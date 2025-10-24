@@ -207,7 +207,11 @@ def main(
                     err=True,
                 )
             metrics = calculate_drop_jump_metrics(
-                contact_states, foot_positions, video.fps, drop_height_m=drop_height
+                contact_states,
+                foot_positions,
+                video.fps,
+                drop_height_m=drop_height,
+                velocity_threshold=velocity_threshold,
             )
 
             # Output metrics as JSON

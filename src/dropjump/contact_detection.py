@@ -110,6 +110,123 @@ def find_contact_phases(
     return phases
 
 
+def interpolate_threshold_crossing(
+    vel_before: float,
+    vel_after: float,
+    velocity_threshold: float,
+) -> float:
+    """
+    Find fractional offset where velocity crosses threshold between two frames.
+
+    Uses linear interpolation assuming velocity changes linearly between frames.
+
+    Args:
+        vel_before: Velocity at frame boundary N (absolute value)
+        vel_after: Velocity at frame boundary N+1 (absolute value)
+        velocity_threshold: Threshold value
+
+    Returns:
+        Fractional offset from frame N (0.0 to 1.0)
+    """
+    # Handle edge cases
+    if abs(vel_after - vel_before) < 1e-9:  # Velocity not changing
+        return 0.5
+
+    # Linear interpolation: at what fraction t does velocity equal threshold?
+    # vel(t) = vel_before + t * (vel_after - vel_before)
+    # Solve for t when vel(t) = threshold:
+    # threshold = vel_before + t * (vel_after - vel_before)
+    # t = (threshold - vel_before) / (vel_after - vel_before)
+
+    t = (velocity_threshold - vel_before) / (vel_after - vel_before)
+
+    # Clamp to [0, 1] range
+    return float(max(0.0, min(1.0, t)))
+
+
+def find_interpolated_phase_transitions(
+    foot_positions: np.ndarray,
+    contact_states: list[ContactState],
+    velocity_threshold: float,
+) -> list[tuple[float, float, ContactState]]:
+    """
+    Find contact phases with sub-frame interpolation for precise timing.
+
+    Uses velocity interpolation to estimate exact transition times between frames.
+
+    Args:
+        foot_positions: Array of foot y-positions (normalized, 0-1)
+        contact_states: List of ContactState for each frame
+        velocity_threshold: Threshold used for contact detection
+
+    Returns:
+        List of (start_frame, end_frame, state) tuples with fractional frame indices
+    """
+    # First get integer frame phases
+    phases = find_contact_phases(contact_states)
+    if not phases or len(foot_positions) < 2:
+        return []
+
+    # Pre-compute velocities for all frame boundaries
+    velocities = np.abs(np.diff(foot_positions, prepend=foot_positions[0]))
+
+    interpolated_phases: list[tuple[float, float, ContactState]] = []
+
+    for start_idx, end_idx, state in phases:
+        start_frac = float(start_idx)
+        end_frac = float(end_idx)
+
+        # Interpolate start boundary (transition INTO this phase)
+        if start_idx > 0 and start_idx < len(velocities):
+            vel_before = velocities[start_idx - 1] if start_idx > 0 else velocities[start_idx]
+            vel_at = velocities[start_idx]
+
+            # Check if we're crossing the threshold at this boundary
+            if state == ContactState.ON_GROUND:
+                # Transition air→ground: velocity dropping below threshold
+                if vel_before > velocity_threshold > vel_at:
+                    # Interpolate between start_idx-1 and start_idx
+                    offset = interpolate_threshold_crossing(
+                        vel_before, vel_at, velocity_threshold
+                    )
+                    start_frac = (start_idx - 1) + offset
+            elif state == ContactState.IN_AIR:
+                # Transition ground→air: velocity rising above threshold
+                if vel_before < velocity_threshold < vel_at:
+                    # Interpolate between start_idx-1 and start_idx
+                    offset = interpolate_threshold_crossing(
+                        vel_before, vel_at, velocity_threshold
+                    )
+                    start_frac = (start_idx - 1) + offset
+
+        # Interpolate end boundary (transition OUT OF this phase)
+        if end_idx < len(foot_positions) - 1 and end_idx + 1 < len(velocities):
+            vel_at = velocities[end_idx]
+            vel_after = velocities[end_idx + 1]
+
+            # Check if we're crossing the threshold at this boundary
+            if state == ContactState.ON_GROUND:
+                # Transition ground→air: velocity rising above threshold
+                if vel_at < velocity_threshold < vel_after:
+                    # Interpolate between end_idx and end_idx+1
+                    offset = interpolate_threshold_crossing(
+                        vel_at, vel_after, velocity_threshold
+                    )
+                    end_frac = end_idx + offset
+            elif state == ContactState.IN_AIR:
+                # Transition air→ground: velocity dropping below threshold
+                if vel_at > velocity_threshold > vel_after:
+                    # Interpolate between end_idx and end_idx+1
+                    offset = interpolate_threshold_crossing(
+                        vel_at, vel_after, velocity_threshold
+                    )
+                    end_frac = end_idx + offset
+
+        interpolated_phases.append((start_frac, end_frac, state))
+
+    return interpolated_phases
+
+
 def compute_average_foot_position(
     landmarks: dict[str, tuple[float, float, float]],
 ) -> tuple[float, float]:

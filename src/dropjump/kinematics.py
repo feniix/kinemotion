@@ -3,7 +3,11 @@
 
 import numpy as np
 
-from .contact_detection import ContactState, find_contact_phases
+from .contact_detection import (
+    ContactState,
+    find_contact_phases,
+    find_interpolated_phase_transitions,
+)
 
 
 class DropJumpMetrics:
@@ -20,6 +24,11 @@ class DropJumpMetrics:
         self.flight_start_frame: int | None = None
         self.flight_end_frame: int | None = None
         self.peak_height_frame: int | None = None
+        # Fractional frame indices for sub-frame precision timing
+        self.contact_start_frame_precise: float | None = None
+        self.contact_end_frame_precise: float | None = None
+        self.flight_start_frame_precise: float | None = None
+        self.flight_end_frame_precise: float | None = None
 
     def to_dict(self) -> dict:
         """Convert metrics to dictionary for JSON output."""
@@ -72,6 +81,26 @@ class DropJumpMetrics:
                 if self.peak_height_frame is not None
                 else None
             ),
+            "contact_start_frame_precise": (
+                round(self.contact_start_frame_precise, 3)
+                if self.contact_start_frame_precise is not None
+                else None
+            ),
+            "contact_end_frame_precise": (
+                round(self.contact_end_frame_precise, 3)
+                if self.contact_end_frame_precise is not None
+                else None
+            ),
+            "flight_start_frame_precise": (
+                round(self.flight_start_frame_precise, 3)
+                if self.flight_start_frame_precise is not None
+                else None
+            ),
+            "flight_end_frame_precise": (
+                round(self.flight_end_frame_precise, 3)
+                if self.flight_end_frame_precise is not None
+                else None
+            ),
         }
 
 
@@ -80,6 +109,7 @@ def calculate_drop_jump_metrics(
     foot_y_positions: np.ndarray,
     fps: float,
     drop_height_m: float | None = None,
+    velocity_threshold: float = 0.02,
 ) -> DropJumpMetrics:
     """
     Calculate drop-jump metrics from contact states and positions.
@@ -89,12 +119,18 @@ def calculate_drop_jump_metrics(
         foot_y_positions: Vertical positions of feet (normalized 0-1)
         fps: Video frame rate
         drop_height_m: Known drop box/platform height in meters for calibration (optional)
+        velocity_threshold: Velocity threshold used for contact detection (for interpolation)
 
     Returns:
         DropJumpMetrics object with calculated values
     """
     metrics = DropJumpMetrics()
     phases = find_contact_phases(contact_states)
+
+    # Get interpolated phases for sub-frame precision timing
+    interpolated_phases = find_interpolated_phase_transitions(
+        foot_y_positions, contact_states, velocity_threshold
+    )
 
     if not phases:
         return metrics
@@ -149,11 +185,31 @@ def calculate_drop_jump_metrics(
             [(s, e) for s, e, _ in ground_phases], key=lambda p: p[1] - p[0]
         )
 
-    # Calculate ground contact time
-    contact_frames = contact_end - contact_start + 1
-    metrics.ground_contact_time = contact_frames / fps
+    # Store integer frame indices (for visualization)
     metrics.contact_start_frame = contact_start
     metrics.contact_end_frame = contact_end
+
+    # Find corresponding interpolated phase for precise timing
+    contact_start_frac = float(contact_start)
+    contact_end_frac = float(contact_end)
+
+    # Find the matching ground phase in interpolated_phases
+    for start_frac, end_frac, state in interpolated_phases:
+        # Match by checking if integer frames are within this phase
+        if (
+            state == ContactState.ON_GROUND
+            and int(start_frac) <= contact_start <= int(end_frac) + 1
+            and int(start_frac) <= contact_end <= int(end_frac) + 1
+        ):
+            contact_start_frac = start_frac
+            contact_end_frac = end_frac
+            break
+
+    # Calculate ground contact time using fractional frames
+    contact_frames_precise = contact_end_frac - contact_start_frac
+    metrics.ground_contact_time = contact_frames_precise / fps
+    metrics.contact_start_frame_precise = contact_start_frac
+    metrics.contact_end_frame_precise = contact_end_frac
 
     # Calculate calibration scale factor from drop height if provided
     scale_factor = 1.0
@@ -193,10 +249,32 @@ def calculate_drop_jump_metrics(
 
     if flight_phases:
         flight_start, flight_end = flight_phases[0]
-        flight_frames = flight_end - flight_start + 1
-        metrics.flight_time = flight_frames / fps
+
+        # Store integer frame indices (for visualization)
         metrics.flight_start_frame = flight_start
         metrics.flight_end_frame = flight_end
+
+        # Find corresponding interpolated phase for precise timing
+        flight_start_frac = float(flight_start)
+        flight_end_frac = float(flight_end)
+
+        # Find the matching air phase in interpolated_phases
+        for start_frac, end_frac, state in interpolated_phases:
+            # Match by checking if integer frames are within this phase
+            if (
+                state == ContactState.IN_AIR
+                and int(start_frac) <= flight_start <= int(end_frac) + 1
+                and int(start_frac) <= flight_end <= int(end_frac) + 1
+            ):
+                flight_start_frac = start_frac
+                flight_end_frac = end_frac
+                break
+
+        # Calculate flight time using fractional frames
+        flight_frames_precise = flight_end_frac - flight_start_frac
+        metrics.flight_time = flight_frames_precise / fps
+        metrics.flight_start_frame_precise = flight_start_frac
+        metrics.flight_end_frame_precise = flight_end_frac
 
         # Calculate jump height using flight time (kinematic method)
         # h = (g * t^2) / 8, where t is total flight time

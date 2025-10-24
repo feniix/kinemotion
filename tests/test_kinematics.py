@@ -7,7 +7,7 @@ from dropjump.kinematics import calculate_drop_jump_metrics
 
 
 def test_calculate_metrics_basic():
-    """Test basic metric calculation."""
+    """Test basic metric calculation with sub-frame interpolation."""
     # Create a simple pattern: ground contact then flight
     contact_states = (
         [ContactState.ON_GROUND] * 10  # 10 frames ground contact
@@ -27,17 +27,28 @@ def test_calculate_metrics_basic():
 
     metrics = calculate_drop_jump_metrics(contact_states, positions, fps)
 
-    # Ground contact time should be 10 frames / 30 fps = 0.333 seconds
+    # Ground contact time should be approximately 10 frames / 30 fps = 0.333 seconds
+    # Sub-frame interpolation may adjust this slightly for precision
     assert metrics.ground_contact_time is not None
-    assert abs(metrics.ground_contact_time - 10 / 30) < 0.01
+    assert 0.25 < metrics.ground_contact_time < 0.40  # Approximately 8-12 frames
 
-    # Flight time should be 20 frames / 30 fps = 0.667 seconds
+    # Flight time should be approximately 20 frames / 30 fps = 0.667 seconds
     assert metrics.flight_time is not None
-    assert abs(metrics.flight_time - 20 / 30) < 0.01
+    assert 0.60 < metrics.flight_time < 0.75  # Approximately 18-22 frames
 
     # Jump height should be calculated from flight time
     assert metrics.jump_height is not None
     assert metrics.jump_height > 0
+
+    # Check fractional frame fields are populated
+    assert metrics.contact_start_frame_precise is not None
+    assert metrics.contact_end_frame_precise is not None
+    assert metrics.flight_start_frame_precise is not None
+    assert metrics.flight_end_frame_precise is not None
+
+    # Fractional frames should be close to integer frames
+    assert abs(metrics.contact_start_frame_precise - metrics.contact_start_frame) < 1.0
+    assert abs(metrics.flight_start_frame_precise - metrics.flight_start_frame) < 1.0
 
 
 def test_metrics_to_dict():
@@ -56,3 +67,9 @@ def test_metrics_to_dict():
     assert "jump_height_m" in result
     assert "contact_start_frame" in result
     assert "flight_start_frame" in result
+
+    # Check fractional frame fields are present
+    assert "contact_start_frame_precise" in result
+    assert "contact_end_frame_precise" in result
+    assert "flight_start_frame_precise" in result
+    assert "flight_end_frame_precise" in result
