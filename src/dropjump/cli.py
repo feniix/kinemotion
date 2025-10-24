@@ -79,6 +79,11 @@ from .video_io import DebugOverlayRenderer, VideoProcessor
     default=None,
     help="Height of drop box/platform in meters (e.g., 0.40 for 40cm) - used for calibration",
 )
+@click.option(
+    "--use-curvature/--no-curvature",
+    default=True,
+    help="Use trajectory curvature analysis for refining transitions (default: enabled)",
+)
 def main(
     video_path: str,
     output: str | None,
@@ -90,6 +95,7 @@ def main(
     detection_confidence: float,
     tracking_confidence: float,
     drop_height: float | None,
+    use_curvature: bool,
 ) -> None:
     """
     Analyze drop-jump video to estimate ground contact time, flight time, and jump height.
@@ -213,6 +219,7 @@ def main(
                 drop_height_m=drop_height,
                 velocity_threshold=velocity_threshold,
                 smoothing_window=smoothing_window,
+                use_curvature=use_curvature,
             )
 
             # Output metrics as JSON

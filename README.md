@@ -7,6 +7,7 @@ A Python tool for analyzing side-view drop-jump videos to estimate key performan
 - **Automatic pose tracking** using MediaPipe Pose landmarks
 - **Ground contact detection** based on foot velocity and position
 - **Derivative-based velocity** - smooth velocity calculation from position trajectory
+- **Trajectory curvature analysis** - acceleration patterns for refined event detection
 - **Sub-frame interpolation** - precise timing beyond frame boundaries for improved accuracy
 - **Automatic drop jump detection** - identifies box → drop → landing → jump phases
 - **Kinematic calculations** for jump metrics:
@@ -264,7 +265,12 @@ The debug video includes:
    - Achieves sub-millisecond timing precision (at 30fps: ±10ms vs ±33ms)
    - Reduces timing error by 60-70% for contact and flight measurements
    - Smoother velocity curves eliminate false threshold crossings
-6. **Metric Calculation**:
+6. **Trajectory Curvature Analysis**: Refines transitions using acceleration patterns
+   - Computes second derivative (acceleration) from position trajectory
+   - Detects landing impact by acceleration spike
+   - Identifies takeoff by acceleration change patterns
+   - Provides independent validation and refinement of velocity-based detection
+7. **Metric Calculation**:
    - Ground contact time = contact phase duration (using fractional frames)
    - Flight time = flight phase duration (using fractional frames)
    - Jump height = calibrated position-based measurement (if --drop-height provided)

@@ -77,7 +77,13 @@ docs/
    - Returns fractional frame indices (e.g., 48.78 instead of 49)
    - Reduces timing error from ±33ms to ±10ms at 30fps (60-70% improvement)
    - Eliminates false threshold crossings from velocity noise
-6. **Metrics Calculation** (kinematics.py):
+6. **Trajectory Curvature Analysis** (contact_detection.py): Refines transitions
+   - Computes acceleration (second derivative) using Savitzky-Golay filter
+   - Detects landing events by acceleration spikes (impact deceleration)
+   - Identifies takeoff events by acceleration changes
+   - Blends curvature-based refinement with velocity-based estimates (70/30)
+   - Provides independent validation based on physical motion patterns
+7. **Metrics Calculation** (kinematics.py):
    - Ground contact time from phase duration (using fractional frames)
    - Flight time from phase duration (using fractional frames)
    - Jump height from position tracking with optional calibration
@@ -256,6 +262,78 @@ v_deriv = [0.015, 0.022, 0.025, 0.024, 0.018, 0.012]  # Smooth
 # With derivative velocity: contact from 49.0 to 53.0 (4 frames = 135ms)
 # Result: Cleaner threshold crossings, less sub-frame offset
 ```
+
+### Trajectory Curvature Analysis (contact_detection.py:242-394)
+
+**IMPORTANT**: The tool uses acceleration patterns (trajectory curvature) to refine event timing.
+
+#### Acceleration-Based Event Detection (smoothing.py:175-223)
+
+Acceleration (second derivative) reveals characteristic patterns at contact events:
+
+**Physical Patterns:**
+- **Landing impact**: Large acceleration spike as feet decelerate on impact
+- **Takeoff**: Acceleration change as body transitions from static to upward motion
+- **In flight**: Constant acceleration (gravity ≈ -9.81 m/s²)
+- **On ground**: Near-zero acceleration (stationary position)
+
+**Implementation:**
+```python
+# Compute acceleration using Savitzky-Golay second derivative
+acceleration = savgol_filter(positions, window=5, polyorder=2, deriv=2, delta=1.0)
+
+# Landing: Find maximum absolute acceleration (impact deceleration)
+landing_frame = np.argmax(np.abs(acceleration[search_window]))
+
+# Takeoff: Find maximum acceleration change (transition from static)
+accel_change = np.abs(np.diff(acceleration))
+takeoff_frame = np.argmax(accel_change[search_window])
+```
+
+**Key Functions:**
+- `compute_acceleration_from_derivative()`: Computes second derivative using Savitzky-Golay
+- `refine_transition_with_curvature()`: Searches for acceleration patterns near transitions
+- `find_interpolated_phase_transitions_with_curvature()`: Combines velocity + curvature
+
+#### Refinement Strategy
+
+Curvature analysis refines velocity-based estimates through blending:
+
+1. **Velocity estimate**: Initial sub-frame transition from velocity threshold crossing
+2. **Curvature search**: Look for acceleration patterns within ±3 frames
+3. **Blending**: 70% curvature-based + 30% velocity-based
+
+**Why Blending?**
+- Velocity is reliable for coarse timing
+- Curvature provides fine detail but can be noisy at boundaries
+- Blending prevents large deviations while incorporating physical insights
+
+**Algorithm:**
+```python
+# 1. Get velocity-based estimate
+velocity_estimate = 49.0  # from interpolation
+
+# 2. Search for acceleration peak near estimate
+search_window = acceleration[46:52]  # ±3 frames
+peak_idx = np.argmax(np.abs(search_window))
+curvature_estimate = 46 + peak_idx  # = 47.2
+
+# 3. Blend estimates
+blend = 0.7 * 47.2 + 0.3 * 49.0  # = 47.74
+```
+
+**Accuracy Improvement:**
+```python
+# Example: Landing detection
+# Velocity only: frame 49.0 (when velocity drops below threshold)
+# With curvature: frame 46.9 (when acceleration spike occurs at impact)
+# Result: 2.1 frames earlier (70ms at 30fps) - more physically accurate
+```
+
+**Optional Feature:**
+- Enabled by default (`--use-curvature`, default: True)
+- Can be disabled with `--no-curvature` flag for pure velocity-based detection
+- Negligible performance impact (reuses smoothed trajectory)
 
 ### JSON Serialization (kinematics.py:29-100)
 

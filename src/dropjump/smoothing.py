@@ -170,3 +170,54 @@ def compute_velocity_from_derivative(
 
     # Return absolute velocity (magnitude only)
     return np.abs(velocity)  # type: ignore[no-any-return]
+
+
+def compute_acceleration_from_derivative(
+    positions: np.ndarray,
+    window_length: int = 5,
+    polyorder: int = 2,
+) -> np.ndarray:
+    """
+    Compute acceleration as second derivative of smoothed position trajectory.
+
+    Uses Savitzky-Golay filter to compute the second derivative directly,
+    providing smooth acceleration (curvature) estimates for detecting
+    characteristic patterns at landing and takeoff.
+
+    Landing and takeoff events show distinctive acceleration patterns:
+    - Landing: Large acceleration spike as feet decelerate on impact
+    - Takeoff: Acceleration change as body accelerates upward
+    - In flight: Constant acceleration due to gravity
+    - On ground: Near-zero acceleration (stationary position)
+
+    Args:
+        positions: 1D array of position values (e.g., foot y-positions)
+        window_length: Window size for smoothing (must be odd, >= polyorder + 2)
+        polyorder: Polynomial order for Savitzky-Golay filter (typically 2 or 3)
+
+    Returns:
+        Array of acceleration values (second derivative of position)
+    """
+    if len(positions) < window_length:
+        # Fallback to simple second differences for short sequences
+        velocity = np.diff(positions, prepend=positions[0])
+        return np.diff(velocity, prepend=velocity[0])
+
+    # Ensure window_length is odd
+    if window_length % 2 == 0:
+        window_length += 1
+
+    # Compute second derivative using Savitzky-Golay filter
+    # deriv=2: compute second derivative (acceleration/curvature)
+    # delta=1.0: frame spacing
+    # mode='interp': interpolate at boundaries
+    acceleration = savgol_filter(
+        positions,
+        window_length,
+        polyorder,
+        deriv=2,  # Second derivative
+        delta=1.0,  # Frame spacing
+        mode="interp",
+    )
+
+    return acceleration  # type: ignore[no-any-return]

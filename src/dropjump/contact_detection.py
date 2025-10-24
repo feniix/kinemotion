@@ -4,7 +4,10 @@ from enum import Enum
 
 import numpy as np
 
-from .smoothing import compute_velocity_from_derivative
+from .smoothing import (
+    compute_acceleration_from_derivative,
+    compute_velocity_from_derivative,
+)
 
 
 class ContactState(Enum):
@@ -234,6 +237,161 @@ def find_interpolated_phase_transitions(
         interpolated_phases.append((start_frac, end_frac, state))
 
     return interpolated_phases
+
+
+def refine_transition_with_curvature(
+    foot_positions: np.ndarray,
+    estimated_frame: float,
+    transition_type: str,
+    search_window: int = 3,
+    smoothing_window: int = 5,
+) -> float:
+    """
+    Refine phase transition timing using trajectory curvature analysis.
+
+    Looks for characteristic acceleration patterns near estimated transition:
+    - Landing: Large acceleration spike (rapid deceleration on impact)
+    - Takeoff: Acceleration change (transition from static to upward motion)
+
+    Args:
+        foot_positions: Array of foot y-positions (normalized, 0-1)
+        estimated_frame: Initial estimate of transition frame (from velocity)
+        transition_type: Type of transition ("landing" or "takeoff")
+        search_window: Number of frames to search around estimate
+        smoothing_window: Window size for acceleration computation
+
+    Returns:
+        Refined fractional frame index
+    """
+    if len(foot_positions) < smoothing_window:
+        return estimated_frame
+
+    # Compute acceleration (second derivative)
+    acceleration = compute_acceleration_from_derivative(
+        foot_positions, window_length=smoothing_window, polyorder=2
+    )
+
+    # Define search range around estimated transition
+    est_int = int(estimated_frame)
+    search_start = max(0, est_int - search_window)
+    search_end = min(len(acceleration), est_int + search_window + 1)
+
+    if search_end <= search_start:
+        return estimated_frame
+
+    # Extract acceleration in search window
+    accel_window = acceleration[search_start:search_end]
+
+    if len(accel_window) == 0:
+        return estimated_frame
+
+    if transition_type == "landing":
+        # Landing: Look for large magnitude acceleration (impact deceleration)
+        # Find frame with maximum absolute acceleration
+        peak_idx = np.argmax(np.abs(accel_window))
+        refined_frame = float(search_start + peak_idx)
+
+    elif transition_type == "takeoff":
+        # Takeoff: Look for acceleration magnitude change
+        # Find frame with large acceleration change (derivative of acceleration)
+        if len(accel_window) < 2:
+            return estimated_frame
+
+        accel_diff = np.abs(np.diff(accel_window))
+        peak_idx = np.argmax(accel_diff)
+        refined_frame = float(search_start + peak_idx)
+
+    else:
+        return estimated_frame
+
+    # Blend with original estimate (don't stray too far)
+    # 70% curvature-based, 30% velocity-based
+    blend_factor = 0.7
+    refined_frame = (
+        blend_factor * refined_frame + (1 - blend_factor) * estimated_frame
+    )
+
+    return refined_frame
+
+
+def find_interpolated_phase_transitions_with_curvature(
+    foot_positions: np.ndarray,
+    contact_states: list[ContactState],
+    velocity_threshold: float,
+    smoothing_window: int = 5,
+    use_curvature: bool = True,
+) -> list[tuple[float, float, ContactState]]:
+    """
+    Find contact phases with sub-frame interpolation and curvature refinement.
+
+    Combines three methods for maximum accuracy:
+    1. Velocity thresholding (coarse integer frame detection)
+    2. Velocity interpolation (sub-frame precision)
+    3. Curvature analysis (refinement based on acceleration patterns)
+
+    Args:
+        foot_positions: Array of foot y-positions (normalized, 0-1)
+        contact_states: List of ContactState for each frame
+        velocity_threshold: Threshold used for contact detection
+        smoothing_window: Window size for velocity/acceleration smoothing
+        use_curvature: Whether to apply curvature-based refinement
+
+    Returns:
+        List of (start_frame, end_frame, state) tuples with fractional frame indices
+    """
+    # Get interpolated phases using velocity
+    interpolated_phases = find_interpolated_phase_transitions(
+        foot_positions, contact_states, velocity_threshold, smoothing_window
+    )
+
+    if not use_curvature or len(interpolated_phases) == 0:
+        return interpolated_phases
+
+    # Refine phase boundaries using curvature analysis
+    refined_phases: list[tuple[float, float, ContactState]] = []
+
+    for start_frac, end_frac, state in interpolated_phases:
+        refined_start = start_frac
+        refined_end = end_frac
+
+        if state == ContactState.ON_GROUND:
+            # Refine landing (start of ground contact)
+            refined_start = refine_transition_with_curvature(
+                foot_positions,
+                start_frac,
+                "landing",
+                search_window=3,
+                smoothing_window=smoothing_window,
+            )
+            # Refine takeoff (end of ground contact)
+            refined_end = refine_transition_with_curvature(
+                foot_positions,
+                end_frac,
+                "takeoff",
+                search_window=3,
+                smoothing_window=smoothing_window,
+            )
+
+        elif state == ContactState.IN_AIR:
+            # For flight phases, takeoff is at start, landing is at end
+            refined_start = refine_transition_with_curvature(
+                foot_positions,
+                start_frac,
+                "takeoff",
+                search_window=3,
+                smoothing_window=smoothing_window,
+            )
+            refined_end = refine_transition_with_curvature(
+                foot_positions,
+                end_frac,
+                "landing",
+                search_window=3,
+                smoothing_window=smoothing_window,
+            )
+
+        refined_phases.append((refined_start, refined_end, state))
+
+    return refined_phases
 
 
 def compute_average_foot_position(
