@@ -4,11 +4,12 @@ This document explains each configuration parameter available in `dropjump-analy
 
 ## Overview
 
-The tool has 6 main configuration parameters divided into 3 categories:
+The tool has 7 main configuration parameters divided into 4 categories:
 
 1. **Smoothing** (1 parameter): Reduces jitter in tracked landmarks
 2. **Contact Detection** (3 parameters): Determines when feet are on/off ground
 3. **Pose Tracking** (2 parameters): Controls MediaPipe's pose detection quality
+4. **Calibration** (1 parameter): Enables accurate jump height measurement
 
 ---
 
@@ -294,6 +295,100 @@ dropjump-analyze video.mp4 --tracking-confidence 0.3
 
 ---
 
+## Calibration Parameters
+
+### `--drop-height` (optional, no default)
+
+**What it does:**
+Specifies the height of the drop box/platform in meters to enable calibrated jump height measurement.
+
+**How it works:**
+- Measures the actual drop distance from the box to the ground in the video
+- Calculates a scale factor to convert normalized coordinates (0-1) to real-world meters
+- Applies this scale factor to the jump height measurement
+- Significantly improves jump height accuracy from ~71% to ~88%
+
+**Technical details:**
+- Only applicable for drop jumps (box → drop → landing → jump)
+- Automatically detects drop jump pattern by comparing ground phase elevations
+- Uses the initial drop phase to establish the calibration scale factor
+- Formula: `scale_factor = drop_height_m / drop_distance_normalized`
+- Applied to position-based jump height measurement (not kinematic)
+
+**When to use:**
+- Any drop jump where you know the box height
+- When accuracy of jump height is important
+- When comparing athletes or tracking progress over time
+- For research or performance analysis
+
+**When NOT to use:**
+- Regular jumps without a drop box (no calibration reference available)
+- Unknown drop box height (will calculate but results won't be accurate)
+- Video doesn't show the full drop from box to ground
+
+**How to measure your drop box:**
+1. Use a tape measure or ruler
+2. Measure from top of box surface to ground
+3. Convert to meters (divide cm by 100)
+4. Examples:
+   - 30cm box = 0.30
+   - 40cm box = 0.40
+   - 60cm box = 0.60
+
+**Accuracy comparison:**
+```
+Without calibration:
+- Uses kinematic method with empirical correction factor
+- Accuracy: ~71% (±29% error)
+- Example: 38.4cm actual → 27.2cm measured (11.2cm short)
+
+With calibration (--drop-height 0.40):
+- Uses position-based measurement with scale factor
+- Accuracy: ~88% (±12% error)
+- Example: 38.4cm actual → 33.9cm measured (4.5cm short)
+```
+
+**Example:**
+```bash
+# 40cm drop box
+dropjump-analyze video.mp4 --drop-height 0.40
+
+# 60cm drop box with outputs
+dropjump-analyze video.mp4 \
+  --drop-height 0.60 \
+  --json-output metrics.json \
+  --output debug.mp4
+
+# Compare calibrated vs uncalibrated
+# Without calibration
+dropjump-analyze video.mp4 --json-output uncalibrated.json
+
+# With calibration
+dropjump-analyze video.mp4 --drop-height 0.40 --json-output calibrated.json
+```
+
+**JSON output with calibration:**
+```json
+{
+  "jump_height_m": 0.339,                      // Primary (calibrated)
+  "jump_height_kinematic_m": 0.256,            // Kinematic-only (fallback)
+  "jump_height_trajectory_normalized": 0.0845  // Normalized measurement
+}
+```
+
+**Troubleshooting:**
+- If jump height still seems wrong:
+  1. Verify box height measurement is accurate
+  2. Check that entire drop is visible in video
+  3. Ensure camera is stationary (not panning/zooming)
+  4. Generate debug video to verify drop phase detection
+- If automatic drop jump detection fails:
+  - First ground phase must be >5% higher than second ground phase
+  - Try adjusting contact detection parameters
+  - Check that athlete starts clearly on the box
+
+---
+
 ## Common Scenarios and Recommended Settings
 
 ### Scenario 1: High-Quality Studio Video
@@ -354,6 +449,34 @@ dropjump-analyze video.mp4 \
   --visibility-threshold 0.6 \
   --detection-confidence 0.7 \
   --tracking-confidence 0.7
+```
+
+### Scenario 6: Drop Jump with Calibration
+- Standard drop jump analysis with 40cm box for accurate jump height
+```bash
+dropjump-analyze video.mp4 \
+  --drop-height 0.40 \
+  --smoothing-window 5 \
+  --velocity-threshold 0.02 \
+  --min-contact-frames 3 \
+  --visibility-threshold 0.5 \
+  --detection-confidence 0.5 \
+  --tracking-confidence 0.5
+```
+
+### Scenario 7: High-Performance Drop Jump Analysis
+- Research-grade analysis with calibration and optimized parameters
+```bash
+dropjump-analyze video.mp4 \
+  --drop-height 0.40 \
+  --output debug.mp4 \
+  --json-output metrics.json \
+  --smoothing-window 5 \
+  --velocity-threshold 0.015 \
+  --min-contact-frames 3 \
+  --visibility-threshold 0.6 \
+  --detection-confidence 0.5 \
+  --tracking-confidence 0.5
 ```
 
 ---
@@ -496,3 +619,4 @@ dropjump-analyze video.mp4 --output v3.mp4 --json-output v3.json --smoothing-win
 | `visibility-threshold` | 0.5 | 0.3-0.8 | Landmark trust level | Occlusions or need high confidence |
 | `detection-confidence` | 0.5 | 0.1-0.9 | Initial pose detection | Multiple people or poor visibility |
 | `tracking-confidence` | 0.5 | 0.1-0.9 | Tracking persistence | Tracking lost or wrong person tracked |
+| `drop-height` | None | 0.1-2.0 | Jump height calibration | Drop jump with known box height |

@@ -73,6 +73,12 @@ from .video_io import DebugOverlayRenderer, VideoProcessor
     help="Pose tracking confidence threshold (0-1)",
     show_default=True,
 )
+@click.option(
+    "--drop-height",
+    type=float,
+    default=None,
+    help="Height of drop box/platform in meters (e.g., 0.40 for 40cm) - used for calibration",
+)
 def main(
     video_path: str,
     output: str | None,
@@ -83,6 +89,7 @@ def main(
     visibility_threshold: float,
     detection_confidence: float,
     tracking_confidence: float,
+    drop_height: float | None,
 ) -> None:
     """
     Analyze drop-jump video to estimate ground contact time, flight time, and jump height.
@@ -194,8 +201,13 @@ def main(
 
             # Calculate metrics
             click.echo("Calculating metrics...", err=True)
+            if drop_height:
+                click.echo(
+                    f"Using drop height calibration: {drop_height}m ({drop_height*100:.0f}cm)",
+                    err=True,
+                )
             metrics = calculate_drop_jump_metrics(
-                contact_states, foot_positions, video.fps
+                contact_states, foot_positions, video.fps, drop_height_m=drop_height
             )
 
             # Output metrics as JSON

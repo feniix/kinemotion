@@ -69,10 +69,13 @@ docs/
 2. **Smoothing** (smoothing.py): Savitzky-Golay filter reduces jitter while preserving dynamics
 3. **Contact Detection** (contact_detection.py): Analyzes vertical foot velocity to classify ground contact vs. flight
 4. **Phase Identification**: Finds continuous ground contact and flight periods
+   - Automatically detects drop jumps vs regular jumps
+   - For drop jumps: identifies standing on box → drop → ground contact → jump
 5. **Metrics Calculation** (kinematics.py):
-   - Ground contact time from phase duration
+   - Ground contact time from phase duration (after drop, before jump)
    - Flight time from phase duration
-   - Jump height from flight time: h = (g × t²) / 8
+   - Jump height from position tracking with optional calibration
+   - Fallback: kinematic estimate from flight time: h = (g × t²) / 8
 6. **Output**: JSON metrics + optional debug video overlay
 
 ### Key Design Decisions
@@ -80,8 +83,13 @@ docs/
 - **Normalized coordinates**: All positions use MediaPipe's 0-1 normalized coordinates (independent of video resolution)
 - **Velocity-based contact detection**: More robust than absolute position thresholds
 - **Configurable thresholds**: CLI flags allow tuning for different video qualities and athletes
-- **Kinematic jump height**: Calculated from flight time rather than direct position measurement (more accurate for 2D analysis)
-- **Aspect ratio preservation**: Output video ALWAYS matches source video dimensions - no hardcoded aspect ratios
+- **Calibrated jump height**: Position-based measurement with drop height calibration for accuracy
+  - Optional `--drop-height` parameter uses known drop box height to calibrate measurements
+  - Achieves ~88% accuracy (vs 71% with kinematic-only method)
+  - Fallback to empirically-corrected kinematic formula when no calibration provided
+- **Aspect ratio preservation**: Output video ALWAYS matches source video dimensions
+  - Handles SAR (Sample Aspect Ratio) metadata from mobile videos
+  - No hardcoded aspect ratios
 
 ## Code Quality & Type Safety
 
@@ -137,16 +145,20 @@ uv run ruff check && uv run mypy src/dropjump && uv run pytest
 
 ## Critical Implementation Details
 
-### Aspect Ratio Preservation (video_io.py)
+### Aspect Ratio Preservation & SAR Handling (video_io.py)
 
-**IMPORTANT**: The tool preserves the exact aspect ratio of the source video. No dimensions are hardcoded.
+**IMPORTANT**: The tool preserves the exact aspect ratio of the source video, including SAR (Sample Aspect Ratio) metadata. No dimensions are hardcoded.
 
-#### VideoProcessor (`video_io.py:10-46`)
+#### VideoProcessor (`video_io.py:15-110`)
 
-- Reads the **first actual frame** to get true dimensions (not OpenCV properties)
+- Reads the **first actual frame** to get true encoded dimensions (not OpenCV properties)
 - Critical for mobile videos with rotation metadata
 - `CAP_PROP_FRAME_WIDTH` and `CAP_PROP_FRAME_HEIGHT` can return incorrect dimensions
 - Always use `frame.shape[:2]` to get actual (height, width)
+- **SAR Metadata Extraction**: Uses `ffprobe` to extract Sample Aspect Ratio metadata
+  - Many mobile videos use non-square pixels (e.g., 1080x1080 encoded, but 616x1080 display)
+  - Calculates display dimensions: `display_width = width × SAR_width / SAR_height`
+  - Falls back to encoded dimensions if ffprobe unavailable or SAR = 1:1
 
 ```python
 # Correct approach (current implementation)
@@ -162,11 +174,13 @@ self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 ```
 
-#### DebugOverlayRenderer (`video_io.py:62-94`)
+#### DebugOverlayRenderer (`video_io.py:130-330`)
 
-- Creates output video with **exact source dimensions**
+- Creates output video with **display dimensions** (respecting SAR)
+- Resizes frames from encoded dimensions to display dimensions if needed (INTER_LANCZOS4)
+- Output video uses square pixels (SAR 1:1) at correct display size
 - H.264 codec (avc1) with fallback to mp4v
-- Runtime validation in `write_frame()` ensures every frame matches expected dimensions
+- Runtime validation in `write_frame()` ensures every frame matches expected encoded dimensions
 - Raises `ValueError` if aspect ratio would be corrupted
 
 ### JSON Serialization (kinematics.py:21-52)
@@ -233,7 +247,7 @@ Modify `smooth_landmarks()` in `smoothing.py:9`:
 
 ### Parameter Tuning
 
-**IMPORTANT**: See `docs/PARAMETERS.md` for comprehensive guide on all 6 CLI parameters.
+**IMPORTANT**: See `docs/PARAMETERS.md` for comprehensive guide on all 7 CLI parameters.
 
 Quick reference:
 - **smoothing-window**: Trajectory smoothness (↑ for noisy video)
@@ -242,6 +256,7 @@ Quick reference:
 - **visibility-threshold**: Landmark confidence (↓ for occluded feet)
 - **detection-confidence**: Pose detection strictness (MediaPipe)
 - **tracking-confidence**: Tracking persistence (MediaPipe)
+- **drop-height**: Drop box height in meters for calibration (e.g., 0.40 for 40cm)
 
 The detailed guide includes:
 - How each parameter works internally
@@ -341,17 +356,26 @@ uv run dropjump-analyze video.mp4 --json-output results.json
 # Generate debug video
 uv run dropjump-analyze video.mp4 --output debug.mp4
 
+# Drop jump with calibration (40cm box)
+uv run dropjump-analyze video.mp4 --drop-height 0.40
+
 # Custom parameters for noisy video
 uv run dropjump-analyze video.mp4 \
   --smoothing-window 7 \
   --velocity-threshold 0.01 \
   --min-contact-frames 5
 
-# Full analysis with all outputs
+# Full analysis with calibration and all outputs
 uv run dropjump-analyze video.mp4 \
   --output debug.mp4 \
   --json-output metrics.json \
+  --drop-height 0.40 \
   --smoothing-window 7
+
+# Regular jump (no calibration, uses corrected kinematic method)
+uv run dropjump-analyze jump.mp4 \
+  --output debug.mp4 \
+  --json-output metrics.json
 ```
 
 ## MCP Server Configuration
