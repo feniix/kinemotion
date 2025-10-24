@@ -1,0 +1,95 @@
+# Spanish translations for Kinemetry.
+# Copyright (C) 2025 Kinemetry Contributors
+# This file is distributed under the same license as the Kinemetry project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Kinemetry 0.1.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-10-24 19:20-0300\n"
+"PO-Revision-Date: 2025-10-24 19:20-0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: src/dropjump/cli.py:121
+#, python-brace-format
+msgid "Analyzing video: {path}"
+msgstr "Analizando video: {path}"
+
+#: src/dropjump/cli.py:125
+msgid "Error: smoothing-window must be >= 3"
+msgstr "Error: ventana-de-suavizado debe ser >= 3"
+
+#: src/dropjump/cli.py:131
+#, python-brace-format
+msgid "Adjusting smoothing-window to {window} (must be odd)"
+msgstr "Ajustando ventana-de-suavizado a {window} (debe ser impar)"
+
+#: src/dropjump/cli.py:141
+#, python-brace-format
+msgid "Video: {width}x{height} @ {fps:.2f} fps, {frames} frames"
+msgstr "Video: {width}x{height} @ {fps:.2f} fps, {frames} fotogramas"
+
+#: src/dropjump/cli.py:157
+msgid "Tracking pose landmarks..."
+msgstr "Rastreando puntos de postura..."
+
+#: src/dropjump/cli.py:163
+msgid "Processing frames"
+msgstr "Procesando fotogramas"
+
+#: src/dropjump/cli.py:180
+msgid "Error: No frames processed"
+msgstr "Error: No se procesaron fotogramas"
+
+#: src/dropjump/cli.py:184
+msgid "Smoothing landmarks..."
+msgstr "Suavizando puntos de referencia..."
+
+#: src/dropjump/cli.py:190
+msgid "Detecting ground contact..."
+msgstr "Detectando contacto con el suelo..."
+
+#: src/dropjump/cli.py:232
+msgid "Calculating metrics..."
+msgstr "Calculando métricas..."
+
+#: src/dropjump/cli.py:235
+#, python-brace-format
+msgid "Using drop height calibration: {height}m ({cm:.0f}cm)"
+msgstr "Usando calibración de altura de caída: {height}m ({cm:.0f}cm)"
+
+#: src/dropjump/cli.py:257
+#, python-brace-format
+msgid "Metrics written to: {path}"
+msgstr "Métricas escritas en: {path}"
+
+#: src/dropjump/cli.py:263
+#, python-brace-format
+msgid "Generating debug video: {path}"
+msgstr "Generando video de depuración: {path}"
+
+#: src/dropjump/cli.py:289
+msgid "Rendering frames"
+msgstr "Renderizando fotogramas"
+
+#: src/dropjump/cli.py:302
+#, python-brace-format
+msgid "Debug video saved: {path}"
+msgstr "Video de depuración guardado: {path}"
+
+#: src/dropjump/cli.py:304
+msgid "Analysis complete!"
+msgstr "¡Análisis completado!"
+
+#: src/dropjump/cli.py:307
+#, python-brace-format
+msgid "Error: {message}"
+msgstr "Error: {message}"

@@ -49,6 +49,43 @@ uv sync
 
 This will install all dependencies and make the `kinemetry` command available.
 
+## Language Support
+
+Kinemetry supports multiple languages for user interface messages. Currently available languages:
+- 🇬🇧 **English** (default)
+- 🇪🇸 **Spanish** (español)
+
+### Using a Specific Language
+
+Use the `--language` (or `-l`) flag to set the language:
+
+```bash
+# Run in Spanish
+kinemetry --language es dropjump-analyze video.mp4
+
+# Run in English (explicit)
+kinemetry --language en dropjump-analyze video.mp4
+```
+
+### Automatic Language Detection
+
+If no language is specified, Kinemetry automatically detects your system locale:
+
+```bash
+# Uses system locale (Spanish if your OS is set to Spanish)
+kinemetry dropjump-analyze video.mp4
+```
+
+### Adding More Languages
+
+To add support for additional languages:
+
+1. Extract translatable strings: `uv run pybabel extract -F babel.cfg -o src/dropjump/locales/kinemetry.pot src/dropjump/`
+2. Create new language catalog: `uv run pybabel init -i src/dropjump/locales/kinemetry.pot -d src/dropjump/locales -l <lang_code> -D kinemetry`
+3. Edit `src/dropjump/locales/<lang_code>/LC_MESSAGES/kinemetry.po` with translations
+4. Compile translations: `uv run pybabel compile -d src/dropjump/locales -D kinemetry`
+5. Update the language choice in `src/dropjump/cli.py`
+
 ## Usage
 
 ### Basic Analysis

@@ -11,6 +11,7 @@ from .contact_detection import (
     compute_average_foot_position,
     detect_ground_contact,
 )
+from .i18n import _, setup_i18n
 from .kinematics import calculate_drop_jump_metrics
 from .pose_tracker import PoseTracker
 from .smoothing import smooth_landmarks
@@ -19,9 +20,17 @@ from .video_io import DebugOverlayRenderer, VideoProcessor
 
 @click.group()
 @click.version_option(package_name="dropjump-analyze")
-def cli() -> None:
+@click.option(
+    "--language",
+    "-l",
+    type=click.Choice(["en", "es"], case_sensitive=False),
+    default=None,
+    help="Language for messages (default: system locale)",
+)
+def cli(language: str | None) -> None:
     """Kinemetry: Video-based kinematic analysis for athletic performance."""
-    pass
+    # Set up translations
+    setup_i18n(language)
 
 
 @cli.command(name="dropjump-analyze")
@@ -109,25 +118,32 @@ def dropjump_analyze(
 
     VIDEO_PATH: Path to the input video file
     """
-    click.echo(f"Analyzing video: {video_path}", err=True)
+    click.echo(_("Analyzing video: {path}").format(path=video_path), err=True)
 
     # Validate parameters
     if smoothing_window < 3:
-        click.echo("Error: smoothing-window must be >= 3", err=True)
+        click.echo(_("Error: smoothing-window must be >= 3"), err=True)
         sys.exit(1)
 
     if smoothing_window % 2 == 0:
         smoothing_window += 1
         click.echo(
-            f"Adjusting smoothing-window to {smoothing_window} (must be odd)", err=True
+            _("Adjusting smoothing-window to {window} (must be odd)").format(
+                window=smoothing_window
+            ),
+            err=True,
         )
 
     try:
         # Initialize video processor
         with VideoProcessor(video_path) as video:
             click.echo(
-                f"Video: {video.width}x{video.height} @ {video.fps:.2f} fps, "
-                f"{video.frame_count} frames",
+                _("Video: {width}x{height} @ {fps:.2f} fps, {frames} frames").format(
+                    width=video.width,
+                    height=video.height,
+                    fps=video.fps,
+                    frames=video.frame_count,
+                ),
                 err=True,
             )
 
@@ -138,13 +154,13 @@ def dropjump_analyze(
             )
 
             # Process all frames
-            click.echo("Tracking pose landmarks...", err=True)
+            click.echo(_("Tracking pose landmarks..."), err=True)
             landmarks_sequence = []
             frames = []
 
             frame_idx = 0
             with click.progressbar(
-                length=video.frame_count, label="Processing frames"
+                length=video.frame_count, label=_("Processing frames")
             ) as bar:
                 while True:
                     frame = video.read_frame()
@@ -161,17 +177,17 @@ def dropjump_analyze(
             tracker.close()
 
             if not landmarks_sequence:
-                click.echo("Error: No frames processed", err=True)
+                click.echo(_("Error: No frames processed"), err=True)
                 sys.exit(1)
 
             # Smooth landmarks
-            click.echo("Smoothing landmarks...", err=True)
+            click.echo(_("Smoothing landmarks..."), err=True)
             smoothed_landmarks = smooth_landmarks(
                 landmarks_sequence, window_length=smoothing_window
             )
 
             # Extract foot positions
-            click.echo("Detecting ground contact...", err=True)
+            click.echo(_("Detecting ground contact..."), err=True)
             foot_positions_list: list[float] = []
             visibilities_list: list[float] = []
 
@@ -213,10 +229,12 @@ def dropjump_analyze(
             )
 
             # Calculate metrics
-            click.echo("Calculating metrics...", err=True)
+            click.echo(_("Calculating metrics..."), err=True)
             if drop_height:
                 click.echo(
-                    f"Using drop height calibration: {drop_height}m ({drop_height*100:.0f}cm)",
+                    _("Using drop height calibration: {height}m ({cm:.0f}cm)").format(
+                        height=drop_height, cm=drop_height * 100
+                    ),
                     err=True,
                 )
             metrics = calculate_drop_jump_metrics(
@@ -236,13 +254,13 @@ def dropjump_analyze(
             if json_output:
                 output_path = Path(json_output)
                 output_path.write_text(metrics_json)
-                click.echo(f"Metrics written to: {json_output}", err=True)
+                click.echo(_("Metrics written to: {path}").format(path=json_output), err=True)
             else:
                 click.echo(metrics_json)
 
             # Generate debug video if requested
             if output:
-                click.echo(f"Generating debug video: {output}", err=True)
+                click.echo(_("Generating debug video: {path}").format(path=output), err=True)
                 if video.display_width != video.width or video.display_height != video.height:
                     click.echo(
                         f"Source video encoded: {video.width}x{video.height}",
@@ -268,7 +286,7 @@ def dropjump_analyze(
                     video.fps,
                 ) as renderer:
                     with click.progressbar(
-                        length=len(frames), label="Rendering frames"
+                        length=len(frames), label=_("Rendering frames")
                     ) as bar:
                         for i, frame in enumerate(frames):
                             annotated = renderer.render_frame(
@@ -281,12 +299,12 @@ def dropjump_analyze(
                             renderer.write_frame(annotated)
                             bar.update(1)
 
-                click.echo(f"Debug video saved: {output}", err=True)
+                click.echo(_("Debug video saved: {path}").format(path=output), err=True)
 
-            click.echo("Analysis complete!", err=True)
+            click.echo(_("Analysis complete!"), err=True)
 
     except Exception as e:
-        click.echo(f"Error: {str(e)}", err=True)
+        click.echo(_("Error: {message}").format(message=str(e)), err=True)
         sys.exit(1)
 
 

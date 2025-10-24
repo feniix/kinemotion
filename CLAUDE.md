@@ -22,6 +22,7 @@ Managed with `uv` and `asdf`:
 - mediapipe: Pose detection and tracking
 - numpy: Numerical operations
 - scipy: Signal processing (Savitzky-Golay filter)
+- babel: Internationalization (i18n) and translation management
 
 **Development dependencies:**
 - pytest: Testing framework
@@ -153,6 +154,109 @@ uv run pytest
 Or run all checks at once:
 ```bash
 uv run ruff check && uv run mypy src/dropjump && uv run pytest
+```
+
+## Internationalization (i18n)
+
+The tool supports multiple languages using Python's `gettext` module with Babel for translation management.
+
+### Architecture
+
+**Translation Module** (`src/dropjump/i18n.py`):
+- Provides `_()` function for marking translatable strings
+- `setup_i18n(language)`: Configures language (auto-detects if None)
+- `get_available_languages()`: Returns list of available language codes
+
+**Translation Files** (`src/dropjump/locales/`):
+```
+locales/
+├── kinemetry.pot          # Translation template (generated)
+└── es/                    # Spanish translations
+    └── LC_MESSAGES/
+        ├── kinemetry.po   # Human-readable translations
+        └── kinemetry.mo   # Compiled binary (generated)
+```
+
+### Usage in Code
+
+**Marking Strings for Translation:**
+```python
+from .i18n import _
+
+# Simple string
+click.echo(_("Analysis complete!"))
+
+# String with variables (use .format(), not f-strings)
+click.echo(_("Analyzing video: {path}").format(path=video_path))
+```
+
+**Important**: Always use `.format()` for variable substitution, never f-strings. Babel needs to extract the entire string pattern.
+
+### Translation Workflow
+
+1. **Extract strings** from source code:
+   ```bash
+   uv run pybabel extract -F babel.cfg -o src/dropjump/locales/kinemetry.pot \
+       --project=Kinemetry --version=0.1.0 src/dropjump/
+   ```
+
+2. **Create new language** (example: French):
+   ```bash
+   uv run pybabel init -i src/dropjump/locales/kinemetry.pot \
+       -d src/dropjump/locales -l fr -D kinemetry
+   ```
+
+3. **Edit translations**: Open `src/dropjump/locales/fr/LC_MESSAGES/kinemetry.po` and fill in `msgstr` fields
+
+4. **Compile translations**:
+   ```bash
+   uv run pybabel compile -d src/dropjump/locales -D kinemetry
+   ```
+
+5. **Update CLI**: Add language code to `click.Choice()` in `cli.py`:
+   ```python
+   @click.option(
+       "--language",
+       type=click.Choice(["en", "es", "fr"], case_sensitive=False),
+       ...
+   )
+   ```
+
+### Configuration Files
+
+**babel.cfg**: Tells Babel how to extract strings
+```ini
+[python: src/dropjump/**.py]
+encoding = utf-8
+keywords = _:1
+```
+
+**scripts/update_translations.sh**: Helper script for translation workflow
+- Extracts strings
+- Updates existing catalogs
+- Compiles to .mo files
+
+### Currently Supported Languages
+
+- **en** (English) - Default, no translation files needed
+- **es** (Spanish) - Full translation available
+
+### Adding Translations
+
+When adding user-facing messages:
+1. Wrap string in `_()` function
+2. Use `.format()` for variables, not f-strings
+3. Run extraction script to update .pot file
+4. Update all language .po files
+5. Compile translations
+
+**Example:**
+```python
+# Good
+_("Video: {width}x{height}").format(width=w, height=h)
+
+# Bad - won't be extracted correctly
+_(f"Video: {w}x{h}")
 ```
 
 ## Critical Implementation Details
