@@ -41,7 +41,7 @@ def test_aspect_ratio_16_9():
 
         # Create output video
         output_path = tempfile.NamedTemporaryFile(suffix=".mp4", delete=False).name
-        renderer = DebugOverlayRenderer(output_path, 1920, 1080, 30.0)
+        renderer = DebugOverlayRenderer(output_path, 1920, 1080, 1920, 1080, 30.0)
 
         # Write test frame
         test_frame = np.zeros((1080, 1920, 3), dtype=np.uint8)
@@ -99,12 +99,12 @@ def test_frame_dimension_validation():
     output_path = tempfile.NamedTemporaryFile(suffix=".mp4", delete=False).name
 
     try:
-        renderer = DebugOverlayRenderer(output_path, 1920, 1080, 30.0)
+        renderer = DebugOverlayRenderer(output_path, 1920, 1080, 1920, 1080, 30.0)
 
         # Try to write frame with wrong dimensions
         wrong_frame = np.zeros((1080, 1080, 3), dtype=np.uint8)  # Square instead of 16:9
 
-        with pytest.raises(ValueError, match="don't match video dimensions"):
+        with pytest.raises(ValueError, match="don't match"):
             renderer.write_frame(wrong_frame)
 
         renderer.close()

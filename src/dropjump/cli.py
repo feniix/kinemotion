@@ -212,13 +212,29 @@ def main(
             # Generate debug video if requested
             if output:
                 click.echo(f"Generating debug video: {output}", err=True)
-                click.echo(
-                    f"Output dimensions: {video.width}x{video.height} "
-                    f"(matching source video aspect ratio)",
-                    err=True,
-                )
+                if video.display_width != video.width or video.display_height != video.height:
+                    click.echo(
+                        f"Source video encoded: {video.width}x{video.height}",
+                        err=True,
+                    )
+                    click.echo(
+                        f"Output dimensions: {video.display_width}x{video.display_height} "
+                        f"(respecting display aspect ratio)",
+                        err=True,
+                    )
+                else:
+                    click.echo(
+                        f"Output dimensions: {video.width}x{video.height} "
+                        f"(matching source video aspect ratio)",
+                        err=True,
+                    )
                 with DebugOverlayRenderer(
-                    output, video.width, video.height, video.fps
+                    output,
+                    video.width,
+                    video.height,
+                    video.display_width,
+                    video.display_height,
+                    video.fps,
                 ) as renderer:
                     with click.progressbar(
                         length=len(frames), label="Rendering frames"
