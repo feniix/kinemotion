@@ -4,6 +4,8 @@ from enum import Enum
 
 import numpy as np
 
+from .smoothing import compute_velocity_from_derivative
+
 
 class ContactState(Enum):
     """States for foot-ground contact."""
@@ -148,16 +150,20 @@ def find_interpolated_phase_transitions(
     foot_positions: np.ndarray,
     contact_states: list[ContactState],
     velocity_threshold: float,
+    smoothing_window: int = 5,
 ) -> list[tuple[float, float, ContactState]]:
     """
     Find contact phases with sub-frame interpolation for precise timing.
 
-    Uses velocity interpolation to estimate exact transition times between frames.
+    Uses derivative-based velocity from smoothed trajectory for interpolation.
+    This provides much smoother velocity estimates than frame-to-frame differences,
+    leading to more accurate threshold crossing detection.
 
     Args:
         foot_positions: Array of foot y-positions (normalized, 0-1)
         contact_states: List of ContactState for each frame
         velocity_threshold: Threshold used for contact detection
+        smoothing_window: Window size for velocity smoothing (must be odd)
 
     Returns:
         List of (start_frame, end_frame, state) tuples with fractional frame indices
@@ -167,8 +173,11 @@ def find_interpolated_phase_transitions(
     if not phases or len(foot_positions) < 2:
         return []
 
-    # Pre-compute velocities for all frame boundaries
-    velocities = np.abs(np.diff(foot_positions, prepend=foot_positions[0]))
+    # Compute velocities from derivative of smoothed trajectory
+    # This gives much smoother velocity estimates than simple frame differences
+    velocities = compute_velocity_from_derivative(
+        foot_positions, window_length=smoothing_window, polyorder=2
+    )
 
     interpolated_phases: list[tuple[float, float, ContactState]] = []
 

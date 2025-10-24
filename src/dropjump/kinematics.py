@@ -110,6 +110,7 @@ def calculate_drop_jump_metrics(
     fps: float,
     drop_height_m: float | None = None,
     velocity_threshold: float = 0.02,
+    smoothing_window: int = 5,
 ) -> DropJumpMetrics:
     """
     Calculate drop-jump metrics from contact states and positions.
@@ -120,6 +121,7 @@ def calculate_drop_jump_metrics(
         fps: Video frame rate
         drop_height_m: Known drop box/platform height in meters for calibration (optional)
         velocity_threshold: Velocity threshold used for contact detection (for interpolation)
+        smoothing_window: Window size for velocity smoothing (must be odd)
 
     Returns:
         DropJumpMetrics object with calculated values
@@ -128,8 +130,9 @@ def calculate_drop_jump_metrics(
     phases = find_contact_phases(contact_states)
 
     # Get interpolated phases for sub-frame precision timing
+    # Uses derivative-based velocity for smoother threshold crossing detection
     interpolated_phases = find_interpolated_phase_transitions(
-        foot_y_positions, contact_states, velocity_threshold
+        foot_y_positions, contact_states, velocity_threshold, smoothing_window
     )
 
     if not phases:

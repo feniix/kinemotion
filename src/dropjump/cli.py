@@ -212,6 +212,7 @@ def main(
                 video.fps,
                 drop_height_m=drop_height,
                 velocity_threshold=velocity_threshold,
+                smoothing_window=smoothing_window,
             )
 
             # Output metrics as JSON

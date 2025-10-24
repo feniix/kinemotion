@@ -72,9 +72,11 @@ docs/
    - Automatically detects drop jumps vs regular jumps
    - For drop jumps: identifies standing on box → drop → ground contact → jump
 5. **Sub-Frame Interpolation** (contact_detection.py): Estimates exact transition times
-   - Linear interpolation of velocity to find threshold crossings
+   - Computes velocity from Savitzky-Golay derivative (smoothing.py)
+   - Linear interpolation of smooth velocity to find threshold crossings
    - Returns fractional frame indices (e.g., 48.78 instead of 49)
    - Reduces timing error from ±33ms to ±10ms at 30fps (60-70% improvement)
+   - Eliminates false threshold crossings from velocity noise
 6. **Metrics Calculation** (kinematics.py):
    - Ground contact time from phase duration (using fractional frames)
    - Flight time from phase duration (using fractional frames)
@@ -189,14 +191,36 @@ self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 ### Sub-Frame Interpolation (contact_detection.py:113-227)
 
-**IMPORTANT**: The tool uses sub-frame interpolation to achieve timing precision beyond frame boundaries.
+**IMPORTANT**: The tool uses sub-frame interpolation with derivative-based velocity to achieve timing precision beyond frame boundaries.
 
-#### How It Works
+#### Derivative-Based Velocity Calculation (smoothing.py:126-172)
+
+Instead of simple frame-to-frame differences, velocity is computed as the derivative of the smoothed position trajectory using Savitzky-Golay filter:
+
+**Advantages:**
+- **Smoother velocity curves**: Eliminates noise from frame-to-frame jitter
+- **More accurate threshold crossings**: Clean transitions without false positives
+- **Better interpolation**: Smoother velocity gradient for sub-frame precision
+- **Consistent with smoothing**: Uses same polynomial fit as position smoothing
+
+**Implementation:**
+```python
+# OLD: Simple differences (noisy)
+velocities = np.abs(np.diff(foot_positions, prepend=foot_positions[0]))
+
+# NEW: Derivative from smoothed trajectory (smooth)
+velocities = savgol_filter(positions, window_length=5, polyorder=2, deriv=1, delta=1.0)
+```
+
+**Key Function:**
+- `compute_velocity_from_derivative()`: Computes first derivative using Savitzky-Golay filter
+
+#### Sub-Frame Interpolation Algorithm
 
 At 30fps, each frame represents 33.3ms. Contact events (landing, takeoff) rarely occur exactly at frame boundaries. Sub-frame interpolation estimates the exact moment between frames when velocity crosses the threshold.
 
 **Algorithm:**
-1. Calculate velocity at each frame boundary: `v[i] = |position[i+1] - position[i]|`
+1. Calculate smooth velocity using derivative: `v = derivative(smooth_position)`
 2. Find frames where velocity crosses threshold (e.g., from 0.025 to 0.015, threshold 0.020)
 3. Use linear interpolation to find exact crossing point:
    ```python
@@ -217,11 +241,20 @@ At 30fps, each frame represents 33.3ms. Contact events (landing, takeoff) rarely
 60fps with interpolation:    ±5ms
 ```
 
+**Velocity Comparison:**
+```python
+# Frame-to-frame differences: noisy, discontinuous jumps
+v_simple = [0.01, 0.03, 0.02, 0.04, 0.02, 0.01]  # Jittery
+
+# Derivative-based: smooth, continuous curve
+v_deriv = [0.015, 0.022, 0.025, 0.024, 0.018, 0.012]  # Smooth
+```
+
 **Example:**
 ```python
 # Integer frames: contact from frame 49 to 53 (5 frames = 168ms at 30fps)
-# Fractional frames: contact from 48.78 to 53.571 (4.791 frames = 161ms)
-# Difference: 7ms more accurate
+# With derivative velocity: contact from 49.0 to 53.0 (4 frames = 135ms)
+# Result: Cleaner threshold crossings, less sub-frame offset
 ```
 
 ### JSON Serialization (kinematics.py:29-100)

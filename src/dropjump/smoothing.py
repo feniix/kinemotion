@@ -121,3 +121,52 @@ def compute_velocity(
             velocity[:, dim] = savgol_filter(velocity[:, dim], smooth_window, 1)
 
     return velocity  # type: ignore[no-any-return]
+
+
+def compute_velocity_from_derivative(
+    positions: np.ndarray,
+    window_length: int = 5,
+    polyorder: int = 2,
+) -> np.ndarray:
+    """
+    Compute velocity as derivative of smoothed position trajectory.
+
+    Uses Savitzky-Golay filter to compute the derivative directly, which provides
+    a much smoother and more accurate velocity estimate than frame-to-frame differences.
+
+    This method:
+    1. Fits a polynomial to the position data in a sliding window
+    2. Analytically computes the derivative of that polynomial
+    3. Returns smooth velocity values
+
+    Args:
+        positions: 1D array of position values (e.g., foot y-positions)
+        window_length: Window size for smoothing (must be odd, >= polyorder + 2)
+        polyorder: Polynomial order for Savitzky-Golay filter (typically 2 or 3)
+
+    Returns:
+        Array of absolute velocity values (magnitude of derivative)
+    """
+    if len(positions) < window_length:
+        # Fallback to simple differences for short sequences
+        return np.abs(np.diff(positions, prepend=positions[0]))  # type: ignore[no-any-return]
+
+    # Ensure window_length is odd
+    if window_length % 2 == 0:
+        window_length += 1
+
+    # Compute derivative using Savitzky-Golay filter
+    # deriv=1: compute first derivative
+    # delta=1.0: frame spacing (velocity per frame)
+    # mode='interp': interpolate at boundaries
+    velocity = savgol_filter(
+        positions,
+        window_length,
+        polyorder,
+        deriv=1,  # First derivative
+        delta=1.0,  # Frame spacing
+        mode="interp",
+    )
+
+    # Return absolute velocity (magnitude only)
+    return np.abs(velocity)  # type: ignore[no-any-return]
