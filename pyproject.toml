@@ -1,7 +1,7 @@
 [project]
 name = "dropjump-analyze"
 version = "0.1.0"
-description = "Analyze drop-jump videos to estimate ground contact time, flight time, and jump height"
+description = "Kinemetry: Video-based kinematic analysis for athletic performance"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.scripts]
-dropjump-analyze = "dropjump.cli:main"
+kinemetry = "dropjump.cli:cli"
 
 [build-system]
 requires = ["hatchling"]

@@ -1,4 +1,4 @@
-"""Command-line interface for drop-jump analysis."""
+"""Command-line interface for kinemetry analysis."""
 
 import json
 import sys
@@ -17,7 +17,14 @@ from .smoothing import smooth_landmarks
 from .video_io import DebugOverlayRenderer, VideoProcessor
 
 
-@click.command()
+@click.group()
+@click.version_option(package_name="dropjump-analyze")
+def cli() -> None:
+    """Kinemetry: Video-based kinematic analysis for athletic performance."""
+    pass
+
+
+@cli.command(name="dropjump-analyze")
 @click.argument("video_path", type=click.Path(exists=True))
 @click.option(
     "--output",
@@ -84,7 +91,7 @@ from .video_io import DebugOverlayRenderer, VideoProcessor
     default=True,
     help="Use trajectory curvature analysis for refining transitions (default: enabled)",
 )
-def main(
+def dropjump_analyze(
     video_path: str,
     output: str | None,
     json_output: str | None,
@@ -284,4 +291,4 @@ def main(
 
 
 if __name__ == "__main__":
-    main()
+    cli()

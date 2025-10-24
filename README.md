@@ -1,6 +1,6 @@
-# Drop-Jump Video Analysis
+# Kinemetry
 
-A Python tool for analyzing side-view drop-jump videos to estimate key performance metrics: ground contact time, flight time, and jump height. Uses MediaPipe pose tracking and basic kinematics.
+A video-based kinematic analysis tool for athletic performance. Analyzes side-view drop-jump videos to estimate key performance metrics: ground contact time, flight time, and jump height. Uses MediaPipe pose tracking and advanced kinematics.
 
 ## Features
 
@@ -47,7 +47,7 @@ asdf install
 uv sync
 ```
 
-This will install all dependencies and make the `dropjump-analyze` command available.
+This will install all dependencies and make the `kinemetry` command available.
 
 ## Usage
 
@@ -56,13 +56,13 @@ This will install all dependencies and make the `dropjump-analyze` command avail
 Analyze a video and output metrics to stdout as JSON:
 
 ```bash
-dropjump-analyze video.mp4
+kinemetry dropjump-analyze video.mp4
 ```
 
 ### Save Metrics to File
 
 ```bash
-dropjump-analyze video.mp4 --json-output metrics.json
+kinemetry dropjump-analyze video.mp4 --json-output metrics.json
 ```
 
 ### Generate Debug Video
@@ -70,7 +70,7 @@ dropjump-analyze video.mp4 --json-output metrics.json
 Create an annotated video showing pose tracking and contact detection:
 
 ```bash
-dropjump-analyze video.mp4 --output debug.mp4
+kinemetry dropjump-analyze video.mp4 --output debug.mp4
 ```
 
 ### Calibrated Drop Jump Analysis
@@ -79,10 +79,10 @@ For most accurate measurements, provide the drop box height in meters:
 
 ```bash
 # 40cm drop box
-dropjump-analyze drop-jump.mp4 --drop-height 0.40
+kinemetry dropjump-analyze drop-jump.mp4 --drop-height 0.40
 
 # 60cm drop box with full outputs
-dropjump-analyze drop-jump.mp4 \
+kinemetry dropjump-analyze drop-jump.mp4 \
   --drop-height 0.60 \
   --json-output metrics.json \
   --output debug.mp4
@@ -91,7 +91,7 @@ dropjump-analyze drop-jump.mp4 \
 ### Full Example
 
 ```bash
-dropjump-analyze jump.mp4 \
+kinemetry dropjump-analyze jump.mp4 \
   --json-output results.json \
   --output debug.mp4 \
   --drop-height 0.40 \
@@ -289,6 +289,9 @@ This project enforces strict code quality standards:
 ### Development Commands
 
 ```bash
+# Run the tool
+uv run kinemetry dropjump-analyze <video_path>
+
 # Run all tests
 uv run pytest
 

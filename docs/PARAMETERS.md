@@ -1,6 +1,6 @@
 # Configuration Parameters Guide
 
-This document explains each configuration parameter available in `dropjump-analyze` and how to tune them for different scenarios.
+This document explains each configuration parameter available in `kinemetry dropjump-analyze` and how to tune them for different scenarios.
 
 ## Overview
 
@@ -47,10 +47,10 @@ Controls the window size for the Savitzky-Golay filter that smooths landmark tra
 **Example:**
 ```bash
 # Noisy video with camera shake
-dropjump-analyze video.mp4 --smoothing-window 9
+kinemetry kinemetry dropjump-analyze video.mp4 --smoothing-window 9
 
 # High-quality 60fps video
-dropjump-analyze video.mp4 --smoothing-window 3
+kinemetry kinemetry dropjump-analyze video.mp4 --smoothing-window 3
 ```
 
 **Visual effect:**
@@ -104,10 +104,10 @@ So feet moving < 648 pixels/sec vertically = on ground
 **Example:**
 ```bash
 # Missing short flight phases
-dropjump-analyze video.mp4 --velocity-threshold 0.01
+kinemetry dropjump-analyze video.mp4 --velocity-threshold 0.01
 
 # Too many false contacts detected
-dropjump-analyze video.mp4 --velocity-threshold 0.03
+kinemetry dropjump-analyze video.mp4 --velocity-threshold 0.03
 ```
 
 ---
@@ -154,10 +154,10 @@ Minimum number of consecutive frames with low velocity required to confirm groun
 **Example:**
 ```bash
 # Noisy tracking with false contacts
-dropjump-analyze video.mp4 --min-contact-frames 5
+kinemetry dropjump-analyze video.mp4 --min-contact-frames 5
 
 # Missing brief contacts in 60fps video
-dropjump-analyze video.mp4 --min-contact-frames 2
+kinemetry dropjump-analyze video.mp4 --min-contact-frames 2
 ```
 
 ---
@@ -198,10 +198,10 @@ Minimum MediaPipe visibility score (0-1) required to trust a landmark for contac
 **Example:**
 ```bash
 # Feet often occluded by equipment
-dropjump-analyze video.mp4 --visibility-threshold 0.3
+kinemetry dropjump-analyze video.mp4 --visibility-threshold 0.3
 
 # Need high confidence tracking only
-dropjump-analyze video.mp4 --visibility-threshold 0.7
+kinemetry dropjump-analyze video.mp4 --visibility-threshold 0.7
 ```
 
 ---
@@ -240,10 +240,10 @@ Minimum confidence score (0-1) for MediaPipe to detect a pose in a frame.
 **Example:**
 ```bash
 # Multiple athletes in frame
-dropjump-analyze video.mp4 --detection-confidence 0.7
+kinemetry dropjump-analyze video.mp4 --detection-confidence 0.7
 
 # Poor lighting, distant athlete
-dropjump-analyze video.mp4 --detection-confidence 0.3
+kinemetry dropjump-analyze video.mp4 --detection-confidence 0.3
 ```
 
 ---
@@ -287,10 +287,10 @@ Low detection + Low tracking = Lenient overall, stable but risky
 **Example:**
 ```bash
 # Tracking jumps to wrong person
-dropjump-analyze video.mp4 --tracking-confidence 0.7
+kinemetry dropjump-analyze video.mp4 --tracking-confidence 0.7
 
 # Tracking frequently lost during jump
-dropjump-analyze video.mp4 --tracking-confidence 0.3
+kinemetry dropjump-analyze video.mp4 --tracking-confidence 0.3
 ```
 
 ---
@@ -351,20 +351,20 @@ With calibration (--drop-height 0.40):
 **Example:**
 ```bash
 # 40cm drop box
-dropjump-analyze video.mp4 --drop-height 0.40
+kinemetry dropjump-analyze video.mp4 --drop-height 0.40
 
 # 60cm drop box with outputs
-dropjump-analyze video.mp4 \
+kinemetry dropjump-analyze video.mp4 \
   --drop-height 0.60 \
   --json-output metrics.json \
   --output debug.mp4
 
 # Compare calibrated vs uncalibrated
 # Without calibration
-dropjump-analyze video.mp4 --json-output uncalibrated.json
+kinemetry dropjump-analyze video.mp4 --json-output uncalibrated.json
 
 # With calibration
-dropjump-analyze video.mp4 --drop-height 0.40 --json-output calibrated.json
+kinemetry dropjump-analyze video.mp4 --drop-height 0.40 --json-output calibrated.json
 ```
 
 **JSON output with calibration:**
@@ -394,7 +394,7 @@ dropjump-analyze video.mp4 --drop-height 0.40 --json-output calibrated.json
 ### Scenario 1: High-Quality Studio Video
 - 60fps, stable camera, good lighting, clear side view
 ```bash
-dropjump-analyze video.mp4 \
+kinemetry dropjump-analyze video.mp4 \
   --smoothing-window 3 \
   --velocity-threshold 0.015 \
   --min-contact-frames 2 \
@@ -406,7 +406,7 @@ dropjump-analyze video.mp4 \
 ### Scenario 2: Outdoor Handheld Video
 - 30fps, camera shake, variable lighting, somewhat noisy
 ```bash
-dropjump-analyze video.mp4 \
+kinemetry dropjump-analyze video.mp4 \
   --smoothing-window 7 \
   --velocity-threshold 0.025 \
   --min-contact-frames 4 \
@@ -418,7 +418,7 @@ dropjump-analyze video.mp4 \
 ### Scenario 3: Low-Quality Smartphone Video
 - 30fps, distant view, poor lighting, compression artifacts
 ```bash
-dropjump-analyze video.mp4 \
+kinemetry dropjump-analyze video.mp4 \
   --smoothing-window 9 \
   --velocity-threshold 0.03 \
   --min-contact-frames 5 \
@@ -430,7 +430,7 @@ dropjump-analyze video.mp4 \
 ### Scenario 4: Very Reactive/Fast Jumps
 - Need to capture brief flight times and contacts
 ```bash
-dropjump-analyze video.mp4 \
+kinemetry dropjump-analyze video.mp4 \
   --smoothing-window 3 \
   --velocity-threshold 0.01 \
   --min-contact-frames 2 \
@@ -442,7 +442,7 @@ dropjump-analyze video.mp4 \
 ### Scenario 5: Multiple People in Frame
 - Need to avoid tracking wrong person
 ```bash
-dropjump-analyze video.mp4 \
+kinemetry dropjump-analyze video.mp4 \
   --smoothing-window 5 \
   --velocity-threshold 0.02 \
   --min-contact-frames 3 \
@@ -454,7 +454,7 @@ dropjump-analyze video.mp4 \
 ### Scenario 6: Drop Jump with Calibration
 - Standard drop jump analysis with 40cm box for accurate jump height
 ```bash
-dropjump-analyze video.mp4 \
+kinemetry dropjump-analyze video.mp4 \
   --drop-height 0.40 \
   --smoothing-window 5 \
   --velocity-threshold 0.02 \
@@ -467,7 +467,7 @@ dropjump-analyze video.mp4 \
 ### Scenario 7: High-Performance Drop Jump Analysis
 - Research-grade analysis with calibration and optimized parameters
 ```bash
-dropjump-analyze video.mp4 \
+kinemetry dropjump-analyze video.mp4 \
   --drop-height 0.40 \
   --output debug.mp4 \
   --json-output metrics.json \
@@ -487,7 +487,7 @@ dropjump-analyze video.mp4 \
 Always start with a debug video to visualize what's happening:
 
 ```bash
-dropjump-analyze video.mp4 --output debug.mp4
+kinemetry dropjump-analyze video.mp4 --output debug.mp4
 ```
 
 ### Step 2: Identify the Problem
@@ -507,7 +507,7 @@ Watch `debug.mp4` and look for:
 
 ```bash
 # Test hypothesis: missing contacts due to high velocity threshold
-dropjump-analyze video.mp4 --output debug2.mp4 --velocity-threshold 0.01
+kinemetry dropjump-analyze video.mp4 --output debug2.mp4 --velocity-threshold 0.01
 
 # Compare debug.mp4 vs debug2.mp4
 ```
@@ -515,7 +515,7 @@ dropjump-analyze video.mp4 --output debug2.mp4 --velocity-threshold 0.01
 ### Step 4: Verify with JSON Output
 
 ```bash
-dropjump-analyze video.mp4 \
+kinemetry dropjump-analyze video.mp4 \
   --json-output results.json \
   --smoothing-window 7 \
   --velocity-threshold 0.015
@@ -596,13 +596,13 @@ Jump to these frames in debug video to verify detection accuracy.
 ### 4. Iterate Systematically
 ```bash
 # Baseline
-dropjump-analyze video.mp4 --output v1.mp4 --json-output v1.json
+kinemetry dropjump-analyze video.mp4 --output v1.mp4 --json-output v1.json
 
 # Test smoothing
-dropjump-analyze video.mp4 --output v2.mp4 --json-output v2.json --smoothing-window 7
+kinemetry dropjump-analyze video.mp4 --output v2.mp4 --json-output v2.json --smoothing-window 7
 
 # Test velocity
-dropjump-analyze video.mp4 --output v3.mp4 --json-output v3.json --smoothing-window 7 --velocity-threshold 0.015
+kinemetry dropjump-analyze video.mp4 --output v3.mp4 --json-output v3.json --smoothing-window 7 --velocity-threshold 0.015
 
 # Compare v1, v2, v3 side-by-side
 ```
