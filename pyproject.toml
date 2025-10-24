@@ -1,0 +1,69 @@
+[project]
+name = "dropjump-analyze"
+version = "0.1.0"
+description = "Analyze drop-jump videos to estimate ground contact time, flight time, and jump height"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.1.7",
+    "opencv-python>=4.9.0",
+    "mediapipe>=0.10.9",
+    "numpy>=1.26.0",
+    "scipy>=1.11.0",
+]
+
+[project.scripts]
+dropjump-analyze = "dropjump.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dropjump"]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.4.3",
+    "black>=23.12.0",
+    "ruff>=0.1.8",
+    "mypy>=1.7.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+]
+ignore = []
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "cv2.*",
+    "mediapipe.*",
+    "scipy.*",
+]
+ignore_missing_imports = true
