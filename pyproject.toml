@@ -8,7 +8,7 @@ license = {text = "MIT"}
 authors = [
     {name = "Sebastian Otaegui", email = "feniix@gmail.com"}
 ]
-keywords = ["kinemetry", "video-analysis", "drop-jump", "athletic-performance", "pose-tracking", "mediapipe"]
+keywords = ["kinemotion", "kinemetry", "video-analysis", "drop-jump", "athletic-performance", "pose-tracking", "mediapipe"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
@@ -34,7 +34,7 @@ Repository = "https://github.com/feniix/kinemotion"
 Issues = "https://github.com/feniix/kinemotion/issues"
 
 [project.scripts]
-kinemetry = "dropjump.cli:cli"
+kinemotion = "dropjump.cli:cli"
 
 [build-system]
 requires = ["hatchling"]

@@ -1,4 +1,4 @@
-"""Command-line interface for kinemetry analysis."""
+"""Command-line interface for kinemotion analysis."""
 
 import json
 import sys
@@ -12,7 +12,7 @@ from .contact_detection import (
     detect_ground_contact,
 )
 from .kinematics import calculate_drop_jump_metrics
-from .pose_tracker import PoseTracker
+from .pose_tracker import PoseTracker, compute_center_of_mass
 from .smoothing import smooth_landmarks
 from .video_io import DebugOverlayRenderer, VideoProcessor
 
@@ -20,7 +20,7 @@ from .video_io import DebugOverlayRenderer, VideoProcessor
 @click.group()
 @click.version_option(package_name="dropjump-analyze")
 def cli() -> None:
-    """Kinemetry: Video-based kinematic analysis for athletic performance."""
+    """Kinemotion: Video-based kinematic analysis for athletic performance."""
     pass
 
 
@@ -91,6 +91,11 @@ def cli() -> None:
     default=True,
     help="Use trajectory curvature analysis for refining transitions (default: enabled)",
 )
+@click.option(
+    "--use-com/--use-feet",
+    default=False,
+    help="Track center of mass instead of feet for improved accuracy (default: feet)",
+)
 def dropjump_analyze(
     video_path: str,
     output: str | None,
@@ -103,6 +108,7 @@ def dropjump_analyze(
     tracking_confidence: float,
     drop_height: float | None,
     use_curvature: bool,
+    use_com: bool,
 ) -> None:
     """
     Analyze drop-jump video to estimate ground contact time, flight time, and jump height.
@@ -170,42 +176,55 @@ def dropjump_analyze(
                 landmarks_sequence, window_length=smoothing_window
             )
 
-            # Extract foot positions
-            click.echo("Detecting ground contact...", err=True)
-            foot_positions_list: list[float] = []
+            # Extract vertical positions (either CoM or feet)
+            if use_com:
+                click.echo("Computing center of mass positions...", err=True)
+            else:
+                click.echo("Extracting foot positions...", err=True)
+
+            position_list: list[float] = []
             visibilities_list: list[float] = []
 
             for frame_landmarks in smoothed_landmarks:
                 if frame_landmarks:
-                    foot_x, foot_y = compute_average_foot_position(frame_landmarks)
-                    foot_positions_list.append(foot_y)
+                    if use_com:
+                        # Use center of mass estimation
+                        com_x, com_y, com_vis = compute_center_of_mass(
+                            frame_landmarks, visibility_threshold=visibility_threshold
+                        )
+                        position_list.append(com_y)
+                        visibilities_list.append(com_vis)
+                    else:
+                        # Use average foot position (original method)
+                        foot_x, foot_y = compute_average_foot_position(frame_landmarks)
+                        position_list.append(foot_y)
 
-                    # Average visibility of foot landmarks
-                    foot_vis = []
-                    for key in [
-                        "left_ankle",
-                        "right_ankle",
-                        "left_heel",
-                        "right_heel",
-                    ]:
-                        if key in frame_landmarks:
-                            foot_vis.append(frame_landmarks[key][2])
-                    visibilities_list.append(
-                        float(np.mean(foot_vis)) if foot_vis else 0.0
-                    )
+                        # Average visibility of foot landmarks
+                        foot_vis = []
+                        for key in [
+                            "left_ankle",
+                            "right_ankle",
+                            "left_heel",
+                            "right_heel",
+                        ]:
+                            if key in frame_landmarks:
+                                foot_vis.append(frame_landmarks[key][2])
+                        visibilities_list.append(
+                            float(np.mean(foot_vis)) if foot_vis else 0.0
+                        )
                 else:
                     # Use previous position if available, otherwise default
-                    foot_positions_list.append(
-                        foot_positions_list[-1] if foot_positions_list else 0.5
+                    position_list.append(
+                        position_list[-1] if position_list else 0.5
                     )
                     visibilities_list.append(0.0)
 
-            foot_positions: np.ndarray = np.array(foot_positions_list)
+            vertical_positions: np.ndarray = np.array(position_list)
             visibilities: np.ndarray = np.array(visibilities_list)
 
             # Detect ground contact
             contact_states = detect_ground_contact(
-                foot_positions,
+                vertical_positions,
                 velocity_threshold=velocity_threshold,
                 min_contact_frames=min_contact_frames,
                 visibility_threshold=visibility_threshold,
@@ -214,6 +233,8 @@ def dropjump_analyze(
 
             # Calculate metrics
             click.echo("Calculating metrics...", err=True)
+            if use_com:
+                click.echo("Using center of mass tracking for improved accuracy", err=True)
             if drop_height:
                 click.echo(
                     f"Using drop height calibration: {drop_height}m ({drop_height*100:.0f}cm)",
@@ -221,7 +242,7 @@ def dropjump_analyze(
                 )
             metrics = calculate_drop_jump_metrics(
                 contact_states,
-                foot_positions,
+                vertical_positions,
                 video.fps,
                 drop_height_m=drop_height,
                 velocity_threshold=velocity_threshold,
@@ -277,6 +298,7 @@ def dropjump_analyze(
                                 contact_states[i],
                                 i,
                                 metrics,
+                                use_com=use_com,
                             )
                             renderer.write_frame(annotated)
                             bar.update(1)

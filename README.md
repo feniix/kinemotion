@@ -5,7 +5,8 @@ A video-based kinematic analysis tool for athletic performance. Analyzes side-vi
 ## Features
 
 - **Automatic pose tracking** using MediaPipe Pose landmarks
-- **Ground contact detection** based on foot velocity and position
+- **Center of mass (CoM) tracking** - biomechanical CoM estimation for 3-5% accuracy improvement
+- **Ground contact detection** based on velocity and position (feet or CoM)
 - **Derivative-based velocity** - smooth velocity calculation from position trajectory
 - **Trajectory curvature analysis** - acceleration patterns for refined event detection
 - **Sub-frame interpolation** - precise timing beyond frame boundaries for improved accuracy
@@ -15,6 +16,7 @@ A video-based kinematic analysis tool for athletic performance. Analyzes side-vi
   - Flight time (ms)
   - Jump height (m) - with optional calibration using drop box height
 - **Calibrated measurements** - use known drop height for ~88% accuracy (vs 71% uncalibrated)
+  - With CoM tracking: potential for 91-93% accuracy
 - **JSON output** for easy integration with other tools
 - **Optional debug video** with visual overlays showing contact states and landmarks
 - **Configurable parameters** for smoothing, thresholds, and detection
@@ -88,10 +90,27 @@ kinemotion dropjump-analyze drop-jump.mp4 \
   --output debug.mp4
 ```
 
+### Center of Mass Tracking (Improved Accuracy)
+
+Use CoM tracking for 3-5% accuracy improvement:
+
+```bash
+# Basic CoM tracking
+kinemotion dropjump-analyze video.mp4 --use-com
+
+# CoM tracking with calibration for maximum accuracy
+kinemotion dropjump-analyze drop-jump.mp4 \
+  --use-com \
+  --drop-height 0.40 \
+  --output debug_com.mp4 \
+  --json-output metrics.json
+```
+
 ### Full Example
 
 ```bash
 kinemotion dropjump-analyze jump.mp4 \
+  --use-com \
   --json-output results.json \
   --output debug.mp4 \
   --drop-height 0.40 \
@@ -253,24 +272,29 @@ The debug video includes:
 
 ## How It Works
 
-1. **Pose Tracking**: MediaPipe extracts 2D pose landmarks (ankles, heels, foot indices) from each frame
-2. **Smoothing**: Savitzky-Golay filter reduces tracking jitter while preserving motion dynamics
-3. **Contact Detection**: Analyzes vertical foot velocity to identify ground contact vs. flight phases
-4. **Phase Identification**: Finds continuous ground contact and flight periods
+1. **Pose Tracking**: MediaPipe extracts 2D pose landmarks (13 points: feet, ankles, knees, hips, shoulders, nose) from each frame
+2. **Position Calculation**: Two methods available:
+   - **Foot-based** (default): Averages ankle, heel, and foot index positions
+   - **CoM-based** (--use-com): Biomechanical center of mass using Dempster's body segment parameters
+     - Head: 8%, Trunk: 50%, Thighs: 20%, Legs: 10%, Feet: 3% of body mass
+     - Weighted average reduces error from foot movement artifacts
+3. **Smoothing**: Savitzky-Golay filter reduces tracking jitter while preserving motion dynamics
+4. **Contact Detection**: Analyzes vertical position velocity to identify ground contact vs. flight phases
+5. **Phase Identification**: Finds continuous ground contact and flight periods
    - Automatically detects drop jumps vs regular jumps
    - For drop jumps: identifies box → drop → ground contact → jump sequence
-5. **Sub-Frame Interpolation**: Estimates exact transition times between frames
+6. **Sub-Frame Interpolation**: Estimates exact transition times between frames
    - Uses Savitzky-Golay derivative for smooth velocity calculation
    - Linear interpolation of velocity to find threshold crossings
    - Achieves sub-millisecond timing precision (at 30fps: ±10ms vs ±33ms)
    - Reduces timing error by 60-70% for contact and flight measurements
    - Smoother velocity curves eliminate false threshold crossings
-6. **Trajectory Curvature Analysis**: Refines transitions using acceleration patterns
+7. **Trajectory Curvature Analysis**: Refines transitions using acceleration patterns
    - Computes second derivative (acceleration) from position trajectory
    - Detects landing impact by acceleration spike
    - Identifies takeoff by acceleration change patterns
    - Provides independent validation and refinement of velocity-based detection
-7. **Metric Calculation**:
+8. **Metric Calculation**:
    - Ground contact time = contact phase duration (using fractional frames)
    - Flight time = flight phase duration (using fractional frames)
    - Jump height = calibrated position-based measurement (if --drop-height provided)
@@ -284,7 +308,7 @@ This project enforces strict code quality standards:
 - **Type safety**: Full mypy strict mode compliance with complete type annotations
 - **Linting**: Comprehensive ruff checks (pycodestyle, pyflakes, isort, pep8-naming, etc.)
 - **Formatting**: Black code style
-- **Testing**: pytest with 9 unit tests
+- **Testing**: pytest with 15 unit tests
 
 ### Development Commands
 

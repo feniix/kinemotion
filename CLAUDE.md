@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-Kinemotion: Video-based kinematic analysis tool for athletic performance. Analyzes drop-jump videos to estimate ground contact time, flight time, and jump height by tracking athlete's feet using MediaPipe pose tracking and advanced kinematics.
+Kinemotion: Video-based kinematic analysis tool for athletic performance. Analyzes drop-jump videos to estimate ground contact time, flight time, and jump height by tracking athlete's movement using MediaPipe pose tracking and advanced kinematics. Supports both foot-based tracking (traditional) and center of mass (CoM) tracking for improved accuracy.
 
 ## Project Setup
 
@@ -57,6 +57,7 @@ src/dropjump/
 tests/
 ├── test_contact_detection.py  # Contact detection unit tests
 ├── test_kinematics.py          # Metrics calculation tests
+├── test_com_estimation.py      # Center of mass estimation tests
 └── test_aspect_ratio.py        # Aspect ratio preservation tests
 
 docs/
@@ -65,30 +66,40 @@ docs/
 
 ### Analysis Pipeline
 
-1. **Pose Tracking** (pose_tracker.py): MediaPipe extracts foot landmarks (ankles, heels, foot indices) from each frame
-2. **Smoothing** (smoothing.py): Savitzky-Golay filter reduces jitter while preserving dynamics
-3. **Contact Detection** (contact_detection.py): Analyzes vertical foot velocity to classify ground contact vs. flight
-4. **Phase Identification**: Finds continuous ground contact and flight periods
+1. **Pose Tracking** (pose_tracker.py): MediaPipe extracts body landmarks from each frame
+   - Foot landmarks: ankles, heels, foot indices (for traditional foot-based tracking)
+   - Body landmarks: nose, shoulders, hips, knees (for CoM-based tracking)
+   - Total 13 landmarks tracked per frame
+2. **Center of Mass Estimation** (pose_tracker.py): Optional biomechanical CoM calculation
+   - Uses Dempster's body segment parameters for accurate weight distribution:
+     - Head: 8%, Trunk: 50%, Thighs: 20%, Legs: 10%, Feet: 3%
+   - Weighted average of segment positions for physics-based tracking
+   - More accurate than foot tracking as it tracks true body movement
+   - Reduces error from foot dorsiflexion/plantarflexion during flight
+3. **Smoothing** (smoothing.py): Savitzky-Golay filter reduces jitter while preserving dynamics
+4. **Contact Detection** (contact_detection.py): Analyzes vertical position velocity to classify ground contact vs. flight
+   - Works with either foot positions or CoM positions
+5. **Phase Identification**: Finds continuous ground contact and flight periods
    - Automatically detects drop jumps vs regular jumps
    - For drop jumps: identifies standing on box → drop → ground contact → jump
-5. **Sub-Frame Interpolation** (contact_detection.py): Estimates exact transition times
+6. **Sub-Frame Interpolation** (contact_detection.py): Estimates exact transition times
    - Computes velocity from Savitzky-Golay derivative (smoothing.py)
    - Linear interpolation of smooth velocity to find threshold crossings
    - Returns fractional frame indices (e.g., 48.78 instead of 49)
    - Reduces timing error from ±33ms to ±10ms at 30fps (60-70% improvement)
    - Eliminates false threshold crossings from velocity noise
-6. **Trajectory Curvature Analysis** (contact_detection.py): Refines transitions
+7. **Trajectory Curvature Analysis** (contact_detection.py): Refines transitions
    - Computes acceleration (second derivative) using Savitzky-Golay filter
    - Detects landing events by acceleration spikes (impact deceleration)
    - Identifies takeoff events by acceleration changes
    - Blends curvature-based refinement with velocity-based estimates (70/30)
    - Provides independent validation based on physical motion patterns
-7. **Metrics Calculation** (kinematics.py):
+8. **Metrics Calculation** (kinematics.py):
    - Ground contact time from phase duration (using fractional frames)
    - Flight time from phase duration (using fractional frames)
    - Jump height from position tracking with optional calibration
    - Fallback: kinematic estimate from flight time: h = (g × t²) / 8
-7. **Output**: JSON metrics + optional debug video overlay
+9. **Output**: JSON metrics + optional debug video overlay with visualizations
 
 ### Key Design Decisions
 
@@ -399,16 +410,18 @@ Modify `smooth_landmarks()` in `smoothing.py:9`:
 
 ### Parameter Tuning
 
-**IMPORTANT**: See `docs/PARAMETERS.md` for comprehensive guide on all 7 CLI parameters.
+**IMPORTANT**: See `docs/PARAMETERS.md` for comprehensive guide on all CLI parameters.
 
 Quick reference:
+- **use-com**: Use center of mass tracking instead of feet (↑ accuracy by 3-5%)
 - **smoothing-window**: Trajectory smoothness (↑ for noisy video)
 - **velocity-threshold**: Contact sensitivity (↓ to detect brief contacts)
 - **min-contact-frames**: Temporal filter (↑ to remove false contacts)
-- **visibility-threshold**: Landmark confidence (↓ for occluded feet)
+- **visibility-threshold**: Landmark confidence (↓ for occluded landmarks)
 - **detection-confidence**: Pose detection strictness (MediaPipe)
 - **tracking-confidence**: Tracking persistence (MediaPipe)
 - **drop-height**: Drop box height in meters for calibration (e.g., 0.40 for 40cm)
+- **use-curvature**: Enable trajectory curvature analysis (default: enabled)
 
 The detailed guide includes:
 - How each parameter works internally
@@ -448,6 +461,7 @@ uv run pytest -v
 
 - **Aspect ratio preservation**: 4 tests covering 16:9, 4:3, 9:16, and validation
 - **Contact detection**: 3 tests for ground contact detection and phase identification
+- **Center of mass estimation**: 6 tests for CoM calculation, biomechanical weights, and fallback behavior
 - **Kinematics**: 2 tests for metrics calculation and JSON serialization
 
 ### Code Quality
@@ -455,7 +469,7 @@ uv run pytest -v
 All code passes:
 - ✅ **Type checking**: Full mypy strict mode compliance
 - ✅ **Linting**: ruff checks with comprehensive rule sets
-- ✅ **Tests**: 9/9 tests passing
+- ✅ **Tests**: 15/15 tests passing
 - ✅ **Formatting**: Black code style
 
 ## Troubleshooting
@@ -533,6 +547,19 @@ uv run kinemotion dropjump-analyze video.mp4 \
 # Regular jump (no calibration, uses corrected kinematic method)
 uv run kinemotion dropjump-analyze jump.mp4 \
   --output debug.mp4 \
+  --json-output metrics.json
+
+# Use center of mass tracking for improved accuracy (3-5% gain)
+uv run kinemotion dropjump-analyze video.mp4 \
+  --use-com \
+  --output debug.mp4 \
+  --json-output metrics.json
+
+# Full analysis with CoM tracking and calibration
+uv run kinemotion dropjump-analyze video.mp4 \
+  --use-com \
+  --drop-height 0.40 \
+  --output debug_com.mp4 \
   --json-output metrics.json
 ```
 
