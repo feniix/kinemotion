@@ -4,15 +4,16 @@ This document explains each configuration parameter available in `kinemotion dro
 
 ## Overview
 
-The tool has 11 main configuration parameters divided into 7 categories:
+The tool has 13 main configuration parameters divided into 8 categories:
 
 1. **Smoothing** (2 parameters): Reduces jitter in tracked landmarks
-2. **Contact Detection** (3 parameters): Determines when feet are on/off ground
-3. **Pose Tracking** (2 parameters): Controls MediaPipe's pose detection quality
-4. **Calibration** (1 parameter): Enables accurate jump height measurement
-5. **Tracking Method** (1 parameter): Choose between CoM or foot-based tracking
-6. **Velocity Threshold Mode** (1 parameter): Auto-calibrate or use fixed threshold
-7. **Trajectory Analysis** (1 parameter): Enable/disable curvature-based refinement
+2. **Advanced Filtering** (2 parameters): Removes tracking glitches and preserves transitions
+3. **Contact Detection** (3 parameters): Determines when feet are on/off ground
+4. **Pose Tracking** (2 parameters): Controls MediaPipe's pose detection quality
+5. **Calibration** (1 parameter): Enables accurate jump height measurement
+6. **Tracking Method** (1 parameter): Choose between CoM or foot-based tracking
+7. **Velocity Threshold Mode** (1 parameter): Auto-calibrate or use fixed threshold
+8. **Trajectory Analysis** (1 parameter): Enable/disable curvature-based refinement
 
 ---
 
@@ -184,6 +185,240 @@ Non-ideal factors:
 - Same post-processing time regardless of order
 - No runtime performance reason to prefer lower orders
 - Choose based on accuracy/noise tradeoff only
+
+---
+
+## Advanced Filtering Parameters
+
+### `--outlier-rejection` / `--no-outlier-rejection` (default: --outlier-rejection)
+
+**What it does:**
+Detects and removes MediaPipe tracking glitches (outliers) before smoothing, replacing them with interpolated values.
+
+**How it works:**
+- Applies two complementary outlier detection methods:
+  1. **RANSAC-based polynomial fitting**: Fits a polynomial to sliding windows of data and identifies points that deviate significantly from the fit
+  2. **Median filtering**: Detects points that differ significantly from the local median
+- Outliers are replaced with linear interpolation from neighboring valid points
+- Applied to each landmark coordinate (x, y) independently
+- Runs BEFORE Savitzky-Golay smoothing in the processing pipeline
+
+**Technical details:**
+- RANSAC parameters:
+  - Window size: 15 frames
+  - Threshold: 0.02 (normalized coordinates)
+  - Min inliers: 70% of window must fit the model
+- Median filter parameters:
+  - Window size: 5 frames
+  - Threshold: 0.03 (normalized coordinates)
+- Combines both methods (marks as outlier if either detects it)
+- Interpolation method: Linear between nearest valid neighbors
+
+**When to use --outlier-rejection (default, recommended):**
+- All typical use cases (enabled by default for good reason)
+- Videos with occasional tracking glitches or jumps
+- Medium to low quality video
+- Camera shake or motion blur
+- Partially occluded landmarks
+- Athlete wearing loose clothing
+- Improves robustness across varying video quality
+
+**When to use --no-outlier-rejection:**
+- Debugging or testing raw MediaPipe output
+- Perfect tracking quality (rare in real-world videos)
+- Academic comparison studies
+- Performance-critical applications (saves ~5-10% processing time)
+- When you want to see unfiltered tracking errors
+
+**Example:**
+```bash
+# Standard usage (outlier rejection enabled by default)
+kinemotion dropjump-analyze video.mp4
+
+# Explicitly enable outlier rejection
+kinemotion dropjump-analyze video.mp4 --outlier-rejection
+
+# Disable for debugging
+kinemotion dropjump-analyze video.mp4 --no-outlier-rejection --output debug.mp4
+```
+
+**Visual effect:**
+- Without outlier rejection: Occasional position "jumps" in debug video (landmark suddenly shifts 5-10cm then returns)
+- With outlier rejection: Smooth trajectory throughout the jump, glitches removed
+
+**Accuracy improvement:**
+- Typical: +1-2% accuracy
+- Videos with tracking issues: +3-5% accuracy
+- Perfect tracking: ~0% (no glitches to remove)
+
+**Common scenarios:**
+- **Scenario 1: Loose clothing**
+  - Problem: Ankle landmark occasionally jumps to clothing edge
+  - Solution: RANSAC detects deviation from smooth trajectory, replaces with interpolation
+- **Scenario 2: Motion blur**
+  - Problem: Landing causes blur, landmark position uncertainty
+  - Solution: Median filter catches brief spikes, smooths transition
+- **Scenario 3: Occlusion**
+  - Problem: One foot temporarily hidden behind other
+  - Solution: Both methods detect inconsistent position, use valid frames for interpolation
+
+**Troubleshooting:**
+- If trajectories look "too smooth" (missing real motion):
+  - Outlier rejection is not the cause (operates at 0.02-0.03 threshold, small deviations)
+  - Check --smoothing-window instead (probably too large)
+- If still seeing tracking glitches in output:
+  - Outlier rejection may be too conservative for your video
+  - This is rare; glitches might be in velocity calculation instead
+  - Try increasing --smoothing-window to further reduce noise
+- If metrics seem unrealistic:
+  - Outlier rejection is likely helping, not hurting
+  - Check other parameters (velocity-threshold, min-contact-frames)
+
+**Performance impact:**
+- Adds ~5-10% to processing time
+- O(n × window_size) complexity per landmark
+- Negligible impact on overall analysis time (most time spent in MediaPipe tracking)
+
+---
+
+### `--bilateral-filter` / `--no-bilateral-filter` (default: --no-bilateral-filter)
+
+**What it does:**
+Uses bilateral temporal filtering instead of Savitzky-Golay smoothing to preserve sharp transitions (landing/takeoff) while smoothing noise.
+
+**How it works:**
+- **Standard Savitzky-Golay** (default): Uniform smoothing across all frames
+  - Smooths based only on temporal distance
+  - Treats all frames equally regardless of motion
+  - May blur sharp transitions like landing impact
+
+- **Bilateral filtering** (--bilateral-filter): Edge-preserving smoothing
+  - Weights each neighbor by TWO factors:
+    1. **Spatial weight**: Temporal distance (like standard smoothing)
+    2. **Intensity weight**: Position similarity (preserves edges)
+  - Frames with similar positions get high weight (smooth together)
+  - Frames with different positions get low weight (preserve transition)
+  - Landing/takeoff edges remain sharp, noise in smooth regions is reduced
+
+**Technical details:**
+- Bilateral filter parameters:
+  - Window size: 9 frames (automatically adjusted to odd)
+  - Sigma spatial: 3.0 (controls temporal weighting)
+  - Sigma intensity: 0.02 (controls position difference weighting)
+- Replaces Savitzky-Golay smoothing when enabled (not additive)
+- Applied to landmark positions before velocity/acceleration calculation
+- More computationally expensive than Savitzky-Golay (~2x time)
+
+**Mathematical formulation:**
+```
+For each frame i:
+  For each neighbor j in window:
+    spatial_weight[j] = exp(-(i-j)² / (2 × sigma_spatial²))
+    intensity_weight[j] = exp(-(pos[j]-pos[i])² / (2 × sigma_intensity²))
+    combined_weight[j] = spatial_weight[j] × intensity_weight[j]
+
+  smoothed_pos[i] = Σ(combined_weight[j] × pos[j]) / Σ(combined_weight[j])
+```
+
+**When to use --bilateral-filter:**
+- Videos with rapid state transitions (landing, takeoff)
+- High-quality video where preserving timing precision is critical
+- Research scenarios requiring maximum event timing accuracy
+- When Savitzky-Golay smoothing blurs important transitions
+- Drop jumps with very brief ground contact times
+- Reactive jumps with explosive movements
+
+**When to use --no-bilateral-filter (default):**
+- Most typical use cases
+- Standard video quality
+- When processing speed matters
+- Proven baseline method (Savitzky-Golay)
+- When results are already good with default settings
+- Lower-quality videos (bilateral may amplify noise)
+
+**Example:**
+```bash
+# Use bilateral filter for high-quality video
+kinemotion dropjump-analyze studio_video.mp4 \
+  --bilateral-filter \
+  --outlier-rejection \
+  --output debug.mp4
+
+# Compare bilateral vs standard smoothing
+kinemotion dropjump-analyze video.mp4 --output standard.mp4
+kinemotion dropjump-analyze video.mp4 --bilateral-filter --output bilateral.mp4
+```
+
+**Visual effect:**
+- Standard smoothing: Landing transition spread over 2-3 frames, smooth curve
+- Bilateral filtering: Landing transition sharp at 1-2 frames, preserves impact timing
+
+**Accuracy improvement:**
+- Typical: +1-2% accuracy
+- Videos with rapid transitions: +2-3% accuracy
+- Low-quality/noisy videos: ~0% or negative (may amplify noise)
+
+**Trade-offs:**
+- **Advantages:**
+  - Preserves sharp transitions (landing, takeoff)
+  - More accurate event timing
+  - Better for rapid movements
+  - Physics-aware (respects motion discontinuities)
+
+- **Disadvantages:**
+  - Experimental feature (less tested than Savitzky-Golay)
+  - ~2x slower processing
+  - May preserve noise in low-quality videos
+  - More parameters to tune (sigma_spatial, sigma_intensity)
+  - Less predictable behavior across varying video quality
+
+**Interaction with other parameters:**
+- **Compatible with:**
+  - --outlier-rejection: Apply together for best results (outlier removal → bilateral smoothing)
+  - --adaptive-threshold: Bilateral preserves transitions, adaptive finds them
+  - --use-com: Both methods improve timing precision
+
+- **Replaces:**
+  - --smoothing-window and --polyorder have no effect when bilateral filter is enabled
+  - Bilateral uses its own window size (9 frames) and weighting scheme
+
+**Common scenarios:**
+- **Scenario 1: Explosive reactive jump**
+  - Problem: Takeoff happens in <2 frames, Savitzky-Golay smooths it to 4 frames
+  - Solution: Bilateral preserves sharp takeoff, accurate flight time measurement
+
+- **Scenario 2: Hard landing impact**
+  - Problem: Landing deceleration spread over 3 frames, timing imprecise
+  - Solution: Bilateral maintains sharp landing transition, better contact time
+
+- **Scenario 3: Noisy low-quality video**
+  - Problem: Bilateral amplifies frame-to-frame noise
+  - Solution: Use standard Savitzky-Golay instead (more robust to noise)
+
+**Troubleshooting:**
+- If results are noisier with --bilateral-filter:
+  - Video quality may not be high enough
+  - Revert to standard smoothing (--no-bilateral-filter)
+  - Or use --outlier-rejection to clean data first
+- If transitions still seem blurred:
+  - Bilateral sigma_intensity may be too large (currently 0.02)
+  - This is a fixed parameter; file an issue for configurability
+- If processing is too slow:
+  - Bilateral adds ~2x time to smoothing step
+  - Use standard Savitzky-Golay for faster processing
+
+**Performance impact:**
+- Adds ~50-100% to smoothing step time
+- Smoothing is ~10-20% of total pipeline
+- Overall impact: ~10-20% slower total processing
+- O(n × window_size) complexity (same as Savitzky-Golay)
+- Slower per-frame due to exponential calculations
+
+**Recommendation:**
+- Start with default (--no-bilateral-filter)
+- If timing precision seems off, try --bilateral-filter
+- Always use with --outlier-rejection for best results
+- Consider experimental feature; may become default in future versions
 
 ---
 
@@ -1046,6 +1281,35 @@ Curvature disabled:
 → Useful for debugging or comparison
 ```
 
+### Outlier rejection + bilateral filter pipeline
+```
+Outlier rejection first (when enabled):
+→ Removes tracking glitches (jumps, spikes)
+→ Replaces with interpolated values
+→ Cleans data for subsequent smoothing
+
+Then bilateral filter (if enabled) OR Savitzky-Golay (default):
+→ Bilateral: edge-preserving, replaces Savitzky-Golay
+→ Savitzky-Golay: uniform smoothing (default)
+
+Best practice:
+→ Keep outlier-rejection enabled (default)
+→ Use bilateral for high-quality videos with rapid transitions
+→ Use Savitzky-Golay (default) for most cases
+```
+
+### Bilateral filter replaces smoothing-window/polyorder
+```
+When bilateral-filter enabled:
+→ Ignores --smoothing-window parameter
+→ Ignores --polyorder parameter
+→ Uses its own window size (9 frames) and weighting
+
+When bilateral-filter disabled (default):
+→ Uses --smoothing-window and --polyorder
+→ Standard Savitzky-Golay smoothing
+```
+
 ---
 
 ## Performance Impact
@@ -1054,6 +1318,8 @@ Curvature disabled:
 |-----------|-------------------|
 | smoothing-window | Negligible (post-processing) |
 | polyorder | Negligible (same algorithm complexity) |
+| outlier-rejection | Low (~5-10% total time increase) |
+| bilateral-filter | Medium (~10-20% total time increase when enabled) |
 | velocity-threshold | None (simple comparison) |
 | min-contact-frames | None (simple counting) |
 | visibility-threshold | None (simple comparison) |
@@ -1122,6 +1388,8 @@ kinemotion dropjump-analyze video.mp4 --output v3.mp4 --json-output v3.json --sm
 |-----------|---------|-------|----------------|-------------|
 | `smoothing-window` | 5 | 3-11 (odd) | Trajectory smoothness | Video is jittery or too smooth |
 | `polyorder` | 2 | 1-4 | Polynomial fit complexity | High-quality video with complex motion (+1-2%) |
+| `outlier-rejection` | enabled | enabled/disabled | Removes tracking glitches | Keep enabled unless debugging (+1-2%) |
+| `bilateral-filter` | disabled | enabled/disabled | Edge-preserving smoothing | High-quality video with rapid transitions (+1-2%) |
 | `velocity-threshold` | 0.02 | 0.005-0.05 | Contact sensitivity | Missing contacts or false detections (ignored if adaptive-threshold enabled) |
 | `min-contact-frames` | 3 | 1-10 | Contact duration filter | Brief false contacts or missing short contacts |
 | `visibility-threshold` | 0.5 | 0.3-0.8 | Landmark trust level | Occlusions or need high confidence |

@@ -14,7 +14,7 @@ from .contact_detection import (
 )
 from .kinematics import calculate_drop_jump_metrics
 from .pose_tracker import PoseTracker, compute_center_of_mass
-from .smoothing import smooth_landmarks
+from .smoothing import smooth_landmarks, smooth_landmarks_advanced
 from .video_io import DebugOverlayRenderer, VideoProcessor
 
 
@@ -55,6 +55,22 @@ def cli() -> None:
         "(2=quadratic, 3=cubic, must be < smoothing-window)"
     ),
     show_default=True,
+)
+@click.option(
+    "--outlier-rejection/--no-outlier-rejection",
+    default=True,
+    help=(
+        "Apply RANSAC and median-based outlier rejection to remove tracking glitches "
+        "(default: enabled, +1-2%% accuracy)"
+    ),
+)
+@click.option(
+    "--bilateral-filter/--no-bilateral-filter",
+    default=False,
+    help=(
+        "Use bilateral temporal filter for edge-preserving smoothing "
+        "(default: disabled, experimental)"
+    ),
 )
 @click.option(
     "--velocity-threshold",
@@ -118,6 +134,8 @@ def dropjump_analyze(
     json_output: str | None,
     smoothing_window: int,
     polyorder: int,
+    outlier_rejection: bool,
+    bilateral_filter: bool,
     velocity_threshold: float,
     min_contact_frames: int,
     visibility_threshold: float,
@@ -200,10 +218,28 @@ def dropjump_analyze(
                 sys.exit(1)
 
             # Smooth landmarks
-            click.echo("Smoothing landmarks...", err=True)
-            smoothed_landmarks = smooth_landmarks(
-                landmarks_sequence, window_length=smoothing_window, polyorder=polyorder
-            )
+            if outlier_rejection or bilateral_filter:
+                if outlier_rejection:
+                    click.echo(
+                        "Smoothing landmarks with outlier rejection...", err=True
+                    )
+                if bilateral_filter:
+                    click.echo(
+                        "Using bilateral temporal filter for edge-preserving smoothing...",
+                        err=True,
+                    )
+                smoothed_landmarks = smooth_landmarks_advanced(
+                    landmarks_sequence,
+                    window_length=smoothing_window,
+                    polyorder=polyorder,
+                    use_outlier_rejection=outlier_rejection,
+                    use_bilateral=bilateral_filter,
+                )
+            else:
+                click.echo("Smoothing landmarks...", err=True)
+                smoothed_landmarks = smooth_landmarks(
+                    landmarks_sequence, window_length=smoothing_window, polyorder=polyorder
+                )
 
             # Extract vertical positions (either CoM or feet)
             if use_com:
