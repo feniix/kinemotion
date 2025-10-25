@@ -8,6 +8,7 @@ import click
 import numpy as np
 
 from .contact_detection import (
+    calculate_adaptive_threshold,
     compute_average_foot_position,
     detect_ground_contact,
 )
@@ -96,6 +97,11 @@ def cli() -> None:
     default=False,
     help="Track center of mass instead of feet for improved accuracy (default: feet)",
 )
+@click.option(
+    "--adaptive-threshold/--fixed-threshold",
+    default=False,
+    help="Auto-calibrate velocity threshold from video baseline (default: fixed)",
+)
 def dropjump_analyze(
     video_path: str,
     output: str | None,
@@ -109,6 +115,7 @@ def dropjump_analyze(
     drop_height: float | None,
     use_curvature: bool,
     use_com: bool,
+    adaptive_threshold: bool,
 ) -> None:
     """
     Analyze drop-jump video to estimate ground contact time, flight time, and jump height.
@@ -221,6 +228,22 @@ def dropjump_analyze(
 
             vertical_positions: np.ndarray = np.array(position_list)
             visibilities: np.ndarray = np.array(visibilities_list)
+
+            # Calculate adaptive threshold if enabled
+            if adaptive_threshold:
+                click.echo("Calculating adaptive velocity threshold...", err=True)
+                velocity_threshold = calculate_adaptive_threshold(
+                    vertical_positions,
+                    video.fps,
+                    baseline_duration=3.0,
+                    multiplier=1.5,
+                    smoothing_window=smoothing_window,
+                )
+                click.echo(
+                    f"Adaptive threshold: {velocity_threshold:.4f} "
+                    f"(auto-calibrated from baseline)",
+                    err=True,
+                )
 
             # Detect ground contact
             contact_states = detect_ground_contact(

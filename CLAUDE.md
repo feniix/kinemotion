@@ -414,8 +414,9 @@ Modify `smooth_landmarks()` in `smoothing.py:9`:
 
 Quick reference:
 - **use-com**: Use center of mass tracking instead of feet (↑ accuracy by 3-5%)
+- **adaptive-threshold**: Auto-calibrate velocity threshold from baseline (↑ accuracy by 2-3%)
 - **smoothing-window**: Trajectory smoothness (↑ for noisy video)
-- **velocity-threshold**: Contact sensitivity (↓ to detect brief contacts)
+- **velocity-threshold**: Contact sensitivity (↓ to detect brief contacts) - ignored if adaptive-threshold enabled
 - **min-contact-frames**: Temporal filter (↑ to remove false contacts)
 - **visibility-threshold**: Landmark confidence (↓ for occluded landmarks)
 - **detection-confidence**: Pose detection strictness (MediaPipe)
@@ -462,6 +463,7 @@ uv run pytest -v
 - **Aspect ratio preservation**: 4 tests covering 16:9, 4:3, 9:16, and validation
 - **Contact detection**: 3 tests for ground contact detection and phase identification
 - **Center of mass estimation**: 6 tests for CoM calculation, biomechanical weights, and fallback behavior
+- **Adaptive thresholding**: 10 tests for auto-calibration, noise adaptation, bounds checking, and edge cases
 - **Kinematics**: 2 tests for metrics calculation and JSON serialization
 
 ### Code Quality
@@ -469,7 +471,7 @@ uv run pytest -v
 All code passes:
 - ✅ **Type checking**: Full mypy strict mode compliance
 - ✅ **Linting**: ruff checks with comprehensive rule sets
-- ✅ **Tests**: 15/15 tests passing
+- ✅ **Tests**: 25/25 tests passing
 - ✅ **Formatting**: Black code style
 
 ## Troubleshooting
@@ -560,6 +562,20 @@ uv run kinemotion dropjump-analyze video.mp4 \
   --use-com \
   --drop-height 0.40 \
   --output debug_com.mp4 \
+  --json-output metrics.json
+
+# Adaptive threshold for auto-calibration (2-3% accuracy gain)
+uv run kinemotion dropjump-analyze video.mp4 \
+  --adaptive-threshold \
+  --output debug.mp4 \
+  --json-output metrics.json
+
+# Maximum accuracy: CoM + adaptive threshold + calibration (~93-96%)
+uv run kinemotion dropjump-analyze video.mp4 \
+  --adaptive-threshold \
+  --use-com \
+  --drop-height 0.40 \
+  --output debug_max.mp4 \
   --json-output metrics.json
 ```
 

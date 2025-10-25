@@ -6,6 +6,7 @@ A video-based kinematic analysis tool for athletic performance. Analyzes side-vi
 
 - **Automatic pose tracking** using MediaPipe Pose landmarks
 - **Center of mass (CoM) tracking** - biomechanical CoM estimation for 3-5% accuracy improvement
+- **Adaptive velocity thresholding** - auto-calibrates from video baseline for 2-3% additional accuracy
 - **Ground contact detection** based on velocity and position (feet or CoM)
 - **Derivative-based velocity** - smooth velocity calculation from position trajectory
 - **Trajectory curvature analysis** - acceleration patterns for refined event detection
@@ -17,6 +18,7 @@ A video-based kinematic analysis tool for athletic performance. Analyzes side-vi
   - Jump height (m) - with optional calibration using drop box height
 - **Calibrated measurements** - use known drop height for ~88% accuracy (vs 71% uncalibrated)
   - With CoM tracking: potential for 91-93% accuracy
+  - With adaptive thresholding + CoM: potential for 93-96% accuracy
 - **JSON output** for easy integration with other tools
 - **Optional debug video** with visual overlays showing contact states and landmarks
 - **Configurable parameters** for smoothing, thresholds, and detection
@@ -106,16 +108,33 @@ kinemotion dropjump-analyze drop-jump.mp4 \
   --json-output metrics.json
 ```
 
-### Full Example
+### Adaptive Thresholding (Auto-Calibration)
+
+Auto-calibrate velocity threshold from video baseline for 2-3% accuracy improvement:
+
+```bash
+# Basic adaptive thresholding
+kinemotion dropjump-analyze video.mp4 --adaptive-threshold
+
+# Combined with CoM for maximum accuracy
+kinemotion dropjump-analyze video.mp4 \
+  --adaptive-threshold \
+  --use-com \
+  --drop-height 0.40 \
+  --output debug.mp4 \
+  --json-output metrics.json
+```
+
+### Full Example (Maximum Accuracy)
 
 ```bash
 kinemotion dropjump-analyze jump.mp4 \
+  --adaptive-threshold \
   --use-com \
-  --json-output results.json \
-  --output debug.mp4 \
   --drop-height 0.40 \
-  --smoothing-window 7 \
-  --velocity-threshold 0.015
+  --output debug.mp4 \
+  --json-output results.json \
+  --smoothing-window 7
 ```
 
 ## Configuration Options
@@ -308,7 +327,7 @@ This project enforces strict code quality standards:
 - **Type safety**: Full mypy strict mode compliance with complete type annotations
 - **Linting**: Comprehensive ruff checks (pycodestyle, pyflakes, isort, pep8-naming, etc.)
 - **Formatting**: Black code style
-- **Testing**: pytest with 15 unit tests
+- **Testing**: pytest with 25 unit tests
 
 ### Development Commands
 

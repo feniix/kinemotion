@@ -18,6 +18,75 @@ class ContactState(Enum):
     UNKNOWN = "unknown"
 
 
+def calculate_adaptive_threshold(
+    positions: np.ndarray,
+    fps: float,
+    baseline_duration: float = 3.0,
+    multiplier: float = 1.5,
+    smoothing_window: int = 5,
+) -> float:
+    """
+    Calculate adaptive velocity threshold based on baseline motion characteristics.
+
+    Analyzes the first few seconds of video (assumed to be relatively stationary,
+    e.g., athlete standing on box) to determine the noise floor, then sets threshold
+    as a multiple of this baseline noise.
+
+    This adapts to:
+    - Different camera distances (closer = more pixel movement)
+    - Different lighting conditions (affects tracking quality)
+    - Different frame rates (higher fps = smoother motion)
+    - Video compression artifacts
+
+    Args:
+        positions: Array of vertical positions (0-1 normalized)
+        fps: Video frame rate
+        baseline_duration: Duration in seconds to analyze for baseline (default: 3.0s)
+        multiplier: Factor above baseline noise to set threshold (default: 1.5x)
+        smoothing_window: Window size for velocity computation
+
+    Returns:
+        Adaptive velocity threshold value
+
+    Example:
+        At 30fps with 3s baseline:
+        - Analyzes first 90 frames
+        - Computes velocity for this "stationary" period
+        - 95th percentile velocity = 0.012 (noise level)
+        - Threshold = 0.012 × 1.5 = 0.018
+    """
+    if len(positions) < 2:
+        return 0.02  # Fallback to default
+
+    # Calculate number of frames for baseline analysis
+    baseline_frames = int(fps * baseline_duration)
+    baseline_frames = min(baseline_frames, len(positions))
+
+    if baseline_frames < smoothing_window:
+        return 0.02  # Not enough data, use default
+
+    # Extract baseline period (assumed relatively stationary)
+    baseline_positions = positions[:baseline_frames]
+
+    # Compute velocity for baseline period using derivative
+    baseline_velocities = compute_velocity_from_derivative(
+        baseline_positions, window_length=smoothing_window, polyorder=2
+    )
+
+    # Calculate noise floor as 95th percentile of baseline velocities
+    # Using 95th percentile instead of max to be robust against outliers
+    noise_floor = float(np.percentile(np.abs(baseline_velocities), 95))
+
+    # Set threshold as multiplier of noise floor
+    # Minimum threshold to avoid being too sensitive
+    adaptive_threshold = max(noise_floor * multiplier, 0.005)
+
+    # Maximum threshold to ensure we still detect contact
+    adaptive_threshold = min(adaptive_threshold, 0.05)
+
+    return adaptive_threshold
+
+
 def detect_ground_contact(
     foot_positions: np.ndarray,
     velocity_threshold: float = 0.02,
