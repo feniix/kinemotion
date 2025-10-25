@@ -38,63 +38,78 @@ Managed with `uv` and `asdf`:
 - **Format code**: `uv run black src/`
 - **Lint code**: `uv run ruff check`
 - **Auto-fix lint issues**: `uv run ruff check --fix`
-- **Type check**: `uv run mypy src/dropjump`
-- **Run all checks**: `uv run ruff check && uv run mypy src/dropjump && uv run pytest`
+- **Type check**: `uv run mypy src/kinemotion`
+- **Run all checks**: `uv run ruff check && uv run mypy src/kinemotion && uv run pytest`
 
 ## Architecture
 
 ### Module Structure
 
 ```
-src/dropjump/
-├── cli.py              # Click-based CLI entry point
-├── pose_tracker.py     # MediaPipe Pose integration
-├── smoothing.py        # Savitzky-Golay landmark smoothing
-├── contact_detection.py # Ground contact state detection
-├── kinematics.py       # Metric calculations (contact time, flight time, jump height)
-└── video_io.py         # Video processing and debug overlay rendering
+src/kinemotion/
+├── __init__.py
+├── cli.py                      # Click-based CLI entry point
+├── core/                       # Shared functionality across all jump types
+│   ├── __init__.py
+│   ├── pose.py                 # MediaPipe Pose integration + CoM
+│   ├── smoothing.py            # Savitzky-Golay landmark smoothing
+│   └── filtering.py            # Outlier rejection + bilateral filtering
+└── dropjump/                   # Drop jump specific analysis
+    ├── __init__.py
+    ├── analysis.py             # Ground contact state detection
+    ├── kinematics.py           # Drop jump metrics calculations
+    └── video_io.py             # Video processing and debug overlay rendering
 
 tests/
-├── test_contact_detection.py  # Contact detection unit tests
-├── test_kinematics.py          # Metrics calculation tests
+├── test_adaptive_threshold.py  # Adaptive threshold tests
+├── test_aspect_ratio.py        # Aspect ratio preservation tests
 ├── test_com_estimation.py      # Center of mass estimation tests
-└── test_aspect_ratio.py        # Aspect ratio preservation tests
+├── test_contact_detection.py  # Contact detection unit tests
+├── test_filtering.py           # Advanced filtering tests
+├── test_kinematics.py          # Metrics calculation tests
+└── test_polyorder.py           # Polynomial order tests
 
 docs/
-└── PARAMETERS.md       # Comprehensive guide to all CLI parameters
+└── PARAMETERS.md               # Comprehensive guide to all CLI parameters
 ```
+
+**Design Rationale:**
+- `core/` contains shared code reusable across different jump types (CMJ, squat jumps, etc.)
+- `dropjump/` contains drop jump specific logic and metrics
+- Future jump types (CMJ, squat) will be sibling modules to `dropjump/`
+- Single CLI with subcommands for different analysis types
 
 ### Analysis Pipeline
 
-1. **Pose Tracking** (pose_tracker.py): MediaPipe extracts body landmarks from each frame
+1. **Pose Tracking** (core/pose.py): MediaPipe extracts body landmarks from each frame
    - Foot landmarks: ankles, heels, foot indices (for traditional foot-based tracking)
    - Body landmarks: nose, shoulders, hips, knees (for CoM-based tracking)
    - Total 13 landmarks tracked per frame
-2. **Center of Mass Estimation** (pose_tracker.py): Optional biomechanical CoM calculation
+2. **Center of Mass Estimation** (core/pose.py): Optional biomechanical CoM calculation
    - Uses Dempster's body segment parameters for accurate weight distribution:
      - Head: 8%, Trunk: 50%, Thighs: 20%, Legs: 10%, Feet: 3%
    - Weighted average of segment positions for physics-based tracking
    - More accurate than foot tracking as it tracks true body movement
    - Reduces error from foot dorsiflexion/plantarflexion during flight
-3. **Smoothing** (smoothing.py): Savitzky-Golay filter reduces jitter while preserving dynamics
-4. **Contact Detection** (contact_detection.py): Analyzes vertical position velocity to classify ground contact vs. flight
+3. **Smoothing** (core/smoothing.py): Savitzky-Golay filter reduces jitter while preserving dynamics
+4. **Contact Detection** (dropjump/analysis.py): Analyzes vertical position velocity to classify ground contact vs. flight
    - Works with either foot positions or CoM positions
 5. **Phase Identification**: Finds continuous ground contact and flight periods
    - Automatically detects drop jumps vs regular jumps
    - For drop jumps: identifies standing on box → drop → ground contact → jump
-6. **Sub-Frame Interpolation** (contact_detection.py): Estimates exact transition times
-   - Computes velocity from Savitzky-Golay derivative (smoothing.py)
+6. **Sub-Frame Interpolation** (dropjump/analysis.py): Estimates exact transition times
+   - Computes velocity from Savitzky-Golay derivative (core/smoothing.py)
    - Linear interpolation of smooth velocity to find threshold crossings
    - Returns fractional frame indices (e.g., 48.78 instead of 49)
    - Reduces timing error from ±33ms to ±10ms at 30fps (60-70% improvement)
    - Eliminates false threshold crossings from velocity noise
-7. **Trajectory Curvature Analysis** (contact_detection.py): Refines transitions
+7. **Trajectory Curvature Analysis** (dropjump/analysis.py): Refines transitions
    - Computes acceleration (second derivative) using Savitzky-Golay filter
    - Detects landing events by acceleration spikes (impact deceleration)
    - Identifies takeoff events by acceleration changes
    - Blends curvature-based refinement with velocity-based estimates (70/30)
    - Provides independent validation based on physical motion patterns
-8. **Metrics Calculation** (kinematics.py):
+8. **Metrics Calculation** (dropjump/kinematics.py):
    - Ground contact time from phase duration (using fractional frames)
    - Flight time from phase duration (using fractional frames)
    - Jump height from position tracking with optional calibration
@@ -127,7 +142,7 @@ The codebase enforces strict code quality standards using multiple tools:
   - `disallow_incomplete_defs`: Partial type hints not allowed
   - `warn_return_any`: Warns on Any return types
   - Third-party stubs: Ignores missing imports for cv2, mediapipe, scipy
-- Run with: `uv run mypy src/dropjump`
+- Run with: `uv run mypy src/kinemotion`
 
 ### Linting with ruff
 
@@ -155,7 +170,7 @@ uv run black src/
 uv run ruff check --fix
 
 # Type check
-uv run mypy src/dropjump
+uv run mypy src/kinemotion
 
 # Run tests
 uv run pytest
@@ -163,16 +178,16 @@ uv run pytest
 
 Or run all checks at once:
 ```bash
-uv run ruff check && uv run mypy src/dropjump && uv run pytest
+uv run ruff check && uv run mypy src/kinemotion && uv run pytest
 ```
 
 ## Critical Implementation Details
 
-### Aspect Ratio Preservation & SAR Handling (video_io.py)
+### Aspect Ratio Preservation & SAR Handling (dropjump/video_io.py)
 
 **IMPORTANT**: The tool preserves the exact aspect ratio of the source video, including SAR (Sample Aspect Ratio) metadata. No dimensions are hardcoded.
 
-#### VideoProcessor (`video_io.py:15-110`)
+#### VideoProcessor (`dropjump/video_io.py:15-110`)
 
 - Reads the **first actual frame** to get true encoded dimensions (not OpenCV properties)
 - Critical for mobile videos with rotation metadata
@@ -197,7 +212,7 @@ self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 ```
 
-#### DebugOverlayRenderer (`video_io.py:130-330`)
+#### DebugOverlayRenderer (`dropjump/video_io.py:130-330`)
 
 - Creates output video with **display dimensions** (respecting SAR)
 - Resizes frames from encoded dimensions to display dimensions if needed (INTER_LANCZOS4)
@@ -364,7 +379,7 @@ Always convert to Python `int()` in `to_dict()` method:
 "contact_start_frame": self.contact_start_frame
 ```
 
-### Video Codec Handling (video_io.py:78-94)
+### Video Codec Handling (dropjump/video_io.py:78-94)
 
 - Primary codec: H.264 (avc1) - better quality, smaller file size
 - Fallback codec: MPEG-4 (mp4v) - broader compatibility
@@ -389,22 +404,22 @@ Always be careful with dimension ordering to avoid squashed/stretched videos.
 
 ### Adding New Metrics
 
-1. Update `DropJumpMetrics` class in `kinematics.py:10-19`
+1. Update `DropJumpMetrics` class in `dropjump/kinematics.py:10-19`
 2. Add calculation logic in `calculate_drop_jump_metrics()` function
 3. Update `to_dict()` method for JSON serialization (remember to convert NumPy types to Python types)
-4. Optionally add visualization in `DebugOverlayRenderer.render_frame()` in `video_io.py:96`
+4. Optionally add visualization in `DebugOverlayRenderer.render_frame()` in `dropjump/video_io.py:96`
 5. Add tests in `tests/test_kinematics.py`
 
 ### Modifying Contact Detection Logic
 
-Edit `detect_ground_contact()` in `contact_detection.py:14`. Key parameters:
+Edit `detect_ground_contact()` in `dropjump/analysis.py:14`. Key parameters:
 - `velocity_threshold`: Tune for different surface/athlete combinations (default: 0.02)
 - `min_contact_frames`: Adjust for frame rate and contact duration expectations (default: 3)
 - `visibility_threshold`: Minimum landmark visibility score (default: 0.5)
 
 ### Adjusting Smoothing
 
-Modify `smooth_landmarks()` in `smoothing.py:9`:
+Modify `smooth_landmarks()` in `core/smoothing.py:9`:
 - `window_length`: Controls smoothing strength (must be odd, default: 5)
 - `polyorder`: Polynomial order for Savitzky-Golay filter (default: 2)
 
@@ -510,7 +525,7 @@ If mypy reports errors:
 2. For numpy types, use explicit casts: `int()`, `float()` when converting to Python types
 3. For third-party libraries without stubs (cv2, mediapipe, scipy), use `# type: ignore` comments sparingly
 4. Check `pyproject.toml` under `[tool.mypy]` for configuration
-5. Run `uv run mypy src/dropjump` to verify fixes
+5. Run `uv run mypy src/kinemotion` to verify fixes
 
 ## CLI Usage Examples
 

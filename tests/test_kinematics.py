@@ -2,8 +2,8 @@
 
 import numpy as np
 
-from dropjump.contact_detection import ContactState
-from dropjump.kinematics import calculate_drop_jump_metrics
+from kinemotion.dropjump.analysis import ContactState
+from kinemotion.dropjump.kinematics import calculate_drop_jump_metrics
 
 
 def test_calculate_metrics_basic():

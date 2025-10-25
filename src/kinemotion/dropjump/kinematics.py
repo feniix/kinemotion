@@ -3,7 +3,7 @@
 
 import numpy as np
 
-from .contact_detection import (
+from .analysis import (
     ContactState,
     find_contact_phases,
     find_interpolated_phase_transitions_with_curvature,

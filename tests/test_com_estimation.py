@@ -2,7 +2,7 @@
 
 import pytest
 
-from dropjump.pose_tracker import compute_center_of_mass
+from kinemotion.core.pose import compute_center_of_mass
 
 
 def test_com_full_body_visible() -> None:

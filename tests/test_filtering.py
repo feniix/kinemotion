@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from dropjump.filtering import (
+from kinemotion.core.filtering import (
     adaptive_smooth_window,
     bilateral_temporal_filter,
     detect_outliers_median,
@@ -10,7 +10,7 @@ from dropjump.filtering import (
     reject_outliers,
     remove_outliers,
 )
-from dropjump.smoothing import smooth_landmarks_advanced
+from kinemotion.core.smoothing import smooth_landmarks_advanced
 
 
 def test_detect_outliers_ransac_finds_glitches() -> None:

@@ -7,15 +7,16 @@ from pathlib import Path
 import click
 import numpy as np
 
-from .contact_detection import (
+from .core.pose import PoseTracker, compute_center_of_mass
+from .core.smoothing import smooth_landmarks, smooth_landmarks_advanced
+from .core.video_io import VideoProcessor
+from .dropjump.analysis import (
     calculate_adaptive_threshold,
     compute_average_foot_position,
     detect_ground_contact,
 )
-from .kinematics import calculate_drop_jump_metrics
-from .pose_tracker import PoseTracker, compute_center_of_mass
-from .smoothing import smooth_landmarks, smooth_landmarks_advanced
-from .video_io import DebugOverlayRenderer, VideoProcessor
+from .dropjump.debug_overlay import DebugOverlayRenderer
+from .dropjump.kinematics import calculate_drop_jump_metrics
 
 
 @click.group()

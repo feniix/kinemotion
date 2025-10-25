@@ -4,7 +4,7 @@ from enum import Enum
 
 import numpy as np
 
-from .smoothing import (
+from ..core.smoothing import (
     compute_acceleration_from_derivative,
     compute_velocity_from_derivative,
 )

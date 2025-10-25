@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from dropjump.contact_detection import (
+from kinemotion.dropjump.analysis import (
     ContactState,
     detect_ground_contact,
     find_contact_phases,

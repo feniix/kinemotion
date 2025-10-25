@@ -6,7 +6,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from dropjump.video_io import DebugOverlayRenderer, VideoProcessor
+from kinemotion.core.video_io import VideoProcessor
+from kinemotion.dropjump.debug_overlay import DebugOverlayRenderer
 
 
 def create_test_video(width: int, height: int, fps: float = 30.0, num_frames: int = 10) -> str:

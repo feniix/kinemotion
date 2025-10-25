@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from dropjump.smoothing import (
+from kinemotion.core.smoothing import (
     compute_acceleration_from_derivative,
     compute_velocity_from_derivative,
     smooth_landmarks,

@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from dropjump.contact_detection import calculate_adaptive_threshold
+from kinemotion.dropjump.analysis import calculate_adaptive_threshold
 
 
 def test_adaptive_threshold_basic() -> None:
