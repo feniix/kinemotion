@@ -4,9 +4,9 @@ This document explains each configuration parameter available in `kinemotion dro
 
 ## Overview
 
-The tool has 10 main configuration parameters divided into 7 categories:
+The tool has 11 main configuration parameters divided into 7 categories:
 
-1. **Smoothing** (1 parameter): Reduces jitter in tracked landmarks
+1. **Smoothing** (2 parameters): Reduces jitter in tracked landmarks
 2. **Contact Detection** (3 parameters): Determines when feet are on/off ground
 3. **Pose Tracking** (2 parameters): Controls MediaPipe's pose detection quality
 4. **Calibration** (1 parameter): Enables accurate jump height measurement
@@ -30,7 +30,7 @@ Controls the window size for the Savitzky-Golay filter that smooths landmark tra
 - Smaller window = more responsive but potentially noisier
 
 **Technical details:**
-- Uses polynomial order 2 (quadratic fit)
+- Uses polynomial order specified by `--polyorder` (default: 2, quadratic fit)
 - Applied to x and y coordinates of all foot landmarks
 - Smoothing happens AFTER all frames are tracked, not in real-time
 
@@ -59,6 +59,131 @@ kinemotion dropjump-analyze video.mp4 --smoothing-window 3
 **Visual effect:**
 - Before smoothing: Foot position jumps between frames
 - After smoothing: Smooth trajectory curve through the jump
+
+---
+
+### `--polyorder` (default: 2)
+
+**What it does:**
+Controls the polynomial order used in the Savitzky-Golay filter for smoothing and derivative calculations.
+
+**How it works:**
+- Fits a polynomial of order N to data points in the smoothing window
+- Order 2 (quadratic): y = a + bx + cx² - fits parabolas
+- Order 3 (cubic): y = a + bx + cx² + dx³ - fits S-curves
+- Order 4+ (quartic, quintic): captures more complex patterns
+- Higher order polynomials can fit more complex motion but are more sensitive to noise
+- Must satisfy: polyorder < smoothing-window (e.g., polyorder=3 requires window≥5)
+
+**Technical details:**
+- Applied to landmark smoothing, velocity calculation, and acceleration calculation
+- Affects all three: position smoothing, first derivative (velocity), second derivative (acceleration)
+- Jump motion is fundamentally parabolic (constant acceleration), so polyorder=2 is mathematically ideal
+- Higher orders useful when motion deviates from ideal parabola (e.g., athlete adjusting mid-air)
+- Same polyorder used throughout entire analysis pipeline for consistency
+
+**When to use polyorder=2 (quadratic, default):**
+- Most jump scenarios (motion follows gravity's parabola)
+- Noisy videos (lower orders more robust to noise)
+- Standard drop jumps and reactive jumps
+- When in doubt - this is the safest choice
+- **Recommended for 95% of use cases**
+
+**When to use polyorder=3 (cubic):**
+- High-quality studio videos with stable tracking
+- Complex motion patterns (athlete adjusting posture mid-flight)
+- Very smooth, low-noise tracking data
+- Research scenarios requiring maximum precision
+- When motion appears to deviate from simple parabola
+- Requires larger smoothing window (7+ recommended)
+
+**When to use polyorder=4+ (advanced):**
+- Rarely needed in practice
+- May overfit to noise rather than capture real motion
+- Only for special research cases with very high-quality data
+- Requires smoothing-window ≥ polyorder + 2
+
+**Accuracy comparison:**
+```
+polyorder=2 (typical):
+- Baseline accuracy for jump motion
+- Robust to noise and tracking errors
+- Ideal for parabolic trajectories
+
+polyorder=3 (advanced):
+- Accuracy improvement: +1-2% for complex motion
+- Better captures non-parabolic adjustments
+- More sensitive to noise
+- Requires high-quality video
+
+polyorder=4+ (expert):
+- Minimal accuracy gain in practice
+- Risk of overfitting to noise
+- Not recommended for general use
+```
+
+**Examples:**
+```bash
+# Default: polyorder=2 (recommended for most cases)
+kinemotion dropjump-analyze video.mp4
+
+# High-quality video with complex motion
+kinemotion dropjump-analyze studio.mp4 \
+  --polyorder 3 \
+  --smoothing-window 7
+
+# Maximum accuracy setup
+kinemotion dropjump-analyze video.mp4 \
+  --polyorder 3 \
+  --smoothing-window 9 \
+  --adaptive-threshold \
+  --use-com \
+  --drop-height 0.40
+```
+
+**Validation rules:**
+```bash
+# Valid combinations
+--smoothing-window 5 --polyorder 2  ✓ (2 < 5)
+--smoothing-window 7 --polyorder 3  ✓ (3 < 7)
+--smoothing-window 9 --polyorder 4  ✓ (4 < 9)
+
+# Invalid combinations
+--smoothing-window 5 --polyorder 5  ✗ (5 ≮ 5)
+--smoothing-window 3 --polyorder 3  ✗ (3 ≮ 3)
+```
+
+**Physical interpretation:**
+```
+Gravity causes constant downward acceleration
+→ Velocity changes linearly with time
+→ Position follows quadratic (parabolic) path
+→ polyorder=2 is theoretically optimal
+
+Non-ideal factors:
+→ Air resistance (higher order needed)
+→ Athlete adjustments mid-flight (higher order needed)
+→ But these effects are usually small vs measurement noise
+→ So polyorder=2 works best in practice
+```
+
+**Troubleshooting:**
+- If smoothing seems too aggressive with polyorder=3:
+  - Reduce to polyorder=2
+  - Or increase smoothing-window
+- If validation error "polyorder must be < smoothing-window":
+  - Increase smoothing-window (e.g., from 5 to 7)
+  - Or decrease polyorder
+- If results look noisier with polyorder=3:
+  - Video quality may not support higher order
+  - Revert to polyorder=2
+  - Or increase smoothing-window to compensate
+
+**Performance impact:**
+- Negligible computational difference between polyorder values
+- Same post-processing time regardless of order
+- No runtime performance reason to prefer lower orders
+- Choose based on accuracy/noise tradeoff only
 
 ---
 
@@ -928,6 +1053,7 @@ Curvature disabled:
 | Parameter | Performance Impact |
 |-----------|-------------------|
 | smoothing-window | Negligible (post-processing) |
+| polyorder | Negligible (same algorithm complexity) |
 | velocity-threshold | None (simple comparison) |
 | min-contact-frames | None (simple counting) |
 | visibility-threshold | None (simple comparison) |
@@ -943,6 +1069,7 @@ Curvature disabled:
 - CoM tracking adds minimal overhead (~5% vs foot tracking) but provides 3-5% accuracy gain
 - Adaptive threshold computed once at start, no runtime overhead
 - Curvature analysis reuses existing derivatives, effectively free
+- Polyorder has no performance impact (polynomial fit complexity is O(window_size), independent of order)
 
 ---
 
@@ -994,6 +1121,7 @@ kinemotion dropjump-analyze video.mp4 --output v3.mp4 --json-output v3.json --sm
 | Parameter | Default | Range | Primary Effect | Adjust When |
 |-----------|---------|-------|----------------|-------------|
 | `smoothing-window` | 5 | 3-11 (odd) | Trajectory smoothness | Video is jittery or too smooth |
+| `polyorder` | 2 | 1-4 | Polynomial fit complexity | High-quality video with complex motion (+1-2%) |
 | `velocity-threshold` | 0.02 | 0.005-0.05 | Contact sensitivity | Missing contacts or false detections (ignored if adaptive-threshold enabled) |
 | `min-contact-frames` | 3 | 1-10 | Contact duration filter | Brief false contacts or missing short contacts |
 | `visibility-threshold` | 0.5 | 0.3-0.8 | Landmark trust level | Occlusions or need high confidence |

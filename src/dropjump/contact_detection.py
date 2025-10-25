@@ -24,6 +24,7 @@ def calculate_adaptive_threshold(
     baseline_duration: float = 3.0,
     multiplier: float = 1.5,
     smoothing_window: int = 5,
+    polyorder: int = 2,
 ) -> float:
     """
     Calculate adaptive velocity threshold based on baseline motion characteristics.
@@ -44,6 +45,7 @@ def calculate_adaptive_threshold(
         baseline_duration: Duration in seconds to analyze for baseline (default: 3.0s)
         multiplier: Factor above baseline noise to set threshold (default: 1.5x)
         smoothing_window: Window size for velocity computation
+        polyorder: Polynomial order for Savitzky-Golay filter (default: 2)
 
     Returns:
         Adaptive velocity threshold value
@@ -70,7 +72,7 @@ def calculate_adaptive_threshold(
 
     # Compute velocity for baseline period using derivative
     baseline_velocities = compute_velocity_from_derivative(
-        baseline_positions, window_length=smoothing_window, polyorder=2
+        baseline_positions, window_length=smoothing_window, polyorder=polyorder
     )
 
     # Calculate noise floor as 95th percentile of baseline velocities
@@ -314,6 +316,7 @@ def refine_transition_with_curvature(
     transition_type: str,
     search_window: int = 3,
     smoothing_window: int = 5,
+    polyorder: int = 2,
 ) -> float:
     """
     Refine phase transition timing using trajectory curvature analysis.
@@ -328,6 +331,7 @@ def refine_transition_with_curvature(
         transition_type: Type of transition ("landing" or "takeoff")
         search_window: Number of frames to search around estimate
         smoothing_window: Window size for acceleration computation
+        polyorder: Polynomial order for Savitzky-Golay filter (default: 2)
 
     Returns:
         Refined fractional frame index
@@ -337,7 +341,7 @@ def refine_transition_with_curvature(
 
     # Compute acceleration (second derivative)
     acceleration = compute_acceleration_from_derivative(
-        foot_positions, window_length=smoothing_window, polyorder=2
+        foot_positions, window_length=smoothing_window, polyorder=polyorder
     )
 
     # Define search range around estimated transition
@@ -388,6 +392,7 @@ def find_interpolated_phase_transitions_with_curvature(
     contact_states: list[ContactState],
     velocity_threshold: float,
     smoothing_window: int = 5,
+    polyorder: int = 2,
     use_curvature: bool = True,
 ) -> list[tuple[float, float, ContactState]]:
     """
@@ -403,6 +408,7 @@ def find_interpolated_phase_transitions_with_curvature(
         contact_states: List of ContactState for each frame
         velocity_threshold: Threshold used for contact detection
         smoothing_window: Window size for velocity/acceleration smoothing
+        polyorder: Polynomial order for Savitzky-Golay filter (default: 2)
         use_curvature: Whether to apply curvature-based refinement
 
     Returns:
@@ -431,6 +437,7 @@ def find_interpolated_phase_transitions_with_curvature(
                 "landing",
                 search_window=3,
                 smoothing_window=smoothing_window,
+                polyorder=polyorder,
             )
             # Refine takeoff (end of ground contact)
             refined_end = refine_transition_with_curvature(
@@ -439,6 +446,7 @@ def find_interpolated_phase_transitions_with_curvature(
                 "takeoff",
                 search_window=3,
                 smoothing_window=smoothing_window,
+                polyorder=polyorder,
             )
 
         elif state == ContactState.IN_AIR:
@@ -449,6 +457,7 @@ def find_interpolated_phase_transitions_with_curvature(
                 "takeoff",
                 search_window=3,
                 smoothing_window=smoothing_window,
+                polyorder=polyorder,
             )
             refined_end = refine_transition_with_curvature(
                 foot_positions,
@@ -456,6 +465,7 @@ def find_interpolated_phase_transitions_with_curvature(
                 "landing",
                 search_window=3,
                 smoothing_window=smoothing_window,
+                polyorder=polyorder,
             )
 
         refined_phases.append((refined_start, refined_end, state))

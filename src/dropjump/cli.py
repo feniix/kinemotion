@@ -47,6 +47,16 @@ def cli() -> None:
     show_default=True,
 )
 @click.option(
+    "--polyorder",
+    type=int,
+    default=2,
+    help=(
+        "Polynomial order for Savitzky-Golay smoothing "
+        "(2=quadratic, 3=cubic, must be < smoothing-window)"
+    ),
+    show_default=True,
+)
+@click.option(
     "--velocity-threshold",
     type=float,
     default=0.02,
@@ -107,6 +117,7 @@ def dropjump_analyze(
     output: str | None,
     json_output: str | None,
     smoothing_window: int,
+    polyorder: int,
     velocity_threshold: float,
     min_contact_frames: int,
     visibility_threshold: float,
@@ -134,6 +145,17 @@ def dropjump_analyze(
         click.echo(
             f"Adjusting smoothing-window to {smoothing_window} (must be odd)", err=True
         )
+
+    if polyorder < 1:
+        click.echo("Error: polyorder must be >= 1", err=True)
+        sys.exit(1)
+
+    if polyorder >= smoothing_window:
+        click.echo(
+            f"Error: polyorder ({polyorder}) must be < smoothing-window ({smoothing_window})",
+            err=True,
+        )
+        sys.exit(1)
 
     try:
         # Initialize video processor
@@ -180,7 +202,7 @@ def dropjump_analyze(
             # Smooth landmarks
             click.echo("Smoothing landmarks...", err=True)
             smoothed_landmarks = smooth_landmarks(
-                landmarks_sequence, window_length=smoothing_window
+                landmarks_sequence, window_length=smoothing_window, polyorder=polyorder
             )
 
             # Extract vertical positions (either CoM or feet)
@@ -238,6 +260,7 @@ def dropjump_analyze(
                     baseline_duration=3.0,
                     multiplier=1.5,
                     smoothing_window=smoothing_window,
+                    polyorder=polyorder,
                 )
                 click.echo(
                     f"Adaptive threshold: {velocity_threshold:.4f} "
@@ -270,6 +293,7 @@ def dropjump_analyze(
                 drop_height_m=drop_height,
                 velocity_threshold=velocity_threshold,
                 smoothing_window=smoothing_window,
+                polyorder=polyorder,
                 use_curvature=use_curvature,
             )
 

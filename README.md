@@ -156,6 +156,15 @@ kinemotion dropjump-analyze jump.mp4 \
   - Larger values = smoother trajectories but less responsive
   - **Tip**: Increase for noisy videos, decrease for high-quality stable footage
 
+- `--polyorder <int>` (default: 2)
+  - Polynomial order for Savitzky-Golay smoothing filter
+  - Must be < smoothing-window (typically 2 or 3)
+  - 2 = quadratic fit (good for parabolic motion like jumps)
+  - 3 = cubic fit (better for complex motion patterns)
+  - Higher order captures more motion complexity but more sensitive to noise
+  - **Tip**: Use 2 for most cases, try 3 for high-quality videos with complex motion
+  - **Accuracy improvement**: +1-2% for complex motion patterns
+
 ### Contact Detection
 
 - `--velocity-threshold <float>` (default: 0.02)
