@@ -1,4 +1,4 @@
-# Kinemetry
+# Kinemotion
 
 A video-based kinematic analysis tool for athletic performance. Analyzes side-view drop-jump videos to estimate key performance metrics: ground contact time, flight time, and jump height. Uses MediaPipe pose tracking and advanced kinematics.
 
@@ -47,7 +47,7 @@ asdf install
 uv sync
 ```
 
-This will install all dependencies and make the `kinemetry` command available.
+This will install all dependencies and make the `kinemotion` command available.
 
 ## Usage
 
@@ -56,13 +56,13 @@ This will install all dependencies and make the `kinemetry` command available.
 Analyze a video and output metrics to stdout as JSON:
 
 ```bash
-kinemetry dropjump-analyze video.mp4
+kinemotion dropjump-analyze video.mp4
 ```
 
 ### Save Metrics to File
 
 ```bash
-kinemetry dropjump-analyze video.mp4 --json-output metrics.json
+kinemotion dropjump-analyze video.mp4 --json-output metrics.json
 ```
 
 ### Generate Debug Video
@@ -70,7 +70,7 @@ kinemetry dropjump-analyze video.mp4 --json-output metrics.json
 Create an annotated video showing pose tracking and contact detection:
 
 ```bash
-kinemetry dropjump-analyze video.mp4 --output debug.mp4
+kinemotion dropjump-analyze video.mp4 --output debug.mp4
 ```
 
 ### Calibrated Drop Jump Analysis
@@ -79,10 +79,10 @@ For most accurate measurements, provide the drop box height in meters:
 
 ```bash
 # 40cm drop box
-kinemetry dropjump-analyze drop-jump.mp4 --drop-height 0.40
+kinemotion dropjump-analyze drop-jump.mp4 --drop-height 0.40
 
 # 60cm drop box with full outputs
-kinemetry dropjump-analyze drop-jump.mp4 \
+kinemotion dropjump-analyze drop-jump.mp4 \
   --drop-height 0.60 \
   --json-output metrics.json \
   --output debug.mp4
@@ -91,7 +91,7 @@ kinemetry dropjump-analyze drop-jump.mp4 \
 ### Full Example
 
 ```bash
-kinemetry dropjump-analyze jump.mp4 \
+kinemotion dropjump-analyze jump.mp4 \
   --json-output results.json \
   --output debug.mp4 \
   --drop-height 0.40 \
@@ -290,7 +290,7 @@ This project enforces strict code quality standards:
 
 ```bash
 # Run the tool
-uv run kinemetry dropjump-analyze <video_path>
+uv run kinemotion dropjump-analyze <video_path>
 
 # Run all tests
 uv run pytest

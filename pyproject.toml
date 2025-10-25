@@ -1,9 +1,25 @@
 [project]
-name = "dropjump-analyze"
+name = "kinemotion"
 version = "0.1.0"
-description = "Kinemetry: Video-based kinematic analysis for athletic performance"
+description = "Video-based kinematic analysis for athletic performance"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10,<3.13"
+license = {text = "MIT"}
+authors = [
+    {name = "Sebastian Otaegui", email = "feniix@gmail.com"}
+]
+keywords = ["kinemetry", "video-analysis", "drop-jump", "athletic-performance", "pose-tracking", "mediapipe"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Multimedia :: Video",
+]
 dependencies = [
     "click>=8.1.7",
     "opencv-python>=4.9.0",
@@ -11,6 +27,11 @@ dependencies = [
     "numpy>=1.26.0",
     "scipy>=1.11.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/feniix/kinemotion"
+Repository = "https://github.com/feniix/kinemotion"
+Issues = "https://github.com/feniix/kinemotion/issues"
 
 [project.scripts]
 kinemetry = "dropjump.cli:cli"
@@ -30,9 +51,15 @@ dev-dependencies = [
     "mypy>=1.7.0",
 ]
 
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
+
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = [
@@ -48,7 +75,7 @@ select = [
 ignore = []
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true

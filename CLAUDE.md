@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-Kinemetry: Video-based kinematic analysis tool for athletic performance. Analyzes drop-jump videos to estimate ground contact time, flight time, and jump height by tracking athlete's feet using MediaPipe pose tracking and advanced kinematics.
+Kinemotion: Video-based kinematic analysis tool for athletic performance. Analyzes drop-jump videos to estimate ground contact time, flight time, and jump height by tracking athlete's feet using MediaPipe pose tracking and advanced kinematics.
 
 ## Project Setup
 
@@ -14,7 +14,7 @@ Managed with `uv` and `asdf`:
 - Python version: 3.12.7 (specified in `.tool-versions`)
   - **Important**: MediaPipe requires Python 3.12 or earlier (no 3.13 support yet)
 - Install dependencies: `uv sync`
-- Run CLI: `kinemetry dropjump-analyze <video.mp4>`
+- Run CLI: `kinemotion dropjump-analyze <video.mp4>`
 
 **Production dependencies:**
 - click: CLI framework
@@ -31,7 +31,7 @@ Managed with `uv` and `asdf`:
 
 ### Development Commands
 
-- **Run tool**: `uv run kinemetry dropjump-analyze <video_path>`
+- **Run tool**: `uv run kinemotion dropjump-analyze <video_path>`
 - **Install/sync deps**: `uv sync`
 - **Run tests**: `uv run pytest`
 - **Run specific test**: `uv run pytest tests/test_aspect_ratio.py -v`
@@ -500,38 +500,38 @@ If mypy reports errors:
 
 ```bash
 # Show main command help
-uv run kinemetry --help
+uv run kinemotion --help
 
 # Show subcommand help
-uv run kinemetry dropjump-analyze --help
+uv run kinemotion dropjump-analyze --help
 
 # Basic analysis (JSON to stdout)
-uv run kinemetry dropjump-analyze video.mp4
+uv run kinemotion dropjump-analyze video.mp4
 
 # Save metrics to file
-uv run kinemetry dropjump-analyze video.mp4 --json-output results.json
+uv run kinemotion dropjump-analyze video.mp4 --json-output results.json
 
 # Generate debug video
-uv run kinemetry dropjump-analyze video.mp4 --output debug.mp4
+uv run kinemotion dropjump-analyze video.mp4 --output debug.mp4
 
 # Drop jump with calibration (40cm box)
-uv run kinemetry dropjump-analyze video.mp4 --drop-height 0.40
+uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40
 
 # Custom parameters for noisy video
-uv run kinemetry dropjump-analyze video.mp4 \
+uv run kinemotion dropjump-analyze video.mp4 \
   --smoothing-window 7 \
   --velocity-threshold 0.01 \
   --min-contact-frames 5
 
 # Full analysis with calibration and all outputs
-uv run kinemetry dropjump-analyze video.mp4 \
+uv run kinemotion dropjump-analyze video.mp4 \
   --output debug.mp4 \
   --json-output metrics.json \
   --drop-height 0.40 \
   --smoothing-window 7
 
 # Regular jump (no calibration, uses corrected kinematic method)
-uv run kinemetry dropjump-analyze jump.mp4 \
+uv run kinemotion dropjump-analyze jump.mp4 \
   --output debug.mp4 \
   --json-output metrics.json
 ```
