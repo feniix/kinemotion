@@ -60,3 +60,5 @@ Thumbs.db
 *.mp4
 *.jpeg
 *.jpg
+
+.claude/settings.local.json*

@@ -14,12 +14,24 @@ A video-based kinematic analysis tool for athletic performance. Analyzes side-vi
   - Ground contact time (ms)
   - Flight time (ms)
   - Jump height (m) - with optional calibration using drop box height
-- **Calibrated measurements** - use known drop height for ~88% accuracy (vs 71% uncalibrated)
+- **Calibrated measurements** - use known drop height for theoretically improved accuracy (⚠️ accuracy claims unvalidated)
 - **JSON output** for easy integration with other tools
 - **Optional debug video** with visual overlays showing contact states and landmarks
 - **Configurable parameters** for smoothing, thresholds, and detection
 
 **Note**: Drop jump analysis uses foot-based tracking with fixed velocity thresholds. Center of mass (CoM) tracking and adaptive thresholding (available in `core/` modules) require longer videos (~5+ seconds) with a 3-second standing baseline, making them unsuitable for typical drop jump videos (~3 seconds). These features may be available in future jump types like CMJ (countermovement jump).
+
+## Validation Status
+
+⚠️ **IMPORTANT**: This tool's accuracy has **not been validated** against gold standard measurements (force plates, 3D motion capture). All accuracy claims and improvement estimates are theoretical and based on algorithmic considerations, not empirical testing.
+
+The tool provides consistent measurements and may be useful for:
+
+- Tracking relative changes in an individual athlete over time
+- Comparing similar jumps under controlled conditions
+- Exploratory analysis and research
+
+For clinical, research, or performance assessment requiring validated accuracy, this tool should be compared against validated measurement systems before use.
 
 ## Setup
 
@@ -37,13 +49,13 @@ asdf plugin add python
 asdf plugin add uv
 ```
 
-2. **Install versions specified in `.tool-versions`**:
+1. **Install versions specified in `.tool-versions`**:
 
 ```bash
 asdf install
 ```
 
-3. **Install project dependencies using uv**:
+1. **Install project dependencies using uv**:
 
 ```bash
 uv sync
@@ -116,6 +128,7 @@ kinemotion dropjump-analyze jump.mp4 \
 > **📖 For detailed explanations of all parameters, see [docs/PARAMETERS.md](docs/PARAMETERS.md)**
 >
 > This section provides a quick reference. The full guide includes:
+>
 > - How each parameter works internally
 > - When and why to adjust them
 > - Scenario-based recommendations
@@ -203,7 +216,7 @@ kinemotion dropjump-analyze jump.mp4 \
 - `--drop-height <float>` (optional)
   - Height of drop box/platform in meters (e.g., 0.40 for 40cm)
   - Enables calibrated jump height measurement using known drop height
-  - Improves accuracy from ~71% to ~88%
+  - Theoretically improves accuracy (⚠️ unvalidated - requires empirical validation)
   - Only applicable for drop jumps (box → drop → landing → jump)
   - **Tip**: Measure your box height accurately for best results
 
@@ -242,6 +255,7 @@ kinemotion dropjump-analyze jump.mp4 \
 ```
 
 **Fields**:
+
 - `jump_height_m`: Primary jump height measurement (calibrated if --drop-height provided, otherwise corrected kinematic)
 - `jump_height_kinematic_m`: Kinematic estimate from flight time: h = (g × t²) / 8
 - `jump_height_trajectory_normalized`: Position-based measurement in normalized coordinates (0-1 range)
@@ -253,6 +267,7 @@ kinemotion dropjump-analyze jump.mp4 \
 ### Debug Video
 
 The debug video includes:
+
 - **Green circle**: Average foot position when on ground
 - **Red circle**: Average foot position when in air
 - **Yellow circles**: Individual foot landmarks (ankles, heels)
@@ -268,6 +283,7 @@ The debug video includes:
 **Symptoms**: Erratic landmark positions, missing detections, incorrect contact states
 
 **Solutions**:
+
 1. **Check video quality**: Ensure the athlete is clearly visible in profile view
 2. **Increase smoothing**: Use `--smoothing-window 7` or higher
 3. **Adjust detection confidence**: Try `--detection-confidence 0.6` or `--tracking-confidence 0.6`
@@ -278,6 +294,7 @@ The debug video includes:
 **Symptoms**: "No frames processed" error or all null landmarks
 
 **Solutions**:
+
 1. **Verify video format**: OpenCV must be able to read the video
 2. **Check framing**: Ensure full body is visible in side view
 3. **Lower confidence thresholds**: Try `--detection-confidence 0.3 --tracking-confidence 0.3`
@@ -288,6 +305,7 @@ The debug video includes:
 **Symptoms**: Wrong ground contact times, flight phases not detected
 
 **Solutions**:
+
 1. **Generate debug video**: Visualize contact states to diagnose the issue
 2. **Adjust velocity threshold**:
    - If missing contacts: decrease to `--velocity-threshold 0.01`
@@ -300,8 +318,9 @@ The debug video includes:
 **Symptoms**: Unrealistic jump height values
 
 **Solutions**:
+
 1. **Use calibration**: For drop jumps, add `--drop-height` parameter with box height in meters (e.g., `--drop-height 0.40`)
-   - This improves accuracy from ~71% to ~88%
+   - Theoretically improves accuracy (⚠️ unvalidated)
 2. **Verify flight time detection**: Check `flight_start_frame` and `flight_end_frame` in JSON
 3. **Compare measurements**: JSON output includes both `jump_height_m` (primary) and `jump_height_kinematic_m` (kinematic-only)
 4. **Check for drop jump detection**: If doing a drop jump, ensure first phase is elevated enough (>5% of frame height)
@@ -311,6 +330,7 @@ The debug video includes:
 **Symptoms**: Cannot write debug video or corrupted output
 
 **Solutions**:
+
 1. **Install additional codecs**: Ensure OpenCV has proper video codec support
 2. **Try different output format**: Use `.avi` extension instead of `.mp4`
 3. **Check output path**: Ensure write permissions for output directory
@@ -339,13 +359,14 @@ The debug video includes:
    - Ground contact time = contact phase duration (using fractional frames)
    - Flight time = flight phase duration (using fractional frames)
    - Jump height = calibrated position-based measurement (if --drop-height provided)
-   - Fallback: corrected kinematic estimate (g × t²) / 8 × 1.35
+   - Fallback: kinematic estimate (g × t²) / 8 with optional empirical correction factor (⚠️ unvalidated)
 
 ## Development
 
 ### Code Quality Standards
 
 This project enforces strict code quality standards:
+
 - **Type safety**: Full mypy strict mode compliance with complete type annotations
 - **Linting**: Comprehensive ruff checks (pycodestyle, pyflakes, isort, pep8-naming, etc.)
 - **Formatting**: Black code style
@@ -393,7 +414,7 @@ See [CLAUDE.md](CLAUDE.md) for detailed development guidelines.
 ## Limitations
 
 - **2D Analysis**: Only analyzes motion in the camera's view plane
-- **Calibration accuracy**: With drop height calibration, achieves ~88% accuracy; without calibration ~71% accuracy
+- **Validation Status**: ⚠️ Accuracy has not been validated against gold standard measurements (force plates, 3D motion capture)
 - **Side View Required**: Must film from the side to accurately track vertical motion
 - **Single Athlete**: Designed for analyzing one athlete at a time
 - **Timing precision**:

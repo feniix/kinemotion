@@ -1,28 +1,37 @@
 # Frame Rate Guide for Drop Jump Analysis
 
+**⚠️ Important:** This document discusses frame rate effects on video-based jump analysis in general. **kinemotion's actual accuracy is currently unvalidated** - accuracy claims are theoretical until empirical testing is completed.
+
 This document explains how video frame rate affects accuracy in drop jump analysis and provides recommendations for different use cases.
 
 ## Table of Contents
 
-- [Executive Summary](#executive-summary)
-- [Frame Rate Impact on Accuracy](#frame-rate-impact-on-accuracy)
-- [Temporal Resolution Analysis](#temporal-resolution-analysis)
-- [Practical Recommendations](#practical-recommendations)
-- [Parameter Adjustments by Frame Rate](#parameter-adjustments-by-frame-rate)
-- [Accuracy Bottlenecks Beyond Frame Rate](#accuracy-bottlenecks-beyond-frame-rate)
-- [Cost-Benefit Analysis](#cost-benefit-analysis)
+- Executive Summary
+- Frame Rate Impact on Accuracy
+- Temporal Resolution Analysis
+- Practical Recommendations
+- Parameter Adjustments by Frame Rate
+- Accuracy Bottlenecks Beyond Frame Rate
+- Cost-Benefit Analysis
+- Limitations & Research Gaps
+- Evidence-Based Summary & Conclusions
+- kinemotion-Specific Recommendations
 
 ---
 
 ## Executive Summary
 
-**TL;DR:**
-- **60 fps is the sweet spot** for drop jump analysis (best accuracy/cost ratio)
-- **30 fps is acceptable** for most applications with sub-frame interpolation
-- **120+ fps offers diminishing returns** (minimal accuracy gains, significant processing overhead)
-- **Calibration matters more than frame rate** (+17% vs +2-3% accuracy improvement)
+**⚠️ Critical Notice:** **kinemotion accuracy is currently unvalidated**. The following represents theoretical considerations, not empirically verified performance.
 
-**Key Finding:** Frame rate improvements follow a **logarithmic curve** - each doubling provides progressively smaller accuracy gains.
+**TL;DR:**
+
+- **kinemotion accuracy unknown** - requires validation studies
+- **60 fps appears adequate** for most applications based on industry data
+- **30 fps may be sufficient** with proper uncertainty documentation
+- **120+ fps benefits unclear** without kinemotion-specific validation
+- **Validation priority** over theoretical improvements
+
+**Key Finding:** Industry research shows diminishing returns from higher frame rates, but kinemotion's actual performance characteristics are unknown until empirical validation is completed.
 
 ---
 
@@ -41,13 +50,15 @@ Sub-frame interpolation (enabled by default) provides sub-millisecond timing pre
 | **480 fps** | 2.1 ms | ±0.6 ms | ±2 ms |
 
 **How sub-frame interpolation works:**
+
 - Calculates smooth velocity curve using Savitzky-Golay derivative
 - Finds exact threshold crossing between frames using linear interpolation
 - Returns fractional frame indices (e.g., 48.73 instead of 49)
 - Reduces timing error by 60-70% compared to integer frame boundaries
 
 **Math example at 30fps:**
-```
+
+```text
 Without interpolation:
 - Event occurs at frame 48.7
 - Detected at frame 49 (integer boundary)
@@ -58,21 +69,55 @@ With interpolation:
 - Event detected at frame 48.73 (fractional)
 - Error: 0.03 frames × 33.3ms/frame = 1ms error
 - Typical error: ±10ms (residual from velocity smoothness)
-```
+```text
 
-### Expected Accuracy Improvements
+### Current Kinemotion Accuracy Status
 
-Assuming calibrated measurements using `--drop-height`:
+**⚠️ Important:** **Kinemotion accuracy is currently unvalidated**. No peer-reviewed studies exist comparing kinemotion outputs to gold standards.
 
-| Frame Rate | Contact Time Error | Flight Time Error | Jump Height Accuracy | Improvement over 30fps |
-|------------|-------------------|-------------------|---------------------|------------------------|
-| **30 fps** | ±10-15 ms | ±10-15 ms | ~88% (baseline) | - |
-| **60 fps** | ±5-8 ms | ±5-8 ms | ~90-91% | +2-3% |
-| **120 fps** | ±3-5 ms | ±3-5 ms | ~91-92% | +3-4% |
-| **240 fps** | ±2-3 ms | ±2-3 ms | ~92-93% | +4-5% |
-| **480 fps** | ±1-2 ms | ±1-2 ms | ~92-93% | +4-5% |
+### What We Don't Know
 
-**Note:** Accuracy improvements plateau beyond 120fps due to other limiting factors (tracking quality, motion blur, calibration precision).
+**Actual kinemotion accuracy metrics:**
+
+- **30fps accuracy**: Unknown (requires validation)
+- **60fps accuracy**: Unknown (requires validation)
+- **Systematic errors**: Unknown (requires validation)
+- **Precision**: Unknown (requires validation)
+
+**Previous Document Claims (Unverified):**
+
+- ~~88% accuracy at 30fps~~ - *No validation data*
+- ~~90-91% accuracy at 60fps~~ - *No validation data*
+- ~~Specific error percentages~~ - *Theoretical estimates only*
+
+### Industry Reference Data (Not kinemotion-specific)
+
+Frame rate studies from other systems (not kinemotion):
+
+| Frame Rate | Reference System Error* | Evidence Source |
+|------------|------------------------|------------------|
+| **120 fps** | 1.4% vs 1000Hz reference | PMC10108745 (n=10) |
+| **240 fps** | 0.7% vs 1000Hz reference | PMC10108745 (n=10) |
+
+*These are from other video analysis systems, not kinemotion validation
+
+**Conclusion:** Actual kinemotion accuracy can only be determined through empirical validation studies.
+
+### MediaPipe Pose Estimation Validation
+
+**Detection Accuracy:**
+
+- **95.24-99.02%** for event detection (heel strike/toe-off) vs Vicon gold standard
+- **Temporal errors: 20-50ms** for gait parameters
+- **Strong correlation:** r = 0.992 vs force plates
+- **High reliability:** ICC > 0.9 for temporal variables
+
+**Jump Height Measurement:**
+
+- **4.8-6.2% systematic overestimation** vs 3D marker-based systems
+- **Correlation:** r > 0.98 for most kinematic variables
+
+**Note:** These validation studies used controlled laboratory conditions and may not translate directly to field applications.
 
 ---
 
@@ -82,7 +127,7 @@ Assuming calibrated measurements using `--drop-height`:
 
 Brief ground contacts benefit most from high frame rates. Minimum contact frames filter (`--min-contact-frames`) must capture enough samples to confirm contact:
 
-**Example: 100ms ground contact (brief reactive jump)**
+#### Example: 100ms ground contact (brief reactive jump)
 
 | Frame Rate | Frames Captured | Detection Reliability | Recommended `--min-contact-frames` |
 |------------|----------------|----------------------|-----------------------------------|
@@ -91,7 +136,7 @@ Brief ground contacts benefit most from high frame rates. Minimum contact frames
 | **120 fps** | ~12 frames | ✅ Very robust | 8-12 |
 | **240 fps** | ~24 frames | ✅ Excessive (overkill) | 16-24 |
 
-**Example: 250ms ground contact (typical drop jump)**
+#### Example: 250ms ground contact (typical drop jump)
 
 | Frame Rate | Frames Captured | Detection Reliability | Recommended `--min-contact-frames` |
 |------------|----------------|----------------------|-----------------------------------|
@@ -107,24 +152,28 @@ Brief ground contacts benefit most from high frame rates. Minimum contact frames
 More temporal samples = smoother velocity derivative:
 
 **30 fps:**
+
 - Adequate for Savitzky-Golay smoothing (5-frame window = 167ms)
 - Occasional noise spikes in velocity
 - Sub-frame interpolation compensates effectively
 - ✅ Acceptable for most applications
 
 **60 fps:**
+
 - Noticeably smoother velocity curves (5-frame window = 83ms)
 - Fewer false threshold crossings
 - Better acceleration pattern detection for curvature analysis
 - ✅ **Recommended** for consistent results
 
 **120 fps:**
+
 - Very smooth velocity curves (5-frame window = 42ms)
 - Minimal noise in derivatives
 - Marginal improvement over 60fps in practice
 - ⚠️ Diminishing returns begin
 
 **240+ fps:**
+
 - Extremely smooth curves but no practical benefit
 - Accuracy limited by tracking quality, not sampling rate
 - ❌ Processing overhead outweighs gains
@@ -145,6 +194,7 @@ More temporal samples = smoother velocity derivative:
    - 240 fps: 8× processing time
 
 **Tracking quality improvement is logarithmic:**
+
 - 30→60 fps: Noticeable improvement in landmark stability
 - 60→120 fps: Small improvement in stability
 - 120→240 fps: Negligible improvement
@@ -156,31 +206,35 @@ More temporal samples = smoother velocity derivative:
 ### 30 fps - Minimum Acceptable ⚙️
 
 **Best for:**
+
 - Quick exploratory analysis
 - Storage/bandwidth constraints
 - Longer drop jump contacts (>200ms)
 - Non-critical measurements
 
 **Advantages:**
+
 - ✅ Small file sizes (~500MB for 5min at 1080p)
 - ✅ Fast processing (baseline)
 - ✅ Sub-frame interpolation provides ±10ms precision
 - ✅ Adequate for most drop jump scenarios
 
 **Limitations:**
+
 - ⚠️ May struggle with very reactive jumps (<150ms contact)
 - ⚠️ Parameter tuning critical (`--min-contact-frames`, `--velocity-threshold`)
 - ⚠️ More susceptible to tracking glitches
 - ⚠️ Less robust velocity calculations
 
 **Recommended parameters:**
+
 ```bash
 kinemotion dropjump-analyze video_30fps.mp4 \
   --smoothing-window 5 \
   --velocity-threshold 0.02 \
   --min-contact-frames 3 \
   --drop-height 0.40
-```
+```text
 
 **Expected accuracy:** ~88% with calibration
 
@@ -189,12 +243,14 @@ kinemotion dropjump-analyze video_30fps.mp4 \
 ### 60 fps - Sweet Spot ⭐ (Recommended)
 
 **Best for:**
+
 - Performance analysis and athlete monitoring
 - Research requiring good accuracy
 - Most drop jump scenarios
 - Balance of quality and practicality
 
 **Advantages:**
+
 - ✅ ±5ms timing precision (excellent)
 - ✅ Robust detection of brief contacts
 - ✅ Smooth velocity curves
@@ -203,18 +259,20 @@ kinemotion dropjump-analyze video_30fps.mp4 \
 - ✅ Best accuracy/cost trade-off
 
 **Limitations:**
+
 - ⚠️ 2× processing time vs 30fps
 - ⚠️ 2× storage requirements
 - ⚠️ Still some noise in high-speed movements
 
 **Recommended parameters:**
+
 ```bash
 kinemotion dropjump-analyze video_60fps.mp4 \
   --smoothing-window 5 \
   --velocity-threshold 0.01 \      # halve (less motion per frame)
   --min-contact-frames 6 \         # double (same time duration)
   --drop-height 0.40
-```
+```text
 
 **Expected accuracy:** ~90-91% with calibration (+2-3% over 30fps)
 
@@ -225,18 +283,21 @@ kinemotion dropjump-analyze video_60fps.mp4 \
 ### 120 fps - Diminishing Returns 🔬
 
 **Best for:**
+
 - Research requiring <5ms timing precision
 - Analysis of explosive/reactive movements
 - High-speed biomechanics research
 - Validation studies against force plates
 
 **Advantages:**
+
 - ✅ ±2.5ms timing precision
 - ✅ Very robust brief contact detection
 - ✅ Excellent velocity curve smoothness
 - ✅ Captures rapid transitions accurately
 
 **Limitations:**
+
 - ⚠️ 4× processing time vs 30fps (2× vs 60fps)
 - ⚠️ Large file sizes (~2GB for 5min at 1080p)
 - ⚠️ Only +1% accuracy over 60fps (marginal gain)
@@ -244,13 +305,14 @@ kinemotion dropjump-analyze video_60fps.mp4 \
 - ⚠️ Other factors become limiting (tracking, calibration)
 
 **Recommended parameters:**
+
 ```bash
 kinemotion dropjump-analyze video_120fps.mp4 \
   --smoothing-window 5 \
   --velocity-threshold 0.005 \     # quarter (4× more frames)
   --min-contact-frames 12 \        # quadruple
   --drop-height 0.40
-```
+```text
 
 **Expected accuracy:** ~91-92% with calibration (+3-4% over 30fps, +1% over 60fps)
 
@@ -261,16 +323,19 @@ kinemotion dropjump-analyze video_120fps.mp4 \
 ### 240 fps - Overkill for Drop Jumps ❌
 
 **Best for:**
+
 - Ultra-high-speed research (e.g., ballistic movements)
 - Special applications requiring sub-2ms precision
 - Validation of measurement systems
 
 **Advantages:**
+
 - ✅ ±1.25ms timing precision (theoretical)
 - ✅ Maximum temporal resolution
 - ✅ Captures finest motion details
 
 **Limitations:**
+
 - ❌ 8× processing time vs 30fps (4× vs 60fps)
 - ❌ Massive file sizes (~4GB for 5min at 1080p)
 - ❌ Only +0.5% accuracy over 120fps (imperceptible)
@@ -283,13 +348,14 @@ kinemotion dropjump-analyze video_120fps.mp4 \
 - ❌ Difficult to achieve good lighting at 240fps
 
 **Recommended parameters:**
+
 ```bash
 kinemotion dropjump-analyze video_240fps.mp4 \
   --smoothing-window 5 \
   --velocity-threshold 0.0025 \    # 1/8× (8× more frames)
   --min-contact-frames 24 \        # 8×
   --drop-height 0.40
-```
+```text
 
 **Expected accuracy:** ~92-93% with calibration (+4-5% over 30fps, +1-2% over 60fps, +0.5% over 120fps)
 
@@ -303,32 +369,35 @@ kinemotion dropjump-analyze video_240fps.mp4 \
 
 When changing frame rate, adjust parameters proportionally to maintain equivalent behavior:
 
-**Rule 1: Velocity threshold scales inversely with FPS**
-```
+#### Rule 1: Velocity threshold scales inversely with FPS
+
+```text
 threshold_new = threshold_30fps × (30 / fps_new)
 
 Examples:
 30 fps → 60 fps: 0.02 → 0.01 (halve)
 30 fps → 120 fps: 0.02 → 0.005 (quarter)
 30 fps → 240 fps: 0.02 → 0.0025 (1/8×)
-```
+```text
 
 **Explanation:** Higher FPS = less motion per frame, so lower threshold needed to detect same velocity.
 
-**Rule 2: Minimum contact frames scales linearly with FPS**
-```
+#### Rule 2: Minimum contact frames scales linearly with FPS
+
+```text
 min_frames_new = min_frames_30fps × (fps_new / 30)
 
 Examples:
 30 fps → 60 fps: 3 → 6 (double)
 30 fps → 120 fps: 3 → 12 (quadruple)
 30 fps → 240 fps: 3 → 24 (8×)
-```
+```text
 
 **Explanation:** To capture the same minimum contact time duration, need proportionally more frames.
 
-**Rule 3: Smoothing window can stay constant (or adjust slightly)**
-```
+#### Rule 3: Smoothing window can stay constant (or adjust slightly)
+
+```text
 # Keep temporal duration constant
 smoothing_window_new = smoothing_window_30fps × (fps_new / 30)
 
@@ -344,13 +413,14 @@ Examples (constant frames, recommended):
 30 fps with window=5 → 5 frames
 60 fps with window=5 → 5 frames (less temporal duration, more samples)
 120 fps with window=5 → 5 frames
-```
+```text
 
 **Recommendation:** Keep smoothing window at 5-7 frames regardless of FPS for best results.
 
 ### Complete Parameter Sets by Frame Rate
 
-**30 fps baseline:**
+#### 30 fps baseline
+
 ```bash
 kinemotion dropjump-analyze video_30fps.mp4 \
   --smoothing-window 5 \
@@ -359,9 +429,10 @@ kinemotion dropjump-analyze video_30fps.mp4 \
   --min-contact-frames 3 \
   --visibility-threshold 0.5 \
   --drop-height 0.40
-```
+```text
 
-**60 fps (2× frames):**
+#### 60 fps (2× frames)
+
 ```bash
 kinemotion dropjump-analyze video_60fps.mp4 \
   --smoothing-window 5 \          # same (or 10 for constant duration)
@@ -370,9 +441,10 @@ kinemotion dropjump-analyze video_60fps.mp4 \
   --min-contact-frames 6 \        # double (2× more frames)
   --visibility-threshold 0.5 \    # same
   --drop-height 0.40
-```
+```text
 
-**120 fps (4× frames):**
+#### 120 fps (4× frames)
+
 ```bash
 kinemotion dropjump-analyze video_120fps.mp4 \
   --smoothing-window 5 \          # same (or 20 for constant duration)
@@ -381,9 +453,10 @@ kinemotion dropjump-analyze video_120fps.mp4 \
   --min-contact-frames 12 \       # quadruple (4× more frames)
   --visibility-threshold 0.5 \    # same
   --drop-height 0.40
-```
+```text
 
-**240 fps (8× frames):**
+#### 240 fps (8× frames)
+
 ```bash
 kinemotion dropjump-analyze video_240fps.mp4 \
   --smoothing-window 5 \          # same (or 40 for constant duration)
@@ -392,7 +465,7 @@ kinemotion dropjump-analyze video_240fps.mp4 \
   --min-contact-frames 24 \       # 8× (8× more frames)
   --visibility-threshold 0.5 \    # same
   --drop-height 0.40
-```
+```text
 
 ### Auto-Detecting Frame Rate (Future Enhancement)
 
@@ -405,7 +478,7 @@ scaling_factor = fps / 30.0
 
 velocity_threshold = 0.02 / scaling_factor
 min_contact_frames = int(3 * scaling_factor)
-```
+```text
 
 ---
 
@@ -416,26 +489,29 @@ At high frame rates (120+ fps), other factors become limiting:
 ### 1. MediaPipe Tracking Precision
 
 **Tracking resolution:** ~1-2 pixels per landmark in 1080p video
-```
+
+```text
 Example: 1 pixel error in 1080p frame
 → 1/1080 = 0.0009 normalized units
 → ~1mm real-world error with good calibration
 → Equivalent to ~5-10ms timing error at typical jump velocities
-```
+```text
 
 **Impact:** Even with 240fps, tracking precision limits effective accuracy to ~5-10ms, making frame rate improvements beyond 60fps marginal.
 
 ### 2. Camera Motion Blur
 
 **Exposure time creates motion blur:**
-```
+
+```text
 30 fps → typical exposure: 1/60s (16.7ms)
 60 fps → typical exposure: 1/120s (8.3ms)
 120 fps → typical exposure: 1/240s (4.2ms)
 240 fps → typical exposure: 1/480s (2.1ms)
-```
+```text
 
 **Motion blur limits effective temporal resolution:**
+
 - At 30fps with 1/60s exposure: landmarks "smeared" over ~1.5 frames
 - At 240fps with 1/480s exposure: landmarks sharp, minimal blur
 - **But:** Pose tracking already introduces ~1-2 pixel uncertainty (5-10ms)
@@ -445,7 +521,8 @@ Example: 1 pixel error in 1080p frame
 ### 3. Calibration Accuracy
 
 **Drop height measurement precision:**
-```
+
+```text
 ±1cm error in 40cm drop height measurement
 → ±2.5% calibration error
 → ±2.2% jump height error (propagates)
@@ -456,19 +533,20 @@ Frame rate improvement from 60→240fps:
 → ±3.5mm jump height improvement
 
 Conclusion: Calibration accuracy dominates over frame rate
-```
+```text
 
 **Impact:** Improving drop height measurement from ±1cm to ±2mm has greater effect than upgrading from 60fps to 240fps.
 
 ### 4. Out-of-Plane Motion
 
 **2D video captures only one plane:**
-```
+
+```text
 Athlete moves forward/backward during jump:
 → Foot appears higher/lower than actual
 → Creates systematic measurement error
 → Not improved by higher frame rate
-```
+```text
 
 **Typical error:** ±5-10mm from out-of-plane motion
 **Impact:** Comparable to timing errors at 60fps; frame rate doesn't address this
@@ -476,7 +554,8 @@ Athlete moves forward/backward during jump:
 ### 5. Athlete Movement Variability
 
 **Human movement is inherently variable:**
-```
+
+```text
 Typical jump-to-jump variability:
 - Ground contact time: ±10-20ms
 - Flight time: ±5-15ms
@@ -485,7 +564,7 @@ Typical jump-to-jump variability:
 Measurement precision required:
 → ~5-10ms timing precision (met by 60fps)
 → Sub-millisecond precision unnecessary
-```
+```text
 
 **Conclusion:** Beyond 60fps, measurement precision exceeds athlete repeatability.
 
@@ -493,18 +572,31 @@ Measurement precision required:
 
 ## Cost-Benefit Analysis
 
-### Accuracy Hierarchy (Impact per Dollar)
+### Kinemotion Development Priorities
 
-**Ranked by accuracy improvement and cost:**
+**Based on current validation gaps:**
 
-| Improvement | Accuracy Gain | Cost | Recommendation |
-|-------------|--------------|------|----------------|
-| **1. Calibration** (`--drop-height`) | +17% (71% → 88%) | $0 (tape measure) | 🔥 **Do this first!** |
-| **2. Video @ 60fps** | +2-3% (88% → 90-91%) | $0-500 (smartphone/camera) | ⭐ **Best ROI** |
-| **3. Outlier rejection** (default) | +1-2% | $0 (software feature) | ✅ **Enabled by default** |
-| **4. Curvature analysis** (default) | Better timing | $0 (software feature) | ✅ **Enabled by default** |
-| **5. Video @ 120fps** | +1% (90% → 91-92%) | $500-2000 (high-speed camera) | 🔬 **Research only** |
-| **6. Video @ 240fps** | +0.5% (91% → 92-93%) | $2000-10000 (pro high-speed) | ❌ **Not worth it** |
+1. **Validation Planning** (High Priority)
+   - Design validation study against force plates
+   - Develop uncertainty quantification methods
+   - Create testing protocols for different conditions
+
+2. **Quality Assurance** (Medium Priority)
+   - Unit testing of accuracy-critical components
+   - Error analysis for systematic biases
+   - Performance benchmarking
+
+3. **User Documentation** (Medium Priority)
+   - Clearly communicate accuracy limitations
+   - Provide uncertainty guidelines
+   - Document appropriate use cases
+
+4. **Future Research** (Low Priority)
+   - Frame rate optimization after validation
+   - Algorithm improvements based on measured performance
+   - Feature expansion based on user needs
+
+**Key Finding:** Priorities should focus on **validation and testing** rather than theoretical accuracy improvements.
 
 ### Processing Time vs Frame Rate
 
@@ -531,71 +623,125 @@ Measurement precision required:
 ### Return on Investment
 
 **30 fps → 60 fps:**
+
 - **Cost:** 2× storage, 2× processing time, may need better camera ($0-500)
 - **Benefit:** +2-3% accuracy, more robust detection, better tracking
 - **ROI:** ⭐⭐⭐⭐⭐ **Excellent** - recommended upgrade
 
 **60 fps → 120 fps:**
+
 - **Cost:** 2× storage, 2× processing time, high-speed camera ($500-2000)
 - **Benefit:** +1% accuracy, marginal robustness improvement
 - **ROI:** ⭐⭐ **Marginal** - only for research applications
 
 **120 fps → 240 fps:**
+
 - **Cost:** 2× storage, 2× processing time, pro high-speed camera ($2000-10000)
 - **Benefit:** +0.5% accuracy, no practical improvement
 - **ROI:** ⭐ **Poor** - not recommended for drop jumps
 
 ---
 
-## Recommendations by Use Case
+## Limitations & Research Gaps
 
-### Recreational / Self-Training
-**Recommendation:** 30 fps
-- Adequate accuracy for personal tracking
-- Minimal storage/processing requirements
-- Most smartphones support 30fps at 1080p
-- Use calibration for accuracy boost
+### Evidence Limitations
 
-### Coaching / Athlete Monitoring
-**Recommendation:** 60 fps ⭐
-- Professional-grade accuracy
-- Reliable detection across jump types
-- Reasonable file sizes and processing time
-- Excellent for progress tracking over time
+**Sample Size Issues:**
 
-### Research / Biomechanics Lab
-**Recommendation:** 60-120 fps
-- 60 fps for most research applications
-- 120 fps if comparing against force plates or requiring <5ms precision
-- 240+ fps only for specialized high-speed biomechanics
+- Most validation studies use small samples (n=10-12)
+- Limited demographic diversity (young adults, athletes)
+- Short-term controlled environments
 
-### Elite Performance Analysis
-**Recommendation:** 60 fps with perfect calibration
-- Focus on measurement accuracy (calibration, camera setup)
-- 60 fps provides sufficient temporal resolution
-- Higher frame rates offer minimal additional value
-- Invest in precise drop height measurement instead
+**Methodological Gaps:**
+
+- **Drop jump specific validation lacking** - most research on CMJ or gait
+- **Field vs laboratory conditions** - limited real-world validation
+- **Camera variety** - most studies use specific camera setups
+- **Standardized protocols** - no consensus on best practices
+
+### Recommended Research Priorities
+
+1. **Comprehensive drop jump validation** across frame rates
+2. **Field testing** with various camera setups and conditions
+3. **Standardized accuracy metrics** for video-based jump analysis
+4. **Cross-validation studies** between different pose estimation systems
+5. **Cost-benefit analysis** with real-world performance data
+
+### Practical Recommendations for kinemotion
+
+**For Current Users:**
+
+- **30fps/60fps** currently adequate for most applications
+- **Document uncertainty** in all measurements
+- **Consider systematic errors** potentially present in pose estimation
+- **Report limitations** when sharing results
+
+**For Development:**
+
+- **Focus on validation** before optimization
+- **Test against gold standards** (force plates, 3D systems)
+- **Quantify uncertainty** of all measurements
+- **Conduct field testing** in real conditions
+
+## Evidence-Based Summary & Conclusions
+
+**⚠️ Critical Limitations:** Many accuracy claims in this field lack comprehensive peer-reviewed validation. The following conclusions are based on limited available evidence:
+
+### Current Limitations
+
+**Kinemotion-specific unknowns:**
+
+- **No validation studies** exist comparing kinemotion to force plates
+- **Actual accuracy metrics** unknown (not theoretically estimated)
+- **Real-world performance** untested
+
+**MediaPipe limitations (potential kinemotion limitations):**
+
+- **Temporal errors:** 20-50ms in pose estimation systems
+- **Systematic bias:** 4.8-6.2% overestimation vs 3D systems
+- **Detection accuracy:** 95.24-99.02% for timing events
+- **Strong correlation:** r = 0.992 vs force plates
+
+**Key Knowledge Gaps:**
+
+- kinemotion's **actual accuracy** vs gold standards
+- **Frame rate impact** on kinemotion specifically
+- **Calibration effectiveness** for kinemotion algorithms
+- **Field performance** vs laboratory conditions
+
+### Required Research
+
+1. **Kinemotion validation study** against force plates
+2. **Frame rate testing** with kinemotion specifically
+3. **Field validation** of kinemotion in real conditions
+4. **Error analysis** of kinemotion's systematic biases
+5. **Uncertainty quantification** of kinemotion measurements
+
+**Bottom Line:** kinemotion accuracy claims are **currently theoretical** - empirical validation is required to determine real performance.
 
 ---
 
-## Summary & Key Takeaways
+## kinemotion-Specific Recommendations
 
-1. **60 fps is the sweet spot** - best balance of accuracy, cost, and practicality
-2. **Calibration matters more than frame rate** - always use `--drop-height` parameter
-3. **Diminishing returns beyond 60 fps** - each doubling provides smaller gains
-4. **Adjust parameters proportionally** - scale velocity threshold and min frames by FPS ratio
-5. **Other factors limit accuracy** - tracking quality, motion blur, calibration precision
-6. **Sub-frame interpolation is key** - enables excellent precision even at 30fps
-7. **30 fps is acceptable** for most drop jump applications with calibration
-8. **240+ fps is overkill** - accuracy limited by factors other than frame rate
+**Current Status:**
 
-**Decision flowchart:**
-```
-Do you need sub-5ms timing precision?
-├─ No → Use 60 fps (or 30 fps if storage limited)
-└─ Yes → Do you have a high-speed camera and need to justify the cost?
-    ├─ Yes → Use 120 fps (maximum practical frame rate)
-    └─ No → Use 60 fps and focus on calibration instead
-```
+- **No validation studies** exist for kinemotion specifically
+- **Accuracy unknown** - requires empirical testing
+- **Focus on reliability** rather than theoretical improvements
 
-**Bottom line:** Invest in 60fps video and accurate calibration before pursuing higher frame rates!
+**Immediate Actions:**
+
+1. **Plan validation study** against force plates or 3D motion capture
+2. **Document current limitations** in user-facing materials
+3. **Implement uncertainty quantification** for all measurements
+4. **Test systematic biases** across different conditions
+
+**Decision Framework:**
+
+```text
+Need precise measurements for critical applications?
+├─ Yes → Conduct validation study first
+└─ No → Use with caution, document uncertainty
+```text
+
+**Bottom Line:** kinemotion is currently **unvalidated software** - accuracy claims are theoretical until empirical validation is completed.

@@ -113,6 +113,7 @@ def calculate_drop_jump_metrics(
     smoothing_window: int = 5,
     polyorder: int = 2,
     use_curvature: bool = True,
+    kinematic_correction_factor: float = 1.0,
 ) -> DropJumpMetrics:
     """
     Calculate drop-jump metrics from contact states and positions.
@@ -126,6 +127,9 @@ def calculate_drop_jump_metrics(
         smoothing_window: Window size for velocity/acceleration smoothing (must be odd)
         polyorder: Polynomial order for Savitzky-Golay filter (default: 2)
         use_curvature: Whether to use curvature analysis for refining transitions
+        kinematic_correction_factor: Correction factor for kinematic jump height calculation
+            (default: 1.0 = no correction). Historical testing suggested 1.35, but this is
+            unvalidated. Use calibrated measurement (--drop-height) for validated results.
 
     Returns:
         DropJumpMetrics object with calculated values
@@ -315,18 +319,30 @@ def calculate_drop_jump_metrics(
                 metrics.jump_height = height_normalized * scale_factor
                 metrics.jump_height_kinematic = jump_height_kinematic
             else:
-                # Use empirical correction factor for kinematic method
-                # Testing shows kinematic method underestimates by ~29% due to:
-                # 1. Contact detection timing (detects landing slightly early)
-                # 2. Frame rate limitations (30 fps = 33ms intervals)
-                # 3. Foot position vs center of mass difference
-                kinematic_correction_factor = 1.35
+                # Apply kinematic correction factor to kinematic method
+                # ⚠️ WARNING: Kinematic correction factor is EXPERIMENTAL and UNVALIDATED
+                #
+                # The kinematic method h = (g × t²) / 8 may underestimate jump height due to:
+                # 1. Contact detection timing (may detect landing slightly early/late)
+                # 2. Frame rate limitations (30 fps = 33ms intervals between samples)
+                # 3. Foot position vs center of mass difference (feet land before CoM peak)
+                #
+                # Default correction factor is 1.0 (no correction). Historical testing
+                # suggested 1.35 could improve accuracy, but:
+                # - This value has NOT been validated against gold standards
+                #   (force plates, motion capture)
+                # - The actual correction needed may vary by athlete, jump type, and video quality
+                # - Using a correction factor without validation is experimental
+                #
+                # For validated measurements, use:
+                # - Calibrated measurement with --drop-height parameter
+                # - Or compare against validated measurement systems
                 metrics.jump_height = jump_height_kinematic * kinematic_correction_factor
                 metrics.jump_height_kinematic = jump_height_kinematic
         else:
             # Fallback to kinematic if no position data
             if drop_height_m is None:
-                kinematic_correction_factor = 1.35
+                # Apply kinematic correction factor (see detailed comment above)
                 metrics.jump_height = jump_height_kinematic * kinematic_correction_factor
             else:
                 metrics.jump_height = jump_height_kinematic

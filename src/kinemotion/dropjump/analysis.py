@@ -95,9 +95,15 @@ def detect_ground_contact(
     min_contact_frames: int = 3,
     visibility_threshold: float = 0.5,
     visibilities: np.ndarray | None = None,
+    window_length: int = 5,
+    polyorder: int = 2,
 ) -> list[ContactState]:
     """
     Detect when feet are in contact with ground based on vertical motion.
+
+    Uses derivative-based velocity calculation via Savitzky-Golay filter for smooth,
+    accurate velocity estimates. This is consistent with the velocity calculation used
+    throughout the pipeline for sub-frame interpolation and curvature analysis.
 
     Args:
         foot_positions: Array of foot y-positions (normalized, 0-1, where 1 is bottom)
@@ -105,6 +111,8 @@ def detect_ground_contact(
         min_contact_frames: Minimum consecutive frames to confirm contact
         visibility_threshold: Minimum visibility score to trust landmark
         visibilities: Array of visibility scores for each frame
+        window_length: Window size for velocity derivative calculation (must be odd)
+        polyorder: Polynomial order for Savitzky-Golay filter (default: 2)
 
     Returns:
         List of ContactState for each frame
@@ -115,8 +123,12 @@ def detect_ground_contact(
     if n_frames < 2:
         return states
 
-    # Compute vertical velocity (positive = moving down in image coordinates)
-    velocities = np.diff(foot_positions, prepend=foot_positions[0])
+    # Compute vertical velocity using derivative-based method
+    # This provides smoother, more accurate velocity estimates than frame-to-frame differences
+    # and is consistent with the velocity calculation used for sub-frame interpolation
+    velocities = compute_velocity_from_derivative(
+        foot_positions, window_length=window_length, polyorder=polyorder
+    )
 
     # Detect potential contact frames based on low velocity
     is_stationary = np.abs(velocities) < velocity_threshold
