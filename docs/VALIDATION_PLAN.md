@@ -21,7 +21,7 @@ For a hobby project, validation means:
 - ✅ **Reasonable accuracy**: Measurements are "in the ballpark" for practical use
 - ✅ **Consistency**: Repeated measurements give similar results
 - ✅ **Sanity checks**: Results make physical sense (jump height from flight time checks out)
-- ✅ **Comparative accuracy**: Similar to other free/affordable tools (MyJump2, jump mats)
+- ✅ **Comparative accuracy**: Similar to other free/affordable tools (My Jump Lab, jump mats)
 - ❌ **NOT research-grade**: Not validated against force plates or motion capture systems
 
 ### Realistic Goals
@@ -72,15 +72,17 @@ For a hobby project, validation means:
 
 These methods cost nothing and can be done immediately by any user.
 
-### 3.1 Compare Against MyJump2 App
+### 3.1 Compare Against My Jump Lab App
 
-**What it is**: MyJump2 is a popular iPhone/Android app ($10-15) that calculates jump height from slow-motion video. It's been validated in multiple research studies (ICC > 0.95 vs. force plates).
+**What it is**: My Jump Lab (also known as My Jump 3) is a popular iPhone/Android app that calculates jump height from slow-motion video. It's been validated in multiple research studies (ICC > 0.95 vs. force plates).
+
+**Download**: [iOS App Store](https://apps.apple.com/us/app/my-jump-lab-my-jump-3/id1554077178) | [Google Play](https://play.google.com/store/apps/details?id=com.my.jump.lab&hl=en)
 
 **How to do it**:
 
-1. Download MyJump2 app (~$10, or use free trial if available)
+1. Download My Jump Lab app from the links above
 2. Record 10-20 jumps (countermovement or drop jumps)
-3. Process same video with both MyJump2 and Kinemotion
+3. Process same video with both My Jump Lab and Kinemotion
 4. Compare jump heights, contact times, flight times
 5. Calculate: mean difference, correlation, percentage error
 
@@ -92,7 +94,7 @@ These methods cost nothing and can be done immediately by any user.
 
 **Time required**: 2-3 hours
 
-**Validation value**: ⭐⭐⭐⭐⭐ (High - MyJump2 is well-validated)
+**Validation value**: ⭐⭐⭐⭐⭐ (High - My Jump Lab is well-validated)
 
 ### 3.2 Tracker Video Analysis Tool
 
@@ -137,10 +139,10 @@ These methods cost nothing and can be done immediately by any user.
 
 **Validation value**: ⭐⭐⭐⭐⭐ (Excellent - rigorous position-based validation, free)
 
-**Advantages over MyJump2**:
+**Advantages over My Jump Lab**:
 
 - Tracks full trajectory (not just flight time)
-- Open-source and free (MyJump2 costs $10-15)
+- Open-source and free (My Jump Lab costs $10-15)
 - More detailed analysis capabilities
 - Established in academic settings
 
@@ -328,7 +330,7 @@ print(f"Mean absolute error: {mae:.2f} cm")
 #### Day 1-2: Setup
 
 - [ ] Download Tracker (<https://physlets.org/tracker/>) - free and open-source
-- [ ] Alternative: Install MyJump2 app if iOS device available
+- [ ] Alternative: Install My Jump Lab app if iOS device available
 - [ ] Set up recording environment (good lighting, clear background)
 - [ ] Test camera angles and distances
 
@@ -344,14 +346,14 @@ print(f"Mean absolute error: {mae:.2f} cm")
 
 - [ ] Process all videos with Kinemotion
 - [ ] Analyze same videos with Tracker (track ankle/heel position)
-- [ ] Alternative: Use MyJump2 if available
+- [ ] Alternative: Use My Jump Lab if available
 - [ ] Export Tracker position data and calculate jump height
 - [ ] Calculate correlation, mean difference, MAE
 - [ ] Document results in validation notes
 
 #### Phase 1 Success Criteria
 
-- Correlation r > 0.85 with Tracker/MyJump2
+- Correlation r > 0.85 with Tracker/My Jump Lab
 - Mean difference < 5cm for jump height
 - Contact/flight times within ±30ms
 - Event detection within ±2-3 frames
@@ -404,19 +406,20 @@ Create a validation issue on GitHub:
 Help validate Kinemotion by comparing it with other tools!
 
 **What to do**:
-1. Record jumps with Kinemotion
-2. Compare with MyJump2, jump mat, or manual analysis
-3. Share your results here
+1. Record jump videos (with phone/camera at 60fps+)
+2. Analyze videos with Kinemotion
+3. Compare with My Jump Lab, jump mat, or manual analysis
+4. Share your results here
 
 **Data to share**:
 - Number of jumps analyzed
-- Reference tool used (MyJump2, jump mat, manual)
+- Reference tool used (My Jump Lab, jump mat, manual)
 - Correlation (if calculated)
 - Mean difference
 - Your assessment (good agreement? systematic bias?)
 
 **Example**:
-- 15 jumps compared with MyJump2
+- 15 jumps compared with My Jump Lab
 - Correlation: r = 0.91
 - Mean difference: -2.3cm (Kinemotion slightly lower)
 - Assessment: Good agreement for practical use
@@ -461,7 +464,7 @@ Help validate Kinemotion by comparing it with other tools!
 
 ### Realistic Timeline (Solo Developer)
 
-**Week 1**: MyJump2 comparison (2-3 hours total)
+**Week 1**: My Jump Lab comparison (2-3 hours total)
 **Week 2**: Manual video analysis (3-4 hours total)
 **Week 3**: Physics checks and repeatability (2-3 hours total)
 **Week 4**: Documentation and results write-up (2-3 hours total)
@@ -474,13 +477,13 @@ Help validate Kinemotion by comparing it with other tools!
 
 **Minimum (Free)**:
 
-- MyJump2 app (or use free trial): $0-15
+- My Jump Lab app (or use free trial): $0-15
 - Time: 10-15 hours
 - **Total: $0-15**
 
 **Recommended (Low-Cost)**:
 
-- MyJump2 app: $10-15
+- My Jump Lab app: $10-15
 - Basic jump mat: $200-400 (optional)
 - Time: 15-20 hours
 - **Total: $10-415**
@@ -534,7 +537,7 @@ Sometimes opportunities arise unexpectedly:
 ```markdown
 ## Validation Status
 
-Kinemotion has been validated through comparison with MyJump2 app and manual video analysis:
+Kinemotion has been validated through comparison with My Jump Lab app and manual video analysis:
 
 - **Jump height**: Correlation r = 0.88, MAE = 4.2cm (n=25 jumps, 30fps video)
 - **Flight time**: Correlation r = 0.91, MAE = 24ms (n=25 jumps, 30fps video)
@@ -575,7 +578,7 @@ Template:
 ## Methods
 
 ### Reference Tools
-- [List tools used: MyJump2, manual analysis, etc.]
+- [List tools used: My Jump Lab, manual analysis, etc.]
 
 ### Testing Protocol
 - [Number of jumps, video settings, conditions]
@@ -654,7 +657,7 @@ Template:
 
 You don't need perfect validation on day one. Start simple:
 
-1. **Phase 1**: Compare with MyJump2 (1 week, free)
+1. **Phase 1**: Compare with My Jump Lab (1 week, free)
 2. **Phase 2**: Manual verification (1 week, free)
 3. **Phase 3**: Document results (1 week)
 4. **Phase 4**: Community validation (ongoing)
@@ -682,7 +685,7 @@ Provide users with **honest, evidence-based information** about tool accuracy so
 |--------|---------------|-------------------|
 | **Budget** | $0-500 | $15,000-30,000 |
 | **Time** | 1-3 months | 6-12 months |
-| **Reference** | MyJump2, jump mat | Force plates, motion capture |
+| **Reference** | My Jump Lab, jump mat | Force plates, motion capture |
 | **Participants** | Self + volunteers | 30-50 recruited participants |
 | **Statistics** | Correlation, MAE | ICC, Bland-Altman, LOA |
 | **Ethics** | None required | IRB approval needed |
@@ -703,4 +706,4 @@ Provide users with **honest, evidence-based information** about tool accuracy so
 - Added Section 3.2: Tracker video analysis tool (free, open-source, rigorous)
 - Clarified that validation assumes 60fps baseline for accuracy targets
 
-**Next Steps**: Start with Phase 1 (Tracker or MyJump2 comparison at 60fps+)
+**Next Steps**: Start with Phase 1 (Tracker or My Jump Lab comparison at 60fps+)
