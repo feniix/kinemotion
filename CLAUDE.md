@@ -427,17 +427,17 @@ Modify `smooth_landmarks()` in `core/smoothing.py:9`:
 
 **IMPORTANT**: See `docs/PARAMETERS.md` for comprehensive guide on all CLI parameters.
 
-Quick reference:
-- **use-com**: Use center of mass tracking instead of feet (↑ accuracy by 3-5%)
-- **adaptive-threshold**: Auto-calibrate velocity threshold from baseline (↑ accuracy by 2-3%)
+Quick reference for `dropjump-analyze`:
 - **smoothing-window**: Trajectory smoothness (↑ for noisy video)
-- **velocity-threshold**: Contact sensitivity (↓ to detect brief contacts) - ignored if adaptive-threshold enabled
+- **velocity-threshold**: Contact sensitivity (↓ to detect brief contacts)
 - **min-contact-frames**: Temporal filter (↑ to remove false contacts)
 - **visibility-threshold**: Landmark confidence (↓ for occluded landmarks)
 - **detection-confidence**: Pose detection strictness (MediaPipe)
 - **tracking-confidence**: Tracking persistence (MediaPipe)
 - **drop-height**: Drop box height in meters for calibration (e.g., 0.40 for 40cm)
 - **use-curvature**: Enable trajectory curvature analysis (default: enabled)
+
+**Note**: Drop jump analysis always uses foot-based tracking with fixed velocity thresholds because typical drop jump videos are ~3 seconds long without a stationary baseline period. The `--use-com` and `--adaptive-threshold` options (available in `core/` modules) require longer videos (~5+ seconds) with 3 seconds of standing baseline, making them suitable for future jump types like CMJ (countermovement jump) but not drop jumps.
 
 The detailed guide includes:
 - How each parameter works internally
@@ -564,33 +564,6 @@ uv run kinemotion dropjump-analyze video.mp4 \
 # Regular jump (no calibration, uses corrected kinematic method)
 uv run kinemotion dropjump-analyze jump.mp4 \
   --output debug.mp4 \
-  --json-output metrics.json
-
-# Use center of mass tracking for improved accuracy (3-5% gain)
-uv run kinemotion dropjump-analyze video.mp4 \
-  --use-com \
-  --output debug.mp4 \
-  --json-output metrics.json
-
-# Full analysis with CoM tracking and calibration
-uv run kinemotion dropjump-analyze video.mp4 \
-  --use-com \
-  --drop-height 0.40 \
-  --output debug_com.mp4 \
-  --json-output metrics.json
-
-# Adaptive threshold for auto-calibration (2-3% accuracy gain)
-uv run kinemotion dropjump-analyze video.mp4 \
-  --adaptive-threshold \
-  --output debug.mp4 \
-  --json-output metrics.json
-
-# Maximum accuracy: CoM + adaptive threshold + calibration (~93-96%)
-uv run kinemotion dropjump-analyze video.mp4 \
-  --adaptive-threshold \
-  --use-com \
-  --drop-height 0.40 \
-  --output debug_max.mp4 \
   --json-output metrics.json
 ```
 

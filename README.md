@@ -5,9 +5,7 @@ A video-based kinematic analysis tool for athletic performance. Analyzes side-vi
 ## Features
 
 - **Automatic pose tracking** using MediaPipe Pose landmarks
-- **Center of mass (CoM) tracking** - biomechanical CoM estimation for 3-5% accuracy improvement
-- **Adaptive velocity thresholding** - auto-calibrates from video baseline for 2-3% additional accuracy
-- **Ground contact detection** based on velocity and position (feet or CoM)
+- **Ground contact detection** based on foot velocity and position
 - **Derivative-based velocity** - smooth velocity calculation from position trajectory
 - **Trajectory curvature analysis** - acceleration patterns for refined event detection
 - **Sub-frame interpolation** - precise timing beyond frame boundaries for improved accuracy
@@ -17,11 +15,11 @@ A video-based kinematic analysis tool for athletic performance. Analyzes side-vi
   - Flight time (ms)
   - Jump height (m) - with optional calibration using drop box height
 - **Calibrated measurements** - use known drop height for ~88% accuracy (vs 71% uncalibrated)
-  - With CoM tracking: potential for 91-93% accuracy
-  - With adaptive thresholding + CoM: potential for 93-96% accuracy
 - **JSON output** for easy integration with other tools
 - **Optional debug video** with visual overlays showing contact states and landmarks
 - **Configurable parameters** for smoothing, thresholds, and detection
+
+**Note**: Drop jump analysis uses foot-based tracking with fixed velocity thresholds. Center of mass (CoM) tracking and adaptive thresholding (available in `core/` modules) require longer videos (~5+ seconds) with a 3-second standing baseline, making them unsuitable for typical drop jump videos (~3 seconds). These features may be available in future jump types like CMJ (countermovement jump).
 
 ## Setup
 
@@ -92,46 +90,11 @@ kinemotion dropjump-analyze drop-jump.mp4 \
   --output debug.mp4
 ```
 
-### Center of Mass Tracking (Improved Accuracy)
-
-Use CoM tracking for 3-5% accuracy improvement:
-
-```bash
-# Basic CoM tracking
-kinemotion dropjump-analyze video.mp4 --use-com
-
-# CoM tracking with calibration for maximum accuracy
-kinemotion dropjump-analyze drop-jump.mp4 \
-  --use-com \
-  --drop-height 0.40 \
-  --output debug_com.mp4 \
-  --json-output metrics.json
-```
-
-### Adaptive Thresholding (Auto-Calibration)
-
-Auto-calibrate velocity threshold from video baseline for 2-3% accuracy improvement:
-
-```bash
-# Basic adaptive thresholding
-kinemotion dropjump-analyze video.mp4 --adaptive-threshold
-
-# Combined with CoM for maximum accuracy
-kinemotion dropjump-analyze video.mp4 \
-  --adaptive-threshold \
-  --use-com \
-  --drop-height 0.40 \
-  --output debug.mp4 \
-  --json-output metrics.json
-```
-
 ### Full Example (Maximum Accuracy)
 
 ```bash
-# With all accuracy improvements enabled (~93-96% accuracy)
+# With all accuracy improvements enabled
 kinemotion dropjump-analyze jump.mp4 \
-  --adaptive-threshold \
-  --use-com \
   --outlier-rejection \
   --drop-height 0.40 \
   --output debug.mp4 \
@@ -141,8 +104,6 @@ kinemotion dropjump-analyze jump.mp4 \
 
 # Alternative: With experimental bilateral filter
 kinemotion dropjump-analyze jump.mp4 \
-  --adaptive-threshold \
-  --use-com \
   --outlier-rejection \
   --bilateral-filter \
   --drop-height 0.40 \
@@ -245,34 +206,6 @@ kinemotion dropjump-analyze jump.mp4 \
   - Improves accuracy from ~71% to ~88%
   - Only applicable for drop jumps (box → drop → landing → jump)
   - **Tip**: Measure your box height accurately for best results
-
-### Tracking Method
-
-- `--use-com / --use-feet` (default: --use-feet)
-  - Choose between center of mass (CoM) or foot-based tracking
-  - **CoM tracking** (`--use-com`): Uses biomechanical CoM estimation with Dempster's body segment parameters
-    - Head: 8%, Trunk: 50%, Thighs: 20%, Legs: 10%, Feet: 3% of body mass
-    - Tracks true body movement instead of foot position
-    - Reduces error from foot dorsiflexion/plantarflexion during flight
-    - **Accuracy improvement**: +3-5% over foot-based tracking
-  - **Foot tracking** (`--use-feet`): Traditional method using average ankle/heel positions
-    - Faster, simpler, well-tested baseline method
-  - **Tip**: Use `--use-com` for maximum accuracy, especially for drop jumps
-
-### Velocity Threshold Mode
-
-- `--adaptive-threshold / --fixed-threshold` (default: --fixed-threshold)
-  - Choose between adaptive or fixed velocity threshold for contact detection
-  - **Adaptive threshold** (`--adaptive-threshold`): Auto-calibrates from video baseline
-    - Analyzes first 3 seconds of video (assumed relatively stationary)
-    - Computes noise floor as 95th percentile of baseline velocity
-    - Sets threshold as 1.5× noise floor (bounded: 0.005-0.05)
-    - Adapts to camera distance, lighting, frame rate, and compression artifacts
-    - **Accuracy improvement**: +2-3% by eliminating manual tuning
-  - **Fixed threshold** (`--fixed-threshold`): Uses `--velocity-threshold` value (default: 0.02)
-    - Consistent, predictable behavior
-    - Requires manual tuning for optimal results
-  - **Tip**: Use `--adaptive-threshold` for varying video conditions or when unsure of optimal threshold
 
 ### Trajectory Analysis
 
@@ -384,12 +317,8 @@ The debug video includes:
 
 ## How It Works
 
-1. **Pose Tracking**: MediaPipe extracts 2D pose landmarks (13 points: feet, ankles, knees, hips, shoulders, nose) from each frame
-2. **Position Calculation**: Two methods available:
-   - **Foot-based** (default): Averages ankle, heel, and foot index positions
-   - **CoM-based** (--use-com): Biomechanical center of mass using Dempster's body segment parameters
-     - Head: 8%, Trunk: 50%, Thighs: 20%, Legs: 10%, Feet: 3% of body mass
-     - Weighted average reduces error from foot movement artifacts
+1. **Pose Tracking**: MediaPipe extracts 2D pose landmarks (foot points: ankles, heels, foot indices) from each frame
+2. **Position Calculation**: Averages ankle, heel, and foot index positions to determine foot location
 3. **Smoothing**: Savitzky-Golay filter reduces tracking jitter while preserving motion dynamics
 4. **Contact Detection**: Analyzes vertical position velocity to identify ground contact vs. flight phases
 5. **Phase Identification**: Finds continuous ground contact and flight periods

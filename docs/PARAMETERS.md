@@ -4,16 +4,16 @@ This document explains each configuration parameter available in `kinemotion dro
 
 ## Overview
 
-The tool has 13 main configuration parameters divided into 8 categories:
+The tool has 11 main configuration parameters divided into 6 categories:
 
 1. **Smoothing** (2 parameters): Reduces jitter in tracked landmarks
 2. **Advanced Filtering** (2 parameters): Removes tracking glitches and preserves transitions
 3. **Contact Detection** (3 parameters): Determines when feet are on/off ground
 4. **Pose Tracking** (2 parameters): Controls MediaPipe's pose detection quality
 5. **Calibration** (1 parameter): Enables accurate jump height measurement
-6. **Tracking Method** (1 parameter): Choose between CoM or foot-based tracking
-7. **Velocity Threshold Mode** (1 parameter): Auto-calibrate or use fixed threshold
-8. **Trajectory Analysis** (1 parameter): Enable/disable curvature-based refinement
+6. **Trajectory Analysis** (1 parameter): Enable/disable curvature-based refinement
+
+**Note**: Drop jump analysis always uses foot-based tracking with fixed velocity thresholds. The `--use-com` and `--adaptive-threshold` features (available in `core/` modules) require longer videos (~5+ seconds) with a 3-second standing baseline, making them unsuitable for typical drop jump videos (~3 seconds total). These features may be exposed in future jump types like CMJ (countermovement jump).
 
 ---
 
@@ -137,8 +137,6 @@ kinemotion dropjump-analyze studio.mp4 \
 kinemotion dropjump-analyze video.mp4 \
   --polyorder 3 \
   --smoothing-window 9 \
-  --adaptive-threshold \
-  --use-com \
   --drop-height 0.40
 ```
 
@@ -375,8 +373,7 @@ kinemotion dropjump-analyze video.mp4 --bilateral-filter --output bilateral.mp4
 **Interaction with other parameters:**
 - **Compatible with:**
   - --outlier-rejection: Apply together for best results (outlier removal → bilateral smoothing)
-  - --adaptive-threshold: Bilateral preserves transitions, adaptive finds them
-  - --use-com: Both methods improve timing precision
+  - --use-curvature: Bilateral preserves transitions for accurate timing refinement
 
 - **Replaces:**
   - --smoothing-window and --polyorder have no effect when bilateral filter is enabled
@@ -752,202 +749,6 @@ kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --json-output calibrate
 
 ---
 
-## Tracking Method Parameters
-
-### `--use-com / --use-feet` (default: --use-feet)
-
-**What it does:**
-Chooses whether to track the body's center of mass (CoM) or average foot position for vertical motion analysis.
-
-**How it works:**
-- **Foot tracking** (`--use-feet`, default): Averages positions of ankle, heel, and foot index landmarks
-  - Simple, fast, well-tested baseline method
-  - Directly tracks contact points with ground
-  - Subject to errors from foot dorsiflexion/plantarflexion during flight
-
-- **CoM tracking** (`--use-com`): Calculates biomechanical center of mass using Dempster's body segment parameters
-  - Tracks weighted average of body segments: Head (8%), Trunk (50%), Thighs (20%), Legs (10%), Feet (3%)
-  - Represents true body movement according to physics
-  - Reduces error from foot movement artifacts during flight
-  - More accurate for calculating flight time and jump height
-
-**Technical details:**
-- CoM calculation uses 13 body landmarks: nose, shoulders, hips, knees, ankles, heels, feet
-- Falls back to hip midpoint if insufficient landmarks visible
-- Visibility threshold applied to each landmark (default: 0.5)
-- CoM position smoothed using same Savitzky-Golay filter as foot tracking
-- Debug video shows CoM as large colored circle with white border
-
-**When to use CoM (`--use-com`):**
-- Drop jumps where maximum accuracy is critical
-- When foot dorsiflexion/plantarflexion is pronounced during flight
-- Research or performance analysis requiring precise measurements
-- When comparing against force plate data
-- When combined with calibration (`--drop-height`) for maximum accuracy
-
-**When to use feet (`--use-feet`):**
-- Quick analysis or exploratory work
-- When baseline method is sufficient
-- When foot landmarks are more visible than body landmarks
-- Troubleshooting or comparison with previous results
-
-**Accuracy comparison:**
-```
-Foot-based tracking:
-- Baseline accuracy: ~88% with calibration
-- Affected by foot movement during flight
-- Simple, fast, reliable
-
-CoM-based tracking:
-- Accuracy improvement: +3-5% over foot tracking
-- With calibration: ~91-93% accuracy
-- More physically accurate representation
-- Slightly more computation
-```
-
-**Example:**
-```bash
-# Use CoM tracking
-kinemotion dropjump-analyze video.mp4 --use-com
-
-# CoM with calibration for maximum accuracy
-kinemotion dropjump-analyze video.mp4 \
-  --use-com \
-  --drop-height 0.40 \
-  --output debug_com.mp4 \
-  --json-output metrics.json
-
-# Compare foot vs CoM tracking
-kinemotion dropjump-analyze video.mp4 --use-feet --json-output feet.json
-kinemotion dropjump-analyze video.mp4 --use-com --json-output com.json
-```
-
-**Debug video visualization:**
-- **Feet tracking**: Yellow circles on individual foot landmarks, averaged position colored by state
-- **CoM tracking**: Large colored circle at CoM, orange circle at hip midpoint, orange line connecting them
-
-**Troubleshooting:**
-- If CoM tracking gives poor results:
-  1. Check that body landmarks (shoulders, hips, knees) are visible in video
-  2. Lower `--visibility-threshold` if landmarks are partially occluded
-  3. Generate debug video to verify CoM position looks reasonable
-  4. Try adjusting `--smoothing-window` if CoM trajectory is jittery
-- Falls back to feet tracking if insufficient body landmarks visible
-
----
-
-## Velocity Threshold Mode Parameters
-
-### `--adaptive-threshold / --fixed-threshold` (default: --fixed-threshold)
-
-**What it does:**
-Chooses whether to automatically calibrate the velocity threshold from the video or use a fixed value.
-
-**How it works:**
-- **Fixed threshold** (`--fixed-threshold`, default): Uses the value specified by `--velocity-threshold` parameter (default: 0.02)
-  - Consistent, predictable behavior across videos
-  - Requires manual tuning for optimal results
-  - Same threshold used for entire video
-
-- **Adaptive threshold** (`--adaptive-threshold`): Automatically calibrates threshold from video baseline
-  - Analyzes first 3 seconds of video (assumed athlete standing relatively still on box)
-  - Computes velocity for this "stationary" period using Savitzky-Golay derivative
-  - Sets threshold as 1.5× the 95th percentile of baseline velocity (noise floor)
-  - Bounded between 0.005 (minimum sensitivity) and 0.05 (maximum sensitivity)
-  - Adapts to video-specific conditions: camera distance, lighting, frame rate, compression
-
-**Technical details:**
-- Baseline duration: 3 seconds (configurable in code)
-- Noise floor: 95th percentile of absolute velocity values (robust to outliers)
-- Multiplier: 1.5× noise floor (configurable in code)
-- Safety bounds: max(1.5 × noise, 0.005), then min(result, 0.05)
-- Falls back to 0.02 if video too short (< smoothing window frames)
-
-**When to use adaptive (`--adaptive-threshold`):**
-- Videos with varying quality or lighting conditions
-- Different camera distances or zoom levels
-- Unknown optimal threshold for specific video
-- Batch processing multiple videos with different characteristics
-- When combined with CoM tracking for maximum accuracy
-- First-time analysis of a new video setup
-
-**When to use fixed (`--fixed-threshold`):**
-- Consistent video setup (same camera, distance, lighting)
-- You've already determined optimal threshold for your setup
-- Need reproducible results with same threshold
-- Debugging or comparison with previous results
-- Baseline motion in video is not stationary (athlete moving)
-
-**Accuracy comparison:**
-```
-Fixed threshold (manual tuning):
-- Requires trial and error to find optimal value
-- May be suboptimal for varying conditions
-- Consistent across runs
-
-Adaptive threshold (auto-calibration):
-- Accuracy improvement: +2-3% by eliminating tuning errors
-- Automatically adapts to video conditions
-- No manual tuning required
-- May vary slightly between runs if baseline motion varies
-```
-
-**Example:**
-```bash
-# Use adaptive threshold
-kinemotion dropjump-analyze video.mp4 --adaptive-threshold
-
-# Adaptive + CoM for maximum accuracy
-kinemotion dropjump-analyze video.mp4 \
-  --adaptive-threshold \
-  --use-com \
-  --drop-height 0.40 \
-  --output debug.mp4 \
-  --json-output metrics.json
-
-# Compare fixed vs adaptive
-kinemotion dropjump-analyze video.mp4 --fixed-threshold --velocity-threshold 0.02 --json-output fixed.json
-kinemotion dropjump-analyze video.mp4 --adaptive-threshold --json-output adaptive.json
-```
-
-**Console output with adaptive threshold:**
-```
-Calculating adaptive velocity threshold...
-Adaptive threshold: 0.0178 (auto-calibrated from baseline)
-```
-
-**How adaptive threshold adapts:**
-```
-Scenario 1: Close camera, high resolution
-- More pixel movement for same physical motion
-- Higher baseline velocity → higher threshold (e.g., 0.025)
-
-Scenario 2: Distant camera, low resolution
-- Less pixel movement for same physical motion
-- Lower baseline velocity → lower threshold (e.g., 0.012)
-
-Scenario 3: Poor lighting, noisy tracking
-- Jittery landmarks → higher baseline velocity
-- Higher threshold (e.g., 0.030) filters out noise
-
-Scenario 4: Studio quality, stable tracking
-- Smooth landmarks → lower baseline velocity
-- Lower threshold (e.g., 0.008) detects subtle motion
-```
-
-**Troubleshooting:**
-- If adaptive threshold gives poor contact detection:
-  1. Verify first 3 seconds show athlete relatively stationary (standing on box)
-  2. If athlete is moving during baseline, use `--fixed-threshold` instead
-  3. Generate debug video to see where contacts are detected
-  4. Check console output to see what threshold was calculated
-- If threshold seems too high/low:
-  - Threshold bounds: 0.005 ≤ threshold ≤ 0.05
-  - Contact detection may need different `--min-contact-frames` setting
-  - Try manual `--fixed-threshold` with custom value for comparison
-
----
-
 ## Trajectory Analysis Parameters
 
 ### `--use-curvature / --no-curvature` (default: --use-curvature)
@@ -1079,39 +880,38 @@ Blended result: 0.7 × 46.9 + 0.3 × 49.0 = 47.43
 ```bash
 kinemotion dropjump-analyze video.mp4 \
   --smoothing-window 3 \
-  --adaptive-threshold \
+  --velocity-threshold 0.015 \
   --min-contact-frames 2 \
   --visibility-threshold 0.6 \
   --detection-confidence 0.5 \
   --tracking-confidence 0.5
 ```
-**Note:** Using `--adaptive-threshold` instead of manual threshold - will auto-calibrate optimally for this setup.
 
 ### Scenario 2: Outdoor Handheld Video
 - 30fps, camera shake, variable lighting, somewhat noisy
 ```bash
 kinemotion dropjump-analyze video.mp4 \
   --smoothing-window 7 \
-  --adaptive-threshold \
+  --velocity-threshold 0.02 \
   --min-contact-frames 4 \
   --visibility-threshold 0.4 \
   --detection-confidence 0.4 \
   --tracking-confidence 0.4
 ```
-**Note:** Adaptive threshold handles variable lighting automatically. Higher smoothing compensates for camera shake.
+**Note:** Higher smoothing compensates for camera shake.
 
 ### Scenario 3: Low-Quality Smartphone Video
 - 30fps, distant view, poor lighting, compression artifacts
 ```bash
 kinemotion dropjump-analyze video.mp4 \
   --smoothing-window 9 \
-  --adaptive-threshold \
+  --velocity-threshold 0.025 \
   --min-contact-frames 5 \
   --visibility-threshold 0.3 \
   --detection-confidence 0.3 \
   --tracking-confidence 0.3
 ```
-**Note:** Adaptive threshold will automatically adjust to compression noise. High smoothing filters out jitter.
+**Note:** High smoothing filters out jitter from compression artifacts.
 
 ### Scenario 4: Very Reactive/Fast Jumps
 - Need to capture brief flight times and contacts
@@ -1142,9 +942,8 @@ kinemotion dropjump-analyze video.mp4 \
 ```bash
 kinemotion dropjump-analyze video.mp4 \
   --drop-height 0.40 \
-  --adaptive-threshold \
-  --use-com \
   --smoothing-window 5 \
+  --velocity-threshold 0.02 \
   --min-contact-frames 3 \
   --visibility-threshold 0.5 \
   --detection-confidence 0.5 \
@@ -1152,29 +951,28 @@ kinemotion dropjump-analyze video.mp4 \
   --output debug.mp4 \
   --json-output metrics.json
 ```
-**Note:** Using CoM tracking + adaptive threshold + calibration achieves ~91-93% accuracy.
+**Note:** Using calibration with drop height achieves ~88% accuracy vs ~71% kinematic-only.
 
 ### Scenario 7: High-Performance Drop Jump Analysis (Maximum Accuracy)
-- Research-grade analysis with all accuracy features enabled (~93-96% accuracy)
+- Research-grade analysis with all accuracy features enabled
 ```bash
 kinemotion dropjump-analyze video.mp4 \
   --drop-height 0.40 \
-  --adaptive-threshold \
-  --use-com \
   --use-curvature \
+  --outlier-rejection \
   --output debug_max.mp4 \
   --json-output metrics.json \
   --smoothing-window 5 \
+  --velocity-threshold 0.02 \
   --min-contact-frames 3 \
   --visibility-threshold 0.6 \
   --detection-confidence 0.5 \
   --tracking-confidence 0.5
 ```
-**Note:** This combines all accuracy improvements:
-- CoM tracking: +3-5% accuracy
-- Adaptive threshold: +2-3% accuracy
-- Calibration: ~88% baseline → 93-96% total
+**Note:** This combines all accuracy improvements for drop jumps:
+- Calibration: ~88% baseline accuracy
 - Curvature analysis: Enhanced timing precision (enabled by default)
+- Outlier rejection: +1-2% accuracy (enabled by default)
 
 ---
 
@@ -1246,25 +1044,17 @@ If tracking-confidence > detection-confidence:
   → Will maintain tracking longer (more stable)
 ```
 
-### CoM tracking works best with adaptive threshold
+### Frame rate affects velocity threshold
 ```
-CoM tracking + adaptive threshold:
-→ CoM reduces foot movement artifacts
-→ Adaptive threshold accounts for smoother CoM trajectories
-→ Optimal combination for maximum accuracy
-```
+30 fps:
+→ More motion per frame
+→ May need higher velocity-threshold (e.g., 0.02)
+→ Adjust min-contact-frames based on expected contact duration
 
-### Adaptive threshold makes manual tuning unnecessary
-```
-With adaptive-threshold:
-→ Ignores --velocity-threshold parameter
-→ Automatically adapts to video conditions
-→ Eliminates need for FPS-based threshold scaling
-
-With fixed-threshold:
-→ Uses --velocity-threshold value
-→ Requires manual tuning per video setup
-→ May need adjustment for different FPS
+60 fps:
+→ Less motion per frame
+→ May need lower velocity-threshold (e.g., 0.01)
+→ Can use smaller min-contact-frames for brief contacts
 ```
 
 ### Curvature + sub-frame interpolation work together
@@ -1326,14 +1116,10 @@ When bilateral-filter disabled (default):
 | detection-confidence | Medium (affects MediaPipe workload) |
 | tracking-confidence | Medium (affects MediaPipe workload) |
 | drop-height | None (scaling calculation only) |
-| use-com | Negligible (weighted average) |
-| adaptive-threshold | Very low (one-time baseline analysis) |
 | use-curvature | Negligible (reuses smoothed trajectory) |
 
 **Notes:**
 - Higher confidence thresholds can actually improve performance by reducing unnecessary pose detection/tracking attempts
-- CoM tracking adds minimal overhead (~5% vs foot tracking) but provides 3-5% accuracy gain
-- Adaptive threshold computed once at start, no runtime overhead
 - Curvature analysis reuses existing derivatives, effectively free
 - Polyorder has no performance impact (polynomial fit complexity is O(window_size), independent of order)
 
@@ -1390,12 +1176,10 @@ kinemotion dropjump-analyze video.mp4 --output v3.mp4 --json-output v3.json --sm
 | `polyorder` | 2 | 1-4 | Polynomial fit complexity | High-quality video with complex motion (+1-2%) |
 | `outlier-rejection` | enabled | enabled/disabled | Removes tracking glitches | Keep enabled unless debugging (+1-2%) |
 | `bilateral-filter` | disabled | enabled/disabled | Edge-preserving smoothing | High-quality video with rapid transitions (+1-2%) |
-| `velocity-threshold` | 0.02 | 0.005-0.05 | Contact sensitivity | Missing contacts or false detections (ignored if adaptive-threshold enabled) |
+| `velocity-threshold` | 0.02 | 0.005-0.05 | Contact sensitivity | Missing contacts or false detections |
 | `min-contact-frames` | 3 | 1-10 | Contact duration filter | Brief false contacts or missing short contacts |
 | `visibility-threshold` | 0.5 | 0.3-0.8 | Landmark trust level | Occlusions or need high confidence |
 | `detection-confidence` | 0.5 | 0.1-0.9 | Initial pose detection | Multiple people or poor visibility |
 | `tracking-confidence` | 0.5 | 0.1-0.9 | Tracking persistence | Tracking lost or wrong person tracked |
 | `drop-height` | None | 0.1-2.0 | Jump height calibration | Drop jump with known box height |
-| `use-com` | feet | com/feet | Tracking method | Want maximum accuracy (+3-5%) |
-| `adaptive-threshold` | fixed | adaptive/fixed | Threshold mode | Varying video conditions, unknown optimal threshold |
 | `use-curvature` | enabled | enabled/disabled | Timing refinement | Default: keep enabled for best accuracy |
