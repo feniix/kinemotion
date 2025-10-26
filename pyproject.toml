@@ -31,6 +31,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/feniix/kinemotion"
 Repository = "https://github.com/feniix/kinemotion"
+Source = "https://github.com/feniix/kinemotion"
 Issues = "https://github.com/feniix/kinemotion/issues"
 
 [project.scripts]
