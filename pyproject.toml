@@ -91,3 +91,25 @@ module = [
     "scipy.*",
 ]
 ignore_missing_imports = true
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+branch = "main"
+changelog_file = "CHANGELOG.md"
+build_command = "uv build"
+dist_path = "dist/"
+upload_to_vcs_release = true
+upload_to_pypi = true
+upload_to_repository = false
+remove_dist = false
+patch_without_tag = false
+commit_message = "chore(release): {version} [skip ci]"
+
+[tool.semantic_release.publish]
+upload_to_pypi = true
+pypi_token_variable = "PYPI_API_TOKEN"
+
+[tool.semantic_release.commit_parser_options]
+allowed_tags = ["feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "build", "ci"]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf"]

@@ -17,10 +17,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python and uv
-        uses: astral-sh/setup-uv@v1
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v1
 
       - name: Install dependencies
         run: uv sync
