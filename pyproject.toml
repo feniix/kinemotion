@@ -96,10 +96,3 @@ module = [
     "scipy.*",
 ]
 ignore_missing_imports = true
-
-[tool.semantic_release]
-version_toml = ["pyproject.toml:project.version"]
-branch = "main"
-changelog_file = "CHANGELOG.md"
-commit_message = "chore(release): {version} [skip ci]"
-upload_to_pypi = false
