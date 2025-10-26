@@ -103,6 +103,7 @@ upload_to_pypi = true
 upload_to_repository = false
 remove_dist = false
 patch_without_tag = false
+major_on_zero = false
 commit_message = "chore(release): {version} [skip ci]"
 
 [tool.semantic_release.publish]
