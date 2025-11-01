@@ -2,6 +2,7 @@
 
 **Status**: 📋 HOBBY PROJECT - Practical Validation Approach
 **Created**: 2025-01-26
+**Last Updated**: 2025-11-01 (Auto-tuning system added)
 **Purpose**: Realistic, low-cost validation roadmap for a hobby project
 
 ---
@@ -9,6 +10,14 @@
 ## ⚠️ Current Status
 
 **IMPORTANT**: Kinemotion measurements are currently **unvalidated**. This document outlines a practical, affordable validation approach suitable for a hobby project. The goal is to establish "reasonable accuracy" rather than research-grade validation.
+
+**NEW (November 2025)**: Kinemotion now features intelligent auto-tuning that eliminates manual parameter adjustment. The tool automatically:
+- Detects video FPS and adjusts velocity thresholds accordingly (30/60/120fps)
+- Analyzes tracking quality and adapts smoothing
+- Auto-detects drop start frame (no manual specification needed)
+- Handles iPhone rotation metadata automatically
+
+This makes validation testing easier - no need to guess optimal parameters!
 
 ---
 

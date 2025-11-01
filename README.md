@@ -71,18 +71,21 @@ This will install all dependencies and make the `kinemotion` command available.
 
 ## Usage
 
+**NEW:** Kinemotion now features **intelligent auto-tuning**! Just specify your drop box height and the tool automatically optimizes all parameters based on video frame rate and tracking quality.
+
 ### Basic Analysis
 
-Analyze a video and output metrics to stdout as JSON:
+Analyze a video with automatic parameter selection:
 
 ```bash
-kinemotion dropjump-analyze video.mp4
+# Drop-height is REQUIRED for accurate calibration
+kinemotion dropjump-analyze video.mp4 --drop-height 0.40
 ```
 
 ### Save Metrics to File
 
 ```bash
-kinemotion dropjump-analyze video.mp4 --json-output metrics.json
+kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --json-output metrics.json
 ```
 
 ### Generate Debug Video
@@ -90,156 +93,104 @@ kinemotion dropjump-analyze video.mp4 --json-output metrics.json
 Create an annotated video showing pose tracking and contact detection:
 
 ```bash
-kinemotion dropjump-analyze video.mp4 --output debug.mp4
+kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --output debug.mp4
 ```
 
-### Calibrated Drop Jump Analysis
+### Complete Analysis
 
-For most accurate measurements, provide the drop box height in meters:
-
-```bash
-# 40cm drop box
-kinemotion dropjump-analyze drop-jump.mp4 --drop-height 0.40
-
-# 60cm drop box with full outputs
-kinemotion dropjump-analyze drop-jump.mp4 \
-  --drop-height 0.60 \
-  --json-output metrics.json \
-  --output debug.mp4
-```
-
-### Full Example (Maximum Accuracy)
+With all outputs:
 
 ```bash
-# With all accuracy improvements enabled
-kinemotion dropjump-analyze jump.mp4 \
-  --outlier-rejection \
-  --drop-height 0.40 \
-  --output debug.mp4 \
-  --json-output results.json \
-  --smoothing-window 7 \
-  --polyorder 3
-
-# Alternative: With experimental bilateral filter
-kinemotion dropjump-analyze jump.mp4 \
-  --outlier-rejection \
-  --bilateral-filter \
+kinemotion dropjump-analyze video.mp4 \
   --drop-height 0.40 \
   --output debug.mp4 \
   --json-output results.json
 ```
 
+### Quality Presets
+
+Choose analysis quality (automatically adjusts all parameters):
+
+```bash
+# Fast analysis (quick, less precise - good for batch processing)
+kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --quality fast
+
+# Balanced (default - best for most use cases)
+kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --quality balanced
+
+# Accurate (research-grade, slower - maximum precision)
+kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --quality accurate
+```
+
+### See Auto-Selected Parameters
+
+View what parameters were automatically selected:
+
+```bash
+kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --verbose
+```
+
+### Expert Mode (Advanced Users)
+
+Override auto-tuned parameters if needed:
+
+```bash
+# Manual parameter override (rarely needed)
+kinemotion dropjump-analyze video.mp4 \
+  --drop-height 0.40 \
+  --expert \
+  --smoothing-window 7 \
+  --velocity-threshold 0.015
+```
+
 ## Configuration Options
 
-> **📖 For detailed explanations of all parameters, see [docs/PARAMETERS.md](docs/PARAMETERS.md)**
->
-> This section provides a quick reference. The full guide includes:
->
-> - How each parameter works internally
-> - When and why to adjust them
-> - Scenario-based recommendations
-> - Debugging workflows
-> - Parameter interaction effects
+### Intelligent Auto-Tuning
 
-### Smoothing
+Kinemotion automatically optimizes parameters based on your video:
+- **FPS-based scaling**: 30fps, 60fps, 120fps videos use different thresholds automatically
+- **Quality-based adjustments**: Adapts smoothing based on MediaPipe tracking confidence
+- **Always enabled**: Outlier rejection, curvature analysis, drop start detection
 
-- `--smoothing-window <int>` (default: 5)
-  - Window size for Savitzky-Golay smoothing filter
-  - Must be odd and >= 3
-  - Larger values = smoother trajectories but less responsive
-  - **Tip**: Increase for noisy videos, decrease for high-quality stable footage
+### Required Parameters
 
-- `--polyorder <int>` (default: 2)
-  - Polynomial order for Savitzky-Golay smoothing filter
-  - Must be < smoothing-window (typically 2 or 3)
-  - 2 = quadratic fit (good for parabolic motion like jumps)
-  - 3 = cubic fit (better for complex motion patterns)
-  - Higher order captures more motion complexity but more sensitive to noise
-  - **Tip**: Use 2 for most cases, try 3 for high-quality videos with complex motion
-  - **Accuracy improvement**: +1-2% for complex motion patterns
-
-### Advanced Filtering
-
-- `--outlier-rejection / --no-outlier-rejection` (default: --outlier-rejection)
-  - Apply RANSAC and median-based outlier rejection to remove tracking glitches
-  - **With outlier rejection** (`--outlier-rejection`): Detects and removes MediaPipe tracking errors
-    - RANSAC-based polynomial fitting identifies positions that deviate from smooth trajectory
-    - Median filtering catches spikes in otherwise smooth motion
-    - Outliers replaced with interpolated values from neighboring valid points
-    - Removes jumps, jitter, and temporary tracking losses
-    - **Accuracy improvement**: +1-2% by eliminating tracking glitches
-  - **Without outlier rejection** (`--no-outlier-rejection`): Uses raw tracked positions
-    - Faster processing, relies entirely on MediaPipe quality
-  - **Tip**: Keep enabled (default) unless debugging or working with perfect tracking
-
-- `--bilateral-filter / --no-bilateral-filter` (default: --no-bilateral-filter)
-  - Use bilateral temporal filter for edge-preserving smoothing
-  - **With bilateral filter** (`--bilateral-filter`): Preserves sharp transitions while smoothing noise
-    - Weights each frame by temporal distance AND position similarity
-    - Landing/takeoff transitions remain sharp (not smoothed away)
-    - Noise in smooth regions (flight, ground contact) is reduced
-    - Edge-preserving alternative to Savitzky-Golay smoothing
-    - **Accuracy improvement**: +1-2% by preserving event timing precision
-  - **Without bilateral filter** (`--no-bilateral-filter`): Uses standard Savitzky-Golay smoothing
-    - Uniform smoothing across all frames
-    - Well-tested baseline method
-  - **Tip**: Experimental feature; enable for videos with rapid transitions or variable motion
-  - **Note**: Cannot be used simultaneously with Savitzky-Golay; bilateral replaces it when enabled
-
-### Contact Detection
-
-- `--velocity-threshold <float>` (default: 0.02)
-  - Vertical velocity threshold for detecting stationary feet
-  - In normalized coordinates (0-1 range)
-  - Lower values = more sensitive (may detect false contacts)
-  - Higher values = less sensitive (may miss brief contacts)
-  - **Tip**: Start with default, decrease if missing contacts, increase if detecting false contacts
-
-- `--min-contact-frames <int>` (default: 3)
-  - Minimum consecutive frames to confirm ground contact
-  - Filters out momentary tracking glitches
-  - **Tip**: Increase for noisy videos with jittery tracking
-
-### Visibility
-
-- `--visibility-threshold <float>` (default: 0.5)
-  - Minimum MediaPipe visibility score (0-1) to trust a landmark
-  - Higher values require more confident tracking
-  - **Tip**: Lower if landmarks are frequently obscured but tracking seems reasonable
-
-### Pose Tracking
-
-- `--detection-confidence <float>` (default: 0.5)
-  - MediaPipe pose detection confidence threshold
-  - **Tip**: Increase if getting false pose detections
-
-- `--tracking-confidence <float>` (default: 0.5)
-  - MediaPipe pose tracking confidence threshold
-  - **Tip**: Increase if tracking is jumping between different people/objects
-
-### Calibration
-
-- `--drop-height <float>` (optional)
+- `--drop-height <float>` **[REQUIRED]**
   - Height of drop box/platform in meters (e.g., 0.40 for 40cm)
-  - Enables calibrated jump height measurement using known drop height
-  - Theoretically improves accuracy (⚠️ unvalidated - requires empirical validation)
-  - Only applicable for drop jumps (box → drop → landing → jump)
-  - **Tip**: Measure your box height accurately for best results
+  - Used for accurate calibration of jump height measurements
+  - Measure your box height accurately for best results
 
-### Trajectory Analysis
+### Optional Parameters
 
-- `--use-curvature / --no-curvature` (default: --use-curvature)
-  - Enable/disable trajectory curvature analysis for refining transitions
-  - **With curvature** (`--use-curvature`): Uses acceleration patterns to refine event timing
-    - Landing detection: Finds acceleration spike from impact deceleration
-    - Takeoff detection: Finds acceleration change as body transitions from static to upward motion
-    - Blends curvature-based refinement (70%) with velocity-based estimate (30%)
-    - Provides physics-based validation of velocity threshold crossings
-    - **Accuracy improvement**: More precise timing, especially for rapid transitions
-  - **Without curvature** (`--no-curvature`): Pure velocity-based detection with sub-frame interpolation
-    - Simpler, faster algorithm
-    - Still highly accurate with smooth velocity curves
-  - **Tip**: Keep enabled (default) for best results; disable only for debugging or comparison
+- `--quality [fast|balanced|accurate]` (default: balanced)
+  - **fast**: Quick analysis, less precise (~50% faster)
+  - **balanced**: Good accuracy/speed tradeoff (recommended)
+  - **accurate**: Research-grade analysis, slower (maximum precision)
+
+- `--verbose` / `-v`
+  - Show auto-selected parameters and analysis details
+  - Useful for understanding what the tool is doing
+
+- `--output <path>` / `-o`
+  - Generate annotated debug video with pose tracking visualization
+
+- `--json-output <path>` / `-j`
+  - Save metrics to JSON file instead of stdout
+
+### Expert Overrides (Rarely Needed)
+
+For advanced users who need manual control:
+
+- `--drop-start-frame <int>`: Manually specify where drop begins (if auto-detection fails)
+- `--smoothing-window <int>`: Override auto-tuned smoothing window
+- `--velocity-threshold <float>`: Override auto-tuned velocity threshold
+- `--min-contact-frames <int>`: Override auto-tuned minimum contact frames
+- `--visibility-threshold <float>`: Override visibility threshold
+- `--detection-confidence <float>`: Override MediaPipe detection confidence
+- `--tracking-confidence <float>`: Override MediaPipe tracking confidence
+
+> **📖 For detailed parameter explanations, see [docs/PARAMETERS.md](docs/PARAMETERS.md)**
+>
+> **Note:** Most users never need expert parameters - auto-tuning handles optimization automatically!
 
 ## Output Format
 

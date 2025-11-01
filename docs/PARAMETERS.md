@@ -1,21 +1,49 @@
 # Configuration Parameters Guide
 
+**⚠️ NOTICE:** **This document is mostly DEPRECATED as of November 2025.**
+
+Kinemotion now features **intelligent auto-tuning** that automatically optimizes all parameters based on video characteristics (FPS, tracking quality). Most users no longer need to manually adjust parameters.
+
+**For current usage, see:**
+- README.md - Simplified interface with auto-tuning
+- CLAUDE.md - Auto-tuning system documentation
+
+**This document is preserved for:**
+- Expert users who need to override auto-tuned values (use `--expert` mode)
+- Understanding what each parameter does internally
+- Debugging when auto-tuning doesn't work as expected
+
+---
+
+## Quick Reference (Auto-Tuned Values)
+
+**You don't need to set these manually!** The tool auto-detects:
+
+| Parameter | 30fps Auto | 60fps Auto | 120fps Auto | Formula |
+|-----------|------------|------------|-------------|---------|
+| `velocity-threshold` | 0.020 | 0.010 | 0.005 | 0.02 × (30/fps) |
+| `min-contact-frames` | 3 | 6 | 12 | round(3 × (fps/30)) |
+| `smoothing-window` | 5 | 3 | 3 | 5 if fps≤30 else 3 |
+| `outlier-rejection` | ✅ | ✅ | ✅ | Always enabled |
+| `use-curvature` | ✅ | ✅ | ✅ | Always enabled |
+| `polyorder` | 2 | 2 | 2 | Always 2 (optimal for jumps) |
+
+**Quality adjustments** (based on MediaPipe visibility):
+- High quality (visibility > 0.7): Minimal smoothing, no bilateral filter
+- Medium quality (0.4-0.7): +1 smoothing adjustment, enable bilateral
+- Low quality (< 0.4): +2 smoothing adjustment, enable bilateral, lower confidence
+
+**Use `--verbose` to see what was auto-selected for your video!**
+
+---
+
+## Legacy Manual Parameter Reference
+
 **⚠️ Important:** **kinemotion accuracy is currently unvalidated**. These parameter recommendations are based on theoretical considerations and industry best practices, not empirically verified performance.
 
-This document explains each configuration parameter available in `kinemotion dropjump-analyze` and how to tune them for different scenarios.
+This section explains each parameter for expert users who need manual control.
 
-## Overview
-
-The tool has 11 main configuration parameters divided into 6 categories:
-
-1. **Smoothing** (2 parameters): Reduces jitter in tracked landmarks
-2. **Advanced Filtering** (2 parameters): Removes tracking glitches and preserves transitions
-3. **Contact Detection** (3 parameters): Determines when feet are on/off ground
-4. **Pose Tracking** (2 parameters): Controls MediaPipe's pose detection quality
-5. **Calibration** (1 parameter): Enables theoretically improved jump height measurement
-6. **Trajectory Analysis** (1 parameter): Enable/disable curvature-based refinement
-
-**Note**: Drop jump analysis always uses foot-based tracking with fixed velocity thresholds. The `--use-com` and `--adaptive-threshold` features (available in `core/` modules) require longer videos (~5+ seconds) with a 3-second standing baseline, making them unsuitable for typical drop jump videos (~3 seconds total). These features may be exposed in future jump types like CMJ (countermovement jump).
+**Note**: Drop jump analysis uses foot-based tracking. The `--use-com` and `--adaptive-threshold` features (available in `core/` modules) require longer videos (~5+ seconds) with a 3-second standing baseline, making them unsuitable for typical drop jump videos (~3 seconds total).
 
 **Accuracy Disclaimer**: All parameter tuning recommendations assume kinemotion provides accurate measurements. Actual accuracy performance is currently unknown and requires validation against gold standards (force plates, 3D motion capture).
 
