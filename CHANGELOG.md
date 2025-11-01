@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.7.1 (2025-11-01)
+
+### Bug Fixes
+
+- Update documentation for auto-tuning system
+  ([`6c1a135`](https://github.com/feniix/kinemotion/commit/6c1a135acf5cce7a627644dbc6393460277906ad))
+
+
 ## v0.7.0 (2025-11-01)
 
 ### Features
