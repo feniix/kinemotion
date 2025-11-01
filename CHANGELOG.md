@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.7.0 (2025-11-01)
+
+### Features
+
+- Add intelligent auto-tuning and video rotation handling
+  ([`7b35f67`](https://github.com/feniix/kinemotion/commit/7b35f6790dd8b6714f3e42389555107a043d486c))
+
+
 ## v0.6.4 (2025-10-26)
 
 ### Bug Fixes
