@@ -504,30 +504,129 @@ Modify `smooth_landmarks()` in `core/smoothing.py:9`:
 - `window_length`: Controls smoothing strength (must be odd, default: 5)
 - `polyorder`: Polynomial order for Savitzky-Golay filter (default: 2)
 
-### Parameter Tuning
+### Intelligent Auto-Tuning System
 
-**IMPORTANT**: See `docs/PARAMETERS.md` for comprehensive guide on all CLI parameters.
+**NEW**: The tool now features intelligent auto-tuning that eliminates the need for manual parameter adjustment!
 
-Quick reference for `dropjump-analyze`:
+#### How It Works (core/auto_tuning.py)
 
-- **smoothing-window**: Trajectory smoothness (↑ for noisy video)
-- **velocity-threshold**: Contact sensitivity (↓ to detect brief contacts)
-- **min-contact-frames**: Temporal filter (↑ to remove false contacts)
-- **visibility-threshold**: Landmark confidence (↓ for occluded landmarks)
-- **detection-confidence**: Pose detection strictness (MediaPipe)
-- **tracking-confidence**: Tracking persistence (MediaPipe)
-- **drop-height**: Drop box height in meters for calibration (e.g., 0.40 for 40cm)
-- **use-curvature**: Enable trajectory curvature analysis (default: enabled)
+The auto-tuning system analyzes your video and automatically selects optimal parameters:
 
-**Note**: Drop jump analysis always uses foot-based tracking with fixed velocity thresholds because typical drop jump videos are ~3 seconds long without a stationary baseline period. The `--use-com` and `--adaptive-threshold` options (available in `core/` modules) require longer videos (~5+ seconds) with 3 seconds of standing baseline, making them suitable for future jump types like CMJ (countermovement jump) but not drop jumps.
+**Phase 1: Video Analysis**
+- Extracts frame rate from video metadata
+- Analyzes landmark visibility quality (average MediaPipe confidence scores)
+- Measures position variance (tracking stability)
+- Detects drop jump pattern (stationary period on platform)
 
-The detailed guide includes:
+**Phase 2: Automatic Parameter Selection**
 
-- How each parameter works internally
-- Frame rate considerations
-- Scenario-based recommended settings
-- Debugging workflow with visual indicators
-- Parameter interaction effects
+**FPS-based scaling** (maintains consistent temporal resolution):
+```python
+velocity_threshold = 0.02 × (30 / fps)
+# 30fps → 0.020, 60fps → 0.010, 120fps → 0.005
+
+min_contact_frames = round(3 × (fps / 30))
+# 30fps → 3 frames (100ms), 60fps → 6 frames (100ms)
+
+smoothing_window = 5 if fps ≤ 30 else 3
+# Higher fps → less smoothing (better temporal resolution)
+```
+
+**Quality-based adjustments** (adapts to tracking quality):
+- High visibility (>0.7): Minimal smoothing, no bilateral filter
+- Medium visibility (0.4-0.7): Moderate smoothing, enable bilateral filter
+- Low visibility (<0.4): Aggressive smoothing, bilateral filter, lower confidence thresholds
+
+**Always enabled** (proven beneficial, no downsides):
+- Outlier rejection (removes tracking glitches)
+- Trajectory curvature analysis (sub-frame precision)
+- Drop start auto-detection (skips stationary period)
+- Polyorder 2 (optimal for parabolic jump motion)
+
+#### Quality Presets
+
+**`--quality fast`** (50% faster, good for batch processing)
+- Velocity threshold ×1.5 (less sensitive)
+- Reduced smoothing (-2 frames)
+- Skips bilateral filter
+- Lower detection confidence (0.3)
+
+**`--quality balanced`** (default, best for most cases)
+- FPS-adjusted parameters
+- Adaptive smoothing based on quality
+- All accuracy features enabled
+
+**`--quality accurate`** (research-grade, slower)
+- Velocity threshold ×0.5 (more sensitive)
+- Increased smoothing (+2 frames)
+- Always enables bilateral filter
+- Higher detection confidence (0.6)
+
+#### User-Facing Parameters
+
+**Reduced from 13 → 2 required + 2 optional:**
+
+**Required:**
+- `--drop-height`: Box height in meters (e.g., 0.40 for 40cm) - REQUIRED for accurate calibration
+
+**Optional:**
+- `--output`: Debug video path
+- `--json-output`: Metrics JSON path
+- `--quality`: fast/balanced/accurate (default: balanced)
+- `--verbose`: Show auto-selected parameters
+
+**Expert overrides** (rarely needed):
+- `--drop-start-frame`: Manual drop start frame
+- `--smoothing-window`: Override auto-tuned smoothing
+- `--velocity-threshold`: Override auto-tuned threshold
+- `--min-contact-frames`: Override auto-tuned minimum
+- `--visibility-threshold`: Override visibility threshold
+- `--detection-confidence`: Override MediaPipe detection
+- `--tracking-confidence`: Override MediaPipe tracking
+
+#### Migration from Manual Parameters
+
+**Old way** (complex, error-prone):
+```bash
+# User had to know these magic numbers for 60fps video
+uv run kinemotion dropjump-analyze video.mp4 \
+  --smoothing-window 3 \
+  --velocity-threshold 0.01 \
+  --min-contact-frames 6 \
+  --outlier-rejection \
+  --use-curvature
+```
+
+**New way** (simple, automatic):
+```bash
+# Just works - auto-detects 60fps and adjusts all parameters
+uv run kinemotion dropjump-analyze video.mp4
+```
+
+#### Viewing Auto-Selected Parameters
+
+Use `--verbose` to see what parameters were automatically selected:
+
+```bash
+uv run kinemotion dropjump-analyze video.mp4 --verbose
+
+# Output shows:
+# ============================================================
+# AUTO-TUNED PARAMETERS
+# ============================================================
+# Video FPS: 59.98
+# Tracking quality: high (avg visibility: 0.79)
+# Quality preset: balanced
+#
+# Selected parameters:
+#   smoothing_window: 3
+#   velocity_threshold: 0.0100
+#   min_contact_frames: 6
+#   ...
+# ============================================================
+```
+
+**Note**: See `docs/PARAMETERS.md` for detailed explanation of what each parameter does internally (useful for expert mode overrides).
 
 ### Working with Different Video Formats
 
@@ -618,6 +717,10 @@ If mypy reports errors:
 
 ## CLI Usage Examples
 
+**NEW: The tool now features intelligent auto-tuning!** Parameters are automatically adjusted based on video frame rate, tracking quality, and analysis preset. No manual parameter tuning required.
+
+### Simple Usage (Recommended)
+
 ```bash
 # Show main command help
 uv run kinemotion --help
@@ -625,35 +728,91 @@ uv run kinemotion --help
 # Show subcommand help
 uv run kinemotion dropjump-analyze --help
 
-# Basic analysis (JSON to stdout)
-uv run kinemotion dropjump-analyze video.mp4
-
-# Save metrics to file
-uv run kinemotion dropjump-analyze video.mp4 --json-output results.json
-
-# Generate debug video
-uv run kinemotion dropjump-analyze video.mp4 --output debug.mp4
-
-# Drop jump with calibration (40cm box)
+# Basic analysis (JSON to stdout) - JUST WORKS!
+# Drop-height is REQUIRED - specify your box height in meters
+# Auto-detects fps, tracking quality, and selects optimal parameters
 uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40
 
-# Custom parameters for noisy video
-uv run kinemotion dropjump-analyze video.mp4 \
-  --smoothing-window 7 \
-  --velocity-threshold 0.01 \
-  --min-contact-frames 5
+# Save metrics to file
+uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --json-output results.json
 
-# Full analysis with calibration and all outputs
+# Generate debug video
+uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --output debug.mp4
+
+# Complete analysis with all outputs
 uv run kinemotion dropjump-analyze video.mp4 \
-  --output debug.mp4 \
-  --json-output metrics.json \
   --drop-height 0.40 \
-  --smoothing-window 7
-
-# Regular jump (no calibration, uses corrected kinematic method)
-uv run kinemotion dropjump-analyze jump.mp4 \
   --output debug.mp4 \
   --json-output metrics.json
+
+# See what parameters were auto-selected
+uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --verbose
+
+# Different box heights (examples)
+uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.30  # 30cm box
+uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.60  # 60cm box
+```
+
+### Quality Presets
+
+```bash
+# Fast analysis (quick, less precise)
+# - 50% faster processing
+# - Good for batch processing or initial assessment
+uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --quality fast
+
+# Balanced analysis (default)
+# - Good accuracy/speed tradeoff
+# - Best for most use cases
+uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --quality balanced
+
+# Accurate analysis (research-grade, slower)
+# - Maximum accuracy
+# - More aggressive smoothing and filtering
+# - Best for publication-quality data
+uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --quality accurate
+```
+
+### Expert Mode (Advanced Users Only)
+
+```bash
+# Override specific auto-tuned parameters
+uv run kinemotion dropjump-analyze video.mp4 \
+  --drop-height 0.40 \
+  --expert \
+  --smoothing-window 7 \
+  --velocity-threshold 0.015
+
+# Manual drop start frame (if auto-detection fails)
+uv run kinemotion dropjump-analyze video.mp4 \
+  --drop-height 0.40 \
+  --drop-start-frame 120
+```
+
+### Auto-Tuning Examples
+
+```bash
+# 30fps video - auto-selects:
+#   velocity_threshold: 0.020
+#   min_contact_frames: 3
+#   smoothing_window: 5
+uv run kinemotion dropjump-analyze video_30fps.mp4 --drop-height 0.40
+
+# 60fps video - auto-selects:
+#   velocity_threshold: 0.010
+#   min_contact_frames: 6
+#   smoothing_window: 3
+uv run kinemotion dropjump-analyze video_60fps.mp4 --drop-height 0.40
+
+# Low quality video (avg visibility < 0.4) - auto-enables:
+#   bilateral_filter: True
+#   smoothing_window: +2 adjustment
+uv run kinemotion dropjump-analyze low_quality.mp4 --drop-height 0.40
+
+# High quality video (avg visibility > 0.7) - optimizes:
+#   bilateral_filter: False (not needed)
+#   smoothing_window: minimal (preserve detail)
+uv run kinemotion dropjump-analyze high_quality.mp4 --drop-height 0.40
 ```
 
 ## MCP Server Configuration

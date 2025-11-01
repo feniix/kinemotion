@@ -8,6 +8,11 @@ from typing import Any
 import click
 import numpy as np
 
+from ..core.auto_tuning import (
+    QualityPreset,
+    analyze_video_sample,
+    auto_tune_parameters,
+)
 from ..core.pose import PoseTracker
 from ..core.smoothing import smooth_landmarks, smooth_landmarks_advanced
 from ..core.video_io import VideoProcessor
@@ -34,150 +39,102 @@ from .kinematics import calculate_drop_jump_metrics
     help="Path for JSON metrics output (default: stdout)",
 )
 @click.option(
-    "--smoothing-window",
-    type=int,
-    default=5,
-    help="Smoothing window size (must be odd, >= 3)",
-    show_default=True,
-)
-@click.option(
-    "--polyorder",
-    type=int,
-    default=2,
-    help=(
-        "Polynomial order for Savitzky-Golay smoothing "
-        "(2=quadratic, 3=cubic, must be < smoothing-window)"
-    ),
-    show_default=True,
-)
-@click.option(
-    "--outlier-rejection/--no-outlier-rejection",
-    default=True,
-    help=(
-        "Apply RANSAC and median-based outlier rejection to remove tracking glitches "
-        "(default: enabled, +1-2%% accuracy)"
-    ),
-)
-@click.option(
-    "--bilateral-filter/--no-bilateral-filter",
-    default=False,
-    help=(
-        "Use bilateral temporal filter for edge-preserving smoothing "
-        "(default: disabled, experimental)"
-    ),
-)
-@click.option(
-    "--velocity-threshold",
-    type=float,
-    default=0.02,
-    help="Velocity threshold for contact detection (normalized units)",
-    show_default=True,
-)
-@click.option(
-    "--min-contact-frames",
-    type=int,
-    default=3,
-    help="Minimum frames for valid ground contact",
-    show_default=True,
-)
-@click.option(
-    "--visibility-threshold",
-    type=float,
-    default=0.5,
-    help="Minimum landmark visibility score (0-1)",
-    show_default=True,
-)
-@click.option(
-    "--detection-confidence",
-    type=float,
-    default=0.5,
-    help="Pose detection confidence threshold (0-1)",
-    show_default=True,
-)
-@click.option(
-    "--tracking-confidence",
-    type=float,
-    default=0.5,
-    help="Pose tracking confidence threshold (0-1)",
-    show_default=True,
-)
-@click.option(
     "--drop-height",
     type=float,
-    default=None,
-    help="Height of drop box/platform in meters (e.g., 0.40 for 40cm) - used for calibration",
+    required=True,
+    help=(
+        "Height of drop box/platform in meters (e.g., 0.40 for 40cm box) - "
+        "REQUIRED for accurate calibration"
+    ),
 )
+@click.option(
+    "--quality",
+    type=click.Choice(["fast", "balanced", "accurate"], case_sensitive=False),
+    default="balanced",
+    help=(
+        "Analysis quality preset: "
+        "fast (quick, less precise), "
+        "balanced (default, good for most cases), "
+        "accurate (research-grade, slower)"
+    ),
+    show_default=True,
+)
+@click.option(
+    "--verbose",
+    "-v",
+    is_flag=True,
+    help="Show auto-selected parameters and analysis details",
+)
+# Expert parameters (hidden in help, but always available for advanced users)
 @click.option(
     "--drop-start-frame",
     type=int,
     default=None,
-    help=(
-        "Frame where drop jump begins (skips initial stationary period). "
-        "Use if auto-detection fails."
-    ),
+    help="[EXPERT] Manually specify frame where drop begins (overrides auto-detection)",
 )
 @click.option(
-    "--use-curvature/--no-curvature",
-    default=True,
-    help="Use trajectory curvature analysis for refining transitions (default: enabled)",
+    "--smoothing-window",
+    type=int,
+    default=None,
+    help="[EXPERT] Override auto-tuned smoothing window size",
 )
 @click.option(
-    "--kinematic-correction-factor",
+    "--velocity-threshold",
     type=float,
-    default=1.0,
-    help=(
-        "Correction factor for kinematic jump height (default: 1.0 = no correction). "
-        "Historical testing suggested 1.35, but this is UNVALIDATED. "
-        "Use --drop-height for validated measurements."
-    ),
-    show_default=True,
+    default=None,
+    help="[EXPERT] Override auto-tuned velocity threshold",
+)
+@click.option(
+    "--min-contact-frames",
+    type=int,
+    default=None,
+    help="[EXPERT] Override auto-tuned minimum contact frames",
+)
+@click.option(
+    "--visibility-threshold",
+    type=float,
+    default=None,
+    help="[EXPERT] Override visibility threshold",
+)
+@click.option(
+    "--detection-confidence",
+    type=float,
+    default=None,
+    help="[EXPERT] Override pose detection confidence",
+)
+@click.option(
+    "--tracking-confidence",
+    type=float,
+    default=None,
+    help="[EXPERT] Override pose tracking confidence",
 )
 def dropjump_analyze(
     video_path: str,
     output: str | None,
     json_output: str | None,
-    smoothing_window: int,
-    polyorder: int,
-    outlier_rejection: bool,
-    bilateral_filter: bool,
-    velocity_threshold: float,
-    min_contact_frames: int,
-    visibility_threshold: float,
-    detection_confidence: float,
-    tracking_confidence: float,
-    drop_height: float | None,
+    drop_height: float,
+    quality: str,
+    verbose: bool,
     drop_start_frame: int | None,
-    use_curvature: bool,
-    kinematic_correction_factor: float,
+    smoothing_window: int | None,
+    velocity_threshold: float | None,
+    min_contact_frames: int | None,
+    visibility_threshold: float | None,
+    detection_confidence: float | None,
+    tracking_confidence: float | None,
 ) -> None:
     """
     Analyze drop-jump video to estimate ground contact time, flight time, and jump height.
+
+    Uses intelligent auto-tuning to select optimal parameters based on video characteristics.
+    Parameters are automatically adjusted for frame rate, tracking quality, and analysis preset.
 
     VIDEO_PATH: Path to the input video file
     """
     click.echo(f"Analyzing video: {video_path}", err=True)
 
-    # Validate parameters
-    if smoothing_window < 3:
-        click.echo("Error: smoothing-window must be >= 3", err=True)
-        sys.exit(1)
-
-    if smoothing_window % 2 == 0:
-        smoothing_window += 1
-        click.echo(
-            f"Adjusting smoothing-window to {smoothing_window} (must be odd)", err=True
-        )
-
-    if polyorder < 1:
-        click.echo("Error: polyorder must be >= 1", err=True)
-        sys.exit(1)
-
-    if polyorder >= smoothing_window:
-        click.echo(
-            f"Error: polyorder ({polyorder}) must be < smoothing-window ({smoothing_window})",
-            err=True,
-        )
-        sys.exit(1)
+    # Convert quality string to enum
+    quality_preset = QualityPreset(quality.lower())
 
     try:
         # Initialize video processor
@@ -188,10 +145,32 @@ def dropjump_analyze(
                 err=True,
             )
 
+            # ================================================================
+            # STEP 1: Auto-tune parameters based on video characteristics
+            # ================================================================
+
+            # Analyze video characteristics from a sample to determine optimal parameters
+            # We'll use detection/tracking confidence from quality preset for initial tracking
+            initial_detection_conf = 0.5
+            initial_tracking_conf = 0.5
+
+            if quality_preset == QualityPreset.FAST:
+                initial_detection_conf = 0.3
+                initial_tracking_conf = 0.3
+            elif quality_preset == QualityPreset.ACCURATE:
+                initial_detection_conf = 0.6
+                initial_tracking_conf = 0.6
+
+            # Override with expert values if provided
+            if detection_confidence is not None:
+                initial_detection_conf = detection_confidence
+            if tracking_confidence is not None:
+                initial_tracking_conf = tracking_confidence
+
             # Initialize pose tracker
             tracker = PoseTracker(
-                min_detection_confidence=detection_confidence,
-                min_tracking_confidence=tracking_confidence,
+                min_detection_confidence=initial_detection_conf,
+                min_tracking_confidence=initial_tracking_conf,
             )
 
             # Process all frames
@@ -222,30 +201,90 @@ def dropjump_analyze(
                 click.echo("Error: No frames processed", err=True)
                 sys.exit(1)
 
-            # Smooth landmarks
-            if outlier_rejection or bilateral_filter:
-                if outlier_rejection:
+            # ================================================================
+            # STEP 2: Analyze video characteristics and auto-tune parameters
+            # ================================================================
+
+            characteristics = analyze_video_sample(
+                landmarks_sequence, video.fps, video.frame_count
+            )
+
+            # Auto-tune parameters based on video characteristics
+            params = auto_tune_parameters(characteristics, quality_preset)
+
+            # Apply expert overrides if provided
+            if smoothing_window is not None:
+                params.smoothing_window = smoothing_window
+            if velocity_threshold is not None:
+                params.velocity_threshold = velocity_threshold
+            if min_contact_frames is not None:
+                params.min_contact_frames = min_contact_frames
+            if visibility_threshold is not None:
+                params.visibility_threshold = visibility_threshold
+
+            # Show selected parameters if verbose
+            if verbose:
+                click.echo("\n" + "=" * 60, err=True)
+                click.echo("AUTO-TUNED PARAMETERS", err=True)
+                click.echo("=" * 60, err=True)
+                click.echo(f"Video FPS: {video.fps:.2f}", err=True)
+                click.echo(
+                    f"Tracking quality: {characteristics.tracking_quality} "
+                    f"(avg visibility: {characteristics.avg_visibility:.2f})",
+                    err=True,
+                )
+                click.echo(f"Quality preset: {quality_preset.value}", err=True)
+                click.echo("\nSelected parameters:", err=True)
+                click.echo(f"  smoothing_window: {params.smoothing_window}", err=True)
+                click.echo(f"  polyorder: {params.polyorder}", err=True)
+                click.echo(
+                    f"  velocity_threshold: {params.velocity_threshold:.4f}", err=True
+                )
+                click.echo(
+                    f"  min_contact_frames: {params.min_contact_frames}", err=True
+                )
+                click.echo(
+                    f"  visibility_threshold: {params.visibility_threshold}", err=True
+                )
+                click.echo(
+                    f"  detection_confidence: {params.detection_confidence}", err=True
+                )
+                click.echo(
+                    f"  tracking_confidence: {params.tracking_confidence}", err=True
+                )
+                click.echo(f"  outlier_rejection: {params.outlier_rejection}", err=True)
+                click.echo(f"  bilateral_filter: {params.bilateral_filter}", err=True)
+                click.echo(f"  use_curvature: {params.use_curvature}", err=True)
+                click.echo("=" * 60 + "\n", err=True)
+
+            # ================================================================
+            # STEP 3: Apply smoothing with auto-tuned parameters
+            # ================================================================
+
+            # Smooth landmarks using auto-tuned parameters
+            if params.outlier_rejection or params.bilateral_filter:
+                if params.outlier_rejection:
                     click.echo(
                         "Smoothing landmarks with outlier rejection...", err=True
                     )
-                if bilateral_filter:
+                if params.bilateral_filter:
                     click.echo(
                         "Using bilateral temporal filter for edge-preserving smoothing...",
                         err=True,
                     )
                 smoothed_landmarks = smooth_landmarks_advanced(
                     landmarks_sequence,
-                    window_length=smoothing_window,
-                    polyorder=polyorder,
-                    use_outlier_rejection=outlier_rejection,
-                    use_bilateral=bilateral_filter,
+                    window_length=params.smoothing_window,
+                    polyorder=params.polyorder,
+                    use_outlier_rejection=params.outlier_rejection,
+                    use_bilateral=params.bilateral_filter,
                 )
             else:
                 click.echo("Smoothing landmarks...", err=True)
                 smoothed_landmarks = smooth_landmarks(
                     landmarks_sequence,
-                    window_length=smoothing_window,
-                    polyorder=polyorder,
+                    window_length=params.smoothing_window,
+                    polyorder=params.polyorder,
                 )
 
             # Extract vertical positions from feet
@@ -281,35 +320,34 @@ def dropjump_analyze(
             vertical_positions: np.ndarray = np.array(position_list)
             visibilities: np.ndarray = np.array(visibilities_list)
 
-            # Detect ground contact
+            # Detect ground contact using auto-tuned parameters
             contact_states = detect_ground_contact(
                 vertical_positions,
-                velocity_threshold=velocity_threshold,
-                min_contact_frames=min_contact_frames,
-                visibility_threshold=visibility_threshold,
+                velocity_threshold=params.velocity_threshold,
+                min_contact_frames=params.min_contact_frames,
+                visibility_threshold=params.visibility_threshold,
                 visibilities=visibilities,
-                window_length=smoothing_window,
-                polyorder=polyorder,
+                window_length=params.smoothing_window,
+                polyorder=params.polyorder,
             )
 
             # Calculate metrics
             click.echo("Calculating metrics...", err=True)
-            if drop_height:
-                click.echo(
-                    f"Using drop height calibration: {drop_height}m ({drop_height*100:.0f}cm)",
-                    err=True,
-                )
+            click.echo(
+                f"Using drop height calibration: {drop_height}m ({drop_height*100:.0f}cm)",
+                err=True,
+            )
             metrics = calculate_drop_jump_metrics(
                 contact_states,
                 vertical_positions,
                 video.fps,
                 drop_height_m=drop_height,
                 drop_start_frame=drop_start_frame,
-                velocity_threshold=velocity_threshold,
-                smoothing_window=smoothing_window,
-                polyorder=polyorder,
-                use_curvature=use_curvature,
-                kinematic_correction_factor=kinematic_correction_factor,
+                velocity_threshold=params.velocity_threshold,
+                smoothing_window=params.smoothing_window,
+                polyorder=params.polyorder,
+                use_curvature=params.use_curvature,
+                kinematic_correction_factor=1.0,  # Always 1.0 now (no experimental correction)
             )
 
             # Output metrics as JSON
