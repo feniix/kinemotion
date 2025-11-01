@@ -10,7 +10,9 @@ from kinemotion.core.video_io import VideoProcessor
 from kinemotion.dropjump.debug_overlay import DebugOverlayRenderer
 
 
-def create_test_video(width: int, height: int, fps: float = 30.0, num_frames: int = 10) -> str:
+def create_test_video(
+    width: int, height: int, fps: float = 30.0, num_frames: int = 10
+) -> str:
     """Create a test video with specified dimensions."""
     temp_file = tempfile.NamedTemporaryFile(suffix=".mp4", delete=False)
     temp_path = temp_file.name
@@ -103,7 +105,9 @@ def test_frame_dimension_validation():
         renderer = DebugOverlayRenderer(output_path, 1920, 1080, 1920, 1080, 30.0)
 
         # Try to write frame with wrong dimensions
-        wrong_frame = np.zeros((1080, 1080, 3), dtype=np.uint8)  # Square instead of 16:9
+        wrong_frame = np.zeros(
+            (1080, 1080, 3), dtype=np.uint8
+        )  # Square instead of 16:9
 
         with pytest.raises(ValueError, match="don't match"):
             renderer.write_frame(wrong_frame)

@@ -38,7 +38,7 @@ class DebugOverlayRenderer:
         self.needs_resize = (display_width != width) or (display_height != height)
 
         # Try H.264 codec first (better quality/compatibility), fallback to mp4v
-        fourcc = cv2.VideoWriter_fourcc(*"avc1")  # type: ignore[attr-defined]
+        fourcc = cv2.VideoWriter_fourcc(*"avc1")
         # IMPORTANT: cv2.VideoWriter expects (width, height) tuple - NOT (height, width)
         # Write at display dimensions so video displays correctly without SAR metadata
         self.writer = cv2.VideoWriter(
@@ -47,7 +47,7 @@ class DebugOverlayRenderer:
 
         # Check if writer opened successfully, fallback to mp4v if not
         if not self.writer.isOpened():
-            fourcc = cv2.VideoWriter_fourcc(*"mp4v")  # type: ignore[attr-defined]
+            fourcc = cv2.VideoWriter_fourcc(*"mp4v")
             self.writer = cv2.VideoWriter(
                 output_path, fourcc, fps, (display_width, display_height)
             )
@@ -93,7 +93,9 @@ class DebugOverlayRenderer:
 
                 # Draw CoM with larger circle
                 color = (
-                    (0, 255, 0) if contact_state == ContactState.ON_GROUND else (0, 0, 255)
+                    (0, 255, 0)
+                    if contact_state == ContactState.ON_GROUND
+                    else (0, 0, 255)
                 )
                 cv2.circle(annotated, (px, py), 15, color, -1)
                 cv2.circle(annotated, (px, py), 17, (255, 255, 255), 2)  # White border
@@ -105,7 +107,9 @@ class DebugOverlayRenderer:
                     rh_x, rh_y, _ = landmarks["right_hip"]
                     hip_x = int((lh_x + rh_x) / 2 * self.width)
                     hip_y = int((lh_y + rh_y) / 2 * self.height)
-                    cv2.circle(annotated, (hip_x, hip_y), 8, (255, 165, 0), -1)  # Orange
+                    cv2.circle(
+                        annotated, (hip_x, hip_y), 8, (255, 165, 0), -1
+                    )  # Orange
                     # Draw line from hip to CoM
                     cv2.line(annotated, (hip_x, hip_y), (px, py), (255, 165, 0), 2)
             else:
@@ -116,7 +120,9 @@ class DebugOverlayRenderer:
 
                 # Draw foot position circle
                 color = (
-                    (0, 255, 0) if contact_state == ContactState.ON_GROUND else (0, 0, 255)
+                    (0, 255, 0)
+                    if contact_state == ContactState.ON_GROUND
+                    else (0, 0, 255)
                 )
                 cv2.circle(annotated, (px, py), 10, color, -1)
 

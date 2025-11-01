@@ -71,7 +71,9 @@ def test_velocity_from_derivative_polyorder() -> None:
 
     # Results should differ slightly due to different polynomial fits
     difference = np.mean(np.abs(velocity_2 - velocity_3))
-    assert difference > 0.0001, "Different polyorders should produce different velocities"
+    assert (
+        difference > 0.0001
+    ), "Different polyorders should produce different velocities"
 
 
 def test_acceleration_from_derivative_polyorder() -> None:

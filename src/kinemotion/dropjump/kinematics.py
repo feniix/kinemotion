@@ -1,10 +1,10 @@
 """Kinematic calculations for drop-jump metrics."""
 
-
 import numpy as np
 
 from .analysis import (
     ContactState,
+    detect_drop_start,
     find_contact_phases,
     find_interpolated_phase_transitions_with_curvature,
 )
@@ -109,6 +109,7 @@ def calculate_drop_jump_metrics(
     foot_y_positions: np.ndarray,
     fps: float,
     drop_height_m: float | None = None,
+    drop_start_frame: int | None = None,
     velocity_threshold: float = 0.02,
     smoothing_window: int = 5,
     polyorder: int = 2,
@@ -135,6 +136,20 @@ def calculate_drop_jump_metrics(
         DropJumpMetrics object with calculated values
     """
     metrics = DropJumpMetrics()
+
+    # Detect or use manually specified drop jump start frame
+    if drop_start_frame is None:
+        # Auto-detect where drop jump actually starts (skip initial stationary period)
+        drop_start_frame = detect_drop_start(
+            foot_y_positions,
+            fps,
+            min_stationary_duration=0.5,  # 0.5s stable period (~30 frames @ 60fps)
+            position_change_threshold=0.005,  # 0.5% of frame height - sensitive to drop start
+            smoothing_window=smoothing_window,
+        )
+    # If manually specified or auto-detected, use it
+    drop_start_frame_value = drop_start_frame if drop_start_frame is not None else 0
+
     phases = find_contact_phases(contact_states)
 
     # Get interpolated phases with curvature-based refinement
@@ -147,6 +162,23 @@ def calculate_drop_jump_metrics(
         polyorder,
         use_curvature,
     )
+
+    if not phases:
+        return metrics
+
+    # Filter phases to only include those after drop start
+    # This removes the initial stationary period where athlete is standing on box
+    if drop_start_frame_value > 0:
+        phases = [
+            (start, end, state)
+            for start, end, state in phases
+            if end >= drop_start_frame_value
+        ]
+        interpolated_phases = [
+            (start, end, state)
+            for start, end, state in interpolated_phases
+            if end >= drop_start_frame_value
+        ]
 
     if not phases:
         return metrics
@@ -177,7 +209,9 @@ def calculate_drop_jump_metrics(
 
         # Find ground phase after first air phase
         ground_after_air = [
-            (start, end, idx) for start, end, idx in ground_phases if idx > first_air_idx
+            (start, end, idx)
+            for start, end, idx in ground_phases
+            if idx > first_air_idx
         ]
 
         if ground_after_air and first_ground_idx < first_air_idx:
@@ -241,7 +275,9 @@ def calculate_drop_jump_metrics(
             # Look back a few frames to get stable position on box
             lookback_start = max(0, first_air_start - 5)
             if lookback_start < first_air_start:
-                initial_position = float(np.mean(foot_y_positions[lookback_start:first_air_start]))
+                initial_position = float(
+                    np.mean(foot_y_positions[lookback_start:first_air_start])
+                )
             else:
                 initial_position = float(foot_y_positions[first_air_start])
 
@@ -337,13 +373,17 @@ def calculate_drop_jump_metrics(
                 # For validated measurements, use:
                 # - Calibrated measurement with --drop-height parameter
                 # - Or compare against validated measurement systems
-                metrics.jump_height = jump_height_kinematic * kinematic_correction_factor
+                metrics.jump_height = (
+                    jump_height_kinematic * kinematic_correction_factor
+                )
                 metrics.jump_height_kinematic = jump_height_kinematic
         else:
             # Fallback to kinematic if no position data
             if drop_height_m is None:
                 # Apply kinematic correction factor (see detailed comment above)
-                metrics.jump_height = jump_height_kinematic * kinematic_correction_factor
+                metrics.jump_height = (
+                    jump_height_kinematic * kinematic_correction_factor
+                )
             else:
                 metrics.jump_height = jump_height_kinematic
             metrics.jump_height_kinematic = jump_height_kinematic

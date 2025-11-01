@@ -1,6 +1,5 @@
 """Landmark smoothing utilities to reduce jitter in pose tracking."""
 
-
 import numpy as np
 from scipy.signal import savgol_filter
 
@@ -79,12 +78,12 @@ def smooth_landmarks(
                 smoothed_sequence[frame_idx] = {}
 
             if (
-                landmark_name not in smoothed_sequence[frame_idx]  # type: ignore[operator]
+                landmark_name not in smoothed_sequence[frame_idx]
                 and landmark_sequence[frame_idx] is not None
             ):
                 # Keep original visibility
-                orig_vis = landmark_sequence[frame_idx][landmark_name][2]  # type: ignore[index]
-                smoothed_sequence[frame_idx][landmark_name] = (  # type: ignore[index]
+                orig_vis = landmark_sequence[frame_idx][landmark_name][2]
+                smoothed_sequence[frame_idx][landmark_name] = (
                     float(x_smooth[idx]),
                     float(y_smooth[idx]),
                     orig_vis,
@@ -125,7 +124,7 @@ def compute_velocity(
         for dim in range(velocity.shape[1]):
             velocity[:, dim] = savgol_filter(velocity[:, dim], smooth_window, 1)
 
-    return velocity  # type: ignore[no-any-return]
+    return velocity
 
 
 def compute_velocity_from_derivative(
@@ -154,7 +153,7 @@ def compute_velocity_from_derivative(
     """
     if len(positions) < window_length:
         # Fallback to simple differences for short sequences
-        return np.abs(np.diff(positions, prepend=positions[0]))  # type: ignore[no-any-return]
+        return np.abs(np.diff(positions, prepend=positions[0]))
 
     # Ensure window_length is odd
     if window_length % 2 == 0:
@@ -174,7 +173,7 @@ def compute_velocity_from_derivative(
     )
 
     # Return absolute velocity (magnitude only)
-    return np.abs(velocity)  # type: ignore[no-any-return]
+    return np.abs(velocity)
 
 
 def compute_acceleration_from_derivative(
@@ -225,7 +224,7 @@ def compute_acceleration_from_derivative(
         mode="interp",
     )
 
-    return acceleration  # type: ignore[no-any-return]
+    return acceleration
 
 
 def smooth_landmarks_advanced(
@@ -345,12 +344,12 @@ def smooth_landmarks_advanced(
                 smoothed_sequence[frame_idx] = {}
 
             if (
-                landmark_name not in smoothed_sequence[frame_idx]  # type: ignore[operator]
+                landmark_name not in smoothed_sequence[frame_idx]
                 and landmark_sequence[frame_idx] is not None
             ):
                 # Keep original visibility
-                orig_vis = landmark_sequence[frame_idx][landmark_name][2]  # type: ignore[index]
-                smoothed_sequence[frame_idx][landmark_name] = (  # type: ignore[index]
+                orig_vis = landmark_sequence[frame_idx][landmark_name][2]
+                smoothed_sequence[frame_idx][landmark_name] = (
                     float(x_smooth[idx]),
                     float(y_smooth[idx]),
                     orig_vis,

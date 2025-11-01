@@ -84,6 +84,8 @@ warn_redundant_casts = true
 warn_unused_ignores = true
 warn_no_return = true
 strict_equality = true
+files = ["src"]
+exclude = ["tests", "examples"]
 
 [[tool.mypy.overrides]]
 module = [

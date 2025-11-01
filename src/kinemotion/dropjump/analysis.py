@@ -89,6 +89,123 @@ def calculate_adaptive_threshold(
     return adaptive_threshold
 
 
+def detect_drop_start(
+    positions: np.ndarray,
+    fps: float,
+    min_stationary_duration: float = 1.0,
+    position_change_threshold: float = 0.02,
+    smoothing_window: int = 5,
+    debug: bool = False,
+) -> int:
+    """
+    Detect when the drop jump actually starts by finding stable period then detecting drop.
+
+    Strategy:
+    1. Scan forward to find first STABLE period (low variance over N frames)
+    2. Use that stable period as baseline
+    3. Detect when position starts changing significantly from baseline
+
+    This handles videos where athlete steps onto box at start (unstable beginning).
+
+    Args:
+        positions: Array of vertical positions (0-1 normalized, y increases downward)
+        fps: Video frame rate
+        min_stationary_duration: Minimum duration (seconds) of stable period (default: 1.0s)
+        position_change_threshold: Position change indicating start of drop
+            (default: 0.02 = 2% of frame)
+        smoothing_window: Window for computing position variance
+        debug: Print debug information (default: False)
+
+    Returns:
+        Frame index where drop starts (or 0 if no clear stable period found)
+
+    Example:
+        - Frames 0-14: Stepping onto box (noisy, unstable)
+        - Frames 15-119: Standing on box (stable, low variance)
+        - Frame 119: Drop begins (position changes significantly)
+        - Returns: 119
+    """
+    min_stable_frames = int(fps * min_stationary_duration)
+    if len(positions) < min_stable_frames + 30:  # Need some frames after stable period
+        if debug:
+            min_frames_needed = min_stable_frames + 30
+            print(
+                f"[detect_drop_start] Video too short: {len(positions)} < {min_frames_needed}"
+            )
+        return 0
+
+    # STEP 1: Find first stable period by scanning forward
+    # Look for window with low variance (< 1% of frame height)
+    stability_threshold = 0.01  # 1% of frame height
+    stable_window = min_stable_frames
+
+    baseline_start = -1
+    baseline_position = 0.0
+
+    # Scan from start, looking for stable window
+    for start_idx in range(0, len(positions) - stable_window, 5):  # Step by 5 frames
+        window = positions[start_idx : start_idx + stable_window]
+        window_std = float(np.std(window))
+
+        if window_std < stability_threshold:
+            # Found stable period!
+            baseline_start = start_idx
+            baseline_position = float(np.median(window))
+
+            if debug:
+                end_frame = baseline_start + stable_window - 1
+                print("[detect_drop_start] Found stable period:")
+                print(f"  frames {baseline_start}-{end_frame}")
+                print(f"  baseline_position: {baseline_position:.4f}")
+                print(f"  baseline_std: {window_std:.4f} < {stability_threshold:.4f}")
+            break
+
+    if baseline_start < 0:
+        if debug:
+            msg = (
+                f"No stable period found (variance always > {stability_threshold:.4f})"
+            )
+            print(f"[detect_drop_start] {msg}")
+        return 0
+
+    # STEP 2: Find when position changes significantly from baseline
+    # Start searching after stable period ends
+    search_start = baseline_start + stable_window
+    window_size = max(3, smoothing_window)
+
+    for i in range(search_start, len(positions) - window_size):
+        # Average position over small window to reduce noise
+        window_positions = positions[i : i + window_size]
+        avg_position = float(np.mean(window_positions))
+
+        # Check if position has increased (dropped) significantly
+        position_change = avg_position - baseline_position
+
+        if position_change > position_change_threshold:
+            # Found start of drop - back up slightly to catch beginning
+            drop_frame_candidate = i - window_size
+            if drop_frame_candidate < baseline_start:
+                drop_frame = baseline_start
+            else:
+                drop_frame = drop_frame_candidate
+
+            if debug:
+                print(f"[detect_drop_start] Drop detected at frame {drop_frame}")
+                print(
+                    f"  position_change: {position_change:.4f} > {position_change_threshold:.4f}"
+                )
+                print(
+                    f"  avg_position: {avg_position:.4f} vs baseline: {baseline_position:.4f}"
+                )
+
+            return drop_frame
+
+    # No significant position change detected
+    if debug:
+        print("[detect_drop_start] No drop detected after stable period")
+    return 0
+
+
 def detect_ground_contact(
     foot_positions: np.ndarray,
     velocity_threshold: float = 0.02,
@@ -273,7 +390,9 @@ def find_interpolated_phase_transitions(
 
         # Interpolate start boundary (transition INTO this phase)
         if start_idx > 0 and start_idx < len(velocities):
-            vel_before = velocities[start_idx - 1] if start_idx > 0 else velocities[start_idx]
+            vel_before = (
+                velocities[start_idx - 1] if start_idx > 0 else velocities[start_idx]
+            )
             vel_at = velocities[start_idx]
 
             # Check if we're crossing the threshold at this boundary
@@ -392,9 +511,7 @@ def refine_transition_with_curvature(
     # Blend with original estimate (don't stray too far)
     # 70% curvature-based, 30% velocity-based
     blend_factor = 0.7
-    refined_frame = (
-        blend_factor * refined_frame + (1 - blend_factor) * estimated_frame
-    )
+    refined_frame = blend_factor * refined_frame + (1 - blend_factor) * estimated_frame
 
     return refined_frame
 

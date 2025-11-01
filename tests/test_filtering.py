@@ -359,9 +359,7 @@ def test_smooth_landmarks_advanced_combined() -> None:
     assert y_coords[25] < 0.8, "Combined filtering should handle glitches"
     # Should be smoother than original
     original_y = [frame["left_ankle"][1] for frame in landmark_sequence]  # type: ignore[index]
-    assert np.std(np.diff(y_coords)) < np.std(
-        np.diff(original_y)
-    ), "Should be smoother"
+    assert np.std(np.diff(y_coords)) < np.std(np.diff(original_y)), "Should be smoother"
 
 
 def test_smooth_landmarks_advanced_fallback_to_standard() -> None:

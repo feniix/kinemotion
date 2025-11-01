@@ -104,7 +104,7 @@ def detect_outliers_median(
     # Mark as outlier if deviation exceeds threshold
     is_outlier = deviations > threshold
 
-    return is_outlier  # type: ignore[no-any-return]
+    return is_outlier
 
 
 def remove_outliers(

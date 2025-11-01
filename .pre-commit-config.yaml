@@ -15,19 +15,20 @@ repos:
       - id: mixed-line-ending
 
   - repo: https://github.com/psf/black
-    rev: 23.12.1
+    rev: 25.9.0
     hooks:
       - id: black
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.9
+    rev: v0.14.3
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.7.1
+    rev: v1.18.2
     hooks:
       - id: mypy
         args: [--ignore-missing-imports, --no-strict-optional]
-        exclude: ^tests/
+        files: ^src/
+        exclude: ^(tests/|examples/)

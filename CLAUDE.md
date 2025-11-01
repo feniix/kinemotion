@@ -240,6 +240,48 @@ self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 - Runtime validation in `write_frame()` ensures every frame matches expected encoded dimensions
 - Raises `ValueError` if aspect ratio would be corrupted
 
+### Video Rotation Handling (core/video_io.py)
+
+**IMPORTANT**: The tool automatically handles video rotation metadata from mobile devices. OpenCV ignores rotation metadata, so we extract and apply it manually.
+
+#### Rotation Metadata Extraction (`core/video_io.py:65-126`)
+
+- **Display Matrix Metadata**: iPhones and other mobile devices store rotation in `side_data_list`
+  - Common rotation values: -90° (portrait right), 90° (portrait left), 180° (upside down)
+  - OpenCV's `VideoCapture.read()` ignores this metadata (known OpenCV issue #26876)
+  - Extracted using ffprobe from the same call that extracts SAR metadata
+- **Automatic Frame Rotation**: Applied in `read_frame()` method using `cv2.rotate()`
+  - -90° / 270° → `cv2.ROTATE_90_CLOCKWISE`
+  - 90° / -270° → `cv2.ROTATE_90_COUNTERCLOCKWISE`
+  - ±180° → `cv2.ROTATE_180`
+- **Dimension Updates**: Width and height are swapped after 90°/-90° rotations
+
+```python
+# Rotation extraction from side_data_list
+side_data_list = stream.get("side_data_list", [])
+for side_data in side_data_list:
+    if side_data.get("side_data_type") == "Display Matrix":
+        self.rotation = int(side_data.get("rotation", 0))
+
+# Automatic rotation in read_frame()
+if self.rotation == -90 or self.rotation == 270:
+    frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+```
+
+**Why this matters:**
+
+- Without rotation handling, portrait videos are processed sideways
+- MediaPipe would detect poses on rotated frames (person lying horizontally)
+- Output videos would have incorrect orientation
+- Jump analysis would fail due to incorrect gravity axis
+
+**Example:**
+
+- iPhone video encoded as 1920x1080 (landscape) with -90° rotation metadata
+- Should be displayed as 1080x1920 (portrait)
+- Tool automatically rotates frames and updates dimensions
+- Output video correctly shows 1080x1920 portrait orientation
+
 ### Sub-Frame Interpolation (contact_detection.py:113-227)
 
 **IMPORTANT**: The tool uses sub-frame interpolation with derivative-based velocity to achieve timing precision beyond frame boundaries.

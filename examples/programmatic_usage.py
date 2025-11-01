@@ -1,7 +1,6 @@
 """Example of using drop-jump analysis programmatically."""
 
 import numpy as np
-
 from dropjump.contact_detection import (
     compute_average_foot_position,
     detect_ground_contact,
@@ -12,7 +11,7 @@ from dropjump.smoothing import smooth_landmarks
 from dropjump.video_io import VideoProcessor
 
 
-def analyze_video(video_path: str):
+def analyze_video(video_path: str) -> dict:
     """
     Analyze a drop-jump video and return metrics.
 

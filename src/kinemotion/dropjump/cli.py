@@ -3,6 +3,7 @@
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 import click
 import numpy as np
@@ -107,6 +108,15 @@ from .kinematics import calculate_drop_jump_metrics
     help="Height of drop box/platform in meters (e.g., 0.40 for 40cm) - used for calibration",
 )
 @click.option(
+    "--drop-start-frame",
+    type=int,
+    default=None,
+    help=(
+        "Frame where drop jump begins (skips initial stationary period). "
+        "Use if auto-detection fails."
+    ),
+)
+@click.option(
     "--use-curvature/--no-curvature",
     default=True,
     help="Use trajectory curvature analysis for refining transitions (default: enabled)",
@@ -136,6 +146,7 @@ def dropjump_analyze(
     detection_confidence: float,
     tracking_confidence: float,
     drop_height: float | None,
+    drop_start_frame: int | None,
     use_curvature: bool,
     kinematic_correction_factor: float,
 ) -> None:
@@ -189,6 +200,7 @@ def dropjump_analyze(
             frames = []
 
             frame_idx = 0
+            bar: Any
             with click.progressbar(
                 length=video.frame_count, label="Processing frames"
             ) as bar:
@@ -231,7 +243,9 @@ def dropjump_analyze(
             else:
                 click.echo("Smoothing landmarks...", err=True)
                 smoothed_landmarks = smooth_landmarks(
-                    landmarks_sequence, window_length=smoothing_window, polyorder=polyorder
+                    landmarks_sequence,
+                    window_length=smoothing_window,
+                    polyorder=polyorder,
                 )
 
             # Extract vertical positions from feet
@@ -261,9 +275,7 @@ def dropjump_analyze(
                     )
                 else:
                     # Use previous position if available, otherwise default
-                    position_list.append(
-                        position_list[-1] if position_list else 0.5
-                    )
+                    position_list.append(position_list[-1] if position_list else 0.5)
                     visibilities_list.append(0.0)
 
             vertical_positions: np.ndarray = np.array(position_list)
@@ -292,6 +304,7 @@ def dropjump_analyze(
                 vertical_positions,
                 video.fps,
                 drop_height_m=drop_height,
+                drop_start_frame=drop_start_frame,
                 velocity_threshold=velocity_threshold,
                 smoothing_window=smoothing_window,
                 polyorder=polyorder,
@@ -313,7 +326,10 @@ def dropjump_analyze(
             # Generate debug video if requested
             if output:
                 click.echo(f"Generating debug video: {output}", err=True)
-                if video.display_width != video.width or video.display_height != video.height:
+                if (
+                    video.display_width != video.width
+                    or video.display_height != video.height
+                ):
                     click.echo(
                         f"Source video encoded: {video.width}x{video.height}",
                         err=True,
@@ -337,9 +353,10 @@ def dropjump_analyze(
                     video.display_height,
                     video.fps,
                 ) as renderer:
+                    render_bar: Any
                     with click.progressbar(
                         length=len(frames), label="Rendering frames"
-                    ) as bar:
+                    ) as render_bar:
                         for i, frame in enumerate(frames):
                             annotated = renderer.render_frame(
                                 frame,
@@ -350,7 +367,7 @@ def dropjump_analyze(
                                 use_com=False,
                             )
                             renderer.write_frame(annotated)
-                            bar.update(1)
+                            render_bar.update(1)
 
                 click.echo(f"Debug video saved: {output}", err=True)
 

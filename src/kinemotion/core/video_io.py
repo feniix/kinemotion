@@ -45,20 +45,35 @@ class VideoProcessor:
             self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
+        # Extract rotation metadata from video (iPhones store rotation in side_data_list)
+        # OpenCV ignores rotation metadata, so we need to extract and apply it manually
+        self.rotation = 0  # Will be set by _extract_video_metadata()
+
         # Calculate display dimensions considering SAR (Sample Aspect Ratio)
         # Mobile videos often have non-square pixels encoded in SAR metadata
         # OpenCV doesn't directly expose SAR, but we need to handle display correctly
         self.display_width = self.width
         self.display_height = self.height
-        self._calculate_display_dimensions()
+        self._extract_video_metadata()
 
-    def _calculate_display_dimensions(self) -> None:
+        # Apply rotation to dimensions if needed
+        if self.rotation in [90, -90, 270]:
+            # Swap dimensions for 90/-90 degree rotations
+            self.width, self.height = self.height, self.width
+            self.display_width, self.display_height = (
+                self.display_height,
+                self.display_width,
+            )
+
+    def _extract_video_metadata(self) -> None:
         """
-        Calculate display dimensions by reading SAR metadata from video file.
+        Extract video metadata including SAR and rotation using ffprobe.
 
-        Many mobile videos use non-square pixels (SAR != 1:1), which means
-        the encoded dimensions differ from how the video should be displayed.
-        We use ffprobe to extract this metadata.
+        Many mobile videos (especially from iPhones) have:
+        - Non-square pixels (SAR != 1:1) affecting display dimensions
+        - Rotation metadata in side_data_list that OpenCV ignores
+
+        We extract both to ensure proper display and pose detection.
         """
         try:
             # Use ffprobe to get SAR metadata
@@ -83,6 +98,8 @@ class VideoProcessor:
                 data = json.loads(result.stdout)
                 if "streams" in data and len(data["streams"]) > 0:
                     stream = data["streams"][0]
+
+                    # Extract SAR (Sample Aspect Ratio)
                     sar_str = stream.get("sample_aspect_ratio", "1:1")
 
                     # Parse SAR (e.g., "270:473")
@@ -98,14 +115,41 @@ class VideoProcessor:
                                 self.width * sar_width / sar_height
                             )
                             self.display_height = self.height
+
+                    # Extract rotation from side_data_list (common for iPhone videos)
+                    side_data_list = stream.get("side_data_list", [])
+                    for side_data in side_data_list:
+                        if side_data.get("side_data_type") == "Display Matrix":
+                            rotation = side_data.get("rotation", 0)
+                            # Convert to int and normalize to 0, 90, -90, 180
+                            self.rotation = int(rotation)
         except (subprocess.TimeoutExpired, FileNotFoundError, json.JSONDecodeError):
             # If ffprobe fails, keep original dimensions (square pixels)
             pass
 
     def read_frame(self) -> np.ndarray | None:
-        """Read next frame from video."""
+        """
+        Read next frame from video and apply rotation if needed.
+
+        OpenCV ignores rotation metadata, so we manually apply rotation
+        based on the display matrix metadata extracted from the video.
+        """
         ret, frame = self.cap.read()
-        return frame if ret else None
+        if not ret:
+            return None
+
+        # Apply rotation if video has rotation metadata
+        if self.rotation == -90 or self.rotation == 270:
+            # -90 degrees = rotate 90 degrees clockwise
+            frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+        elif self.rotation == 90 or self.rotation == -270:
+            # 90 degrees = rotate 90 degrees counter-clockwise
+            frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        elif self.rotation == 180 or self.rotation == -180:
+            # 180 degrees rotation
+            frame = cv2.rotate(frame, cv2.ROTATE_180)
+
+        return frame
 
     def reset(self) -> None:
         """Reset video to beginning."""

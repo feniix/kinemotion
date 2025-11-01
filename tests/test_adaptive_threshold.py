@@ -44,7 +44,9 @@ def test_adaptive_threshold_high_noise() -> None:
 
     # With higher noise, threshold should be proportionally higher
     # Noise std=0.015 with multiplier 1.5 gives ~0.012-0.022 range
-    assert 0.010 <= threshold <= 0.05, f"Threshold {threshold} should adapt to high noise"
+    assert (
+        0.010 <= threshold <= 0.05
+    ), f"Threshold {threshold} should adapt to high noise"
 
 
 def test_adaptive_threshold_low_noise() -> None:
@@ -108,7 +110,9 @@ def test_adaptive_threshold_short_video() -> None:
     threshold = calculate_adaptive_threshold(positions, fps, baseline_duration=3.0)
 
     # Should still work with available frames
-    assert 0.005 <= threshold <= 0.05, f"Threshold {threshold} should work with short video"
+    assert (
+        0.005 <= threshold <= 0.05
+    ), f"Threshold {threshold} should work with short video"
 
 
 def test_adaptive_threshold_very_short_video() -> None:
