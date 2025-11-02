@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.8.2 (2025-11-02)
+
+### Bug Fixes
+
+- Add OCI annotations to Docker manifest for GHCR metadata
+  ([`c6e2295`](https://github.com/feniix/kinemotion/commit/c6e2295dd5eb3eae6b820d3dc7a84d730772de41))
+
+
 ## v0.8.1 (2025-11-02)
 
 ### Bug Fixes
