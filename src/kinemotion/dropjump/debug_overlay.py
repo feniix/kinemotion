@@ -87,7 +87,7 @@ class DebugOverlayRenderer:
         if landmarks:
             if use_com:
                 # Draw center of mass position
-                com_x, com_y, com_vis = compute_center_of_mass(landmarks)
+                com_x, com_y, _ = compute_center_of_mass(landmarks)  # com_vis not used
                 px = int(com_x * self.width)
                 py = int(com_y * self.height)
 

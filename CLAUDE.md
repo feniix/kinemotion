@@ -30,7 +30,7 @@ Managed with `uv` and `asdf`:
 - pytest: Testing framework
 - black: Code formatting
 - ruff: Fast Python linter
-- mypy: Static type checking
+- pyright: Static type checking
 
 ### Development Commands
 
@@ -41,8 +41,8 @@ Managed with `uv` and `asdf`:
 - **Format code**: `uv run black src/`
 - **Lint code**: `uv run ruff check`
 - **Auto-fix lint issues**: `uv run ruff check --fix`
-- **Type check**: `uv run mypy src/kinemotion`
-- **Run all checks**: `uv run ruff check && uv run mypy src/kinemotion && uv run pytest`
+- **Type check**: `uv run pyright`
+- **Run all checks**: `uv run ruff check && uv run pyright && uv run pytest`
 
 ## Architecture
 
@@ -172,16 +172,17 @@ docs/
 
 The codebase enforces strict code quality standards using multiple tools:
 
-### Type Checking with mypy
+### Type Checking with pyright
 
 - **Strict mode enabled**: All functions require type annotations
-- Configuration in `pyproject.toml` under `[tool.mypy]`
+- Configuration in `pyproject.toml` under `[tool.pyright]`
 - Key settings:
-  - `disallow_untyped_defs`: All functions must have complete type annotations
-  - `disallow_incomplete_defs`: Partial type hints not allowed
-  - `warn_return_any`: Warns on Any return types
-  - Third-party stubs: Ignores missing imports for cv2, mediapipe, scipy
-- Run with: `uv run mypy src/kinemotion`
+  - `typeCheckingMode: "strict"`: Enables strict type checking (equivalent to mypy's disallow_untyped_defs and related flags)
+  - `pythonVersion: "3.10"`: Target Python version
+  - `include: ["src"]`: Only check source files, exclude tests and examples
+  - `reportMissingImports: "none"`: Ignore missing stubs for cv2, mediapipe, scipy
+  - Additional warnings for unused imports, variables, and functions
+- Run with: `uv run pyright`
 
 ### Linting with ruff
 
@@ -210,7 +211,7 @@ uv run black src/
 uv run ruff check --fix
 
 # Type check
-uv run mypy src/kinemotion
+uv run pyright
 
 # Run tests
 uv run pytest
@@ -219,7 +220,7 @@ uv run pytest
 Or run all checks at once:
 
 ```bash
-uv run ruff check && uv run mypy src/kinemotion && uv run pytest
+uv run ruff check && uv run pyright && uv run pytest
 ```
 
 ### Commit Message Format

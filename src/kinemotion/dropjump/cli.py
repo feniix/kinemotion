@@ -651,19 +651,30 @@ def _process_batch(
         ]
 
         if with_gct:
-            avg_gct = sum(r.metrics.ground_contact_time * 1000 for r in with_gct) / len(
-                with_gct
-            )
+            # Type assertion: filtering ensures metrics and ground_contact_time are not None
+            avg_gct = sum(
+                r.metrics.ground_contact_time * 1000
+                for r in with_gct
+                if r.metrics and r.metrics.ground_contact_time is not None
+            ) / len(with_gct)
             click.echo(f"\nAverage ground contact time: {avg_gct:.1f} ms", err=True)
 
         if with_flight:
-            avg_flight = sum(r.metrics.flight_time * 1000 for r in with_flight) / len(
-                with_flight
-            )
+            # Type assertion: filtering ensures metrics and flight_time are not None
+            avg_flight = sum(
+                r.metrics.flight_time * 1000
+                for r in with_flight
+                if r.metrics and r.metrics.flight_time is not None
+            ) / len(with_flight)
             click.echo(f"Average flight time: {avg_flight:.1f} ms", err=True)
 
         if with_jump:
-            avg_jump = sum(r.metrics.jump_height for r in with_jump) / len(with_jump)
+            # Type assertion: filtering ensures metrics and jump_height are not None
+            avg_jump = sum(
+                r.metrics.jump_height
+                for r in with_jump
+                if r.metrics and r.metrics.jump_height is not None
+            ) / len(with_jump)
             click.echo(
                 f"Average jump height: {avg_jump:.3f} m ({avg_jump * 100:.1f} cm)",
                 err=True,

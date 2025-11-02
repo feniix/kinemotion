@@ -54,7 +54,7 @@ def smooth_landmarks(
 
         for i, frame_landmarks in enumerate(landmark_sequence):
             if frame_landmarks is not None and landmark_name in frame_landmarks:
-                x, y, vis = frame_landmarks[landmark_name]
+                x, y, _ = frame_landmarks[landmark_name]  # vis not used
                 x_coords.append(x)
                 y_coords.append(y)
                 valid_frames.append(i)
@@ -287,7 +287,7 @@ def smooth_landmarks_advanced(
 
         for i, frame_landmarks in enumerate(landmark_sequence):
             if frame_landmarks is not None and landmark_name in frame_landmarks:
-                x, y, vis = frame_landmarks[landmark_name]
+                x, y, _ = frame_landmarks[landmark_name]  # vis not used
                 x_coords.append(x)
                 y_coords.append(y)
                 valid_frames.append(i)

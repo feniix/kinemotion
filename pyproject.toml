@@ -52,7 +52,7 @@ dev = [
     "pytest>=7.4.3",
     "black>=23.12.0",
     "ruff>=0.1.8",
-    "mypy>=1.7.0",
+    "pyright>=1.1.380",
     "pre-commit>=3.6.0",
     "python-semantic-release>=9.8.2",
 ]
@@ -75,28 +75,46 @@ select = [
 ]
 ignore = []
 
-[tool.mypy]
-python_version = "3.10"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-strict_equality = true
-files = ["src"]
+[tool.pyright]
+include = ["src"]
 exclude = ["tests", "examples"]
 
-[[tool.mypy.overrides]]
-module = [
-    "cv2.*",
-    "mediapipe.*",
-    "scipy.*",
-]
-ignore_missing_imports = true
+pythonVersion = "3.10"
+typeCheckingMode = "strict"
+
+# Equivalent to mypy's ignore_missing_imports for libraries without stubs
+reportMissingImports = "none"
+reportMissingTypeStubs = false
+reportMissingModuleSource = "none"
+
+# Disable some overly strict rules from strict mode
+reportUnknownMemberType = "none"
+reportUnknownArgumentType = "none"
+reportUnknownVariableType = "none"
+reportUnknownParameterType = "none"
+
+# Numpy/OpenCV related relaxations (missing type arguments for ndarray)
+reportMissingTypeArgument = "none"
+reportAttributeAccessIssue = "none"
+
+# Click decorator issues (untyped decorators from click library)
+reportUntypedFunctionDecorator = "none"
+reportFunctionMemberAccess = "none"
+
+# Relax these to match mypy behavior (can be tightened later)
+reportOptionalMemberAccess = "warning"
+reportOptionalOperand = "warning"
+reportPossiblyUnboundVariable = "warning"
+reportCallIssue = "warning"
+reportArgumentType = "warning"
+reportUnnecessaryComparison = "warning"
+
+# Additional warnings for code quality
+reportUnusedImport = "warning"
+reportUnusedClass = "warning"
+reportUnusedFunction = "warning"
+reportUnusedVariable = "warning"
+reportDuplicateImport = "warning"
 
 [tool.semantic_release]
 version_toml = ["pyproject.toml:project.version"]

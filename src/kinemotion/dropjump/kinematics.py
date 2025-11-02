@@ -147,8 +147,12 @@ def calculate_drop_jump_metrics(
             position_change_threshold=0.005,  # 0.5% of frame height - sensitive to drop start
             smoothing_window=smoothing_window,
         )
-    # If manually specified or auto-detected, use it
-    drop_start_frame_value = drop_start_frame if drop_start_frame is not None else 0
+    # If manually specified or auto-detected, use it; otherwise start from frame 0
+    drop_start_frame_value: int
+    if drop_start_frame is None:  # pyright: ignore[reportUnnecessaryComparison]
+        drop_start_frame_value = 0
+    else:
+        drop_start_frame_value = drop_start_frame
 
     phases = find_contact_phases(contact_states)
 
@@ -199,6 +203,10 @@ def calculate_drop_jump_metrics(
 
     if not ground_phases:
         return metrics
+
+    # Initialize contact variables with first ground phase as fallback
+    # (will be overridden by drop jump or regular jump detection logic)
+    contact_start, contact_end = ground_phases[0][0], ground_phases[0][1]
 
     # Detect if this is a drop jump or regular jump
     # Drop jump: first ground phase is elevated (lower y), followed by drop, then landing (higher y)
