@@ -23,6 +23,9 @@ A video-based kinematic analysis tool for athletic performance. Analyzes side-vi
 - **Calibrated measurements** - use known drop height for theoretically improved accuracy (⚠️ accuracy claims unvalidated)
 - **JSON output** for easy integration with other tools
 - **Optional debug video** with visual overlays showing contact states and landmarks
+- **Batch processing** - CLI and Python API for parallel processing of multiple videos
+- **Python library API** - use kinemotion programmatically in your own code
+- **CSV export** - aggregated results for research and analysis
 - **Configurable parameters** for smoothing, thresholds, and detection
 
 **Note**: Drop jump analysis uses foot-based tracking with fixed velocity thresholds. Center of mass (CoM) tracking and adaptive thresholding (available in `core/` modules) require longer videos (~5+ seconds) with a 3-second standing baseline, making them unsuitable for typical drop jump videos (~3 seconds). These features may be available in future jump types like CMJ (countermovement jump).
@@ -142,6 +145,133 @@ kinemotion dropjump-analyze video.mp4 \
   --smoothing-window 7 \
   --velocity-threshold 0.015
 ```
+
+### Batch Processing
+
+Process multiple videos in parallel from the command line:
+
+```bash
+# Process multiple videos with glob pattern
+kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 --workers 4
+
+# Save all results to directories
+kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \
+  --json-output-dir results/ \
+  --output-dir debug_videos/ \
+  --csv-summary summary.csv
+
+# Multiple explicit paths (batch mode auto-enabled)
+kinemotion dropjump-analyze video1.mp4 video2.mp4 video3.mp4 --drop-height 0.40
+```
+
+**Batch options:**
+- `--batch`: Explicitly enable batch mode
+- `--workers <int>`: Number of parallel workers (default: 4)
+- `--output-dir <path>`: Directory for debug videos (auto-named per video)
+- `--json-output-dir <path>`: Directory for JSON metrics (auto-named per video)
+- `--csv-summary <path>`: Export aggregated results to CSV
+
+**Output example:**
+```
+Batch processing 10 videos with 4 workers
+======================================================================
+
+Processing videos...
+[1/10] ✓ athlete1.mp4 (2.3s)
+[2/10] ✓ athlete2.mp4 (2.1s)
+[3/10] ✗ athlete3.mp4 (0.5s)
+    Error: No frames could be processed
+
+======================================================================
+BATCH PROCESSING SUMMARY
+======================================================================
+Total videos: 10
+Successful: 9
+Failed: 1
+
+Average ground contact time: 245.3 ms
+Average flight time: 523.7 ms
+Average jump height: 0.352 m (35.2 cm)
+```
+
+## Python API
+
+Use kinemotion as a library in your Python code for automated pipelines and custom analysis:
+
+### Single Video Processing
+
+```python
+from kinemotion import process_video
+
+# Process a single video
+metrics = process_video(
+    video_path="athlete_jump.mp4",
+    drop_height=0.40,  # 40cm drop box
+    quality="balanced",
+    verbose=True
+)
+
+# Access results
+print(f"Jump height: {metrics.jump_height:.3f} m")
+print(f"Ground contact time: {metrics.ground_contact_time * 1000:.1f} ms")
+print(f"Flight time: {metrics.flight_time * 1000:.1f} ms")
+```
+
+### Bulk Video Processing
+
+```python
+from kinemotion import VideoConfig, process_videos_bulk
+
+# Configure multiple videos
+configs = [
+    VideoConfig("video1.mp4", drop_height=0.40),
+    VideoConfig("video2.mp4", drop_height=0.30, quality="accurate"),
+    VideoConfig("video3.mp4", drop_height=0.50, output_video="debug3.mp4"),
+]
+
+# Process in parallel with 4 workers
+results = process_videos_bulk(configs, max_workers=4)
+
+# Check results
+for result in results:
+    if result.success:
+        print(f"✓ {result.video_path}: {result.metrics.jump_height:.3f} m")
+    else:
+        print(f"✗ {result.video_path}: {result.error}")
+```
+
+### Export Results to CSV
+
+```python
+import csv
+from pathlib import Path
+from kinemotion import VideoConfig, process_videos_bulk
+
+# Process directory of videos
+video_dir = Path("athlete_videos")
+configs = [
+    VideoConfig(str(v), drop_height=0.40, quality="balanced")
+    for v in video_dir.glob("*.mp4")
+]
+
+results = process_videos_bulk(configs, max_workers=4)
+
+# Export to CSV
+with open("results.csv", "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["Video", "GCT (ms)", "Flight (ms)", "Jump (m)"])
+
+    for r in results:
+        if r.success and r.metrics:
+            writer.writerow([
+                Path(r.video_path).name,
+                f"{r.metrics.ground_contact_time * 1000:.1f}" if r.metrics.ground_contact_time else "N/A",
+                f"{r.metrics.flight_time * 1000:.1f}" if r.metrics.flight_time else "N/A",
+                f"{r.metrics.jump_height:.3f}" if r.metrics.jump_height else "N/A",
+            ])
+```
+
+**See [examples/bulk/README.md](examples/bulk/README.md) for comprehensive API documentation and more examples.**
 
 ## Configuration Options
 
@@ -327,7 +457,8 @@ This project enforces strict code quality standards:
 - **Type safety**: Full mypy strict mode compliance with complete type annotations
 - **Linting**: Comprehensive ruff checks (pycodestyle, pyflakes, isort, pep8-naming, etc.)
 - **Formatting**: Black code style
-- **Testing**: pytest with 25 unit tests
+- **Testing**: pytest with 61 unit tests
+- **PEP 561 compliant**: Includes py.typed marker for type checking support
 
 ### Development Commands
 
@@ -385,9 +516,7 @@ See [CLAUDE.md](CLAUDE.md) for detailed development guidelines.
 - Advanced camera calibration (intrinsic parameters, lens distortion)
 - Multi-angle analysis support
 - Automatic camera orientation detection
-- Batch processing for multiple videos
 - Real-time analysis from webcam
-- Export to CSV/Excel formats
 - Comparison with reference values
 - Force plate integration for validation
 

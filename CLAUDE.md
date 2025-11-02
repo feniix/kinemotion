@@ -50,29 +50,41 @@ Managed with `uv` and `asdf`:
 
 ```text
 src/kinemotion/
-├── __init__.py
+├── __init__.py                 # Public API exports
+├── api.py                      # Python library API (process_video, process_videos_bulk)
+├── py.typed                    # PEP 561 type marker
 ├── cli.py                      # Main CLI entry point (registers subcommands)
 ├── core/                       # Shared functionality across all jump types
 │   ├── __init__.py
 │   ├── pose.py                 # MediaPipe Pose integration + CoM
 │   ├── smoothing.py            # Savitzky-Golay landmark smoothing
 │   ├── filtering.py            # Outlier rejection + bilateral filtering
+│   ├── auto_tuning.py          # Intelligent parameter auto-tuning
 │   └── video_io.py             # Video processing (VideoProcessor class)
 └── dropjump/                   # Drop jump specific analysis
     ├── __init__.py
-    ├── cli.py                  # Drop jump CLI command (dropjump-analyze)
+    ├── cli.py                  # Drop jump CLI command (dropjump-analyze) + batch mode
     ├── analysis.py             # Ground contact state detection
     ├── kinematics.py           # Drop jump metrics calculations
     └── debug_overlay.py        # Debug video overlay rendering
 
 tests/
-├── test_adaptive_threshold.py  # Adaptive threshold tests
-├── test_aspect_ratio.py        # Aspect ratio preservation tests
-├── test_com_estimation.py      # Center of mass estimation tests
-├── test_contact_detection.py  # Contact detection unit tests
-├── test_filtering.py           # Advanced filtering tests
-├── test_kinematics.py          # Metrics calculation tests
-└── test_polyorder.py           # Polynomial order tests
+├── test_adaptive_threshold.py  # Adaptive threshold tests (10 tests)
+├── test_api.py                 # API module tests (14 tests)
+├── test_aspect_ratio.py        # Aspect ratio preservation tests (4 tests)
+├── test_com_estimation.py      # Center of mass estimation tests (6 tests)
+├── test_contact_detection.py   # Contact detection unit tests (3 tests)
+├── test_filtering.py           # Advanced filtering tests (17 tests)
+├── test_kinematics.py          # Metrics calculation tests (2 tests)
+└── test_polyorder.py           # Polynomial order tests (5 tests)
+                                # Total: 61 tests
+
+examples/
+├── bulk/                       # Bulk processing examples
+│   ├── README.md               # Comprehensive API documentation
+│   ├── bulk_processing.py      # Advanced bulk processing examples
+│   └── simple_example.py       # Quick start examples
+└── programmatic_usage.py       # Low-level API example
 
 docs/
 ├── PARAMETERS.md               # Comprehensive guide to all CLI parameters
@@ -91,9 +103,20 @@ docs/
 **CLI Architecture:**
 
 - `src/kinemotion/cli.py` (20 lines): Main CLI group + command registration
-- `src/kinemotion/dropjump/cli.py` (358 lines): Complete dropjump-analyze command
+- `src/kinemotion/dropjump/cli.py` (724 lines): Complete dropjump-analyze command with batch mode
+- `src/kinemotion/api.py` (428 lines): Python library API for programmatic usage
 - Commands registered using Click's `cli.add_command()` pattern
 - Modular design allows easy addition of new jump type analysis commands
+
+**API Architecture:**
+
+- `src/kinemotion/api.py`: Public API for library usage
+  - `process_video()`: Process single videos programmatically
+  - `process_videos_bulk()`: Parallel batch processing with ProcessPoolExecutor
+  - `VideoConfig`: Configuration dataclass for video processing
+  - `VideoResult`: Result dataclass with success/error handling
+- Fully typed with PEP 561 compliance (py.typed marker)
+- Used by both CLI batch mode and external library consumers
 
 ### Analysis Pipeline
 
@@ -814,6 +837,109 @@ uv run kinemotion dropjump-analyze low_quality.mp4 --drop-height 0.40
 #   smoothing_window: minimal (preserve detail)
 uv run kinemotion dropjump-analyze high_quality.mp4 --drop-height 0.40
 ```
+
+### Batch Processing (CLI)
+
+Process multiple videos in parallel from the command line:
+
+```bash
+# Batch mode with glob pattern
+uv run kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 --workers 4
+
+# Save all results to directories
+uv run kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \
+  --json-output-dir results/ \
+  --output-dir debug_videos/ \
+  --csv-summary summary.csv
+
+# Multiple explicit paths (batch mode auto-enabled)
+uv run kinemotion dropjump-analyze video1.mp4 video2.mp4 video3.mp4 --drop-height 0.40
+```
+
+**Batch options:**
+- `--batch`: Explicitly enable batch mode
+- `--workers <int>`: Number of parallel workers (default: 4)
+- `--output-dir <path>`: Directory for debug videos (auto-named per video)
+- `--json-output-dir <path>`: Directory for JSON metrics (auto-named per video)
+- `--csv-summary <path>`: Export aggregated results to CSV
+
+## Using Kinemotion as a Library
+
+The kinemotion package provides a Python API for programmatic use in automated pipelines and custom analysis tools.
+
+### Quick Start (Python API)
+
+```python
+from kinemotion import process_video
+
+# Process a single video
+metrics = process_video(
+    video_path="athlete_jump.mp4",
+    drop_height=0.40,  # 40cm drop box
+    quality="balanced",
+    verbose=True
+)
+
+# Access results
+print(f"Jump height: {metrics.jump_height:.3f} m")
+print(f"Ground contact time: {metrics.ground_contact_time * 1000:.1f} ms")
+```
+
+### Bulk Processing (Python API)
+
+```python
+from kinemotion import VideoConfig, process_videos_bulk
+
+# Configure multiple videos
+configs = [
+    VideoConfig("video1.mp4", drop_height=0.40),
+    VideoConfig("video2.mp4", drop_height=0.30, quality="accurate"),
+    VideoConfig("video3.mp4", drop_height=0.50, output_video="debug3.mp4"),
+]
+
+# Process in parallel with 4 workers
+results = process_videos_bulk(configs, max_workers=4)
+
+# Check results
+for result in results:
+    if result.success:
+        print(f"✓ {result.video_path}: {result.metrics.jump_height:.3f} m")
+    else:
+        print(f"✗ {result.video_path}: {result.error}")
+```
+
+### API Documentation
+
+See `examples/bulk/README.md` for comprehensive API documentation including:
+- Complete API reference
+- Common use cases (directory processing, CSV export, custom parameters)
+- Integration examples (Pandas, custom CLI)
+- Performance tips
+- Error handling patterns
+
+**Key API Functions:**
+
+- `process_video(video_path, drop_height, **kwargs) -> DropJumpMetrics`
+  - Process a single video programmatically
+  - Returns metrics object with all analysis results
+  - Raises FileNotFoundError or ValueError on errors
+
+- `process_videos_bulk(configs, max_workers=4, progress_callback=None) -> list[VideoResult]`
+  - Process multiple videos in parallel using ProcessPoolExecutor
+  - Each VideoResult contains success status, metrics, or error
+  - Error isolation: one failure doesn't crash the batch
+
+- `VideoConfig(video_path, drop_height, quality="balanced", ...)`
+  - Configuration dataclass for video processing
+  - All CLI parameters available as attributes
+
+- `VideoResult(video_path, success, metrics=None, error=None, processing_time=0.0)`
+  - Result dataclass with structured success/error handling
+
+**Type Safety:**
+- Fully typed API with PEP 561 compliance (py.typed marker)
+- IDE autocomplete and type checking support
+- All public functions have complete type annotations
 
 ## MCP Server Configuration
 

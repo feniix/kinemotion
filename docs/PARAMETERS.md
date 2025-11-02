@@ -37,6 +37,53 @@ Kinemotion now features **intelligent auto-tuning** that automatically optimizes
 
 ---
 
+## Batch Processing Parameters
+
+These parameters control batch processing mode when analyzing multiple videos:
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `--batch` | flag | auto | Explicitly enable batch mode (auto-enabled with multiple files) |
+| `--workers` | int | 4 | Number of parallel workers for ProcessPoolExecutor |
+| `--output-dir` | path | - | Directory for debug videos (auto-named: `{video_name}_debug.mp4`) |
+| `--json-output-dir` | path | - | Directory for JSON metrics (auto-named: `{video_name}.json`) |
+| `--csv-summary` | path | - | Export aggregated results to CSV file |
+
+**Usage:**
+```bash
+# Batch process with all outputs
+kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \
+  --workers 4 \
+  --json-output-dir results/ \
+  --output-dir debug_videos/ \
+  --csv-summary summary.csv
+```
+
+**Notes:**
+- Batch mode is automatically enabled when multiple video paths are provided
+- All analysis parameters (quality, smoothing-window, etc.) apply to all videos in batch
+- Progress is shown in real-time: `[3/10] ✓ athlete3.mp4 (2.1s)`
+- Summary statistics are calculated across successful videos
+- CSV includes all videos (successful and failed)
+
+**Python API Alternative:**
+
+For more control, use the Python API:
+```python
+from kinemotion import VideoConfig, process_videos_bulk
+
+configs = [
+    VideoConfig("video1.mp4", drop_height=0.40, quality="fast"),
+    VideoConfig("video2.mp4", drop_height=0.30, quality="accurate"),  # Different settings per video
+]
+
+results = process_videos_bulk(configs, max_workers=4)
+```
+
+See `examples/bulk/README.md` for complete API documentation.
+
+---
+
 ## Legacy Manual Parameter Reference
 
 **⚠️ Important:** **kinemotion accuracy is currently unvalidated**. These parameter recommendations are based on theoretical considerations and industry best practices, not empirically verified performance.
