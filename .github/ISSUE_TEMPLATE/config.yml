@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Question or Discussion
+    url: https://github.com/feniix/kinemotion/discussions
+    about: Ask questions or discuss ideas with the community
+  - name: Documentation
+    url: https://github.com/feniix/kinemotion/blob/main/README.md
+    about: Read the documentation, usage guides, and troubleshooting tips
+  - name: Contributing Guide
+    url: https://github.com/feniix/kinemotion/blob/main/CONTRIBUTING.md
+    about: Learn how to contribute to Kinemotion
