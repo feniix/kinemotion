@@ -35,6 +35,17 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # ============================================================================
 FROM python:3.12-slim-bookworm AS runtime
 
+# OCI annotations for image metadata
+LABEL org.opencontainers.image.title="kinemotion" \
+      org.opencontainers.image.description="Video-based kinematic analysis for athletic performance. Analyzes drop-jump videos using MediaPipe pose tracking." \
+      org.opencontainers.image.authors="Sebastian Otaegui <feniix@gmail.com>" \
+      org.opencontainers.image.vendor="kinemotion" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.url="https://github.com/feniix/kinemotion" \
+      org.opencontainers.image.source="https://github.com/feniix/kinemotion" \
+      org.opencontainers.image.documentation="https://github.com/feniix/kinemotion#readme" \
+      org.opencontainers.image.base.name="docker.io/library/python:3.12-slim-bookworm"
+
 # Install system dependencies required by OpenCV and MediaPipe
 # - libgl1: OpenGL library for OpenCV
 # - libglib2.0-0: GLib library for MediaPipe
