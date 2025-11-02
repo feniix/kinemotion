@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.8.1 (2025-11-02)
+
+### Bug Fixes
+
+- Add OCI-compliant labels to Docker image
+  ([`6b18b33`](https://github.com/feniix/kinemotion/commit/6b18b33538615048c8ea572c4ebc402160ee1c5e))
+
+
 ## v0.8.0 (2025-11-02)
 
 ### Features
