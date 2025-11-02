@@ -47,8 +47,8 @@ packages = ["src/kinemotion"]
 [tool.hatch.build.targets.wheel.force-include]
 "src/kinemotion/py.typed" = "kinemotion/py.typed"
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "pytest>=7.4.3",
     "black>=23.12.0",
     "ruff>=0.1.8",

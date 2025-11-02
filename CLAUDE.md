@@ -222,6 +222,54 @@ Or run all checks at once:
 uv run ruff check && uv run mypy src/kinemotion && uv run pytest
 ```
 
+### Commit Message Format
+
+**IMPORTANT**: All commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
+
+The commit message format is enforced by the `conventional-pre-commit` hook and is required for semantic versioning with `python-semantic-release`.
+
+**Format:**
+```
+<type>(<optional scope>): <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+**Allowed types** (from `pyproject.toml`):
+- `feat`: A new feature (triggers minor version bump)
+- `fix`: A bug fix (triggers patch version bump)
+- `perf`: Performance improvement (triggers patch version bump)
+- `docs`: Documentation only changes
+- `style`: Code style changes (formatting, whitespace)
+- `refactor`: Code refactoring (no functional changes)
+- `test`: Adding or updating tests
+- `chore`: Maintenance tasks, dependency updates
+- `build`: Build system or dependency changes
+- `ci`: CI/CD pipeline changes
+
+**Examples:**
+```bash
+feat: Add batch processing mode to CLI
+fix: Correct aspect ratio handling for portrait videos
+docs: Update README with auto-tuning examples
+refactor: Extract video rotation logic into separate method
+perf: Optimize pose tracking with caching
+test: Add tests for CoM estimation edge cases
+chore(release): 0.10.0 [skip ci]
+```
+
+**Breaking changes:**
+Use `!` after type/scope or add `BREAKING CHANGE:` in footer:
+```bash
+feat!: Change API signature for process_video
+# or
+feat: Change API signature for process_video
+
+BREAKING CHANGE: drop_height parameter is now required
+```
+
 ## Critical Implementation Details
 
 ### Aspect Ratio Preservation & SAR Handling (core/video_io.py)
