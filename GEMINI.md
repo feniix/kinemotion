@@ -14,7 +14,7 @@ Kinemotion is a video-based kinematic analysis tool for athletic performance. It
 
 The project uses `uv` for dependency management and `asdf` for Python version management.
 
-- **Python Version**: 3.12.7 (specified in `.tool-versions`). MediaPipe requires Python <= 3.12.
+- **Python Version**: 3.12.7 (specified in `.tool-versions`). MediaPipe requires Python \<= 3.12.
 - **Install Dependencies**: `uv sync`
 
 **Key Libraries:**
@@ -53,14 +53,14 @@ docs/                   # Documentation (PARAMETERS.md is key)
 ### Analysis Pipeline
 
 1. **Pose Tracking** (`core/pose.py`): Extracts 13 body landmarks per frame using MediaPipe.
-2. **Center of Mass (CoM) Estimation** (`core/pose.py`): Optional, more accurate tracking using a biomechanical model.
-3. **Smoothing** (`core/smoothing.py`): A Savitzky-Golay filter reduces jitter.
-4. **Contact Detection** (`dropjump/analysis.py`): Analyzes vertical velocity to determine ground contact vs. flight.
-5. **Phase Identification**: Finds continuous ground contact and flight periods.
-6. **Sub-Frame Interpolation** (`dropjump/analysis.py`): Estimates exact transition times between frames using linear interpolation on the velocity curve, improving timing precision significantly.
-7. **Trajectory Curvature Analysis** (`dropjump/analysis.py`): Refines transition timing by detecting acceleration spikes (e.g., landing impact).
-8. **Metrics Calculation** (`dropjump/kinematics.py`): Calculates ground contact time, flight time, and jump height.
-9. **Output**: Provides metrics in JSON format and an optional debug video.
+1. **Center of Mass (CoM) Estimation** (`core/pose.py`): Optional, more accurate tracking using a biomechanical model.
+1. **Smoothing** (`core/smoothing.py`): A Savitzky-Golay filter reduces jitter.
+1. **Contact Detection** (`dropjump/analysis.py`): Analyzes vertical velocity to determine ground contact vs. flight.
+1. **Phase Identification**: Finds continuous ground contact and flight periods.
+1. **Sub-Frame Interpolation** (`dropjump/analysis.py`): Estimates exact transition times between frames using linear interpolation on the velocity curve, improving timing precision significantly.
+1. **Trajectory Curvature Analysis** (`dropjump/analysis.py`): Refines transition timing by detecting acceleration spikes (e.g., landing impact).
+1. **Metrics Calculation** (`dropjump/kinematics.py`): Calculates ground contact time, flight time, and jump height.
+1. **Output**: Provides metrics in JSON format and an optional debug video.
 
 ## Critical Implementation Details
 
@@ -103,9 +103,9 @@ docs/                   # Documentation (PARAMETERS.md is key)
 When contributing code, strictly adhere to the project's quality standards.
 
 1. **Format Code**: `uv run black src/`
-2. **Lint and Fix**: `uv run ruff check --fix`
-3. **Type Check**: `uv run mypy src/kinemotion`
-4. **Run Tests**: `uv run pytest`
+1. **Lint and Fix**: `uv run ruff check --fix`
+1. **Type Check**: `uv run mypy src/kinemotion`
+1. **Run Tests**: `uv run pytest`
 
 **Run all checks before committing**: `uv run ruff check && uv run mypy src/kinemotion && uv run pytest`
 
@@ -116,11 +116,11 @@ When contributing code, strictly adhere to the project's quality standards.
 ## Common Development Tasks
 
 - **Adding New Metrics**:
-    1. Update `DropJumpMetrics` in `dropjump/kinematics.py`.
-    2. Add calculation logic in `calculate_drop_jump_metrics()`.
-    3. Update `to_dict()` method (remember to cast NumPy types).
-    4. (Optional) Add visualization in `DebugOverlayRenderer`.
-    5. Add tests in `tests/test_kinematics.py`.
+  1. Update `DropJumpMetrics` in `dropjump/kinematics.py`.
+  1. Add calculation logic in `calculate_drop_jump_metrics()`.
+  1. Update `to_dict()` method (remember to cast NumPy types).
+  1. (Optional) Add visualization in `DebugOverlayRenderer`.
+  1. Add tests in `tests/test_kinematics.py`.
 - **Modifying Contact Detection**: Edit `detect_ground_contact()` in `dropjump/analysis.py`.
 - **Adjusting Smoothing**: Modify `smooth_landmarks()` in `core/smoothing.py`.
 

@@ -165,6 +165,7 @@ kinemotion dropjump-analyze video1.mp4 video2.mp4 video3.mp4 --drop-height 0.40
 ```
 
 **Batch options:**
+
 - `--batch`: Explicitly enable batch mode
 - `--workers <int>`: Number of parallel workers (default: 4)
 - `--output-dir <path>`: Directory for debug videos (auto-named per video)
@@ -172,7 +173,8 @@ kinemotion dropjump-analyze video1.mp4 video2.mp4 video3.mp4 --drop-height 0.40
 - `--csv-summary <path>`: Export aggregated results to CSV
 
 **Output example:**
-```
+
+```text
 Batch processing 10 videos with 4 workers
 ======================================================================
 
@@ -278,13 +280,14 @@ with open("results.csv", "w", newline="") as f:
 ### Intelligent Auto-Tuning
 
 Kinemotion automatically optimizes parameters based on your video:
+
 - **FPS-based scaling**: 30fps, 60fps, 120fps videos use different thresholds automatically
 - **Quality-based adjustments**: Adapts smoothing based on MediaPipe tracking confidence
 - **Always enabled**: Outlier rejection, curvature analysis, drop start detection
 
 ### Required Parameters
 
-- `--drop-height <float>` **[REQUIRED]**
+- `--drop-height <float>` **\[REQUIRED\]**
   - Height of drop box/platform in meters (e.g., 0.40 for 40cm)
   - Used for accurate calibration of jump height measurements
   - Measure your box height accurately for best results
@@ -292,18 +295,22 @@ Kinemotion automatically optimizes parameters based on your video:
 ### Optional Parameters
 
 - `--quality [fast|balanced|accurate]` (default: balanced)
+
   - **fast**: Quick analysis, less precise (~50% faster)
   - **balanced**: Good accuracy/speed tradeoff (recommended)
   - **accurate**: Research-grade analysis, slower (maximum precision)
 
 - `--verbose` / `-v`
+
   - Show auto-selected parameters and analysis details
   - Useful for understanding what the tool is doing
 
 - `--output <path>` / `-o`
+
   - Generate annotated debug video with pose tracking visualization
 
 - `--json-output <path>` / `-j`
+
   - Save metrics to JSON file instead of stdout
 
 ### Expert Overrides (Rarely Needed)
@@ -372,9 +379,9 @@ The debug video includes:
 **Solutions**:
 
 1. **Check video quality**: Ensure the athlete is clearly visible in profile view
-2. **Increase smoothing**: Use `--smoothing-window 7` or higher
-3. **Adjust detection confidence**: Try `--detection-confidence 0.6` or `--tracking-confidence 0.6`
-4. **Generate debug video**: Use `--output` to visualize what's being tracked
+1. **Increase smoothing**: Use `--smoothing-window 7` or higher
+1. **Adjust detection confidence**: Try `--detection-confidence 0.6` or `--tracking-confidence 0.6`
+1. **Generate debug video**: Use `--output` to visualize what's being tracked
 
 ### No Pose Detected
 
@@ -383,9 +390,9 @@ The debug video includes:
 **Solutions**:
 
 1. **Verify video format**: OpenCV must be able to read the video
-2. **Check framing**: Ensure full body is visible in side view
-3. **Lower confidence thresholds**: Try `--detection-confidence 0.3 --tracking-confidence 0.3`
-4. **Test video playback**: Verify video opens correctly with standard video players
+1. **Check framing**: Ensure full body is visible in side view
+1. **Lower confidence thresholds**: Try `--detection-confidence 0.3 --tracking-confidence 0.3`
+1. **Test video playback**: Verify video opens correctly with standard video players
 
 ### Incorrect Contact Detection
 
@@ -394,11 +401,11 @@ The debug video includes:
 **Solutions**:
 
 1. **Generate debug video**: Visualize contact states to diagnose the issue
-2. **Adjust velocity threshold**:
+1. **Adjust velocity threshold**:
    - If missing contacts: decrease to `--velocity-threshold 0.01`
    - If false contacts: increase to `--velocity-threshold 0.03`
-3. **Adjust minimum frames**: `--min-contact-frames 5` for longer required contact
-4. **Check visibility**: Lower `--visibility-threshold 0.3` if feet are partially obscured
+1. **Adjust minimum frames**: `--min-contact-frames 5` for longer required contact
+1. **Check visibility**: Lower `--visibility-threshold 0.3` if feet are partially obscured
 
 ### Jump Height Seems Wrong
 
@@ -408,9 +415,9 @@ The debug video includes:
 
 1. **Use calibration**: For drop jumps, add `--drop-height` parameter with box height in meters (e.g., `--drop-height 0.40`)
    - Theoretically improves accuracy (⚠️ unvalidated)
-2. **Verify flight time detection**: Check `flight_start_frame` and `flight_end_frame` in JSON
-3. **Compare measurements**: JSON output includes both `jump_height_m` (primary) and `jump_height_kinematic_m` (kinematic-only)
-4. **Check for drop jump detection**: If doing a drop jump, ensure first phase is elevated enough (>5% of frame height)
+1. **Verify flight time detection**: Check `flight_start_frame` and `flight_end_frame` in JSON
+1. **Compare measurements**: JSON output includes both `jump_height_m` (primary) and `jump_height_kinematic_m` (kinematic-only)
+1. **Check for drop jump detection**: If doing a drop jump, ensure first phase is elevated enough (>5% of frame height)
 
 ### Video Codec Issues
 
@@ -419,30 +426,30 @@ The debug video includes:
 **Solutions**:
 
 1. **Install additional codecs**: Ensure OpenCV has proper video codec support
-2. **Try different output format**: Use `.avi` extension instead of `.mp4`
-3. **Check output path**: Ensure write permissions for output directory
+1. **Try different output format**: Use `.avi` extension instead of `.mp4`
+1. **Check output path**: Ensure write permissions for output directory
 
 ## How It Works
 
 1. **Pose Tracking**: MediaPipe extracts 2D pose landmarks (foot points: ankles, heels, foot indices) from each frame
-2. **Position Calculation**: Averages ankle, heel, and foot index positions to determine foot location
-3. **Smoothing**: Savitzky-Golay filter reduces tracking jitter while preserving motion dynamics
-4. **Contact Detection**: Analyzes vertical position velocity to identify ground contact vs. flight phases
-5. **Phase Identification**: Finds continuous ground contact and flight periods
+1. **Position Calculation**: Averages ankle, heel, and foot index positions to determine foot location
+1. **Smoothing**: Savitzky-Golay filter reduces tracking jitter while preserving motion dynamics
+1. **Contact Detection**: Analyzes vertical position velocity to identify ground contact vs. flight phases
+1. **Phase Identification**: Finds continuous ground contact and flight periods
    - Automatically detects drop jumps vs regular jumps
    - For drop jumps: identifies box → drop → ground contact → jump sequence
-6. **Sub-Frame Interpolation**: Estimates exact transition times between frames
+1. **Sub-Frame Interpolation**: Estimates exact transition times between frames
    - Uses Savitzky-Golay derivative for smooth velocity calculation
    - Linear interpolation of velocity to find threshold crossings
    - Achieves sub-millisecond timing precision (at 30fps: ±10ms vs ±33ms)
    - Reduces timing error by 60-70% for contact and flight measurements
    - Smoother velocity curves eliminate false threshold crossings
-7. **Trajectory Curvature Analysis**: Refines transitions using acceleration patterns
+1. **Trajectory Curvature Analysis**: Refines transitions using acceleration patterns
    - Computes second derivative (acceleration) from position trajectory
    - Detects landing impact by acceleration spike
    - Identifies takeoff by acceleration change patterns
    - Provides independent validation and refinement of velocity-based detection
-8. **Metric Calculation**:
+1. **Metric Calculation**:
    - Ground contact time = contact phase duration (using fractional frames)
    - Flight time = flight phase duration (using fractional frames)
    - Jump height = calibrated position-based measurement (if --drop-height provided)
@@ -493,9 +500,9 @@ uv run ruff check && uv run mypy src/dropjump && uv run pytest
 Before committing code, ensure all checks pass:
 
 1. Format with Black
-2. Fix linting issues with ruff
-3. Ensure type safety with mypy
-4. Run all tests with pytest
+1. Fix linting issues with ruff
+1. Ensure type safety with mypy
+1. Run all tests with pytest
 
 See [CLAUDE.md](CLAUDE.md) for detailed development guidelines.
 

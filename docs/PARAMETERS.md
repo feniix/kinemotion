@@ -5,51 +5,55 @@
 Kinemotion now features **intelligent auto-tuning** that automatically optimizes all parameters based on video characteristics (FPS, tracking quality). Most users no longer need to manually adjust parameters.
 
 **For current usage, see:**
+
 - README.md - Simplified interface with auto-tuning
 - CLAUDE.md - Auto-tuning system documentation
 
 **This document is preserved for:**
+
 - Expert users who need to override auto-tuned values (use `--expert` mode)
 - Understanding what each parameter does internally
 - Debugging when auto-tuning doesn't work as expected
 
----
+______________________________________________________________________
 
 ## Quick Reference (Auto-Tuned Values)
 
 **You don't need to set these manually!** The tool auto-detects:
 
-| Parameter | 30fps Auto | 60fps Auto | 120fps Auto | Formula |
-|-----------|------------|------------|-------------|---------|
-| `velocity-threshold` | 0.020 | 0.010 | 0.005 | 0.02 × (30/fps) |
-| `min-contact-frames` | 3 | 6 | 12 | round(3 × (fps/30)) |
-| `smoothing-window` | 5 | 3 | 3 | 5 if fps≤30 else 3 |
-| `outlier-rejection` | ✅ | ✅ | ✅ | Always enabled |
-| `use-curvature` | ✅ | ✅ | ✅ | Always enabled |
-| `polyorder` | 2 | 2 | 2 | Always 2 (optimal for jumps) |
+| Parameter            | 30fps Auto | 60fps Auto | 120fps Auto | Formula                      |
+| -------------------- | ---------- | ---------- | ----------- | ---------------------------- |
+| `velocity-threshold` | 0.020      | 0.010      | 0.005       | 0.02 × (30/fps)              |
+| `min-contact-frames` | 3          | 6          | 12          | round(3 × (fps/30))          |
+| `smoothing-window`   | 5          | 3          | 3           | 5 if fps≤30 else 3           |
+| `outlier-rejection`  | ✅         | ✅         | ✅          | Always enabled               |
+| `use-curvature`      | ✅         | ✅         | ✅          | Always enabled               |
+| `polyorder`          | 2          | 2          | 2           | Always 2 (optimal for jumps) |
 
 **Quality adjustments** (based on MediaPipe visibility):
+
 - High quality (visibility > 0.7): Minimal smoothing, no bilateral filter
 - Medium quality (0.4-0.7): +1 smoothing adjustment, enable bilateral
-- Low quality (< 0.4): +2 smoothing adjustment, enable bilateral, lower confidence
+- Low quality (\< 0.4): +2 smoothing adjustment, enable bilateral, lower confidence
 
 **Use `--verbose` to see what was auto-selected for your video!**
 
----
+______________________________________________________________________
 
 ## Batch Processing Parameters
 
 These parameters control batch processing mode when analyzing multiple videos:
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `--batch` | flag | auto | Explicitly enable batch mode (auto-enabled with multiple files) |
-| `--workers` | int | 4 | Number of parallel workers for ProcessPoolExecutor |
-| `--output-dir` | path | - | Directory for debug videos (auto-named: `{video_name}_debug.mp4`) |
-| `--json-output-dir` | path | - | Directory for JSON metrics (auto-named: `{video_name}.json`) |
-| `--csv-summary` | path | - | Export aggregated results to CSV file |
+| Parameter           | Type | Default | Description                                                       |
+| ------------------- | ---- | ------- | ----------------------------------------------------------------- |
+| `--batch`           | flag | auto    | Explicitly enable batch mode (auto-enabled with multiple files)   |
+| `--workers`         | int  | 4       | Number of parallel workers for ProcessPoolExecutor                |
+| `--output-dir`      | path | -       | Directory for debug videos (auto-named: `{video_name}_debug.mp4`) |
+| `--json-output-dir` | path | -       | Directory for JSON metrics (auto-named: `{video_name}.json`)      |
+| `--csv-summary`     | path | -       | Export aggregated results to CSV file                             |
 
 **Usage:**
+
 ```bash
 # Batch process with all outputs
 kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \
@@ -60,6 +64,7 @@ kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \
 ```
 
 **Notes:**
+
 - Batch mode is automatically enabled when multiple video paths are provided
 - All analysis parameters (quality, smoothing-window, etc.) apply to all videos in batch
 - Progress is shown in real-time: `[3/10] ✓ athlete3.mp4 (2.1s)`
@@ -69,6 +74,7 @@ kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \
 **Python API Alternative:**
 
 For more control, use the Python API:
+
 ```python
 from kinemotion import VideoConfig, process_videos_bulk
 
@@ -82,7 +88,7 @@ results = process_videos_bulk(configs, max_workers=4)
 
 See `examples/bulk/README.md` for complete API documentation.
 
----
+______________________________________________________________________
 
 ## Legacy Manual Parameter Reference
 
@@ -94,7 +100,7 @@ This section explains each parameter for expert users who need manual control.
 
 **Accuracy Disclaimer**: All parameter tuning recommendations assume kinemotion provides accurate measurements. Actual accuracy performance is currently unknown and requires validation against gold standards (force plates, 3D motion capture).
 
----
+______________________________________________________________________
 
 ## Smoothing Parameters
 
@@ -133,7 +139,7 @@ Controls the window size for the Savitzky-Golay filter that smooths landmark tra
 
 **Example:**
 
-```bash
+````bash
 # Noisy video with camera shake
 kinemotion dropjump-analyze video.mp4 --smoothing-window 9
 
@@ -1386,3 +1392,4 @@ kinemotion dropjump-analyze video.mp4 --output v3.mp4 --json-output v3.json --sm
 | `tracking-confidence` | 0.5 | 0.1-0.9 | Tracking persistence | Tracking lost or wrong person tracked |
 | `drop-height` | None | 0.1-2.0 | Jump height calibration | Drop jump with known box height |
 | `use-curvature` | enabled | enabled/disabled | Timing refinement | Default: keep enabled for best accuracy |
+````

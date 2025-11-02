@@ -32,3 +32,12 @@ repos:
         args: [--ignore-missing-imports, --no-strict-optional]
         files: ^src/
         exclude: ^(tests/|examples/)
+
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.17
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-gfm>=0.3.5  # GitHub Flavored Markdown
+          - mdformat-tables  # Table formatting
+        exclude: ^CLAUDE\.md$

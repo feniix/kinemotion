@@ -17,7 +17,7 @@ This is **not production-ready software** and should not be used in security-cri
 If you discover a security vulnerability, please report it by:
 
 1. **Opening a GitHub issue** with details about the vulnerability
-2. Using the label "security" if available
+1. Using the label "security" if available
 
 For now, we handle security reports the same as other bug reports. When the project reaches version 1.0, we will implement a more formal security disclosure process.
 

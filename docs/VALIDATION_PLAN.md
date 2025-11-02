@@ -5,13 +5,14 @@
 **Last Updated**: 2025-11-01 (Auto-tuning system added)
 **Purpose**: Realistic, low-cost validation roadmap for a hobby project
 
----
+______________________________________________________________________
 
 ## ⚠️ Current Status
 
 **IMPORTANT**: Kinemotion measurements are currently **unvalidated**. This document outlines a practical, affordable validation approach suitable for a hobby project. The goal is to establish "reasonable accuracy" rather than research-grade validation.
 
 **NEW (November 2025)**: Kinemotion now features intelligent auto-tuning that eliminates manual parameter adjustment. The tool automatically:
+
 - Detects video FPS and adjusts velocity thresholds accordingly (30/60/120fps)
 - Analyzes tracking quality and adapts smoothing
 - Auto-detects drop start frame (no manual specification needed)
@@ -19,7 +20,7 @@
 
 This makes validation testing easier - no need to guess optimal parameters!
 
----
+______________________________________________________________________
 
 ## 1. Validation Philosophy for Hobby Projects
 
@@ -41,7 +42,7 @@ For a hobby project, validation means:
 - Build confidence through community validation
 - **No academic publication required** - just honest assessment
 
----
+______________________________________________________________________
 
 ## 2. Frame Rate Recommendations
 
@@ -49,14 +50,14 @@ For a hobby project, validation means:
 
 ### Frame Rate vs. Timing Accuracy
 
-| Frame Rate | Time per Frame | Event Detection Error | Contact Time Error* | Recommendation |
-|------------|----------------|----------------------|-------------------|----------------|
-| 30fps | 33.3ms | ±17-33ms | ±10-20% | ⚠️ Minimum viable |
-| 60fps | 16.7ms | ±8-17ms | ±5-10% | ✅ Recommended |
-| 120fps | 8.3ms | ±4-8ms | ±2-5% | 🎯 Ideal |
-| 240fps | 4.2ms | ±2-4ms | ±1-3% | 🏆 Excellent |
+| Frame Rate | Time per Frame | Event Detection Error | Contact Time Error\* | Recommendation    |
+| ---------- | -------------- | --------------------- | -------------------- | ----------------- |
+| 30fps      | 33.3ms         | ±17-33ms              | ±10-20%              | ⚠️ Minimum viable |
+| 60fps      | 16.7ms         | ±8-17ms               | ±5-10%               | ✅ Recommended    |
+| 120fps     | 8.3ms          | ±4-8ms                | ±2-5%                | 🎯 Ideal          |
+| 240fps     | 4.2ms          | ±2-4ms                | ±1-3%                | 🏆 Excellent      |
 
-*For typical drop jump contact times of 150-300ms
+\*For typical drop jump contact times of 150-300ms
 
 ### Our Recommendation
 
@@ -75,7 +76,7 @@ For a hobby project, validation means:
 
 **Note**: All validation in this document assumes **60fps as the baseline** unless otherwise specified. Adjust acceptance criteria if using 30fps (double the timing error tolerances).
 
----
+______________________________________________________________________
 
 ## 3. Free Validation Methods (Budget: $0)
 
@@ -90,15 +91,15 @@ These methods cost nothing and can be done immediately by any user.
 **How to do it**:
 
 1. Download My Jump Lab app from the links above
-2. Record 10-20 jumps (countermovement or drop jumps)
-3. Process same video with both My Jump Lab and Kinemotion
-4. Compare jump heights, contact times, flight times
-5. Calculate: mean difference, correlation, percentage error
+1. Record 10-20 jumps (countermovement or drop jumps)
+1. Process same video with both My Jump Lab and Kinemotion
+1. Compare jump heights, contact times, flight times
+1. Calculate: mean difference, correlation, percentage error
 
 **What to expect**:
 
 - If correlation r > 0.85: Good agreement
-- If mean difference < 5cm for jump height: Acceptable
+- If mean difference \< 5cm for jump height: Acceptable
 - If contact/flight times within ±30ms: Reasonable for 30fps video
 
 **Time required**: 2-3 hours
@@ -121,14 +122,14 @@ These methods cost nothing and can be done immediately by any user.
 **How to do it**:
 
 1. Download Tracker from <https://physlets.org/tracker/>
-2. Open your drop jump video in Tracker
-3. Set coordinate system (origin at ground level)
-4. Calibrate scale using known reference (e.g., drop box height)
-5. Track ankle/heel position frame-by-frame (autotrack feature available)
-6. Export position data (time vs. vertical position)
-7. Identify takeoff/landing from position data
-8. Calculate jump height from trajectory
-9. Compare with Kinemotion results
+1. Open your drop jump video in Tracker
+1. Set coordinate system (origin at ground level)
+1. Calibrate scale using known reference (e.g., drop box height)
+1. Track ankle/heel position frame-by-frame (autotrack feature available)
+1. Export position data (time vs. vertical position)
+1. Identify takeoff/landing from position data
+1. Calculate jump height from trajectory
+1. Compare with Kinemotion results
 
 **What to compare**:
 
@@ -162,11 +163,11 @@ These methods cost nothing and can be done immediately by any user.
 **How to do it**:
 
 1. Record 5-10 jumps at 60fps or 120fps (slow-motion on phone)
-2. Use free video player (VLC, QuickTime) to step through frame-by-frame
-3. Manually mark takeoff frame and landing frame
-4. Calculate flight time: (frames_between / frame_rate)
-5. Calculate jump height: h = g × t² / 8 (where t = flight time, g = 9.81 m/s²)
-6. Compare with Kinemotion results
+1. Use free video player (VLC, QuickTime) to step through frame-by-frame
+1. Manually mark takeoff frame and landing frame
+1. Calculate flight time: (frames_between / frame_rate)
+1. Calculate jump height: h = g × t² / 8 (where t = flight time, g = 9.81 m/s²)
+1. Compare with Kinemotion results
 
 **What to expect**:
 
@@ -185,20 +186,24 @@ These methods cost nothing and can be done immediately by any user.
 **Checks to perform**:
 
 1. **Jump height from flight time**:
+
    - Calculate: h = g × t² / 8
    - Compare with position-based height
    - Should agree within 10-15%
 
-2. **Velocity at takeoff**:
+1. **Velocity at takeoff**:
+
    - Calculate: v = g × t / 2 (where t = flight time)
    - Check: Is takeoff velocity reasonable? (1.5-2.5 m/s for typical jumps)
 
-3. **Drop height calibration**:
+1. **Drop height calibration**:
+
    - If you know drop box height (e.g., 40cm)
    - Does calibrated measurement match reality?
    - Test with known reference heights
 
-4. **Repeatability**:
+1. **Repeatability**:
+
    - Do 3 identical jumps
    - Results should be within 5-10% of each other
    - High variation suggests measurement issues
@@ -214,10 +219,10 @@ These methods cost nothing and can be done immediately by any user.
 **How to do it**:
 
 1. Record 5 jumps
-2. Process with Kinemotion
-3. Process same videos again (fresh analysis)
-4. Compare results - should be identical (deterministic algorithm)
-5. If using different videos of same jumps:
+1. Process with Kinemotion
+1. Process same videos again (fresh analysis)
+1. Compare results - should be identical (deterministic algorithm)
+1. If using different videos of same jumps:
    - Calculate ICC (intraclass correlation)
    - Target: ICC > 0.90 (excellent reliability)
 
@@ -225,7 +230,7 @@ These methods cost nothing and can be done immediately by any user.
 
 **Validation value**: ⭐⭐⭐⭐ (Good - validates algorithm consistency)
 
----
+______________________________________________________________________
 
 ## 4. Low-Cost Validation Methods (Budget: $100-500)
 
@@ -246,9 +251,9 @@ Optional methods if you have budget for equipment.
 **How to do it**:
 
 1. Purchase or build jump mat
-2. Record 20-30 jumps with simultaneous video + jump mat
-3. Compare contact times and flight times
-4. Calculate correlation and agreement statistics
+1. Record 20-30 jumps with simultaneous video + jump mat
+1. Compare contact times and flight times
+1. Calculate correlation and agreement statistics
 
 **What to expect**:
 
@@ -275,7 +280,7 @@ Optional methods if you have budget for equipment.
 
 **Validation value**: ⭐⭐⭐⭐ (Good - direct flight time measurement)
 
----
+______________________________________________________________________
 
 ## 5. Simple Statistical Analysis
 
@@ -288,7 +293,7 @@ Optional methods if you have budget for equipment.
   - r > 0.90: Excellent
   - r = 0.80-0.90: Good
   - r = 0.70-0.80: Acceptable
-  - r < 0.70: Needs improvement
+  - r \< 0.70: Needs improvement
 
 **Tool**: Any spreadsheet (Excel, Google Sheets) or Python pandas
 
@@ -302,13 +307,13 @@ Optional methods if you have budget for equipment.
 
 - Calculate: mean(abs(Kinemotion - Reference))
 - Shows typical error magnitude
-- Target: MAE < 5cm for jump height, < 30ms for timing at 30fps
+- Target: MAE \< 5cm for jump height, \< 30ms for timing at 30fps
 
 ### 5.4 Percentage Error
 
 - Calculate: mean(abs((Kinemotion - Reference) / Reference) × 100)
 - Shows relative error
-- Target: < 10% for practical use
+- Target: \< 10% for practical use
 
 **Example Python Code**:
 
@@ -328,7 +333,7 @@ print(f"Mean difference: {mean_diff:.2f} cm")
 print(f"Mean absolute error: {mae:.2f} cm")
 ```
 
----
+______________________________________________________________________
 
 ## 6. DIY Validation Protocol (For Developer)
 
@@ -363,7 +368,7 @@ print(f"Mean absolute error: {mae:.2f} cm")
 #### Phase 1 Success Criteria
 
 - Correlation r > 0.85 with Tracker/My Jump Lab
-- Mean difference < 5cm for jump height
+- Mean difference \< 5cm for jump height
 - Contact/flight times within ±30ms
 - Event detection within ±2-3 frames
 
@@ -386,7 +391,7 @@ print(f"Mean absolute error: {mae:.2f} cm")
 #### Phase 2 Success Criteria
 
 - Event detection within ±2 frames of manual analysis
-- Physics calculations internally consistent (<10% difference)
+- Physics calculations internally consistent (\<10% difference)
 - Perfect repeatability (deterministic algorithm)
 
 ### Phase 3: Documentation (Week 4)
@@ -397,7 +402,7 @@ print(f"Mean absolute error: {mae:.2f} cm")
 - [ ] Document limitations and error sources
 - [ ] Add disclaimer with validation status
 
----
+______________________________________________________________________
 
 ## 7. Community Validation
 
@@ -441,7 +446,7 @@ Help validate Kinemotion by comparing it with other tools!
 - Identify patterns (works better at 60fps vs 30fps, etc.)
 - Build confidence through multiple independent validations
 
----
+______________________________________________________________________
 
 ## 8. Acceptance Criteria for Hobby Project
 
@@ -449,15 +454,15 @@ Help validate Kinemotion by comparing it with other tools!
 
 ### Jump Height
 
-- ✅ **Acceptable**: MAE < 5cm, r > 0.85
-- ⭐ **Good**: MAE < 3cm, r > 0.90
-- 🏆 **Excellent**: MAE < 2cm, r > 0.95
+- ✅ **Acceptable**: MAE \< 5cm, r > 0.85
+- ⭐ **Good**: MAE \< 3cm, r > 0.90
+- 🏆 **Excellent**: MAE \< 2cm, r > 0.95
 
 ### Contact Time / Flight Time
 
-- ✅ **Acceptable**: MAE < 30ms (at 30fps), r > 0.80
-- ⭐ **Good**: MAE < 20ms (at 30fps), r > 0.85
-- 🏆 **Excellent**: MAE < 10ms (at 60fps), r > 0.90
+- ✅ **Acceptable**: MAE \< 30ms (at 30fps), r > 0.80
+- ⭐ **Good**: MAE \< 20ms (at 30fps), r > 0.85
+- 🏆 **Excellent**: MAE \< 10ms (at 60fps), r > 0.90
 
 ### Event Detection
 
@@ -467,7 +472,7 @@ Help validate Kinemotion by comparing it with other tools!
 
 **If these criteria are met**: Can claim "validated for practical use" with appropriate caveats about video quality, frame rate, and conditions.
 
----
+______________________________________________________________________
 
 ## 9. Timeline & Resource Summary
 
@@ -506,7 +511,7 @@ Help validate Kinemotion by comparing it with other tools!
 
 **For hobby project**: Stick to minimum or recommended budget!
 
----
+______________________________________________________________________
 
 ## 10. Opportunistic Validation
 
@@ -521,13 +526,13 @@ Sometimes opportunities arise unexpectedly:
 **If this happens**:
 
 1. Explain your tool and validation goal
-2. Ask if you can run 10-20 test jumps for comparison
-3. Offer to share results (may help their research too)
-4. Be flexible with timing (work around their schedule)
+1. Ask if you can run 10-20 test jumps for comparison
+1. Offer to share results (may help their research too)
+1. Be flexible with timing (work around their schedule)
 
 **Cost**: Usually free if someone gives you access, just your time
 
----
+______________________________________________________________________
 
 ## 11. Documenting Results
 
@@ -629,7 +634,7 @@ Template:
 [Optional: Include CSV or table of all measurements for transparency]
 ```
 
----
+______________________________________________________________________
 
 ## 12. Alternative: "Trust but Verify" Approach
 
@@ -638,16 +643,19 @@ Template:
 ### Practical Verification
 
 1. **Does it pass the smell test?**
+
    - Do jump heights seem reasonable? (20-40cm for recreational, 40-70cm for trained athletes)
    - Are contact times sensible? (150-300ms typical for drop jumps)
    - Does flight time correlate with perceived jump height?
 
-2. **Internal consistency**
+1. **Internal consistency**
+
    - Do better jumps (feel higher) measure higher?
    - Do repeated similar jumps give similar results?
    - Do trends over time make sense (improving with training)?
 
-3. **Comparative validation**
+1. **Comparative validation**
+
    - Does athlete A (known to jump higher) measure higher than athlete B?
    - Do measurements track with performance (vertical jump improvement = better game performance)?
 
@@ -658,7 +666,7 @@ Template:
 - Not making high-stakes decisions based on measurements
 - Comfortable with "good enough" accuracy
 
----
+______________________________________________________________________
 
 ## 13. Conclusion
 
@@ -667,10 +675,10 @@ Template:
 You don't need perfect validation on day one. Start simple:
 
 1. **Phase 1**: Compare with My Jump Lab (1 week, free)
-2. **Phase 2**: Manual verification (1 week, free)
-3. **Phase 3**: Document results (1 week)
-4. **Phase 4**: Community validation (ongoing)
-5. **Phase 5**: Opportunistic upgrades (if lab access becomes available)
+1. **Phase 2**: Manual verification (1 week, free)
+1. **Phase 3**: Document results (1 week)
+1. **Phase 4**: Community validation (ongoing)
+1. **Phase 5**: Opportunistic upgrades (if lab access becomes available)
 
 ### Honest Limitations
 
@@ -686,25 +694,25 @@ A hobby project validation will never match research-grade validation, and **tha
 
 Provide users with **honest, evidence-based information** about tool accuracy so they can make informed decisions about whether it meets their needs.
 
----
+______________________________________________________________________
 
 ## Appendix: Quick Comparison - Hobby vs Research Validation
 
-| Aspect | Hobby Approach | Research Approach |
-|--------|---------------|-------------------|
-| **Budget** | $0-500 | $15,000-30,000 |
-| **Time** | 1-3 months | 6-12 months |
-| **Reference** | My Jump Lab, jump mat | Force plates, motion capture |
-| **Participants** | Self + volunteers | 30-50 recruited participants |
-| **Statistics** | Correlation, MAE | ICC, Bland-Altman, LOA |
-| **Ethics** | None required | IRB approval needed |
-| **Publication** | GitHub documentation | Peer-reviewed journal |
-| **Outcome** | "Practical accuracy" | "Research-grade validated" |
-| **Use cases** | Personal training, coaching | Scientific studies, research |
+| Aspect           | Hobby Approach              | Research Approach            |
+| ---------------- | --------------------------- | ---------------------------- |
+| **Budget**       | $0-500                      | $15,000-30,000               |
+| **Time**         | 1-3 months                  | 6-12 months                  |
+| **Reference**    | My Jump Lab, jump mat       | Force plates, motion capture |
+| **Participants** | Self + volunteers           | 30-50 recruited participants |
+| **Statistics**   | Correlation, MAE            | ICC, Bland-Altman, LOA       |
+| **Ethics**       | None required               | IRB approval needed          |
+| **Publication**  | GitHub documentation        | Peer-reviewed journal        |
+| **Outcome**      | "Practical accuracy"        | "Research-grade validated"   |
+| **Use cases**    | Personal training, coaching | Scientific studies, research |
 
 **For a hobby project**: Left column is perfectly appropriate!
 
----
+______________________________________________________________________
 
 **Document Version**: 2.1 (Frame Rate Guidance Added)
 **Last Updated**: 2025-01-26

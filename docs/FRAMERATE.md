@@ -17,7 +17,7 @@ This document explains how video frame rate affects accuracy in drop jump analys
 - Evidence-Based Summary & Conclusions
 - kinemotion-Specific Recommendations
 
----
+______________________________________________________________________
 
 ## Executive Summary
 
@@ -33,7 +33,7 @@ This document explains how video frame rate affects accuracy in drop jump analys
 
 **Key Finding:** Industry research shows diminishing returns from higher frame rates, but kinemotion's actual performance characteristics are unknown until empirical validation is completed.
 
----
+______________________________________________________________________
 
 ## Frame Rate Impact on Accuracy
 
@@ -41,13 +41,13 @@ This document explains how video frame rate affects accuracy in drop jump analys
 
 Sub-frame interpolation (enabled by default) provides sub-millisecond timing precision:
 
-| Frame Rate | Time Between Frames | Precision with Interpolation | Precision without Interpolation |
-|------------|--------------------|-----------------------------|--------------------------------|
-| **30 fps** | 33.3 ms | ±10 ms | ±33 ms |
-| **60 fps** | 16.7 ms | ±5 ms | ±17 ms |
-| **120 fps** | 8.3 ms | ±2.5 ms | ±8 ms |
-| **240 fps** | 4.2 ms | ±1.25 ms | ±4 ms |
-| **480 fps** | 2.1 ms | ±0.6 ms | ±2 ms |
+| Frame Rate  | Time Between Frames | Precision with Interpolation | Precision without Interpolation |
+| ----------- | ------------------- | ---------------------------- | ------------------------------- |
+| **30 fps**  | 33.3 ms             | ±10 ms                       | ±33 ms                          |
+| **60 fps**  | 16.7 ms             | ±5 ms                        | ±17 ms                          |
+| **120 fps** | 8.3 ms              | ±2.5 ms                      | ±8 ms                           |
+| **240 fps** | 4.2 ms              | ±1.25 ms                     | ±4 ms                           |
+| **480 fps** | 2.1 ms              | ±0.6 ms                      | ±2 ms                           |
 
 **How sub-frame interpolation works:**
 
@@ -58,7 +58,7 @@ Sub-frame interpolation (enabled by default) provides sub-millisecond timing pre
 
 **Math example at 30fps:**
 
-```text
+````text
 Without interpolation:
 - Event occurs at frame 48.7
 - Detected at frame 49 (integer boundary)
@@ -745,3 +745,4 @@ Need precise measurements for critical applications?
 ```text
 
 **Bottom Line:** kinemotion is currently **unvalidated software** - accuracy claims are theoretical until empirical validation is completed.
+````

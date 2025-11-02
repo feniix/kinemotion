@@ -119,7 +119,7 @@ Process multiple videos in parallel.
 
 **Parameters:**
 
-- `configs` (list[VideoConfig], required): List of video configurations
+- `configs` (list\[VideoConfig\], required): List of video configurations
 - `max_workers` (int, optional): Number of parallel workers (default: 4)
 - `progress_callback` (callable, optional): Function called after each video completes
 

@@ -14,14 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add batch processing mode to CLI
   ([`b0ab3c6`](https://github.com/feniix/kinemotion/commit/b0ab3c6b37a013402ff7a89305a68e49549eeae3))
 
-
 ## v0.9.0 (2025-11-02)
 
 ### Features
 
 - Add programmatic API for bulk video processing
   ([`213de56`](https://github.com/feniix/kinemotion/commit/213de564fda96b461807dbefa2795e037a5edc94))
-
 
 ## v0.8.3 (2025-11-02)
 
@@ -35,14 +33,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update repository metadata for GHCR package description
   ([`4779355`](https://github.com/feniix/kinemotion/commit/4779355901a407514d83cf2aa82f55fa083e7e63))
 
-
 ## v0.8.2 (2025-11-02)
 
 ### Bug Fixes
 
 - Add OCI annotations to Docker manifest for GHCR metadata
   ([`c6e2295`](https://github.com/feniix/kinemotion/commit/c6e2295dd5eb3eae6b820d3dc7a84d730772de41))
-
 
 ## v0.8.1 (2025-11-02)
 
@@ -51,14 +47,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add OCI-compliant labels to Docker image
   ([`6b18b33`](https://github.com/feniix/kinemotion/commit/6b18b33538615048c8ea572c4ebc402160ee1c5e))
 
-
 ## v0.8.0 (2025-11-02)
 
 ### Features
 
 - Add Docker support and GitHub Container Registry publishing
   ([`249ca4c`](https://github.com/feniix/kinemotion/commit/249ca4c0c0ab40cda5acfebac012db8075b9694f))
-
 
 ## v0.7.1 (2025-11-01)
 
@@ -67,14 +61,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update documentation for auto-tuning system
   ([`6c1a135`](https://github.com/feniix/kinemotion/commit/6c1a135acf5cce7a627644dbc6393460277906ad))
 
-
 ## v0.7.0 (2025-11-01)
 
 ### Features
 
 - Add intelligent auto-tuning and video rotation handling
   ([`7b35f67`](https://github.com/feniix/kinemotion/commit/7b35f6790dd8b6714f3e42389555107a043d486c))
-
 
 ## v0.6.4 (2025-10-26)
 
@@ -83,14 +75,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Project urls
   ([`c7b5914`](https://github.com/feniix/kinemotion/commit/c7b5914d3516e0f59dcf88ac81f99ffe94edb706))
 
-
 ## v0.6.3 (2025-10-26)
 
 ### Bug Fixes
 
 - Changelog markdown
   ([`976de66`](https://github.com/feniix/kinemotion/commit/976de66b2a964b83240a559ea097cb74f5e1a537))
-
 
 ## v0.6.2 (2025-10-26)
 
@@ -99,7 +89,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add semantic-release insertion flag to CHANGELOG.md
   ([`93f3a28`](https://github.com/feniix/kinemotion/commit/93f3a28c750bdb70b2a57f9b0c1910b105753980))
 
-## [Unreleased]
+## \[Unreleased\]
 
 ### Added
 
@@ -125,7 +115,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Your security fix here.
 
-## [0.5.0] - 2025-10-26
+## \[0.5.0\] - 2025-10-26
 
 ### Added
 
