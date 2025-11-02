@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.9.0 (2025-11-02)
+
+### Features
+
+- Add programmatic API for bulk video processing
+  ([`213de56`](https://github.com/feniix/kinemotion/commit/213de564fda96b461807dbefa2795e037a5edc94))
+
+
 ## v0.8.3 (2025-11-02)
 
 ### Bug Fixes
