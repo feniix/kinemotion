@@ -1,5 +1,7 @@
 """Command-line interface for drop jump analysis."""
 
+import csv
+import glob
 import json
 import sys
 from pathlib import Path
@@ -8,6 +10,7 @@ from typing import Any
 import click
 import numpy as np
 
+from ..api import VideoConfig, VideoResult, process_videos_bulk
 from ..core.auto_tuning import (
     QualityPreset,
     analyze_video_sample,
@@ -25,7 +28,7 @@ from .kinematics import calculate_drop_jump_metrics
 
 
 @click.command(name="dropjump-analyze")
-@click.argument("video_path", type=click.Path(exists=True))
+@click.argument("video_path", nargs=-1, type=click.Path(exists=False), required=True)
 @click.option(
     "--output",
     "-o",
@@ -64,6 +67,34 @@ from .kinematics import calculate_drop_jump_metrics
     "-v",
     is_flag=True,
     help="Show auto-selected parameters and analysis details",
+)
+# Batch processing options
+@click.option(
+    "--batch",
+    is_flag=True,
+    help="Enable batch processing mode for multiple videos",
+)
+@click.option(
+    "--workers",
+    type=int,
+    default=4,
+    help="Number of parallel workers for batch processing (default: 4)",
+    show_default=True,
+)
+@click.option(
+    "--output-dir",
+    type=click.Path(),
+    help="Directory for debug video outputs (batch mode only)",
+)
+@click.option(
+    "--json-output-dir",
+    type=click.Path(),
+    help="Directory for JSON metrics outputs (batch mode only)",
+)
+@click.option(
+    "--csv-summary",
+    type=click.Path(),
+    help="Path for CSV summary export (batch mode only)",
 )
 # Expert parameters (hidden in help, but always available for advanced users)
 @click.option(
@@ -109,6 +140,106 @@ from .kinematics import calculate_drop_jump_metrics
     help="[EXPERT] Override pose tracking confidence",
 )
 def dropjump_analyze(
+    video_path: tuple[str, ...],
+    output: str | None,
+    json_output: str | None,
+    drop_height: float,
+    quality: str,
+    verbose: bool,
+    batch: bool,
+    workers: int,
+    output_dir: str | None,
+    json_output_dir: str | None,
+    csv_summary: str | None,
+    drop_start_frame: int | None,
+    smoothing_window: int | None,
+    velocity_threshold: float | None,
+    min_contact_frames: int | None,
+    visibility_threshold: float | None,
+    detection_confidence: float | None,
+    tracking_confidence: float | None,
+) -> None:
+    """
+    Analyze drop-jump video(s) to estimate ground contact time, flight time, and jump height.
+
+    Uses intelligent auto-tuning to select optimal parameters based on video characteristics.
+    Parameters are automatically adjusted for frame rate, tracking quality, and analysis preset.
+
+    VIDEO_PATH: Path(s) to video file(s). Supports glob patterns in batch mode
+    (e.g., "videos/*.mp4").
+
+    Examples:
+
+    \b
+    # Single video
+    kinemotion dropjump-analyze video.mp4 --drop-height 0.40
+
+    \b
+    # Batch mode with glob pattern
+    kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 --workers 4
+
+    \b
+    # Batch with output directories
+    kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \\
+        --json-output-dir results/ --csv-summary summary.csv
+    """
+    # Expand glob patterns and collect all video files
+    video_files: list[str] = []
+    for pattern in video_path:
+        expanded = glob.glob(pattern)
+        if expanded:
+            video_files.extend(expanded)
+        elif Path(pattern).exists():
+            # Direct path (not a glob pattern)
+            video_files.append(pattern)
+        else:
+            click.echo(f"Warning: No files found for pattern: {pattern}", err=True)
+
+    if not video_files:
+        click.echo("Error: No video files found", err=True)
+        sys.exit(1)
+
+    # Determine if batch mode should be used
+    use_batch = batch or len(video_files) > 1
+
+    if use_batch:
+        _process_batch(
+            video_files,
+            drop_height,
+            quality,
+            workers,
+            output_dir,
+            json_output_dir,
+            csv_summary,
+            drop_start_frame,
+            smoothing_window,
+            velocity_threshold,
+            min_contact_frames,
+            visibility_threshold,
+            detection_confidence,
+            tracking_confidence,
+            verbose,
+        )
+    else:
+        # Single video mode (original behavior)
+        _process_single(
+            video_files[0],
+            output,
+            json_output,
+            drop_height,
+            quality,
+            verbose,
+            drop_start_frame,
+            smoothing_window,
+            velocity_threshold,
+            min_contact_frames,
+            visibility_threshold,
+            detection_confidence,
+            tracking_confidence,
+        )
+
+
+def _process_single(
     video_path: str,
     output: str | None,
     json_output: str | None,
@@ -123,14 +254,7 @@ def dropjump_analyze(
     detection_confidence: float | None,
     tracking_confidence: float | None,
 ) -> None:
-    """
-    Analyze drop-jump video to estimate ground contact time, flight time, and jump height.
-
-    Uses intelligent auto-tuning to select optimal parameters based on video characteristics.
-    Parameters are automatically adjusted for frame rate, tracking quality, and analysis preset.
-
-    VIDEO_PATH: Path to the input video file
-    """
+    """Process a single video (original CLI behavior)."""
     click.echo(f"Analyzing video: {video_path}", err=True)
 
     # Convert quality string to enum
@@ -414,3 +538,194 @@ def dropjump_analyze(
     except Exception as e:
         click.echo(f"Error: {str(e)}", err=True)
         sys.exit(1)
+
+
+def _process_batch(
+    video_files: list[str],
+    drop_height: float,
+    quality: str,
+    workers: int,
+    output_dir: str | None,
+    json_output_dir: str | None,
+    csv_summary: str | None,
+    drop_start_frame: int | None,
+    smoothing_window: int | None,
+    velocity_threshold: float | None,
+    min_contact_frames: int | None,
+    visibility_threshold: float | None,
+    detection_confidence: float | None,
+    tracking_confidence: float | None,
+    verbose: bool,
+) -> None:
+    """Process multiple videos in batch mode using parallel processing."""
+    click.echo(
+        f"\nBatch processing {len(video_files)} videos with {workers} workers", err=True
+    )
+    click.echo("=" * 70, err=True)
+
+    # Create output directories if specified
+    if output_dir:
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+        click.echo(f"Debug videos will be saved to: {output_dir}", err=True)
+
+    if json_output_dir:
+        Path(json_output_dir).mkdir(parents=True, exist_ok=True)
+        click.echo(f"JSON metrics will be saved to: {json_output_dir}", err=True)
+
+    # Build configurations for each video
+    configs: list[VideoConfig] = []
+    for video_file in video_files:
+        video_name = Path(video_file).stem
+
+        # Determine output paths
+        debug_video = None
+        if output_dir:
+            debug_video = str(Path(output_dir) / f"{video_name}_debug.mp4")
+
+        json_file = None
+        if json_output_dir:
+            json_file = str(Path(json_output_dir) / f"{video_name}.json")
+
+        config = VideoConfig(
+            video_path=video_file,
+            drop_height=drop_height,
+            quality=quality,
+            output_video=debug_video,
+            json_output=json_file,
+            drop_start_frame=drop_start_frame,
+            smoothing_window=smoothing_window,
+            velocity_threshold=velocity_threshold,
+            min_contact_frames=min_contact_frames,
+            visibility_threshold=visibility_threshold,
+            detection_confidence=detection_confidence,
+            tracking_confidence=tracking_confidence,
+        )
+        configs.append(config)
+
+    # Progress callback
+    completed = 0
+
+    def show_progress(result: VideoResult) -> None:
+        nonlocal completed
+        completed += 1
+        status = "✓" if result.success else "✗"
+        video_name = Path(result.video_path).name
+        click.echo(
+            f"[{completed}/{len(configs)}] {status} {video_name} "
+            f"({result.processing_time:.1f}s)",
+            err=True,
+        )
+        if not result.success:
+            click.echo(f"    Error: {result.error}", err=True)
+
+    # Process all videos
+    click.echo("\nProcessing videos...", err=True)
+    results = process_videos_bulk(
+        configs, max_workers=workers, progress_callback=show_progress
+    )
+
+    # Generate summary
+    click.echo("\n" + "=" * 70, err=True)
+    click.echo("BATCH PROCESSING SUMMARY", err=True)
+    click.echo("=" * 70, err=True)
+
+    successful = [r for r in results if r.success]
+    failed = [r for r in results if not r.success]
+
+    click.echo(f"Total videos: {len(results)}", err=True)
+    click.echo(f"Successful: {len(successful)}", err=True)
+    click.echo(f"Failed: {len(failed)}", err=True)
+
+    if successful:
+        # Calculate average metrics
+        with_gct = [
+            r
+            for r in successful
+            if r.metrics and r.metrics.ground_contact_time is not None
+        ]
+        with_flight = [
+            r for r in successful if r.metrics and r.metrics.flight_time is not None
+        ]
+        with_jump = [
+            r for r in successful if r.metrics and r.metrics.jump_height is not None
+        ]
+
+        if with_gct:
+            avg_gct = sum(r.metrics.ground_contact_time * 1000 for r in with_gct) / len(
+                with_gct
+            )
+            click.echo(f"\nAverage ground contact time: {avg_gct:.1f} ms", err=True)
+
+        if with_flight:
+            avg_flight = sum(r.metrics.flight_time * 1000 for r in with_flight) / len(
+                with_flight
+            )
+            click.echo(f"Average flight time: {avg_flight:.1f} ms", err=True)
+
+        if with_jump:
+            avg_jump = sum(r.metrics.jump_height for r in with_jump) / len(with_jump)
+            click.echo(
+                f"Average jump height: {avg_jump:.3f} m ({avg_jump * 100:.1f} cm)",
+                err=True,
+            )
+
+    # Export CSV summary if requested
+    if csv_summary and successful:
+        click.echo(f"\nExporting CSV summary to: {csv_summary}", err=True)
+        Path(csv_summary).parent.mkdir(parents=True, exist_ok=True)
+
+        with open(csv_summary, "w", newline="") as f:
+            writer = csv.writer(f)
+
+            # Header
+            writer.writerow(
+                [
+                    "Video",
+                    "Ground Contact Time (ms)",
+                    "Flight Time (ms)",
+                    "Jump Height (m)",
+                    "Processing Time (s)",
+                    "Status",
+                ]
+            )
+
+            # Data rows
+            for result in results:
+                if result.success and result.metrics:
+                    writer.writerow(
+                        [
+                            Path(result.video_path).name,
+                            (
+                                f"{result.metrics.ground_contact_time * 1000:.1f}"
+                                if result.metrics.ground_contact_time
+                                else "N/A"
+                            ),
+                            (
+                                f"{result.metrics.flight_time * 1000:.1f}"
+                                if result.metrics.flight_time
+                                else "N/A"
+                            ),
+                            (
+                                f"{result.metrics.jump_height:.3f}"
+                                if result.metrics.jump_height
+                                else "N/A"
+                            ),
+                            f"{result.processing_time:.2f}",
+                            "Success",
+                        ]
+                    )
+                else:
+                    writer.writerow(
+                        [
+                            Path(result.video_path).name,
+                            "N/A",
+                            "N/A",
+                            "N/A",
+                            f"{result.processing_time:.2f}",
+                            f"Failed: {result.error}",
+                        ]
+                    )
+
+        click.echo("CSV summary written successfully", err=True)
+
+    click.echo("\nBatch processing complete!", err=True)

@@ -42,9 +42,12 @@ env/
 htmlcov/
 
 # Output files
+*.mov
+*.MOV
 *.mp4
 *.avi
 *.json
+*.csv
 !pyproject.toml
 
 # Logs
