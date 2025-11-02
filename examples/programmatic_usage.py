@@ -1,17 +1,20 @@
-"""Example of using drop-jump analysis programmatically."""
+"""Example of using drop-jump analysis programmatically (low-level API)."""
+
+from typing import Any
 
 import numpy as np
-from dropjump.contact_detection import (
+
+from kinemotion.core.pose import PoseTracker
+from kinemotion.core.smoothing import smooth_landmarks
+from kinemotion.core.video_io import VideoProcessor
+from kinemotion.dropjump.analysis import (
     compute_average_foot_position,
     detect_ground_contact,
 )
-from dropjump.kinematics import calculate_drop_jump_metrics
-from dropjump.pose_tracker import PoseTracker
-from dropjump.smoothing import smooth_landmarks
-from dropjump.video_io import VideoProcessor
+from kinemotion.dropjump.kinematics import calculate_drop_jump_metrics
 
 
-def analyze_video(video_path: str) -> dict:
+def analyze_video(video_path: str) -> dict[str, Any]:
     """
     Analyze a drop-jump video and return metrics.
 
@@ -46,26 +49,28 @@ def analyze_video(video_path: str) -> dict:
     smoothed = smooth_landmarks(landmarks_sequence, window_length=5)
 
     # Extract foot positions
-    foot_positions = []
-    visibilities = []
+    foot_positions_list: list[float] = []
+    visibilities_list: list[float] = []
 
     for frame_landmarks in smoothed:
         if frame_landmarks:
             _, foot_y = compute_average_foot_position(frame_landmarks)
-            foot_positions.append(foot_y)
+            foot_positions_list.append(foot_y)
 
             # Average foot visibility
             foot_vis = []
             for key in ["left_ankle", "right_ankle", "left_heel", "right_heel"]:
                 if key in frame_landmarks:
                     foot_vis.append(frame_landmarks[key][2])
-            visibilities.append(np.mean(foot_vis) if foot_vis else 0.0)
+            visibilities_list.append(float(np.mean(foot_vis)) if foot_vis else 0.0)
         else:
-            foot_positions.append(foot_positions[-1] if foot_positions else 0.5)
-            visibilities.append(0.0)
+            foot_positions_list.append(
+                foot_positions_list[-1] if foot_positions_list else 0.5
+            )
+            visibilities_list.append(0.0)
 
-    foot_positions = np.array(foot_positions)
-    visibilities = np.array(visibilities)
+    foot_positions: np.ndarray[Any, Any] = np.array(foot_positions_list)
+    visibilities: np.ndarray[Any, Any] = np.array(visibilities_list)
 
     # Detect contact
     contact_states = detect_ground_contact(
