@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.8.0 (2025-11-02)
+
+### Features
+
+- Add Docker support and GitHub Container Registry publishing
+  ([`249ca4c`](https://github.com/feniix/kinemotion/commit/249ca4c0c0ab40cda5acfebac012db8075b9694f))
+
+
 ## v0.7.1 (2025-11-01)
 
 ### Bug Fixes
