@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.8.3 (2025-11-02)
+
+### Bug Fixes
+
+- Create new release
+  ([`5f6322b`](https://github.com/feniix/kinemotion/commit/5f6322b6da24631f95f4e3036ed145e0d47b53a1))
+
+### Documentation
+
+- Update repository metadata for GHCR package description
+  ([`4779355`](https://github.com/feniix/kinemotion/commit/4779355901a407514d83cf2aa82f55fa083e7e63))
+
+
 ## v0.8.2 (2025-11-02)
 
 ### Bug Fixes
