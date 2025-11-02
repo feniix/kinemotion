@@ -93,6 +93,8 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},value=v${{ needs.release.outputs.version }}
             type=semver,pattern={{major}},value=v${{ needs.release.outputs.version }}
             type=raw,value=latest
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
 
       - name: Build and push Docker image
         id: push
@@ -102,6 +104,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           platforms: linux/amd64
           # Multi-scope caching: Docker layers + uv cache
           cache-from: type=gha
