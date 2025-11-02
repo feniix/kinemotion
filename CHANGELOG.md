@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.10.0 (2025-11-02)
+
+### Features
+
+- Add batch processing mode to CLI
+  ([`b0ab3c6`](https://github.com/feniix/kinemotion/commit/b0ab3c6b37a013402ff7a89305a68e49549eeae3))
+
+
 ## v0.9.0 (2025-11-02)
 
 ### Features
