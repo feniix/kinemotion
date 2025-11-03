@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.10.6 (2025-11-03)
+
+### Bug Fixes
+
+- **cli**: Reduce cognitive complexity in _process_single and _process_batch
+  ([`42434af`](https://github.com/feniix/kinemotion/commit/42434af3716afd841c80c118b6e1122846a685ed))
+
+
 ## v0.10.5 (2025-11-03)
 
 ### Bug Fixes
