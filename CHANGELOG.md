@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.10.5 (2025-11-03)
+
+### Bug Fixes
+
+- **kinematics**: Reduce cognitive complexity in calculate_drop_jump_metrics
+  ([`d6a06f3`](https://github.com/feniix/kinemotion/commit/d6a06f3671eb370a971c73c98270668d5aefe9b1))
+
+
 ## v0.10.4 (2025-11-03)
 
 ### Bug Fixes
