@@ -130,13 +130,13 @@ def remove_outliers(
     if not np.any(outlier_mask):
         return positions_clean
 
-    outlier_indices = np.where(outlier_mask)[0]
+    outlier_indices = np.nonzero(outlier_mask)[0]
 
     for idx in outlier_indices:
         if method == "interpolate":
             # Find nearest valid points before and after
-            valid_before = np.where(~outlier_mask[:idx])[0]
-            valid_after = np.where(~outlier_mask[idx + 1 :])[0]
+            valid_before = np.nonzero(~outlier_mask[:idx])[0]
+            valid_after = np.nonzero(~outlier_mask[idx + 1 :])[0]
 
             if len(valid_before) > 0 and len(valid_after) > 0:
                 # Linear interpolation between nearest valid points

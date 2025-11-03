@@ -401,7 +401,6 @@ def calculate_drop_jump_metrics(
 
 def estimate_jump_height_from_trajectory(
     foot_y_positions: np.ndarray,
-    contact_start: int,
     flight_start: int,
     flight_end: int,
     pixel_to_meter_ratio: float | None = None,
@@ -411,7 +410,6 @@ def estimate_jump_height_from_trajectory(
 
     Args:
         foot_y_positions: Vertical positions of feet (normalized or pixels)
-        contact_start: Frame where ground contact starts
         flight_start: Frame where flight begins
         flight_end: Frame where flight ends
         pixel_to_meter_ratio: Conversion factor from pixels to meters

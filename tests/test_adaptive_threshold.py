@@ -1,6 +1,7 @@
 """Tests for adaptive velocity threshold calculation."""
 
 import numpy as np
+import pytest
 
 from kinemotion.dropjump.analysis import calculate_adaptive_threshold
 
@@ -125,7 +126,9 @@ def test_adaptive_threshold_very_short_video() -> None:
     threshold = calculate_adaptive_threshold(positions, fps, smoothing_window=5)
 
     # Should return default threshold
-    assert threshold == 0.02, "Should return default 0.02 for very short video"
+    assert threshold == pytest.approx(
+        0.02
+    ), "Should return default 0.02 for very short video"
 
 
 def test_adaptive_threshold_different_fps() -> None:

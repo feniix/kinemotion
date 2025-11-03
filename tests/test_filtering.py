@@ -1,6 +1,7 @@
 """Tests for advanced filtering techniques (Phase 1 accuracy improvements)."""
 
 import numpy as np
+import pytest
 
 from kinemotion.core.filtering import (
     adaptive_smooth_window,
@@ -71,8 +72,8 @@ def test_remove_outliers_interpolate() -> None:
     expected = (0.2 + 0.4) / 2  # = 0.3
     assert abs(cleaned[3] - expected) < 0.01, "Should interpolate outlier"
     # Other values should be unchanged
-    assert cleaned[0] == 0.0
-    assert cleaned[5] == 0.5
+    assert cleaned[0] == pytest.approx(0.0)
+    assert cleaned[5] == pytest.approx(0.5)
 
 
 def test_remove_outliers_median() -> None:
@@ -85,7 +86,7 @@ def test_remove_outliers_median() -> None:
     # Outlier should be replaced with local median
     # Window around index 3: [0.1, 0.2, 0.9, 0.4, 0.5] → median ≈ 0.2-0.4
     assert 0.1 <= cleaned[3] <= 0.5, "Should use median replacement"
-    assert cleaned[3] != 0.9, "Outlier should be replaced"
+    assert cleaned[3] != pytest.approx(0.9), "Outlier should be replaced"
 
 
 def test_reject_outliers_combined() -> None:

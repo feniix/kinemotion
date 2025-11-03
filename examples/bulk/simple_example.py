@@ -88,10 +88,7 @@ def process_with_outputs_example() -> None:
 
 
 if __name__ == "__main__":
-    # Uncomment the example you want to run:
-
-    # process_single_video_example()
-    # process_multiple_videos_example()
-    # process_with_outputs_example()
-
-    print("Edit this script to uncomment and run examples!")
+    print("Edit this script to run examples:")
+    print("  - process_single_video_example()")
+    print("  - process_multiple_videos_example()")
+    print("  - process_with_outputs_example()")

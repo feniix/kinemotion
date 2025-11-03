@@ -218,7 +218,6 @@ def dropjump_analyze(
             visibility_threshold,
             detection_confidence,
             tracking_confidence,
-            verbose,
         )
     else:
         # Single video mode (original behavior)
@@ -302,7 +301,6 @@ def _process_single(
             landmarks_sequence = []
             frames = []
 
-            frame_idx = 0
             bar: Any
             with click.progressbar(
                 length=video.frame_count, label="Processing frames"
@@ -316,7 +314,6 @@ def _process_single(
                     landmarks = tracker.process_frame(frame)
                     landmarks_sequence.append(landmarks)
 
-                    frame_idx += 1
                     bar.update(1)
 
             tracker.close()
@@ -555,7 +552,6 @@ def _process_batch(
     visibility_threshold: float | None,
     detection_confidence: float | None,
     tracking_confidence: float | None,
-    verbose: bool,
 ) -> None:
     """Process multiple videos in batch mode using parallel processing."""
     click.echo(

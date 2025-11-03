@@ -11,10 +11,8 @@ from pathlib import Path
 from kinemotion.api import VideoConfig, VideoResult, process_videos_bulk
 
 
-def main() -> None:
-    """Process multiple videos in parallel and save results."""
-
-    # Example 1: Simple bulk processing with default settings
+def example_simple_bulk() -> None:
+    """Example 1: Simple bulk processing with default settings."""
     print("=" * 80)
     print("EXAMPLE 1: Simple Bulk Processing")
     print("=" * 80)
@@ -30,22 +28,11 @@ def main() -> None:
 
     # Print results
     for result in results:
-        if result.success:
-            assert result.metrics is not None
-            print(f"\n✓ {result.video_path} ({result.processing_time:.2f}s)")
-            if result.metrics.ground_contact_time:
-                print(
-                    f"  Ground contact time: {result.metrics.ground_contact_time * 1000:.1f} ms"
-                )
-            if result.metrics.flight_time:
-                print(f"  Flight time: {result.metrics.flight_time * 1000:.1f} ms")
-            if result.metrics.jump_height:
-                print(f"  Jump height: {result.metrics.jump_height:.3f} m")
-        else:
-            print(f"\n✗ {result.video_path} - FAILED")
-            print(f"  Error: {result.error}")
+        print_result(result)
 
-    # Example 2: Advanced configuration with different quality settings
+
+def example_advanced_configuration() -> None:
+    """Example 2: Advanced configuration with different quality settings."""
     print("\n" + "=" * 80)
     print("EXAMPLE 2: Advanced Configuration")
     print("=" * 80)
@@ -86,76 +73,53 @@ def main() -> None:
             f"{status} Completed: {result.video_path} ({result.processing_time:.2f}s)"
         )
 
-    results = process_videos_bulk(
-        advanced_configs, max_workers=2, progress_callback=on_progress
-    )
+    process_videos_bulk(advanced_configs, max_workers=2, progress_callback=on_progress)
 
-    # Example 3: Process entire directory with consistent settings
+
+def example_process_directory() -> list[VideoResult]:
+    """Example 3: Process entire directory with consistent settings."""
     print("\n" + "=" * 80)
     print("EXAMPLE 3: Process Directory")
     print("=" * 80)
 
-    # Find all MP4 files in a directory
-    video_dir = Path("videos")
-    if video_dir.exists():
-        video_files = list(video_dir.glob("*.mp4"))
-
-        # Create configs with same drop height for all
-        dir_configs = [
-            VideoConfig(
-                video_path=str(video_file),
-                drop_height=0.40,
-                quality="balanced",
-                json_output=f"results/{video_file.stem}.json",
-            )
-            for video_file in video_files
-        ]
-
-        print(f"Found {len(video_files)} videos to process")
-
-        results = process_videos_bulk(
-            dir_configs, max_workers=4, progress_callback=on_progress
+    # Progress callback to show completion
+    def on_progress(result: VideoResult) -> None:
+        status = "✓" if result.success else "✗"
+        print(
+            f"{status} Completed: {result.video_path} ({result.processing_time:.2f}s)"
         )
 
-        # Generate summary report
-        successful = [r for r in results if r.success]
-        failed = [r for r in results if not r.success]
+    # Find all MP4 files in a directory
+    video_dir = Path("videos")
+    if not video_dir.exists():
+        print("Directory 'videos' not found - skipping")
+        return []
 
-        print("\n" + "=" * 80)
-        print("SUMMARY")
-        print("=" * 80)
-        print(f"Total videos: {len(results)}")
-        print(f"Successful: {len(successful)}")
-        print(f"Failed: {len(failed)}")
+    video_files = list(video_dir.glob("*.mp4"))
 
-        if successful:
-            # Filter for non-None metrics
-            with_gct = [
-                r
-                for r in successful
-                if r.metrics and r.metrics.ground_contact_time is not None
-            ]
-            with_jump = [
-                r for r in successful if r.metrics and r.metrics.jump_height is not None
-            ]
+    # Create configs with same drop height for all
+    dir_configs = [
+        VideoConfig(
+            video_path=str(video_file),
+            drop_height=0.40,
+            quality="balanced",
+            json_output=f"results/{video_file.stem}.json",
+        )
+        for video_file in video_files
+    ]
 
-            if with_gct:
-                # Type narrowing: we know metrics and ground_contact_time exist
-                avg_gct = sum(
-                    r.metrics.ground_contact_time * 1000  # type: ignore[union-attr,operator,misc]
-                    for r in with_gct
-                ) / len(with_gct)
-                print(f"\nAverage ground contact time: {avg_gct:.1f} ms")
+    print(f"Found {len(video_files)} videos to process")
 
-            if with_jump:
-                # Type narrowing: we know metrics and jump_height exist
-                avg_jump = sum(
-                    r.metrics.jump_height  # type: ignore[union-attr,misc]
-                    for r in with_jump
-                ) / len(with_jump)
-                print(f"Average jump height: {avg_jump:.3f} m")
+    results = process_videos_bulk(
+        dir_configs, max_workers=4, progress_callback=on_progress
+    )
 
-    # Example 4: Export results to CSV
+    print_summary(results)
+    return results
+
+
+def example_export_csv(results: list[VideoResult]) -> None:
+    """Example 4: Export results to CSV."""
     print("\n" + "=" * 80)
     print("EXAMPLE 4: Export to CSV")
     print("=" * 80)
@@ -163,53 +127,58 @@ def main() -> None:
     # Collect successful results
     successful_results = [r for r in results if r.success]
 
-    if successful_results:
-        import csv
+    if not successful_results:
+        print("No successful results to export")
+        return
 
-        output_csv = "results/analysis_summary.csv"
+    import csv
 
-        with open(output_csv, "w", newline="") as f:
-            writer = csv.writer(f)
+    output_csv = "results/analysis_summary.csv"
 
-            # Header
+    with open(output_csv, "w", newline="") as f:
+        writer = csv.writer(f)
+
+        # Header
+        writer.writerow(
+            [
+                "Video",
+                "Ground Contact Time (ms)",
+                "Flight Time (ms)",
+                "Jump Height (m)",
+                "Processing Time (s)",
+            ]
+        )
+
+        # Data rows
+        for result in successful_results:
+            assert result.metrics is not None
             writer.writerow(
                 [
-                    "Video",
-                    "Ground Contact Time (ms)",
-                    "Flight Time (ms)",
-                    "Jump Height (m)",
-                    "Processing Time (s)",
+                    Path(result.video_path).name,
+                    (
+                        f"{result.metrics.ground_contact_time * 1000:.1f}"
+                        if result.metrics.ground_contact_time
+                        else "N/A"
+                    ),
+                    (
+                        f"{result.metrics.flight_time * 1000:.1f}"
+                        if result.metrics.flight_time
+                        else "N/A"
+                    ),
+                    (
+                        f"{result.metrics.jump_height:.3f}"
+                        if result.metrics.jump_height
+                        else "N/A"
+                    ),
+                    f"{result.processing_time:.2f}",
                 ]
             )
 
-            # Data rows
-            for result in successful_results:
-                assert result.metrics is not None
-                writer.writerow(
-                    [
-                        Path(result.video_path).name,
-                        (
-                            f"{result.metrics.ground_contact_time * 1000:.1f}"
-                            if result.metrics.ground_contact_time
-                            else "N/A"
-                        ),
-                        (
-                            f"{result.metrics.flight_time * 1000:.1f}"
-                            if result.metrics.flight_time
-                            else "N/A"
-                        ),
-                        (
-                            f"{result.metrics.jump_height:.3f}"
-                            if result.metrics.jump_height
-                            else "N/A"
-                        ),
-                        f"{result.processing_time:.2f}",
-                    ]
-                )
+    print(f"Results exported to: {output_csv}")
 
-        print(f"Results exported to: {output_csv}")
 
-    # Example 5: Process with custom parameters for challenging videos
+def example_custom_parameters() -> None:
+    """Example 5: Process with custom parameters for challenging videos."""
     print("\n" + "=" * 80)
     print("EXAMPLE 5: Custom Parameters for Low-Quality Videos")
     print("=" * 80)
@@ -232,10 +201,81 @@ def main() -> None:
         ),
     ]
 
+    # Progress callback to show completion
+    def on_progress(result: VideoResult) -> None:
+        status = "✓" if result.success else "✗"
+        print(
+            f"{status} Completed: {result.video_path} ({result.processing_time:.2f}s)"
+        )
+
     # Process with custom settings
-    results = process_videos_bulk(
-        custom_configs, max_workers=2, progress_callback=on_progress
-    )
+    process_videos_bulk(custom_configs, max_workers=2, progress_callback=on_progress)
+
+
+def print_result(result: VideoResult) -> None:
+    """Print a single video processing result."""
+    if result.success:
+        assert result.metrics is not None
+        print(f"\n✓ {result.video_path} ({result.processing_time:.2f}s)")
+        if result.metrics.ground_contact_time:
+            print(
+                f"  Ground contact time: {result.metrics.ground_contact_time * 1000:.1f} ms"
+            )
+        if result.metrics.flight_time:
+            print(f"  Flight time: {result.metrics.flight_time * 1000:.1f} ms")
+        if result.metrics.jump_height:
+            print(f"  Jump height: {result.metrics.jump_height:.3f} m")
+    else:
+        print(f"\n✗ {result.video_path} - FAILED")
+        print(f"  Error: {result.error}")
+
+
+def print_summary(results: list[VideoResult]) -> None:
+    """Print summary statistics for a batch of results."""
+    successful = [r for r in results if r.success]
+    failed = [r for r in results if not r.success]
+
+    print("\n" + "=" * 80)
+    print("SUMMARY")
+    print("=" * 80)
+    print(f"Total videos: {len(results)}")
+    print(f"Successful: {len(successful)}")
+    print(f"Failed: {len(failed)}")
+
+    if not successful:
+        return
+
+    # Filter for non-None metrics
+    with_gct = [
+        r for r in successful if r.metrics and r.metrics.ground_contact_time is not None
+    ]
+    with_jump = [
+        r for r in successful if r.metrics and r.metrics.jump_height is not None
+    ]
+
+    if with_gct:
+        # Type narrowing: we know metrics and ground_contact_time exist
+        avg_gct = sum(
+            r.metrics.ground_contact_time * 1000  # type: ignore[union-attr,operator,misc]
+            for r in with_gct
+        ) / len(with_gct)
+        print(f"\nAverage ground contact time: {avg_gct:.1f} ms")
+
+    if with_jump:
+        # Type narrowing: we know metrics and jump_height exist
+        avg_jump = sum(
+            r.metrics.jump_height for r in with_jump  # type: ignore[union-attr,misc]
+        ) / len(with_jump)
+        print(f"Average jump height: {avg_jump:.3f} m")
+
+
+def main() -> None:
+    """Process multiple videos in parallel and save results."""
+    example_simple_bulk()
+    example_advanced_configuration()
+    results = example_process_directory()
+    example_export_csv(results)
+    example_custom_parameters()
 
 
 def example_single_video() -> None:

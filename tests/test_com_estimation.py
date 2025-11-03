@@ -132,7 +132,7 @@ def test_com_biomechanical_weights() -> None:
         "right_ankle": (0.55, 0.8, 0.85),
     }
 
-    com_x, com_y, com_vis = compute_center_of_mass(landmarks)
+    _, com_y, _ = compute_center_of_mass(landmarks)
 
     # CoM should be closer to trunk (0.3) than to ankles (0.8)
     # Due to trunk being 50% of body weight
@@ -160,7 +160,7 @@ def test_com_lateral_asymmetry() -> None:
         "right_ankle": (0.45, 0.9, 0.85),
     }
 
-    com_x, com_y, com_vis = compute_center_of_mass(landmarks)
+    com_x, _, _ = compute_center_of_mass(landmarks)
 
     # CoM should be shifted left (x < 0.5)
     assert com_x < 0.45, f"CoM x={com_x} should be shifted left"

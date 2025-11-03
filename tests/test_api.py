@@ -141,7 +141,7 @@ def test_video_config_creation() -> None:
     )
 
     assert config.video_path == "test.mp4"
-    assert config.drop_height == 0.40
+    assert config.drop_height == pytest.approx(0.40)
     assert config.quality == "balanced"
     assert config.output_video is None
     assert config.json_output is None
@@ -164,7 +164,7 @@ def test_video_result_creation() -> None:
     assert result.video_path == "test.mp4"
     assert result.success is True
     assert result.metrics == metrics
-    assert result.processing_time == 5.5
+    assert result.processing_time == pytest.approx(5.5)
     assert result.error is None
 
 
