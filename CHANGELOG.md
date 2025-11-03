@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.10.9 (2025-11-03)
+
+### Bug Fixes
+
+- **ci**: Update uv.lock during semantic release
+  ([`9b7bc0b`](https://github.com/feniix/kinemotion/commit/9b7bc0b5115cd9493eed2b99778ed78fb26fdd34))
+
+- **ci**: Update uv.lock during semantic release
+  ([`30fb092`](https://github.com/feniix/kinemotion/commit/30fb092575295c2c672bf378a8d2794cc1fe35da))
+
+
 ## v0.10.8 (2025-11-03)
 
 ### Bug Fixes

@@ -1,6 +1,6 @@
 [project]
 name = "kinemotion"
-version = "0.10.8"
+version = "0.10.9"
 description = "Video-based kinematic analysis for athletic performance"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
