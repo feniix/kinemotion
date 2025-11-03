@@ -120,7 +120,11 @@ reportDuplicateImport = "warning"
 version_toml = ["pyproject.toml:project.version"]
 branch = "main"
 changelog_file = "CHANGELOG.md"
-build_command = "uv lock && uv build"
+build_command = """
+    uv lock --upgrade-package "$PACKAGE_NAME"
+    git add uv.lock
+    uv build
+"""
 dist_path = "dist/"
 upload_to_vcs_release = true
 remove_dist = false
