@@ -46,6 +46,25 @@ class AnalysisParameters:
     tracking_confidence: float | None = None
 
 
+@dataclass
+class BatchOptions:
+    """Batch processing configuration."""
+
+    batch: bool
+    workers: int
+    output_dir: str | None
+    json_output_dir: str | None
+    csv_summary: str | None
+
+
+@dataclass
+class OutputOptions:
+    """Output configuration for single video processing."""
+
+    output: str | None
+    json_output: str | None
+
+
 @click.command(name="dropjump-analyze")
 @click.argument("video_path", nargs=-1, type=click.Path(exists=False), required=True)
 @click.option(
@@ -202,6 +221,62 @@ def dropjump_analyze(
     kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \\
         --json-output-dir results/ --csv-summary summary.csv
     """
+    # Group parameters into dataclasses
+    batch_opts = BatchOptions(
+        batch=batch,
+        workers=workers,
+        output_dir=output_dir,
+        json_output_dir=json_output_dir,
+        csv_summary=csv_summary,
+    )
+
+    output_opts = OutputOptions(
+        output=output,
+        json_output=json_output,
+    )
+
+    expert_params = AnalysisParameters(
+        drop_start_frame=drop_start_frame,
+        smoothing_window=smoothing_window,
+        velocity_threshold=velocity_threshold,
+        min_contact_frames=min_contact_frames,
+        visibility_threshold=visibility_threshold,
+        detection_confidence=detection_confidence,
+        tracking_confidence=tracking_confidence,
+    )
+
+    # Execute analysis with grouped parameters
+    _execute_analysis(
+        video_path,
+        drop_height,
+        quality,
+        verbose,
+        batch_opts,
+        output_opts,
+        expert_params,
+    )
+
+
+def _execute_analysis(
+    video_path: tuple[str, ...],
+    drop_height: float,
+    quality: str,
+    verbose: bool,
+    batch_opts: BatchOptions,
+    output_opts: OutputOptions,
+    expert_params: AnalysisParameters,
+) -> None:
+    """Execute drop jump analysis with grouped parameters.
+
+    Args:
+        video_path: Tuple of video path patterns
+        drop_height: Drop height in meters
+        quality: Quality preset string
+        verbose: Verbose output flag
+        batch_opts: Batch processing options
+        output_opts: Output file options
+        expert_params: Expert parameter overrides
+    """
     # Expand glob patterns and collect all video files
     video_files: list[str] = []
     for pattern in video_path:
@@ -219,40 +294,29 @@ def dropjump_analyze(
         sys.exit(1)
 
     # Determine if batch mode should be used
-    use_batch = batch or len(video_files) > 1
-
-    # Group expert parameters
-    params = AnalysisParameters(
-        drop_start_frame=drop_start_frame,
-        smoothing_window=smoothing_window,
-        velocity_threshold=velocity_threshold,
-        min_contact_frames=min_contact_frames,
-        visibility_threshold=visibility_threshold,
-        detection_confidence=detection_confidence,
-        tracking_confidence=tracking_confidence,
-    )
+    use_batch = batch_opts.batch or len(video_files) > 1
 
     if use_batch:
         _process_batch(
             video_files,
             drop_height,
             quality,
-            workers,
-            output_dir,
-            json_output_dir,
-            csv_summary,
-            params,
+            batch_opts.workers,
+            batch_opts.output_dir,
+            batch_opts.json_output_dir,
+            batch_opts.csv_summary,
+            expert_params,
         )
     else:
         # Single video mode (original behavior)
         _process_single(
             video_files[0],
-            output,
-            json_output,
+            output_opts.output,
+            output_opts.json_output,
             drop_height,
             quality,
             verbose,
-            params,
+            expert_params,
         )
 
 
