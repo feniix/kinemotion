@@ -87,6 +87,8 @@ examples/
 └── programmatic_usage.py       # Low-level API example
 
 docs/
+├── CAMERA_SETUP.md             # Camera positioning and recording guide
+├── CAMERA_SETUP_ES.md          # Guía de configuración de cámara (español)
 ├── PARAMETERS.md               # Comprehensive guide to all CLI parameters
 └── IMPLEMENTATION_PLAN.md      # Implementation plan and fix guide
 ```
@@ -154,6 +156,42 @@ docs/
    - Jump height from position tracking with optional calibration
    - Fallback: kinematic estimate from flight time: h = (g × t²) / 8
 9. **Output**: JSON metrics + optional debug video overlay with visualizations
+
+### Camera Setup Requirements
+
+**IMPORTANT**: Proper camera positioning is critical for accurate drop jump analysis.
+
+**Required Setup (Side View):**
+
+- **Camera position**: Side view, perpendicular to sagittal plane (90° angle)
+- **Distance**: 3-5 meters from athlete (optimal: ~4m)
+- **Height**: Camera lens at athlete's hip height (0.8-1.2m)
+- **Framing**: Full body visible (head to feet) throughout entire jump sequence
+- **Orientation**: Landscape (horizontal) for wider field of view
+- **Equipment**: Stable tripod (no hand-held), 30+ fps, 1080p+ resolution
+
+**Why Side View:**
+
+- Drop jumps are primarily vertical movements in the sagittal plane
+- Direct measurement of vertical displacement (jump height)
+- Accurate velocity calculation for contact detection
+- Clear visualization of triple extension (ankle-knee-hip)
+- Validated in biomechanics research (2D sagittal correlates r=0.51-0.93 with 3D)
+
+**Common Mistakes to Avoid:**
+
+- ❌ Front/back view instead of side view (cannot measure vertical motion accurately)
+- ❌ Camera too close (< 3m) or at wrong angle (not perpendicular)
+- ❌ Poor framing (athlete moves out of frame during jump)
+- ❌ Hand-held camera (movement reduces tracking accuracy)
+
+**See [docs/CAMERA_SETUP.md](docs/CAMERA_SETUP.md) for comprehensive camera setup guide** ([Español](docs/CAMERA_SETUP_ES.md)) **including:**
+
+- Detailed positioning instructions with diagrams
+- Lighting and background recommendations
+- Equipment recommendations (budget to professional)
+- Troubleshooting common issues
+- Video quality impact on analysis accuracy
 
 ### Key Design Decisions
 
