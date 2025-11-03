@@ -1,9 +1,9 @@
 # Kinemotion
 
-[![PyPI version](https://badge.fury.io/py/kinemotion.svg)](https://badge.fury.io/py/kinemotion)
+[![PyPI version](https://img.shields.io/pypi/v/kinemotion.svg)](https://pypi.org/project/kinemotion/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
+[![Type checked with pyright](https://img.shields.io/badge/type%20checked-pyright-blue.svg)](https://github.com/microsoft/pyright)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 A video-based kinematic analysis tool for athletic performance. Analyzes side-view drop-jump videos to estimate key performance metrics: ground contact time, flight time, and jump height. Uses MediaPipe pose tracking and advanced kinematics.
@@ -461,7 +461,7 @@ The debug video includes:
 
 This project enforces strict code quality standards:
 
-- **Type safety**: Full mypy strict mode compliance with complete type annotations
+- **Type safety**: Full pyright strict mode compliance with complete type annotations
 - **Linting**: Comprehensive ruff checks (pycodestyle, pyflakes, isort, pep8-naming, etc.)
 - **Formatting**: Black code style
 - **Testing**: pytest with 61 unit tests
@@ -489,10 +489,10 @@ uv run ruff check
 uv run ruff check --fix
 
 # Type check
-uv run mypy src/dropjump
+uv run pyright
 
 # Run all checks
-uv run ruff check && uv run mypy src/dropjump && uv run pytest
+uv run ruff check && uv run pyright && uv run pytest
 ```
 
 ### Contributing
@@ -501,7 +501,7 @@ Before committing code, ensure all checks pass:
 
 1. Format with Black
 1. Fix linting issues with ruff
-1. Ensure type safety with mypy
+1. Ensure type safety with pyright
 1. Run all tests with pytest
 
 See [CLAUDE.md](CLAUDE.md) for detailed development guidelines.
