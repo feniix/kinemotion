@@ -14,8 +14,8 @@ def test_adaptive_threshold_basic() -> None:
     baseline_frames = int(3 * fps)  # 90 frames
 
     # Baseline: small random noise around position 0.5
-    np.random.seed(42)
-    baseline_positions = 0.5 + np.random.normal(0, 0.005, baseline_frames)
+    rng = np.random.default_rng(42)
+    baseline_positions = 0.5 + rng.normal(0, 0.005, baseline_frames)
 
     # Movement: larger position changes
     movement_positions = np.linspace(0.5, 0.7, 60)
@@ -36,8 +36,8 @@ def test_adaptive_threshold_high_noise() -> None:
     baseline_frames = int(3 * fps)
 
     # High noise baseline
-    np.random.seed(42)
-    baseline_positions = 0.5 + np.random.normal(0, 0.015, baseline_frames)
+    rng = np.random.default_rng(42)
+    baseline_positions = 0.5 + rng.normal(0, 0.015, baseline_frames)
     movement_positions = np.linspace(0.5, 0.8, 60)
     positions = np.concatenate([baseline_positions, movement_positions])
 
@@ -56,8 +56,8 @@ def test_adaptive_threshold_low_noise() -> None:
     baseline_frames = int(3 * fps)
 
     # Very low noise baseline
-    np.random.seed(42)
-    baseline_positions = 0.5 + np.random.normal(0, 0.002, baseline_frames)
+    rng = np.random.default_rng(42)
+    baseline_positions = 0.5 + rng.normal(0, 0.002, baseline_frames)
     movement_positions = np.linspace(0.5, 0.7, 60)
     positions = np.concatenate([baseline_positions, movement_positions])
 
@@ -90,8 +90,8 @@ def test_adaptive_threshold_maximum_bound() -> None:
     baseline_frames = int(3 * fps)
 
     # Extreme noise baseline
-    np.random.seed(42)
-    baseline_positions = 0.5 + np.random.normal(0, 0.05, baseline_frames)
+    rng = np.random.default_rng(42)
+    baseline_positions = 0.5 + rng.normal(0, 0.05, baseline_frames)
     movement_positions = np.linspace(0.5, 0.8, 60)
     positions = np.concatenate([baseline_positions, movement_positions])
 
@@ -106,7 +106,8 @@ def test_adaptive_threshold_short_video() -> None:
     fps = 30.0
 
     # Only 60 frames (2 seconds) - less than 3 second baseline
-    positions = 0.5 + np.random.normal(0, 0.01, 60)
+    rng = np.random.default_rng(42)
+    positions = 0.5 + rng.normal(0, 0.01, 60)
 
     threshold = calculate_adaptive_threshold(positions, fps, baseline_duration=3.0)
 
@@ -137,8 +138,8 @@ def test_adaptive_threshold_different_fps() -> None:
     fps = 60.0
     baseline_frames = int(3 * fps)  # 180 frames
 
-    np.random.seed(42)
-    baseline_positions = 0.5 + np.random.normal(0, 0.008, baseline_frames)
+    rng = np.random.default_rng(42)
+    baseline_positions = 0.5 + rng.normal(0, 0.008, baseline_frames)
     movement_positions = np.linspace(0.5, 0.7, 120)
     positions = np.concatenate([baseline_positions, movement_positions])
 
@@ -153,8 +154,8 @@ def test_adaptive_threshold_custom_multiplier() -> None:
     fps = 30.0
     baseline_frames = int(3 * fps)
 
-    np.random.seed(42)
-    baseline_positions = 0.5 + np.random.normal(0, 0.005, baseline_frames)
+    rng = np.random.default_rng(42)
+    baseline_positions = 0.5 + rng.normal(0, 0.008, baseline_frames)
     movement_positions = np.linspace(0.5, 0.7, 60)
     positions = np.concatenate([baseline_positions, movement_positions])
 
@@ -181,9 +182,9 @@ def test_adaptive_threshold_baseline_duration() -> None:
     fps = 30.0
 
     # Long video with different noise in different sections
-    np.random.seed(42)
-    first_3s = 0.5 + np.random.normal(0, 0.005, int(3 * fps))  # Low noise
-    next_2s = 0.5 + np.random.normal(0, 0.015, int(2 * fps))  # High noise
+    rng = np.random.default_rng(42)
+    first_3s = 0.5 + rng.normal(0, 0.005, int(3 * fps))  # Low noise
+    next_2s = 0.5 + rng.normal(0, 0.015, int(2 * fps))  # High noise
     movement = np.linspace(0.5, 0.7, 60)
 
     positions = np.concatenate([first_3s, next_2s, movement])

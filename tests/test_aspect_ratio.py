@@ -21,9 +21,10 @@ def create_test_video(
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
     writer = cv2.VideoWriter(temp_path, fourcc, fps, (width, height))
 
+    rng = np.random.default_rng(42)
     for _ in range(num_frames):
         # Create a random frame
-        frame = np.random.randint(0, 255, (height, width, 3), dtype=np.uint8)
+        frame = rng.integers(0, 255, (height, width, 3), dtype=np.uint8)
         writer.write(frame)
 
     writer.release()

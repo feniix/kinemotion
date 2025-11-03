@@ -15,10 +15,11 @@ def test_smooth_landmarks_polyorder2_vs_polyorder3() -> None:
     n_frames = 30
     landmark_sequence = []
 
+    rng = np.random.default_rng(42)
     for i in range(n_frames):
         # Smooth parabolic motion with noise
         base_y = 0.5 + 0.01 * (i - 15) ** 2 / 225  # Parabola
-        noisy_y = base_y + np.random.normal(0, 0.01)
+        noisy_y = base_y + rng.normal(0, 0.01)
 
         landmark_sequence.append(
             {
@@ -49,9 +50,10 @@ def test_smooth_landmarks_polyorder2_vs_polyorder3() -> None:
 def test_velocity_from_derivative_polyorder() -> None:
     """Test velocity computation with different polynomial orders."""
     # Create synthetic position data with quadratic motion
+    rng = np.random.default_rng(42)
     t = np.linspace(0, 2, 60)
     positions = 0.5 + 0.1 * t**2  # Parabolic trajectory
-    positions += np.random.normal(0, 0.005, len(positions))  # Add noise
+    positions += rng.normal(0, 0.005, len(positions))  # Add noise
 
     # Compute velocity with different polynomial orders
     velocity_2 = compute_velocity_from_derivative(
@@ -79,9 +81,10 @@ def test_velocity_from_derivative_polyorder() -> None:
 def test_acceleration_from_derivative_polyorder() -> None:
     """Test acceleration computation with different polynomial orders."""
     # Create synthetic position data with cubic motion (non-zero third derivative)
+    rng = np.random.default_rng(42)
     t = np.linspace(0, 2, 60)
     positions = 0.5 + 0.05 * t**3  # Cubic trajectory
-    positions += np.random.normal(0, 0.003, len(positions))  # Add noise
+    positions += rng.normal(0, 0.003, len(positions))  # Add noise
 
     # Compute acceleration with different polynomial orders
     accel_2 = compute_acceleration_from_derivative(
@@ -111,7 +114,8 @@ def test_acceleration_from_derivative_polyorder() -> None:
 
 def test_polyorder_validation() -> None:
     """Test that polyorder must be less than window_length."""
-    positions = np.random.rand(50)
+    rng = np.random.default_rng(42)
+    positions = rng.random(50)
 
     # polyorder=2 with window=5 should work (2 < 5)
     velocity_valid = compute_velocity_from_derivative(

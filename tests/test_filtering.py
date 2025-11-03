@@ -35,8 +35,9 @@ def test_detect_outliers_ransac_finds_glitches() -> None:
 def test_detect_outliers_ransac_handles_clean_data() -> None:
     """Test that RANSAC does not flag valid points as outliers."""
     # Create smooth motion with small noise
+    rng = np.random.default_rng(42)
     positions = np.array([0.5 + 0.001 * i**2 for i in range(30)])
-    positions += np.random.normal(0, 0.001, 30)  # Small noise
+    positions += rng.normal(0, 0.001, 30)  # Small noise
 
     outliers = detect_outliers_ransac(
         positions, window_size=15, threshold=0.02, min_inliers=0.7
@@ -220,8 +221,9 @@ def test_bilateral_temporal_filter_preserves_edges() -> None:
 def test_bilateral_temporal_filter_smooths_noise() -> None:
     """Test that bilateral filter smooths noise within smooth regions."""
     # Noisy flat region
+    rng = np.random.default_rng(42)
     positions = np.array([0.5] * 30)
-    positions += np.random.normal(0, 0.01, 30)
+    positions += rng.normal(0, 0.01, 30)
 
     filtered = bilateral_temporal_filter(
         positions, window_size=9, sigma_spatial=3.0, sigma_intensity=0.02
@@ -233,7 +235,8 @@ def test_bilateral_temporal_filter_smooths_noise() -> None:
 
 def test_bilateral_temporal_filter_window_size() -> None:
     """Test that bilateral filter handles even window sizes."""
-    positions = np.random.rand(50)
+    rng = np.random.default_rng(42)
+    positions = rng.random(50)
 
     # Even window size should be adjusted to odd
     filtered_even = bilateral_temporal_filter(
@@ -284,10 +287,11 @@ def test_smooth_landmarks_advanced_with_bilateral() -> None:
     # Create landmark sequence with sharp transition (landing)
     n_frames = 40
     landmark_sequence = []
+    rng = np.random.default_rng(42)
 
     for i in range(n_frames):
         y = 0.8 if i < 20 else 0.5  # Sharp drop at frame 20
-        y += np.random.normal(0, 0.005)  # Add noise
+        y += rng.normal(0, 0.005)  # Add noise
 
         landmark_sequence.append(
             {
@@ -322,10 +326,11 @@ def test_smooth_landmarks_advanced_combined() -> None:
     n_frames = 50
     landmark_sequence = []
 
+    rng = np.random.default_rng(42)
     for i in range(n_frames):
         # Parabolic motion
         y = 0.5 + 0.001 * (i - 25) ** 2
-        y += np.random.normal(0, 0.005)  # Noise
+        y += rng.normal(0, 0.005)  # Noise
 
         # Add tracking glitch
         if i == 25:

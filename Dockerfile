@@ -53,10 +53,10 @@ LABEL org.opencontainers.image.title="kinemotion" \
 # - ffmpeg: Video codec support for OpenCV
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
     libgl1 \
     libglib2.0-0 \
     libgomp1 \
-    ffmpeg \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
