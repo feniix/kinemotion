@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.10.4 (2025-11-03)
+
+### Bug Fixes
+
+- **api**: Reduce cognitive complexity in process_video function
+  ([`d2e05cb`](https://github.com/feniix/kinemotion/commit/d2e05cb415067a1a1b081216a9474ccda1ae2567))
+
+
 ## v0.10.3 (2025-11-03)
 
 ### Bug Fixes
