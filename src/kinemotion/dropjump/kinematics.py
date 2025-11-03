@@ -104,6 +104,297 @@ class DropJumpMetrics:
         }
 
 
+def _determine_drop_start_frame(
+    drop_start_frame: int | None,
+    foot_y_positions: np.ndarray,
+    fps: float,
+    smoothing_window: int,
+) -> int:
+    """Determine the drop start frame for analysis.
+
+    Args:
+        drop_start_frame: Manual drop start frame or None for auto-detection
+        foot_y_positions: Vertical positions array
+        fps: Video frame rate
+        smoothing_window: Smoothing window size
+
+    Returns:
+        Drop start frame (0 if not detected/provided)
+    """
+    if drop_start_frame is None:
+        # Auto-detect where drop jump actually starts (skip initial stationary period)
+        detected_frame = detect_drop_start(
+            foot_y_positions,
+            fps,
+            min_stationary_duration=0.5,
+            position_change_threshold=0.005,
+            smoothing_window=smoothing_window,
+        )
+        return detected_frame if detected_frame is not None else 0
+    return drop_start_frame
+
+
+def _filter_phases_after_drop(
+    phases: list[tuple[int, int, ContactState]],
+    interpolated_phases: list[tuple[float, float, ContactState]],
+    drop_start_frame: int,
+) -> tuple[
+    list[tuple[int, int, ContactState]], list[tuple[float, float, ContactState]]
+]:
+    """Filter phases to only include those after drop start.
+
+    Args:
+        phases: Integer frame phases
+        interpolated_phases: Sub-frame precision phases
+        drop_start_frame: Frame where drop starts
+
+    Returns:
+        Tuple of (filtered_phases, filtered_interpolated_phases)
+    """
+    if drop_start_frame <= 0:
+        return phases, interpolated_phases
+
+    filtered_phases = [
+        (start, end, state) for start, end, state in phases if end >= drop_start_frame
+    ]
+    filtered_interpolated = [
+        (start, end, state)
+        for start, end, state in interpolated_phases
+        if end >= drop_start_frame
+    ]
+    return filtered_phases, filtered_interpolated
+
+
+def _identify_main_contact_phase(
+    phases: list[tuple[int, int, ContactState]],
+    ground_phases: list[tuple[int, int, int]],
+    air_phases_indexed: list[tuple[int, int, int]],
+    foot_y_positions: np.ndarray,
+) -> tuple[int, int, bool]:
+    """Identify the main contact phase and determine if it's a drop jump.
+
+    Args:
+        phases: All phase tuples
+        ground_phases: Ground phases with indices
+        air_phases_indexed: Air phases with indices
+        foot_y_positions: Vertical position array
+
+    Returns:
+        Tuple of (contact_start, contact_end, is_drop_jump)
+    """
+    # Initialize with first ground phase as fallback
+    contact_start, contact_end = ground_phases[0][0], ground_phases[0][1]
+    is_drop_jump = False
+
+    # Detect if this is a drop jump or regular jump
+    if air_phases_indexed and len(ground_phases) >= 2:
+        first_ground_start, first_ground_end, first_ground_idx = ground_phases[0]
+        first_air_idx = air_phases_indexed[0][2]
+
+        # Find ground phase after first air phase
+        ground_after_air = [
+            (start, end, idx)
+            for start, end, idx in ground_phases
+            if idx > first_air_idx
+        ]
+
+        if ground_after_air and first_ground_idx < first_air_idx:
+            # Check if first ground is at higher elevation (lower y) than ground after air
+            first_ground_y = float(
+                np.mean(foot_y_positions[first_ground_start : first_ground_end + 1])
+            )
+            second_ground_start, second_ground_end, _ = ground_after_air[0]
+            second_ground_y = float(
+                np.mean(foot_y_positions[second_ground_start : second_ground_end + 1])
+            )
+
+            # If first ground is significantly higher (>5% of frame), it's a drop jump
+            if second_ground_y - first_ground_y > 0.05:
+                is_drop_jump = True
+                contact_start, contact_end = second_ground_start, second_ground_end
+
+    if not is_drop_jump:
+        # Regular jump: use longest ground contact phase
+        contact_start, contact_end = max(
+            [(s, e) for s, e, _ in ground_phases], key=lambda p: p[1] - p[0]
+        )
+
+    return contact_start, contact_end, is_drop_jump
+
+
+def _find_precise_phase_timing(
+    contact_start: int,
+    contact_end: int,
+    interpolated_phases: list[tuple[float, float, ContactState]],
+) -> tuple[float, float]:
+    """Find precise sub-frame timing for contact phase.
+
+    Args:
+        contact_start: Integer contact start frame
+        contact_end: Integer contact end frame
+        interpolated_phases: Sub-frame precision phases
+
+    Returns:
+        Tuple of (contact_start_frac, contact_end_frac)
+    """
+    contact_start_frac = float(contact_start)
+    contact_end_frac = float(contact_end)
+
+    # Find the matching ground phase in interpolated_phases
+    for start_frac, end_frac, state in interpolated_phases:
+        if (
+            state == ContactState.ON_GROUND
+            and int(start_frac) <= contact_start <= int(end_frac) + 1
+            and int(start_frac) <= contact_end <= int(end_frac) + 1
+        ):
+            contact_start_frac = start_frac
+            contact_end_frac = end_frac
+            break
+
+    return contact_start_frac, contact_end_frac
+
+
+def _calculate_calibration_scale(
+    drop_height_m: float | None,
+    phases: list[tuple[int, int, ContactState]],
+    air_phases_indexed: list[tuple[int, int, int]],
+    foot_y_positions: np.ndarray,
+) -> float:
+    """Calculate calibration scale factor from known drop height.
+
+    Args:
+        drop_height_m: Known drop height in meters
+        phases: All phase tuples
+        air_phases_indexed: Air phases with indices
+        foot_y_positions: Vertical position array
+
+    Returns:
+        Scale factor (1.0 if no calibration possible)
+    """
+    scale_factor = 1.0
+
+    if drop_height_m is None or len(phases) < 2:
+        return scale_factor
+
+    if not air_phases_indexed:
+        return scale_factor
+
+    # Get first air phase (the drop)
+    first_air_start, first_air_end, _ = air_phases_indexed[0]
+
+    # Initial position: at start of drop (on the box)
+    lookback_start = max(0, first_air_start - 5)
+    if lookback_start < first_air_start:
+        initial_position = float(
+            np.mean(foot_y_positions[lookback_start:first_air_start])
+        )
+    else:
+        initial_position = float(foot_y_positions[first_air_start])
+
+    # Landing position: at the ground after drop
+    landing_position = float(foot_y_positions[first_air_end])
+
+    # Drop distance in normalized coordinates (y increases downward)
+    drop_normalized = landing_position - initial_position
+
+    if drop_normalized > 0.01:  # Sanity check
+        scale_factor = drop_height_m / drop_normalized
+
+    return scale_factor
+
+
+def _analyze_flight_phase(
+    metrics: DropJumpMetrics,
+    phases: list[tuple[int, int, ContactState]],
+    interpolated_phases: list[tuple[float, float, ContactState]],
+    contact_end: int,
+    foot_y_positions: np.ndarray,
+    fps: float,
+    drop_height_m: float | None,
+    scale_factor: float,
+    kinematic_correction_factor: float,
+) -> None:
+    """Analyze flight phase and calculate jump height metrics.
+
+    Args:
+        metrics: DropJumpMetrics object to populate
+        phases: All phase tuples
+        interpolated_phases: Sub-frame precision phases
+        contact_end: End of contact phase
+        foot_y_positions: Vertical position array
+        fps: Video frame rate
+        drop_height_m: Known drop height (optional)
+        scale_factor: Calibration scale factor
+        kinematic_correction_factor: Correction for kinematic method
+    """
+    # Find flight phase after ground contact
+    flight_phases = [
+        (start, end)
+        for start, end, state in phases
+        if state == ContactState.IN_AIR and start > contact_end
+    ]
+
+    if not flight_phases:
+        return
+
+    flight_start, flight_end = flight_phases[0]
+
+    # Store integer frame indices
+    metrics.flight_start_frame = flight_start
+    metrics.flight_end_frame = flight_end
+
+    # Find precise timing
+    flight_start_frac = float(flight_start)
+    flight_end_frac = float(flight_end)
+
+    for start_frac, end_frac, state in interpolated_phases:
+        if (
+            state == ContactState.IN_AIR
+            and int(start_frac) <= flight_start <= int(end_frac) + 1
+            and int(start_frac) <= flight_end <= int(end_frac) + 1
+        ):
+            flight_start_frac = start_frac
+            flight_end_frac = end_frac
+            break
+
+    # Calculate flight time
+    flight_frames_precise = flight_end_frac - flight_start_frac
+    metrics.flight_time = flight_frames_precise / fps
+    metrics.flight_start_frame_precise = flight_start_frac
+    metrics.flight_end_frame_precise = flight_end_frac
+
+    # Calculate jump height using kinematic method
+    g = 9.81  # m/s^2
+    jump_height_kinematic = (g * metrics.flight_time**2) / 8
+
+    # Calculate jump height from trajectory
+    takeoff_position = foot_y_positions[flight_start]
+    flight_positions = foot_y_positions[flight_start : flight_end + 1]
+
+    if len(flight_positions) > 0:
+        peak_idx = np.argmin(flight_positions)
+        metrics.peak_height_frame = int(flight_start + peak_idx)
+        peak_position = np.min(flight_positions)
+
+        height_normalized = float(takeoff_position - peak_position)
+        metrics.jump_height_trajectory = height_normalized
+
+        # Choose measurement method based on calibration availability
+        if drop_height_m is not None and scale_factor > 1.0:
+            metrics.jump_height = height_normalized * scale_factor
+            metrics.jump_height_kinematic = jump_height_kinematic
+        else:
+            metrics.jump_height = jump_height_kinematic * kinematic_correction_factor
+            metrics.jump_height_kinematic = jump_height_kinematic
+    else:
+        # Fallback to kinematic if no position data
+        if drop_height_m is None:
+            metrics.jump_height = jump_height_kinematic * kinematic_correction_factor
+        else:
+            metrics.jump_height = jump_height_kinematic
+        metrics.jump_height_kinematic = jump_height_kinematic
+
+
 def calculate_drop_jump_metrics(
     contact_states: list[ContactState],
     foot_y_positions: np.ndarray,
@@ -137,27 +428,13 @@ def calculate_drop_jump_metrics(
     """
     metrics = DropJumpMetrics()
 
-    # Detect or use manually specified drop jump start frame
-    if drop_start_frame is None:
-        # Auto-detect where drop jump actually starts (skip initial stationary period)
-        drop_start_frame = detect_drop_start(
-            foot_y_positions,
-            fps,
-            min_stationary_duration=0.5,  # 0.5s stable period (~30 frames @ 60fps)
-            position_change_threshold=0.005,  # 0.5% of frame height - sensitive to drop start
-            smoothing_window=smoothing_window,
-        )
-    # If manually specified or auto-detected, use it; otherwise start from frame 0
-    drop_start_frame_value: int
-    if drop_start_frame is None:  # pyright: ignore[reportUnnecessaryComparison]
-        drop_start_frame_value = 0
-    else:
-        drop_start_frame_value = drop_start_frame
+    # Determine drop start frame
+    drop_start_frame_value = _determine_drop_start_frame(
+        drop_start_frame, foot_y_positions, fps, smoothing_window
+    )
 
+    # Find contact phases
     phases = find_contact_phases(contact_states)
-
-    # Get interpolated phases with curvature-based refinement
-    # Combines velocity interpolation + acceleration pattern analysis
     interpolated_phases = find_interpolated_phase_transitions_with_curvature(
         foot_y_positions,
         contact_states,
@@ -171,25 +448,14 @@ def calculate_drop_jump_metrics(
         return metrics
 
     # Filter phases to only include those after drop start
-    # This removes the initial stationary period where athlete is standing on box
-    if drop_start_frame_value > 0:
-        phases = [
-            (start, end, state)
-            for start, end, state in phases
-            if end >= drop_start_frame_value
-        ]
-        interpolated_phases = [
-            (start, end, state)
-            for start, end, state in interpolated_phases
-            if end >= drop_start_frame_value
-        ]
+    phases, interpolated_phases = _filter_phases_after_drop(
+        phases, interpolated_phases, drop_start_frame_value
+    )
 
     if not phases:
         return metrics
 
-    # Find the main contact phase
-    # For drop jumps: find first ON_GROUND after first IN_AIR (the landing after drop)
-    # For regular jumps: use longest ON_GROUND phase
+    # Separate ground and air phases
     ground_phases = [
         (start, end, i)
         for i, (start, end, state) in enumerate(phases)
@@ -204,197 +470,43 @@ def calculate_drop_jump_metrics(
     if not ground_phases:
         return metrics
 
-    # Initialize contact variables with first ground phase as fallback
-    # (will be overridden by drop jump or regular jump detection logic)
-    contact_start, contact_end = ground_phases[0][0], ground_phases[0][1]
+    # Identify main contact phase
+    contact_start, contact_end, _ = _identify_main_contact_phase(
+        phases, ground_phases, air_phases_indexed, foot_y_positions
+    )
 
-    # Detect if this is a drop jump or regular jump
-    # Drop jump: first ground phase is elevated (lower y), followed by drop, then landing (higher y)
-    is_drop_jump = False
-    if air_phases_indexed and len(ground_phases) >= 2:
-        first_ground_start, first_ground_end, first_ground_idx = ground_phases[0]
-        first_air_idx = air_phases_indexed[0][2]
-
-        # Find ground phase after first air phase
-        ground_after_air = [
-            (start, end, idx)
-            for start, end, idx in ground_phases
-            if idx > first_air_idx
-        ]
-
-        if ground_after_air and first_ground_idx < first_air_idx:
-            # Check if first ground is at higher elevation (lower y) than ground after air
-            first_ground_y = float(
-                np.mean(foot_y_positions[first_ground_start : first_ground_end + 1])
-            )
-            second_ground_start, second_ground_end, _ = ground_after_air[0]
-            second_ground_y = float(
-                np.mean(foot_y_positions[second_ground_start : second_ground_end + 1])
-            )
-
-            # If first ground is significantly higher (>5% of frame), it's a drop jump
-            if second_ground_y - first_ground_y > 0.05:
-                is_drop_jump = True
-                contact_start, contact_end = second_ground_start, second_ground_end
-
-    if not is_drop_jump:
-        # Regular jump: use longest ground contact phase
-        contact_start, contact_end = max(
-            [(s, e) for s, e, _ in ground_phases], key=lambda p: p[1] - p[0]
-        )
-
-    # Store integer frame indices (for visualization)
+    # Store integer frame indices
     metrics.contact_start_frame = contact_start
     metrics.contact_end_frame = contact_end
 
-    # Find corresponding interpolated phase for precise timing
-    contact_start_frac = float(contact_start)
-    contact_end_frac = float(contact_end)
+    # Find precise timing for contact phase
+    contact_start_frac, contact_end_frac = _find_precise_phase_timing(
+        contact_start, contact_end, interpolated_phases
+    )
 
-    # Find the matching ground phase in interpolated_phases
-    for start_frac, end_frac, state in interpolated_phases:
-        # Match by checking if integer frames are within this phase
-        if (
-            state == ContactState.ON_GROUND
-            and int(start_frac) <= contact_start <= int(end_frac) + 1
-            and int(start_frac) <= contact_end <= int(end_frac) + 1
-        ):
-            contact_start_frac = start_frac
-            contact_end_frac = end_frac
-            break
-
-    # Calculate ground contact time using fractional frames
+    # Calculate ground contact time
     contact_frames_precise = contact_end_frac - contact_start_frac
     metrics.ground_contact_time = contact_frames_precise / fps
     metrics.contact_start_frame_precise = contact_start_frac
     metrics.contact_end_frame_precise = contact_end_frac
 
-    # Calculate calibration scale factor from drop height if provided
-    scale_factor = 1.0
-    if drop_height_m is not None and len(phases) >= 2:
-        # Find the initial drop by looking for first IN_AIR phase
-        # This represents the drop from the box
+    # Calculate calibration scale factor
+    scale_factor = _calculate_calibration_scale(
+        drop_height_m, phases, air_phases_indexed, foot_y_positions
+    )
 
-        if air_phases_indexed and ground_phases:
-            # Get first air phase (the drop)
-            first_air_start, first_air_end, _ = air_phases_indexed[0]
-
-            # Initial position: at start of drop (on the box)
-            # Look back a few frames to get stable position on box
-            lookback_start = max(0, first_air_start - 5)
-            if lookback_start < first_air_start:
-                initial_position = float(
-                    np.mean(foot_y_positions[lookback_start:first_air_start])
-                )
-            else:
-                initial_position = float(foot_y_positions[first_air_start])
-
-            # Landing position: at the ground after drop
-            # Use position at end of first air phase
-            landing_position = float(foot_y_positions[first_air_end])
-
-            # Drop distance in normalized coordinates (y increases downward)
-            drop_normalized = landing_position - initial_position
-
-            if drop_normalized > 0.01:  # Sanity check (at least 1% of frame height)
-                # Calculate scale factor: real_meters / normalized_distance
-                scale_factor = drop_height_m / drop_normalized
-
-    # Find flight phase after ground contact
-    flight_phases = [
-        (start, end)
-        for start, end, state in phases
-        if state == ContactState.IN_AIR and start > contact_end
-    ]
-
-    if flight_phases:
-        flight_start, flight_end = flight_phases[0]
-
-        # Store integer frame indices (for visualization)
-        metrics.flight_start_frame = flight_start
-        metrics.flight_end_frame = flight_end
-
-        # Find corresponding interpolated phase for precise timing
-        flight_start_frac = float(flight_start)
-        flight_end_frac = float(flight_end)
-
-        # Find the matching air phase in interpolated_phases
-        for start_frac, end_frac, state in interpolated_phases:
-            # Match by checking if integer frames are within this phase
-            if (
-                state == ContactState.IN_AIR
-                and int(start_frac) <= flight_start <= int(end_frac) + 1
-                and int(start_frac) <= flight_end <= int(end_frac) + 1
-            ):
-                flight_start_frac = start_frac
-                flight_end_frac = end_frac
-                break
-
-        # Calculate flight time using fractional frames
-        flight_frames_precise = flight_end_frac - flight_start_frac
-        metrics.flight_time = flight_frames_precise / fps
-        metrics.flight_start_frame_precise = flight_start_frac
-        metrics.flight_end_frame_precise = flight_end_frac
-
-        # Calculate jump height using flight time (kinematic method)
-        # h = (g * t^2) / 8, where t is total flight time
-        g = 9.81  # m/s^2
-        jump_height_kinematic = (g * metrics.flight_time**2) / 8
-
-        # Calculate jump height from trajectory (position-based method)
-        # This measures actual vertical displacement from takeoff to peak
-        takeoff_position = foot_y_positions[flight_start]
-        flight_positions = foot_y_positions[flight_start : flight_end + 1]
-
-        if len(flight_positions) > 0:
-            peak_idx = np.argmin(flight_positions)
-            metrics.peak_height_frame = int(flight_start + peak_idx)
-            peak_position = np.min(flight_positions)
-
-            # Height in normalized coordinates (0-1 range)
-            height_normalized = float(takeoff_position - peak_position)
-
-            # Store trajectory value (in normalized coordinates)
-            metrics.jump_height_trajectory = height_normalized
-
-            # Choose measurement method based on calibration availability
-            if drop_height_m is not None and scale_factor > 1.0:
-                # Use calibrated trajectory measurement (most accurate)
-                metrics.jump_height = height_normalized * scale_factor
-                metrics.jump_height_kinematic = jump_height_kinematic
-            else:
-                # Apply kinematic correction factor to kinematic method
-                # ⚠️ WARNING: Kinematic correction factor is EXPERIMENTAL and UNVALIDATED
-                #
-                # The kinematic method h = (g × t²) / 8 may underestimate jump height due to:
-                # 1. Contact detection timing (may detect landing slightly early/late)
-                # 2. Frame rate limitations (30 fps = 33ms intervals between samples)
-                # 3. Foot position vs center of mass difference (feet land before CoM peak)
-                #
-                # Default correction factor is 1.0 (no correction). Historical testing
-                # suggested 1.35 could improve accuracy, but:
-                # - This value has NOT been validated against gold standards
-                #   (force plates, motion capture)
-                # - The actual correction needed may vary by athlete, jump type, and video quality
-                # - Using a correction factor without validation is experimental
-                #
-                # For validated measurements, use:
-                # - Calibrated measurement with --drop-height parameter
-                # - Or compare against validated measurement systems
-                metrics.jump_height = (
-                    jump_height_kinematic * kinematic_correction_factor
-                )
-                metrics.jump_height_kinematic = jump_height_kinematic
-        else:
-            # Fallback to kinematic if no position data
-            if drop_height_m is None:
-                # Apply kinematic correction factor (see detailed comment above)
-                metrics.jump_height = (
-                    jump_height_kinematic * kinematic_correction_factor
-                )
-            else:
-                metrics.jump_height = jump_height_kinematic
-            metrics.jump_height_kinematic = jump_height_kinematic
+    # Analyze flight phase and calculate jump height
+    _analyze_flight_phase(
+        metrics,
+        phases,
+        interpolated_phases,
+        contact_end,
+        foot_y_positions,
+        fps,
+        drop_height_m,
+        scale_factor,
+        kinematic_correction_factor,
+    )
 
     return metrics
 
