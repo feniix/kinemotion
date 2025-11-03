@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.10.8 (2025-11-03)
+
+### Bug Fixes
+
+- **cli**: Suppress S107 for Click CLI framework requirement
+  ([`17c8335`](https://github.com/feniix/kinemotion/commit/17c83357334ca7d400fe41d802c9e5e61a995fff))
+
+
 ## v0.10.7 (2025-11-03)
 
 ### Bug Fixes
