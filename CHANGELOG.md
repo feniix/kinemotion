@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.10.1 (2025-11-03)
+
+### Bug Fixes
+
+- Resolve SonarCloud code quality issues
+  ([`73f7784`](https://github.com/feniix/kinemotion/commit/73f778491bc01bfed973421fe5261364f8540147))
+
+### Build System
+
+- Add style checker for commit messages
+  ([`d25669b`](https://github.com/feniix/kinemotion/commit/d25669bdf17810a38a86fbd9b03e208ea14f5326))
+
+- Migrate from mypy to pyright for type checking
+  ([`521b526`](https://github.com/feniix/kinemotion/commit/521b52619553bb5b3ee61e0db4ff6fd06744ac7a))
+
+### Documentation
+
+- Install precommit hook for improving markdown
+  ([`546164b`](https://github.com/feniix/kinemotion/commit/546164b9f68cf3222da9753fdd2f2cd272ead90f))
+
+- Update documentation for batch processing and Python API
+  ([`f0fa8b6`](https://github.com/feniix/kinemotion/commit/f0fa8b69b927ff4a2e7f15bac242374592fe0eb9))
+
+
 ## v0.10.0 (2025-11-02)
 
 ### Features
