@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.10.12 (2025-11-03)
+
+### Bug Fixes
+
+- Add sonar quality gate status
+  ([`df66261`](https://github.com/feniix/kinemotion/commit/df662612916d511ee7c6ed63bc79d23b30154bc6))
+
+
 ## v0.10.11 (2025-11-03)
 
 ### Bug Fixes
