@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.10.7 (2025-11-03)
+
+### Bug Fixes
+
+- **cli**: Reduce function parameter count using dataclasses
+  ([`e86dbee`](https://github.com/feniix/kinemotion/commit/e86dbeef6677984b0cb256158c8e5ff3ad24b5fc))
+
+
 ## v0.10.6 (2025-11-03)
 
 ### Bug Fixes
