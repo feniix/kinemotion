@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.10.2 (2025-11-03)
+
+### Bug Fixes
+
+- Replace legacy numpy random functions with Generator API
+  ([`5cfa31b`](https://github.com/feniix/kinemotion/commit/5cfa31bce040eadfc53d52654c2e75087ef087a5))
+
+
 ## v0.10.1 (2025-11-03)
 
 ### Bug Fixes
