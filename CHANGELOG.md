@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.10.11 (2025-11-03)
+
+### Bug Fixes
+
+- Correct PyPI badge and update type checker references
+  ([`5a4aa38`](https://github.com/feniix/kinemotion/commit/5a4aa38972e59f176be1f520eef6cf4cc6b51156))
+
+
 ## v0.10.10 (2025-11-03)
 
 ### Bug Fixes
