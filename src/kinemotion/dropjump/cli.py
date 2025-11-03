@@ -4,6 +4,7 @@ import csv
 import glob
 import json
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +26,19 @@ from .analysis import (
 )
 from .debug_overlay import DebugOverlayRenderer
 from .kinematics import calculate_drop_jump_metrics
+
+
+@dataclass
+class AnalysisParameters:
+    """Expert parameters for analysis customization."""
+
+    drop_start_frame: int | None = None
+    smoothing_window: int | None = None
+    velocity_threshold: float | None = None
+    min_contact_frames: int | None = None
+    visibility_threshold: float | None = None
+    detection_confidence: float | None = None
+    tracking_confidence: float | None = None
 
 
 @click.command(name="dropjump-analyze")
@@ -202,6 +216,17 @@ def dropjump_analyze(
     # Determine if batch mode should be used
     use_batch = batch or len(video_files) > 1
 
+    # Group expert parameters
+    params = AnalysisParameters(
+        drop_start_frame=drop_start_frame,
+        smoothing_window=smoothing_window,
+        velocity_threshold=velocity_threshold,
+        min_contact_frames=min_contact_frames,
+        visibility_threshold=visibility_threshold,
+        detection_confidence=detection_confidence,
+        tracking_confidence=tracking_confidence,
+    )
+
     if use_batch:
         _process_batch(
             video_files,
@@ -211,13 +236,7 @@ def dropjump_analyze(
             output_dir,
             json_output_dir,
             csv_summary,
-            drop_start_frame,
-            smoothing_window,
-            velocity_threshold,
-            min_contact_frames,
-            visibility_threshold,
-            detection_confidence,
-            tracking_confidence,
+            params,
         )
     else:
         # Single video mode (original behavior)
@@ -228,13 +247,7 @@ def dropjump_analyze(
             drop_height,
             quality,
             verbose,
-            drop_start_frame,
-            smoothing_window,
-            velocity_threshold,
-            min_contact_frames,
-            visibility_threshold,
-            detection_confidence,
-            tracking_confidence,
+            params,
         )
 
 
@@ -245,13 +258,7 @@ def _process_single(
     drop_height: float,
     quality: str,
     verbose: bool,
-    drop_start_frame: int | None,
-    smoothing_window: int | None,
-    velocity_threshold: float | None,
-    min_contact_frames: int | None,
-    visibility_threshold: float | None,
-    detection_confidence: float | None,
-    tracking_confidence: float | None,
+    expert_params: AnalysisParameters,
 ) -> None:
     """Process a single video (original CLI behavior)."""
     click.echo(f"Analyzing video: {video_path}", err=True)
@@ -285,10 +292,10 @@ def _process_single(
                 initial_tracking_conf = 0.6
 
             # Override with expert values if provided
-            if detection_confidence is not None:
-                initial_detection_conf = detection_confidence
-            if tracking_confidence is not None:
-                initial_tracking_conf = tracking_confidence
+            if expert_params.detection_confidence is not None:
+                initial_detection_conf = expert_params.detection_confidence
+            if expert_params.tracking_confidence is not None:
+                initial_tracking_conf = expert_params.tracking_confidence
 
             # Initialize pose tracker
             tracker = PoseTracker(
@@ -334,14 +341,14 @@ def _process_single(
             params = auto_tune_parameters(characteristics, quality_preset)
 
             # Apply expert overrides if provided
-            if smoothing_window is not None:
-                params.smoothing_window = smoothing_window
-            if velocity_threshold is not None:
-                params.velocity_threshold = velocity_threshold
-            if min_contact_frames is not None:
-                params.min_contact_frames = min_contact_frames
-            if visibility_threshold is not None:
-                params.visibility_threshold = visibility_threshold
+            if expert_params.smoothing_window is not None:
+                params.smoothing_window = expert_params.smoothing_window
+            if expert_params.velocity_threshold is not None:
+                params.velocity_threshold = expert_params.velocity_threshold
+            if expert_params.min_contact_frames is not None:
+                params.min_contact_frames = expert_params.min_contact_frames
+            if expert_params.visibility_threshold is not None:
+                params.visibility_threshold = expert_params.visibility_threshold
 
             # Show selected parameters if verbose
             if verbose:
@@ -463,7 +470,7 @@ def _process_single(
                 vertical_positions,
                 video.fps,
                 drop_height_m=drop_height,
-                drop_start_frame=drop_start_frame,
+                drop_start_frame=expert_params.drop_start_frame,
                 velocity_threshold=params.velocity_threshold,
                 smoothing_window=params.smoothing_window,
                 polyorder=params.polyorder,
@@ -545,13 +552,7 @@ def _process_batch(
     output_dir: str | None,
     json_output_dir: str | None,
     csv_summary: str | None,
-    drop_start_frame: int | None,
-    smoothing_window: int | None,
-    velocity_threshold: float | None,
-    min_contact_frames: int | None,
-    visibility_threshold: float | None,
-    detection_confidence: float | None,
-    tracking_confidence: float | None,
+    expert_params: AnalysisParameters,
 ) -> None:
     """Process multiple videos in batch mode using parallel processing."""
     click.echo(
@@ -588,13 +589,13 @@ def _process_batch(
             quality=quality,
             output_video=debug_video,
             json_output=json_file,
-            drop_start_frame=drop_start_frame,
-            smoothing_window=smoothing_window,
-            velocity_threshold=velocity_threshold,
-            min_contact_frames=min_contact_frames,
-            visibility_threshold=visibility_threshold,
-            detection_confidence=detection_confidence,
-            tracking_confidence=tracking_confidence,
+            drop_start_frame=expert_params.drop_start_frame,
+            smoothing_window=expert_params.smoothing_window,
+            velocity_threshold=expert_params.velocity_threshold,
+            min_contact_frames=expert_params.min_contact_frames,
+            visibility_threshold=expert_params.visibility_threshold,
+            detection_confidence=expert_params.detection_confidence,
+            tracking_confidence=expert_params.tracking_confidence,
         )
         configs.append(config)
 
