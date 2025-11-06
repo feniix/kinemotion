@@ -39,6 +39,64 @@ class AnalysisParameters:
     tracking_confidence: float | None = None
 
 
+def _collect_video_files(video_path: tuple[str, ...]) -> list[str]:
+    """Expand glob patterns and collect all video files."""
+    video_files: list[str] = []
+    for pattern in video_path:
+        expanded = glob.glob(pattern)
+        if expanded:
+            video_files.extend(expanded)
+        elif Path(pattern).exists():
+            video_files.append(pattern)
+        else:
+            click.echo(f"Warning: No files found for pattern: {pattern}", err=True)
+    return video_files
+
+
+def _generate_output_paths(
+    video: str, output_dir: str | None, json_output_dir: str | None
+) -> tuple[str | None, str | None]:
+    """Generate output paths for debug video and JSON."""
+    out_path = None
+    json_path = None
+    if output_dir:
+        out_path = str(Path(output_dir) / f"{Path(video).stem}_debug.mp4")
+    if json_output_dir:
+        json_path = str(Path(json_output_dir) / f"{Path(video).stem}.json")
+    return out_path, json_path
+
+
+def _process_batch_videos(
+    video_files: list[str],
+    output_dir: str | None,
+    json_output_dir: str | None,
+    quality_preset: QualityPreset,
+    verbose: bool,
+    expert_params: AnalysisParameters,
+    workers: int,
+) -> None:
+    """Process multiple videos in batch mode."""
+    click.echo(
+        f"Batch mode: Processing {len(video_files)} video(s) with {workers} workers",
+        err=True,
+    )
+    click.echo("Note: Batch processing not yet fully implemented", err=True)
+    click.echo("Processing videos sequentially...", err=True)
+
+    for video in video_files:
+        try:
+            click.echo(f"\nProcessing: {video}", err=True)
+            out_path, json_path = _generate_output_paths(
+                video, output_dir, json_output_dir
+            )
+            _process_single(
+                video, out_path, json_path, quality_preset, verbose, expert_params
+            )
+        except Exception as e:
+            click.echo(f"Error processing {video}: {e}", err=True)
+            continue
+
+
 @click.command(name="cmj-analyze")
 @click.argument("video_path", nargs=-1, type=click.Path(exists=False), required=True)
 @click.option(
@@ -189,15 +247,7 @@ def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters for
         --json-output-dir results/ --csv-summary summary.csv
     """
     # Expand glob patterns and collect all video files
-    video_files: list[str] = []
-    for pattern in video_path:
-        expanded = glob.glob(pattern)
-        if expanded:
-            video_files.extend(expanded)
-        elif Path(pattern).exists():
-            video_files.append(pattern)
-        else:
-            click.echo(f"Warning: No files found for pattern: {pattern}", err=True)
+    video_files = _collect_video_files(video_path)
 
     if not video_files:
         click.echo("Error: No video files found", err=True)
@@ -220,27 +270,15 @@ def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters for
     )
 
     if use_batch:
-        click.echo(
-            f"Batch mode: Processing {len(video_files)} video(s) with {workers} workers",
-            err=True,
+        _process_batch_videos(
+            video_files,
+            output_dir,
+            json_output_dir,
+            quality_preset,
+            verbose,
+            expert_params,
+            workers,
         )
-        click.echo("Note: Batch processing not yet fully implemented", err=True)
-        click.echo("Processing videos sequentially...", err=True)
-        for video in video_files:
-            try:
-                click.echo(f"\nProcessing: {video}", err=True)
-                out_path = None
-                json_path = None
-                if output_dir:
-                    out_path = str(Path(output_dir) / f"{Path(video).stem}_debug.mp4")
-                if json_output_dir:
-                    json_path = str(Path(json_output_dir) / f"{Path(video).stem}.json")
-                _process_single(
-                    video, out_path, json_path, quality_preset, verbose, expert_params
-                )
-            except Exception as e:
-                click.echo(f"Error processing {video}: {e}", err=True)
-                continue
     else:
         # Single video mode
         try:
