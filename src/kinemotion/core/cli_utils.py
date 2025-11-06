@@ -210,5 +210,3 @@ def common_output_options(func: Callable) -> Callable:  # type: ignore[type-arg]
         help="Path for JSON metrics output (default: stdout)",
     )(func)
     return func
-
-    return func
