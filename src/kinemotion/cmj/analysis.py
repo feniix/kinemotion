@@ -279,8 +279,6 @@ def find_cmj_takeoff_from_velocity_peak(
     velocities: np.ndarray,
     lowest_point_frame: int,
     fps: float,
-    window_length: int = 5,
-    polyorder: int = 2,
 ) -> float:
     """
     Find CMJ takeoff frame as peak upward velocity during concentric phase.
@@ -293,8 +291,6 @@ def find_cmj_takeoff_from_velocity_peak(
         velocities: Array of SIGNED vertical velocities (negative = upward)
         lowest_point_frame: Frame at lowest point
         fps: Video frame rate
-        window_length: Window size for derivative calculations
-        polyorder: Polynomial order for Savitzky-Golay filter
 
     Returns:
         Takeoff frame with fractional precision.
@@ -407,7 +403,7 @@ def find_interpolated_takeoff_landing(
 
     # Find takeoff using peak velocity method (CMJ-specific)
     takeoff_frame = find_cmj_takeoff_from_velocity_peak(
-        positions, velocities, lowest_point_frame, fps, window_length, polyorder
+        positions, velocities, lowest_point_frame, fps
     )
 
     # Find landing using position peak and impact detection

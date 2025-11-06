@@ -638,6 +638,50 @@ class CMJVideoResult:
     processing_time: float = 0.0
 
 
+def _generate_cmj_outputs(
+    output_video: str | None,
+    json_output: str | None,
+    metrics: CMJMetrics,
+    frames: list,
+    smoothed_landmarks: list,
+    video_width: int,
+    video_height: int,
+    video_display_width: int,
+    video_display_height: int,
+    video_fps: float,
+    verbose: bool,
+) -> None:
+    """Generate JSON and debug video outputs for CMJ analysis."""
+    if json_output:
+        import json
+
+        output_path = Path(json_output)
+        output_path.write_text(json.dumps(metrics.to_dict(), indent=2))
+        if verbose:
+            print(f"Metrics written to: {json_output}")
+
+    if output_video:
+        if verbose:
+            print(f"Generating debug video: {output_video}")
+
+        with CMJDebugOverlayRenderer(
+            output_video,
+            video_width,
+            video_height,
+            video_display_width,
+            video_display_height,
+            video_fps,
+        ) as renderer:
+            for i, frame in enumerate(frames):
+                annotated = renderer.render_frame(
+                    frame, smoothed_landmarks[i], i, metrics
+                )
+                renderer.write_frame(annotated)
+
+        if verbose:
+            print(f"Debug video saved: {output_video}")
+
+
 def process_cmj_video(
     video_path: str,
     quality: str = "balanced",
@@ -741,12 +785,6 @@ def process_cmj_video(
         vertical_positions, _ = _extract_vertical_positions(smoothed_landmarks)
         tracking_method = "foot"
 
-        # Calculate countermovement threshold (FPS-adjusted)
-        # POSITIVE threshold for downward motion (squatting) in normalized coordinates
-        cm_threshold = countermovement_threshold
-        if cm_threshold is None:
-            cm_threshold = 0.015 * (30.0 / video.fps)
-
         # Detect CMJ phases
         if verbose:
             print("Detecting CMJ phases...")
@@ -788,34 +826,19 @@ def process_cmj_video(
         )
 
         # Generate outputs if requested
-        if json_output:
-            import json
-
-            output_path = Path(json_output)
-            output_path.write_text(json.dumps(metrics.to_dict(), indent=2))
-            if verbose:
-                print(f"Metrics written to: {json_output}")
-
-        if output_video:
-            if verbose:
-                print(f"Generating debug video: {output_video}")
-
-            with CMJDebugOverlayRenderer(
-                output_video,
-                video.width,
-                video.height,
-                video.display_width,
-                video.display_height,
-                video.fps,
-            ) as renderer:
-                for i, frame in enumerate(frames):
-                    annotated = renderer.render_frame(
-                        frame, smoothed_landmarks[i], i, metrics
-                    )
-                    renderer.write_frame(annotated)
-
-            if verbose:
-                print(f"Debug video saved: {output_video}")
+        _generate_cmj_outputs(
+            output_video,
+            json_output,
+            metrics,
+            frames,
+            smoothed_landmarks,
+            video.width,
+            video.height,
+            video.display_width,
+            video.display_height,
+            video.fps,
+            verbose,
+        )
 
         if verbose:
             print(f"\nJump height: {metrics.jump_height:.3f}m")
