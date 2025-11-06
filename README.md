@@ -162,7 +162,7 @@ Use kinemotion as a library for automated pipelines and custom analysis.
 ### Drop Jump API
 
 ```python
-from kinemotion import process_video
+from kinemotion import process_dropjump_video
 
 # Process a single video
 metrics = process_video(
@@ -182,7 +182,7 @@ print(f"Flight time: {metrics.flight_time * 1000:.1f} ms")
 
 ```python
 # Drop jump bulk processing
-from kinemotion import VideoConfig, process_videos_bulk
+from kinemotion import DropJumpVideoConfig, process_dropjump_videos_bulk
 
 configs = [
     VideoConfig("video1.mp4", drop_height=0.40),

@@ -8,7 +8,11 @@ using the kinemotion API for high-throughput analysis.
 
 from pathlib import Path
 
-from kinemotion.api import VideoConfig, VideoResult, process_videos_bulk
+from kinemotion.api import (
+    DropJumpVideoConfig,
+    DropJumpVideoResult,
+    process_dropjump_videos_bulk,
+)
 
 
 def example_simple_bulk() -> None:
@@ -18,13 +22,13 @@ def example_simple_bulk() -> None:
     print("=" * 80)
 
     video_configs = [
-        VideoConfig(video_path="video1.mp4"),
-        VideoConfig(video_path="video2.mp4"),
-        VideoConfig(video_path="video3.mp4"),
+        DropJumpVideoConfig(video_path="video1.mp4"),
+        DropJumpVideoConfig(video_path="video2.mp4"),
+        DropJumpVideoConfig(video_path="video3.mp4"),
     ]
 
     # Process videos with 4 parallel workers
-    results = process_videos_bulk(video_configs, max_workers=4)
+    results = process_dropjump_videos_bulk(video_configs, max_workers=4)
 
     # Print results
     for result in results:
@@ -39,19 +43,19 @@ def example_advanced_configuration() -> None:
 
     advanced_configs = [
         # Fast analysis for quick screening
-        VideoConfig(
+        DropJumpVideoConfig(
             video_path="athlete1_trial1.mp4",
             quality="fast",
             json_output="results/athlete1_trial1.json",
         ),
         # Balanced analysis (default)
-        VideoConfig(
+        DropJumpVideoConfig(
             video_path="athlete1_trial2.mp4",
             quality="balanced",
             json_output="results/athlete1_trial2.json",
         ),
         # Research-grade accurate analysis with debug video
-        VideoConfig(
+        DropJumpVideoConfig(
             video_path="athlete1_trial3.mp4",
             quality="accurate",
             output_video="debug/athlete1_trial3_debug.mp4",
@@ -64,23 +68,25 @@ def example_advanced_configuration() -> None:
     Path("debug").mkdir(exist_ok=True)
 
     # Progress callback to show completion
-    def on_progress(result: VideoResult) -> None:
+    def on_progress(result: DropJumpVideoResult) -> None:
         status = "✓" if result.success else "✗"
         print(
             f"{status} Completed: {result.video_path} ({result.processing_time:.2f}s)"
         )
 
-    process_videos_bulk(advanced_configs, max_workers=2, progress_callback=on_progress)
+    process_dropjump_videos_bulk(
+        advanced_configs, max_workers=2, progress_callback=on_progress
+    )
 
 
-def example_process_directory() -> list[VideoResult]:
+def example_process_directory() -> list[DropJumpVideoResult]:
     """Example 3: Process entire directory with consistent settings."""
     print("\n" + "=" * 80)
     print("EXAMPLE 3: Process Directory")
     print("=" * 80)
 
     # Progress callback to show completion
-    def on_progress(result: VideoResult) -> None:
+    def on_progress(result: DropJumpVideoResult) -> None:
         status = "✓" if result.success else "✗"
         print(
             f"{status} Completed: {result.video_path} ({result.processing_time:.2f}s)"
@@ -96,7 +102,7 @@ def example_process_directory() -> list[VideoResult]:
 
     # Create configs with same drop height for all
     dir_configs = [
-        VideoConfig(
+        DropJumpVideoConfig(
             video_path=str(video_file),
             quality="balanced",
             json_output=f"results/{video_file.stem}.json",
@@ -106,7 +112,7 @@ def example_process_directory() -> list[VideoResult]:
 
     print(f"Found {len(video_files)} videos to process")
 
-    results = process_videos_bulk(
+    results = process_dropjump_videos_bulk(
         dir_configs, max_workers=4, progress_callback=on_progress
     )
 
@@ -114,7 +120,7 @@ def example_process_directory() -> list[VideoResult]:
     return results
 
 
-def example_export_csv(results: list[VideoResult]) -> None:
+def example_export_csv(results: list[DropJumpVideoResult]) -> None:
     """Example 4: Export results to CSV."""
     print("\n" + "=" * 80)
     print("EXAMPLE 4: Export to CSV")
@@ -181,14 +187,14 @@ def example_custom_parameters() -> None:
 
     custom_configs = [
         # Low quality video - use more aggressive smoothing
-        VideoConfig(
+        DropJumpVideoConfig(
             video_path="low_quality.mp4",
             smoothing_window=7,  # More smoothing
             velocity_threshold=0.025,  # Higher threshold
             quality="accurate",
         ),
         # High speed video - adjust for higher framerate
-        VideoConfig(
+        DropJumpVideoConfig(
             video_path="high_speed_120fps.mp4",
             quality="accurate",
             # Auto-tuning will handle FPS adjustments
@@ -196,17 +202,19 @@ def example_custom_parameters() -> None:
     ]
 
     # Progress callback to show completion
-    def on_progress(result: VideoResult) -> None:
+    def on_progress(result: DropJumpVideoResult) -> None:
         status = "✓" if result.success else "✗"
         print(
             f"{status} Completed: {result.video_path} ({result.processing_time:.2f}s)"
         )
 
     # Process with custom settings
-    process_videos_bulk(custom_configs, max_workers=2, progress_callback=on_progress)
+    process_dropjump_videos_bulk(
+        custom_configs, max_workers=2, progress_callback=on_progress
+    )
 
 
-def print_result(result: VideoResult) -> None:
+def print_result(result: DropJumpVideoResult) -> None:
     """Print a single video processing result."""
     if result.success:
         assert result.metrics is not None
@@ -224,7 +232,7 @@ def print_result(result: VideoResult) -> None:
         print(f"  Error: {result.error}")
 
 
-def print_summary(results: list[VideoResult]) -> None:
+def print_summary(results: list[DropJumpVideoResult]) -> None:
     """Print summary statistics for a batch of results."""
     successful = [r for r in results if r.success]
     failed = [r for r in results if not r.success]
@@ -274,7 +282,7 @@ def main() -> None:
 
 def example_single_video() -> None:
     """Example: Process a single video programmatically."""
-    from kinemotion.api import process_video
+    from kinemotion.api import process_dropjump_video
 
     print("\n" + "=" * 80)
     print("SINGLE VIDEO PROCESSING")
@@ -282,7 +290,7 @@ def example_single_video() -> None:
 
     try:
         # Process single video with verbose output
-        metrics = process_video(
+        metrics = process_dropjump_video(
             video_path="sample.mp4",
             quality="balanced",
             output_video="sample_debug.mp4",

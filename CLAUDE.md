@@ -192,7 +192,7 @@ kinemotion cmj-analyze videos/*.mp4 --batch --workers 4
 
 ```python
 # Drop jump
-from kinemotion import process_video
+from kinemotion import process_dropjump_video
 metrics = process_video("video.mp4", drop_height=0.40)
 
 # CMJ

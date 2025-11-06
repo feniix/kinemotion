@@ -76,14 +76,14 @@ kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \
 For more control, use the Python API:
 
 ```python
-from kinemotion import VideoConfig, process_videos_bulk
+from kinemotion import DropJumpVideoConfig, process_dropjump_videos_bulk
 
 configs = [
-    VideoConfig("video1.mp4", drop_height=0.40, quality="fast"),
-    VideoConfig("video2.mp4", drop_height=0.30, quality="accurate"),  # Different settings per video
+    DropJumpVideoConfig("video1.mp4", drop_height=0.40, quality="fast"),
+    DropJumpVideoConfig("video2.mp4", drop_height=0.30, quality="accurate"),  # Different settings per video
 ]
 
-results = process_videos_bulk(configs, max_workers=4)
+results = process_dropjump_videos_bulk(configs, max_workers=4)
 ```
 
 See `examples/bulk/README.md` for complete API documentation.

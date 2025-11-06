@@ -16,10 +16,10 @@ Kinemotion can be used as a library in your Python code, not just as a CLI tool.
 ### Single Video Processing
 
 ```python
-from kinemotion import process_video
+from kinemotion import process_dropjump_video
 
 # Process a single video
-metrics = process_video(
+metrics = process_dropjump_video(
     video_path="athlete_jump.mp4",
     drop_height=0.40,  # 40cm drop box (REQUIRED)
     verbose=True
@@ -33,17 +33,17 @@ print(f"Flight time: {metrics.flight_time_ms:.1f} ms")
 ### Bulk Video Processing
 
 ```python
-from kinemotion import VideoConfig, process_videos_bulk
+from kinemotion import DropJumpVideoConfig, process_dropjump_videos_bulk
 
 # Configure multiple videos
 configs = [
-    VideoConfig("video1.mp4", drop_height=0.40),
-    VideoConfig("video2.mp4", drop_height=0.30),
-    VideoConfig("video3.mp4", drop_height=0.50),
+    DropJumpVideoConfig("video1.mp4", drop_height=0.40),
+    DropJumpVideoConfig("video2.mp4", drop_height=0.30),
+    DropJumpVideoConfig("video3.mp4", drop_height=0.50),
 ]
 
 # Process in parallel with 4 workers
-results = process_videos_bulk(configs, max_workers=4)
+results = process_dropjump_videos_bulk(configs, max_workers=4)
 
 # Check results
 for result in results:
@@ -113,7 +113,7 @@ Process a single drop jump video.
 - `FileNotFoundError`: Video file not found
 - `ValueError`: Invalid parameters or video cannot be processed
 
-#### `process_videos_bulk()`
+#### `process_dropjump_videos_bulk()`
 
 Process multiple videos in parallel.
 
@@ -134,7 +134,7 @@ Process multiple videos in parallel.
 Configuration for a single video.
 
 ```python
-VideoConfig(
+DropJumpVideoConfig(
     video_path="video.mp4",
     drop_height=0.40,
     quality="balanced",
@@ -177,7 +177,7 @@ Analysis results for a drop jump.
 
 ```python
 from pathlib import Path
-from kinemotion import VideoConfig, process_videos_bulk
+from kinemotion import DropJumpVideoConfig, process_dropjump_videos_bulk
 
 # Find all MP4 files
 video_dir = Path("athlete_videos")
@@ -185,7 +185,7 @@ video_files = list(video_dir.glob("*.mp4"))
 
 # Create configs with consistent settings
 configs = [
-    VideoConfig(
+    DropJumpVideoConfig(
         video_path=str(video_file),
         drop_height=0.40,
         quality="balanced",
@@ -199,7 +199,7 @@ def show_progress(result):
     status = "✓" if result.success else "✗"
     print(f"{status} {result.video_path}")
 
-results = process_videos_bulk(
+results = process_dropjump_videos_bulk(
     configs,
     max_workers=4,
     progress_callback=show_progress
@@ -215,11 +215,11 @@ print(f"\nAverage jump height: {avg_jump:.3f} m")
 
 ```python
 import csv
-from kinemotion import VideoConfig, process_videos_bulk
+from kinemotion import DropJumpVideoConfig, process_dropjump_videos_bulk
 
 # Process videos
 configs = [...]  # Your video configs
-results = process_videos_bulk(configs, max_workers=4)
+results = process_dropjump_videos_bulk(configs, max_workers=4)
 
 # Export successful results
 with open("results.csv", "w", newline="") as f:
@@ -244,29 +244,29 @@ with open("results.csv", "w", newline="") as f:
 ### 3. Different Quality Settings
 
 ```python
-from kinemotion import VideoConfig, process_videos_bulk
+from kinemotion import DropJumpVideoConfig, process_dropjump_videos_bulk
 
 configs = [
     # Fast: Quick screening
-    VideoConfig("video1.mp4", drop_height=0.40, quality="fast"),
+    DropJumpVideoConfig("video1.mp4", drop_height=0.40, quality="fast"),
 
     # Balanced: Default, good accuracy/speed
-    VideoConfig("video2.mp4", drop_height=0.40, quality="balanced"),
+    DropJumpVideoConfig("video2.mp4", drop_height=0.40, quality="balanced"),
 
     # Accurate: Research-grade, slower
-    VideoConfig("video3.mp4", drop_height=0.40, quality="accurate"),
+    DropJumpVideoConfig("video3.mp4", drop_height=0.40, quality="accurate"),
 ]
 
-results = process_videos_bulk(configs, max_workers=3)
+results = process_dropjump_videos_bulk(configs, max_workers=3)
 ```
 
 ### 4. Custom Parameters for Challenging Videos
 
 ```python
-from kinemotion import process_video
+from kinemotion import process_dropjump_video
 
 # Low quality video - more aggressive smoothing
-metrics = process_video(
+metrics = process_dropjump_video(
     video_path="low_quality.mp4",
     drop_height=0.40,
     smoothing_window=7,        # More smoothing
@@ -275,7 +275,7 @@ metrics = process_video(
 )
 
 # High speed video - let auto-tuning handle FPS
-metrics = process_video(
+metrics = process_dropjump_video(
     video_path="high_speed_120fps.mp4",
     drop_height=0.40,
     quality="accurate"  # Auto-adjusts for 120fps
@@ -285,11 +285,11 @@ metrics = process_video(
 ### 5. Generate Debug Videos
 
 ```python
-from kinemotion import VideoConfig, process_videos_bulk
+from kinemotion import DropJumpVideoConfig, process_dropjump_videos_bulk
 
 # Process and save debug videos for review
 configs = [
-    VideoConfig(
+    DropJumpVideoConfig(
         video_path="athlete1_trial1.mp4",
         drop_height=0.40,
         output_video="debug/athlete1_trial1_debug.mp4",
@@ -298,7 +298,7 @@ configs = [
     # ... more videos
 ]
 
-results = process_videos_bulk(configs, max_workers=2)
+results = process_dropjump_videos_bulk(configs, max_workers=2)
 ```
 
 ## Performance Tips
@@ -326,14 +326,14 @@ Debug videos are slow to generate. Skip them for large batches:
 
 ```python
 # Don't set output_video parameter
-VideoConfig("video.mp4", drop_height=0.40)  # No debug video
+DropJumpVideoConfig("video.mp4", drop_height=0.40)  # No debug video
 ```
 
 ### 4. Process Videos Sequentially for Single Machine
 
 ```python
 # Use max_workers=1 if you have limited memory
-results = process_videos_bulk(configs, max_workers=1)
+results = process_dropjump_videos_bulk(configs, max_workers=1)
 ```
 
 ## Error Handling
@@ -341,7 +341,7 @@ results = process_videos_bulk(configs, max_workers=1)
 All errors are isolated per video - one failure doesn't crash the batch:
 
 ```python
-results = process_videos_bulk(configs, max_workers=4)
+results = process_dropjump_videos_bulk(configs, max_workers=4)
 
 for result in results:
     if result.success:
@@ -362,19 +362,19 @@ for result in results:
 
 ```python
 import pandas as pd
-from kinemotion import VideoConfig, process_videos_bulk
+from kinemotion import DropJumpVideoConfig, process_dropjump_videos_bulk
 
 # Read video list from CSV
 df = pd.read_csv("videos.csv")  # Columns: path, drop_height
 
 # Create configs
 configs = [
-    VideoConfig(row.path, row.drop_height)
+    DropJumpVideoConfig(row.path, row.drop_height)
     for _, row in df.iterrows()
 ]
 
 # Process
-results = process_videos_bulk(configs, max_workers=4)
+results = process_dropjump_videos_bulk(configs, max_workers=4)
 
 # Create results DataFrame
 results_data = []
@@ -396,7 +396,7 @@ results_df.to_csv("analysis_results.csv", index=False)
 
 ```python
 import click
-from kinemotion import VideoConfig, process_videos_bulk
+from kinemotion import DropJumpVideoConfig, process_dropjump_videos_bulk
 
 @click.command()
 @click.argument("video_dir", type=click.Path(exists=True))
@@ -408,13 +408,13 @@ def analyze_directory(video_dir, drop_height, workers):
 
     videos = list(Path(video_dir).glob("*.mp4"))
     configs = [
-        VideoConfig(str(v), drop_height=drop_height)
+        DropJumpVideoConfig(str(v), drop_height=drop_height)
         for v in videos
     ]
 
     click.echo(f"Processing {len(videos)} videos with {workers} workers...")
 
-    results = process_videos_bulk(configs, max_workers=workers)
+    results = process_dropjump_videos_bulk(configs, max_workers=workers)
 
     successful = [r for r in results if r.success]
     click.echo(f"Success: {len(successful)}/{len(results)}")
@@ -439,7 +439,7 @@ uv sync
 Reduce `max_workers` or process videos sequentially:
 
 ```python
-results = process_videos_bulk(configs, max_workers=1)
+results = process_dropjump_videos_bulk(configs, max_workers=1)
 ```
 
 ### Video Processing Failures

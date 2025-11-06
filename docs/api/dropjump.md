@@ -5,7 +5,7 @@ The drop jump API provides functions for analyzing drop jump videos and extracti
 ## Quick Example
 
 ```python
-from kinemotion import process_video
+from kinemotion import process_dropjump_video
 
 metrics = process_video(
     video_path="dropjump.mp4",

@@ -322,8 +322,8 @@ def _generate_outputs(
 
 
 @dataclass
-class VideoResult:
-    """Result of processing a single video."""
+class DropJumpVideoResult:
+    """Result of processing a single drop jump video."""
 
     video_path: str
     success: bool
@@ -333,8 +333,8 @@ class VideoResult:
 
 
 @dataclass
-class VideoConfig:
-    """Configuration for processing a single video."""
+class DropJumpVideoConfig:
+    """Configuration for processing a single drop jump video."""
 
     video_path: str
     quality: str = "balanced"
@@ -349,7 +349,7 @@ class VideoConfig:
     tracking_confidence: float | None = None
 
 
-def process_video(
+def process_dropjump_video(
     video_path: str,
     quality: str = "balanced",
     output_video: str | None = None,
@@ -488,56 +488,56 @@ def process_video(
         return metrics
 
 
-def process_videos_bulk(
-    configs: list[VideoConfig],
+def process_dropjump_videos_bulk(
+    configs: list[DropJumpVideoConfig],
     max_workers: int = 4,
-    progress_callback: Callable[[VideoResult], None] | None = None,
-) -> list[VideoResult]:
+    progress_callback: Callable[[DropJumpVideoResult], None] | None = None,
+) -> list[DropJumpVideoResult]:
     """
-    Process multiple videos in parallel using ProcessPoolExecutor.
+    Process multiple drop jump videos in parallel using ProcessPoolExecutor.
 
     Args:
-        configs: List of VideoConfig objects specifying video paths and parameters
+        configs: List of DropJumpVideoConfig objects specifying video paths and parameters
         max_workers: Maximum number of parallel workers (default: 4)
         progress_callback: Optional callback function called after each video completes.
-                         Receives VideoResult object.
+                         Receives DropJumpVideoResult object.
 
     Returns:
-        List of VideoResult objects, one per input video, in completion order
+        List of DropJumpVideoResult objects, one per input video, in completion order
 
     Example:
         >>> configs = [
-        ...     VideoConfig("video1.mp4"),
-        ...     VideoConfig("video2.mp4", quality="accurate"),
-        ...     VideoConfig("video3.mp4", output_video="debug3.mp4"),
+        ...     DropJumpVideoConfig("video1.mp4"),
+        ...     DropJumpVideoConfig("video2.mp4", quality="accurate"),
+        ...     DropJumpVideoConfig("video3.mp4", output_video="debug3.mp4"),
         ... ]
-        >>> results = process_videos_bulk(configs, max_workers=4)
+        >>> results = process_dropjump_videos_bulk(configs, max_workers=4)
         >>> for result in results:
         ...     if result.success:
         ...         print(f"{result.video_path}: {result.metrics.jump_height_m:.3f}m")
         ...     else:
         ...         print(f"{result.video_path}: FAILED - {result.error}")
     """
-    results: list[VideoResult] = []
+    results: list[DropJumpVideoResult] = []
 
     # Use ProcessPoolExecutor for CPU-bound video processing
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
         # Submit all jobs
         future_to_config = {
-            executor.submit(_process_video_wrapper, config): config
+            executor.submit(_process_dropjump_video_wrapper, config): config
             for config in configs
         }
 
         # Process results as they complete
         for future in as_completed(future_to_config):
             config = future_to_config[future]
-            result: VideoResult
+            result: DropJumpVideoResult
 
             try:
                 result = future.result()
             except Exception as exc:
                 # Handle unexpected errors
-                result = VideoResult(
+                result = DropJumpVideoResult(
                     video_path=config.video_path,
                     success=False,
                     error=f"Unexpected error: {str(exc)}",
@@ -552,20 +552,20 @@ def process_videos_bulk(
     return results
 
 
-def _process_video_wrapper(config: VideoConfig) -> VideoResult:
+def _process_dropjump_video_wrapper(config: DropJumpVideoConfig) -> DropJumpVideoResult:
     """
     Wrapper function for parallel processing. Must be picklable (top-level function).
 
     Args:
-        config: VideoConfig object with processing parameters
+        config: DropJumpVideoConfig object with processing parameters
 
     Returns:
-        VideoResult object with metrics or error information
+        DropJumpVideoResult object with metrics or error information
     """
     start_time = time.time()
 
     try:
-        metrics = process_video(
+        metrics = process_dropjump_video(
             video_path=config.video_path,
             quality=config.quality,
             output_video=config.output_video,
@@ -582,7 +582,7 @@ def _process_video_wrapper(config: VideoConfig) -> VideoResult:
 
         processing_time = time.time() - start_time
 
-        return VideoResult(
+        return DropJumpVideoResult(
             video_path=config.video_path,
             success=True,
             metrics=metrics,
@@ -592,7 +592,7 @@ def _process_video_wrapper(config: VideoConfig) -> VideoResult:
     except Exception as e:
         processing_time = time.time() - start_time
 
-        return VideoResult(
+        return DropJumpVideoResult(
             video_path=config.video_path,
             success=False,
             error=str(e),

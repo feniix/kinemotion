@@ -31,7 +31,7 @@ See [CMJ API](cmj.md) for detailed documentation.
 ## Basic Usage
 
 ```python
-from kinemotion import process_video, process_cmj_video
+from kinemotion import process_dropjump_video, process_cmj_video
 
 # Drop jump analysis
 drop_metrics = process_video("dropjump.mp4", drop_height=0.40)
@@ -43,7 +43,7 @@ cmj_metrics = process_cmj_video("cmj.mp4")
 ## Batch Processing
 
 ```python
-from kinemotion import process_videos_bulk, process_cmj_videos_bulk
+from kinemotion import process_dropjump_videos_bulk, process_cmj_videos_bulk
 
 # Batch drop jump analysis
 results = process_videos_bulk(

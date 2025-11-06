@@ -5,7 +5,12 @@ Simple example: Process a single video or multiple videos using kinemotion.
 This demonstrates the most straightforward way to use kinemotion as a library.
 """
 
-from kinemotion.api import VideoConfig, VideoResult, process_video, process_videos_bulk
+from kinemotion.api import (
+    DropJumpVideoConfig,
+    DropJumpVideoResult,
+    process_dropjump_video,
+    process_dropjump_videos_bulk,
+)
 
 
 def process_single_video_example() -> None:
@@ -13,7 +18,7 @@ def process_single_video_example() -> None:
     print("Processing single video...")
 
     # Process with just the video path
-    metrics = process_video(
+    metrics = process_dropjump_video(
         video_path="my_video.mp4",
         verbose=True,
     )
@@ -35,21 +40,21 @@ def process_multiple_videos_example() -> None:
 
     # Configure videos to process
     configs = [
-        VideoConfig("athlete1_jump1.mp4"),
-        VideoConfig("athlete1_jump2.mp4"),
-        VideoConfig("athlete1_jump3.mp4"),
-        VideoConfig("athlete2_jump1.mp4", quality="accurate"),
+        DropJumpVideoConfig("athlete1_jump1.mp4"),
+        DropJumpVideoConfig("athlete1_jump2.mp4"),
+        DropJumpVideoConfig("athlete1_jump3.mp4"),
+        DropJumpVideoConfig("athlete2_jump1.mp4", quality="accurate"),
     ]
 
     # Process all videos using 4 parallel workers
     # Progress callback shows completion status
-    def show_progress(result: VideoResult) -> None:
+    def show_progress(result: DropJumpVideoResult) -> None:
         if result.success:
             print(f"✓ {result.video_path} - {result.processing_time:.1f}s")
         else:
             print(f"✗ {result.video_path} - ERROR: {result.error}")
 
-    results = process_videos_bulk(
+    results = process_dropjump_videos_bulk(
         configs, max_workers=4, progress_callback=show_progress
     )
 
@@ -71,7 +76,7 @@ def process_with_outputs_example() -> None:
     """Process video and save debug video + JSON results."""
     print("\nProcessing with output files...")
 
-    metrics = process_video(
+    metrics = process_dropjump_video(
         video_path="my_video.mp4",
         output_video="debug_output.mp4",  # Save annotated video
         json_output="results.json",  # Save metrics as JSON

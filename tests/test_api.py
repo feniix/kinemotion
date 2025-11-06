@@ -7,17 +7,17 @@ import numpy as np
 import pytest
 
 from kinemotion.api import (
-    VideoConfig,
-    VideoResult,
-    process_video,
-    process_videos_bulk,
+    DropJumpVideoConfig,
+    DropJumpVideoResult,
+    process_dropjump_video,
+    process_dropjump_videos_bulk,
 )
 from kinemotion.dropjump.kinematics import DropJumpMetrics
 
 
 def test_process_video_returns_metrics(sample_video_path: str) -> None:
-    """Test that process_video returns DropJumpMetrics object."""
-    metrics = process_video(
+    """Test that process_dropjump_video returns DropJumpMetrics object."""
+    metrics = process_dropjump_video(
         video_path=sample_video_path,
         quality="fast",  # Use fast for quicker tests
         verbose=False,
@@ -30,11 +30,11 @@ def test_process_video_returns_metrics(sample_video_path: str) -> None:
 
 
 def test_process_video_with_json_output(sample_video_path: str) -> None:
-    """Test that process_video saves JSON output correctly."""
+    """Test that process_dropjump_video saves JSON output correctly."""
     with tempfile.TemporaryDirectory() as tmpdir:
         json_path = Path(tmpdir) / "metrics.json"
 
-        process_video(
+        process_dropjump_video(
             video_path=sample_video_path,
             json_output=str(json_path),
             quality="fast",
@@ -56,11 +56,11 @@ def test_process_video_with_json_output(sample_video_path: str) -> None:
 
 
 def test_process_video_with_debug_output(sample_video_path: str) -> None:
-    """Test that process_video saves debug video correctly."""
+    """Test that process_dropjump_video saves debug video correctly."""
     with tempfile.TemporaryDirectory() as tmpdir:
         output_path = Path(tmpdir) / "debug.mp4"
 
-        metrics = process_video(
+        metrics = process_dropjump_video(
             video_path=sample_video_path,
             output_video=str(output_path),
             quality="fast",
@@ -81,7 +81,7 @@ def test_process_video_invalid_quality(tmp_path: Path) -> None:
     dummy_video.touch()
 
     with pytest.raises(ValueError, match="Invalid quality preset"):
-        process_video(
+        process_dropjump_video(
             video_path=str(dummy_video),
             quality="invalid",
         )
@@ -90,7 +90,7 @@ def test_process_video_invalid_quality(tmp_path: Path) -> None:
 def test_process_video_file_not_found() -> None:
     """Test that missing video file raises FileNotFoundError."""
     with pytest.raises(FileNotFoundError, match="Video file not found"):
-        process_video(
+        process_dropjump_video(
             video_path="nonexistent_video.mp4",
         )
 
@@ -100,7 +100,7 @@ def test_process_video_quality_presets(sample_video_path: str) -> None:
     qualities = ["fast", "balanced", "accurate"]
 
     for quality in qualities:
-        metrics = process_video(
+        metrics = process_dropjump_video(
             video_path=sample_video_path,
             quality=quality,
             verbose=False,
@@ -113,7 +113,7 @@ def test_process_video_quality_presets(sample_video_path: str) -> None:
 
 def test_process_video_with_expert_overrides(sample_video_path: str) -> None:
     """Test that expert parameter overrides work."""
-    metrics = process_video(
+    metrics = process_dropjump_video(
         video_path=sample_video_path,
         smoothing_window=7,
         velocity_threshold=0.025,
@@ -126,8 +126,8 @@ def test_process_video_with_expert_overrides(sample_video_path: str) -> None:
 
 
 def test_video_config_creation() -> None:
-    """Test VideoConfig dataclass creation."""
-    config = VideoConfig(
+    """Test DropJumpVideoConfig dataclass creation."""
+    config = DropJumpVideoConfig(
         video_path="test.mp4",
         quality="balanced",
     )
@@ -139,13 +139,13 @@ def test_video_config_creation() -> None:
 
 
 def test_video_result_creation() -> None:
-    """Test VideoResult dataclass creation."""
+    """Test DropJumpVideoResult dataclass creation."""
     metrics = DropJumpMetrics()
     metrics.ground_contact_time = 0.250  # 250ms in seconds
     metrics.flight_time = 0.500  # 500ms in seconds
     metrics.jump_height = 0.35
 
-    result = VideoResult(
+    result = DropJumpVideoResult(
         video_path="test.mp4",
         success=True,
         metrics=metrics,
@@ -162,16 +162,16 @@ def test_video_result_creation() -> None:
 def test_process_videos_bulk_success(sample_video_path: str) -> None:
     """Test bulk processing of multiple videos."""
     configs = [
-        VideoConfig(video_path=sample_video_path, quality="fast"),
-        VideoConfig(video_path=sample_video_path, quality="fast"),
+        DropJumpVideoConfig(video_path=sample_video_path, quality="fast"),
+        DropJumpVideoConfig(video_path=sample_video_path, quality="fast"),
     ]
 
-    results = process_videos_bulk(configs, max_workers=2)
+    results = process_dropjump_videos_bulk(configs, max_workers=2)
 
     assert len(results) == 2
 
     for result in results:
-        assert isinstance(result, VideoResult)
+        assert isinstance(result, DropJumpVideoResult)
         assert result.video_path == sample_video_path
         assert result.success is True
         assert result.metrics is not None
@@ -182,20 +182,20 @@ def test_process_videos_bulk_success(sample_video_path: str) -> None:
 def test_process_videos_bulk_with_failure() -> None:
     """Test bulk processing handles failures gracefully."""
     configs = [
-        VideoConfig(
+        DropJumpVideoConfig(
             video_path="nonexistent1.mp4",
         ),
-        VideoConfig(
+        DropJumpVideoConfig(
             video_path="nonexistent2.mp4",
         ),
     ]
 
-    results = process_videos_bulk(configs, max_workers=2)
+    results = process_dropjump_videos_bulk(configs, max_workers=2)
 
     assert len(results) == 2
 
     for result in results:
-        assert isinstance(result, VideoResult)
+        assert isinstance(result, DropJumpVideoResult)
         assert result.success is False
         assert result.metrics is None
         assert result.error is not None
@@ -205,14 +205,14 @@ def test_process_videos_bulk_with_failure() -> None:
 def test_process_videos_bulk_mixed_results(sample_video_path: str) -> None:
     """Test bulk processing with mix of successful and failed videos."""
     configs = [
-        VideoConfig(video_path=sample_video_path, quality="fast"),
-        VideoConfig(
+        DropJumpVideoConfig(video_path=sample_video_path, quality="fast"),
+        DropJumpVideoConfig(
             video_path="nonexistent.mp4",
         ),
-        VideoConfig(video_path=sample_video_path, quality="fast"),
+        DropJumpVideoConfig(video_path=sample_video_path, quality="fast"),
     ]
 
-    results = process_videos_bulk(configs, max_workers=2)
+    results = process_dropjump_videos_bulk(configs, max_workers=2)
 
     assert len(results) == 3
 
@@ -235,16 +235,16 @@ def test_process_videos_bulk_mixed_results(sample_video_path: str) -> None:
 def test_process_videos_bulk_progress_callback(sample_video_path: str) -> None:
     """Test that progress callback is called for each video."""
     configs = [
-        VideoConfig(video_path=sample_video_path, quality="fast"),
-        VideoConfig(video_path=sample_video_path, quality="fast"),
+        DropJumpVideoConfig(video_path=sample_video_path, quality="fast"),
+        DropJumpVideoConfig(video_path=sample_video_path, quality="fast"),
     ]
 
     callback_results = []
 
-    def progress_callback(result: VideoResult) -> None:
+    def progress_callback(result: DropJumpVideoResult) -> None:
         callback_results.append(result)
 
-    results = process_videos_bulk(
+    results = process_dropjump_videos_bulk(
         configs, max_workers=2, progress_callback=progress_callback
     )
 
@@ -261,23 +261,23 @@ def test_process_videos_bulk_different_parameters(sample_video_path: str) -> Non
     """Test bulk processing with different parameter combinations."""
     with tempfile.TemporaryDirectory() as tmpdir:
         configs = [
-            VideoConfig(
+            DropJumpVideoConfig(
                 video_path=sample_video_path,
                 quality="fast",
             ),
-            VideoConfig(
+            DropJumpVideoConfig(
                 video_path=sample_video_path,
                 quality="balanced",
                 json_output=str(Path(tmpdir) / "video2.json"),
             ),
-            VideoConfig(
+            DropJumpVideoConfig(
                 video_path=sample_video_path,
                 quality="fast",
                 smoothing_window=7,
             ),
         ]
 
-        results = process_videos_bulk(configs, max_workers=2)
+        results = process_dropjump_videos_bulk(configs, max_workers=2)
 
         assert len(results) == 3
         assert all(r.success for r in results)
