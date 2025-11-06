@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.14.4 (2025-11-06)
+
+### Bug Fixes
+
+- **docs**: Make docs workflow depend on release workflow completion
+  ([`a26fa34`](https://github.com/feniix/kinemotion/commit/a26fa349a55d3a3b264e0a71e214629e33c0f85c))
+
+
 ## v0.14.3 (2025-11-06)
 
 ### Bug Fixes
