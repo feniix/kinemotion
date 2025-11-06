@@ -620,7 +620,6 @@ class CMJVideoConfig:
     json_output: str | None = None
     smoothing_window: int | None = None
     velocity_threshold: float | None = None
-    countermovement_threshold: float | None = None
     min_contact_frames: int | None = None
     visibility_threshold: float | None = None
     detection_confidence: float | None = None
@@ -927,7 +926,6 @@ def _process_cmj_video_wrapper(config: CMJVideoConfig) -> CMJVideoResult:
             json_output=config.json_output,
             smoothing_window=config.smoothing_window,
             velocity_threshold=config.velocity_threshold,
-            countermovement_threshold=config.countermovement_threshold,
             min_contact_frames=config.min_contact_frames,
             visibility_threshold=config.visibility_threshold,
             detection_confidence=config.detection_confidence,
