@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.11.3 (2025-11-06)
+
+### Bug Fixes
+
+- Deduplicate CLI utilities across CMJ and drop jump modules
+  ([`c314083`](https://github.com/feniix/kinemotion/commit/c314083dd6601071f75ded38864f7ba9a9daab3d))
+
+- **cmj**: Remove unused countermovement_threshold parameter from process_cmj_video
+  ([`a8d9425`](https://github.com/feniix/kinemotion/commit/a8d9425a509b44ccf5c9e983e2d8552e9b5f8839))
+
+
 ## v0.11.2 (2025-11-06)
 
 ### Bug Fixes
