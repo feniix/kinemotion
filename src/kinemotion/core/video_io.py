@@ -151,10 +151,6 @@ class VideoProcessor:
 
         return frame
 
-    def reset(self) -> None:
-        """Reset video to beginning."""
-        self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
-
     def close(self) -> None:
         """Release video capture."""
         self.cap.release()
@@ -162,5 +158,5 @@ class VideoProcessor:
     def __enter__(self) -> "VideoProcessor":
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:  # type: ignore[no-untyped-def]
+    def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:  # type: ignore[no-untyped-def]
         self.close()

@@ -48,29 +48,6 @@ def create_video_writer(
     return writer, needs_resize
 
 
-def prepare_frame_for_overlay(
-    frame: np.ndarray, needs_resize: bool, display_width: int, display_height: int
-) -> np.ndarray:
-    """
-    Prepare frame for overlay rendering by resizing if needed.
-
-    Args:
-        frame: Original video frame
-        needs_resize: Whether frame needs resizing
-        display_width: Target display width
-        display_height: Target display height
-
-    Returns:
-        Prepared frame ready for overlay
-    """
-    # Apply SAR correction if needed
-    if needs_resize:
-        frame = cv2.resize(
-            frame, (display_width, display_height), interpolation=cv2.INTER_LINEAR
-        )
-    return frame
-
-
 def write_overlay_frame(
     writer: cv2.VideoWriter, frame: np.ndarray, width: int, height: int
 ) -> None:
@@ -162,5 +139,5 @@ class BaseDebugOverlayRenderer:
     def __enter__(self) -> "BaseDebugOverlayRenderer":
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:  # type: ignore[no-untyped-def]
+    def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:  # type: ignore[no-untyped-def]
         self.close()
