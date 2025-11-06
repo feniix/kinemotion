@@ -89,6 +89,87 @@ def calculate_adaptive_threshold(
     return adaptive_threshold
 
 
+def _find_stable_baseline(
+    positions: np.ndarray,
+    min_stable_frames: int,
+    stability_threshold: float = 0.01,
+    debug: bool = False,
+) -> tuple[int, float]:
+    """Find first stable period and return baseline position.
+
+    Returns:
+        Tuple of (baseline_start_frame, baseline_position). Returns (-1, 0.0) if not found.
+    """
+    stable_window = min_stable_frames
+
+    for start_idx in range(0, len(positions) - stable_window, 5):
+        window = positions[start_idx : start_idx + stable_window]
+        window_std = float(np.std(window))
+
+        if window_std < stability_threshold:
+            baseline_start = start_idx
+            baseline_position = float(np.median(window))
+
+            if debug:
+                end_frame = baseline_start + stable_window - 1
+                print("[detect_drop_start] Found stable period:")
+                print(f"  frames {baseline_start}-{end_frame}")
+                print(f"  baseline_position: {baseline_position:.4f}")
+                print(f"  baseline_std: {window_std:.4f} < {stability_threshold:.4f}")
+
+            return baseline_start, baseline_position
+
+    if debug:
+        print(
+            f"[detect_drop_start] No stable period found "
+            f"(variance always > {stability_threshold:.4f})"
+        )
+    return -1, 0.0
+
+
+def _find_drop_from_baseline(
+    positions: np.ndarray,
+    baseline_start: int,
+    baseline_position: float,
+    stable_window: int,
+    position_change_threshold: float,
+    smoothing_window: int,
+    debug: bool = False,
+) -> int:
+    """Find drop start after stable baseline period.
+
+    Returns:
+        Drop frame index, or 0 if not found.
+    """
+    search_start = baseline_start + stable_window
+    window_size = max(3, smoothing_window)
+
+    for i in range(search_start, len(positions) - window_size):
+        window_positions = positions[i : i + window_size]
+        avg_position = float(np.mean(window_positions))
+        position_change = avg_position - baseline_position
+
+        if position_change > position_change_threshold:
+            drop_frame = max(baseline_start, i - window_size)
+
+            if debug:
+                print(f"[detect_drop_start] Drop detected at frame {drop_frame}")
+                print(
+                    f"  position_change: {position_change:.4f} > "
+                    f"{position_change_threshold:.4f}"
+                )
+                print(
+                    f"  avg_position: {avg_position:.4f} vs "
+                    f"baseline: {baseline_position:.4f}"
+                )
+
+            return drop_frame
+
+    if debug:
+        print("[detect_drop_start] No drop detected after stable period")
+    return 0
+
+
 def detect_drop_start(
     positions: np.ndarray,
     fps: float,
@@ -126,84 +207,32 @@ def detect_drop_start(
         - Returns: 119
     """
     min_stable_frames = int(fps * min_stationary_duration)
-    if len(positions) < min_stable_frames + 30:  # Need some frames after stable period
+    if len(positions) < min_stable_frames + 30:
         if debug:
-            min_frames_needed = min_stable_frames + 30
             print(
-                f"[detect_drop_start] Video too short: {len(positions)} < {min_frames_needed}"
+                f"[detect_drop_start] Video too short: {len(positions)} < "
+                f"{min_stable_frames + 30}"
             )
         return 0
 
-    # STEP 1: Find first stable period by scanning forward
-    # Look for window with low variance (< 1% of frame height)
-    stability_threshold = 0.01  # 1% of frame height
-    stable_window = min_stable_frames
-
-    baseline_start = -1
-    baseline_position = 0.0
-
-    # Scan from start, looking for stable window
-    for start_idx in range(0, len(positions) - stable_window, 5):  # Step by 5 frames
-        window = positions[start_idx : start_idx + stable_window]
-        window_std = float(np.std(window))
-
-        if window_std < stability_threshold:
-            # Found stable period!
-            baseline_start = start_idx
-            baseline_position = float(np.median(window))
-
-            if debug:
-                end_frame = baseline_start + stable_window - 1
-                print("[detect_drop_start] Found stable period:")
-                print(f"  frames {baseline_start}-{end_frame}")
-                print(f"  baseline_position: {baseline_position:.4f}")
-                print(f"  baseline_std: {window_std:.4f} < {stability_threshold:.4f}")
-            break
+    # Find stable baseline period
+    baseline_start, baseline_position = _find_stable_baseline(
+        positions, min_stable_frames, debug=debug
+    )
 
     if baseline_start < 0:
-        if debug:
-            msg = (
-                f"No stable period found (variance always > {stability_threshold:.4f})"
-            )
-            print(f"[detect_drop_start] {msg}")
         return 0
 
-    # STEP 2: Find when position changes significantly from baseline
-    # Start searching after stable period ends
-    search_start = baseline_start + stable_window
-    window_size = max(3, smoothing_window)
-
-    for i in range(search_start, len(positions) - window_size):
-        # Average position over small window to reduce noise
-        window_positions = positions[i : i + window_size]
-        avg_position = float(np.mean(window_positions))
-
-        # Check if position has increased (dropped) significantly
-        position_change = avg_position - baseline_position
-
-        if position_change > position_change_threshold:
-            # Found start of drop - back up slightly to catch beginning
-            drop_frame_candidate = i - window_size
-            if drop_frame_candidate < baseline_start:
-                drop_frame = baseline_start
-            else:
-                drop_frame = drop_frame_candidate
-
-            if debug:
-                print(f"[detect_drop_start] Drop detected at frame {drop_frame}")
-                print(
-                    f"  position_change: {position_change:.4f} > {position_change_threshold:.4f}"
-                )
-                print(
-                    f"  avg_position: {avg_position:.4f} vs baseline: {baseline_position:.4f}"
-                )
-
-            return drop_frame
-
-    # No significant position change detected
-    if debug:
-        print("[detect_drop_start] No drop detected after stable period")
-    return 0
+    # Find drop from baseline
+    return _find_drop_from_baseline(
+        positions,
+        baseline_start,
+        baseline_position,
+        min_stable_frames,
+        position_change_threshold,
+        smoothing_window,
+        debug,
+    )
 
 
 def detect_ground_contact(
@@ -349,6 +378,71 @@ def interpolate_threshold_crossing(
     return float(max(0.0, min(1.0, t)))
 
 
+def _interpolate_phase_start(
+    start_idx: int,
+    state: ContactState,
+    velocities: np.ndarray,
+    velocity_threshold: float,
+) -> float:
+    """Interpolate start boundary of a phase with sub-frame precision.
+
+    Returns:
+        Fractional start frame, or float(start_idx) if no interpolation.
+    """
+    if start_idx <= 0 or start_idx >= len(velocities):
+        return float(start_idx)
+
+    vel_before = velocities[start_idx - 1]
+    vel_at = velocities[start_idx]
+
+    # Check threshold crossing based on state
+    is_landing = (
+        state == ContactState.ON_GROUND and vel_before > velocity_threshold > vel_at
+    )
+    is_takeoff = (
+        state == ContactState.IN_AIR and vel_before < velocity_threshold < vel_at
+    )
+
+    if is_landing or is_takeoff:
+        offset = interpolate_threshold_crossing(vel_before, vel_at, velocity_threshold)
+        return (start_idx - 1) + offset
+
+    return float(start_idx)
+
+
+def _interpolate_phase_end(
+    end_idx: int,
+    state: ContactState,
+    velocities: np.ndarray,
+    velocity_threshold: float,
+    max_idx: int,
+) -> float:
+    """Interpolate end boundary of a phase with sub-frame precision.
+
+    Returns:
+        Fractional end frame, or float(end_idx) if no interpolation.
+    """
+    if end_idx >= max_idx - 1 or end_idx + 1 >= len(velocities):
+        return float(end_idx)
+
+    vel_at = velocities[end_idx]
+    vel_after = velocities[end_idx + 1]
+
+    # Check threshold crossing based on state
+    is_takeoff = (
+        state == ContactState.ON_GROUND and vel_at < velocity_threshold < vel_after
+    )
+    is_landing = (
+        state == ContactState.IN_AIR and vel_at > velocity_threshold > vel_after
+    )
+
+    if is_takeoff or is_landing:
+        offset = interpolate_threshold_crossing(vel_at, vel_after, velocity_threshold)
+        return end_idx + offset
+
+    return float(end_idx)
+
+
 def find_interpolated_phase_transitions(
     foot_positions: np.ndarray,
     contact_states: list[ContactState],
@@ -371,13 +465,10 @@ def find_interpolated_phase_transitions(
     Returns:
         List of (start_frame, end_frame, state) tuples with fractional frame indices
     """
-    # First get integer frame phases
     phases = find_contact_phases(contact_states)
     if not phases or len(foot_positions) < 2:
         return []
 
-    # Compute velocities from derivative of smoothed trajectory
-    # This gives much smoother velocity estimates than simple frame differences
     velocities = compute_velocity_from_derivative(
         foot_positions, window_length=smoothing_window, polyorder=2
     )
@@ -385,57 +476,12 @@ def find_interpolated_phase_transitions(
     interpolated_phases: list[tuple[float, float, ContactState]] = []
 
     for start_idx, end_idx, state in phases:
-        start_frac = float(start_idx)
-        end_frac = float(end_idx)
-
-        # Interpolate start boundary (transition INTO this phase)
-        if start_idx > 0 and start_idx < len(velocities):
-            vel_before = (
-                velocities[start_idx - 1] if start_idx > 0 else velocities[start_idx]
-            )
-            vel_at = velocities[start_idx]
-
-            # Check if we're crossing the threshold at this boundary
-            if state == ContactState.ON_GROUND:
-                # Transition air→ground: velocity dropping below threshold
-                if vel_before > velocity_threshold > vel_at:
-                    # Interpolate between start_idx-1 and start_idx
-                    offset = interpolate_threshold_crossing(
-                        vel_before, vel_at, velocity_threshold
-                    )
-                    start_frac = (start_idx - 1) + offset
-            elif state == ContactState.IN_AIR:
-                # Transition ground→air: velocity rising above threshold
-                if vel_before < velocity_threshold < vel_at:
-                    # Interpolate between start_idx-1 and start_idx
-                    offset = interpolate_threshold_crossing(
-                        vel_before, vel_at, velocity_threshold
-                    )
-                    start_frac = (start_idx - 1) + offset
-
-        # Interpolate end boundary (transition OUT OF this phase)
-        if end_idx < len(foot_positions) - 1 and end_idx + 1 < len(velocities):
-            vel_at = velocities[end_idx]
-            vel_after = velocities[end_idx + 1]
-
-            # Check if we're crossing the threshold at this boundary
-            if state == ContactState.ON_GROUND:
-                # Transition ground→air: velocity rising above threshold
-                if vel_at < velocity_threshold < vel_after:
-                    # Interpolate between end_idx and end_idx+1
-                    offset = interpolate_threshold_crossing(
-                        vel_at, vel_after, velocity_threshold
-                    )
-                    end_frac = end_idx + offset
-            elif state == ContactState.IN_AIR:
-                # Transition air→ground: velocity dropping below threshold
-                if vel_at > velocity_threshold > vel_after:
-                    # Interpolate between end_idx and end_idx+1
-                    offset = interpolate_threshold_crossing(
-                        vel_at, vel_after, velocity_threshold
-                    )
-                    end_frac = end_idx + offset
-
+        start_frac = _interpolate_phase_start(
+            start_idx, state, velocities, velocity_threshold
+        )
+        end_frac = _interpolate_phase_end(
+            end_idx, state, velocities, velocity_threshold, len(foot_positions)
+        )
         interpolated_phases.append((start_frac, end_frac, state))
 
     return interpolated_phases
