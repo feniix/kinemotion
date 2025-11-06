@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.13.0 (2025-11-06)
+
+### Documentation
+
+- Add sports biomechanics pose estimation research documentation
+  ([`745d273`](https://github.com/feniix/kinemotion/commit/745d273da294d49dd83f8fe488f5ede38189361a))
+
+- Update camera setup guides for 45° angle and dual iPhone configuration
+  ([`373a858`](https://github.com/feniix/kinemotion/commit/373a858e81c74da6a85be8c00d7fc0c20ac42e85))
+
+### Features
+
+- **docs**: Reorganize documentation and add 45° camera setup guidance
+  ([`0e8f992`](https://github.com/feniix/kinemotion/commit/0e8f992a7854a662b65574f589306bc13529cd5e))
+
+
 ## v0.12.3 (2025-11-06)
 
 ### Bug Fixes
