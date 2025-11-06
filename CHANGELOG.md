@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.12.2 (2025-11-06)
+
+### Bug Fixes
+
+- **core**: Suppress false positive for polyorder parameter
+  ([`ae5ffea`](https://github.com/feniix/kinemotion/commit/ae5ffea708741592e1cd356cdf35dcc388cbe97f))
+
+- **dropjump**: Remove unused parameters from calculate_drop_jump_metrics
+  ([`6130c11`](https://github.com/feniix/kinemotion/commit/6130c113be71dcd8c278b1f31a3b5e300a6b4532))
+
+### Refactoring
+
+- **core**: Reduce cognitive complexity in pose.py
+  ([`f0a3805`](https://github.com/feniix/kinemotion/commit/f0a380561844e54b4372f57c93b82f8c8a1440ee))
+
+- **dropjump**: Reduce cognitive complexity in analysis.py
+  ([`180bb37`](https://github.com/feniix/kinemotion/commit/180bb373f63675ef6ecacaea8e9ee9f63c3d3746))
+
+- **dropjump**: Reduce cognitive complexity in debug_overlay.py
+  ([`076cb56`](https://github.com/feniix/kinemotion/commit/076cb560c55baaff0ba93d0631eb38d69f8a7d7b))
+
+
 ## v0.12.1 (2025-11-06)
 
 ### Bug Fixes
