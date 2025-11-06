@@ -7,29 +7,43 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=feniix_kinemotion&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=feniix_kinemotion)
 
-A video-based kinematic analysis tool for athletic performance. Analyzes side-view drop-jump videos to estimate key performance metrics: ground contact time, flight time, and jump height. Uses MediaPipe pose tracking and advanced kinematics.
+A video-based kinematic analysis tool for athletic performance. Analyzes vertical jump videos to estimate key performance metrics using MediaPipe pose tracking and advanced kinematics.
+
+**Supported jump types:**
+
+- **Drop Jump**: Ground contact time, flight time, reactive strength index
+- **Counter Movement Jump (CMJ)**: Jump height, flight time, countermovement depth, triple extension biomechanics
 
 ## Features
 
+### Core Features
+
 - **Automatic pose tracking** using MediaPipe Pose landmarks
-- **Ground contact detection** based on foot velocity and position
 - **Derivative-based velocity** - smooth velocity calculation from position trajectory
 - **Trajectory curvature analysis** - acceleration patterns for refined event detection
-- **Sub-frame interpolation** - precise timing beyond frame boundaries for improved accuracy
-- **Automatic drop jump detection** - identifies box → drop → landing → jump phases
-- **Kinematic calculations** for jump metrics:
-  - Ground contact time (ms)
-  - Flight time (ms)
-  - Jump height (m) - with optional calibration using drop box height
-- **Calibrated measurements** - use known drop height for theoretically improved accuracy (⚠️ accuracy claims unvalidated)
+- **Sub-frame interpolation** - precise timing beyond frame boundaries
+- **Intelligent auto-tuning** - automatic parameter optimization based on video characteristics
 - **JSON output** for easy integration with other tools
-- **Optional debug video** with visual overlays showing contact states and landmarks
-- **Batch processing** - CLI and Python API for parallel processing of multiple videos
-- **Python library API** - use kinemotion programmatically in your own code
-- **CSV export** - aggregated results for research and analysis
-- **Configurable parameters** for smoothing, thresholds, and detection
+- **Debug video overlays** with visual analysis
+- **Batch processing** - CLI and Python API for parallel processing
+- **Python library API** - use kinemotion programmatically
+- **CSV export** - aggregated results for research
 
-**Note**: Drop jump analysis uses foot-based tracking with fixed velocity thresholds. Center of mass (CoM) tracking and adaptive thresholding (available in `core/` modules) require longer videos (~5+ seconds) with a 3-second standing baseline, making them unsuitable for typical drop jump videos (~3 seconds). These features may be available in future jump types like CMJ (countermovement jump).
+### Drop Jump Analysis
+
+- **Ground contact detection** based on foot velocity and position
+- **Automatic drop jump detection** - identifies box → drop → landing → jump phases
+- **Metrics**: Ground contact time, flight time, jump height (with drop height calibration)
+- **Reactive strength index** calculations
+
+### Counter Movement Jump (CMJ) Analysis
+
+- **Backward search algorithm** - robust phase detection from peak height
+- **Flight time method** - force plate standard (h = g×t²/8)
+- **Triple extension tracking** - ankle, knee, hip joint angles
+- **Skeleton overlay** - biomechanical visualization
+- **Metrics**: Jump height, flight time, countermovement depth, eccentric/concentric durations
+- **Validated accuracy**: 50.6cm jump (±1 frame precision)
 
 ## Validation Status
 
@@ -75,133 +89,77 @@ This will install all dependencies and make the `kinemotion` command available.
 
 ## Usage
 
-**NEW:** Kinemotion now features **intelligent auto-tuning**! Just specify your drop box height and the tool automatically optimizes all parameters based on video frame rate and tracking quality.
+Kinemotion supports two jump types with intelligent auto-tuning that automatically optimizes parameters based on video characteristics.
 
-### Basic Analysis
+### Drop Jump Analysis
 
-Analyze a video with automatic parameter selection:
+Analyzes reactive strength and ground contact time:
 
 ```bash
 # Drop-height is REQUIRED for accurate calibration
 kinemotion dropjump-analyze video.mp4 --drop-height 0.40
 ```
 
-### Save Metrics to File
+### Counter Movement Jump (CMJ) Analysis
+
+Analyzes jump height and biomechanics:
 
 ```bash
-kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --json-output metrics.json
+# No drop height needed (floor level)
+kinemotion cmj-analyze video.mp4
+
+# With triple extension visualization
+kinemotion cmj-analyze video.mp4 --output debug.mp4
 ```
 
-### Generate Debug Video
-
-Create an annotated video showing pose tracking and contact detection:
+### Common Options (Both Jump Types)
 
 ```bash
-kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --output debug.mp4
-```
+# Save metrics to JSON
+kinemotion cmj-analyze video.mp4 --json-output results.json
 
-### Complete Analysis
+# Generate debug video
+kinemotion cmj-analyze video.mp4 --output debug.mp4
 
-With all outputs:
-
-```bash
-kinemotion dropjump-analyze video.mp4 \
-  --drop-height 0.40 \
+# Complete analysis with all outputs
+kinemotion cmj-analyze video.mp4 \
   --output debug.mp4 \
-  --json-output results.json
+  --json-output results.json \
+  --verbose
 ```
 
 ### Quality Presets
 
-Choose analysis quality (automatically adjusts all parameters):
-
 ```bash
-# Fast analysis (quick, less precise - good for batch processing)
-kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --quality fast
+# Fast (50% faster, good for batch)
+kinemotion cmj-analyze video.mp4 --quality fast
 
-# Balanced (default - best for most use cases)
-kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --quality balanced
+# Balanced (default)
+kinemotion cmj-analyze video.mp4 --quality balanced
 
-# Accurate (research-grade, slower - maximum precision)
-kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --quality accurate
-```
-
-### See Auto-Selected Parameters
-
-View what parameters were automatically selected:
-
-```bash
-kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --verbose
-```
-
-### Expert Mode (Advanced Users)
-
-Override auto-tuned parameters if needed:
-
-```bash
-# Manual parameter override (rarely needed)
-kinemotion dropjump-analyze video.mp4 \
-  --drop-height 0.40 \
-  --expert \
-  --smoothing-window 7 \
-  --velocity-threshold 0.015
+# Accurate (research-grade)
+kinemotion cmj-analyze video.mp4 --quality accurate --verbose
 ```
 
 ### Batch Processing
 
-Process multiple videos in parallel from the command line:
+Process multiple videos in parallel:
 
 ```bash
-# Process multiple videos with glob pattern
+# Drop jumps
 kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 --workers 4
 
-# Save all results to directories
-kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \
+# CMJ (no drop height needed)
+kinemotion cmj-analyze videos/*.mp4 --batch --workers 4 \
   --json-output-dir results/ \
-  --output-dir debug_videos/ \
   --csv-summary summary.csv
-
-# Multiple explicit paths (batch mode auto-enabled)
-kinemotion dropjump-analyze video1.mp4 video2.mp4 video3.mp4 --drop-height 0.40
-```
-
-**Batch options:**
-
-- `--batch`: Explicitly enable batch mode
-- `--workers <int>`: Number of parallel workers (default: 4)
-- `--output-dir <path>`: Directory for debug videos (auto-named per video)
-- `--json-output-dir <path>`: Directory for JSON metrics (auto-named per video)
-- `--csv-summary <path>`: Export aggregated results to CSV
-
-**Output example:**
-
-```text
-Batch processing 10 videos with 4 workers
-======================================================================
-
-Processing videos...
-[1/10] ✓ athlete1.mp4 (2.3s)
-[2/10] ✓ athlete2.mp4 (2.1s)
-[3/10] ✗ athlete3.mp4 (0.5s)
-    Error: No frames could be processed
-
-======================================================================
-BATCH PROCESSING SUMMARY
-======================================================================
-Total videos: 10
-Successful: 9
-Failed: 1
-
-Average ground contact time: 245.3 ms
-Average flight time: 523.7 ms
-Average jump height: 0.352 m (35.2 cm)
 ```
 
 ## Python API
 
-Use kinemotion as a library in your Python code for automated pipelines and custom analysis:
+Use kinemotion as a library for automated pipelines and custom analysis.
 
-### Single Video Processing
+### Drop Jump API
 
 ```python
 from kinemotion import process_video
@@ -223,43 +181,53 @@ print(f"Flight time: {metrics.flight_time * 1000:.1f} ms")
 ### Bulk Video Processing
 
 ```python
+# Drop jump bulk processing
 from kinemotion import VideoConfig, process_videos_bulk
 
-# Configure multiple videos
 configs = [
     VideoConfig("video1.mp4", drop_height=0.40),
     VideoConfig("video2.mp4", drop_height=0.30, quality="accurate"),
-    VideoConfig("video3.mp4", drop_height=0.50, output_video="debug3.mp4"),
 ]
 
-# Process in parallel with 4 workers
 results = process_videos_bulk(configs, max_workers=4)
 
-# Check results
-for result in results:
+# CMJ bulk processing
+from kinemotion import CMJVideoConfig, process_cmj_videos_bulk
+
+cmj_configs = [
+    CMJVideoConfig("cmj1.mp4"),
+    CMJVideoConfig("cmj2.mp4", quality="accurate"),
+]
+
+cmj_results = process_cmj_videos_bulk(cmj_configs, max_workers=4)
+
+for result in cmj_results:
     if result.success:
-        print(f"✓ {result.video_path}: {result.metrics.jump_height:.3f} m")
-    else:
-        print(f"✗ {result.video_path}: {result.error}")
+        print(f"{result.video_path}: {result.metrics.jump_height*100:.1f}cm")
 ```
 
-### Export Results to CSV
+See `examples/bulk/README.md` for comprehensive API documentation.
+
+### CMJ-Specific Features
 
 ```python
+# Triple extension angles available in metrics
+metrics = process_cmj_video("video.mp4", output_video="debug.mp4")
+
+# Debug video shows:
+# - Skeleton overlay (foot→shin→femur→trunk)
+# - Joint angles (ankle, knee, hip, trunk)
+# - Phase-coded visualization
+```
+
+### CSV Export Example
+
+```python
+# See examples/bulk/ for complete CSV export examples
+from kinemotion import process_cmj_video
 import csv
-from pathlib import Path
-from kinemotion import VideoConfig, process_videos_bulk
 
-# Process directory of videos
-video_dir = Path("athlete_videos")
-configs = [
-    VideoConfig(str(v), drop_height=0.40, quality="balanced")
-    for v in video_dir.glob("*.mp4")
-]
-
-results = process_videos_bulk(configs, max_workers=4)
-
-# Export to CSV
+# ... process videos ...
 with open("results.csv", "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow(["Video", "GCT (ms)", "Flight (ms)", "Jump (m)"])

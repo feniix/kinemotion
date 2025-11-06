@@ -1,1041 +1,234 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Repository Purpose
 
-Kinemotion: Video-based kinematic analysis tool for athletic performance. Analyzes drop-jump videos to estimate ground contact time, flight time, and jump height by tracking athlete's movement using MediaPipe pose tracking and advanced kinematics. Supports both foot-based tracking (traditional) and center of mass (CoM) tracking for improved accuracy.
+Kinemotion: Video-based kinematic analysis for athletic performance using MediaPipe pose tracking.
 
-## Project Setup
+**Supported Jump Types:**
+- **Drop Jump**: Ground contact time, flight time, reactive strength index
+- **Counter Movement Jump (CMJ)**: Jump height, flight time, countermovement depth, triple extension
 
-### Dependencies
+## Quick Setup
 
-Managed with `uv` and `asdf`:
+```bash
+asdf install        # Install Python 3.12.7 + uv
+uv sync            # Install dependencies
+uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40
+uv run kinemotion cmj-analyze video.mp4
+```
 
-- Python version: 3.12.7 (specified in `.tool-versions`)
-  - **Important**: MediaPipe requires Python 3.12 or earlier (no 3.13 support yet)
-- Install dependencies: `uv sync`
-- Run CLI: `kinemotion dropjump-analyze <video.mp4>`
-
-**Production dependencies:**
-
-- click: CLI framework
-- opencv-python: Video processing
-- mediapipe: Pose detection and tracking
-- numpy: Numerical operations
-- scipy: Signal processing (Savitzky-Golay filter)
-
-**Development dependencies:**
-
-- pytest: Testing framework
-- black: Code formatting
-- ruff: Fast Python linter
-- pyright: Static type checking
-
-### Development Commands
-
-- **Run tool**: `uv run kinemotion dropjump-analyze <video_path>`
-- **Install/sync deps**: `uv sync`
-- **Run tests**: `uv run pytest`
-- **Run specific test**: `uv run pytest tests/test_aspect_ratio.py -v`
-- **Format code**: `uv run black src/`
-- **Lint code**: `uv run ruff check`
-- **Auto-fix lint issues**: `uv run ruff check --fix`
-- **Type check**: `uv run pyright`
-- **Run all checks**: `uv run ruff check && uv run pyright && uv run pytest`
+**Development:**
+```bash
+uv run pytest                           # Run all 70 tests
+uv run ruff check --fix && uv run pyright  # Lint + type check
+```
 
 ## Architecture
 
 ### Module Structure
 
-```text
+```
 src/kinemotion/
-├── __init__.py                 # Public API exports
-├── api.py                      # Python library API (process_video, process_videos_bulk)
-├── py.typed                    # PEP 561 type marker
-├── cli.py                      # Main CLI entry point (registers subcommands)
-├── core/                       # Shared functionality across all jump types
-│   ├── __init__.py
-│   ├── pose.py                 # MediaPipe Pose integration + CoM
-│   ├── smoothing.py            # Savitzky-Golay landmark smoothing
-│   ├── filtering.py            # Outlier rejection + bilateral filtering
-│   ├── auto_tuning.py          # Intelligent parameter auto-tuning
-│   └── video_io.py             # Video processing (VideoProcessor class)
-└── dropjump/                   # Drop jump specific analysis
-    ├── __init__.py
-    ├── cli.py                  # Drop jump CLI command (dropjump-analyze) + batch mode
-    ├── analysis.py             # Ground contact state detection
-    ├── kinematics.py           # Drop jump metrics calculations
-    └── debug_overlay.py        # Debug video overlay rendering
+├── cli.py                  # Main CLI (registers subcommands)
+├── api.py                  # Python API (process_video, process_cmj_video, bulk)
+├── core/                   # Shared: pose, smoothing, filtering, auto_tuning, video_io
+├── dropjump/               # Drop jump: cli, analysis, kinematics, debug_overlay
+└── cmj/                    # CMJ: cli, analysis, kinematics, joint_angles, debug_overlay
 
-tests/
-├── test_adaptive_threshold.py  # Adaptive threshold tests (10 tests)
-├── test_api.py                 # API module tests (14 tests)
-├── test_aspect_ratio.py        # Aspect ratio preservation tests (4 tests)
-├── test_com_estimation.py      # Center of mass estimation tests (6 tests)
-├── test_contact_detection.py   # Contact detection unit tests (3 tests)
-├── test_filtering.py           # Advanced filtering tests (17 tests)
-├── test_kinematics.py          # Metrics calculation tests (2 tests)
-└── test_polyorder.py           # Polynomial order tests (5 tests)
-                                # Total: 61 tests
-
-examples/
-├── bulk/                       # Bulk processing examples
-│   ├── README.md               # Comprehensive API documentation
-│   ├── bulk_processing.py      # Advanced bulk processing examples
-│   └── simple_example.py       # Quick start examples
-└── programmatic_usage.py       # Low-level API example
-
-docs/
-├── CAMERA_SETUP.md             # Camera positioning and recording guide
-├── CAMERA_SETUP_ES.md          # Guía de configuración de cámara (español)
-├── PARAMETERS.md               # Comprehensive guide to all CLI parameters
-└── IMPLEMENTATION_PLAN.md      # Implementation plan and fix guide
+tests/                      # 70 tests total (61 drop jump, 9 CMJ)
+docs/                       # CMJ_GUIDE, TRIPLE_EXTENSION, REAL_TIME_ANALYSIS, etc.
 ```
 
-**Design Rationale:**
+**Design**: Each jump type is a sibling module with its own CLI command, metrics, and visualization.
 
-- `core/` contains shared code reusable across different jump types (CMJ, squat jumps, etc.)
-- `dropjump/` contains drop jump specific logic, metrics, and CLI command
-- Each jump type module contains its own CLI command definition
-- Main `cli.py` is just an entry point that registers subcommands from each module
-- Future jump types (CMJ, squat) will be sibling modules to `dropjump/` with their own cli.py
-- Single CLI group with subcommands for different analysis types
+### Key Differences: Drop Jump vs CMJ
 
-**CLI Architecture:**
-
-- `src/kinemotion/cli.py` (20 lines): Main CLI group + command registration
-- `src/kinemotion/dropjump/cli.py` (724 lines): Complete dropjump-analyze command with batch mode
-- `src/kinemotion/api.py` (428 lines): Python library API for programmatic usage
-- Commands registered using Click's `cli.add_command()` pattern
-- Modular design allows easy addition of new jump type analysis commands
-
-**API Architecture:**
-
-- `src/kinemotion/api.py`: Public API for library usage
-  - `process_video()`: Process single videos programmatically
-  - `process_videos_bulk()`: Parallel batch processing with ProcessPoolExecutor
-  - `VideoConfig`: Configuration dataclass for video processing
-  - `VideoResult`: Result dataclass with success/error handling
-- Fully typed with PEP 561 compliance (py.typed marker)
-- Used by both CLI batch mode and external library consumers
-
-### Analysis Pipeline
-
-1. **Pose Tracking** (core/pose.py): MediaPipe extracts body landmarks from each frame
-   - Foot landmarks: ankles, heels, foot indices (for traditional foot-based tracking)
-   - Body landmarks: nose, shoulders, hips, knees (for CoM-based tracking)
-   - Total 13 landmarks tracked per frame
-2. **Center of Mass Estimation** (core/pose.py): Optional biomechanical CoM calculation
-   - Uses Dempster's body segment parameters for accurate weight distribution:
-     - Head: 8%, Trunk: 50%, Thighs: 20%, Legs: 10%, Feet: 3%
-   - Weighted average of segment positions for physics-based tracking
-   - More accurate than foot tracking as it tracks true body movement
-   - Reduces error from foot dorsiflexion/plantarflexion during flight
-3. **Smoothing** (core/smoothing.py): Savitzky-Golay filter reduces jitter while preserving dynamics
-4. **Contact Detection** (dropjump/analysis.py): Analyzes vertical position velocity to classify ground contact vs. flight
-   - Works with either foot positions or CoM positions
-5. **Phase Identification**: Finds continuous ground contact and flight periods
-   - Automatically detects drop jumps vs regular jumps
-   - For drop jumps: identifies standing on box → drop → ground contact → jump
-6. **Sub-Frame Interpolation** (dropjump/analysis.py): Estimates exact transition times
-   - Computes velocity from Savitzky-Golay derivative (core/smoothing.py)
-   - Linear interpolation of smooth velocity to find threshold crossings
-   - Returns fractional frame indices (e.g., 48.78 instead of 49)
-   - Reduces timing error from ±33ms to ±10ms at 30fps (60-70% improvement)
-   - Eliminates false threshold crossings from velocity noise
-7. **Trajectory Curvature Analysis** (dropjump/analysis.py): Refines transitions
-   - Computes acceleration (second derivative) using Savitzky-Golay filter
-   - Detects landing events by acceleration spikes (impact deceleration)
-   - Identifies takeoff events by acceleration changes
-   - Blends curvature-based refinement with velocity-based estimates (70/30)
-   - Provides independent validation based on physical motion patterns
-8. **Metrics Calculation** (dropjump/kinematics.py):
-   - Ground contact time from phase duration (using fractional frames)
-   - Flight time from phase duration (using fractional frames)
-   - Jump height from position tracking with optional calibration
-   - Fallback: kinematic estimate from flight time: h = (g × t²) / 8
-9. **Output**: JSON metrics + optional debug video overlay with visualizations
-
-### Camera Setup Requirements
-
-**IMPORTANT**: Proper camera positioning is critical for accurate drop jump analysis.
-
-**Required Setup (Side View):**
-
-- **Camera position**: Side view, perpendicular to sagittal plane (90° angle)
-- **Distance**: 3-5 meters from athlete (optimal: ~4m)
-- **Height**: Camera lens at athlete's hip height (0.8-1.2m)
-- **Framing**: Full body visible (head to feet) throughout entire jump sequence
-- **Orientation**: Landscape (horizontal) for wider field of view
-- **Equipment**: Stable tripod (no hand-held), 30+ fps, 1080p+ resolution
-
-**Why Side View:**
-
-- Drop jumps are primarily vertical movements in the sagittal plane
-- Direct measurement of vertical displacement (jump height)
-- Accurate velocity calculation for contact detection
-- Clear visualization of triple extension (ankle-knee-hip)
-- Validated in biomechanics research (2D sagittal correlates r=0.51-0.93 with 3D)
-
-**Common Mistakes to Avoid:**
-
-- ❌ Front/back view instead of side view (cannot measure vertical motion accurately)
-- ❌ Camera too close (< 3m) or at wrong angle (not perpendicular)
-- ❌ Poor framing (athlete moves out of frame during jump)
-- ❌ Hand-held camera (movement reduces tracking accuracy)
-
-**See [docs/CAMERA_SETUP.md](docs/CAMERA_SETUP.md) for comprehensive camera setup guide** ([Español](docs/CAMERA_SETUP_ES.md)) **including:**
-
-- Detailed positioning instructions with diagrams
-- Lighting and background recommendations
-- Equipment recommendations (budget to professional)
-- Troubleshooting common issues
-- Video quality impact on analysis accuracy
-
-### Key Design Decisions
-
-- **Normalized coordinates**: All positions use MediaPipe's 0-1 normalized coordinates (independent of video resolution)
-- **Velocity-based contact detection**: More robust than absolute position thresholds
-- **Configurable thresholds**: CLI flags allow tuning for different video qualities and athletes
-- **Calibrated jump height**: Position-based measurement with drop height calibration for accuracy
-  - Optional `--drop-height` parameter uses known drop box height to calibrate measurements
-  - **⚠️ Accuracy claim unvalidated** - theoretical benefit estimated, not empirically tested
-  - Fallback to empirically-corrected kinematic formula when no calibration provided
-- **Aspect ratio preservation**: Output video ALWAYS matches source video dimensions
-  - Handles SAR (Sample Aspect Ratio) metadata from mobile videos
-  - No hardcoded aspect ratios
-
-## Code Quality & Type Safety
-
-The codebase enforces strict code quality standards using multiple tools:
-
-### Type Checking with pyright
-
-- **Strict mode enabled**: All functions require type annotations
-- Configuration in `pyproject.toml` under `[tool.pyright]`
-- Key settings:
-  - `typeCheckingMode: "strict"`: Enables strict type checking (equivalent to mypy's disallow_untyped_defs and related flags)
-  - `pythonVersion: "3.10"`: Target Python version
-  - `include: ["src"]`: Only check source files, exclude tests and examples
-  - `reportMissingImports: "none"`: Ignore missing stubs for cv2, mediapipe, scipy
-  - Additional warnings for unused imports, variables, and functions
-- Run with: `uv run pyright`
-
-### Linting with ruff
-
-- **Comprehensive rule set**: pycodestyle, pyflakes, isort, pep8-naming, pyupgrade, flake8-bugbear, flake8-comprehensions
-- Configuration in `pyproject.toml` under `[tool.ruff]`
-- Key settings:
-  - Line length: 100 characters
-  - Target version: Python 3.11+
-  - Auto-fixable issues: Use `uv run ruff check --fix`
-- Run with: `uv run ruff check`
-
-### Code Formatting with black
-
-- Consistent code style across the project
-- Run with: `uv run black src/`
-
-### When Contributing Code
-
-Always run before committing:
-
-```bash
-# Format code
-uv run black src/
-
-# Check and fix linting issues
-uv run ruff check --fix
-
-# Type check
-uv run pyright
-
-# Run tests
-uv run pytest
-```
-
-Or run all checks at once:
-
-```bash
-uv run ruff check && uv run pyright && uv run pytest
-```
-
-### Commit Message Format
-
-**IMPORTANT**: All commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
-
-The commit message format is enforced by the `conventional-pre-commit` hook and is required for semantic versioning with `python-semantic-release`.
-
-**Format:**
-```
-<type>(<optional scope>): <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-**Allowed types** (from `pyproject.toml`):
-- `feat`: A new feature (triggers minor version bump)
-- `fix`: A bug fix (triggers patch version bump)
-- `perf`: Performance improvement (triggers patch version bump)
-- `docs`: Documentation only changes
-- `style`: Code style changes (formatting, whitespace)
-- `refactor`: Code refactoring (no functional changes)
-- `test`: Adding or updating tests
-- `chore`: Maintenance tasks, dependency updates
-- `build`: Build system or dependency changes
-- `ci`: CI/CD pipeline changes
-
-**Examples:**
-```bash
-feat: Add batch processing mode to CLI
-fix: Correct aspect ratio handling for portrait videos
-docs: Update README with auto-tuning examples
-refactor: Extract video rotation logic into separate method
-perf: Optimize pose tracking with caching
-test: Add tests for CoM estimation edge cases
-chore(release): 0.10.0 [skip ci]
-```
-
-**Breaking changes:**
-Use `!` after type/scope or add `BREAKING CHANGE:` in footer:
-```bash
-feat!: Change API signature for process_video
-# or
-feat: Change API signature for process_video
-
-BREAKING CHANGE: drop_height parameter is now required
-```
+| Feature | Drop Jump | CMJ |
+|---------|-----------|-----|
+| Starting | Elevated box | Floor level |
+| Algorithm | Forward search | Backward search from peak |
+| Velocity | Absolute (magnitude) | Signed (direction matters) |
+| Parameter | `--drop-height` required | No calibration needed |
+| Key Metric | Ground contact time | Jump height from flight time |
 
 ## Critical Implementation Details
 
-### Aspect Ratio Preservation & SAR Handling (core/video_io.py)
+### 1. Aspect Ratio Preservation (core/video_io.py)
 
-**IMPORTANT**: The tool preserves the exact aspect ratio of the source video, including SAR (Sample Aspect Ratio) metadata. No dimensions are hardcoded.
+**Always:**
+- Read first actual frame for dimensions: `frame.shape[:2]`
+- Handle SAR (Sample Aspect Ratio) metadata with ffprobe
+- Validate dimensions in `write_frame()` to prevent corruption
 
-#### VideoProcessor (`core/video_io.py:15-110`)
+**Never:**
+- Use `cv2.CAP_PROP_FRAME_WIDTH/HEIGHT` (wrong for rotated videos)
 
-- Reads the **first actual frame** to get true encoded dimensions (not OpenCV properties)
-- Critical for mobile videos with rotation metadata
-- `CAP_PROP_FRAME_WIDTH` and `CAP_PROP_FRAME_HEIGHT` can return incorrect dimensions
-- Always use `frame.shape[:2]` to get actual (height, width)
-- **SAR Metadata Extraction**: Uses `ffprobe` to extract Sample Aspect Ratio metadata
-  - Many mobile videos use non-square pixels (e.g., 1080x1080 encoded, but 616x1080 display)
-  - Calculates display dimensions: `display_width = width × SAR_width / SAR_height`
-  - Falls back to encoded dimensions if ffprobe unavailable or SAR = 1:1
+### 2. Video Rotation (core/video_io.py)
 
+- Extract rotation metadata from ffprobe (`side_data_list`)
+- Apply rotation in `read_frame()` using `cv2.rotate()`
+- Update width/height after 90°/-90° rotations
+
+### 3. JSON Serialization
+
+**Always convert NumPy types:**
 ```python
-# Correct approach (current implementation)
-ret, first_frame = self.cap.read()
-if ret:
-    self.height, self.width = first_frame.shape[:2]  # From actual frame data
+"frame": int(self.frame) if self.frame is not None else None
 ```
 
-**Never do this:**
-
+**Never:**
 ```python
-# Wrong - may return incorrect dimensions with rotated videos
-self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+"frame": self.frame  # WRONG - int64 not JSON serializable
 ```
 
-#### DebugOverlayRenderer (`dropjump/debug_overlay.py`)
+### 4. CMJ Signed Velocity (cmj/analysis.py)
 
-- Creates output video with **display dimensions** (respecting SAR)
-- Resizes frames from encoded dimensions to display dimensions if needed (INTER_LANCZOS4)
-- Output video uses square pixels (SAR 1:1) at correct display size
-- H.264 codec (avc1) with fallback to mp4v
-- Runtime validation in `write_frame()` ensures every frame matches expected encoded dimensions
-- Raises `ValueError` if aspect ratio would be corrupted
-
-### Video Rotation Handling (core/video_io.py)
-
-**IMPORTANT**: The tool automatically handles video rotation metadata from mobile devices. OpenCV ignores rotation metadata, so we extract and apply it manually.
-
-#### Rotation Metadata Extraction (`core/video_io.py:65-126`)
-
-- **Display Matrix Metadata**: iPhones and other mobile devices store rotation in `side_data_list`
-  - Common rotation values: -90° (portrait right), 90° (portrait left), 180° (upside down)
-  - OpenCV's `VideoCapture.read()` ignores this metadata (known OpenCV issue #26876)
-  - Extracted using ffprobe from the same call that extracts SAR metadata
-- **Automatic Frame Rotation**: Applied in `read_frame()` method using `cv2.rotate()`
-  - -90° / 270° → `cv2.ROTATE_90_CLOCKWISE`
-  - 90° / -270° → `cv2.ROTATE_90_COUNTERCLOCKWISE`
-  - ±180° → `cv2.ROTATE_180`
-- **Dimension Updates**: Width and height are swapped after 90°/-90° rotations
+**Critical difference from drop jump:**
 
 ```python
-# Rotation extraction from side_data_list
-side_data_list = stream.get("side_data_list", [])
-for side_data in side_data_list:
-    if side_data.get("side_data_type") == "Display Matrix":
-        self.rotation = int(side_data.get("rotation", 0))
+# Drop jump: absolute velocity
+velocities = compute_velocity_from_derivative(positions)  # Returns abs()
 
-# Automatic rotation in read_frame()
-if self.rotation == -90 or self.rotation == 270:
-    frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+# CMJ: MUST use signed velocity
+velocities = compute_signed_velocity(positions)  # Keeps sign
 ```
 
-**Why this matters:**
+**Why**: CMJ needs to distinguish upward (negative) vs downward (positive) motion for phase detection.
 
-- Without rotation handling, portrait videos are processed sideways
-- MediaPipe would detect poses on rotated frames (person lying horizontally)
-- Output videos would have incorrect orientation
-- Jump analysis would fail due to incorrect gravity axis
-
-**Example:**
-
-- iPhone video encoded as 1920x1080 (landscape) with -90° rotation metadata
-- Should be displayed as 1080x1920 (portrait)
-- Tool automatically rotates frames and updates dimensions
-- Output video correctly shows 1080x1920 portrait orientation
-
-### Sub-Frame Interpolation (contact_detection.py:113-227)
-
-**IMPORTANT**: The tool uses sub-frame interpolation with derivative-based velocity to achieve timing precision beyond frame boundaries.
-
-#### Derivative-Based Velocity Calculation (smoothing.py:126-172)
-
-Instead of simple frame-to-frame differences, velocity is computed as the derivative of the smoothed position trajectory using Savitzky-Golay filter:
-
-**Advantages:**
-
-- **Smoother velocity curves**: Eliminates noise from frame-to-frame jitter
-- **More accurate threshold crossings**: Clean transitions without false positives
-- **Better interpolation**: Smoother velocity gradient for sub-frame precision
-- **Consistent with smoothing**: Uses same polynomial fit as position smoothing
-
-**Implementation:**
-
-```python
-# OLD: Simple differences (noisy)
-velocities = np.abs(np.diff(foot_positions, prepend=foot_positions[0]))
-
-# NEW: Derivative from smoothed trajectory (smooth)
-velocities = savgol_filter(positions, window_length=5, polyorder=2, deriv=1, delta=1.0)
-```
-
-**Key Function:**
-
-- `compute_velocity_from_derivative()`: Computes first derivative using Savitzky-Golay filter
-
-#### Sub-Frame Interpolation Algorithm
-
-At 30fps, each frame represents 33.3ms. Contact events (landing, takeoff) rarely occur exactly at frame boundaries. Sub-frame interpolation estimates the exact moment between frames when velocity crosses the threshold.
+### 5. CMJ Backward Search (cmj/analysis.py)
 
 **Algorithm:**
+1. Find peak height first (global argmin)
+2. Work backward: takeoff → lowest point
+3. Work forward: landing after peak
 
-1. Calculate smooth velocity using derivative: `v = derivative(smooth_position)`
-2. Find frames where velocity crosses threshold (e.g., from 0.025 to 0.015, threshold 0.020)
-3. Use linear interpolation to find exact crossing point:
+**Why**: More robust than forward search, avoids false detections from video start.
 
-   ```python
-   # If v[10] = 0.025 and v[11] = 0.015, threshold = 0.020
-   t = (0.020 - 0.025) / (0.015 - 0.025) = 0.5
-   # Crossing at frame 10.5
-   ```
+### 6. Frame Dimensions
 
-**Key Functions:**
+OpenCV vs NumPy ordering:
+- NumPy shape: `(height, width, channels)`
+- OpenCV VideoWriter: `(width, height)` tuple
 
-- `interpolate_threshold_crossing()`: Linear interpolation of velocity crossing
-- `find_interpolated_phase_transitions()`: Returns fractional frame indices for all phases
+## Common Tasks
 
-**Accuracy Improvement:**
+### Add New Jump Type
 
-```text
-30fps without interpolation: ±33ms (1 frame on each boundary)
-30fps with interpolation:    ±10ms (sub-frame precision)
-60fps without interpolation: ±17ms
-60fps with interpolation:    ±5ms
-```
+1. Create `src/kinemotion/newjump/` with cli.py, analysis.py, kinematics.py
+2. Register in `src/kinemotion/cli.py`: `cli.add_command(newjump_analyze)`
+3. Add API functions in `api.py`
+4. Export in `__init__.py`
+5. Add tests
 
-**Velocity Comparison:**
+### Add Metrics
 
-```python
-# Frame-to-frame differences: noisy, discontinuous jumps
-v_simple = [0.01, 0.03, 0.02, 0.04, 0.02, 0.01]  # Jittery
+1. Update dataclass (e.g., `CMJMetrics`)
+2. Calculate in `calculate_*_metrics()`
+3. Add to `to_dict()` (convert NumPy types!)
+4. Add tests
 
-# Derivative-based: smooth, continuous curve
-v_deriv = [0.015, 0.022, 0.025, 0.024, 0.018, 0.012]  # Smooth
-```
+### Modify Detection
 
-**Example:**
+**Drop Jump**: Edit `detect_ground_contact()` in dropjump/analysis.py
+**CMJ**: Edit `detect_cmj_phases()` in cmj/analysis.py (backward search)
 
-```python
-# Integer frames: contact from frame 49 to 53 (5 frames = 168ms at 30fps)
-# With derivative velocity: contact from 49.0 to 53.0 (4 frames = 135ms)
-# Result: Cleaner threshold crossings, less sub-frame offset
-```
+## Testing & Quality
 
-### Trajectory Curvature Analysis (contact_detection.py:242-394)
-
-**IMPORTANT**: The tool uses acceleration patterns (trajectory curvature) to refine event timing.
-
-#### Acceleration-Based Event Detection (smoothing.py:175-223)
-
-Acceleration (second derivative) reveals characteristic patterns at contact events:
-
-**Physical Patterns:**
-
-- **Landing impact**: Large acceleration spike as feet decelerate on impact
-- **Takeoff**: Acceleration change as body transitions from static to upward motion
-- **In flight**: Constant acceleration (gravity ≈ -9.81 m/s²)
-- **On ground**: Near-zero acceleration (stationary position)
-
-**Implementation:**
-
-```python
-# Compute acceleration using Savitzky-Golay second derivative
-acceleration = savgol_filter(positions, window=5, polyorder=2, deriv=2, delta=1.0)
-
-# Landing: Find maximum absolute acceleration (impact deceleration)
-landing_frame = np.argmax(np.abs(acceleration[search_window]))
-
-# Takeoff: Find maximum acceleration change (transition from static)
-accel_change = np.abs(np.diff(acceleration))
-takeoff_frame = np.argmax(accel_change[search_window])
-```
-
-**Key Functions:**
-
-- `compute_acceleration_from_derivative()`: Computes second derivative using Savitzky-Golay
-- `refine_transition_with_curvature()`: Searches for acceleration patterns near transitions
-- `find_interpolated_phase_transitions_with_curvature()`: Combines velocity + curvature
-
-#### Refinement Strategy
-
-Curvature analysis refines velocity-based estimates through blending:
-
-1. **Velocity estimate**: Initial sub-frame transition from velocity threshold crossing
-2. **Curvature search**: Look for acceleration patterns within ±3 frames
-3. **Blending**: 70% curvature-based + 30% velocity-based
-
-**Why Blending?**
-
-- Velocity is reliable for coarse timing
-- Curvature provides fine detail but can be noisy at boundaries
-- Blending prevents large deviations while incorporating physical insights
-
-**Algorithm:**
-
-```python
-# 1. Get velocity-based estimate
-velocity_estimate = 49.0  # from interpolation
-
-# 2. Search for acceleration peak near estimate
-search_window = acceleration[46:52]  # ±3 frames
-peak_idx = np.argmax(np.abs(search_window))
-curvature_estimate = 46 + peak_idx  # = 47.2
-
-# 3. Blend estimates
-blend = 0.7 * 47.2 + 0.3 * 49.0  # = 47.74
-```
-
-**Accuracy Improvement:**
-
-```python
-# Example: Landing detection
-# Velocity only: frame 49.0 (when velocity drops below threshold)
-# With curvature: frame 46.9 (when acceleration spike occurs at impact)
-# Result: 2.1 frames earlier (70ms at 30fps) - more physically accurate
-```
-
-**Optional Feature:**
-
-- Enabled by default (`--use-curvature`, default: True)
-- Can be disabled with `--no-curvature` flag for pure velocity-based detection
-- Negligible performance impact (reuses smoothed trajectory)
-
-### JSON Serialization (kinematics.py:29-100)
-
-**IMPORTANT**: NumPy integer types (int64, int32) are not JSON serializable.
-
-Always convert to Python `int()` in `to_dict()` method:
-
-```python
-"contact_start_frame": (
-    int(self.contact_start_frame) if self.contact_start_frame is not None else None
-)
-```
-
-**Never do this:**
-
-```python
-# Wrong - will fail with "Object of type int64 is not JSON serializable"
-"contact_start_frame": self.contact_start_frame
-```
-
-### Video Codec Handling (dropjump/debug_overlay.py)
-
-- Primary codec: H.264 (avc1) - better quality, smaller file size
-- Fallback codec: MPEG-4 (mp4v) - broader compatibility
-- Raises error if both fail to open
-
-### Frame Dimensions (Throughout)
-
-OpenCV and NumPy use different dimension ordering:
-
-- **NumPy array shape**: `(height, width, channels)`
-- **OpenCV VideoWriter size**: `(width, height)` tuple
-
-Example:
-
-```python
-frame.shape           # (1080, 1920, 3)  - height first
-cv2.VideoWriter(..., (1920, 1080))      # width first
-```
-
-Always be careful with dimension ordering to avoid squashed/stretched videos.
-
-## Common Development Tasks
-
-### Adding New Metrics
-
-1. Update `DropJumpMetrics` class in `dropjump/kinematics.py:10-19`
-2. Add calculation logic in `calculate_drop_jump_metrics()` function
-3. Update `to_dict()` method for JSON serialization (remember to convert NumPy types to Python types)
-4. Optionally add visualization in `DebugOverlayRenderer.render_frame()` in `dropjump/debug_overlay.py`
-5. Add tests in `tests/test_kinematics.py`
-
-### Modifying Contact Detection Logic
-
-Edit `detect_ground_contact()` in `dropjump/analysis.py:14`. Key parameters:
-
-- `velocity_threshold`: Tune for different surface/athlete combinations (default: 0.02)
-- `min_contact_frames`: Adjust for frame rate and contact duration expectations (default: 3)
-- `visibility_threshold`: Minimum landmark visibility score (default: 0.5)
-
-### Adjusting Smoothing
-
-Modify `smooth_landmarks()` in `core/smoothing.py:9`:
-
-- `window_length`: Controls smoothing strength (must be odd, default: 5)
-- `polyorder`: Polynomial order for Savitzky-Golay filter (default: 2)
-
-### Intelligent Auto-Tuning System
-
-**NEW**: The tool now features intelligent auto-tuning that eliminates the need for manual parameter adjustment!
-
-#### How It Works (core/auto_tuning.py)
-
-The auto-tuning system analyzes your video and automatically selects optimal parameters:
-
-**Phase 1: Video Analysis**
-- Extracts frame rate from video metadata
-- Analyzes landmark visibility quality (average MediaPipe confidence scores)
-- Measures position variance (tracking stability)
-- Detects drop jump pattern (stationary period on platform)
-
-**Phase 2: Automatic Parameter Selection**
-
-**FPS-based scaling** (maintains consistent temporal resolution):
-```python
-velocity_threshold = 0.02 × (30 / fps)
-# 30fps → 0.020, 60fps → 0.010, 120fps → 0.005
-
-min_contact_frames = round(3 × (fps / 30))
-# 30fps → 3 frames (100ms), 60fps → 6 frames (100ms)
-
-smoothing_window = 5 if fps ≤ 30 else 3
-# Higher fps → less smoothing (better temporal resolution)
-```
-
-**Quality-based adjustments** (adapts to tracking quality):
-- High visibility (>0.7): Minimal smoothing, no bilateral filter
-- Medium visibility (0.4-0.7): Moderate smoothing, enable bilateral filter
-- Low visibility (<0.4): Aggressive smoothing, bilateral filter, lower confidence thresholds
-
-**Always enabled** (proven beneficial, no downsides):
-- Outlier rejection (removes tracking glitches)
-- Trajectory curvature analysis (sub-frame precision)
-- Drop start auto-detection (skips stationary period)
-- Polyorder 2 (optimal for parabolic jump motion)
-
-#### Quality Presets
-
-**`--quality fast`** (50% faster, good for batch processing)
-- Velocity threshold ×1.5 (less sensitive)
-- Reduced smoothing (-2 frames)
-- Skips bilateral filter
-- Lower detection confidence (0.3)
-
-**`--quality balanced`** (default, best for most cases)
-- FPS-adjusted parameters
-- Adaptive smoothing based on quality
-- All accuracy features enabled
-
-**`--quality accurate`** (research-grade, slower)
-- Velocity threshold ×0.5 (more sensitive)
-- Increased smoothing (+2 frames)
-- Always enables bilateral filter
-- Higher detection confidence (0.6)
-
-#### User-Facing Parameters
-
-**Reduced from 13 → 2 required + 2 optional:**
-
-**Required:**
-- `--drop-height`: Box height in meters (e.g., 0.40 for 40cm) - REQUIRED for accurate calibration
-
-**Optional:**
-- `--output`: Debug video path
-- `--json-output`: Metrics JSON path
-- `--quality`: fast/balanced/accurate (default: balanced)
-- `--verbose`: Show auto-selected parameters
-
-**Expert overrides** (rarely needed):
-- `--drop-start-frame`: Manual drop start frame
-- `--smoothing-window`: Override auto-tuned smoothing
-- `--velocity-threshold`: Override auto-tuned threshold
-- `--min-contact-frames`: Override auto-tuned minimum
-- `--visibility-threshold`: Override visibility threshold
-- `--detection-confidence`: Override MediaPipe detection
-- `--tracking-confidence`: Override MediaPipe tracking
-
-#### Migration from Manual Parameters
-
-**Old way** (complex, error-prone):
-```bash
-# User had to know these magic numbers for 60fps video
-uv run kinemotion dropjump-analyze video.mp4 \
-  --smoothing-window 3 \
-  --velocity-threshold 0.01 \
-  --min-contact-frames 6 \
-  --outlier-rejection \
-  --use-curvature
-```
-
-**New way** (simple, automatic):
-```bash
-# Just works - auto-detects 60fps and adjusts all parameters
-uv run kinemotion dropjump-analyze video.mp4
-```
-
-#### Viewing Auto-Selected Parameters
-
-Use `--verbose` to see what parameters were automatically selected:
+### Before Commit
 
 ```bash
-uv run kinemotion dropjump-analyze video.mp4 --verbose
-
-# Output shows:
-# ============================================================
-# AUTO-TUNED PARAMETERS
-# ============================================================
-# Video FPS: 59.98
-# Tracking quality: high (avg visibility: 0.79)
-# Quality preset: balanced
-#
-# Selected parameters:
-#   smoothing_window: 3
-#   velocity_threshold: 0.0100
-#   min_contact_frames: 6
-#   ...
-# ============================================================
+uv run ruff check --fix   # Auto-fix linting
+uv run pyright            # Type check (strict)
+uv run pytest             # All 70 tests
 ```
 
-**Note**: See `docs/PARAMETERS.md` for detailed explanation of what each parameter does internally (useful for expert mode overrides).
+### Standards
 
-### Working with Different Video Formats
+- Pyright strict mode (all functions typed)
+- Ruff (100 char lines)
+- Conventional Commits (see below)
 
-The tool handles various video formats and aspect ratios:
+## Quick Reference
 
-- 16:9 landscape (1920x1080)
-- 4:3 standard (640x480)
-- 9:16 portrait (1080x1920)
-- Mobile videos with rotation metadata
-
-Tests in `tests/test_aspect_ratio.py` verify this behavior.
-
-## Testing
-
-### Running Tests
+### CLI
 
 ```bash
-# All tests (9 tests total)
-uv run pytest
+# Drop jump (requires --drop-height)
+kinemotion dropjump-analyze video.mp4 --drop-height 0.40
 
-# Specific test modules
-uv run pytest tests/test_aspect_ratio.py -v
-uv run pytest tests/test_contact_detection.py -v
-uv run pytest tests/test_kinematics.py -v
+# CMJ (no calibration needed)
+kinemotion cmj-analyze video.mp4 --output debug.mp4
 
-# With verbose output
-uv run pytest -v
+# Batch
+kinemotion cmj-analyze videos/*.mp4 --batch --workers 4
 ```
 
-### Test Coverage
-
-- **Aspect ratio preservation**: 4 tests covering 16:9, 4:3, 9:16, and validation
-- **Contact detection**: 3 tests for ground contact detection and phase identification
-- **Center of mass estimation**: 6 tests for CoM calculation, biomechanical weights, and fallback behavior
-- **Adaptive thresholding**: 10 tests for auto-calibration, noise adaptation, bounds checking, and edge cases
-- **Kinematics**: 2 tests for metrics calculation and JSON serialization
-
-### Code Quality
-
-All code passes:
-
-- ✅ **Type checking**: Full mypy strict mode compliance
-- ✅ **Linting**: ruff checks with comprehensive rule sets
-- ✅ **Tests**: 25/25 tests passing
-- ✅ **Formatting**: Black code style
-
-## Troubleshooting
-
-### MediaPipe Version Compatibility
-
-- MediaPipe 0.10.x requires Python ≤ 3.12
-- If you see "no matching distribution" errors, check Python version in `.tool-versions`
-
-### Video Dimension Issues
-
-If output video has wrong aspect ratio:
-
-1. Check `VideoProcessor` is reading first frame correctly
-2. Verify `DebugOverlayRenderer` receives correct width/height from `VideoProcessor`
-3. Check that `write_frame()` validation is enabled (should raise error if dimensions mismatch)
-4. Run `tests/test_aspect_ratio.py` to verify the mechanism
-
-### JSON Serialization Errors
-
-If you see "Object of type X is not JSON serializable":
-
-1. Check `kinematics.py` `to_dict()` method
-2. Ensure all NumPy types are converted to Python types with `int()` or `float()`
-3. Run `tests/test_kinematics.py::test_metrics_to_dict` to verify
-
-### Video Codec Issues
-
-If output video won't play:
-
-1. Try different output format: `.avi` instead of `.mp4`
-2. Check OpenCV codec support: `cv2.getBuildInformation()`
-3. DebugOverlayRenderer will fallback from H.264 to MPEG-4 automatically
-
-### Type Checking Issues
-
-If mypy reports errors:
-
-1. Ensure all function signatures have complete type annotations (parameters and return types)
-2. For numpy types, use explicit casts: `int()`, `float()` when converting to Python types
-3. For third-party libraries without stubs (cv2, mediapipe, scipy), use `# type: ignore` comments sparingly
-4. Check `pyproject.toml` under `[tool.mypy]` for configuration
-5. Run `uv run mypy src/kinemotion` to verify fixes
-
-## CLI Usage Examples
-
-**NEW: The tool now features intelligent auto-tuning!** Parameters are automatically adjusted based on video frame rate, tracking quality, and analysis preset. No manual parameter tuning required.
-
-### Simple Usage (Recommended)
-
-```bash
-# Show main command help
-uv run kinemotion --help
-
-# Show subcommand help
-uv run kinemotion dropjump-analyze --help
-
-# Basic analysis (JSON to stdout) - JUST WORKS!
-# Drop-height is REQUIRED - specify your box height in meters
-# Auto-detects fps, tracking quality, and selects optimal parameters
-uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40
-
-# Save metrics to file
-uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --json-output results.json
-
-# Generate debug video
-uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --output debug.mp4
-
-# Complete analysis with all outputs
-uv run kinemotion dropjump-analyze video.mp4 \
-  --drop-height 0.40 \
-  --output debug.mp4 \
-  --json-output metrics.json
-
-# See what parameters were auto-selected
-uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --verbose
-
-# Different box heights (examples)
-uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.30  # 30cm box
-uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.60  # 60cm box
-```
-
-### Quality Presets
-
-```bash
-# Fast analysis (quick, less precise)
-# - 50% faster processing
-# - Good for batch processing or initial assessment
-uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --quality fast
-
-# Balanced analysis (default)
-# - Good accuracy/speed tradeoff
-# - Best for most use cases
-uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --quality balanced
-
-# Accurate analysis (research-grade, slower)
-# - Maximum accuracy
-# - More aggressive smoothing and filtering
-# - Best for publication-quality data
-uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --quality accurate
-```
-
-### Expert Mode (Advanced Users Only)
-
-```bash
-# Override specific auto-tuned parameters
-uv run kinemotion dropjump-analyze video.mp4 \
-  --drop-height 0.40 \
-  --expert \
-  --smoothing-window 7 \
-  --velocity-threshold 0.015
-
-# Manual drop start frame (if auto-detection fails)
-uv run kinemotion dropjump-analyze video.mp4 \
-  --drop-height 0.40 \
-  --drop-start-frame 120
-```
-
-### Auto-Tuning Examples
-
-```bash
-# 30fps video - auto-selects:
-#   velocity_threshold: 0.020
-#   min_contact_frames: 3
-#   smoothing_window: 5
-uv run kinemotion dropjump-analyze video_30fps.mp4 --drop-height 0.40
-
-# 60fps video - auto-selects:
-#   velocity_threshold: 0.010
-#   min_contact_frames: 6
-#   smoothing_window: 3
-uv run kinemotion dropjump-analyze video_60fps.mp4 --drop-height 0.40
-
-# Low quality video (avg visibility < 0.4) - auto-enables:
-#   bilateral_filter: True
-#   smoothing_window: +2 adjustment
-uv run kinemotion dropjump-analyze low_quality.mp4 --drop-height 0.40
-
-# High quality video (avg visibility > 0.7) - optimizes:
-#   bilateral_filter: False (not needed)
-#   smoothing_window: minimal (preserve detail)
-uv run kinemotion dropjump-analyze high_quality.mp4 --drop-height 0.40
-```
-
-### Batch Processing (CLI)
-
-Process multiple videos in parallel from the command line:
-
-```bash
-# Batch mode with glob pattern
-uv run kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 --workers 4
-
-# Save all results to directories
-uv run kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \
-  --json-output-dir results/ \
-  --output-dir debug_videos/ \
-  --csv-summary summary.csv
-
-# Multiple explicit paths (batch mode auto-enabled)
-uv run kinemotion dropjump-analyze video1.mp4 video2.mp4 video3.mp4 --drop-height 0.40
-```
-
-**Batch options:**
-- `--batch`: Explicitly enable batch mode
-- `--workers <int>`: Number of parallel workers (default: 4)
-- `--output-dir <path>`: Directory for debug videos (auto-named per video)
-- `--json-output-dir <path>`: Directory for JSON metrics (auto-named per video)
-- `--csv-summary <path>`: Export aggregated results to CSV
-
-## Using Kinemotion as a Library
-
-The kinemotion package provides a Python API for programmatic use in automated pipelines and custom analysis tools.
-
-### Quick Start (Python API)
+### Python API
 
 ```python
+# Drop jump
 from kinemotion import process_video
+metrics = process_video("video.mp4", drop_height=0.40)
 
-# Process a single video
-metrics = process_video(
-    video_path="athlete_jump.mp4",
-    drop_height=0.40,  # 40cm drop box
-    quality="balanced",
-    verbose=True
-)
-
-# Access results
-print(f"Jump height: {metrics.jump_height:.3f} m")
-print(f"Ground contact time: {metrics.ground_contact_time * 1000:.1f} ms")
+# CMJ
+from kinemotion import process_cmj_video
+metrics = process_cmj_video("video.mp4")
 ```
 
-### Bulk Processing (Python API)
+## Important Gotchas
 
-```python
-from kinemotion import VideoConfig, process_videos_bulk
+### Video Processing
 
-# Configure multiple videos
-configs = [
-    VideoConfig("video1.mp4", drop_height=0.40),
-    VideoConfig("video2.mp4", drop_height=0.30, quality="accurate"),
-    VideoConfig("video3.mp4", drop_height=0.50, output_video="debug3.mp4"),
-]
+1. Read first frame for dimensions (not OpenCV properties)
+2. Handle rotation metadata (mobile videos)
+3. Preserve aspect ratio (SAR)
+4. Validate dimensions in write_frame()
 
-# Process in parallel with 4 workers
-results = process_videos_bulk(configs, max_workers=4)
+### CMJ Specific
 
-# Check results
-for result in results:
-    if result.success:
-        print(f"✓ {result.video_path}: {result.metrics.jump_height:.3f} m")
-    else:
-        print(f"✗ {result.video_path}: {result.error}")
+1. **Lateral view required** - Front view won't work (parallax errors)
+2. **Signed velocity** - Critical for phase detection
+3. **Backward search** - Requires complete video (not real-time)
+4. **MediaPipe limitations** - Ankle/knee only 18-27% visible in side view
+
+### Type Safety
+
+1. Convert NumPy types in `to_dict()`: `int()`, `float()`
+2. Type all functions (pyright strict)
+3. Handle None in optional fields
+
+## Documentation
+
+**User guides:** docs/CMJ_GUIDE.md, docs/CAMERA_SETUP.md, docs/PARAMETERS.md
+**Technical:** docs/TRIPLE_EXTENSION.md, docs/REAL_TIME_ANALYSIS.md
+
+## Commit Format
+
+**Required**: [Conventional Commits](https://www.conventionalcommits.org/) - enforced by pre-commit hook
+
+**Format**: `<type>(<scope>): <description>`
+
+**Types** (triggers version bumps):
+- `feat`: New feature → minor version bump (0.x.0)
+- `fix`: Bug fix → patch version bump (0.0.x)
+- `perf`: Performance improvement → patch
+- `docs`, `test`, `refactor`, `chore`, `style`, `ci`, `build` → no version bump
+
+**Examples:**
+```bash
+feat: add CMJ analysis with triple extension tracking
+fix: correct takeoff detection in backward search algorithm
+docs: add triple extension biomechanics guide
+test: add CMJ phase detection tests
+refactor: extract signed velocity to separate function
+chore(release): 0.11.0 [skip ci]
 ```
 
-### API Documentation
+**Breaking changes**: Add `!` or `BREAKING CHANGE:` footer
+```bash
+feat!: change API signature for process_video
+```
 
-See `examples/bulk/README.md` for comprehensive API documentation including:
-- Complete API reference
-- Common use cases (directory processing, CSV export, custom parameters)
-- Integration examples (Pandas, custom CLI)
-- Performance tips
-- Error handling patterns
+## MCP Servers
 
-**Key API Functions:**
-
-- `process_video(video_path, drop_height, **kwargs) -> DropJumpMetrics`
-  - Process a single video programmatically
-  - Returns metrics object with all analysis results
-  - Raises FileNotFoundError or ValueError on errors
-
-- `process_videos_bulk(configs, max_workers=4, progress_callback=None) -> list[VideoResult]`
-  - Process multiple videos in parallel using ProcessPoolExecutor
-  - Each VideoResult contains success status, metrics, or error
-  - Error isolation: one failure doesn't crash the batch
-
-- `VideoConfig(video_path, drop_height, quality="balanced", ...)`
-  - Configuration dataclass for video processing
-  - All CLI parameters available as attributes
-
-- `VideoResult(video_path, success, metrics=None, error=None, processing_time=0.0)`
-  - Result dataclass with structured success/error handling
-
-**Type Safety:**
-- Fully typed API with PEP 561 compliance (py.typed marker)
-- IDE autocomplete and type checking support
-- All public functions have complete type annotations
-
-## MCP Server Configuration
-
-The repository includes MCP server configuration in `.mcp.json`:
-
-- **web-search**: DuckDuckGo search via @dannyboy2042/freebird-mcp
-- **sequential**: Sequential thinking via @smithery-ai/server-sequential-thinking
-- **context7**: Library documentation via @upstash/context7-mcp
-- **terraform**: Terraform registry via terraform-mcp-server
-- **basic-memory**: Note-taking for sr-quant-iac project
-
-Enabled via `.claude/settings.local.json` with `enableAllProjectMcpServers: true`.
+Configured in `.mcp.json`: web-search, sequential-thinking, context7, etc.
