@@ -19,6 +19,7 @@ from ..core.auto_tuning import (
     auto_tune_parameters,
 )
 from ..core.cli_utils import (
+    apply_expert_param_overrides,
     determine_initial_confidence,
     smooth_landmark_sequence,
     track_all_frames,
@@ -299,21 +300,6 @@ def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters for
             sys.exit(1)
 
 
-def _apply_expert_param_overrides(
-    params: AutoTunedParams, expert_params: AnalysisParameters
-) -> AutoTunedParams:
-    """Apply expert parameter overrides to auto-tuned parameters."""
-    if expert_params.smoothing_window is not None:
-        params.smoothing_window = expert_params.smoothing_window
-    if expert_params.velocity_threshold is not None:
-        params.velocity_threshold = expert_params.velocity_threshold
-    if expert_params.min_contact_frames is not None:
-        params.min_contact_frames = expert_params.min_contact_frames
-    if expert_params.visibility_threshold is not None:
-        params.visibility_threshold = expert_params.visibility_threshold
-    return params
-
-
 def _print_auto_tuned_params(
     video: VideoProcessor,
     quality_preset: QualityPreset,
@@ -419,7 +405,7 @@ def _process_single(
                 landmarks_sequence, video.fps, video.frame_count
             )
             params = auto_tune_parameters(characteristics, quality_preset)
-            params = _apply_expert_param_overrides(params, expert_params)
+            params = apply_expert_param_overrides(params, expert_params)
 
             # Calculate countermovement threshold (FPS-adjusted)
             # Base: +0.015 at 30fps (POSITIVE for downward motion in normalized coords)

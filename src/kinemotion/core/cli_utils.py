@@ -15,6 +15,10 @@ class ExpertParameters(Protocol):
 
     detection_confidence: float | None
     tracking_confidence: float | None
+    smoothing_window: int | None
+    velocity_threshold: float | None
+    min_contact_frames: int | None
+    visibility_threshold: float | None
 
 
 def determine_initial_confidence(
@@ -77,6 +81,29 @@ def track_all_frames(video: VideoProcessor, tracker: PoseTracker) -> tuple[list,
 
     tracker.close()
     return frames, landmarks_sequence
+
+
+def apply_expert_param_overrides(
+    params: AutoTunedParams, expert_params: ExpertParameters
+) -> AutoTunedParams:
+    """Apply expert parameter overrides to auto-tuned parameters.
+
+    Args:
+        params: Auto-tuned parameters
+        expert_params: Expert overrides
+
+    Returns:
+        Modified params object (mutated in place)
+    """
+    if expert_params.smoothing_window is not None:
+        params.smoothing_window = expert_params.smoothing_window
+    if expert_params.velocity_threshold is not None:
+        params.velocity_threshold = expert_params.velocity_threshold
+    if expert_params.min_contact_frames is not None:
+        params.min_contact_frames = expert_params.min_contact_frames
+    if expert_params.visibility_threshold is not None:
+        params.visibility_threshold = expert_params.visibility_threshold
+    return params
 
 
 def smooth_landmark_sequence(landmarks_sequence: list, params: AutoTunedParams) -> list:
