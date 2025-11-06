@@ -1,0 +1,99 @@
+site_name: Kinemotion
+site_description: Video-based kinematic analysis for athletic performance
+site_author: Sebastian Otaegui
+site_url: https://kinemotion.readthedocs.io
+repo_url: https://github.com/feniix/kinemotion
+repo_name: feniix/kinemotion
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    # Light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            signature_crossrefs: true
+            separate_signature: true
+            merge_init_into_class: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Guides:
+    - CMJ Analysis: guides/cmj-guide.md
+    - Camera Setup: guides/camera-setup.md
+    - Bulk Processing: guides/bulk-processing.md
+  - Reference:
+    - CLI Parameters: reference/parameters.md
+    - Pose Systems: reference/pose-systems.md
+  - API Reference:
+    - Overview: api/overview.md
+    - Drop Jump API: api/dropjump.md
+    - CMJ API: api/cmj.md
+    - Core Utilities: api/core.md
+  - Technical:
+    - Triple Extension: technical/triple-extension.md
+    - Framerate: technical/framerate.md
+    - Real-time Analysis: technical/real-time-analysis.md
+    - IMU Metadata: technical/imu-metadata.md
+  - Research:
+    - Sports Biomechanics: research/sports-biomechanics-pose-estimation.md
+  - Development:
+    - Validation Plan: development/validation-plan.md
+    - Error Findings: development/errors-findings.md
+  - Translations:
+    - Español:
+      - Configuración de Cámara: translations/es/camera-setup.md
+
+# Exclude files from the documentation build
+exclude_docs: |
+  README.md
+
+watch:
+  - src/kinemotion

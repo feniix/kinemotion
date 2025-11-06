@@ -941,7 +941,7 @@ ______________________________________________________________________
 - **[Referencia Rápida de Sistemas de Pose](../../reference/pose-systems.md)** - Guía de comparación de sistemas
 - [Guía de Parámetros CLI](../../reference/parameters.md) - Parámetros de análisis
 - [Guía CMJ](../../guides/cmj-guide.md) - Especificaciones de salto con contramovimiento
-- [CLAUDE.md](../../../CLAUDE.md) principal - Documentación completa del proyecto
+- [CLAUDE.md](https://github.com/feniix/kinemotion/blob/main/CLAUDE.md) principal - Documentación completa del proyecto (GitHub)
 
 ______________________________________________________________________
 

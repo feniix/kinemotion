@@ -50,6 +50,9 @@ htmlcov/
 *.csv
 !pyproject.toml
 
+# Documentation build output
+site/
+
 # Logs
 *.log
 combined.log
