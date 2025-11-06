@@ -102,7 +102,6 @@ def find_standing_phase(
 
 def find_countermovement_start(
     velocities: np.ndarray,
-    fps: float,
     countermovement_threshold: float = 0.015,
     min_eccentric_frames: int = 3,
     standing_start: int | None = None,
@@ -114,7 +113,6 @@ def find_countermovement_start(
 
     Args:
         velocities: Array of SIGNED vertical velocities
-        fps: Video frame rate
         countermovement_threshold: Velocity threshold for detecting downward motion (POSITIVE)
         min_eccentric_frames: Minimum consecutive frames of downward motion
         standing_start: Optional frame where standing phase ended
@@ -143,7 +141,6 @@ def find_countermovement_start(
 def find_lowest_point(
     positions: np.ndarray,
     velocities: np.ndarray,
-    eccentric_start: int | None = None,
     min_search_frame: int = 80,
 ) -> int:
     """
@@ -155,7 +152,6 @@ def find_lowest_point(
     Args:
         positions: Array of vertical positions (higher value = lower in video)
         velocities: Array of SIGNED vertical velocities (positive=down, negative=up)
-        eccentric_start: Optional frame where eccentric phase started
         min_search_frame: Minimum frame to start searching (default: frame 80)
 
     Returns:
@@ -381,9 +377,6 @@ def find_interpolated_takeoff_landing(
     positions: np.ndarray,
     velocities: np.ndarray,
     lowest_point_frame: int,
-    velocity_threshold: float = 0.02,
-    min_flight_frames: int = 3,
-    use_curvature: bool = True,
     window_length: int = 5,
     polyorder: int = 2,
 ) -> tuple[float, float] | None:
@@ -397,9 +390,6 @@ def find_interpolated_takeoff_landing(
         positions: Array of vertical positions
         velocities: Array of vertical velocities
         lowest_point_frame: Frame at lowest point
-        velocity_threshold: Velocity threshold (unused for CMJ, kept for API compatibility)
-        min_flight_frames: Minimum consecutive frames for valid flight phase
-        use_curvature: Whether to use trajectory curvature refinement
         window_length: Window size for derivative calculations
         polyorder: Polynomial order for Savitzky-Golay filter
 
@@ -428,14 +418,76 @@ def find_interpolated_takeoff_landing(
     return (takeoff_frame, landing_frame)
 
 
+def _find_takeoff_frame(
+    velocities: np.ndarray, peak_height_frame: int, fps: float
+) -> float:
+    """Find takeoff frame as peak upward velocity before peak height."""
+    takeoff_search_start = max(0, peak_height_frame - int(fps * 0.35))
+    takeoff_search_end = peak_height_frame - 2
+
+    takeoff_velocities = velocities[takeoff_search_start:takeoff_search_end]
+
+    if len(takeoff_velocities) > 0:
+        peak_vel_idx = int(np.argmin(takeoff_velocities))
+        return float(takeoff_search_start + peak_vel_idx)
+    else:
+        return float(peak_height_frame - int(fps * 0.3))
+
+
+def _find_lowest_frame(
+    velocities: np.ndarray, positions: np.ndarray, takeoff_frame: float, fps: float
+) -> float:
+    """Find lowest point frame before takeoff."""
+    lowest_search_start = max(0, int(takeoff_frame) - int(fps * 0.4))
+    lowest_search_end = int(takeoff_frame)
+
+    # Find where velocity crosses from positive to negative
+    for i in range(lowest_search_end - 1, lowest_search_start, -1):
+        if i > 0 and velocities[i] < 0 and velocities[i - 1] >= 0:
+            return float(i)
+
+    # Fallback: use maximum position
+    lowest_positions = positions[lowest_search_start:lowest_search_end]
+    if len(lowest_positions) > 0:
+        lowest_idx = int(np.argmax(lowest_positions))
+        return float(lowest_search_start + lowest_idx)
+    else:
+        return float(int(takeoff_frame) - int(fps * 0.2))
+
+
+def _find_landing_frame(
+    accelerations: np.ndarray, peak_height_frame: int, fps: float
+) -> float:
+    """Find landing frame after peak height."""
+    landing_search_start = peak_height_frame
+    landing_search_end = min(len(accelerations), peak_height_frame + int(fps * 0.5))
+    landing_accelerations = accelerations[landing_search_start:landing_search_end]
+
+    if len(landing_accelerations) > 0:
+        landing_idx = int(np.argmin(landing_accelerations))
+        return float(landing_search_start + landing_idx)
+    else:
+        return float(peak_height_frame + int(fps * 0.3))
+
+
+def _find_standing_end(velocities: np.ndarray, lowest_point: float) -> float | None:
+    """Find end of standing phase before lowest point."""
+    if lowest_point <= 20:
+        return None
+
+    standing_search = velocities[: int(lowest_point)]
+    low_vel = np.abs(standing_search) < 0.005
+    if np.any(low_vel):
+        standing_frames = np.nonzero(low_vel)[0]
+        if len(standing_frames) > 10:
+            return float(standing_frames[-1])
+
+    return None
+
+
 def detect_cmj_phases(
     positions: np.ndarray,
     fps: float,
-    velocity_threshold: float = 0.02,
-    countermovement_threshold: float = -0.015,
-    min_contact_frames: int = 3,
-    min_eccentric_frames: int = 3,
-    use_curvature: bool = True,
     window_length: int = 5,
     polyorder: int = 2,
 ) -> tuple[float | None, float, float, float] | None:
@@ -451,11 +503,6 @@ def detect_cmj_phases(
     Args:
         positions: Array of vertical positions (normalized 0-1)
         fps: Video frame rate
-        velocity_threshold: Velocity threshold (not used)
-        countermovement_threshold: Velocity threshold (not used)
-        min_contact_frames: Minimum frames for ground contact
-        min_eccentric_frames: Minimum frames for eccentric phase
-        use_curvature: Whether to use trajectory curvature refinement
         window_length: Window size for derivative calculations
         polyorder: Polynomial order for Savitzky-Golay filter
 
@@ -473,76 +520,13 @@ def detect_cmj_phases(
 
     # Step 1: Find peak height (global minimum y = highest point in frame)
     peak_height_frame = int(np.argmin(positions))
-
     if peak_height_frame < 10:
         return None  # Peak too early, invalid
 
-    # Step 2: Find takeoff as peak upward velocity
-    # Takeoff occurs at maximum upward velocity (most negative) before peak height
-    # Typical: 0.3 seconds before peak (9 frames at 30fps)
-    takeoff_search_start = max(0, peak_height_frame - int(fps * 0.35))
-    takeoff_search_end = peak_height_frame - 2  # Must be at least 2 frames before peak
-
-    takeoff_velocities = velocities[takeoff_search_start:takeoff_search_end]
-
-    if len(takeoff_velocities) > 0:
-        # Takeoff = peak upward velocity (most negative)
-        peak_vel_idx = int(np.argmin(takeoff_velocities))
-        takeoff_frame = float(takeoff_search_start + peak_vel_idx)
-    else:
-        # Fallback
-        takeoff_frame = float(peak_height_frame - int(fps * 0.3))
-
-    # Step 3: Find lowest point (countermovement bottom) before takeoff
-    # This is where velocity crosses from positive (squatting) to negative (jumping)
-    # Search backward from takeoff for where velocity was last positive/zero
-    lowest_search_start = max(0, int(takeoff_frame) - int(fps * 0.4))
-    lowest_search_end = int(takeoff_frame)
-
-    # Find where velocity crosses from positive to negative (transition point)
-    lowest_frame_found = None
-    for i in range(lowest_search_end - 1, lowest_search_start, -1):
-        if i > 0:
-            # Look for velocity crossing from positive/zero to negative
-            if velocities[i] < 0 and velocities[i - 1] >= 0:
-                lowest_frame_found = float(i)
-                break
-
-    # Fallback: use maximum position (lowest point in frame) if no velocity crossing
-    if lowest_frame_found is None:
-        lowest_positions = positions[lowest_search_start:lowest_search_end]
-        if len(lowest_positions) > 0:
-            lowest_idx = int(np.argmax(lowest_positions))
-            lowest_point = float(lowest_search_start + lowest_idx)
-        else:
-            lowest_point = float(int(takeoff_frame) - int(fps * 0.2))
-    else:
-        lowest_point = lowest_frame_found
-
-    # Step 4: Find landing (impact after peak height)
-    # Landing shows as large negative acceleration spike (impact deceleration)
-    landing_search_start = peak_height_frame
-    landing_search_end = min(len(accelerations), peak_height_frame + int(fps * 0.5))
-    landing_accelerations = accelerations[landing_search_start:landing_search_end]
-
-    if len(landing_accelerations) > 0:
-        # Find most negative acceleration (maximum impact deceleration)
-        # Landing acceleration should be around -0.008 to -0.010
-        landing_idx = int(np.argmin(landing_accelerations))  # Most negative = impact
-        landing_frame = float(landing_search_start + landing_idx)
-    else:
-        landing_frame = float(peak_height_frame + int(fps * 0.3))
-
-    # Optional: Find standing phase (not critical)
-    standing_end = None
-    if lowest_point > 20:
-        # Look for low-velocity period before lowest point
-        standing_search = velocities[: int(lowest_point)]
-        low_vel = np.abs(standing_search) < 0.005
-        if np.any(low_vel):
-            # Find last low-velocity frame before countermovement
-            standing_frames = np.where(low_vel)[0]
-            if len(standing_frames) > 10:
-                standing_end = float(standing_frames[-1])
+    # Step 2-4: Find all phases using helper functions
+    takeoff_frame = _find_takeoff_frame(velocities, peak_height_frame, fps)
+    lowest_point = _find_lowest_frame(velocities, positions, takeoff_frame, fps)
+    landing_frame = _find_landing_frame(accelerations, peak_height_frame, fps)
+    standing_end = _find_standing_end(velocities, lowest_point)
 
     return (standing_end, lowest_point, takeoff_frame, landing_frame)

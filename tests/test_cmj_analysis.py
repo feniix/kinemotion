@@ -58,7 +58,6 @@ def test_find_countermovement_start() -> None:
 
     eccentric_start = find_countermovement_start(
         velocities,
-        fps=30.0,
         countermovement_threshold=-0.008,  # More lenient threshold for test
         min_eccentric_frames=3,
         standing_start=30,
@@ -86,9 +85,7 @@ def test_find_lowest_point() -> None:
 
     # New algorithm searches with min_search_frame=80 by default
     # For this short test, use min_search_frame=0
-    lowest = find_lowest_point(
-        positions, velocities, eccentric_start=0, min_search_frame=0
-    )
+    lowest = find_lowest_point(positions, velocities, min_search_frame=0)
 
     # Should detect lowest point around frame 50 (with new algorithm may vary)
     assert 30 <= lowest <= 70  # Wider tolerance for new algorithm
@@ -112,19 +109,14 @@ def test_detect_cmj_phases_full() -> None:
     result = detect_cmj_phases(
         positions,
         fps,
-        velocity_threshold=0.015,  # Slightly lower threshold
-        countermovement_threshold=-0.010,  # More lenient for test
-        min_contact_frames=3,
-        min_eccentric_frames=3,
-        use_curvature=False,  # Disable for simpler test
         window_length=5,
         polyorder=2,
     )
 
     assert result is not None
-    standing_end, lowest_point, takeoff, landing = result
+    _, lowest_point, takeoff, landing = result
 
-    # Verify phases are in correct order (standing_end may be None or incorrect in synthetic data)
+    # Verify phases are in correct order
     assert lowest_point < takeoff
     assert takeoff < landing
 
@@ -153,10 +145,6 @@ def test_cmj_phases_without_standing() -> None:
     result = detect_cmj_phases(
         positions,
         fps,
-        velocity_threshold=0.012,  # Lower threshold for better detection
-        countermovement_threshold=-0.008,  # More lenient
-        min_contact_frames=3,
-        use_curvature=False,
         window_length=5,
         polyorder=2,
     )
@@ -164,7 +152,7 @@ def test_cmj_phases_without_standing() -> None:
     # Result may be None with synthetic data - that's okay for this test
     # The main goal is to verify the function handles edge cases without crashing
     if result is not None:
-        standing_end, lowest_point, takeoff, landing = result
+        _, lowest_point, takeoff, landing = result
         # Basic sanity checks if phases were detected
         assert lowest_point < takeoff
         assert takeoff < landing

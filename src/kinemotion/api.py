@@ -754,11 +754,6 @@ def process_cmj_video(
         phases = detect_cmj_phases(
             vertical_positions,
             video.fps,
-            velocity_threshold=params.velocity_threshold,
-            countermovement_threshold=cm_threshold,
-            min_contact_frames=params.min_contact_frames,
-            min_eccentric_frames=params.min_contact_frames,
-            use_curvature=params.use_curvature,
             window_length=params.smoothing_window,
             polyorder=params.polyorder,
         )

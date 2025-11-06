@@ -1,6 +1,7 @@
 """Tests for CMJ kinematics calculations."""
 
 import numpy as np
+import pytest
 
 from kinemotion.cmj.kinematics import CMJMetrics, calculate_cmj_metrics
 
@@ -48,14 +49,14 @@ def test_calculate_cmj_metrics_basic() -> None:
 
     # Verify basic properties
     assert isinstance(metrics, CMJMetrics)
-    assert metrics.video_fps == fps
+    assert metrics.video_fps == pytest.approx(fps)
     assert metrics.tracking_method == "foot"
 
     # Verify frames are set correctly
-    assert metrics.standing_start_frame == standing_start
-    assert metrics.lowest_point_frame == lowest_point
-    assert metrics.takeoff_frame == takeoff
-    assert metrics.landing_frame == landing
+    assert metrics.standing_start_frame == pytest.approx(standing_start)
+    assert metrics.lowest_point_frame == pytest.approx(lowest_point)
+    assert metrics.takeoff_frame == pytest.approx(takeoff)
+    assert metrics.landing_frame == pytest.approx(landing)
 
     # Verify durations
     assert metrics.flight_time > 0
@@ -179,5 +180,5 @@ def test_cmj_velocity_calculations() -> None:
     assert metrics.concentric_duration > 0
 
     # Verify velocities are calculated (may need to check signs based on coordinate system)
-    assert metrics.peak_eccentric_velocity != 0.0
-    assert metrics.peak_concentric_velocity != 0.0
+    assert abs(metrics.peak_eccentric_velocity) > 1e-6
+    assert abs(metrics.peak_concentric_velocity) > 1e-6
