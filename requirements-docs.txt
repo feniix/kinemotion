@@ -1,4 +1,12 @@
 # Documentation dependencies for Read the Docs
+# MkDocs and theme
 mkdocs>=1.5.0
 mkdocs-material>=9.5.0
 mkdocstrings[python]>=0.24.0
+
+# Runtime dependencies (minimal versions for import to work)
+click>=8.1.7
+numpy>=1.26.0
+
+# Note: opencv-python and mediapipe are not needed for docs build
+# mkdocstrings can generate docs from source without running the code
