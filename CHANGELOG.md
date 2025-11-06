@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.12.1 (2025-11-06)
+
+### Bug Fixes
+
+- **core**: Remove unreachable duplicate return statement
+  ([`294115d`](https://github.com/feniix/kinemotion/commit/294115da761b2851ecc4405a6503138851a56ad1))
+
+- **examples**: Remove drop_height from API examples
+  ([`f3da09e`](https://github.com/feniix/kinemotion/commit/f3da09ef4ab050b13b80b9fdd8c7734e4556647a))
+
+### Refactoring
+
+- **dropjump**: Remove unused calibration parameters
+  ([`1a7572c`](https://github.com/feniix/kinemotion/commit/1a7572c83ff4e990e39dcb96ff61220adf40818e))
+
+
 ## v0.12.0 (2025-11-06)
 
 ### Documentation
