@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.12.3 (2025-11-06)
+
+### Bug Fixes
+
+- Resolve SonarCloud cognitive complexity violations
+  ([`5b20c48`](https://github.com/feniix/kinemotion/commit/5b20c488e058ac3628b0e20847d3fe2539a687c4))
+
+### Refactoring
+
+- **core**: Reduce cognitive complexity in video_io and auto_tuning
+  ([`14076fe`](https://github.com/feniix/kinemotion/commit/14076fe9d1f9b41ef2ff9bd643b17cf566e18654))
+
+- **dropjump**: Add shared utility for foot position extraction
+  ([`5222cc4`](https://github.com/feniix/kinemotion/commit/5222cc471b9f4406116de0b7fc193f07d21cd88a))
+
+- **dropjump**: Reduce cognitive complexity in CLI functions
+  ([`6fc887f`](https://github.com/feniix/kinemotion/commit/6fc887f6288e870a306aa1e3ffc7b8a46c21c3fc))
+
+- **examples**: Simplify programmatic usage with shared utility
+  ([`5e1bc19`](https://github.com/feniix/kinemotion/commit/5e1bc194f5784a24cfcbc7e6372ebd26a95225aa))
+
+
 ## v0.12.2 (2025-11-06)
 
 ### Bug Fixes
