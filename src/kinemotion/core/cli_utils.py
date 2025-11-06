@@ -5,7 +5,7 @@ from typing import Any, Protocol
 
 import click
 
-from .auto_tuning import AutoTunedParams, QualityPreset, VideoCharacteristics
+from .auto_tuning import AnalysisParameters, QualityPreset, VideoCharacteristics
 from .pose import PoseTracker
 from .smoothing import smooth_landmarks, smooth_landmarks_advanced
 from .video_io import VideoProcessor
@@ -85,8 +85,8 @@ def track_all_frames(video: VideoProcessor, tracker: PoseTracker) -> tuple[list,
 
 
 def apply_expert_param_overrides(
-    params: AutoTunedParams, expert_params: ExpertParameters
-) -> AutoTunedParams:
+    params: AnalysisParameters, expert_params: ExpertParameters
+) -> AnalysisParameters:
     """Apply expert parameter overrides to auto-tuned parameters.
 
     Args:
@@ -110,7 +110,7 @@ def apply_expert_param_overrides(
 def print_auto_tuned_params(
     video: VideoProcessor,
     quality_preset: QualityPreset,
-    params: AutoTunedParams,
+    params: AnalysisParameters,
     characteristics: VideoCharacteristics | None = None,
     extra_params: dict[str, Any] | None = None,
 ) -> None:
@@ -159,7 +159,9 @@ def print_auto_tuned_params(
     click.echo("=" * 60 + "\n", err=True)
 
 
-def smooth_landmark_sequence(landmarks_sequence: list, params: AutoTunedParams) -> list:
+def smooth_landmark_sequence(
+    landmarks_sequence: list, params: AnalysisParameters
+) -> list:
     """Apply smoothing to landmark sequence.
 
     Args:

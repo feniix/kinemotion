@@ -12,7 +12,7 @@ Proper camera positioning is critical for accurate drop jump analysis. The curre
 
 ### Required Camera Position
 
-**Camera must be positioned at a side view angle, perpendicular to the sagittal plane (90°)**
+Camera must be positioned at a side view angle, perpendicular to the sagittal plane (90°).
 
 #### Camera Positioning Diagram
 

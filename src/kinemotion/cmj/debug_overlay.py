@@ -242,18 +242,15 @@ class CMJDebugOverlayRenderer(BaseDebugOverlayRenderer):
             y_offset += 30
 
         # Draw angle arcs at joints for visual feedback (only if angle is available)
-        if angles.get("ankle_angle") is not None:
-            self._draw_angle_arc(
-                frame, landmarks, f"{side_used}_ankle", angles["ankle_angle"]
-            )
-        if angles.get("knee_angle") is not None:
-            self._draw_angle_arc(
-                frame, landmarks, f"{side_used}_knee", angles["knee_angle"]
-            )
-        if angles.get("hip_angle") is not None:
-            self._draw_angle_arc(
-                frame, landmarks, f"{side_used}_hip", angles["hip_angle"]
-            )
+        ankle_angle = angles.get("ankle_angle")
+        if ankle_angle is not None:
+            self._draw_angle_arc(frame, landmarks, f"{side_used}_ankle", ankle_angle)
+        knee_angle = angles.get("knee_angle")
+        if knee_angle is not None:
+            self._draw_angle_arc(frame, landmarks, f"{side_used}_knee", knee_angle)
+        hip_angle = angles.get("hip_angle")
+        if hip_angle is not None:
+            self._draw_angle_arc(frame, landmarks, f"{side_used}_hip", hip_angle)
 
     def _draw_angle_arc(
         self,

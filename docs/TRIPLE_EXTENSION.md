@@ -49,7 +49,7 @@ The CMJ debug video now includes **triple extension tracking** - real-time visua
 
 **At Lowest Point (Countermovement Bottom):**
 
-```
+```text
 Ankle:  70-90°  (neutral to slight dorsiflexion)
 Knee:   90-110° (moderate squat)
 Hip:    90-110° (hip flexion)
@@ -58,7 +58,7 @@ Trunk:  0-20°   (slight forward lean)
 
 **At Takeoff (Leaving Ground):**
 
-```
+```text
 Ankle:  110-130° (strong plantarflexion)
 Knee:   160-180° (near full extension)
 Hip:    170-180° (full extension)
@@ -67,7 +67,7 @@ Trunk:  0-10°    (nearly vertical)
 
 **During Flight:**
 
-```
+```text
 All joints: ~180° (full extension)
 ```
 
@@ -139,23 +139,23 @@ All joints: ~180° (full extension)
 
 ### Poor Extension Patterns
 
-**Problem 1: Incomplete knee extension**
+#### Problem 1: Incomplete knee extension
 
-```
+```text
 Takeoff: Ankle 120°, Knee 150°, Hip 175°
 → Power leak: Not fully utilizing leg strength
 ```
 
-**Problem 2: Sequential extension (not simultaneous)**
+#### Problem 2: Sequential extension (not simultaneous)
 
-```
+```text
 Early concentric: Hip 170°, Knee 120°, Ankle 80°
 → Poor coordination: Extending in sequence instead of together
 ```
 
-**Problem 3: Excessive trunk lean**
+#### Problem 3: Excessive trunk lean
 
-```
+```text
 Takeoff: Trunk 30° forward
 → Sub-optimal: Reduces vertical force component
 ```
@@ -272,7 +272,7 @@ The triple extension feature has been tested with:
 
 **Debug video shows:**
 
-```
+```text
 Frame 140-155 (Concentric phase):
   ┌─────────────────────┐
   │ TRIPLE EXTENSION    │

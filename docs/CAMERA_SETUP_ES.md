@@ -12,7 +12,7 @@ El posicionamiento adecuado de la cámara es crítico para un análisis preciso 
 
 ### Posición Requerida de la Cámara
 
-**La cámara debe posicionarse en ángulo de vista lateral, perpendicular al plano sagital (90°)**
+La cámara debe posicionarse en ángulo de vista lateral, perpendicular al plano sagital (90°).
 
 #### Diagrama de Posicionamiento de Cámara
 

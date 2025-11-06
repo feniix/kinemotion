@@ -61,7 +61,7 @@ print(f"Eccentric duration: {metrics.eccentric_duration*1000:.0f}ms")
 
 ### Movement Characteristics
 
-3. **Countermovement Depth** (m) - Vertical distance during eccentric phase
+1. **Countermovement Depth** (m) - Vertical distance during eccentric phase
 
    - Represents how deep the athlete squats
    - Typical range: 0.20-0.40m
@@ -90,7 +90,7 @@ print(f"Eccentric duration: {metrics.eccentric_duration*1000:.0f}ms")
 
 ### Velocity Profile
 
-8. **Peak Eccentric Velocity** (m/s) - Maximum downward speed
+1. **Peak Eccentric Velocity** (m/s) - Maximum downward speed
 
    - Indicates countermovement speed
    - Typical range: 0.5-1.5 m/s
@@ -102,10 +102,10 @@ print(f"Eccentric duration: {metrics.eccentric_duration*1000:.0f}ms")
 
 ### Triple Extension (in debug video)
 
-10. **Ankle Angle** - Dorsiflexion/plantarflexion
-01. **Knee Angle** - Flexion/extension
-01. **Hip Angle** - Flexion/extension
-01. **Trunk Tilt** - Forward/backward lean
+1. **Ankle Angle** - Dorsiflexion/plantarflexion
+1. **Knee Angle** - Flexion/extension
+1. **Hip Angle** - Flexion/extension
+1. **Trunk Tilt** - Forward/backward lean
 
 **Note**: Ankle/knee angles have limited visibility in lateral view videos (~20-30% of frames). Trunk angle is available throughout. See docs/TRIPLE_EXTENSION.md for details.
 

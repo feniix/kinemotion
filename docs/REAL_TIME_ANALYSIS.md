@@ -244,7 +244,7 @@ ______________________________________________________________________
 
 **Test video**: 236 frames @ 29.58fps
 
-```
+```text
 Processing time breakdown:
 - MediaPipe tracking: ~5-6 seconds
 - Smoothing: ~0.1 seconds
@@ -681,7 +681,7 @@ ______________________________________________________________________
 
 ## Recommendation Matrix
 
-### Choose Offline (Current) If:
+### Choose Offline (Current) If
 
 - ✅ Maximum accuracy required (research, validation)
 - ✅ Processing pre-recorded videos
@@ -689,7 +689,7 @@ ______________________________________________________________________
 - ✅ Want triple extension with full coverage
 - ✅ Publication-quality data needed
 
-### Choose Near Real-Time If:
+### Choose Near Real-Time If
 
 - ✅ Need quick results (1-2 sec acceptable)
 - ✅ Coaching/training applications
@@ -697,7 +697,7 @@ ______________________________________________________________________
 - ✅ Want to maintain accuracy
 - ✅ Building mobile/web app
 
-### Choose True Real-Time If:
+### Choose True Real-Time If
 
 - ⚠️ Instant feedback critical (\<100ms)
 - ⚠️ Interactive applications (games, VR)

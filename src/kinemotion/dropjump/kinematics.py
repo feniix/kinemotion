@@ -123,14 +123,13 @@ def _determine_drop_start_frame(
     """
     if drop_start_frame is None:
         # Auto-detect where drop jump actually starts (skip initial stationary period)
-        detected_frame = detect_drop_start(
+        return detect_drop_start(
             foot_y_positions,
             fps,
             min_stationary_duration=0.5,
             position_change_threshold=0.005,
             smoothing_window=smoothing_window,
         )
-        return detected_frame if detected_frame is not None else 0
     return drop_start_frame
 
 
