@@ -602,6 +602,75 @@ def find_interpolated_phase_transitions_with_curvature(
     return refined_phases
 
 
+def find_landing_from_acceleration(
+    positions: np.ndarray,
+    accelerations: np.ndarray,
+    takeoff_frame: int,
+    fps: float,
+    search_duration: float = 0.7,
+) -> int:
+    """
+    Find landing frame by detecting impact acceleration after takeoff.
+
+    Similar to CMJ landing detection, looks for maximum positive acceleration
+    (deceleration on ground impact) after the jump peak.
+
+    Args:
+        positions: Array of vertical positions (normalized 0-1)
+        accelerations: Array of accelerations (second derivative)
+        takeoff_frame: Frame at takeoff (end of ground contact)
+        fps: Video frame rate
+        search_duration: Duration in seconds to search for landing (default: 0.7s)
+
+    Returns:
+        Landing frame index (integer)
+    """
+    # Find peak height (minimum y value = highest point)
+    search_start = takeoff_frame
+    search_end = min(len(positions), takeoff_frame + int(fps * search_duration))
+
+    if search_end <= search_start:
+        return min(len(positions) - 1, takeoff_frame + int(fps * 0.3))
+
+    flight_positions = positions[search_start:search_end]
+    peak_idx = int(np.argmin(flight_positions))
+    peak_frame = search_start + peak_idx
+
+    # After peak, look for landing (impact with ground)
+    # Landing is detected by maximum positive acceleration (deceleration on impact)
+    landing_search_start = peak_frame + 2
+    landing_search_end = min(len(accelerations), landing_search_start + int(fps * 0.6))
+
+    if landing_search_end <= landing_search_start:
+        return min(len(positions) - 1, peak_frame + int(fps * 0.2))
+
+    # Find impact: maximum positive acceleration after peak
+    landing_accelerations = accelerations[landing_search_start:landing_search_end]
+    impact_idx = int(np.argmax(landing_accelerations))
+    impact_frame = landing_search_start + impact_idx
+
+    # After acceleration peak, look for position stabilization (full ground contact)
+    # Check where vertical position stops decreasing (athlete stops compressing)
+    stabilization_search_start = impact_frame
+    stabilization_search_end = min(len(positions), impact_frame + int(fps * 0.2))
+
+    landing_frame = impact_frame
+    if stabilization_search_end > stabilization_search_start + 3:
+        # Find where position reaches maximum (lowest point) and starts stabilizing
+        search_positions = positions[
+            stabilization_search_start:stabilization_search_end
+        ]
+
+        # Look for the frame where position reaches its maximum (deepest landing)
+        max_pos_idx = int(np.argmax(search_positions))
+
+        # Landing is just after max position (athlete at deepest landing compression)
+        landing_frame = stabilization_search_start + max_pos_idx
+        landing_frame = min(len(positions) - 1, landing_frame)
+
+    return landing_frame
+
+
 def compute_average_foot_position(
     landmarks: dict[str, tuple[float, float, float]],
 ) -> tuple[float, float]:
