@@ -21,8 +21,12 @@ from ..core.auto_tuning import (
     analyze_video_sample,
     auto_tune_parameters,
 )
+from ..core.cli_utils import (
+    determine_initial_confidence,
+    smooth_landmark_sequence,
+    track_all_frames,
+)
 from ..core.pose import PoseTracker
-from ..core.smoothing import smooth_landmarks, smooth_landmarks_advanced
 from ..core.video_io import VideoProcessor
 from .analysis import (
     ContactState,
@@ -256,69 +260,6 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual parameter
         )
 
 
-def _determine_initial_confidence(
-    quality_preset: QualityPreset,
-    expert_params: AnalysisParameters,
-) -> tuple[float, float]:
-    """Determine initial detection and tracking confidence levels.
-
-    Args:
-        quality_preset: Quality preset enum
-        expert_params: Expert parameter overrides
-
-    Returns:
-        Tuple of (detection_confidence, tracking_confidence)
-    """
-    initial_detection_conf = 0.5
-    initial_tracking_conf = 0.5
-
-    if quality_preset == QualityPreset.FAST:
-        initial_detection_conf = 0.3
-        initial_tracking_conf = 0.3
-    elif quality_preset == QualityPreset.ACCURATE:
-        initial_detection_conf = 0.6
-        initial_tracking_conf = 0.6
-
-    # Override with expert values if provided
-    if expert_params.detection_confidence is not None:
-        initial_detection_conf = expert_params.detection_confidence
-    if expert_params.tracking_confidence is not None:
-        initial_tracking_conf = expert_params.tracking_confidence
-
-    return initial_detection_conf, initial_tracking_conf
-
-
-def _track_all_frames(video: VideoProcessor, tracker: PoseTracker) -> tuple[list, list]:
-    """Track pose landmarks in all video frames.
-
-    Args:
-        video: Video processor
-        tracker: Pose tracker
-
-    Returns:
-        Tuple of (frames, landmarks_sequence)
-    """
-    click.echo("Tracking pose landmarks...", err=True)
-    landmarks_sequence = []
-    frames = []
-
-    bar: Any
-    with click.progressbar(length=video.frame_count, label="Processing frames") as bar:
-        while True:
-            frame = video.read_frame()
-            if frame is None:
-                break
-
-            frames.append(frame)
-            landmarks = tracker.process_frame(frame)
-            landmarks_sequence.append(landmarks)
-
-            bar.update(1)
-
-    tracker.close()
-    return frames, landmarks_sequence
-
-
 def _apply_expert_param_overrides(
     params: AutoTunedParams, expert_params: AnalysisParameters
 ) -> AutoTunedParams:
@@ -378,42 +319,6 @@ def _print_auto_tuned_params(
     click.echo(f"  bilateral_filter: {params.bilateral_filter}", err=True)
     click.echo(f"  use_curvature: {params.use_curvature}", err=True)
     click.echo("=" * 60 + "\n", err=True)
-
-
-def _smooth_landmark_sequence(
-    landmarks_sequence: list, params: AutoTunedParams
-) -> list:
-    """Apply smoothing to landmark sequence.
-
-    Args:
-        landmarks_sequence: Raw landmark sequence
-        params: Auto-tuned parameters
-
-    Returns:
-        Smoothed landmarks
-    """
-    if params.outlier_rejection or params.bilateral_filter:
-        if params.outlier_rejection:
-            click.echo("Smoothing landmarks with outlier rejection...", err=True)
-        if params.bilateral_filter:
-            click.echo(
-                "Using bilateral temporal filter for edge-preserving smoothing...",
-                err=True,
-            )
-        return smooth_landmarks_advanced(
-            landmarks_sequence,
-            window_length=params.smoothing_window,
-            polyorder=params.polyorder,
-            use_outlier_rejection=params.outlier_rejection,
-            use_bilateral=params.bilateral_filter,
-        )
-    else:
-        click.echo("Smoothing landmarks...", err=True)
-        return smooth_landmarks(
-            landmarks_sequence,
-            window_length=params.smoothing_window,
-            polyorder=params.polyorder,
-        )
 
 
 def _extract_positions_and_visibilities(
@@ -533,7 +438,7 @@ def _process_single(
             )
 
             # Determine confidence levels
-            detection_conf, tracking_conf = _determine_initial_confidence(
+            detection_conf, tracking_conf = determine_initial_confidence(
                 quality_preset, expert_params
             )
 
@@ -542,7 +447,7 @@ def _process_single(
                 min_detection_confidence=detection_conf,
                 min_tracking_confidence=tracking_conf,
             )
-            frames, landmarks_sequence = _track_all_frames(video, tracker)
+            frames, landmarks_sequence = track_all_frames(video, tracker)
 
             if not landmarks_sequence:
                 click.echo("Error: No frames processed", err=True)
@@ -560,7 +465,7 @@ def _process_single(
                 _print_auto_tuned_params(video, characteristics, quality_preset, params)
 
             # Apply smoothing
-            smoothed_landmarks = _smooth_landmark_sequence(landmarks_sequence, params)
+            smoothed_landmarks = smooth_landmark_sequence(landmarks_sequence, params)
 
             # Extract positions
             vertical_positions, visibilities = _extract_positions_and_visibilities(
