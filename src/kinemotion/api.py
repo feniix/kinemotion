@@ -337,7 +337,6 @@ class VideoConfig:
     """Configuration for processing a single video."""
 
     video_path: str
-    drop_height: float
     quality: str = "balanced"
     output_video: str | None = None
     json_output: str | None = None
@@ -352,7 +351,6 @@ class VideoConfig:
 
 def process_video(
     video_path: str,
-    drop_height: float,
     quality: str = "balanced",
     output_video: str | None = None,
     json_output: str | None = None,
@@ -368,9 +366,10 @@ def process_video(
     """
     Process a single drop jump video and return metrics.
 
+    Jump height is calculated from flight time using kinematic formula (h = g*t²/8).
+
     Args:
         video_path: Path to the input video file
-        drop_height: Height of drop box/platform in meters (e.g., 0.40 for 40cm)
         quality: Analysis quality preset ("fast", "balanced", or "accurate")
         output_video: Optional path for debug video output
         json_output: Optional path for JSON metrics output
@@ -459,15 +458,12 @@ def process_video(
         # Calculate metrics
         if verbose:
             print("Calculating metrics...")
-            print(
-                f"Using drop height calibration: {drop_height}m ({drop_height*100:.0f}cm)"
-            )
 
         metrics = calculate_drop_jump_metrics(
             contact_states,
             vertical_positions,
             video.fps,
-            drop_height_m=drop_height,
+            drop_height_m=None,
             drop_start_frame=drop_start_frame,
             velocity_threshold=params.velocity_threshold,
             smoothing_window=params.smoothing_window,
@@ -513,9 +509,9 @@ def process_videos_bulk(
 
     Example:
         >>> configs = [
-        ...     VideoConfig("video1.mp4", drop_height=0.40),
-        ...     VideoConfig("video2.mp4", drop_height=0.30, quality="accurate"),
-        ...     VideoConfig("video3.mp4", drop_height=0.50, output_video="debug3.mp4"),
+        ...     VideoConfig("video1.mp4"),
+        ...     VideoConfig("video2.mp4", quality="accurate"),
+        ...     VideoConfig("video3.mp4", output_video="debug3.mp4"),
         ... ]
         >>> results = process_videos_bulk(configs, max_workers=4)
         >>> for result in results:
@@ -573,7 +569,6 @@ def _process_video_wrapper(config: VideoConfig) -> VideoResult:
     try:
         metrics = process_video(
             video_path=config.video_path,
-            drop_height=config.drop_height,
             quality=config.quality,
             output_video=config.output_video,
             json_output=config.json_output,

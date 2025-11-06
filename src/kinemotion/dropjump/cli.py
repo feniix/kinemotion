@@ -63,15 +63,6 @@ class AnalysisParameters:
     help="Path for JSON metrics output (default: stdout)",
 )
 @click.option(
-    "--drop-height",
-    type=float,
-    required=True,
-    help=(
-        "Height of drop box/platform in meters (e.g., 0.40 for 40cm box) - "
-        "REQUIRED for accurate calibration"
-    ),
-)
-@click.option(
     "--quality",
     type=click.Choice(["fast", "balanced", "accurate"], case_sensitive=False),
     default="balanced",
@@ -164,7 +155,6 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual parameter
     video_path: tuple[str, ...],
     output: str | None,
     json_output: str | None,
-    drop_height: float,
     quality: str,
     verbose: bool,
     batch: bool,
@@ -193,15 +183,15 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual parameter
 
     \b
     # Single video
-    kinemotion dropjump-analyze video.mp4 --drop-height 0.40
+    kinemotion dropjump-analyze video.mp4
 
     \b
     # Batch mode with glob pattern
-    kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 --workers 4
+    kinemotion dropjump-analyze videos/*.mp4 --batch --workers 4
 
     \b
     # Batch with output directories
-    kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \\
+    kinemotion dropjump-analyze videos/*.mp4 --batch \\
         --json-output-dir results/ --csv-summary summary.csv
     """
     # Expand glob patterns and collect all video files
@@ -237,7 +227,6 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual parameter
     if use_batch:
         _process_batch(
             video_files,
-            drop_height,
             quality,
             workers,
             output_dir,
@@ -251,7 +240,6 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual parameter
             video_files[0],
             output,
             json_output,
-            drop_height,
             quality,
             verbose,
             expert_params,
@@ -356,7 +344,6 @@ def _process_single(
     video_path: str,
     output: str | None,
     json_output: str | None,
-    drop_height: float,
     quality: str,
     verbose: bool,
     expert_params: AnalysisParameters,
@@ -422,15 +409,11 @@ def _process_single(
 
             # Calculate metrics
             click.echo("Calculating metrics...", err=True)
-            click.echo(
-                f"Using drop height calibration: {drop_height}m ({drop_height*100:.0f}cm)",
-                err=True,
-            )
             metrics = calculate_drop_jump_metrics(
                 contact_states,
                 vertical_positions,
                 video.fps,
-                drop_height_m=drop_height,
+                drop_height_m=None,
                 drop_start_frame=expert_params.drop_start_frame,
                 velocity_threshold=params.velocity_threshold,
                 smoothing_window=params.smoothing_window,
@@ -480,7 +463,6 @@ def _setup_batch_output_dirs(
 
 def _create_video_configs(
     video_files: list[str],
-    drop_height: float,
     quality: str,
     output_dir: str | None,
     json_output_dir: str | None,
@@ -490,7 +472,6 @@ def _create_video_configs(
 
     Args:
         video_files: List of video file paths
-        drop_height: Drop height in meters
         quality: Quality preset
         output_dir: Debug video output directory
         json_output_dir: JSON metrics output directory
@@ -513,7 +494,6 @@ def _create_video_configs(
 
         config = VideoConfig(
             video_path=video_file,
-            drop_height=drop_height,
             quality=quality,
             output_video=debug_video,
             json_output=json_file,
@@ -662,7 +642,6 @@ def _write_csv_summary(
 
 def _process_batch(
     video_files: list[str],
-    drop_height: float,
     quality: str,
     workers: int,
     output_dir: str | None,
@@ -681,7 +660,7 @@ def _process_batch(
 
     # Create video configurations
     configs = _create_video_configs(
-        video_files, drop_height, quality, output_dir, json_output_dir, expert_params
+        video_files, quality, output_dir, json_output_dir, expert_params
     )
 
     # Progress callback

@@ -2,11 +2,13 @@
 
 import numpy as np
 
+from ..core.smoothing import compute_acceleration_from_derivative
 from .analysis import (
     ContactState,
     detect_drop_start,
     find_contact_phases,
     find_interpolated_phase_transitions_with_curvature,
+    find_landing_from_acceleration,
 )
 
 
@@ -312,8 +314,13 @@ def _analyze_flight_phase(
     drop_height_m: float | None,
     scale_factor: float,
     kinematic_correction_factor: float,
+    smoothing_window: int,
+    polyorder: int,
 ) -> None:
     """Analyze flight phase and calculate jump height metrics.
+
+    Uses acceleration-based landing detection (like CMJ) for accurate flight time,
+    then calculates jump height using kinematic formula h = g*t²/8.
 
     Args:
         metrics: DropJumpMetrics object to populate
@@ -322,38 +329,41 @@ def _analyze_flight_phase(
         contact_end: End of contact phase
         foot_y_positions: Vertical position array
         fps: Video frame rate
-        drop_height_m: Known drop height (optional)
+        drop_height_m: Known drop height (optional, for RSI calculation)
         scale_factor: Calibration scale factor
         kinematic_correction_factor: Correction for kinematic method
+        smoothing_window: Window size for acceleration computation
+        polyorder: Polynomial order for Savitzky-Golay filter
     """
-    # Find flight phase after ground contact
-    flight_phases = [
-        (start, end)
-        for start, end, state in phases
-        if state == ContactState.IN_AIR and start > contact_end
-    ]
+    # Find takeoff frame (end of ground contact)
+    flight_start = contact_end
 
-    if not flight_phases:
-        return
+    # Compute accelerations for landing detection
+    accelerations = compute_acceleration_from_derivative(
+        foot_y_positions, window_length=smoothing_window, polyorder=polyorder
+    )
 
-    flight_start, flight_end = flight_phases[0]
+    # Use acceleration-based landing detection (like CMJ)
+    # This finds the actual ground impact, not just when velocity drops
+    flight_end = find_landing_from_acceleration(
+        foot_y_positions, accelerations, flight_start, fps, search_duration=0.7
+    )
 
     # Store integer frame indices
     metrics.flight_start_frame = flight_start
     metrics.flight_end_frame = flight_end
 
-    # Find precise timing
+    # Find precise sub-frame timing for takeoff
     flight_start_frac = float(flight_start)
     flight_end_frac = float(flight_end)
 
     for start_frac, end_frac, state in interpolated_phases:
         if (
-            state == ContactState.IN_AIR
+            state == ContactState.ON_GROUND
             and int(start_frac) <= flight_start <= int(end_frac) + 1
-            and int(start_frac) <= flight_end <= int(end_frac) + 1
         ):
-            flight_start_frac = start_frac
-            flight_end_frac = end_frac
+            # Use end of ground contact as precise takeoff
+            flight_start_frac = end_frac
             break
 
     # Calculate flight time
@@ -362,11 +372,16 @@ def _analyze_flight_phase(
     metrics.flight_start_frame_precise = flight_start_frac
     metrics.flight_end_frame_precise = flight_end_frac
 
-    # Calculate jump height using kinematic method
+    # Calculate jump height using kinematic method (like CMJ)
+    # h = g * t² / 8
     g = 9.81  # m/s^2
     jump_height_kinematic = (g * metrics.flight_time**2) / 8
 
-    # Calculate jump height from trajectory
+    # Always use kinematic method for jump height (like CMJ)
+    metrics.jump_height = jump_height_kinematic
+    metrics.jump_height_kinematic = jump_height_kinematic
+
+    # Calculate trajectory-based height for reference
     takeoff_position = foot_y_positions[flight_start]
     flight_positions = foot_y_positions[flight_start : flight_end + 1]
 
@@ -377,21 +392,6 @@ def _analyze_flight_phase(
 
         height_normalized = float(takeoff_position - peak_position)
         metrics.jump_height_trajectory = height_normalized
-
-        # Choose measurement method based on calibration availability
-        if drop_height_m is not None and scale_factor > 1.0:
-            metrics.jump_height = height_normalized * scale_factor
-            metrics.jump_height_kinematic = jump_height_kinematic
-        else:
-            metrics.jump_height = jump_height_kinematic * kinematic_correction_factor
-            metrics.jump_height_kinematic = jump_height_kinematic
-    else:
-        # Fallback to kinematic if no position data
-        if drop_height_m is None:
-            metrics.jump_height = jump_height_kinematic * kinematic_correction_factor
-        else:
-            metrics.jump_height = jump_height_kinematic
-        metrics.jump_height_kinematic = jump_height_kinematic
 
 
 def calculate_drop_jump_metrics(
@@ -505,46 +505,8 @@ def calculate_drop_jump_metrics(
         drop_height_m,
         scale_factor,
         kinematic_correction_factor,
+        smoothing_window,
+        polyorder,
     )
 
     return metrics
-
-
-def estimate_jump_height_from_trajectory(
-    foot_y_positions: np.ndarray,
-    flight_start: int,
-    flight_end: int,
-    pixel_to_meter_ratio: float | None = None,
-) -> float:
-    """
-    Estimate jump height from position trajectory.
-
-    Args:
-        foot_y_positions: Vertical positions of feet (normalized or pixels)
-        flight_start: Frame where flight begins
-        flight_end: Frame where flight ends
-        pixel_to_meter_ratio: Conversion factor from pixels to meters
-
-    Returns:
-        Estimated jump height in meters (or normalized units if no calibration)
-    """
-    if flight_end < flight_start:
-        return 0.0
-
-    # Get position at takeoff (end of contact) and peak (minimum y during flight)
-    takeoff_position = foot_y_positions[flight_start]
-    flight_positions = foot_y_positions[flight_start : flight_end + 1]
-
-    if len(flight_positions) == 0:
-        return 0.0
-
-    peak_position = np.min(flight_positions)
-
-    # Height difference (in normalized coordinates, y increases downward)
-    height_diff = takeoff_position - peak_position
-
-    # Convert to meters if calibration available
-    if pixel_to_meter_ratio is not None:
-        return float(height_diff * pixel_to_meter_ratio)
-
-    return float(height_diff)
