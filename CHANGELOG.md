@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.14.2 (2025-11-06)
+
+### Bug Fixes
+
+- **docs**: Optimize Read the Docs build to avoid heavy dependencies
+  ([`f46dd9d`](https://github.com/feniix/kinemotion/commit/f46dd9d36c9e5c9c173c01a49e9dadb047a385da))
+
+
 ## v0.14.1 (2025-11-06)
 
 ### Bug Fixes
