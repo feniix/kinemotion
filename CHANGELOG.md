@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.11.5 (2025-11-06)
+
+### Bug Fixes
+
+- Deduplicate apply_expert_param_overrides across CLI modules
+  ([`a475c6e`](https://github.com/feniix/kinemotion/commit/a475c6e52aaa3733fc60104df3f8760acc8990b2))
+
+- Deduplicate print_auto_tuned_params across CLI modules
+  ([`f084406`](https://github.com/feniix/kinemotion/commit/f084406d08318b87a91dcba0756938cb7cc50a4c))
+
+
 ## v0.11.4 (2025-11-06)
 
 ### Bug Fixes
