@@ -1,6 +1,6 @@
 # Camera Setup Guide
 
-> **Versión en español disponible:** [CAMERA_SETUP_ES.md](CAMERA_SETUP_ES.md)
+> **Versión en español disponible:** [camera-setup.md](../translations/es/camera-setup.md)
 
 This guide provides best practices for recording drop jump and CMJ videos to ensure accurate analysis with kinemotion.
 
@@ -936,12 +936,12 @@ ______________________________________________________________________
 
 ## Related Documentation
 
-- **[Versión en Español](CAMERA_SETUP_ES.md)** - Spanish version of this guide
-- **[Sports Biomechanics Pose Estimation](SPORTS_BIOMECHANICS_POSE_ESTIMATION.md)** - Comprehensive research on pose systems
-- **[Pose Systems Quick Reference](POSE_SYSTEMS_QUICK_REFERENCE.md)** - System comparison guide
-- [CLI Parameters Guide](PARAMETERS.md) - Analysis parameters
-- [CMJ Guide](CMJ_GUIDE.md) - Counter-movement jump specifics
-- Main [CLAUDE.md](../CLAUDE.md) - Complete project documentation
+- **[Versión en Español](../translations/es/camera-setup.md)** - Spanish version of this guide
+- **[Sports Biomechanics Pose Estimation](../research/sports-biomechanics-pose-estimation.md)** - Comprehensive research on pose systems
+- **[Pose Systems Quick Reference](../reference/pose-systems.md)** - System comparison guide
+- [CLI Parameters Guide](../reference/parameters.md) - Analysis parameters
+- [CMJ Guide](cmj-guide.md) - Counter-movement jump specifics
+- Main [CLAUDE.md](../../CLAUDE.md) - Complete project documentation
 
 ______________________________________________________________________
 
@@ -959,7 +959,7 @@ ______________________________________________________________________
 
 - Pagnon, D., Domalain, M., & Reveret, L. (2022). Pose2Sim: An End-to-End Workflow for 3D Markerless Sports Kinematics—Part 2: Accuracy. *Sensors*, 22(7), 2712. <https://doi.org/10.3390/s22072712>
 
-For complete bibliography, see [SPORTS_BIOMECHANICS_POSE_ESTIMATION.md](SPORTS_BIOMECHANICS_POSE_ESTIMATION.md).
+For complete bibliography, see [sports-biomechanics-pose-estimation.md](../research/sports-biomechanics-pose-estimation.md).
 
 ______________________________________________________________________
 

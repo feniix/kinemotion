@@ -224,8 +224,47 @@ metrics = process_cmj_video("video.mp4")
 
 ## Documentation
 
-**User guides:** docs/CMJ_GUIDE.md, docs/CAMERA_SETUP.md, docs/PARAMETERS.md
-**Technical:** docs/TRIPLE_EXTENSION.md, docs/REAL_TIME_ANALYSIS.md
+**User guides:** docs/guides/cmj-guide.md, docs/guides/camera-setup.md, docs/guides/bulk-processing.md
+**Reference:** docs/reference/parameters.md, docs/reference/pose-systems.md
+**Technical:** docs/technical/triple-extension.md, docs/technical/real-time-analysis.md
+**Research:** docs/research/sports-biomechanics-pose-estimation.md
+
+**See [docs/README.md](docs/README.md) for complete documentation navigation.**
+
+### Documentation Organization
+
+Documentation follows the [Diátaxis framework](https://diataxis.fr/) - a systematic approach that organizes content by user needs:
+
+**Framework categories:**
+1. **Tutorials/Guides** (learning-oriented) → `docs/guides/`
+   - Goal: Help users accomplish specific tasks
+   - Examples: Camera setup, CMJ analysis, bulk processing
+   - Characteristic: Step-by-step instructions
+
+2. **Reference** (information-oriented) → `docs/reference/`
+   - Goal: Provide technical descriptions and specifications
+   - Examples: CLI parameters, pose system comparisons
+   - Characteristic: Structured for quick lookup
+
+3. **Explanation** (understanding-oriented) → `docs/technical/`, `docs/research/`
+   - Goal: Clarify and illuminate topics
+   - Examples: Triple extension biomechanics, pose estimation research
+   - Characteristic: Background knowledge, theory
+
+4. **Development** (contributor-oriented) → `docs/development/`
+   - Goal: Support project contributors
+   - Examples: Validation plans, error findings
+   - Characteristic: Internal processes, debugging
+
+**Additional categories:**
+- `docs/translations/` - Non-English documentation (e.g., Spanish)
+
+**When adding new documentation:**
+- **How-to content?** → `guides/`
+- **Parameter specs or quick lookups?** → `reference/`
+- **Implementation details or theory?** → `technical/` or `research/`
+- **Testing or debugging?** → `development/`
+- **Translation?** → `translations/{language-code}/`
 
 ## Commit Format
 

@@ -294,7 +294,7 @@ For advanced users who need manual control:
 - `--detection-confidence <float>`: Override MediaPipe detection confidence
 - `--tracking-confidence <float>`: Override MediaPipe tracking confidence
 
-> **📖 For detailed parameter explanations, see [docs/PARAMETERS.md](docs/PARAMETERS.md)**
+> **📖 For detailed parameter explanations, see [docs/reference/parameters.md](docs/reference/parameters.md)**
 >
 > **Note:** Most users never need expert parameters - auto-tuning handles optimization automatically!
 

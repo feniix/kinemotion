@@ -1,6 +1,6 @@
 # Guía de Configuración de Cámara
 
-> **English version available:** [CAMERA_SETUP.md](CAMERA_SETUP.md)
+> **English version available:** [camera-setup.md](../../guides/camera-setup.md)
 
 Esta guía proporciona las mejores prácticas para grabar videos de drop jumps y CMJ para asegurar un análisis preciso con kinemotion.
 
@@ -936,12 +936,12 @@ ______________________________________________________________________
 
 ## Documentación Relacionada
 
-- **[English Version](CAMERA_SETUP.md)** - Versión en inglés de esta guía
-- **[Estimación de Pose para Biomecánica Deportiva](SPORTS_BIOMECHANICS_POSE_ESTIMATION.md)** - Investigación completa sobre sistemas de pose
-- **[Referencia Rápida de Sistemas de Pose](POSE_SYSTEMS_QUICK_REFERENCE.md)** - Guía de comparación de sistemas
-- [Guía de Parámetros CLI](PARAMETERS.md) - Parámetros de análisis
-- [Guía CMJ](CMJ_GUIDE.md) - Especificaciones de salto con contramovimiento
-- [CLAUDE.md](../CLAUDE.md) principal - Documentación completa del proyecto
+- **[English Version](../../guides/camera-setup.md)** - Versión en inglés de esta guía
+- **[Estimación de Pose para Biomecánica Deportiva](../../research/sports-biomechanics-pose-estimation.md)** - Investigación completa sobre sistemas de pose
+- **[Referencia Rápida de Sistemas de Pose](../../reference/pose-systems.md)** - Guía de comparación de sistemas
+- [Guía de Parámetros CLI](../../reference/parameters.md) - Parámetros de análisis
+- [Guía CMJ](../../guides/cmj-guide.md) - Especificaciones de salto con contramovimiento
+- [CLAUDE.md](../../../CLAUDE.md) principal - Documentación completa del proyecto
 
 ______________________________________________________________________
 
@@ -959,7 +959,7 @@ ______________________________________________________________________
 
 - Pagnon, D., Domalain, M., & Reveret, L. (2022). Pose2Sim: An End-to-End Workflow for 3D Markerless Sports Kinematics—Part 2: Accuracy. *Sensors*, 22(7), 2712. <https://doi.org/10.3390/s22072712>
 
-Para bibliografía completa, ver [SPORTS_BIOMECHANICS_POSE_ESTIMATION.md](SPORTS_BIOMECHANICS_POSE_ESTIMATION.md).
+Para bibliografía completa, ver [sports-biomechanics-pose-estimation.md](../../research/sports-biomechanics-pose-estimation.md).
 
 ______________________________________________________________________
 
