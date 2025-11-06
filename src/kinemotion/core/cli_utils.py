@@ -4,7 +4,7 @@ from typing import Any, Protocol
 
 import click
 
-from .auto_tuning import AutoTunedParams, QualityPreset
+from .auto_tuning import AutoTunedParams, QualityPreset, VideoCharacteristics
 from .pose import PoseTracker
 from .smoothing import smooth_landmarks, smooth_landmarks_advanced
 from .video_io import VideoProcessor
@@ -104,6 +104,58 @@ def apply_expert_param_overrides(
     if expert_params.visibility_threshold is not None:
         params.visibility_threshold = expert_params.visibility_threshold
     return params
+
+
+def print_auto_tuned_params(
+    video: VideoProcessor,
+    quality_preset: QualityPreset,
+    params: AutoTunedParams,
+    characteristics: VideoCharacteristics | None = None,
+    extra_params: dict[str, Any] | None = None,
+) -> None:
+    """Print auto-tuned parameters in verbose mode.
+
+    Args:
+        video: Video processor
+        quality_preset: Quality preset
+        params: Auto-tuned parameters
+        characteristics: Optional video characteristics (for tracking quality display)
+        extra_params: Optional extra parameters to display (e.g., countermovement_threshold)
+    """
+    click.echo("\n" + "=" * 60, err=True)
+    click.echo("AUTO-TUNED PARAMETERS", err=True)
+    click.echo("=" * 60, err=True)
+    click.echo(f"Video FPS: {video.fps:.2f}", err=True)
+
+    if characteristics:
+        click.echo(
+            f"Tracking quality: {characteristics.tracking_quality} "
+            f"(avg visibility: {characteristics.avg_visibility:.2f})",
+            err=True,
+        )
+
+    click.echo(f"Quality preset: {quality_preset.value}", err=True)
+    click.echo("\nSelected parameters:", err=True)
+    click.echo(f"  smoothing_window: {params.smoothing_window}", err=True)
+    click.echo(f"  polyorder: {params.polyorder}", err=True)
+    click.echo(f"  velocity_threshold: {params.velocity_threshold:.4f}", err=True)
+
+    # Print extra parameters if provided
+    if extra_params:
+        for key, value in extra_params.items():
+            if isinstance(value, float):
+                click.echo(f"  {key}: {value:.4f}", err=True)
+            else:
+                click.echo(f"  {key}: {value}", err=True)
+
+    click.echo(f"  min_contact_frames: {params.min_contact_frames}", err=True)
+    click.echo(f"  visibility_threshold: {params.visibility_threshold}", err=True)
+    click.echo(f"  detection_confidence: {params.detection_confidence}", err=True)
+    click.echo(f"  tracking_confidence: {params.tracking_confidence}", err=True)
+    click.echo(f"  outlier_rejection: {params.outlier_rejection}", err=True)
+    click.echo(f"  bilateral_filter: {params.bilateral_filter}", err=True)
+    click.echo(f"  use_curvature: {params.use_curvature}", err=True)
+    click.echo("=" * 60 + "\n", err=True)
 
 
 def smooth_landmark_sequence(landmarks_sequence: list, params: AutoTunedParams) -> list:

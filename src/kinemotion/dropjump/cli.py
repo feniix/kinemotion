@@ -13,17 +13,14 @@ import numpy as np
 
 from ..api import VideoConfig, VideoResult, process_videos_bulk
 from ..core.auto_tuning import (
-    AnalysisParameters as AutoTunedParams,
-)
-from ..core.auto_tuning import (
     QualityPreset,
-    VideoCharacteristics,
     analyze_video_sample,
     auto_tune_parameters,
 )
 from ..core.cli_utils import (
     apply_expert_param_overrides,
     determine_initial_confidence,
+    print_auto_tuned_params,
     smooth_landmark_sequence,
     track_all_frames,
 )
@@ -261,44 +258,6 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual parameter
         )
 
 
-def _print_auto_tuned_params(
-    video: VideoProcessor,
-    characteristics: VideoCharacteristics,
-    quality_preset: QualityPreset,
-    params: AutoTunedParams,
-) -> None:
-    """Print auto-tuned parameters in verbose mode.
-
-    Args:
-        video: Video processor
-        characteristics: Video characteristics
-        quality_preset: Quality preset
-        params: Auto-tuned parameters
-    """
-    click.echo("\n" + "=" * 60, err=True)
-    click.echo("AUTO-TUNED PARAMETERS", err=True)
-    click.echo("=" * 60, err=True)
-    click.echo(f"Video FPS: {video.fps:.2f}", err=True)
-    click.echo(
-        f"Tracking quality: {characteristics.tracking_quality} "
-        f"(avg visibility: {characteristics.avg_visibility:.2f})",
-        err=True,
-    )
-    click.echo(f"Quality preset: {quality_preset.value}", err=True)
-    click.echo("\nSelected parameters:", err=True)
-    click.echo(f"  smoothing_window: {params.smoothing_window}", err=True)
-    click.echo(f"  polyorder: {params.polyorder}", err=True)
-    click.echo(f"  velocity_threshold: {params.velocity_threshold:.4f}", err=True)
-    click.echo(f"  min_contact_frames: {params.min_contact_frames}", err=True)
-    click.echo(f"  visibility_threshold: {params.visibility_threshold}", err=True)
-    click.echo(f"  detection_confidence: {params.detection_confidence}", err=True)
-    click.echo(f"  tracking_confidence: {params.tracking_confidence}", err=True)
-    click.echo(f"  outlier_rejection: {params.outlier_rejection}", err=True)
-    click.echo(f"  bilateral_filter: {params.bilateral_filter}", err=True)
-    click.echo(f"  use_curvature: {params.use_curvature}", err=True)
-    click.echo("=" * 60 + "\n", err=True)
-
-
 def _extract_positions_and_visibilities(
     smoothed_landmarks: list,
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -440,7 +399,7 @@ def _process_single(
 
             # Show parameters if verbose
             if verbose:
-                _print_auto_tuned_params(video, characteristics, quality_preset, params)
+                print_auto_tuned_params(video, quality_preset, params, characteristics)
 
             # Apply smoothing
             smoothed_landmarks = smooth_landmark_sequence(landmarks_sequence, params)
