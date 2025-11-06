@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.11.7 (2025-11-06)
+
+### Bug Fixes
+
+- Reduce code duplication to 2.73% with shared CLI decorators
+  ([`4edbb50`](https://github.com/feniix/kinemotion/commit/4edbb50cec1e9e730a958e88aded53129f772649))
+
+### Documentation
+
+- Add code duplication guidelines to CLAUDE.md
+  ([`5294842`](https://github.com/feniix/kinemotion/commit/529484241b236ad60d7dba693afd25e8f89b6a09))
+
+
 ## v0.11.6 (2025-11-06)
 
 ### Bug Fixes
