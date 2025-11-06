@@ -414,6 +414,22 @@ def _smooth_landmark_sequence(
         )
 
 
+def _get_foot_position(frame_landmarks: dict | None, last_position: float) -> float:
+    """Extract average foot position from frame landmarks."""
+    if not frame_landmarks:
+        return last_position
+
+    # Average foot position (ankles and heels)
+    foot_y_values = []
+    for key in ["left_ankle", "right_ankle", "left_heel", "right_heel"]:
+        if key in frame_landmarks:
+            foot_y_values.append(frame_landmarks[key][1])
+
+    if foot_y_values:
+        return float(np.mean(foot_y_values))
+    return last_position
+
+
 def _extract_positions_from_landmarks(
     smoothed_landmarks: list,
 ) -> tuple[np.ndarray, str]:
@@ -429,20 +445,9 @@ def _extract_positions_from_landmarks(
     position_list: list[float] = []
 
     for frame_landmarks in smoothed_landmarks:
-        if frame_landmarks:
-            # Average foot position (ankles and heels)
-            foot_y_values = []
-            for key in ["left_ankle", "right_ankle", "left_heel", "right_heel"]:
-                if key in frame_landmarks:
-                    foot_y_values.append(frame_landmarks[key][1])
-
-            if foot_y_values:
-                avg_y = float(np.mean(foot_y_values))
-                position_list.append(avg_y)
-            else:
-                position_list.append(position_list[-1] if position_list else 0.5)
-        else:
-            position_list.append(position_list[-1] if position_list else 0.5)
+        last_pos = position_list[-1] if position_list else 0.5
+        position = _get_foot_position(frame_landmarks, last_pos)
+        position_list.append(position)
 
     return np.array(position_list), "foot"
 
