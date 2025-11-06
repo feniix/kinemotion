@@ -216,6 +216,59 @@ def auto_tune_parameters(
     )
 
 
+def _collect_foot_visibility_and_positions(
+    frame_landmarks: dict[str, tuple[float, float, float]],
+) -> tuple[list[float], list[float]]:
+    """
+    Collect visibility scores and Y positions from foot landmarks.
+
+    Args:
+        frame_landmarks: Landmarks for a single frame
+
+    Returns:
+        Tuple of (visibility_scores, y_positions)
+    """
+    foot_keys = [
+        "left_ankle",
+        "right_ankle",
+        "left_heel",
+        "right_heel",
+        "left_foot_index",
+        "right_foot_index",
+    ]
+
+    frame_vis = []
+    frame_y_positions = []
+
+    for key in foot_keys:
+        if key in frame_landmarks:
+            _, y, vis = frame_landmarks[key]  # x not needed for analysis
+            frame_vis.append(vis)
+            frame_y_positions.append(y)
+
+    return frame_vis, frame_y_positions
+
+
+def _check_stable_period(positions: list[float]) -> bool:
+    """
+    Check if video has a stable period at the start.
+
+    A stable period (low variance in first 30 frames) indicates
+    the subject is standing on an elevated platform before jumping.
+
+    Args:
+        positions: List of average Y positions per frame
+
+    Returns:
+        True if stable period detected, False otherwise
+    """
+    if len(positions) < 30:
+        return False
+
+    first_30_std = float(np.std(positions[:30]))
+    return first_30_std < 0.01  # Very stable = on platform
+
+
 def analyze_video_sample(
     landmarks_sequence: list[dict[str, tuple[float, float, float]] | None],
     fps: float,
@@ -235,35 +288,22 @@ def analyze_video_sample(
     Returns:
         VideoCharacteristics with analyzed properties
     """
-    # Calculate average landmark visibility
     visibilities = []
     positions = []
 
+    # Collect visibility and position data from all frames
     for frame_landmarks in landmarks_sequence:
-        if frame_landmarks:
-            # Collect visibility scores from foot landmarks
-            foot_keys = [
-                "left_ankle",
-                "right_ankle",
-                "left_heel",
-                "right_heel",
-                "left_foot_index",
-                "right_foot_index",
-            ]
+        if not frame_landmarks:
+            continue
 
-            frame_vis = []
-            frame_y_positions = []
+        frame_vis, frame_y_positions = _collect_foot_visibility_and_positions(
+            frame_landmarks
+        )
 
-            for key in foot_keys:
-                if key in frame_landmarks:
-                    _, y, vis = frame_landmarks[key]  # x not needed for analysis
-                    frame_vis.append(vis)
-                    frame_y_positions.append(y)
-
-            if frame_vis:
-                visibilities.append(float(np.mean(frame_vis)))
-            if frame_y_positions:
-                positions.append(float(np.mean(frame_y_positions)))
+        if frame_vis:
+            visibilities.append(float(np.mean(frame_vis)))
+        if frame_y_positions:
+            positions.append(float(np.mean(frame_y_positions)))
 
     # Compute metrics
     avg_visibility = float(np.mean(visibilities)) if visibilities else 0.5
@@ -273,11 +313,7 @@ def analyze_video_sample(
     tracking_quality = analyze_tracking_quality(avg_visibility)
 
     # Check for stable period (indicates drop jump from elevated platform)
-    # Simple check: do first 30 frames have low variance?
-    has_stable_period = False
-    if len(positions) >= 30:
-        first_30_std = float(np.std(positions[:30]))
-        has_stable_period = first_30_std < 0.01  # Very stable = on platform
+    has_stable_period = _check_stable_period(positions)
 
     return VideoCharacteristics(
         fps=fps,

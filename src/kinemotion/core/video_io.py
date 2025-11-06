@@ -65,6 +65,43 @@ class VideoProcessor:
                 self.display_width,
             )
 
+    def _parse_sample_aspect_ratio(self, sar_str: str) -> None:
+        """
+        Parse SAR string and update display dimensions.
+
+        Args:
+            sar_str: SAR string in format "width:height" (e.g., "270:473")
+        """
+        if not sar_str or ":" not in sar_str:
+            return
+
+        sar_parts = sar_str.split(":")
+        sar_width = int(sar_parts[0])
+        sar_height = int(sar_parts[1])
+
+        # Calculate display dimensions if pixels are non-square
+        # DAR = (width * SAR_width) / (height * SAR_height)
+        if sar_width != sar_height:
+            self.display_width = int(self.width * sar_width / sar_height)
+            self.display_height = self.height
+
+    def _extract_rotation_from_stream(self, stream: dict) -> int:  # type: ignore[type-arg]
+        """
+        Extract rotation metadata from video stream.
+
+        Args:
+            stream: ffprobe stream dictionary
+
+        Returns:
+            Rotation angle in degrees (0, 90, -90, 180)
+        """
+        side_data_list = stream.get("side_data_list", [])
+        for side_data in side_data_list:
+            if side_data.get("side_data_type") == "Display Matrix":
+                rotation = side_data.get("rotation", 0)
+                return int(rotation)
+        return 0
+
     def _extract_video_metadata(self) -> None:
         """
         Extract video metadata including SAR and rotation using ffprobe.
@@ -94,35 +131,22 @@ class VideoProcessor:
                 timeout=5,
             )
 
-            if result.returncode == 0:
-                data = json.loads(result.stdout)
-                if "streams" in data and len(data["streams"]) > 0:
-                    stream = data["streams"][0]
+            if result.returncode != 0:
+                return
 
-                    # Extract SAR (Sample Aspect Ratio)
-                    sar_str = stream.get("sample_aspect_ratio", "1:1")
+            data = json.loads(result.stdout)
+            if "streams" not in data or len(data["streams"]) == 0:
+                return
 
-                    # Parse SAR (e.g., "270:473")
-                    if sar_str and ":" in sar_str:
-                        sar_parts = sar_str.split(":")
-                        sar_width = int(sar_parts[0])
-                        sar_height = int(sar_parts[1])
+            stream = data["streams"][0]
 
-                        # Calculate display dimensions
-                        # DAR = (width * SAR_width) / (height * SAR_height)
-                        if sar_width != sar_height:
-                            self.display_width = int(
-                                self.width * sar_width / sar_height
-                            )
-                            self.display_height = self.height
+            # Extract and parse SAR (Sample Aspect Ratio)
+            sar_str = stream.get("sample_aspect_ratio", "1:1")
+            self._parse_sample_aspect_ratio(sar_str)
 
-                    # Extract rotation from side_data_list (common for iPhone videos)
-                    side_data_list = stream.get("side_data_list", [])
-                    for side_data in side_data_list:
-                        if side_data.get("side_data_type") == "Display Matrix":
-                            rotation = side_data.get("rotation", 0)
-                            # Convert to int and normalize to 0, 90, -90, 180
-                            self.rotation = int(rotation)
+            # Extract rotation from side_data_list (common for iPhone videos)
+            self.rotation = self._extract_rotation_from_stream(stream)
+
         except (subprocess.TimeoutExpired, FileNotFoundError, json.JSONDecodeError):
             # If ffprobe fails, keep original dimensions (square pixels)
             pass
