@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.15.0 (2025-11-06)
+
+### Features
+
+- Standardize drop jump API naming for consistency with CMJ
+  ([`fcd92d0`](https://github.com/feniix/kinemotion/commit/fcd92d0802408d02dcb83a97816b491f92c36f28))
+
+### Breaking Changes
+
+- Users must update imports and function calls from process_video to process_dropjump_video,
+  VideoConfig to DropJumpVideoConfig, and process_videos_bulk to process_dropjump_videos_bulk.
+
+
 ## v0.14.4 (2025-11-06)
 
 ### Bug Fixes
