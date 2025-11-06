@@ -820,18 +820,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kinemotion.api.process_video" class="md-nav__link">
+  <a href="#kinemotion.api.process_dropjump_video" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;process_video
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;process_dropjump_video
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#kinemotion.api.process_videos_bulk" class="md-nav__link">
+  <a href="#kinemotion.api.process_dropjump_videos_bulk" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;process_videos_bulk
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;process_dropjump_videos_bulk
     </span>
   </a>
   
@@ -847,9 +847,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kinemotion.api.VideoConfig" class="md-nav__link">
+  <a href="#kinemotion.api.DropJumpVideoConfig" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;VideoConfig
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;DropJumpVideoConfig
     </span>
   </a>
   
@@ -865,9 +865,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kinemotion.api.VideoResult" class="md-nav__link">
+  <a href="#kinemotion.api.DropJumpVideoResult" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;VideoResult
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;DropJumpVideoResult
     </span>
   </a>
   
@@ -1490,18 +1490,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kinemotion.api.process_video" class="md-nav__link">
+  <a href="#kinemotion.api.process_dropjump_video" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;process_video
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;process_dropjump_video
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#kinemotion.api.process_videos_bulk" class="md-nav__link">
+  <a href="#kinemotion.api.process_dropjump_videos_bulk" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;process_videos_bulk
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;process_dropjump_videos_bulk
     </span>
   </a>
   
@@ -1517,9 +1517,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kinemotion.api.VideoConfig" class="md-nav__link">
+  <a href="#kinemotion.api.DropJumpVideoConfig" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;VideoConfig
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;DropJumpVideoConfig
     </span>
   </a>
   
@@ -1535,9 +1535,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kinemotion.api.VideoResult" class="md-nav__link">
+  <a href="#kinemotion.api.DropJumpVideoResult" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;VideoResult
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;DropJumpVideoResult
     </span>
   </a>
   
@@ -1640,9 +1640,9 @@
 <h1 id="drop-jump-api">Drop Jump API<a class="headerlink" href="#drop-jump-api" title="Permanent link">&para;</a></h1>
 <p>The drop jump API provides functions for analyzing drop jump videos and extracting kinematic metrics.</p>
 <h2 id="quick-example">Quick Example<a class="headerlink" href="#quick-example" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kinemotion</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_video</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kinemotion</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_dropjump_video</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">metrics</span> <span class="o">=</span> <span class="n">process_video</span><span class="p">(</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">metrics</span> <span class="o">=</span> <span class="n">process_dropjump_video</span><span class="p">(</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">video_path</span><span class="o">=</span><span class="s2">&quot;dropjump.mp4&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">drop_height</span><span class="o">=</span><span class="mf">0.40</span><span class="p">,</span>  <span class="c1"># meters</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">output_path</span><span class="o">=</span><span class="s2">&quot;debug.mp4&quot;</span><span class="p">,</span>  <span class="c1"># optional</span>
@@ -1659,12 +1659,12 @@
 <div class="doc doc-object doc-function">
 
 
-<h2 id="kinemotion.api.process_video" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">process_video</span>
+<h2 id="kinemotion.api.process_dropjump_video" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">process_dropjump_video</span>
 
 
-<a href="#kinemotion.api.process_video" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">process_video</span><span class="p">(</span>
+<a href="#kinemotion.api.process_dropjump_video" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">process_dropjump_video</span><span class="p">(</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">video_path</span><span class="p">,</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">output_video</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2087,7 +2087,7 @@
 <span class="normal"><a href="#__codelineno-0-485">485</a></span>
 <span class="normal"><a href="#__codelineno-0-486">486</a></span>
 <span class="normal"><a href="#__codelineno-0-487">487</a></span>
-<span class="normal"><a href="#__codelineno-0-488">488</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-352" name="__codelineno-0-352"></a><span class="k">def</span><span class="w"> </span><span class="nf">process_video</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-488">488</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-352" name="__codelineno-0-352"></a><span class="k">def</span><span class="w"> </span><span class="nf">process_dropjump_video</span><span class="p">(</span>
 <a id="__codelineno-0-353" name="__codelineno-0-353"></a>    <span class="n">video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <a id="__codelineno-0-354" name="__codelineno-0-354"></a>    <span class="n">quality</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;balanced&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-355" name="__codelineno-0-355"></a>    <span class="n">output_video</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2236,19 +2236,19 @@ show_source: false</p>
 <div class="doc doc-object doc-function">
 
 
-<h2 id="kinemotion.api.process_videos_bulk" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">process_videos_bulk</span>
+<h2 id="kinemotion.api.process_dropjump_videos_bulk" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">process_dropjump_videos_bulk</span>
 
 
-<a href="#kinemotion.api.process_videos_bulk" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">process_videos_bulk</span><span class="p">(</span>
+<a href="#kinemotion.api.process_dropjump_videos_bulk" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">process_dropjump_videos_bulk</span><span class="p">(</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">configs</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
 
-        <p>Process multiple videos in parallel using ProcessPoolExecutor.</p>
+        <p>Process multiple drop jump videos in parallel using ProcessPoolExecutor.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -2267,16 +2267,16 @@ show_source: false</p>
                 <code>configs</code>
             </td>
             <td>
-                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="            VideoConfig
+                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="            DropJumpVideoConfig
 
 
   
       dataclass
-   (kinemotion.api.VideoConfig)" href="#kinemotion.api.VideoConfig">VideoConfig</a>]</code>
+   (kinemotion.api.DropJumpVideoConfig)" href="#kinemotion.api.DropJumpVideoConfig">DropJumpVideoConfig</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>List of VideoConfig objects specifying video paths and parameters</p>
+                <p>List of DropJumpVideoConfig objects specifying video paths and parameters</p>
               </div>
             </td>
             <td>
@@ -2304,17 +2304,17 @@ show_source: false</p>
                 <code>progress_callback</code>
             </td>
             <td>
-                  <code><span title="collections.abc.Callable">Callable</span>[[<a class="autorefs autorefs-internal" title="            VideoResult
+                  <code><span title="collections.abc.Callable">Callable</span>[[<a class="autorefs autorefs-internal" title="            DropJumpVideoResult
 
 
   
       dataclass
-   (kinemotion.api.VideoResult)" href="#kinemotion.api.VideoResult">VideoResult</a>], None] | None</code>
+   (kinemotion.api.DropJumpVideoResult)" href="#kinemotion.api.DropJumpVideoResult">DropJumpVideoResult</a>], None] | None</code>
             </td>
             <td>
               <div class="doc-md-description">
                 <p>Optional callback function called after each video completes.
-             Receives VideoResult object.</p>
+             Receives DropJumpVideoResult object.</p>
               </div>
             </td>
             <td>
@@ -2336,16 +2336,16 @@ show_source: false</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="            VideoResult
+                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="            DropJumpVideoResult
 
 
   
       dataclass
-   (kinemotion.api.VideoResult)" href="#kinemotion.api.VideoResult">VideoResult</a>]</code>
+   (kinemotion.api.DropJumpVideoResult)" href="#kinemotion.api.DropJumpVideoResult">DropJumpVideoResult</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>List of VideoResult objects, one per input video, in completion order</p>
+                <p>List of DropJumpVideoResult objects, one per input video, in completion order</p>
               </div>
             </td>
           </tr>
@@ -2359,11 +2359,11 @@ show_source: false</p>
 <blockquote>
 <blockquote>
 <p>configs = [
-...     VideoConfig("video1.mp4"),
-...     VideoConfig("video2.mp4", quality="accurate"),
-...     VideoConfig("video3.mp4", output_video="debug3.mp4"),
+...     DropJumpVideoConfig("video1.mp4"),
+...     DropJumpVideoConfig("video2.mp4", quality="accurate"),
+...     DropJumpVideoConfig("video3.mp4", output_video="debug3.mp4"),
 ... ]
-results = process_videos_bulk(configs, max_workers=4)
+results = process_dropjump_videos_bulk(configs, max_workers=4)
 for result in results:
 ...     if result.success:
 ...         print(f"{result.video_path}: {result.metrics.jump_height_m:.3f}m")
@@ -2437,56 +2437,56 @@ for result in results:
 <span class="normal"><a href="#__codelineno-0-549">549</a></span>
 <span class="normal"><a href="#__codelineno-0-550">550</a></span>
 <span class="normal"><a href="#__codelineno-0-551">551</a></span>
-<span class="normal"><a href="#__codelineno-0-552">552</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-491" name="__codelineno-0-491"></a><span class="k">def</span><span class="w"> </span><span class="nf">process_videos_bulk</span><span class="p">(</span>
-<a id="__codelineno-0-492" name="__codelineno-0-492"></a>    <span class="n">configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">VideoConfig</span><span class="p">],</span>
+<span class="normal"><a href="#__codelineno-0-552">552</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-491" name="__codelineno-0-491"></a><span class="k">def</span><span class="w"> </span><span class="nf">process_dropjump_videos_bulk</span><span class="p">(</span>
+<a id="__codelineno-0-492" name="__codelineno-0-492"></a>    <span class="n">configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DropJumpVideoConfig</span><span class="p">],</span>
 <a id="__codelineno-0-493" name="__codelineno-0-493"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
-<a id="__codelineno-0-494" name="__codelineno-0-494"></a>    <span class="n">progress_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">VideoResult</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-495" name="__codelineno-0-495"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">VideoResult</span><span class="p">]:</span>
+<a id="__codelineno-0-494" name="__codelineno-0-494"></a>    <span class="n">progress_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">DropJumpVideoResult</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-495" name="__codelineno-0-495"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">DropJumpVideoResult</span><span class="p">]:</span>
 <a id="__codelineno-0-496" name="__codelineno-0-496"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<a id="__codelineno-0-497" name="__codelineno-0-497"></a><span class="sd">    Process multiple videos in parallel using ProcessPoolExecutor.</span>
+<a id="__codelineno-0-497" name="__codelineno-0-497"></a><span class="sd">    Process multiple drop jump videos in parallel using ProcessPoolExecutor.</span>
 <a id="__codelineno-0-498" name="__codelineno-0-498"></a>
 <a id="__codelineno-0-499" name="__codelineno-0-499"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-500" name="__codelineno-0-500"></a><span class="sd">        configs: List of VideoConfig objects specifying video paths and parameters</span>
+<a id="__codelineno-0-500" name="__codelineno-0-500"></a><span class="sd">        configs: List of DropJumpVideoConfig objects specifying video paths and parameters</span>
 <a id="__codelineno-0-501" name="__codelineno-0-501"></a><span class="sd">        max_workers: Maximum number of parallel workers (default: 4)</span>
 <a id="__codelineno-0-502" name="__codelineno-0-502"></a><span class="sd">        progress_callback: Optional callback function called after each video completes.</span>
-<a id="__codelineno-0-503" name="__codelineno-0-503"></a><span class="sd">                         Receives VideoResult object.</span>
+<a id="__codelineno-0-503" name="__codelineno-0-503"></a><span class="sd">                         Receives DropJumpVideoResult object.</span>
 <a id="__codelineno-0-504" name="__codelineno-0-504"></a>
 <a id="__codelineno-0-505" name="__codelineno-0-505"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-506" name="__codelineno-0-506"></a><span class="sd">        List of VideoResult objects, one per input video, in completion order</span>
+<a id="__codelineno-0-506" name="__codelineno-0-506"></a><span class="sd">        List of DropJumpVideoResult objects, one per input video, in completion order</span>
 <a id="__codelineno-0-507" name="__codelineno-0-507"></a>
 <a id="__codelineno-0-508" name="__codelineno-0-508"></a><span class="sd">    Example:</span>
 <a id="__codelineno-0-509" name="__codelineno-0-509"></a><span class="sd">        &gt;&gt;&gt; configs = [</span>
-<a id="__codelineno-0-510" name="__codelineno-0-510"></a><span class="sd">        ...     VideoConfig(&quot;video1.mp4&quot;),</span>
-<a id="__codelineno-0-511" name="__codelineno-0-511"></a><span class="sd">        ...     VideoConfig(&quot;video2.mp4&quot;, quality=&quot;accurate&quot;),</span>
-<a id="__codelineno-0-512" name="__codelineno-0-512"></a><span class="sd">        ...     VideoConfig(&quot;video3.mp4&quot;, output_video=&quot;debug3.mp4&quot;),</span>
+<a id="__codelineno-0-510" name="__codelineno-0-510"></a><span class="sd">        ...     DropJumpVideoConfig(&quot;video1.mp4&quot;),</span>
+<a id="__codelineno-0-511" name="__codelineno-0-511"></a><span class="sd">        ...     DropJumpVideoConfig(&quot;video2.mp4&quot;, quality=&quot;accurate&quot;),</span>
+<a id="__codelineno-0-512" name="__codelineno-0-512"></a><span class="sd">        ...     DropJumpVideoConfig(&quot;video3.mp4&quot;, output_video=&quot;debug3.mp4&quot;),</span>
 <a id="__codelineno-0-513" name="__codelineno-0-513"></a><span class="sd">        ... ]</span>
-<a id="__codelineno-0-514" name="__codelineno-0-514"></a><span class="sd">        &gt;&gt;&gt; results = process_videos_bulk(configs, max_workers=4)</span>
+<a id="__codelineno-0-514" name="__codelineno-0-514"></a><span class="sd">        &gt;&gt;&gt; results = process_dropjump_videos_bulk(configs, max_workers=4)</span>
 <a id="__codelineno-0-515" name="__codelineno-0-515"></a><span class="sd">        &gt;&gt;&gt; for result in results:</span>
 <a id="__codelineno-0-516" name="__codelineno-0-516"></a><span class="sd">        ...     if result.success:</span>
 <a id="__codelineno-0-517" name="__codelineno-0-517"></a><span class="sd">        ...         print(f&quot;{result.video_path}: {result.metrics.jump_height_m:.3f}m&quot;)</span>
 <a id="__codelineno-0-518" name="__codelineno-0-518"></a><span class="sd">        ...     else:</span>
 <a id="__codelineno-0-519" name="__codelineno-0-519"></a><span class="sd">        ...         print(f&quot;{result.video_path}: FAILED - {result.error}&quot;)</span>
 <a id="__codelineno-0-520" name="__codelineno-0-520"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-521" name="__codelineno-0-521"></a>    <span class="n">results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">VideoResult</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-521" name="__codelineno-0-521"></a>    <span class="n">results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DropJumpVideoResult</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 <a id="__codelineno-0-522" name="__codelineno-0-522"></a>
 <a id="__codelineno-0-523" name="__codelineno-0-523"></a>    <span class="c1"># Use ProcessPoolExecutor for CPU-bound video processing</span>
 <a id="__codelineno-0-524" name="__codelineno-0-524"></a>    <span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
 <a id="__codelineno-0-525" name="__codelineno-0-525"></a>        <span class="c1"># Submit all jobs</span>
 <a id="__codelineno-0-526" name="__codelineno-0-526"></a>        <span class="n">future_to_config</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-0-527" name="__codelineno-0-527"></a>            <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">_process_video_wrapper</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span> <span class="n">config</span>
+<a id="__codelineno-0-527" name="__codelineno-0-527"></a>            <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">_process_dropjump_video_wrapper</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span> <span class="n">config</span>
 <a id="__codelineno-0-528" name="__codelineno-0-528"></a>            <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">configs</span>
 <a id="__codelineno-0-529" name="__codelineno-0-529"></a>        <span class="p">}</span>
 <a id="__codelineno-0-530" name="__codelineno-0-530"></a>
 <a id="__codelineno-0-531" name="__codelineno-0-531"></a>        <span class="c1"># Process results as they complete</span>
 <a id="__codelineno-0-532" name="__codelineno-0-532"></a>        <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">future_to_config</span><span class="p">):</span>
 <a id="__codelineno-0-533" name="__codelineno-0-533"></a>            <span class="n">config</span> <span class="o">=</span> <span class="n">future_to_config</span><span class="p">[</span><span class="n">future</span><span class="p">]</span>
-<a id="__codelineno-0-534" name="__codelineno-0-534"></a>            <span class="n">result</span><span class="p">:</span> <span class="n">VideoResult</span>
+<a id="__codelineno-0-534" name="__codelineno-0-534"></a>            <span class="n">result</span><span class="p">:</span> <span class="n">DropJumpVideoResult</span>
 <a id="__codelineno-0-535" name="__codelineno-0-535"></a>
 <a id="__codelineno-0-536" name="__codelineno-0-536"></a>            <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-0-537" name="__codelineno-0-537"></a>                <span class="n">result</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 <a id="__codelineno-0-538" name="__codelineno-0-538"></a>            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
 <a id="__codelineno-0-539" name="__codelineno-0-539"></a>                <span class="c1"># Handle unexpected errors</span>
-<a id="__codelineno-0-540" name="__codelineno-0-540"></a>                <span class="n">result</span> <span class="o">=</span> <span class="n">VideoResult</span><span class="p">(</span>
+<a id="__codelineno-0-540" name="__codelineno-0-540"></a>                <span class="n">result</span> <span class="o">=</span> <span class="n">DropJumpVideoResult</span><span class="p">(</span>
 <a id="__codelineno-0-541" name="__codelineno-0-541"></a>                    <span class="n">video_path</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">video_path</span><span class="p">,</span>
 <a id="__codelineno-0-542" name="__codelineno-0-542"></a>                    <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <a id="__codelineno-0-543" name="__codelineno-0-543"></a>                    <span class="n">error</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
@@ -2513,16 +2513,16 @@ show_source: false</p>
 
 
 
-<h2 id="kinemotion.api.VideoConfig" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">VideoConfig</span>
+<h2 id="kinemotion.api.DropJumpVideoConfig" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">DropJumpVideoConfig</span>
 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
   </span>
 
-<a href="#kinemotion.api.VideoConfig" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">VideoConfig</span><span class="p">(</span>
+<a href="#kinemotion.api.DropJumpVideoConfig" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">DropJumpVideoConfig</span><span class="p">(</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">video_path</span><span class="p">,</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">output_video</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2540,7 +2540,7 @@ show_source: false</p>
     <div class="doc doc-contents first">
 
 
-        <p>Configuration for processing a single video.</p>
+        <p>Configuration for processing a single drop jump video.</p>
 
 
 
@@ -2579,16 +2579,16 @@ show_source: false</p>
 
 
 
-<h2 id="kinemotion.api.VideoResult" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">VideoResult</span>
+<h2 id="kinemotion.api.DropJumpVideoResult" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">DropJumpVideoResult</span>
 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
   </span>
 
-<a href="#kinemotion.api.VideoResult" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">VideoResult</span><span class="p">(</span>
+<a href="#kinemotion.api.DropJumpVideoResult" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">DropJumpVideoResult</span><span class="p">(</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">video_path</span><span class="p">,</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">success</span><span class="p">,</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">metrics</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2600,7 +2600,7 @@ show_source: false</p>
     <div class="doc doc-contents first">
 
 
-        <p>Result of processing a single video.</p>
+        <p>Result of processing a single drop jump video.</p>
 
 
 
@@ -2887,14 +2887,14 @@ show_source: false</p>
 <h2 id="key-parameters">Key Parameters<a class="headerlink" href="#key-parameters" title="Permanent link">&para;</a></h2>
 <h3 id="drop_height">drop_height<a class="headerlink" href="#drop_height" title="Permanent link">&para;</a></h3>
 <p><strong>Required.</strong> The height of the drop box in meters. This is critical for accurate velocity calculations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">metrics</span> <span class="o">=</span> <span class="n">process_video</span><span class="p">(</span><span class="s2">&quot;video.mp4&quot;</span><span class="p">,</span> <span class="n">drop_height</span><span class="o">=</span><span class="mf">0.40</span><span class="p">)</span>  <span class="c1"># 40cm box</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">metrics</span> <span class="o">=</span> <span class="n">process_dropjump_video</span><span class="p">(</span><span class="s2">&quot;video.mp4&quot;</span><span class="p">,</span> <span class="n">drop_height</span><span class="o">=</span><span class="mf">0.40</span><span class="p">)</span>  <span class="c1"># 40cm box</span>
 </code></pre></div>
 <h3 id="smoothing">smoothing<a class="headerlink" href="#smoothing" title="Permanent link">&para;</a></h3>
 <p>Apply Savitzky-Golay smoothing to landmark positions before analysis. Reduces noise but may slightly delay event detection.</p>
 <p>Default: <code>True</code></p>
 <h3 id="output_path">output_path<a class="headerlink" href="#output_path" title="Permanent link">&para;</a></h3>
 <p>Path to write debug video with overlay visualization. If not provided, no debug video is created.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">metrics</span> <span class="o">=</span> <span class="n">process_video</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">metrics</span> <span class="o">=</span> <span class="n">process_dropjump_video</span><span class="p">(</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;video.mp4&quot;</span><span class="p">,</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">drop_height</span><span class="o">=</span><span class="mf">0.40</span><span class="p">,</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">output_path</span><span class="o">=</span><span class="s2">&quot;debug.mp4&quot;</span>
