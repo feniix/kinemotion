@@ -255,55 +255,6 @@ def _find_precise_phase_timing(
     return contact_start_frac, contact_end_frac
 
 
-def _calculate_calibration_scale(
-    drop_height_m: float | None,
-    phases: list[tuple[int, int, ContactState]],
-    air_phases_indexed: list[tuple[int, int, int]],
-    foot_y_positions: np.ndarray,
-) -> float:
-    """Calculate calibration scale factor from known drop height.
-
-    Args:
-        drop_height_m: Known drop height in meters
-        phases: All phase tuples
-        air_phases_indexed: Air phases with indices
-        foot_y_positions: Vertical position array
-
-    Returns:
-        Scale factor (1.0 if no calibration possible)
-    """
-    scale_factor = 1.0
-
-    if drop_height_m is None or len(phases) < 2:
-        return scale_factor
-
-    if not air_phases_indexed:
-        return scale_factor
-
-    # Get first air phase (the drop)
-    first_air_start, first_air_end, _ = air_phases_indexed[0]
-
-    # Initial position: at start of drop (on the box)
-    lookback_start = max(0, first_air_start - 5)
-    if lookback_start < first_air_start:
-        initial_position = float(
-            np.mean(foot_y_positions[lookback_start:first_air_start])
-        )
-    else:
-        initial_position = float(foot_y_positions[first_air_start])
-
-    # Landing position: at the ground after drop
-    landing_position = float(foot_y_positions[first_air_end])
-
-    # Drop distance in normalized coordinates (y increases downward)
-    drop_normalized = landing_position - initial_position
-
-    if drop_normalized > 0.01:  # Sanity check
-        scale_factor = drop_height_m / drop_normalized
-
-    return scale_factor
-
-
 def _analyze_flight_phase(
     metrics: DropJumpMetrics,
     phases: list[tuple[int, int, ContactState]],
@@ -311,9 +262,6 @@ def _analyze_flight_phase(
     contact_end: int,
     foot_y_positions: np.ndarray,
     fps: float,
-    drop_height_m: float | None,
-    scale_factor: float,
-    kinematic_correction_factor: float,
     smoothing_window: int,
     polyorder: int,
 ) -> None:
@@ -329,9 +277,6 @@ def _analyze_flight_phase(
         contact_end: End of contact phase
         foot_y_positions: Vertical position array
         fps: Video frame rate
-        drop_height_m: Known drop height (optional, for RSI calculation)
-        scale_factor: Calibration scale factor
-        kinematic_correction_factor: Correction for kinematic method
         smoothing_window: Window size for acceleration computation
         polyorder: Polynomial order for Savitzky-Golay filter
     """
@@ -489,11 +434,6 @@ def calculate_drop_jump_metrics(
     metrics.contact_start_frame_precise = contact_start_frac
     metrics.contact_end_frame_precise = contact_end_frac
 
-    # Calculate calibration scale factor
-    scale_factor = _calculate_calibration_scale(
-        drop_height_m, phases, air_phases_indexed, foot_y_positions
-    )
-
     # Analyze flight phase and calculate jump height
     _analyze_flight_phase(
         metrics,
@@ -502,9 +442,6 @@ def calculate_drop_jump_metrics(
         contact_end,
         foot_y_positions,
         fps,
-        drop_height_m,
-        scale_factor,
-        kinematic_correction_factor,
         smoothing_window,
         polyorder,
     )
