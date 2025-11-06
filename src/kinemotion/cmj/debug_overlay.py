@@ -98,6 +98,76 @@ class CMJDebugOverlayRenderer:
         }
         return colors.get(phase, (128, 128, 128))
 
+    def _get_skeleton_segments(
+        self, side_prefix: str
+    ) -> list[tuple[str, str, tuple[int, int, int], int]]:
+        """Get skeleton segments for one side of the body."""
+        return [
+            (f"{side_prefix}heel", f"{side_prefix}ankle", (0, 255, 255), 3),  # Foot
+            (
+                f"{side_prefix}heel",
+                f"{side_prefix}foot_index",
+                (0, 255, 255),
+                2,
+            ),  # Alt foot
+            (f"{side_prefix}ankle", f"{side_prefix}knee", (255, 100, 100), 4),  # Shin
+            (f"{side_prefix}knee", f"{side_prefix}hip", (100, 255, 100), 4),  # Femur
+            (
+                f"{side_prefix}hip",
+                f"{side_prefix}shoulder",
+                (100, 100, 255),
+                4,
+            ),  # Trunk
+            (f"{side_prefix}shoulder", "nose", (150, 150, 255), 2),  # Neck
+        ]
+
+    def _draw_segment(
+        self,
+        frame: np.ndarray,
+        landmarks: dict[str, tuple[float, float, float]],
+        start_key: str,
+        end_key: str,
+        color: tuple[int, int, int],
+        thickness: int,
+    ) -> None:
+        """Draw a single skeleton segment if both endpoints are visible."""
+        if start_key not in landmarks or end_key not in landmarks:
+            return
+
+        start_vis = landmarks[start_key][2]
+        end_vis = landmarks[end_key][2]
+
+        # Very low threshold to show as much as possible
+        if start_vis > 0.2 and end_vis > 0.2:
+            start_x = int(landmarks[start_key][0] * self.width)
+            start_y = int(landmarks[start_key][1] * self.height)
+            end_x = int(landmarks[end_key][0] * self.width)
+            end_y = int(landmarks[end_key][1] * self.height)
+
+            cv2.line(frame, (start_x, start_y), (end_x, end_y), color, thickness)
+
+    def _draw_joints(
+        self,
+        frame: np.ndarray,
+        landmarks: dict[str, tuple[float, float, float]],
+        side_prefix: str,
+    ) -> None:
+        """Draw joint circles for one side of the body."""
+        joint_keys = [
+            f"{side_prefix}heel",
+            f"{side_prefix}foot_index",
+            f"{side_prefix}ankle",
+            f"{side_prefix}knee",
+            f"{side_prefix}hip",
+            f"{side_prefix}shoulder",
+        ]
+        for key in joint_keys:
+            if key in landmarks and landmarks[key][2] > 0.2:
+                jx = int(landmarks[key][0] * self.width)
+                jy = int(landmarks[key][1] * self.height)
+                cv2.circle(frame, (jx, jy), 6, (255, 255, 255), -1)
+                cv2.circle(frame, (jx, jy), 8, (0, 0, 0), 2)
+
     def _draw_skeleton(
         self, frame: np.ndarray, landmarks: dict[str, tuple[float, float, float]]
     ) -> None:
@@ -112,68 +182,16 @@ class CMJDebugOverlayRenderer:
         """
         # Try both sides and draw all visible segments
         for side_prefix in ["right_", "left_"]:
-            segments = [
-                (f"{side_prefix}heel", f"{side_prefix}ankle", (0, 255, 255), 3),  # Foot
-                (
-                    f"{side_prefix}heel",
-                    f"{side_prefix}foot_index",
-                    (0, 255, 255),
-                    2,
-                ),  # Alt foot
-                (
-                    f"{side_prefix}ankle",
-                    f"{side_prefix}knee",
-                    (255, 100, 100),
-                    4,
-                ),  # Shin
-                (
-                    f"{side_prefix}knee",
-                    f"{side_prefix}hip",
-                    (100, 255, 100),
-                    4,
-                ),  # Femur
-                (
-                    f"{side_prefix}hip",
-                    f"{side_prefix}shoulder",
-                    (100, 100, 255),
-                    4,
-                ),  # Trunk
-                # Additional segments for better visualization
-                (f"{side_prefix}shoulder", "nose", (150, 150, 255), 2),  # Neck
-            ]
+            segments = self._get_skeleton_segments(side_prefix)
 
             # Draw ALL visible segments (not just one side)
             for start_key, end_key, color, thickness in segments:
-                if start_key in landmarks and end_key in landmarks:
-                    start_vis = landmarks[start_key][2]
-                    end_vis = landmarks[end_key][2]
-
-                    # Very low threshold to show as much as possible
-                    if start_vis > 0.2 and end_vis > 0.2:
-                        start_x = int(landmarks[start_key][0] * self.width)
-                        start_y = int(landmarks[start_key][1] * self.height)
-                        end_x = int(landmarks[end_key][0] * self.width)
-                        end_y = int(landmarks[end_key][1] * self.height)
-
-                        cv2.line(
-                            frame, (start_x, start_y), (end_x, end_y), color, thickness
-                        )
+                self._draw_segment(
+                    frame, landmarks, start_key, end_key, color, thickness
+                )
 
             # Draw joints as circles for this side
-            joint_keys = [
-                f"{side_prefix}heel",
-                f"{side_prefix}foot_index",
-                f"{side_prefix}ankle",
-                f"{side_prefix}knee",
-                f"{side_prefix}hip",
-                f"{side_prefix}shoulder",
-            ]
-            for key in joint_keys:
-                if key in landmarks and landmarks[key][2] > 0.2:
-                    jx = int(landmarks[key][0] * self.width)
-                    jy = int(landmarks[key][1] * self.height)
-                    cv2.circle(frame, (jx, jy), 6, (255, 255, 255), -1)
-                    cv2.circle(frame, (jx, jy), 8, (0, 0, 0), 2)
+            self._draw_joints(frame, landmarks, side_prefix)
 
         # Always draw nose (head position) if visible
         if "nose" in landmarks and landmarks["nose"][2] > 0.2:
@@ -316,6 +334,126 @@ class CMJDebugOverlayRenderer:
         # Draw arc (simplified as a circle for now)
         cv2.circle(frame, (jx, jy), radius, arc_color, 2)
 
+    def _draw_foot_landmarks(
+        self,
+        frame: np.ndarray,
+        landmarks: dict[str, tuple[float, float, float]],
+        phase_color: tuple[int, int, int],
+    ) -> None:
+        """Draw foot landmarks and average position."""
+        foot_keys = ["left_ankle", "right_ankle", "left_heel", "right_heel"]
+        foot_positions = []
+
+        for key in foot_keys:
+            if key in landmarks:
+                x, y, vis = landmarks[key]
+                if vis > 0.5:
+                    lx = int(x * self.width)
+                    ly = int(y * self.height)
+                    foot_positions.append((lx, ly))
+                    cv2.circle(frame, (lx, ly), 5, (255, 255, 0), -1)
+
+        # Draw average foot position with phase color
+        if foot_positions:
+            avg_x = int(np.mean([p[0] for p in foot_positions]))
+            avg_y = int(np.mean([p[1] for p in foot_positions]))
+            cv2.circle(frame, (avg_x, avg_y), 12, phase_color, -1)
+            cv2.circle(frame, (avg_x, avg_y), 14, (255, 255, 255), 2)
+
+    def _draw_phase_banner(
+        self, frame: np.ndarray, phase: str | None, phase_color: tuple[int, int, int]
+    ) -> None:
+        """Draw phase indicator banner."""
+        if not phase:
+            return
+
+        phase_text = f"Phase: {phase.upper()}"
+        text_size = cv2.getTextSize(phase_text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0]
+        cv2.rectangle(frame, (5, 5), (text_size[0] + 15, 45), phase_color, -1)
+        cv2.putText(
+            frame, phase_text, (10, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2
+        )
+
+    def _draw_key_frame_markers(
+        self, frame: np.ndarray, frame_idx: int, metrics: CMJMetrics
+    ) -> None:
+        """Draw markers for key frames (standing start, lowest, takeoff, landing)."""
+        y_offset = 120
+        markers = []
+
+        if metrics.standing_start_frame and frame_idx == int(
+            metrics.standing_start_frame
+        ):
+            markers.append("COUNTERMOVEMENT START")
+
+        if frame_idx == int(metrics.lowest_point_frame):
+            markers.append("LOWEST POINT")
+
+        if frame_idx == int(metrics.takeoff_frame):
+            markers.append("TAKEOFF")
+
+        if frame_idx == int(metrics.landing_frame):
+            markers.append("LANDING")
+
+        for marker in markers:
+            cv2.putText(
+                frame,
+                marker,
+                (10, y_offset),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.7,
+                (255, 255, 0),
+                2,
+            )
+            y_offset += 35
+
+    def _draw_metrics_summary(
+        self, frame: np.ndarray, frame_idx: int, metrics: CMJMetrics
+    ) -> None:
+        """Draw metrics summary in bottom right (last 30 frames)."""
+        total_frames = int(metrics.landing_frame) + 30
+        if frame_idx < total_frames - 30:
+            return
+
+        metrics_text = [
+            f"Jump Height: {metrics.jump_height:.3f}m",
+            f"Flight Time: {metrics.flight_time*1000:.0f}ms",
+            f"CM Depth: {metrics.countermovement_depth:.3f}m",
+            f"Ecc Duration: {metrics.eccentric_duration*1000:.0f}ms",
+            f"Con Duration: {metrics.concentric_duration*1000:.0f}ms",
+        ]
+
+        # Draw background
+        box_height = len(metrics_text) * 30 + 20
+        cv2.rectangle(
+            frame,
+            (self.width - 320, self.height - box_height - 10),
+            (self.width - 10, self.height - 10),
+            (0, 0, 0),
+            -1,
+        )
+        cv2.rectangle(
+            frame,
+            (self.width - 320, self.height - box_height - 10),
+            (self.width - 10, self.height - 10),
+            (0, 255, 0),
+            2,
+        )
+
+        # Draw metrics text
+        text_y = self.height - box_height + 10
+        for text in metrics_text:
+            cv2.putText(
+                frame,
+                text,
+                (self.width - 310, text_y),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.6,
+                (255, 255, 255),
+                1,
+            )
+            text_y += 30
+
     def render_frame(
         self,
         frame: np.ndarray,
@@ -346,47 +484,12 @@ class CMJDebugOverlayRenderer:
 
         # Draw skeleton and triple extension if landmarks available
         if landmarks:
-            # Draw skeleton segments for triple extension
             self._draw_skeleton(annotated, landmarks)
-
-            # Draw joint angles
             self._draw_joint_angles(annotated, landmarks, phase_color)
-
-            # Draw foot landmarks
-            foot_keys = ["left_ankle", "right_ankle", "left_heel", "right_heel"]
-            foot_positions = []
-
-            for key in foot_keys:
-                if key in landmarks:
-                    x, y, vis = landmarks[key]
-                    if vis > 0.5:
-                        lx = int(x * self.width)
-                        ly = int(y * self.height)
-                        foot_positions.append((lx, ly))
-                        cv2.circle(annotated, (lx, ly), 5, (255, 255, 0), -1)
-
-            # Draw average foot position with phase color
-            if foot_positions:
-                avg_x = int(np.mean([p[0] for p in foot_positions]))
-                avg_y = int(np.mean([p[1] for p in foot_positions]))
-                cv2.circle(annotated, (avg_x, avg_y), 12, phase_color, -1)
-                cv2.circle(annotated, (avg_x, avg_y), 14, (255, 255, 255), 2)
+            self._draw_foot_landmarks(annotated, landmarks, phase_color)
 
         # Draw phase indicator banner
-        if phase:
-            # Phase name with background
-            phase_text = f"Phase: {phase.upper()}"
-            text_size = cv2.getTextSize(phase_text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0]
-            cv2.rectangle(annotated, (5, 5), (text_size[0] + 15, 45), phase_color, -1)
-            cv2.putText(
-                annotated,
-                phase_text,
-                (10, 35),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                1,
-                (0, 0, 0),
-                2,
-            )
+        self._draw_phase_banner(annotated, phase, phase_color)
 
         # Draw frame number
         cv2.putText(
@@ -399,78 +502,10 @@ class CMJDebugOverlayRenderer:
             2,
         )
 
-        # Draw key frame markers
+        # Draw key frame markers and metrics summary
         if metrics:
-            y_offset = 120
-            markers = []
-
-            if metrics.standing_start_frame and frame_idx == int(
-                metrics.standing_start_frame
-            ):
-                markers.append("COUNTERMOVEMENT START")
-
-            if frame_idx == int(metrics.lowest_point_frame):
-                markers.append("LOWEST POINT")
-
-            if frame_idx == int(metrics.takeoff_frame):
-                markers.append("TAKEOFF")
-
-            if frame_idx == int(metrics.landing_frame):
-                markers.append("LANDING")
-
-            for marker in markers:
-                cv2.putText(
-                    annotated,
-                    marker,
-                    (10, y_offset),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.7,
-                    (255, 255, 0),
-                    2,
-                )
-                y_offset += 35
-
-            # Draw metrics summary in bottom right (last 30 frames)
-            total_frames = int(metrics.landing_frame) + 30
-            if frame_idx >= total_frames - 30:
-                metrics_text = [
-                    f"Jump Height: {metrics.jump_height:.3f}m",
-                    f"Flight Time: {metrics.flight_time*1000:.0f}ms",
-                    f"CM Depth: {metrics.countermovement_depth:.3f}m",
-                    f"Ecc Duration: {metrics.eccentric_duration*1000:.0f}ms",
-                    f"Con Duration: {metrics.concentric_duration*1000:.0f}ms",
-                ]
-
-                # Draw background
-                box_height = len(metrics_text) * 30 + 20
-                cv2.rectangle(
-                    annotated,
-                    (self.width - 320, self.height - box_height - 10),
-                    (self.width - 10, self.height - 10),
-                    (0, 0, 0),
-                    -1,
-                )
-                cv2.rectangle(
-                    annotated,
-                    (self.width - 320, self.height - box_height - 10),
-                    (self.width - 10, self.height - 10),
-                    (0, 255, 0),
-                    2,
-                )
-
-                # Draw metrics text
-                text_y = self.height - box_height + 10
-                for text in metrics_text:
-                    cv2.putText(
-                        annotated,
-                        text,
-                        (self.width - 310, text_y),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        0.6,
-                        (255, 255, 255),
-                        1,
-                    )
-                    text_y += 30
+            self._draw_key_frame_markers(annotated, frame_idx, metrics)
+            self._draw_metrics_summary(annotated, frame_idx, metrics)
 
         return annotated
 
