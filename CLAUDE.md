@@ -254,6 +254,8 @@ chore(release): 0.11.0 [skip ci]
 feat!: change API signature for process_video
 ```
 
+**Important**: Commit messages must never reference Claude or AI assistance. Keep messages professional and focused on the technical changes.
+
 ## MCP Servers
 
 Configured in `.mcp.json`: web-search, sequential-thinking, context7, etc.
