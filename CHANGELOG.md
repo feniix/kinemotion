@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.11.1 (2025-11-06)
+
+### Bug Fixes
+
+- **cmj**: Remove unused parameters and fix code quality issues
+  ([`72a1e43`](https://github.com/feniix/kinemotion/commit/72a1e43ec107e5b1c132efb10a08a09ea2864ae4))
+
+
 ## v0.11.0 (2025-11-06)
 
 ### Documentation
