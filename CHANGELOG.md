@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.11.2 (2025-11-06)
+
+### Bug Fixes
+
+- **cmj**: Reduce cognitive complexity in _extract_positions_from_landmarks
+  ([`9772df6`](https://github.com/feniix/kinemotion/commit/9772df69ca8fb2a46726614dd0adda3795cf0ad1))
+
+- **cmj**: Reduce cognitive complexity in cmj_analyze CLI function
+  ([`e9c7200`](https://github.com/feniix/kinemotion/commit/e9c720081df171d2b18150a5b370c4471fdf9b19))
+
+- **cmj**: Reduce cognitive complexity in debug overlay rendering
+  ([`11f35c4`](https://github.com/feniix/kinemotion/commit/11f35c4cf675301bccfef376e12c0ed06470e259))
+
+- **cmj**: Remove unused variable and parameters in api and analysis
+  ([`e8ef607`](https://github.com/feniix/kinemotion/commit/e8ef60735711f4c715d53049477362284efca433))
+
+
 ## v0.11.1 (2025-11-06)
 
 ### Bug Fixes
