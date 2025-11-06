@@ -1,12 +1,15 @@
 name: Documentation
 
 on:
-  push:
+  # Trigger after release workflow completes (which bumps version)
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
     branches: [main]
+  # Also allow manual trigger and PR builds
   pull_request:
     branches: [main]
-  release:
-    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -14,6 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Check out main to get the version bump commit from semantic-release
+          ref: main
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -40,7 +47,8 @@ jobs:
           path: site/
 
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Deploy only after successful release workflow, not on PRs
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -48,6 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0  # Fetch all history for gh-deploy
 
       - name: Set up Python
