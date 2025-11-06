@@ -752,3 +752,39 @@ def compute_average_foot_position(
         return (0.5, 0.5)  # Default to center if no visible feet
 
     return (float(np.mean(x_positions)), float(np.mean(y_positions)))
+
+
+def extract_foot_positions_and_visibilities(
+    smoothed_landmarks: list[dict[str, tuple[float, float, float]] | None],
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Extract vertical positions and average visibilities from smoothed landmarks.
+
+    This utility function eliminates code duplication between CLI and programmatic usage.
+
+    Args:
+        smoothed_landmarks: Smoothed landmark sequence from tracking
+
+    Returns:
+        Tuple of (vertical_positions, visibilities) as numpy arrays
+    """
+    position_list: list[float] = []
+    visibilities_list: list[float] = []
+
+    for frame_landmarks in smoothed_landmarks:
+        if frame_landmarks:
+            _, foot_y = compute_average_foot_position(frame_landmarks)
+            position_list.append(foot_y)
+
+            # Average visibility of foot landmarks
+            foot_vis = []
+            for key in ["left_ankle", "right_ankle", "left_heel", "right_heel"]:
+                if key in frame_landmarks:
+                    foot_vis.append(frame_landmarks[key][2])
+            visibilities_list.append(float(np.mean(foot_vis)) if foot_vis else 0.0)
+        else:
+            # Fill missing frames with last known position or default
+            position_list.append(position_list[-1] if position_list else 0.5)
+            visibilities_list.append(0.0)
+
+    return np.array(position_list), np.array(visibilities_list)
