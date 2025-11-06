@@ -147,6 +147,31 @@ uv run pytest             # All 70 tests
 - Pyright strict mode (all functions typed)
 - Ruff (100 char lines)
 - Conventional Commits (see below)
+- **Code duplication target: < 3%**
+
+### Avoiding Code Duplication
+
+When writing new code, follow these principles to maintain low duplication:
+
+1. **Extract Common Logic**: If you find yourself copying code between modules, extract it to a shared utility
+   - Example: `core/smoothing.py` uses `_smooth_landmarks_core()` shared by both standard and advanced smoothing
+   - Example: `core/debug_overlay_utils.py` provides `BaseDebugOverlayRenderer` base class
+
+2. **Use Inheritance for Shared Behavior**: When classes share common initialization or methods
+   - Example: `DebugOverlayRenderer` and `CMJDebugOverlayRenderer` inherit from `BaseDebugOverlayRenderer`
+   - Avoids duplicating `__init__()`, `write_frame()`, `close()`, and context manager methods
+
+3. **Create Helper Functions**: Break down complex functions into smaller, reusable pieces
+   - Example: `_extract_landmark_coordinates()`, `_get_landmark_names()`, `_fill_missing_frames()`
+   - Makes code more testable and reusable
+
+4. **Use Function Composition**: Pass functions as parameters to share control flow logic
+   - Example: `_smooth_landmarks_core()` accepts a `smoother_fn` parameter
+   - Allows different smoothing strategies without duplicating iteration logic
+
+5. **Check Duplication**: Run `npx jscpd src/kinemotion` to verify duplication stays below 3%
+   - Current: 2.96% (206 duplicated lines out of 6952)
+   - Acceptable duplicates: CLI option definitions, small wrapper functions for type safety
 
 ## Quick Reference
 
