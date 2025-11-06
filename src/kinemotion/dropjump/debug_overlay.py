@@ -3,60 +3,14 @@
 import cv2
 import numpy as np
 
+from ..core.debug_overlay_utils import BaseDebugOverlayRenderer
 from ..core.pose import compute_center_of_mass
 from .analysis import ContactState, compute_average_foot_position
 from .kinematics import DropJumpMetrics
 
 
-class DebugOverlayRenderer:
+class DebugOverlayRenderer(BaseDebugOverlayRenderer):
     """Renders debug information on video frames."""
-
-    def __init__(
-        self,
-        output_path: str,
-        width: int,
-        height: int,
-        display_width: int,
-        display_height: int,
-        fps: float,
-    ):
-        """
-        Initialize overlay renderer.
-
-        Args:
-            output_path: Path for output video
-            width: Encoded frame width (from source video)
-            height: Encoded frame height (from source video)
-            display_width: Display width (considering SAR)
-            display_height: Display height (considering SAR)
-            fps: Frames per second
-        """
-        self.width = width
-        self.height = height
-        self.display_width = display_width
-        self.display_height = display_height
-        self.needs_resize = (display_width != width) or (display_height != height)
-
-        # Try H.264 codec first (better quality/compatibility), fallback to mp4v
-        fourcc = cv2.VideoWriter_fourcc(*"avc1")
-        # IMPORTANT: cv2.VideoWriter expects (width, height) tuple - NOT (height, width)
-        # Write at display dimensions so video displays correctly without SAR metadata
-        self.writer = cv2.VideoWriter(
-            output_path, fourcc, fps, (display_width, display_height)
-        )
-
-        # Check if writer opened successfully, fallback to mp4v if not
-        if not self.writer.isOpened():
-            fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-            self.writer = cv2.VideoWriter(
-                output_path, fourcc, fps, (display_width, display_height)
-            )
-
-        if not self.writer.isOpened():
-            raise ValueError(
-                f"Failed to create video writer for {output_path} with dimensions "
-                f"{display_width}x{display_height}"
-            )
 
     def render_frame(
         self,
@@ -211,42 +165,3 @@ class DebugOverlayRenderer:
                 )
 
         return annotated
-
-    def write_frame(self, frame: np.ndarray) -> None:
-        """
-        Write frame to output video.
-
-        Args:
-            frame: Video frame with shape (height, width, 3)
-
-        Raises:
-            ValueError: If frame dimensions don't match expected encoded dimensions
-        """
-        # Validate frame dimensions match expected encoded dimensions
-        frame_height, frame_width = frame.shape[:2]
-        if frame_height != self.height or frame_width != self.width:
-            raise ValueError(
-                f"Frame dimensions ({frame_width}x{frame_height}) don't match "
-                f"source dimensions ({self.width}x{self.height}). "
-                f"Aspect ratio must be preserved from source video."
-            )
-
-        # Resize to display dimensions if needed (to handle SAR)
-        if self.needs_resize:
-            frame = cv2.resize(
-                frame,
-                (self.display_width, self.display_height),
-                interpolation=cv2.INTER_LANCZOS4,
-            )
-
-        self.writer.write(frame)
-
-    def close(self) -> None:
-        """Release video writer."""
-        self.writer.release()
-
-    def __enter__(self) -> "DebugOverlayRenderer":
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:  # type: ignore[no-untyped-def]
-        self.close()

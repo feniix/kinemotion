@@ -9,6 +9,166 @@ from .filtering import (
 )
 
 
+def _extract_landmark_coordinates(
+    landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
+    landmark_name: str,
+) -> tuple[list[float], list[float], list[int]]:
+    """
+    Extract x, y coordinates and valid frame indices for a specific landmark.
+
+    Args:
+        landmark_sequence: List of landmark dictionaries from each frame
+        landmark_name: Name of the landmark to extract
+
+    Returns:
+        Tuple of (x_coords, y_coords, valid_frames)
+    """
+    x_coords = []
+    y_coords = []
+    valid_frames = []
+
+    for i, frame_landmarks in enumerate(landmark_sequence):
+        if frame_landmarks is not None and landmark_name in frame_landmarks:
+            x, y, _ = frame_landmarks[landmark_name]  # vis not used
+            x_coords.append(x)
+            y_coords.append(y)
+            valid_frames.append(i)
+
+    return x_coords, y_coords, valid_frames
+
+
+def _get_landmark_names(
+    landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
+) -> list[str] | None:
+    """
+    Extract landmark names from first valid frame.
+
+    Args:
+        landmark_sequence: List of landmark dictionaries from each frame
+
+    Returns:
+        List of landmark names or None if no valid frame found
+    """
+    for frame_landmarks in landmark_sequence:
+        if frame_landmarks is not None:
+            return list(frame_landmarks.keys())
+    return None
+
+
+def _fill_missing_frames(
+    smoothed_sequence: list[dict[str, tuple[float, float, float]] | None],
+    landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
+) -> None:
+    """
+    Fill in any missing frames in smoothed sequence with original data.
+
+    Args:
+        smoothed_sequence: Smoothed sequence (modified in place)
+        landmark_sequence: Original sequence
+    """
+    for i in range(len(landmark_sequence)):
+        if i >= len(smoothed_sequence) or not smoothed_sequence[i]:
+            if i < len(smoothed_sequence):
+                smoothed_sequence[i] = landmark_sequence[i]
+            else:
+                smoothed_sequence.append(landmark_sequence[i])
+
+
+def _store_smoothed_landmarks(
+    smoothed_sequence: list[dict[str, tuple[float, float, float]] | None],
+    landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
+    landmark_name: str,
+    x_smooth: np.ndarray,
+    y_smooth: np.ndarray,
+    valid_frames: list[int],
+) -> None:
+    """
+    Store smoothed landmark values back into the sequence.
+
+    Args:
+        smoothed_sequence: Sequence to store smoothed values into (modified in place)
+        landmark_sequence: Original sequence (for visibility values)
+        landmark_name: Name of the landmark being smoothed
+        x_smooth: Smoothed x coordinates
+        y_smooth: Smoothed y coordinates
+        valid_frames: Frame indices corresponding to smoothed values
+    """
+    for idx, frame_idx in enumerate(valid_frames):
+        if frame_idx >= len(smoothed_sequence):
+            smoothed_sequence.extend([{}] * (frame_idx - len(smoothed_sequence) + 1))
+
+        # Ensure smoothed_sequence[frame_idx] is a dict, not None
+        if smoothed_sequence[frame_idx] is None:
+            smoothed_sequence[frame_idx] = {}
+
+        # Type narrowing: after the check above, we know it's a dict
+        frame_dict = smoothed_sequence[frame_idx]
+        assert frame_dict is not None  # for type checker
+
+        if landmark_name not in frame_dict and landmark_sequence[frame_idx] is not None:
+            # Keep original visibility
+            orig_landmarks = landmark_sequence[frame_idx]
+            assert orig_landmarks is not None  # for type checker
+            orig_vis = orig_landmarks[landmark_name][2]
+            frame_dict[landmark_name] = (
+                float(x_smooth[idx]),
+                float(y_smooth[idx]),
+                orig_vis,
+            )
+
+
+def _smooth_landmarks_core(
+    landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
+    window_length: int,
+    polyorder: int,
+    smoother_fn,  # type: ignore[no-untyped-def]
+) -> list[dict[str, tuple[float, float, float]] | None]:
+    """
+    Core smoothing logic shared by both standard and advanced smoothing.
+
+    Args:
+        landmark_sequence: List of landmark dictionaries from each frame
+        window_length: Length of filter window (must be odd)
+        polyorder: Order of polynomial used to fit samples
+        smoother_fn: Function that takes (x_coords, y_coords, valid_frames)
+            and returns (x_smooth, y_smooth)
+
+    Returns:
+        Smoothed landmark sequence
+    """
+    landmark_names = _get_landmark_names(landmark_sequence)
+    if landmark_names is None:
+        return landmark_sequence
+
+    smoothed_sequence: list[dict[str, tuple[float, float, float]] | None] = []
+
+    for landmark_name in landmark_names:
+        x_coords, y_coords, valid_frames = _extract_landmark_coordinates(
+            landmark_sequence, landmark_name
+        )
+
+        if len(x_coords) < window_length:
+            continue
+
+        # Apply smoothing function
+        x_smooth, y_smooth = smoother_fn(x_coords, y_coords, valid_frames)
+
+        # Store smoothed values back
+        _store_smoothed_landmarks(
+            smoothed_sequence,
+            landmark_sequence,
+            landmark_name,
+            x_smooth,
+            y_smooth,
+            valid_frames,
+        )
+
+    # Fill in any missing frames with original data
+    _fill_missing_frames(smoothed_sequence, landmark_sequence)
+
+    return smoothed_sequence
+
+
 def smooth_landmarks(
     landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
     window_length: int = 5,
@@ -26,78 +186,20 @@ def smooth_landmarks(
         Smoothed landmark sequence with same structure as input
     """
     if len(landmark_sequence) < window_length:
-        # Not enough frames to smooth effectively
         return landmark_sequence
 
     # Ensure window_length is odd
     if window_length % 2 == 0:
         window_length += 1
 
-    # Extract landmark names from first valid frame
-    landmark_names = None
-    for frame_landmarks in landmark_sequence:
-        if frame_landmarks is not None:
-            landmark_names = list(frame_landmarks.keys())
-            break
-
-    if landmark_names is None:
-        return landmark_sequence
-
-    # Build arrays for each landmark coordinate
-    smoothed_sequence: list[dict[str, tuple[float, float, float]] | None] = []
-
-    for landmark_name in landmark_names:
-        # Extract x, y coordinates for this landmark across all frames
-        x_coords = []
-        y_coords = []
-        valid_frames = []
-
-        for i, frame_landmarks in enumerate(landmark_sequence):
-            if frame_landmarks is not None and landmark_name in frame_landmarks:
-                x, y, _ = frame_landmarks[landmark_name]  # vis not used
-                x_coords.append(x)
-                y_coords.append(y)
-                valid_frames.append(i)
-
-        if len(x_coords) < window_length:
-            continue
-
-        # Apply Savitzky-Golay filter
+    def savgol_smoother(x_coords, y_coords, _valid_frames):  # type: ignore[no-untyped-def]
         x_smooth = savgol_filter(x_coords, window_length, polyorder)
         y_smooth = savgol_filter(y_coords, window_length, polyorder)
+        return x_smooth, y_smooth
 
-        # Store smoothed values back
-        for idx, frame_idx in enumerate(valid_frames):
-            if frame_idx >= len(smoothed_sequence):
-                smoothed_sequence.extend(
-                    [{}] * (frame_idx - len(smoothed_sequence) + 1)
-                )
-
-            # Ensure smoothed_sequence[frame_idx] is a dict, not None
-            if smoothed_sequence[frame_idx] is None:
-                smoothed_sequence[frame_idx] = {}
-
-            if (
-                landmark_name not in smoothed_sequence[frame_idx]
-                and landmark_sequence[frame_idx] is not None
-            ):
-                # Keep original visibility
-                orig_vis = landmark_sequence[frame_idx][landmark_name][2]
-                smoothed_sequence[frame_idx][landmark_name] = (
-                    float(x_smooth[idx]),
-                    float(y_smooth[idx]),
-                    orig_vis,
-                )
-
-    # Fill in any missing frames with original data
-    for i in range(len(landmark_sequence)):
-        if i >= len(smoothed_sequence) or not smoothed_sequence[i]:
-            if i < len(smoothed_sequence):
-                smoothed_sequence[i] = landmark_sequence[i]
-            else:
-                smoothed_sequence.append(landmark_sequence[i])
-
-    return smoothed_sequence
+    return _smooth_landmarks_core(
+        landmark_sequence, window_length, polyorder, savgol_smoother
+    )
 
 
 def compute_velocity(
@@ -259,42 +361,13 @@ def smooth_landmarks_advanced(
         Smoothed landmark sequence with same structure as input
     """
     if len(landmark_sequence) < window_length:
-        # Not enough frames to smooth effectively
         return landmark_sequence
 
     # Ensure window_length is odd
     if window_length % 2 == 0:
         window_length += 1
 
-    # Extract landmark names from first valid frame
-    landmark_names = None
-    for frame_landmarks in landmark_sequence:
-        if frame_landmarks is not None:
-            landmark_names = list(frame_landmarks.keys())
-            break
-
-    if landmark_names is None:
-        return landmark_sequence
-
-    # Build arrays for each landmark coordinate
-    smoothed_sequence: list[dict[str, tuple[float, float, float]] | None] = []
-
-    for landmark_name in landmark_names:
-        # Extract x, y coordinates for this landmark across all frames
-        x_coords = []
-        y_coords = []
-        valid_frames = []
-
-        for i, frame_landmarks in enumerate(landmark_sequence):
-            if frame_landmarks is not None and landmark_name in frame_landmarks:
-                x, y, _ = frame_landmarks[landmark_name]  # vis not used
-                x_coords.append(x)
-                y_coords.append(y)
-                valid_frames.append(i)
-
-        if len(x_coords) < window_length:
-            continue
-
+    def advanced_smoother(x_coords, y_coords, _valid_frames):  # type: ignore[no-untyped-def]
         x_array = np.array(x_coords)
         y_array = np.array(y_coords)
 
@@ -332,35 +405,8 @@ def smooth_landmarks_advanced(
             x_smooth = savgol_filter(x_array, window_length, polyorder)
             y_smooth = savgol_filter(y_array, window_length, polyorder)
 
-        # Store smoothed values back
-        for idx, frame_idx in enumerate(valid_frames):
-            if frame_idx >= len(smoothed_sequence):
-                smoothed_sequence.extend(
-                    [{}] * (frame_idx - len(smoothed_sequence) + 1)
-                )
+        return x_smooth, y_smooth
 
-            # Ensure smoothed_sequence[frame_idx] is a dict, not None
-            if smoothed_sequence[frame_idx] is None:
-                smoothed_sequence[frame_idx] = {}
-
-            if (
-                landmark_name not in smoothed_sequence[frame_idx]
-                and landmark_sequence[frame_idx] is not None
-            ):
-                # Keep original visibility
-                orig_vis = landmark_sequence[frame_idx][landmark_name][2]
-                smoothed_sequence[frame_idx][landmark_name] = (
-                    float(x_smooth[idx]),
-                    float(y_smooth[idx]),
-                    orig_vis,
-                )
-
-    # Fill in any missing frames with original data
-    for i in range(len(landmark_sequence)):
-        if i >= len(smoothed_sequence) or not smoothed_sequence[i]:
-            if i < len(smoothed_sequence):
-                smoothed_sequence[i] = landmark_sequence[i]
-            else:
-                smoothed_sequence.append(landmark_sequence[i])
-
-    return smoothed_sequence
+    return _smooth_landmarks_core(
+        landmark_sequence, window_length, polyorder, advanced_smoother
+    )
