@@ -7,7 +7,7 @@ The drop jump API provides functions for analyzing drop jump videos and extracti
 ```python
 from kinemotion import process_dropjump_video
 
-metrics = process_video(
+metrics = process_dropjump_video(
     video_path="dropjump.mp4",
     drop_height=0.40,  # meters
     output_path="debug.mp4",  # optional
@@ -21,26 +21,26 @@ print(f"RSI: {metrics.reactive_strength_index:.2f}")
 
 ## Main Functions
 
-::: kinemotion.api.process_video
+::: kinemotion.api.process_dropjump_video
 options:
 show_root_heading: true
 show_source: false
 
-::: kinemotion.api.process_videos_bulk
+::: kinemotion.api.process_dropjump_videos_bulk
 options:
 show_root_heading: true
 show_source: false
 
 ## Configuration
 
-::: kinemotion.api.VideoConfig
+::: kinemotion.api.DropJumpVideoConfig
 options:
 show_root_heading: true
 show_source: false
 
 ## Results
 
-::: kinemotion.api.VideoResult
+::: kinemotion.api.DropJumpVideoResult
 options:
 show_root_heading: true
 show_source: false
@@ -59,7 +59,7 @@ show_source: false
 **Required.** The height of the drop box in meters. This is critical for accurate velocity calculations.
 
 ```python
-metrics = process_video("video.mp4", drop_height=0.40)  # 40cm box
+metrics = process_dropjump_video("video.mp4", drop_height=0.40)  # 40cm box
 ```
 
 ### smoothing
@@ -73,7 +73,7 @@ Default: `True`
 Path to write debug video with overlay visualization. If not provided, no debug video is created.
 
 ```python
-metrics = process_video(
+metrics = process_dropjump_video(
     "video.mp4",
     drop_height=0.40,
     output_path="debug.mp4"
