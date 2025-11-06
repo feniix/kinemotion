@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.12.0 (2025-11-06)
+
+### Documentation
+
+- Update claude.md
+  ([`b4d93d9`](https://github.com/feniix/kinemotion/commit/b4d93d94259fbfe86101c256910fcfc07c8dfcc2))
+
+### Features
+
+- **dropjump**: Calculate jump height from flight time like CMJ
+  ([`f7d96a2`](https://github.com/feniix/kinemotion/commit/f7d96a253b287d58215fd64bd1e598784cb098f4))
+
+- **dropjump**: Improve landing detection with position stabilization
+  ([`6d19938`](https://github.com/feniix/kinemotion/commit/6d199382485a80a975911c51444b2c18aa32c428))
+
+### Refactoring
+
+- **core**: Remove unused code and fix vulture warnings
+  ([`16328e2`](https://github.com/feniix/kinemotion/commit/16328e299a0e15f7f0f0e87d133e1f662dc59d0b))
+
+- **core**: Rename AutoTunedParams to AnalysisParameters for consistency
+  ([`2b6e59b`](https://github.com/feniix/kinemotion/commit/2b6e59b832769224b600e23bf4141af5d6159169))
+
+### Testing
+
+- Update tests for kinematic-based height calculation
+  ([`308469e`](https://github.com/feniix/kinemotion/commit/308469e978c53a971a4a20352cfffd72a3c9e6cd))
+
+
 ## v0.11.7 (2025-11-06)
 
 ### Bug Fixes
