@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.11.0 (2025-11-06)
+
+### Documentation
+
+- Add camera setup docs
+  ([`84678d6`](https://github.com/feniix/kinemotion/commit/84678d60261a361c1dce51aec604491ab096f537))
+
+### Features
+
+- Add counter movement jump (CMJ) analysis with triple extension tracking
+  ([`b6fc454`](https://github.com/feniix/kinemotion/commit/b6fc454482b20b11d82fadc51974a554562b60d3))
+
+
 ## v0.10.12 (2025-11-03)
 
 ### Bug Fixes
