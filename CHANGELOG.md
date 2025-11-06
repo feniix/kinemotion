@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.11.6 (2025-11-06)
+
+### Bug Fixes
+
+- Reduce code duplication to 2.96%
+  ([`12fab42`](https://github.com/feniix/kinemotion/commit/12fab420b47b874f08cc8012393521bd6e3e2c43))
+
+
 ## v0.11.5 (2025-11-06)
 
 ### Bug Fixes
