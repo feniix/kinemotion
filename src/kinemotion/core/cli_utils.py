@@ -1,5 +1,6 @@
 """Shared CLI utilities for drop jump and CMJ analysis."""
 
+from collections.abc import Callable
 from typing import Any, Protocol
 
 import click
@@ -190,3 +191,116 @@ def smooth_landmark_sequence(landmarks_sequence: list, params: AutoTunedParams) 
             window_length=params.smoothing_window,
             polyorder=params.polyorder,
         )
+
+
+def common_output_options(func: Callable) -> Callable:  # type: ignore[type-arg]
+    """Add common output options to CLI command."""
+    func = click.option(
+        "--output",
+        "-o",
+        type=click.Path(),
+        help="Path for debug video output (optional)",
+    )(func)
+    func = click.option(
+        "--json-output",
+        "-j",
+        type=click.Path(),
+        help="Path for JSON metrics output (default: stdout)",
+    )(func)
+    return func
+
+
+def common_quality_options(func: Callable) -> Callable:  # type: ignore[type-arg]
+    """Add quality and verbose options to CLI command."""
+    func = click.option(
+        "--quality",
+        type=click.Choice(["fast", "balanced", "accurate"], case_sensitive=False),
+        default="balanced",
+        help=(
+            "Analysis quality preset: "
+            "fast (quick, less precise), "
+            "balanced (default, good for most cases), "
+            "accurate (research-grade, slower)"
+        ),
+        show_default=True,
+    )(func)
+    func = click.option(
+        "--verbose",
+        "-v",
+        is_flag=True,
+        help="Show auto-selected parameters and analysis details",
+    )(func)
+    return func
+
+
+def common_batch_options(func: Callable) -> Callable:  # type: ignore[type-arg]
+    """Add batch processing options to CLI command."""
+    func = click.option(
+        "--batch",
+        is_flag=True,
+        help="Enable batch processing mode for multiple videos",
+    )(func)
+    func = click.option(
+        "--workers",
+        type=int,
+        default=4,
+        help="Number of parallel workers for batch processing (default: 4)",
+        show_default=True,
+    )(func)
+    func = click.option(
+        "--output-dir",
+        type=click.Path(),
+        help="Directory for debug video outputs (batch mode only)",
+    )(func)
+    func = click.option(
+        "--json-output-dir",
+        type=click.Path(),
+        help="Directory for JSON metrics outputs (batch mode only)",
+    )(func)
+    func = click.option(
+        "--csv-summary",
+        type=click.Path(),
+        help="Path for CSV summary export (batch mode only)",
+    )(func)
+    return func
+
+
+def common_expert_options(func: Callable) -> Callable:  # type: ignore[type-arg]
+    """Add expert parameter options to CLI command."""
+    func = click.option(
+        "--smoothing-window",
+        type=int,
+        default=None,
+        help="[EXPERT] Override auto-tuned smoothing window size",
+    )(func)
+    func = click.option(
+        "--velocity-threshold",
+        type=float,
+        default=None,
+        help="[EXPERT] Override auto-tuned velocity threshold",
+    )(func)
+    func = click.option(
+        "--min-contact-frames",
+        type=int,
+        default=None,
+        help="[EXPERT] Override auto-tuned minimum contact frames",
+    )(func)
+    func = click.option(
+        "--visibility-threshold",
+        type=float,
+        default=None,
+        help="[EXPERT] Override visibility threshold for landmarks",
+    )(func)
+    func = click.option(
+        "--detection-confidence",
+        type=float,
+        default=None,
+        help="[EXPERT] Override MediaPipe detection confidence (0.0-1.0)",
+    )(func)
+    func = click.option(
+        "--tracking-confidence",
+        type=float,
+        default=None,
+        help="[EXPERT] Override MediaPipe tracking confidence (0.0-1.0)",
+    )(func)
+    return func

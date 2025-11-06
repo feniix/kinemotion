@@ -17,6 +17,7 @@ from ..core.auto_tuning import (
 )
 from ..core.cli_utils import (
     apply_expert_param_overrides,
+    common_output_options,
     determine_initial_confidence,
     print_auto_tuned_params,
     smooth_landmark_sequence,
@@ -102,18 +103,7 @@ def _process_batch_videos(
 
 @click.command(name="cmj-analyze")
 @click.argument("video_path", nargs=-1, type=click.Path(exists=False), required=True)
-@click.option(
-    "--output",
-    "-o",
-    type=click.Path(),
-    help="Path for debug video output (optional)",
-)
-@click.option(
-    "--json-output",
-    "-j",
-    type=click.Path(),
-    help="Path for JSON metrics output (default: stdout)",
-)
+@common_output_options
 @click.option(
     "--quality",
     type=click.Choice(["fast", "balanced", "accurate"], case_sensitive=False),
