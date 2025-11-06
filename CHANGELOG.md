@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.15.1 (2025-11-06)
+
+### Bug Fixes
+
+- **docs**: Update mkdocstrings references to renamed API functions
+  ([`d410df3`](https://github.com/feniix/kinemotion/commit/d410df3fb6dd726ac607443371e375190521dae6))
+
+
 ## v0.15.0 (2025-11-06)
 
 ### Features
