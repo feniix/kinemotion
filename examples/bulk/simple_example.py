@@ -12,10 +12,9 @@ def process_single_video_example() -> None:
     """Process a single video - the simplest usage."""
     print("Processing single video...")
 
-    # Process with just the required parameters
+    # Process with just the video path
     metrics = process_video(
         video_path="my_video.mp4",
-        drop_height=0.40,  # 40cm drop box
         verbose=True,
     )
 
@@ -36,10 +35,10 @@ def process_multiple_videos_example() -> None:
 
     # Configure videos to process
     configs = [
-        VideoConfig("athlete1_jump1.mp4", drop_height=0.40),
-        VideoConfig("athlete1_jump2.mp4", drop_height=0.40),
-        VideoConfig("athlete1_jump3.mp4", drop_height=0.40),
-        VideoConfig("athlete2_jump1.mp4", drop_height=0.30),  # Different drop height
+        VideoConfig("athlete1_jump1.mp4"),
+        VideoConfig("athlete1_jump2.mp4"),
+        VideoConfig("athlete1_jump3.mp4"),
+        VideoConfig("athlete2_jump1.mp4", quality="accurate"),
     ]
 
     # Process all videos using 4 parallel workers
@@ -74,7 +73,6 @@ def process_with_outputs_example() -> None:
 
     metrics = process_video(
         video_path="my_video.mp4",
-        drop_height=0.40,
         output_video="debug_output.mp4",  # Save annotated video
         json_output="results.json",  # Save metrics as JSON
         quality="accurate",  # Use highest quality analysis

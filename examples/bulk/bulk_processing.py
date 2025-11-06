@@ -18,9 +18,9 @@ def example_simple_bulk() -> None:
     print("=" * 80)
 
     video_configs = [
-        VideoConfig(video_path="video1.mp4", drop_height=0.40),
-        VideoConfig(video_path="video2.mp4", drop_height=0.30),
-        VideoConfig(video_path="video3.mp4", drop_height=0.50),
+        VideoConfig(video_path="video1.mp4"),
+        VideoConfig(video_path="video2.mp4"),
+        VideoConfig(video_path="video3.mp4"),
     ]
 
     # Process videos with 4 parallel workers
@@ -41,21 +41,18 @@ def example_advanced_configuration() -> None:
         # Fast analysis for quick screening
         VideoConfig(
             video_path="athlete1_trial1.mp4",
-            drop_height=0.40,
             quality="fast",
             json_output="results/athlete1_trial1.json",
         ),
         # Balanced analysis (default)
         VideoConfig(
             video_path="athlete1_trial2.mp4",
-            drop_height=0.40,
             quality="balanced",
             json_output="results/athlete1_trial2.json",
         ),
         # Research-grade accurate analysis with debug video
         VideoConfig(
             video_path="athlete1_trial3.mp4",
-            drop_height=0.40,
             quality="accurate",
             output_video="debug/athlete1_trial3_debug.mp4",
             json_output="results/athlete1_trial3.json",
@@ -101,7 +98,6 @@ def example_process_directory() -> list[VideoResult]:
     dir_configs = [
         VideoConfig(
             video_path=str(video_file),
-            drop_height=0.40,
             quality="balanced",
             json_output=f"results/{video_file.stem}.json",
         )
@@ -187,7 +183,6 @@ def example_custom_parameters() -> None:
         # Low quality video - use more aggressive smoothing
         VideoConfig(
             video_path="low_quality.mp4",
-            drop_height=0.40,
             smoothing_window=7,  # More smoothing
             velocity_threshold=0.025,  # Higher threshold
             quality="accurate",
@@ -195,7 +190,6 @@ def example_custom_parameters() -> None:
         # High speed video - adjust for higher framerate
         VideoConfig(
             video_path="high_speed_120fps.mp4",
-            drop_height=0.40,
             quality="accurate",
             # Auto-tuning will handle FPS adjustments
         ),
@@ -290,7 +284,6 @@ def example_single_video() -> None:
         # Process single video with verbose output
         metrics = process_video(
             video_path="sample.mp4",
-            drop_height=0.40,
             quality="balanced",
             output_video="sample_debug.mp4",
             json_output="sample_results.json",
