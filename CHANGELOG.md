@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.14.0 (2025-11-06)
+
+### Features
+
+- **docs**: Add MkDocs documentation with auto-generated API reference
+  ([`cb5cd31`](https://github.com/feniix/kinemotion/commit/cb5cd313e43c6ba0c95c8e77b5651e7c86c73902))
+
+
 ## v0.13.0 (2025-11-06)
 
 ### Documentation
