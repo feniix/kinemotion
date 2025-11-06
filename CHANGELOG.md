@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.14.1 (2025-11-06)
+
+### Bug Fixes
+
+- **docs**: Resolve Read the Docs build failure with Material theme
+  ([`8c0b998`](https://github.com/feniix/kinemotion/commit/8c0b99876ab948300b0b9a773848c11474b23c03))
+
+
 ## v0.14.0 (2025-11-06)
 
 ### Features
