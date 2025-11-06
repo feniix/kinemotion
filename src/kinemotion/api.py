@@ -689,7 +689,6 @@ def process_cmj_video(
     json_output: str | None = None,
     smoothing_window: int | None = None,
     velocity_threshold: float | None = None,
-    countermovement_threshold: float | None = None,
     min_contact_frames: int | None = None,
     visibility_threshold: float | None = None,
     detection_confidence: float | None = None,
@@ -710,7 +709,6 @@ def process_cmj_video(
         json_output: Optional path for JSON metrics output
         smoothing_window: Optional override for smoothing window
         velocity_threshold: Optional override for velocity threshold
-        countermovement_threshold: Optional override for countermovement threshold
         min_contact_frames: Optional override for minimum contact frames
         visibility_threshold: Optional override for visibility threshold
         detection_confidence: Optional override for pose detection confidence
