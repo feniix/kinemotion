@@ -28,8 +28,8 @@ from ..core.pose import PoseTracker
 from ..core.video_io import VideoProcessor
 from .analysis import (
     ContactState,
-    compute_average_foot_position,
     detect_ground_contact,
+    extract_foot_positions_and_visibilities,
 )
 from .debug_overlay import DebugOverlayRenderer
 from .kinematics import DropJumpMetrics, calculate_drop_jump_metrics
@@ -258,26 +258,7 @@ def _extract_positions_and_visibilities(
         Tuple of (vertical_positions, visibilities)
     """
     click.echo("Extracting foot positions...", err=True)
-
-    position_list: list[float] = []
-    visibilities_list: list[float] = []
-
-    for frame_landmarks in smoothed_landmarks:
-        if frame_landmarks:
-            _, foot_y = compute_average_foot_position(frame_landmarks)
-            position_list.append(foot_y)
-
-            # Average visibility of foot landmarks
-            foot_vis = []
-            for key in ["left_ankle", "right_ankle", "left_heel", "right_heel"]:
-                if key in frame_landmarks:
-                    foot_vis.append(frame_landmarks[key][2])
-            visibilities_list.append(float(np.mean(foot_vis)) if foot_vis else 0.0)
-        else:
-            position_list.append(position_list[-1] if position_list else 0.5)
-            visibilities_list.append(0.0)
-
-    return np.array(position_list), np.array(visibilities_list)
+    return extract_foot_positions_and_visibilities(smoothed_landmarks)
 
 
 def _create_debug_video(
@@ -567,6 +548,63 @@ def _compute_batch_statistics(results: list[VideoResult]) -> None:
             )
 
 
+def _format_time_metric(value: float | None, multiplier: float = 1000.0) -> str:
+    """Format time metric for CSV output.
+
+    Args:
+        value: Time value in seconds
+        multiplier: Multiplier to convert to milliseconds (default: 1000.0)
+
+    Returns:
+        Formatted string or "N/A" if value is None
+    """
+    return f"{value * multiplier:.1f}" if value is not None else "N/A"
+
+
+def _format_distance_metric(value: float | None) -> str:
+    """Format distance metric for CSV output.
+
+    Args:
+        value: Distance value in meters
+
+    Returns:
+        Formatted string or "N/A" if value is None
+    """
+    return f"{value:.3f}" if value is not None else "N/A"
+
+
+def _create_csv_row_from_result(result: VideoResult) -> list[str]:
+    """Create CSV row from video processing result.
+
+    Args:
+        result: Video processing result
+
+    Returns:
+        List of formatted values for CSV row
+    """
+    video_name = Path(result.video_path).name
+    processing_time = f"{result.processing_time:.2f}"
+
+    if result.success and result.metrics:
+        return [
+            video_name,
+            _format_time_metric(result.metrics.ground_contact_time),
+            _format_time_metric(result.metrics.flight_time),
+            _format_distance_metric(result.metrics.jump_height),
+            processing_time,
+            "Success",
+        ]
+    else:
+        return [
+            video_name,
+            "N/A",
+            "N/A",
+            "N/A",
+            processing_time,
+            f"Failed: {result.error}",
+        ]
+
+
 def _write_csv_summary(
     csv_summary: str | None, results: list[VideoResult], successful: list[VideoResult]
 ) -> None:
@@ -600,40 +638,7 @@ def _write_csv_summary(
 
         # Data rows
         for result in results:
-            if result.success and result.metrics:
-                writer.writerow(
-                    [
-                        Path(result.video_path).name,
-                        (
-                            f"{result.metrics.ground_contact_time * 1000:.1f}"
-                            if result.metrics.ground_contact_time
-                            else "N/A"
-                        ),
-                        (
-                            f"{result.metrics.flight_time * 1000:.1f}"
-                            if result.metrics.flight_time
-                            else "N/A"
-                        ),
-                        (
-                            f"{result.metrics.jump_height:.3f}"
-                            if result.metrics.jump_height
-                            else "N/A"
-                        ),
-                        f"{result.processing_time:.2f}",
-                        "Success",
-                    ]
-                )
-            else:
-                writer.writerow(
-                    [
-                        Path(result.video_path).name,
-                        "N/A",
-                        "N/A",
-                        "N/A",
-                        f"{result.processing_time:.2f}",
-                        f"Failed: {result.error}",
-                    ]
-                )
+            writer.writerow(_create_csv_row_from_result(result))
 
     click.echo("CSV summary written successfully", err=True)
 
