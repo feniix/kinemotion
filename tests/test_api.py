@@ -19,7 +19,6 @@ def test_process_video_returns_metrics(sample_video_path: str) -> None:
     """Test that process_video returns DropJumpMetrics object."""
     metrics = process_video(
         video_path=sample_video_path,
-        drop_height=0.40,
         quality="fast",  # Use fast for quicker tests
         verbose=False,
     )
@@ -37,7 +36,6 @@ def test_process_video_with_json_output(sample_video_path: str) -> None:
 
         process_video(
             video_path=sample_video_path,
-            drop_height=0.40,
             json_output=str(json_path),
             quality="fast",
         )
@@ -64,7 +62,6 @@ def test_process_video_with_debug_output(sample_video_path: str) -> None:
 
         metrics = process_video(
             video_path=sample_video_path,
-            drop_height=0.40,
             output_video=str(output_path),
             quality="fast",
         )
@@ -86,7 +83,6 @@ def test_process_video_invalid_quality(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="Invalid quality preset"):
         process_video(
             video_path=str(dummy_video),
-            drop_height=0.40,
             quality="invalid",
         )
 
@@ -96,7 +92,6 @@ def test_process_video_file_not_found() -> None:
     with pytest.raises(FileNotFoundError, match="Video file not found"):
         process_video(
             video_path="nonexistent_video.mp4",
-            drop_height=0.40,
         )
 
 
@@ -107,7 +102,6 @@ def test_process_video_quality_presets(sample_video_path: str) -> None:
     for quality in qualities:
         metrics = process_video(
             video_path=sample_video_path,
-            drop_height=0.40,
             quality=quality,
             verbose=False,
         )
@@ -121,7 +115,6 @@ def test_process_video_with_expert_overrides(sample_video_path: str) -> None:
     """Test that expert parameter overrides work."""
     metrics = process_video(
         video_path=sample_video_path,
-        drop_height=0.40,
         smoothing_window=7,
         velocity_threshold=0.025,
         min_contact_frames=5,
@@ -136,12 +129,10 @@ def test_video_config_creation() -> None:
     """Test VideoConfig dataclass creation."""
     config = VideoConfig(
         video_path="test.mp4",
-        drop_height=0.40,
         quality="balanced",
     )
 
     assert config.video_path == "test.mp4"
-    assert config.drop_height == pytest.approx(0.40)
     assert config.quality == "balanced"
     assert config.output_video is None
     assert config.json_output is None
@@ -171,8 +162,8 @@ def test_video_result_creation() -> None:
 def test_process_videos_bulk_success(sample_video_path: str) -> None:
     """Test bulk processing of multiple videos."""
     configs = [
-        VideoConfig(video_path=sample_video_path, drop_height=0.40, quality="fast"),
-        VideoConfig(video_path=sample_video_path, drop_height=0.30, quality="fast"),
+        VideoConfig(video_path=sample_video_path, quality="fast"),
+        VideoConfig(video_path=sample_video_path, quality="fast"),
     ]
 
     results = process_videos_bulk(configs, max_workers=2)
@@ -191,8 +182,12 @@ def test_process_videos_bulk_success(sample_video_path: str) -> None:
 def test_process_videos_bulk_with_failure() -> None:
     """Test bulk processing handles failures gracefully."""
     configs = [
-        VideoConfig(video_path="nonexistent1.mp4", drop_height=0.40),
-        VideoConfig(video_path="nonexistent2.mp4", drop_height=0.40),
+        VideoConfig(
+            video_path="nonexistent1.mp4",
+        ),
+        VideoConfig(
+            video_path="nonexistent2.mp4",
+        ),
     ]
 
     results = process_videos_bulk(configs, max_workers=2)
@@ -210,9 +205,11 @@ def test_process_videos_bulk_with_failure() -> None:
 def test_process_videos_bulk_mixed_results(sample_video_path: str) -> None:
     """Test bulk processing with mix of successful and failed videos."""
     configs = [
-        VideoConfig(video_path=sample_video_path, drop_height=0.40, quality="fast"),
-        VideoConfig(video_path="nonexistent.mp4", drop_height=0.40),
-        VideoConfig(video_path=sample_video_path, drop_height=0.30, quality="fast"),
+        VideoConfig(video_path=sample_video_path, quality="fast"),
+        VideoConfig(
+            video_path="nonexistent.mp4",
+        ),
+        VideoConfig(video_path=sample_video_path, quality="fast"),
     ]
 
     results = process_videos_bulk(configs, max_workers=2)
@@ -238,8 +235,8 @@ def test_process_videos_bulk_mixed_results(sample_video_path: str) -> None:
 def test_process_videos_bulk_progress_callback(sample_video_path: str) -> None:
     """Test that progress callback is called for each video."""
     configs = [
-        VideoConfig(video_path=sample_video_path, drop_height=0.40, quality="fast"),
-        VideoConfig(video_path=sample_video_path, drop_height=0.30, quality="fast"),
+        VideoConfig(video_path=sample_video_path, quality="fast"),
+        VideoConfig(video_path=sample_video_path, quality="fast"),
     ]
 
     callback_results = []
@@ -266,18 +263,15 @@ def test_process_videos_bulk_different_parameters(sample_video_path: str) -> Non
         configs = [
             VideoConfig(
                 video_path=sample_video_path,
-                drop_height=0.40,
                 quality="fast",
             ),
             VideoConfig(
                 video_path=sample_video_path,
-                drop_height=0.40,
                 quality="balanced",
                 json_output=str(Path(tmpdir) / "video2.json"),
             ),
             VideoConfig(
                 video_path=sample_video_path,
-                drop_height=0.40,
                 quality="fast",
                 smoothing_window=7,
             ),
