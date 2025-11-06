@@ -413,13 +413,11 @@ def _process_single(
                 contact_states,
                 vertical_positions,
                 video.fps,
-                drop_height_m=None,
                 drop_start_frame=expert_params.drop_start_frame,
                 velocity_threshold=params.velocity_threshold,
                 smoothing_window=params.smoothing_window,
                 polyorder=params.polyorder,
                 use_curvature=params.use_curvature,
-                kinematic_correction_factor=1.0,
             )
 
             # Output metrics

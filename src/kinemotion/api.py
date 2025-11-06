@@ -463,13 +463,11 @@ def process_video(
             contact_states,
             vertical_positions,
             video.fps,
-            drop_height_m=None,
             drop_start_frame=drop_start_frame,
             velocity_threshold=params.velocity_threshold,
             smoothing_window=params.smoothing_window,
             polyorder=params.polyorder,
             use_curvature=params.use_curvature,
-            kinematic_correction_factor=1.0,
         )
 
         # Generate outputs (JSON and debug video)

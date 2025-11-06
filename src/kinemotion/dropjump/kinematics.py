@@ -343,29 +343,26 @@ def calculate_drop_jump_metrics(
     contact_states: list[ContactState],
     foot_y_positions: np.ndarray,
     fps: float,
-    drop_height_m: float | None = None,
     drop_start_frame: int | None = None,
     velocity_threshold: float = 0.02,
     smoothing_window: int = 5,
     polyorder: int = 2,
     use_curvature: bool = True,
-    kinematic_correction_factor: float = 1.0,
 ) -> DropJumpMetrics:
     """
     Calculate drop-jump metrics from contact states and positions.
+
+    Jump height is calculated from flight time using kinematic formula: h = g × t² / 8
 
     Args:
         contact_states: Contact state for each frame
         foot_y_positions: Vertical positions of feet (normalized 0-1)
         fps: Video frame rate
-        drop_height_m: Known drop box/platform height in meters for calibration (optional)
+        drop_start_frame: Optional manual drop start frame
         velocity_threshold: Velocity threshold used for contact detection (for interpolation)
         smoothing_window: Window size for velocity/acceleration smoothing (must be odd)
         polyorder: Polynomial order for Savitzky-Golay filter (default: 2)
         use_curvature: Whether to use curvature analysis for refining transitions
-        kinematic_correction_factor: Correction factor for kinematic jump height calculation
-            (default: 1.0 = no correction). Historical testing suggested 1.35, but this is
-            unvalidated. Use calibrated measurement (--drop-height) for validated results.
 
     Returns:
         DropJumpMetrics object with calculated values
