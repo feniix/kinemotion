@@ -1,0 +1,3296 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Video-based kinematic analysis for athletic performance">
+      
+      
+        <meta name="author" content="Sebastian Otaegui">
+      
+      
+        <link rel="canonical" href="https://kinemotion.readthedocs.io/development/validation-plan/">
+      
+      
+        <link rel="prev" href="../../research/sports-biomechanics-pose-estimation/">
+      
+      
+        <link rel="next" href="../errors-findings/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
+    
+    
+      
+        <title>Validation Plan - Kinemotion</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kinemotion-validation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Kinemotion" class="md-header__button md-logo" aria-label="Kinemotion" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kinemotion
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Validation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/feniix/kinemotion" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    feniix/kinemotion
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/cmj-guide/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/parameters/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/overview/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../technical/triple-extension/" class="md-tabs__link">
+          
+  
+  
+  Technical
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../research/sports-biomechanics-pose-estimation/" class="md-tabs__link">
+          
+  
+  
+  Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../translations/es/camera-setup/" class="md-tabs__link">
+          
+  
+  
+  Translations
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Kinemotion" class="md-nav__button md-logo" aria-label="Kinemotion" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Kinemotion
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/feniix/kinemotion" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    feniix/kinemotion
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Guides
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/cmj-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CMJ Analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/camera-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Camera Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/bulk-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Bulk Processing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Parameters
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/pose-systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pose Systems
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/dropjump/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Drop Jump API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/cmj/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CMJ API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Utilities
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Technical
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Technical
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technical/triple-extension/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Triple Extension
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technical/framerate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Framerate
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technical/real-time-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Real-time Analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technical/imu-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    IMU Metadata
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Research
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Research
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../research/sports-biomechanics-pose-estimation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sports Biomechanics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Development
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Validation Plan
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Validation Plan
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#current-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Current Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-validation-philosophy-for-hobby-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Validation Philosophy for Hobby Projects
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Validation Philosophy for Hobby Projects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-validation-means-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      What "Validation" Means Here
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#realistic-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Realistic Goals
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-frame-rate-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Frame Rate Recommendations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Frame Rate Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#frame-rate-vs-timing-accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Frame Rate vs. Timing Accuracy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#our-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Our Recommendation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-free-validation-methods-budget-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Free Validation Methods (Budget: $0)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Free Validation Methods (Budget: $0)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-compare-against-my-jump-lab-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 Compare Against My Jump Lab App
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-tracker-video-analysis-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 Tracker Video Analysis Tool
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-manual-slow-motion-video-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 Manual Slow-Motion Video Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-physics-sanity-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 Physics Sanity Checks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-test-retest-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.5 Test-Retest Reliability
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-low-cost-validation-methods-budget-100-500" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Low-Cost Validation Methods (Budget: $100-500)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Low-Cost Validation Methods (Budget: $100-500)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-jump-mat-comparison-200-500" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 Jump Mat Comparison (~$200-500)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-optical-timing-gates-100-300" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 Optical Timing Gates (~$100-300)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-simple-statistical-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Simple Statistical Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Simple Statistical Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-correlation" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Correlation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-mean-difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Mean Difference
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-mean-absolute-error-mae" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 Mean Absolute Error (MAE)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-percentage-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4 Percentage Error
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-diy-validation-protocol-for-developer" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. DIY Validation Protocol (For Developer)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. DIY Validation Protocol (For Developer)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-initial-testing-week-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1: Initial Testing (Week 1)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1: Initial Testing (Week 1)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#day-1-2-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Day 1-2: Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#day-3-5-data-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Day 3-5: Data Collection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#day-6-7-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Day 6-7: Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1 Success Criteria
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-manual-verification-week-2-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2: Manual Verification (Week 2-3)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 2: Manual Verification (Week 2-3)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#week-2-frame-by-frame-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Week 2: Frame-by-Frame Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-3-physics-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Week 3: Physics Checks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2 Success Criteria
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-documentation-week-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 3: Documentation (Week 4)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-community-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Community Validation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Community Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leverage-user-contributions-to-expand-validation-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Leverage user contributions to expand validation data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#71-invite-user-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Invite User Comparisons
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-aggregate-community-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 Aggregate Community Data
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-acceptance-criteria-for-hobby-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Acceptance Criteria for Hobby Project
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Acceptance Criteria for Hobby Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jump-height" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jump Height
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contact-time-flight-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contact Time / Flight Time
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Event Detection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-timeline-resource-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Timeline &amp; Resource Summary
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Timeline &amp; Resource Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#realistic-timeline-solo-developer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Realistic Timeline (Solo Developer)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#budget-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Budget Summary
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-opportunistic-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Opportunistic Validation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Opportunistic Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#if-lab-access-becomes-available" class="md-nav__link">
+    <span class="md-ellipsis">
+      If Lab Access Becomes Available
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-documenting-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Documenting Results
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Documenting Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-to-document-honest-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      What to Document (Honest Assessment)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-docsvalidation_resultsmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create docs/VALIDATION_RESULTS.md
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-alternative-trust-but-verify-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      12. Alternative: "Trust but Verify" Approach
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Alternative: &#34;Trust but Verify&#34; Approach">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#practical-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Verification
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      13. Conclusion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-is-iterative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation is Iterative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#honest-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Honest Limitations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Goal
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-quick-comparison-hobby-vs-research-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Appendix: Quick Comparison - Hobby vs Research Validation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../errors-findings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Error Findings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Translations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Translations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_1" id="__nav_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Español
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            Español
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../translations/es/camera-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuración de Cámara
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#current-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Current Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-validation-philosophy-for-hobby-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Validation Philosophy for Hobby Projects
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Validation Philosophy for Hobby Projects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-validation-means-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      What "Validation" Means Here
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#realistic-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Realistic Goals
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-frame-rate-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Frame Rate Recommendations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Frame Rate Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#frame-rate-vs-timing-accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Frame Rate vs. Timing Accuracy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#our-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Our Recommendation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-free-validation-methods-budget-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Free Validation Methods (Budget: $0)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Free Validation Methods (Budget: $0)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-compare-against-my-jump-lab-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 Compare Against My Jump Lab App
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-tracker-video-analysis-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 Tracker Video Analysis Tool
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-manual-slow-motion-video-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 Manual Slow-Motion Video Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-physics-sanity-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 Physics Sanity Checks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-test-retest-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.5 Test-Retest Reliability
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-low-cost-validation-methods-budget-100-500" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Low-Cost Validation Methods (Budget: $100-500)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Low-Cost Validation Methods (Budget: $100-500)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-jump-mat-comparison-200-500" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 Jump Mat Comparison (~$200-500)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-optical-timing-gates-100-300" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 Optical Timing Gates (~$100-300)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-simple-statistical-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Simple Statistical Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Simple Statistical Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-correlation" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Correlation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-mean-difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Mean Difference
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-mean-absolute-error-mae" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 Mean Absolute Error (MAE)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-percentage-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4 Percentage Error
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-diy-validation-protocol-for-developer" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. DIY Validation Protocol (For Developer)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. DIY Validation Protocol (For Developer)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-initial-testing-week-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1: Initial Testing (Week 1)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1: Initial Testing (Week 1)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#day-1-2-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Day 1-2: Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#day-3-5-data-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Day 3-5: Data Collection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#day-6-7-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Day 6-7: Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1 Success Criteria
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-manual-verification-week-2-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2: Manual Verification (Week 2-3)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 2: Manual Verification (Week 2-3)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#week-2-frame-by-frame-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Week 2: Frame-by-Frame Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-3-physics-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Week 3: Physics Checks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2 Success Criteria
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-documentation-week-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 3: Documentation (Week 4)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-community-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Community Validation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Community Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leverage-user-contributions-to-expand-validation-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Leverage user contributions to expand validation data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#71-invite-user-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Invite User Comparisons
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-aggregate-community-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 Aggregate Community Data
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-acceptance-criteria-for-hobby-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Acceptance Criteria for Hobby Project
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Acceptance Criteria for Hobby Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jump-height" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jump Height
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contact-time-flight-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contact Time / Flight Time
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Event Detection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-timeline-resource-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Timeline &amp; Resource Summary
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Timeline &amp; Resource Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#realistic-timeline-solo-developer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Realistic Timeline (Solo Developer)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#budget-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Budget Summary
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-opportunistic-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Opportunistic Validation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Opportunistic Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#if-lab-access-becomes-available" class="md-nav__link">
+    <span class="md-ellipsis">
+      If Lab Access Becomes Available
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-documenting-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Documenting Results
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Documenting Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-to-document-honest-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      What to Document (Honest Assessment)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-docsvalidation_resultsmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create docs/VALIDATION_RESULTS.md
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-alternative-trust-but-verify-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      12. Alternative: "Trust but Verify" Approach
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Alternative: &#34;Trust but Verify&#34; Approach">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#practical-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Verification
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      13. Conclusion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-is-iterative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation is Iterative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#honest-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Honest Limitations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Goal
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-quick-comparison-hobby-vs-research-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Appendix: Quick Comparison - Hobby vs Research Validation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="kinemotion-validation-plan">Kinemotion Validation Plan<a class="headerlink" href="#kinemotion-validation-plan" title="Permanent link">&para;</a></h1>
+<p><strong>Status</strong>: 📋 HOBBY PROJECT - Practical Validation Approach
+<strong>Created</strong>: 2025-01-26
+<strong>Last Updated</strong>: 2025-11-01 (Auto-tuning system added)
+<strong>Purpose</strong>: Realistic, low-cost validation roadmap for a hobby project</p>
+<hr />
+<h2 id="current-status">⚠️ Current Status<a class="headerlink" href="#current-status" title="Permanent link">&para;</a></h2>
+<p><strong>IMPORTANT</strong>: Kinemotion measurements are currently <strong>unvalidated</strong>. This document outlines a practical, affordable validation approach suitable for a hobby project. The goal is to establish "reasonable accuracy" rather than research-grade validation.</p>
+<p><strong>NEW (November 2025)</strong>: Kinemotion now features intelligent auto-tuning that eliminates manual parameter adjustment. The tool automatically:</p>
+<ul>
+<li>Detects video FPS and adjusts velocity thresholds accordingly (30/60/120fps)</li>
+<li>Analyzes tracking quality and adapts smoothing</li>
+<li>Auto-detects drop start frame (no manual specification needed)</li>
+<li>Handles iPhone rotation metadata automatically</li>
+</ul>
+<p>This makes validation testing easier - no need to guess optimal parameters!</p>
+<hr />
+<h2 id="1-validation-philosophy-for-hobby-projects">1. Validation Philosophy for Hobby Projects<a class="headerlink" href="#1-validation-philosophy-for-hobby-projects" title="Permanent link">&para;</a></h2>
+<h3 id="what-validation-means-here">What "Validation" Means Here<a class="headerlink" href="#what-validation-means-here" title="Permanent link">&para;</a></h3>
+<p>For a hobby project, validation means:</p>
+<ul>
+<li>✅ <strong>Reasonable accuracy</strong>: Measurements are "in the ballpark" for practical use</li>
+<li>✅ <strong>Consistency</strong>: Repeated measurements give similar results</li>
+<li>✅ <strong>Sanity checks</strong>: Results make physical sense (jump height from flight time checks out)</li>
+<li>✅ <strong>Comparative accuracy</strong>: Similar to other free/affordable tools (My Jump Lab, jump mats)</li>
+<li>❌ <strong>NOT research-grade</strong>: Not validated against force plates or motion capture systems</li>
+</ul>
+<h3 id="realistic-goals">Realistic Goals<a class="headerlink" href="#realistic-goals" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Establish that Kinemotion provides <strong>useful estimates</strong> for athletes and coaches</li>
+<li>Identify conditions where it works well (and where it doesn't)</li>
+<li>Compare against other accessible tools</li>
+<li>Build confidence through community validation</li>
+<li><strong>No academic publication required</strong> - just honest assessment</li>
+</ul>
+<hr />
+<h2 id="2-frame-rate-recommendations">2. Frame Rate Recommendations<a class="headerlink" href="#2-frame-rate-recommendations" title="Permanent link">&para;</a></h2>
+<p><strong>IMPORTANT</strong>: Frame rate significantly impacts timing accuracy for drop jump analysis.</p>
+<h3 id="frame-rate-vs-timing-accuracy">Frame Rate vs. Timing Accuracy<a class="headerlink" href="#frame-rate-vs-timing-accuracy" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Frame Rate</th>
+<th>Time per Frame</th>
+<th>Event Detection Error</th>
+<th>Contact Time Error*</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30fps</td>
+<td>33.3ms</td>
+<td>±17-33ms</td>
+<td>±10-20%</td>
+<td>⚠️ Minimum viable</td>
+</tr>
+<tr>
+<td>60fps</td>
+<td>16.7ms</td>
+<td>±8-17ms</td>
+<td>±5-10%</td>
+<td>✅ Recommended</td>
+</tr>
+<tr>
+<td>120fps</td>
+<td>8.3ms</td>
+<td>±4-8ms</td>
+<td>±2-5%</td>
+<td>🎯 Ideal</td>
+</tr>
+<tr>
+<td>240fps</td>
+<td>4.2ms</td>
+<td>±2-4ms</td>
+<td>±1-3%</td>
+<td>🏆 Excellent</td>
+</tr>
+</tbody>
+</table>
+<p>*For typical drop jump contact times of 150-300ms</p>
+<h3 id="our-recommendation">Our Recommendation<a class="headerlink" href="#our-recommendation" title="Permanent link">&para;</a></h3>
+<p><strong>For validation and general use</strong>:</p>
+<ul>
+<li>🎯 <strong>Target</strong>: 60fps or higher (most modern phones support this)</li>
+<li>✅ <strong>Minimum</strong>: 30fps (works but with reduced timing accuracy)</li>
+<li>🏆 <strong>Ideal</strong>: 120fps slow-motion if available (best precision)</li>
+</ul>
+<p><strong>Why 60fps minimum</strong>:</p>
+<ul>
+<li>Ground contact times are often 150-300ms</li>
+<li>At 30fps: ±30ms timing error = 10-20% uncertainty</li>
+<li>At 60fps: ±15ms timing error = 5-10% uncertainty</li>
+<li>Modern smartphones easily support 60fps recording</li>
+</ul>
+<p><strong>Note</strong>: All validation in this document assumes <strong>60fps as the baseline</strong> unless otherwise specified. Adjust acceptance criteria if using 30fps (double the timing error tolerances).</p>
+<hr />
+<h2 id="3-free-validation-methods-budget-0">3. Free Validation Methods (Budget: $0)<a class="headerlink" href="#3-free-validation-methods-budget-0" title="Permanent link">&para;</a></h2>
+<p>These methods cost nothing and can be done immediately by any user.</p>
+<h3 id="31-compare-against-my-jump-lab-app">3.1 Compare Against My Jump Lab App<a class="headerlink" href="#31-compare-against-my-jump-lab-app" title="Permanent link">&para;</a></h3>
+<p><strong>What it is</strong>: My Jump Lab (also known as My Jump 3) is a popular iPhone/Android app that calculates jump height from slow-motion video. It's been validated in multiple research studies (ICC &gt; 0.95 vs. force plates).</p>
+<p><strong>Download</strong>: <a href="https://apps.apple.com/us/app/my-jump-lab-my-jump-3/id1554077178">iOS App Store</a> | <a href="https://play.google.com/store/apps/details?id=com.my.jump.lab&amp;hl=en">Google Play</a></p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Download My Jump Lab app from the links above</li>
+<li>Record 10-20 jumps (countermovement or drop jumps)</li>
+<li>Process same video with both My Jump Lab and Kinemotion</li>
+<li>Compare jump heights, contact times, flight times</li>
+<li>Calculate: mean difference, correlation, percentage error</li>
+</ol>
+<p><strong>What to expect</strong>:</p>
+<ul>
+<li>If correlation r &gt; 0.85: Good agreement</li>
+<li>If mean difference \&lt; 5cm for jump height: Acceptable</li>
+<li>If contact/flight times within ±30ms: Reasonable for 30fps video</li>
+</ul>
+<p><strong>Time required</strong>: 2-3 hours</p>
+<p><strong>Validation value</strong>: ⭐⭐⭐⭐⭐ (High - My Jump Lab is well-validated)</p>
+<h3 id="32-tracker-video-analysis-tool">3.2 Tracker Video Analysis Tool<a class="headerlink" href="#32-tracker-video-analysis-tool" title="Permanent link">&para;</a></h3>
+<p><strong>What it is</strong>: Tracker (<a href="https://physlets.org/tracker/">https://physlets.org/tracker/</a>) is a free, open-source video analysis tool widely used in physics education. It allows frame-by-frame position tracking with sub-pixel accuracy.</p>
+<p><strong>Why it's excellent for validation</strong>:</p>
+<ul>
+<li>✅ Free and open-source</li>
+<li>✅ Used in academic settings (established credibility)</li>
+<li>✅ Tracks full trajectories (not just flight time)</li>
+<li>✅ Export position data for detailed comparison</li>
+<li>✅ Calibration tools (use known reference length)</li>
+<li>✅ Sub-pixel tracking accuracy</li>
+</ul>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Download Tracker from <a href="https://physlets.org/tracker/">https://physlets.org/tracker/</a></li>
+<li>Open your drop jump video in Tracker</li>
+<li>Set coordinate system (origin at ground level)</li>
+<li>Calibrate scale using known reference (e.g., drop box height)</li>
+<li>Track ankle/heel position frame-by-frame (autotrack feature available)</li>
+<li>Export position data (time vs. vertical position)</li>
+<li>Identify takeoff/landing from position data</li>
+<li>Calculate jump height from trajectory</li>
+<li>Compare with Kinemotion results</li>
+</ol>
+<p><strong>What to compare</strong>:</p>
+<ul>
+<li><strong>Jump height</strong>: Direct position measurement vs. Kinemotion</li>
+<li><strong>Event timing</strong>: Landing/takeoff frames from trajectory analysis</li>
+<li><strong>Trajectory shape</strong>: Compare full position curves</li>
+<li><strong>Contact/flight times</strong>: Derived from position tracking</li>
+</ul>
+<p><strong>What to expect</strong>:</p>
+<ul>
+<li>Tracker accuracy: ±0.5-1cm (with proper calibration)</li>
+<li>Should agree within ±3-5cm with Kinemotion</li>
+<li>Validates both position tracking AND event detection</li>
+<li>Can identify systematic biases (e.g., Kinemotion consistently 2cm higher)</li>
+</ul>
+<p><strong>Time required</strong>: 2-3 hours (1 hour learning Tracker + 1-2 hours analysis)</p>
+<p><strong>Validation value</strong>: ⭐⭐⭐⭐⭐ (Excellent - rigorous position-based validation, free)</p>
+<p><strong>Advantages over My Jump Lab</strong>:</p>
+<ul>
+<li>Tracks full trajectory (not just flight time)</li>
+<li>Open-source and free (My Jump Lab costs $10-15)</li>
+<li>More detailed analysis capabilities</li>
+<li>Established in academic settings</li>
+</ul>
+<h3 id="33-manual-slow-motion-video-analysis">3.3 Manual Slow-Motion Video Analysis<a class="headerlink" href="#33-manual-slow-motion-video-analysis" title="Permanent link">&para;</a></h3>
+<p><strong>What it is</strong>: Frame-by-frame inspection of video to manually identify landing/takeoff frames.</p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Record 5-10 jumps at 60fps or 120fps (slow-motion on phone)</li>
+<li>Use free video player (VLC, QuickTime) to step through frame-by-frame</li>
+<li>Manually mark takeoff frame and landing frame</li>
+<li>Calculate flight time: (frames_between / frame_rate)</li>
+<li>Calculate jump height: h = g × t² / 8 (where t = flight time, g = 9.81 m/s²)</li>
+<li>Compare with Kinemotion results</li>
+</ol>
+<p><strong>What to expect</strong>:</p>
+<ul>
+<li>Manual analysis accuracy: ±1-2 frames (±16-33ms at 60fps)</li>
+<li>Should agree within ±2 frames of Kinemotion's detected events</li>
+<li>Validates event detection accuracy</li>
+</ul>
+<p><strong>Time required</strong>: 3-4 hours</p>
+<p><strong>Validation value</strong>: ⭐⭐⭐⭐ (Good - validates event detection directly)</p>
+<h3 id="34-physics-sanity-checks">3.4 Physics Sanity Checks<a class="headerlink" href="#34-physics-sanity-checks" title="Permanent link">&para;</a></h3>
+<p><strong>What it is</strong>: Verify measurements make physical sense.</p>
+<p><strong>Checks to perform</strong>:</p>
+<ol>
+<li>
+<p><strong>Jump height from flight time</strong>:</p>
+</li>
+<li>
+<p>Calculate: h = g × t² / 8</p>
+</li>
+<li>Compare with position-based height</li>
+<li>
+<p>Should agree within 10-15%</p>
+</li>
+<li>
+<p><strong>Velocity at takeoff</strong>:</p>
+</li>
+<li>
+<p>Calculate: v = g × t / 2 (where t = flight time)</p>
+</li>
+<li>
+<p>Check: Is takeoff velocity reasonable? (1.5-2.5 m/s for typical jumps)</p>
+</li>
+<li>
+<p><strong>Drop height calibration</strong>:</p>
+</li>
+<li>
+<p>If you know drop box height (e.g., 40cm)</p>
+</li>
+<li>Does calibrated measurement match reality?</li>
+<li>
+<p>Test with known reference heights</p>
+</li>
+<li>
+<p><strong>Repeatability</strong>:</p>
+</li>
+<li>
+<p>Do 3 identical jumps</p>
+</li>
+<li>Results should be within 5-10% of each other</li>
+<li>High variation suggests measurement issues</li>
+</ol>
+<p><strong>Time required</strong>: 1-2 hours</p>
+<p><strong>Validation value</strong>: ⭐⭐⭐ (Moderate - catches obvious errors)</p>
+<h3 id="35-test-retest-reliability">3.5 Test-Retest Reliability<a class="headerlink" href="#35-test-retest-reliability" title="Permanent link">&para;</a></h3>
+<p><strong>What it is</strong>: Measure same jumps twice to check consistency.</p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Record 5 jumps</li>
+<li>Process with Kinemotion</li>
+<li>Process same videos again (fresh analysis)</li>
+<li>Compare results - should be identical (deterministic algorithm)</li>
+<li>If using different videos of same jumps:</li>
+<li>Calculate ICC (intraclass correlation)</li>
+<li>Target: ICC &gt; 0.90 (excellent reliability)</li>
+</ol>
+<p><strong>Time required</strong>: 1 hour</p>
+<p><strong>Validation value</strong>: ⭐⭐⭐⭐ (Good - validates algorithm consistency)</p>
+<hr />
+<h2 id="4-low-cost-validation-methods-budget-100-500">4. Low-Cost Validation Methods (Budget: $100-500)<a class="headerlink" href="#4-low-cost-validation-methods-budget-100-500" title="Permanent link">&para;</a></h2>
+<p>Optional methods if you have budget for equipment.</p>
+<h3 id="41-jump-mat-comparison-200-500">4.1 Jump Mat Comparison (~$200-500)<a class="headerlink" href="#41-jump-mat-comparison-200-500" title="Permanent link">&para;</a></h3>
+<p><strong>What it is</strong>: Affordable switch mats that measure contact time and flight time.</p>
+<p><strong>Options</strong>:</p>
+<ul>
+<li><strong>DIY jump mat</strong>: Build your own with pressure sensors and Arduino (~$50-100)</li>
+<li><strong>Commercial jump mats</strong>:</li>
+<li>Basic models: $200-400</li>
+<li>Plyomat: ~$900 (validated against force plates)</li>
+<li>Just Jump mat: ~$300-400</li>
+</ul>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Purchase or build jump mat</li>
+<li>Record 20-30 jumps with simultaneous video + jump mat</li>
+<li>Compare contact times and flight times</li>
+<li>Calculate correlation and agreement statistics</li>
+</ol>
+<p><strong>What to expect</strong>:</p>
+<ul>
+<li>Jump mats accurate to ±10-20ms typically</li>
+<li>Good target for video-based validation</li>
+<li>If agreement within ±30ms: Acceptable for 30fps video</li>
+</ul>
+<p><strong>Time required</strong>: 4-6 hours (after equipment acquisition)</p>
+<p><strong>Validation value</strong>: ⭐⭐⭐⭐⭐ (Excellent - independent reference system)</p>
+<h3 id="42-optical-timing-gates-100-300">4.2 Optical Timing Gates (~$100-300)<a class="headerlink" href="#42-optical-timing-gates-100-300" title="Permanent link">&para;</a></h3>
+<p><strong>What it is</strong>: Infrared sensors that detect when you break a light beam.</p>
+<p><strong>How to use</strong>:</p>
+<ul>
+<li>Set up 2 timing gates at ankle height</li>
+<li>Jump through gates (break beam on takeoff and landing)</li>
+<li>Measures flight time directly</li>
+<li>Compare with video-based flight time</li>
+</ul>
+<p><strong>Time required</strong>: 3-4 hours</p>
+<p><strong>Validation value</strong>: ⭐⭐⭐⭐ (Good - direct flight time measurement)</p>
+<hr />
+<h2 id="5-simple-statistical-analysis">5. Simple Statistical Analysis<a class="headerlink" href="#5-simple-statistical-analysis" title="Permanent link">&para;</a></h2>
+<p><strong>No need for complex statistics!</strong> Basic comparisons are sufficient:</p>
+<h3 id="51-correlation">5.1 Correlation<a class="headerlink" href="#51-correlation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Calculate Pearson correlation (r) between Kinemotion and reference</li>
+<li>Interpretation:</li>
+<li>r &gt; 0.90: Excellent</li>
+<li>r = 0.80-0.90: Good</li>
+<li>r = 0.70-0.80: Acceptable</li>
+<li>r \&lt; 0.70: Needs improvement</li>
+</ul>
+<p><strong>Tool</strong>: Any spreadsheet (Excel, Google Sheets) or Python pandas</p>
+<h3 id="52-mean-difference">5.2 Mean Difference<a class="headerlink" href="#52-mean-difference" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Calculate: mean(Kinemotion - Reference)</li>
+<li>Shows systematic bias</li>
+<li>Example: If mean difference = +3cm, Kinemotion overestimates by 3cm on average</li>
+</ul>
+<h3 id="53-mean-absolute-error-mae">5.3 Mean Absolute Error (MAE)<a class="headerlink" href="#53-mean-absolute-error-mae" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Calculate: mean(abs(Kinemotion - Reference))</li>
+<li>Shows typical error magnitude</li>
+<li>Target: MAE \&lt; 5cm for jump height, \&lt; 30ms for timing at 30fps</li>
+</ul>
+<h3 id="54-percentage-error">5.4 Percentage Error<a class="headerlink" href="#54-percentage-error" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Calculate: mean(abs((Kinemotion - Reference) / Reference) × 100)</li>
+<li>Shows relative error</li>
+<li>Target: \&lt; 10% for practical use</li>
+</ul>
+<p><strong>Example Python Code</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">pearsonr</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">kinemotion</span> <span class="o">=</span> <span class="p">[</span><span class="mf">28.5</span><span class="p">,</span> <span class="mf">32.1</span><span class="p">,</span> <span class="mf">30.4</span><span class="p">,</span> <span class="mf">29.8</span><span class="p">,</span> <span class="mf">31.2</span><span class="p">]</span>  <span class="c1"># cm</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">reference</span> <span class="o">=</span> <span class="p">[</span><span class="mf">27.9</span><span class="p">,</span> <span class="mf">31.5</span><span class="p">,</span> <span class="mf">29.8</span><span class="p">,</span> <span class="mf">29.2</span><span class="p">,</span> <span class="mf">30.5</span><span class="p">]</span>   <span class="c1"># cm</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">r</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">kinemotion</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">mean_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kinemotion</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">reference</span><span class="p">))</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">mae</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kinemotion</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">reference</span><span class="p">)))</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Correlation: r = </span><span class="si">{</span><span class="n">r</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, p = </span><span class="si">{</span><span class="n">p</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean difference: </span><span class="si">{</span><span class="n">mean_diff</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean absolute error: </span><span class="si">{</span><span class="n">mae</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="6-diy-validation-protocol-for-developer">6. DIY Validation Protocol (For Developer)<a class="headerlink" href="#6-diy-validation-protocol-for-developer" title="Permanent link">&para;</a></h2>
+<p><strong>Goal</strong>: Quick self-validation with minimal resources</p>
+<h3 id="phase-1-initial-testing-week-1">Phase 1: Initial Testing (Week 1)<a class="headerlink" href="#phase-1-initial-testing-week-1" title="Permanent link">&para;</a></h3>
+<h4 id="day-1-2-setup">Day 1-2: Setup<a class="headerlink" href="#day-1-2-setup" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] Download Tracker (<a href="https://physlets.org/tracker/">https://physlets.org/tracker/</a>) - free and open-source</li>
+<li>[ ] Alternative: Install My Jump Lab app if iOS device available</li>
+<li>[ ] Set up recording environment (good lighting, clear background)</li>
+<li>[ ] Test camera angles and distances</li>
+</ul>
+<h4 id="day-3-5-data-collection">Day 3-5: Data Collection<a class="headerlink" href="#day-3-5-data-collection" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] Record 10 countermovement jumps or drop jumps</li>
+<li>[ ] Include known reference in video (ruler, measuring tape, or known drop box height)</li>
+<li>[ ] Ensure good video quality (no motion blur, clear foot position)</li>
+<li>[ ] <strong>Use 60fps or higher</strong> (recommended for accurate timing measurements)</li>
+<li>[ ] 30fps acceptable as minimum, but expect ±30ms timing error vs ±15ms at 60fps</li>
+</ul>
+<h4 id="day-6-7-analysis">Day 6-7: Analysis<a class="headerlink" href="#day-6-7-analysis" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] Process all videos with Kinemotion</li>
+<li>[ ] Analyze same videos with Tracker (track ankle/heel position)</li>
+<li>[ ] Alternative: Use My Jump Lab if available</li>
+<li>[ ] Export Tracker position data and calculate jump height</li>
+<li>[ ] Calculate correlation, mean difference, MAE</li>
+<li>[ ] Document results in validation notes</li>
+</ul>
+<h4 id="phase-1-success-criteria">Phase 1 Success Criteria<a class="headerlink" href="#phase-1-success-criteria" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Correlation r &gt; 0.85 with Tracker/My Jump Lab</li>
+<li>Mean difference \&lt; 5cm for jump height</li>
+<li>Contact/flight times within ±30ms</li>
+<li>Event detection within ±2-3 frames</li>
+</ul>
+<h3 id="phase-2-manual-verification-week-2-3">Phase 2: Manual Verification (Week 2-3)<a class="headerlink" href="#phase-2-manual-verification-week-2-3" title="Permanent link">&para;</a></h3>
+<h4 id="week-2-frame-by-frame-analysis">Week 2: Frame-by-Frame Analysis<a class="headerlink" href="#week-2-frame-by-frame-analysis" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] Select 5 best quality videos</li>
+<li>[ ] Manually identify takeoff/landing frames</li>
+<li>[ ] Compare with Kinemotion's detected events</li>
+<li>[ ] Document frame differences</li>
+</ul>
+<h4 id="week-3-physics-checks">Week 3: Physics Checks<a class="headerlink" href="#week-3-physics-checks" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] Calculate jump height from flight time (h = g×t²/8)</li>
+<li>[ ] Compare with position-based estimates</li>
+<li>[ ] Verify velocity calculations make sense</li>
+<li>[ ] Test repeatability (process same video 3 times)</li>
+</ul>
+<h4 id="phase-2-success-criteria">Phase 2 Success Criteria<a class="headerlink" href="#phase-2-success-criteria" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Event detection within ±2 frames of manual analysis</li>
+<li>Physics calculations internally consistent (\&lt;10% difference)</li>
+<li>Perfect repeatability (deterministic algorithm)</li>
+</ul>
+<h3 id="phase-3-documentation-week-4">Phase 3: Documentation (Week 4)<a class="headerlink" href="#phase-3-documentation-week-4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Write up results in docs/VALIDATION_RESULTS.md</li>
+<li>[ ] Update README.md with honest accuracy claims</li>
+<li>[ ] Document conditions where tool works well</li>
+<li>[ ] Document limitations and error sources</li>
+<li>[ ] Add disclaimer with validation status</li>
+</ul>
+<hr />
+<h2 id="7-community-validation">7. Community Validation<a class="headerlink" href="#7-community-validation" title="Permanent link">&para;</a></h2>
+<h3 id="leverage-user-contributions-to-expand-validation-data">Leverage user contributions to expand validation data<a class="headerlink" href="#leverage-user-contributions-to-expand-validation-data" title="Permanent link">&para;</a></h3>
+<h3 id="71-invite-user-comparisons">7.1 Invite User Comparisons<a class="headerlink" href="#71-invite-user-comparisons" title="Permanent link">&para;</a></h3>
+<p>Create a validation issue on GitHub:</p>
+<p><strong>Title</strong>: "Community Validation: Share Your Comparison Data"</p>
+<p><strong>Template</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Help validate Kinemotion by comparing it with other tools!
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="gs">**What to do**</span>:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">1.</span> Record jump videos (with phone/camera at 60fps+)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">2.</span> Analyze videos with Kinemotion
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">3.</span> Compare with My Jump Lab, jump mat, or manual analysis
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">4.</span> Share your results here
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="gs">**Data to share**</span>:
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">-</span><span class="w"> </span>Number of jumps analyzed
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">-</span><span class="w"> </span>Reference tool used (My Jump Lab, jump mat, manual)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">-</span><span class="w"> </span>Correlation (if calculated)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">-</span><span class="w"> </span>Mean difference
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">-</span><span class="w"> </span>Your assessment (good agreement? systematic bias?)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="gs">**Example**</span>:
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="k">-</span><span class="w"> </span>15 jumps compared with My Jump Lab
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="k">-</span><span class="w"> </span>Correlation: r = 0.91
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="k">-</span><span class="w"> </span>Mean difference: -2.3cm (Kinemotion slightly lower)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="k">-</span><span class="w"> </span>Assessment: Good agreement for practical use
+</code></pre></div>
+<h3 id="72-aggregate-community-data">7.2 Aggregate Community Data<a class="headerlink" href="#72-aggregate-community-data" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Collect user reports in validation spreadsheet</li>
+<li>Calculate overall statistics across all users</li>
+<li>Identify patterns (works better at 60fps vs 30fps, etc.)</li>
+<li>Build confidence through multiple independent validations</li>
+</ul>
+<hr />
+<h2 id="8-acceptance-criteria-for-hobby-project">8. Acceptance Criteria for Hobby Project<a class="headerlink" href="#8-acceptance-criteria-for-hobby-project" title="Permanent link">&para;</a></h2>
+<p><strong>"Good Enough" Thresholds</strong>:</p>
+<h3 id="jump-height">Jump Height<a class="headerlink" href="#jump-height" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ <strong>Acceptable</strong>: MAE \&lt; 5cm, r &gt; 0.85</li>
+<li>⭐ <strong>Good</strong>: MAE \&lt; 3cm, r &gt; 0.90</li>
+<li>🏆 <strong>Excellent</strong>: MAE \&lt; 2cm, r &gt; 0.95</li>
+</ul>
+<h3 id="contact-time-flight-time">Contact Time / Flight Time<a class="headerlink" href="#contact-time-flight-time" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ <strong>Acceptable</strong>: MAE \&lt; 30ms (at 30fps), r &gt; 0.80</li>
+<li>⭐ <strong>Good</strong>: MAE \&lt; 20ms (at 30fps), r &gt; 0.85</li>
+<li>🏆 <strong>Excellent</strong>: MAE \&lt; 10ms (at 60fps), r &gt; 0.90</li>
+</ul>
+<h3 id="event-detection">Event Detection<a class="headerlink" href="#event-detection" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ <strong>Acceptable</strong>: Within ±3 frames of manual analysis</li>
+<li>⭐ <strong>Good</strong>: Within ±2 frames of manual analysis</li>
+<li>🏆 <strong>Excellent</strong>: Within ±1 frame of manual analysis</li>
+</ul>
+<p><strong>If these criteria are met</strong>: Can claim "validated for practical use" with appropriate caveats about video quality, frame rate, and conditions.</p>
+<hr />
+<h2 id="9-timeline-resource-summary">9. Timeline &amp; Resource Summary<a class="headerlink" href="#9-timeline-resource-summary" title="Permanent link">&para;</a></h2>
+<h3 id="realistic-timeline-solo-developer">Realistic Timeline (Solo Developer)<a class="headerlink" href="#realistic-timeline-solo-developer" title="Permanent link">&para;</a></h3>
+<p><strong>Week 1</strong>: My Jump Lab comparison (2-3 hours total)
+<strong>Week 2</strong>: Manual video analysis (3-4 hours total)
+<strong>Week 3</strong>: Physics checks and repeatability (2-3 hours total)
+<strong>Week 4</strong>: Documentation and results write-up (2-3 hours total)</p>
+<p><strong>Total time investment</strong>: 10-15 hours over 1 month</p>
+<p><strong>Optional</strong>: Purchase jump mat if budget allows (adds 4-6 hours for testing)</p>
+<h3 id="budget-summary">Budget Summary<a class="headerlink" href="#budget-summary" title="Permanent link">&para;</a></h3>
+<p><strong>Minimum (Free)</strong>:</p>
+<ul>
+<li>My Jump Lab app (or use free trial): $0-15</li>
+<li>Time: 10-15 hours</li>
+<li><strong>Total: $0-15</strong></li>
+</ul>
+<p><strong>Recommended (Low-Cost)</strong>:</p>
+<ul>
+<li>My Jump Lab app: $10-15</li>
+<li>Basic jump mat: $200-400 (optional)</li>
+<li>Time: 15-20 hours</li>
+<li><strong>Total: $10-415</strong></li>
+</ul>
+<p><strong>Aspirational (Research-Grade)</strong>:</p>
+<ul>
+<li>All of the above: $10-415</li>
+<li>Plyomat validated jump mat: $900</li>
+<li>Lab access for force plate comparison: $0-5000 (if opportunity arises)</li>
+<li><strong>Total: $910-6315</strong></li>
+</ul>
+<p><strong>For hobby project</strong>: Stick to minimum or recommended budget!</p>
+<hr />
+<h2 id="10-opportunistic-validation">10. Opportunistic Validation<a class="headerlink" href="#10-opportunistic-validation" title="Permanent link">&para;</a></h2>
+<h3 id="if-lab-access-becomes-available">If Lab Access Becomes Available<a class="headerlink" href="#if-lab-access-becomes-available" title="Permanent link">&para;</a></h3>
+<p>Sometimes opportunities arise unexpectedly:</p>
+<ul>
+<li>Friend/colleague has access to biomechanics lab</li>
+<li>Local university offers community access</li>
+<li>Contact with sports science researcher</li>
+</ul>
+<p><strong>If this happens</strong>:</p>
+<ol>
+<li>Explain your tool and validation goal</li>
+<li>Ask if you can run 10-20 test jumps for comparison</li>
+<li>Offer to share results (may help their research too)</li>
+<li>Be flexible with timing (work around their schedule)</li>
+</ol>
+<p><strong>Cost</strong>: Usually free if someone gives you access, just your time</p>
+<hr />
+<h2 id="11-documenting-results">11. Documenting Results<a class="headerlink" href="#11-documenting-results" title="Permanent link">&para;</a></h2>
+<h3 id="what-to-document-honest-assessment">What to Document (Honest Assessment)<a class="headerlink" href="#what-to-document-honest-assessment" title="Permanent link">&para;</a></h3>
+<p><strong>If validation successful</strong> (meets acceptance criteria):</p>
+<ul>
+<li>✅ State which reference tools were used</li>
+<li>✅ Report correlation and error statistics</li>
+<li>✅ Specify video conditions tested (frame rate, lighting, etc.)</li>
+<li>✅ Note limitations and caveats</li>
+<li>✅ Update README.md with accuracy claims</li>
+</ul>
+<p><strong>Example README update</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gu">## Validation Status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Kinemotion has been validated through comparison with My Jump Lab app and manual video analysis:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Jump height**</span>: Correlation r = 0.88, MAE = 4.2cm (n=25 jumps, 30fps video)
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Flight time**</span>: Correlation r = 0.91, MAE = 24ms (n=25 jumps, 30fps video)
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Event detection**</span>: Within ±2 frames of manual analysis
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="gs">**Tested conditions**</span>: Indoor lighting, 1080p video at 30fps, front camera view
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="gs">**Limitations**</span>:
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">-</span><span class="w"> </span>Not validated against force plates or motion capture
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="k">-</span><span class="w"> </span>Accuracy decreases with poor lighting or motion blur
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">-</span><span class="w"> </span>Lower accuracy at 30fps vs 60fps (±30ms vs ±15ms timing)
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>See docs/VALIDATION_RESULTS.md for full details.
+</code></pre></div>
+<p><strong>If validation shows issues</strong>:</p>
+<ul>
+<li>❗ Be transparent about problems found</li>
+<li>❗ Document conditions where tool doesn't work well</li>
+<li>❗ Keep prominent ⚠️ warnings in documentation</li>
+<li>❗ Explain what needs improvement</li>
+</ul>
+<h3 id="create-docsvalidation_resultsmd">Create docs/VALIDATION_RESULTS.md<a class="headerlink" href="#create-docsvalidation_resultsmd" title="Permanent link">&para;</a></h3>
+<p>Template:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gh"># Validation Results</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="gs">**Date**</span>: [YYYY-MM-DD]
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="gs">**Validated by**</span>: [Your name/GitHub handle]
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="gs">**Version tested**</span>: [Kinemotion version]
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="gu">## Summary</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>[Brief overview of validation approach and key findings]
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="gu">## Methods</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="gu">### Reference Tools</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">-</span><span class="w"> </span>[List tools used: My Jump Lab, manual analysis, etc.]
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="gu">### Testing Protocol</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="k">-</span><span class="w"> </span>[Number of jumps, video settings, conditions]
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="gu">## Results</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="gu">### Jump Height</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="k">-</span><span class="w"> </span>Correlation: r = [value]
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="k">-</span><span class="w"> </span>Mean difference: [value] cm
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="k">-</span><span class="w"> </span>Mean absolute error: [value] cm
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="k">-</span><span class="w"> </span>Interpretation: [good/acceptable/needs work]
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="gu">### Contact Time</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="k">-</span><span class="w"> </span>[Same format]
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="gu">### Flight Time</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="k">-</span><span class="w"> </span>[Same format]
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="gu">### Event Detection</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="k">-</span><span class="w"> </span>[Frame accuracy comparison]
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="gu">## Visualizations</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>[Include scatter plots, Bland-Altman if desired, or just tables]
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="gu">## Conclusions</span>
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="gu">### What Works Well</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="k">-</span><span class="w"> </span>[List conditions/scenarios with good accuracy]
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a><span class="gu">### Limitations Found</span>
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a><span class="k">-</span><span class="w"> </span>[List conditions where accuracy suffers]
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a><span class="gu">### Recommendations</span>
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a><span class="k">-</span><span class="w"> </span>[Advice for users to get best results]
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a><span class="gu">## Raw Data</span>
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>[Optional: Include CSV or table of all measurements for transparency]
+</code></pre></div>
+<hr />
+<h2 id="12-alternative-trust-but-verify-approach">12. Alternative: "Trust but Verify" Approach<a class="headerlink" href="#12-alternative-trust-but-verify-approach" title="Permanent link">&para;</a></h2>
+<p><strong>Philosophy</strong>: Start using the tool, verify it makes sense through practical use.</p>
+<h3 id="practical-verification">Practical Verification<a class="headerlink" href="#practical-verification" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Does it pass the smell test?</strong></p>
+</li>
+<li>
+<p>Do jump heights seem reasonable? (20-40cm for recreational, 40-70cm for trained athletes)</p>
+</li>
+<li>Are contact times sensible? (150-300ms typical for drop jumps)</li>
+<li>
+<p>Does flight time correlate with perceived jump height?</p>
+</li>
+<li>
+<p><strong>Internal consistency</strong></p>
+</li>
+<li>
+<p>Do better jumps (feel higher) measure higher?</p>
+</li>
+<li>Do repeated similar jumps give similar results?</li>
+<li>
+<p>Do trends over time make sense (improving with training)?</p>
+</li>
+<li>
+<p><strong>Comparative validation</strong></p>
+</li>
+<li>
+<p>Does athlete A (known to jump higher) measure higher than athlete B?</p>
+</li>
+<li>Do measurements track with performance (vertical jump improvement = better game performance)?</li>
+</ol>
+<p><strong>When this is sufficient</strong>:</p>
+<ul>
+<li>Using tool for personal training feedback</li>
+<li>Tracking relative improvements over time</li>
+<li>Not making high-stakes decisions based on measurements</li>
+<li>Comfortable with "good enough" accuracy</li>
+</ul>
+<hr />
+<h2 id="13-conclusion">13. Conclusion<a class="headerlink" href="#13-conclusion" title="Permanent link">&para;</a></h2>
+<h3 id="validation-is-iterative">Validation is Iterative<a class="headerlink" href="#validation-is-iterative" title="Permanent link">&para;</a></h3>
+<p>You don't need perfect validation on day one. Start simple:</p>
+<ol>
+<li><strong>Phase 1</strong>: Compare with My Jump Lab (1 week, free)</li>
+<li><strong>Phase 2</strong>: Manual verification (1 week, free)</li>
+<li><strong>Phase 3</strong>: Document results (1 week)</li>
+<li><strong>Phase 4</strong>: Community validation (ongoing)</li>
+<li><strong>Phase 5</strong>: Opportunistic upgrades (if lab access becomes available)</li>
+</ol>
+<h3 id="honest-limitations">Honest Limitations<a class="headerlink" href="#honest-limitations" title="Permanent link">&para;</a></h3>
+<p>A hobby project validation will never match research-grade validation, and <strong>that's okay</strong>:</p>
+<ul>
+<li>✅ Can establish "practical accuracy"</li>
+<li>✅ Can identify obvious problems</li>
+<li>✅ Can build user confidence</li>
+<li>❌ Cannot claim research-grade validation</li>
+<li>❌ Cannot recommend for scientific studies (without further validation)</li>
+</ul>
+<h3 id="the-goal">The Goal<a class="headerlink" href="#the-goal" title="Permanent link">&para;</a></h3>
+<p>Provide users with <strong>honest, evidence-based information</strong> about tool accuracy so they can make informed decisions about whether it meets their needs.</p>
+<hr />
+<h2 id="appendix-quick-comparison-hobby-vs-research-validation">Appendix: Quick Comparison - Hobby vs Research Validation<a class="headerlink" href="#appendix-quick-comparison-hobby-vs-research-validation" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Hobby Approach</th>
+<th>Research Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Budget</strong></td>
+<td>$0-500</td>
+<td>$15,000-30,000</td>
+</tr>
+<tr>
+<td><strong>Time</strong></td>
+<td>1-3 months</td>
+<td>6-12 months</td>
+</tr>
+<tr>
+<td><strong>Reference</strong></td>
+<td>My Jump Lab, jump mat</td>
+<td>Force plates, motion capture</td>
+</tr>
+<tr>
+<td><strong>Participants</strong></td>
+<td>Self + volunteers</td>
+<td>30-50 recruited participants</td>
+</tr>
+<tr>
+<td><strong>Statistics</strong></td>
+<td>Correlation, MAE</td>
+<td>ICC, Bland-Altman, LOA</td>
+</tr>
+<tr>
+<td><strong>Ethics</strong></td>
+<td>None required</td>
+<td>IRB approval needed</td>
+</tr>
+<tr>
+<td><strong>Publication</strong></td>
+<td>GitHub documentation</td>
+<td>Peer-reviewed journal</td>
+</tr>
+<tr>
+<td><strong>Outcome</strong></td>
+<td>"Practical accuracy"</td>
+<td>"Research-grade validated"</td>
+</tr>
+<tr>
+<td><strong>Use cases</strong></td>
+<td>Personal training, coaching</td>
+<td>Scientific studies, research</td>
+</tr>
+</tbody>
+</table>
+<p><strong>For a hobby project</strong>: Left column is perfectly appropriate!</p>
+<hr />
+<p><strong>Document Version</strong>: 2.1 (Frame Rate Guidance Added)
+<strong>Last Updated</strong>: 2025-01-26
+<strong>Status</strong>: 📋 Practical Validation Approach
+<strong>Key Updates</strong>:</p>
+<ul>
+<li>Added Section 2: Frame Rate Recommendations (60fps recommended, not 30fps)</li>
+<li>Added Section 3.2: Tracker video analysis tool (free, open-source, rigorous)</li>
+<li>Clarified that validation assumes 60fps baseline for accuracy targets</li>
+</ul>
+<p><strong>Next Steps</strong>: Start with Phase 1 (Tracker or My Jump Lab comparison at 60fps+)</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

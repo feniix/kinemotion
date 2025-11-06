@@ -1,0 +1,3199 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Video-based kinematic analysis for athletic performance">
+      
+      
+        <meta name="author" content="Sebastian Otaegui">
+      
+      
+        <link rel="canonical" href="https://kinemotion.readthedocs.io/technical/real-time-analysis/">
+      
+      
+        <link rel="prev" href="../framerate/">
+      
+      
+        <link rel="next" href="../imu-metadata/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
+    
+    
+      
+        <title>Real-time Analysis - Kinemotion</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#real-time-cmj-analysis-technical-assessment" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Kinemotion" class="md-header__button md-logo" aria-label="Kinemotion" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kinemotion
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Real-time Analysis
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/feniix/kinemotion" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    feniix/kinemotion
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/cmj-guide/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/parameters/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/overview/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../triple-extension/" class="md-tabs__link">
+          
+  
+  
+  Technical
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../research/sports-biomechanics-pose-estimation/" class="md-tabs__link">
+          
+  
+  
+  Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../development/validation-plan/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../translations/es/camera-setup/" class="md-tabs__link">
+          
+  
+  
+  Translations
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Kinemotion" class="md-nav__button md-logo" aria-label="Kinemotion" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Kinemotion
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/feniix/kinemotion" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    feniix/kinemotion
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Guides
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/cmj-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CMJ Analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/camera-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Camera Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/bulk-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Bulk Processing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Parameters
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/pose-systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pose Systems
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/dropjump/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Drop Jump API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/cmj/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CMJ API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Utilities
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Technical
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Technical
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../triple-extension/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Triple Extension
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../framerate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Framerate
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Real-time Analysis
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Real-time Analysis
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Executive Summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-implementation-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current Implementation Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current Implementation Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Constraints
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Constraints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-backward-search-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Backward Search Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-savitzky-golay-smoothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Savitzky-Golay Smoothing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-global-trajectory-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Global Trajectory Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-time-feasibility-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-Time Feasibility Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real-Time Feasibility Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-near-real-time-with-buffering-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option 1: Near Real-Time with Buffering ⭐ RECOMMENDED
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-true-real-time-with-forward-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option 2: True Real-Time with Forward Detection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-processing-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current Processing Speed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-time-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-Time Requirements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Roadmap
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-near-real-time-buffered-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1: Near Real-Time (Buffered) - RECOMMENDED
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-true-real-time-forward-detection-future" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2: True Real-Time (Forward Detection) - FUTURE
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-most-use-cases-near-real-time-buffered" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Most Use Cases: Near Real-Time (Buffered)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-researchanalysis-offline-current" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Research/Analysis: Offline (Current)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-true-real-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future: True Real-Time
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technical Constraints
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technical Constraints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mediapipe-processing-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      MediaPipe Processing Speed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory Requirements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example Use Cases
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-case-1-training-app-near-real-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Case 1: Training App (Near Real-Time)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-case-2-research-lab-offline-current" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Case 2: Research Lab (Offline - Current)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-case-3-competition-testing-near-real-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Case 3: Competition Testing (Near Real-Time)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Specification
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Specification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buffered-near-real-time-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buffered Near Real-Time Mode
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buffered Near Real-Time Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Design
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jump-completion-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jump Completion Detection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#processing-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Processing Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#true-real-time-mode-future" class="md-nav__link">
+    <span class="md-ellipsis">
+      True Real-Time Mode (Future)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="True Real-Time Mode (Future)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forward-only-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forward-Only Detection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Comparison
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendation Matrix
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommendation Matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choose-offline-current-if" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose Offline (Current) If
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-near-real-time-if" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose Near Real-Time If
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-true-real-time-if" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose True Real-Time If
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technical Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technical Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buffered-mode-implementation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buffered Mode Implementation Checklist
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#true-real-time-implementation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      True Real-Time Implementation Checklist
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Questions &amp; Answers
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../imu-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    IMU Metadata
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Research
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Research
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../research/sports-biomechanics-pose-estimation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sports Biomechanics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Development
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/validation-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Validation Plan
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/errors-findings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Error Findings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Translations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Translations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_1" id="__nav_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Español
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            Español
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../translations/es/camera-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuración de Cámara
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Executive Summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-implementation-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current Implementation Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current Implementation Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Constraints
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Constraints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-backward-search-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Backward Search Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-savitzky-golay-smoothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Savitzky-Golay Smoothing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-global-trajectory-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Global Trajectory Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-time-feasibility-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-Time Feasibility Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real-Time Feasibility Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-near-real-time-with-buffering-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option 1: Near Real-Time with Buffering ⭐ RECOMMENDED
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-true-real-time-with-forward-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option 2: True Real-Time with Forward Detection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-processing-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current Processing Speed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-time-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-Time Requirements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Roadmap
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-near-real-time-buffered-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1: Near Real-Time (Buffered) - RECOMMENDED
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-true-real-time-forward-detection-future" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2: True Real-Time (Forward Detection) - FUTURE
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-most-use-cases-near-real-time-buffered" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Most Use Cases: Near Real-Time (Buffered)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-researchanalysis-offline-current" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Research/Analysis: Offline (Current)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-true-real-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future: True Real-Time
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technical Constraints
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technical Constraints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mediapipe-processing-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      MediaPipe Processing Speed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory Requirements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example Use Cases
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-case-1-training-app-near-real-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Case 1: Training App (Near Real-Time)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-case-2-research-lab-offline-current" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Case 2: Research Lab (Offline - Current)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-case-3-competition-testing-near-real-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Case 3: Competition Testing (Near Real-Time)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Specification
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Specification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buffered-near-real-time-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buffered Near Real-Time Mode
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buffered Near Real-Time Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Design
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jump-completion-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jump Completion Detection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#processing-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Processing Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#true-real-time-mode-future" class="md-nav__link">
+    <span class="md-ellipsis">
+      True Real-Time Mode (Future)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="True Real-Time Mode (Future)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forward-only-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forward-Only Detection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Comparison
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendation Matrix
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommendation Matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choose-offline-current-if" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose Offline (Current) If
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-near-real-time-if" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose Near Real-Time If
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-true-real-time-if" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose True Real-Time If
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technical Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technical Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buffered-mode-implementation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buffered Mode Implementation Checklist
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#true-real-time-implementation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      True Real-Time Implementation Checklist
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Questions &amp; Answers
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="real-time-cmj-analysis-technical-assessment">Real-Time CMJ Analysis - Technical Assessment<a class="headerlink" href="#real-time-cmj-analysis-technical-assessment" title="Permanent link">&para;</a></h1>
+<h2 id="executive-summary">Executive Summary<a class="headerlink" href="#executive-summary" title="Permanent link">&para;</a></h2>
+<p><strong>Can the current CMJ implementation work with streaming video for real-time analysis?</strong></p>
+<p><strong>Answer: No, but near real-time (1-2 second delay) is feasible.</strong></p>
+<hr />
+<h2 id="current-implementation-architecture">Current Implementation Architecture<a class="headerlink" href="#current-implementation-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="design-constraints">Design Constraints<a class="headerlink" href="#design-constraints" title="Permanent link">&para;</a></h3>
+<p>The current CMJ analysis algorithm <strong>requires the complete video</strong> due to fundamental architectural decisions:</p>
+<h4 id="1-backward-search-algorithm">1. Backward Search Algorithm<a class="headerlink" href="#1-backward-search-algorithm" title="Permanent link">&para;</a></h4>
+<p><strong>Core principle</strong>: Find peak height first, work backward to find all events.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Current algorithm (requires complete video)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">detect_cmj_phases</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">fps</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="c1"># Step 1: Find peak height (global minimum y)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">peak_frame</span> <span class="o">=</span> <span class="n">argmin</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>  <span class="c1"># Needs complete trajectory!</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="c1"># Step 2: Work backward from peak</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">takeoff</span> <span class="o">=</span> <span class="n">find_peak_velocity_before</span><span class="p">(</span><span class="n">peak_frame</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">lowest_point</span> <span class="o">=</span> <span class="n">find_max_position_before</span><span class="p">(</span><span class="n">takeoff</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">landing</span> <span class="o">=</span> <span class="n">find_impact_after</span><span class="p">(</span><span class="n">peak_frame</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="k">return</span> <span class="p">(</span><span class="n">lowest_point</span><span class="p">,</span> <span class="n">takeoff</span><span class="p">,</span> <span class="n">landing</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Why this matters</strong>:</p>
+<ul>
+<li>Can't find peak height until jump is complete</li>
+<li>Can't work backward until we know where peak is</li>
+<li>Requires global view of entire trajectory</li>
+</ul>
+<h4 id="2-savitzky-golay-smoothing">2. Savitzky-Golay Smoothing<a class="headerlink" href="#2-savitzky-golay-smoothing" title="Permanent link">&para;</a></h4>
+<p><strong>Symmetric window requirement</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Current smoothing (non-causal)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">velocity</span> <span class="o">=</span> <span class="n">savgol_filter</span><span class="p">(</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">positions</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">window_length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>      <span class="c1"># Uses ±2 frames around current</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">polyorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">deriv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;interp&#39;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">)</span>
+</code></pre></div>
+<p><strong>Implications</strong>:</p>
+<ul>
+<li>Needs frames from FUTURE to smooth current frame</li>
+<li>Can't process frame-by-frame as they arrive</li>
+<li>Non-causal filter (not real-time compatible)</li>
+</ul>
+<h4 id="3-global-trajectory-analysis">3. Global Trajectory Analysis<a class="headerlink" href="#3-global-trajectory-analysis" title="Permanent link">&para;</a></h4>
+<p><strong>Auto-tuning and phase detection</strong>:</p>
+<ul>
+<li>Analyzes entire video to determine tracking quality</li>
+<li>Uses global min/max for phase boundaries</li>
+<li>Optimizes parameters based on full sequence</li>
+</ul>
+<p><strong>Validation results</strong>:</p>
+<ul>
+<li>✅ <strong>Jump height</strong>: 50.6cm (±1 frame = 33ms accuracy)</li>
+<li>✅ <strong>Takeoff detection</strong>: Frame 154 (known: 153)</li>
+<li>✅ <strong>Landing detection</strong>: Frame 173 (known: 172)</li>
+</ul>
+<p>This accuracy comes FROM having the complete trajectory.</p>
+<hr />
+<h2 id="real-time-feasibility-analysis">Real-Time Feasibility Analysis<a class="headerlink" href="#real-time-feasibility-analysis" title="Permanent link">&para;</a></h2>
+<h3 id="option-1-near-real-time-with-buffering-recommended">Option 1: Near Real-Time with Buffering ⭐ RECOMMENDED<a class="headerlink" href="#option-1-near-real-time-with-buffering-recommended" title="Permanent link">&para;</a></h3>
+<p><strong>Approach</strong>: Buffer frames, detect jump completion, analyze buffer.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">NearRealTimeCMJAnalyzer</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">CircularBuffer</span><span class="p">(</span><span class="n">max_frames</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>  <span class="c1"># 10 seconds @ 30fps</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;waiting&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">process_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="c1"># Add to buffer</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="c1"># Detect jump completion</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;waiting&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect_movement_start</span><span class="p">():</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;jumping&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;jumping&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect_jump_complete</span><span class="p">():</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>            <span class="c1"># Run offline algorithm on buffered frames</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>            <span class="n">metrics</span> <span class="o">=</span> <span class="n">analyze_cmj_offline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">get_frames</span><span class="p">())</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;waiting&quot;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>            <span class="k">return</span> <span class="n">metrics</span>  <span class="c1"># Results 1-2 seconds after landing</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Jump not complete yet</span>
+</code></pre></div>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li><strong>Latency</strong>: 1-2 seconds after landing</li>
+<li><strong>Accuracy</strong>: ⭐⭐⭐⭐⭐ Same as offline (50.6cm validated)</li>
+<li><strong>Complexity</strong>: Low (reuses existing algorithm)</li>
+<li><strong>Implementation</strong>: 200-300 lines of new code</li>
+</ul>
+<p><strong>Jump completion detection</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">detect_jump_complete</span><span class="p">(</span><span class="n">buffer</span><span class="p">):</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">recent_positions</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">get_recent</span><span class="p">(</span><span class="n">frames</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>  <span class="c1"># Last 1 second</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">recent_velocity</span> <span class="o">=</span> <span class="n">compute_velocity</span><span class="p">(</span><span class="n">recent_positions</span><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="c1"># Landed if:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="c1"># 1. Low velocity for sustained period</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="c1"># 2. Position has returned to near-starting level</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="c1"># 3. At least 2 seconds have passed since movement start</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">recent_velocity</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.005</span> <span class="ow">and</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="n">duration</span> <span class="o">&gt;</span> <span class="mf">2.0</span> <span class="ow">and</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="n">position_stabilized</span><span class="p">):</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="k">return</span> <span class="kc">True</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="k">return</span> <span class="kc">False</span>
+</code></pre></div>
+<p><strong>Advantages</strong>:</p>
+<ul>
+<li>✅ Maintains accuracy (same algorithm)</li>
+<li>✅ Simple implementation</li>
+<li>✅ Keeps triple extension visualization</li>
+<li>✅ 1-2 second delay acceptable for coaching</li>
+<li>✅ No new validation needed</li>
+</ul>
+<p><strong>Disadvantages</strong>:</p>
+<ul>
+<li>⚠️ Not instant (1-2 second delay)</li>
+<li>⚠️ Memory usage (buffer of ~300 frames)</li>
+</ul>
+<hr />
+<h3 id="option-2-true-real-time-with-forward-detection">Option 2: True Real-Time with Forward Detection<a class="headerlink" href="#option-2-true-real-time-with-forward-detection" title="Permanent link">&para;</a></h3>
+<p><strong>Approach</strong>: Detect phases as they occur, no buffering.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">RealTimeCMJAnalyzer</span><span class="p">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;standing&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">position_history</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># Causal filter</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">process_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">frame_idx</span><span class="p">):</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        <span class="c1"># Track pose</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="n">landmarks</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="n">position</span> <span class="o">=</span> <span class="n">extract_position</span><span class="p">(</span><span class="n">landmarks</span><span class="p">)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="c1"># Causal smoothing (only past frames)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">position_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        <span class="n">smoothed_pos</span> <span class="o">=</span> <span class="n">exponential_smooth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position_history</span><span class="p">)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        <span class="n">velocity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_history</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>        <span class="c1"># State machine for phase detection</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;standing&quot;</span> <span class="ow">and</span> <span class="n">velocity</span> <span class="o">&gt;</span> <span class="mf">0.015</span><span class="p">:</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;eccentric&quot;</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;eccentric_start&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame_idx</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;eccentric&quot;</span> <span class="ow">and</span> <span class="n">velocity</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;concentric&quot;</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;lowest_point&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame_idx</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;concentric&quot;</span> <span class="ow">and</span> <span class="n">velocity</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.02</span><span class="p">:</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;flight&quot;</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;takeoff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame_idx</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;flight&quot;</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">velocity</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.01</span><span class="p">:</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;landed&quot;</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;landing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame_idx</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_metrics</span><span class="p">()</span>  <span class="c1"># Return immediately!</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Jump not complete</span>
+</code></pre></div>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li><strong>Latency</strong>: \&lt;100ms (instant)</li>
+<li><strong>Accuracy</strong>: ⭐⭐⭐ Lower (causal filtering, no global optimization)</li>
+<li><strong>Complexity</strong>: High (new algorithm, needs extensive validation)</li>
+<li><strong>Implementation</strong>: 500-800 lines + validation</li>
+</ul>
+<p><strong>Challenges</strong>:</p>
+<ol>
+<li>
+<p><strong>Causal filtering artifacts</strong>:</p>
+</li>
+<li>
+<p>Exponential smoothing has lag</p>
+</li>
+<li>Can't use future frames to refine past estimates</li>
+<li>
+<p>Velocity estimates noisier</p>
+</li>
+<li>
+<p><strong>No global optimization</strong>:</p>
+</li>
+<li>
+<p>Can't find "true" peak (don't know it yet)</p>
+</li>
+<li>Can't refine takeoff by working backward</li>
+<li>
+<p>Miss opportunities for sub-frame interpolation</p>
+</li>
+<li>
+<p><strong>False positives</strong>:</p>
+</li>
+<li>
+<p>May detect non-jump movements</p>
+</li>
+<li>Need robust state machine</li>
+<li>
+<p>Sensitive to noise</p>
+</li>
+<li>
+<p><strong>Accuracy degradation</strong>:</p>
+</li>
+<li>
+<p>Estimated: 55-60cm instead of 50.6cm (±10% error)</p>
+</li>
+<li>Frame detection: ±2-3 frames instead of ±1</li>
+<li>Less reliable phase detection</li>
+</ol>
+<p><strong>Advantages</strong>:</p>
+<ul>
+<li>✅ Instant feedback (\&lt;100ms)</li>
+<li>✅ True real-time</li>
+<li>✅ Lower memory usage</li>
+</ul>
+<p><strong>Disadvantages</strong>:</p>
+<ul>
+<li>⚠️ Reduced accuracy (~10% error)</li>
+<li>⚠️ Complex validation needed</li>
+<li>⚠️ High implementation effort</li>
+<li>⚠️ May not work reliably</li>
+</ul>
+<hr />
+<h2 id="performance-analysis">Performance Analysis<a class="headerlink" href="#performance-analysis" title="Permanent link">&para;</a></h2>
+<h3 id="current-processing-speed">Current Processing Speed<a class="headerlink" href="#current-processing-speed" title="Permanent link">&para;</a></h3>
+<p><strong>Test video</strong>: 236 frames @ 29.58fps</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Processing time breakdown:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>- MediaPipe tracking: ~5-6 seconds
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>- Smoothing: ~0.1 seconds
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>- Phase detection: ~0.01 seconds
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>- Rendering debug video: ~2 seconds
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Total: ~7-8 seconds for 8-second video
+</code></pre></div>
+<p><strong>Per-frame cost</strong>: ~30-40ms (mostly MediaPipe)</p>
+<p><strong>Bottleneck</strong>: MediaPipe pose tracking (not our algorithm)</p>
+<h3 id="real-time-requirements">Real-Time Requirements<a class="headerlink" href="#real-time-requirements" title="Permanent link">&para;</a></h3>
+<p><strong>For 30fps streaming</strong>:</p>
+<ul>
+<li>Must process each frame in \&lt;33ms</li>
+<li>MediaPipe: ~25-30ms per frame</li>
+<li>Our algorithm: \&lt;1ms per frame</li>
+<li><strong>Conclusion</strong>: MediaPipe is the limiting factor, but feasible</li>
+</ul>
+<p><strong>For 60fps streaming</strong>:</p>
+<ul>
+<li>Must process each frame in \&lt;17ms</li>
+<li>MediaPipe: ~25-30ms per frame</li>
+<li><strong>Conclusion</strong>: Would need GPU acceleration or lower MediaPipe model complexity</li>
+</ul>
+<hr />
+<h2 id="implementation-roadmap">Implementation Roadmap<a class="headerlink" href="#implementation-roadmap" title="Permanent link">&para;</a></h2>
+<h3 id="phase-1-near-real-time-buffered-recommended">Phase 1: Near Real-Time (Buffered) - RECOMMENDED<a class="headerlink" href="#phase-1-near-real-time-buffered-recommended" title="Permanent link">&para;</a></h3>
+<p><strong>Effort</strong>: 1-2 days</p>
+<p><strong>Implementation</strong>:</p>
+<ol>
+<li><strong>Create <code>RealtimeCMJAnalyzer</code> class</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">RealtimeCMJAnalyzer</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">CircularFrameBuffer</span><span class="p">(</span><span class="n">buffer_seconds</span><span class="p">)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span> <span class="o">=</span> <span class="n">PoseTracker</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">process_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Process single frame, return metrics when jump complete.&quot;&quot;&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="n">landmarks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span><span class="o">.</span><span class="n">process_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">landmarks</span><span class="p">)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_jump_complete</span><span class="p">():</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analyze_buffered_jump</span><span class="p">()</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>        <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
+<ol>
+<li>
+<p><strong>Jump completion detector</strong>:</p>
+</li>
+<li>
+<p>Monitor position stability</p>
+</li>
+<li>Detect landing (velocity → near zero)</li>
+<li>
+<p>Wait 1 second after landing to ensure complete</p>
+</li>
+<li>
+<p><strong>Analyze buffered frames</strong>:</p>
+</li>
+<li>
+<p>Call existing <code>detect_cmj_phases()</code></p>
+</li>
+<li>Use proven algorithm</li>
+<li>Return metrics with 1-2 second delay</li>
+</ol>
+<p><strong>API Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">analyzer</span> <span class="o">=</span> <span class="n">RealtimeCMJAnalyzer</span><span class="p">()</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">frame</span> <span class="o">=</span> <span class="n">camera</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">process_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Jump complete! Height: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">jump_height</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">cm&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>✅ Maintains 50.6cm accuracy</li>
+<li>✅ Simple implementation</li>
+<li>✅ All features work (triple extension, etc.)</li>
+<li>✅ 1-2 second delay acceptable</li>
+</ul>
+<hr />
+<h3 id="phase-2-true-real-time-forward-detection-future">Phase 2: True Real-Time (Forward Detection) - FUTURE<a class="headerlink" href="#phase-2-true-real-time-forward-detection-future" title="Permanent link">&para;</a></h3>
+<p><strong>Effort</strong>: 1-2 weeks + validation</p>
+<p><strong>Implementation</strong>:</p>
+<ol>
+<li><strong>Causal filter</strong> (exponential smoothing or one-sided Savitzky-Golay)</li>
+<li><strong>Forward phase detection</strong> (state machine)</li>
+<li><strong>Event triggers</strong> (real-time callbacks)</li>
+<li><strong>Extensive validation</strong> (test against known jumps)</li>
+</ol>
+<p><strong>Expected accuracy</strong>: 55-60cm (±10% error)</p>
+<p><strong>Use cases</strong>: Specialized applications requiring instant feedback</p>
+<hr />
+<h2 id="recommendations">Recommendations<a class="headerlink" href="#recommendations" title="Permanent link">&para;</a></h2>
+<h3 id="for-most-use-cases-near-real-time-buffered">For Most Use Cases: Near Real-Time (Buffered)<a class="headerlink" href="#for-most-use-cases-near-real-time-buffered" title="Permanent link">&para;</a></h3>
+<p><strong>Implement buffered mode if:</strong></p>
+<ul>
+<li>Need quick results during training (1-2 sec acceptable)</li>
+<li>Want to maintain accuracy (50.6cm validated)</li>
+<li>Building coaching app or live testing system</li>
+<li>Value reliability over instant feedback</li>
+</ul>
+<h3 id="for-researchanalysis-offline-current">For Research/Analysis: Offline (Current)<a class="headerlink" href="#for-researchanalysis-offline-current" title="Permanent link">&para;</a></h3>
+<p><strong>Use current implementation for:</strong></p>
+<ul>
+<li>Maximum accuracy needed</li>
+<li>Post-session analysis</li>
+<li>Research/publication data</li>
+<li>Detailed biomechanical analysis</li>
+</ul>
+<h3 id="future-true-real-time">Future: True Real-Time<a class="headerlink" href="#future-true-real-time" title="Permanent link">&para;</a></h3>
+<p><strong>Only implement if:</strong></p>
+<ul>
+<li>Instant feedback is critical (\&lt;100ms)</li>
+<li>Willing to accept ~10% accuracy reduction</li>
+<li>Have time for extensive validation</li>
+<li>Specialized application requires it</li>
+</ul>
+<hr />
+<h2 id="technical-constraints">Technical Constraints<a class="headerlink" href="#technical-constraints" title="Permanent link">&para;</a></h2>
+<h3 id="mediapipe-processing-speed">MediaPipe Processing Speed<a class="headerlink" href="#mediapipe-processing-speed" title="Permanent link">&para;</a></h3>
+<p><strong>Current</strong>: ~25-30ms per frame (M1 Pro)</p>
+<p><strong>Implications</strong>:</p>
+<ul>
+<li>30fps: ✅ Feasible (33ms budget, 25-30ms used)</li>
+<li>60fps: ⚠️ Challenging (17ms budget, 25-30ms used)</li>
+</ul>
+<p><strong>Solutions for 60fps</strong>:</p>
+<ol>
+<li>Use GPU acceleration</li>
+<li>Use lighter MediaPipe model (reduced accuracy)</li>
+<li>Process every other frame</li>
+<li>Use dedicated hardware (Jetson Nano, etc.)</li>
+</ol>
+<h3 id="memory-requirements">Memory Requirements<a class="headerlink" href="#memory-requirements" title="Permanent link">&para;</a></h3>
+<p><strong>Buffered approach</strong>:</p>
+<ul>
+<li>10 seconds @ 30fps = 300 frames</li>
+<li>720x1280x3 bytes per frame = 2.7MB per frame</li>
+<li>Total buffer: ~800MB (manageable)</li>
+</ul>
+<p><strong>True real-time</strong>:</p>
+<ul>
+<li>Minimal buffer (10-20 frames for smoothing)</li>
+<li>~50-100MB (very low)</li>
+</ul>
+<hr />
+<h2 id="example-use-cases">Example Use Cases<a class="headerlink" href="#example-use-cases" title="Permanent link">&para;</a></h2>
+<h3 id="use-case-1-training-app-near-real-time">Use Case 1: Training App (Near Real-Time)<a class="headerlink" href="#use-case-1-training-app-near-real-time" title="Permanent link">&para;</a></h3>
+<p><strong>Scenario</strong>: Mobile app for athletes to track CMJ during workouts</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Training app implementation</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">app</span> <span class="o">=</span> <span class="n">TrainingApp</span><span class="p">()</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">analyzer</span> <span class="o">=</span> <span class="n">RealtimeCMJAnalyzer</span><span class="p">(</span><span class="n">buffer_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">while</span> <span class="n">training_session_active</span><span class="p">:</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">frame</span> <span class="o">=</span> <span class="n">phone_camera</span><span class="o">.</span><span class="n">capture</span><span class="p">()</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">process_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        <span class="c1"># Show results 1-2 seconds after landing</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>        <span class="n">app</span><span class="o">.</span><span class="n">display_result</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Jump: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">jump_height</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">cm&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>        <span class="n">app</span><span class="o">.</span><span class="n">save_to_session</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>        <span class="n">app</span><span class="o">.</span><span class="n">play_feedback_sound</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Latency</strong>: 1-2 seconds after landing ✓ Acceptable</p>
+<h3 id="use-case-2-research-lab-offline-current">Use Case 2: Research Lab (Offline - Current)<a class="headerlink" href="#use-case-2-research-lab-offline-current" title="Permanent link">&para;</a></h3>
+<p><strong>Scenario</strong>: Biomechanics research, publication-quality data</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Current offline analysis (already implemented)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">metrics</span> <span class="o">=</span> <span class="n">process_cmj_video</span><span class="p">(</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="s2">&quot;athlete_cmj.mp4&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;accurate&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">output_video</span><span class="o">=</span><span class="s2">&quot;debug.mp4&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">)</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Accuracy: 50.6cm (validated)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Use for research papers, detailed analysis</span>
+</code></pre></div>
+<p><strong>Latency</strong>: N/A (offline) ✓ Maximum accuracy</p>
+<h3 id="use-case-3-competition-testing-near-real-time">Use Case 3: Competition Testing (Near Real-Time)<a class="headerlink" href="#use-case-3-competition-testing-near-real-time" title="Permanent link">&para;</a></h3>
+<p><strong>Scenario</strong>: Testing session with immediate results</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Competition testing station</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">analyzer</span> <span class="o">=</span> <span class="n">RealtimeCMJAnalyzer</span><span class="p">()</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">for</span> <span class="n">athlete</span> <span class="ow">in</span> <span class="n">competition</span><span class="p">:</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Testing </span><span class="si">{</span><span class="n">athlete</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        <span class="n">frame</span> <span class="o">=</span> <span class="n">camera</span><span class="o">.</span><span class="n">capture</span><span class="p">()</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">process_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">jump_height</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">cm&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>            <span class="n">save_to_database</span><span class="p">(</span><span class="n">athlete</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>            <span class="k">break</span>  <span class="c1"># Move to next athlete</span>
+</code></pre></div>
+<p><strong>Latency</strong>: 1-2 seconds ✓ Fast enough for testing</p>
+<hr />
+<h2 id="implementation-specification">Implementation Specification<a class="headerlink" href="#implementation-specification" title="Permanent link">&para;</a></h2>
+<h3 id="buffered-near-real-time-mode">Buffered Near Real-Time Mode<a class="headerlink" href="#buffered-near-real-time-mode" title="Permanent link">&para;</a></h3>
+<h4 id="api-design">API Design<a class="headerlink" href="#api-design" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kinemotion</span><span class="w"> </span><span class="kn">import</span> <span class="n">RealtimeCMJAnalyzer</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Initialize analyzer</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">analyzer</span> <span class="o">=</span> <span class="n">RealtimeCMJAnalyzer</span><span class="p">(</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">buffer_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>           <span class="c1"># Buffer duration</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span>           <span class="c1"># Analysis quality</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="n">detection_confidence</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>     <span class="c1"># MediaPipe settings</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="n">jump_timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>            <span class="c1"># Max jump duration</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="p">)</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Process streaming frames</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="k">while</span> <span class="n">camera</span><span class="o">.</span><span class="n">is_open</span><span class="p">():</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="n">frame</span> <span class="o">=</span> <span class="n">camera</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    <span class="c1"># Returns None until jump complete</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">process_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>    <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Jump height: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">jump_height</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">cm&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Latency: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">latency_ms</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">ms after landing&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>    <span class="c1"># Optional: Get live preview (incomplete analysis)</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>    <span class="n">preview</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">get_preview</span><span class="p">()</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>    <span class="k">if</span> <span class="n">preview</span><span class="p">:</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>        <span class="n">display_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current phase: </span><span class="si">{</span><span class="n">preview</span><span class="o">.</span><span class="n">phase</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="jump-completion-detection">Jump Completion Detection<a class="headerlink" href="#jump-completion-detection" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">detect_jump_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Detect if a complete CMJ has occurred and analysis can begin.&quot;&quot;&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="c1"># Require minimum activity</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">duration</span> <span class="o">&lt;</span> <span class="mf">2.0</span><span class="p">:</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>        <span class="k">return</span> <span class="kc">False</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="c1"># Get recent trajectory (last 1 second)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="n">recent_positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">get_recent</span><span class="p">(</span><span class="n">frames</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="n">recent_velocity</span> <span class="o">=</span> <span class="n">compute_signed_velocity</span><span class="p">(</span><span class="n">recent_positions</span><span class="p">)</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="c1"># Check for landing indicators:</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    <span class="c1"># 1. Position stabilized (low velocity)</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    <span class="n">stable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">recent_velocity</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">:])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.005</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>    <span class="c1"># 2. Clear upward motion detected earlier</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>    <span class="n">had_upward_motion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">recent_velocity</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.015</span><span class="p">)</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>    <span class="c1"># 3. Position returned to near-starting level</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>    <span class="n">current_pos</span> <span class="o">=</span> <span class="n">recent_positions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    <span class="n">starting_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">get_starting_position</span><span class="p">()</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>    <span class="n">returned</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">current_pos</span> <span class="o">-</span> <span class="n">starting_pos</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>    <span class="k">return</span> <span class="n">stable</span> <span class="ow">and</span> <span class="n">had_upward_motion</span> <span class="ow">and</span> <span class="n">returned</span>
+</code></pre></div>
+<h4 id="processing-pipeline">Processing Pipeline<a class="headerlink" href="#processing-pipeline" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">analyze_buffered_jump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyze complete jump from buffer using offline algorithm.&quot;&quot;&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="c1"># Extract frames and landmarks from buffer</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">get_frames</span><span class="p">()</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">landmarks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">get_landmarks</span><span class="p">()</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="c1"># Use existing offline algorithm (proven accurate)</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="n">positions</span> <span class="o">=</span> <span class="n">extract_positions</span><span class="p">(</span><span class="n">landmarks</span><span class="p">)</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="n">phases</span> <span class="o">=</span> <span class="n">detect_cmj_phases</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">fps</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>  <span class="c1"># Backward search</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="n">metrics</span> <span class="o">=</span> <span class="n">calculate_cmj_metrics</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>    <span class="c1"># Calculate latency</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>    <span class="n">landing_time</span> <span class="o">=</span> <span class="n">phases</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="n">fps</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>    <span class="n">current_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">duration</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>    <span class="n">latency</span> <span class="o">=</span> <span class="n">current_time</span> <span class="o">-</span> <span class="n">landing_time</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>    <span class="k">return</span> <span class="n">RealtimeResult</span><span class="p">(</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>        <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>        <span class="n">latency_ms</span><span class="o">=</span><span class="n">latency</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>        <span class="n">frames_analyzed</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>    <span class="p">)</span>
+</code></pre></div>
+<p><strong>Accuracy</strong>: Same as offline (50.6cm validated) ✓</p>
+<hr />
+<h3 id="true-real-time-mode-future">True Real-Time Mode (Future)<a class="headerlink" href="#true-real-time-mode-future" title="Permanent link">&para;</a></h3>
+<h4 id="forward-only-detection">Forward-Only Detection<a class="headerlink" href="#forward-only-detection" title="Permanent link">&para;</a></h4>
+<p><strong>State machine approach</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TrueRealtimeCMJAnalyzer</span><span class="p">:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;idle&quot;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">position_buffer</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># Minimal buffer</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">process_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">frame_idx</span><span class="p">):</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>        <span class="c1"># Extract position (causal only)</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>        <span class="n">position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_position_causal</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">position_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>        <span class="c1"># Compute causal velocity (only past frames)</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>        <span class="n">velocity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_causal_velocity</span><span class="p">()</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>        <span class="c1"># State transitions</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;idle&quot;</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">velocity</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.005</span><span class="p">:</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;standing&quot;</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;standing&quot;</span> <span class="ow">and</span> <span class="n">velocity</span> <span class="o">&gt;</span> <span class="mf">0.015</span><span class="p">:</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;eccentric&quot;</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;eccentric_start&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame_idx</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;eccentric&quot;</span> <span class="ow">and</span> <span class="n">velocity</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;concentric&quot;</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;lowest_point&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame_idx</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;concentric&quot;</span> <span class="ow">and</span> <span class="n">velocity</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.025</span><span class="p">:</span>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;flight&quot;</span>
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;takeoff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame_idx</span>
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a>
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a>        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;flight&quot;</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">velocity</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.01</span><span class="p">:</span>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;landing&quot;</span>
+<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;landing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame_idx</span>
+<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a>
+<a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a>            <span class="c1"># Calculate metrics immediately</span>
+<a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_instant_metrics</span><span class="p">()</span>
+<a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a>
+<a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a>        <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
+<p><strong>Causal smoothing</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">compute_causal_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute velocity using only past frames (causal filter).&quot;&quot;&quot;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="c1"># Option 1: Exponential moving average</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.3</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="n">smoothed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_buffer</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>        <span class="n">smoothed</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">pos</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">smoothed</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="n">velocity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position_buffer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">smoothed</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="c1"># Option 2: One-sided Savitzky-Golay</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>    <span class="c1"># Uses only past frames (asymmetric window)</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    <span class="n">velocity</span> <span class="o">=</span> <span class="n">savgol_filter</span><span class="p">(</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>        <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position_buffer</span><span class="p">),</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>        <span class="n">window_length</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>        <span class="n">polyorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>        <span class="n">deriv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;mirror&#39;</span>  <span class="c1"># Only use left side</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>    <span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>    <span class="k">return</span> <span class="n">velocity</span>
+</code></pre></div>
+<p><strong>Expected accuracy</strong>:</p>
+<ul>
+<li>Jump height: ±10% error (55-60cm instead of 50.6cm)</li>
+<li>Frame detection: ±2-3 frames instead of ±1</li>
+<li>Phase timing: Less precise</li>
+</ul>
+<p><strong>Why lower accuracy</strong>:</p>
+<ul>
+<li>Causal filtering has inherent lag</li>
+<li>Can't refine estimates with future data</li>
+<li>No global trajectory optimization</li>
+<li>More sensitive to noise</li>
+</ul>
+<hr />
+<h2 id="performance-comparison">Performance Comparison<a class="headerlink" href="#performance-comparison" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Offline (Current)</th>
+<th>Near Real-Time</th>
+<th>True Real-Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Latency</strong></td>
+<td>N/A</td>
+<td>1-2 seconds</td>
+<td>\&lt;100ms</td>
+</tr>
+<tr>
+<td><strong>Jump Height Accuracy</strong></td>
+<td>50.6cm ✓</td>
+<td>50.6cm ✓</td>
+<td>~55-60cm</td>
+</tr>
+<tr>
+<td><strong>Frame Detection Error</strong></td>
+<td>±1 frame</td>
+<td>±1 frame</td>
+<td>±2-3 frames</td>
+</tr>
+<tr>
+<td><strong>Smoothing Quality</strong></td>
+<td>Excellent</td>
+<td>Excellent</td>
+<td>Good</td>
+</tr>
+<tr>
+<td><strong>Triple Extension</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Limited</td>
+</tr>
+<tr>
+<td><strong>Memory Usage</strong></td>
+<td>Full video</td>
+<td>~800MB buffer</td>
+<td>~50MB</td>
+</tr>
+<tr>
+<td><strong>Implementation Effort</strong></td>
+<td>✓ Done</td>
+<td>1-2 days</td>
+<td>1-2 weeks</td>
+</tr>
+<tr>
+<td><strong>Validation Effort</strong></td>
+<td>✓ Done</td>
+<td>Minimal</td>
+<td>Extensive</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="recommendation-matrix">Recommendation Matrix<a class="headerlink" href="#recommendation-matrix" title="Permanent link">&para;</a></h2>
+<h3 id="choose-offline-current-if">Choose Offline (Current) If<a class="headerlink" href="#choose-offline-current-if" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ Maximum accuracy required (research, validation)</li>
+<li>✅ Processing pre-recorded videos</li>
+<li>✅ Time is not critical</li>
+<li>✅ Want triple extension with full coverage</li>
+<li>✅ Publication-quality data needed</li>
+</ul>
+<h3 id="choose-near-real-time-if">Choose Near Real-Time If<a class="headerlink" href="#choose-near-real-time-if" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ Need quick results (1-2 sec acceptable)</li>
+<li>✅ Coaching/training applications</li>
+<li>✅ Live testing sessions</li>
+<li>✅ Want to maintain accuracy</li>
+<li>✅ Building mobile/web app</li>
+</ul>
+<h3 id="choose-true-real-time-if">Choose True Real-Time If<a class="headerlink" href="#choose-true-real-time-if" title="Permanent link">&para;</a></h3>
+<ul>
+<li>⚠️ Instant feedback critical (\&lt;100ms)</li>
+<li>⚠️ Interactive applications (games, VR)</li>
+<li>⚠️ Can accept ~10% accuracy reduction</li>
+<li>⚠️ Have resources for extensive validation</li>
+<li>⚠️ Specialized use case</li>
+</ul>
+<hr />
+<h2 id="technical-considerations">Technical Considerations<a class="headerlink" href="#technical-considerations" title="Permanent link">&para;</a></h2>
+<h3 id="buffered-mode-implementation-checklist">Buffered Mode Implementation Checklist<a class="headerlink" href="#buffered-mode-implementation-checklist" title="Permanent link">&para;</a></h3>
+<p><strong>Core components needed</strong>:</p>
+<ol>
+<li>
+<p><strong>CircularFrameBuffer class</strong></p>
+</li>
+<li>
+<p>Store frames + landmarks</p>
+</li>
+<li>Efficient memory management</li>
+<li>
+<p>Thread-safe if needed</p>
+</li>
+<li>
+<p><strong>JumpCompletionDetector</strong></p>
+</li>
+<li>
+<p>Analyze recent frames</p>
+</li>
+<li>Detect landing + stability</li>
+<li>
+<p>Trigger analysis</p>
+</li>
+<li>
+<p><strong>RealtimeCMJAnalyzer wrapper</strong></p>
+</li>
+<li>
+<p>Manages buffer</p>
+</li>
+<li>Calls existing offline algorithm</li>
+<li>
+<p>Returns results with latency info</p>
+</li>
+<li>
+<p><strong>Testing suite</strong></p>
+</li>
+<li>
+<p>Validate against known jumps</p>
+</li>
+<li>Test various scenarios</li>
+<li>Measure actual latency</li>
+</ol>
+<p><strong>Estimated implementation</strong>: 200-300 lines</p>
+<h3 id="true-real-time-implementation-checklist">True Real-Time Implementation Checklist<a class="headerlink" href="#true-real-time-implementation-checklist" title="Permanent link">&para;</a></h3>
+<p><strong>Major components needed</strong>:</p>
+<ol>
+<li>
+<p><strong>Causal filtering system</strong></p>
+</li>
+<li>
+<p>Exponential smoothing</p>
+</li>
+<li>One-sided Savitzky-Golay</li>
+<li>
+<p>Adaptive filtering</p>
+</li>
+<li>
+<p><strong>Forward phase detector</strong></p>
+</li>
+<li>
+<p>State machine</p>
+</li>
+<li>Event triggers</li>
+<li>
+<p>Robust to noise</p>
+</li>
+<li>
+<p><strong>Instant metrics calculator</strong></p>
+</li>
+<li>
+<p>No backward refinement</p>
+</li>
+<li>Immediate results</li>
+<li>
+<p>Error handling</p>
+</li>
+<li>
+<p><strong>Extensive validation</strong></p>
+</li>
+<li>
+<p>Compare with offline</p>
+</li>
+<li>Test accuracy degradation</li>
+<li>Validate across multiple videos</li>
+</ol>
+<p><strong>Estimated implementation</strong>: 500-800 lines</p>
+<hr />
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<h3 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h3>
+<p><strong>Current implementation (offline)</strong>:</p>
+<ul>
+<li>✅ Production-ready</li>
+<li>✅ Validated accuracy (50.6cm)</li>
+<li>✅ ±1 frame precision</li>
+<li>✅ Triple extension tracking</li>
+<li>❌ Not real-time compatible</li>
+</ul>
+<p><strong>Feasible near-term</strong>: Buffered near real-time</p>
+<ul>
+<li>1-2 second delay</li>
+<li>Same accuracy as offline</li>
+<li>Simple implementation</li>
+<li>Good for coaching/training apps</li>
+</ul>
+<p><strong>Future possibility</strong>: True real-time</p>
+<ul>
+<li>\&lt;100ms latency</li>
+<li>~10% accuracy reduction</li>
+<li>Complex implementation</li>
+<li>Specialized use cases</li>
+</ul>
+<h3 id="recommendation">Recommendation<a class="headerlink" href="#recommendation" title="Permanent link">&para;</a></h3>
+<p><strong>Implement buffered near real-time mode</strong> as next feature:</p>
+<ul>
+<li>Maintains accuracy (critical for credibility)</li>
+<li>Simple enough to implement quickly (1-2 days)</li>
+<li>Meets 80% of real-time use cases</li>
+<li>Builds on proven algorithm</li>
+</ul>
+<p><strong>Don't implement true real-time</strong> unless:</p>
+<ul>
+<li>Specific application requires it</li>
+<li>Can accept accuracy reduction</li>
+<li>Have time for extensive validation</li>
+</ul>
+<hr />
+<h2 id="questions-answers">Questions &amp; Answers<a class="headerlink" href="#questions-answers" title="Permanent link">&para;</a></h2>
+<p><strong>Q: Can I use this for a live training app?</strong>
+A: Yes! Use buffered near real-time mode (1-2 sec delay). Accuracy maintained.</p>
+<p><strong>Q: Can I get instant feedback as I jump?</strong>
+A: Not with current algorithm. Would need true real-time mode (~10% accuracy loss).</p>
+<p><strong>Q: What about webcam input?</strong>
+A: Buffered mode works great with webcam. True real-time possible but less accurate.</p>
+<p><strong>Q: How much memory does buffering need?</strong>
+A: ~800MB for 10 second buffer @ 1080p. Manageable for most systems.</p>
+<p><strong>Q: Will triple extension work in real-time?</strong>
+A: Yes in buffered mode (same as offline). Limited in true real-time (harder to track during motion).</p>
+<hr />
+<p><em>Kinemotion CMJ Module</em>
+<em>Real-Time Analysis Technical Assessment</em>
+<em>Version 0.1.0 - 2025-11-06</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

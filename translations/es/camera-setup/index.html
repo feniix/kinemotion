@@ -1,0 +1,3931 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Video-based kinematic analysis for athletic performance">
+      
+      
+        <meta name="author" content="Sebastian Otaegui">
+      
+      
+        <link rel="canonical" href="https://kinemotion.readthedocs.io/translations/es/camera-setup/">
+      
+      
+        <link rel="prev" href="../../../development/errors-findings/">
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
+    
+    
+      
+        <title>Configuración de Cámara - Kinemotion</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#guia-de-configuracion-de-camara" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Kinemotion" class="md-header__button md-logo" aria-label="Kinemotion" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kinemotion
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuración de Cámara
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/feniix/kinemotion" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    feniix/kinemotion
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../guides/cmj-guide/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../reference/parameters/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../api/overview/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../technical/triple-extension/" class="md-tabs__link">
+          
+  
+  
+  Technical
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../research/sports-biomechanics-pose-estimation/" class="md-tabs__link">
+          
+  
+  
+  Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/validation-plan/" class="md-tabs__link">
+          
+  
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Translations
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Kinemotion" class="md-nav__button md-logo" aria-label="Kinemotion" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Kinemotion
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/feniix/kinemotion" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    feniix/kinemotion
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Guides
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/cmj-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CMJ Analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/camera-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Camera Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/bulk-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Bulk Processing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Parameters
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/pose-systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pose Systems
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/dropjump/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Drop Jump API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/cmj/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CMJ API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Utilities
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Technical
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Technical
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../technical/triple-extension/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Triple Extension
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../technical/framerate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Framerate
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../technical/real-time-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Real-time Analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../technical/imu-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    IMU Metadata
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Research
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Research
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../research/sports-biomechanics-pose-estimation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sports Biomechanics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Development
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/validation-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Validation Plan
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/errors-findings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Error Findings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Translations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Translations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8_1" id="__nav_8_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Español
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            Español
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Configuración de Cámara
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuración de Cámara
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#descripcion-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      Descripción General
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-1-un-iphone-a-45-estandar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración 1: Un iPhone a 45° (Estándar)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración 1: Un iPhone a 45° (Estándar)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#posicionamiento-de-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Posicionamiento de Cámara
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Posicionamiento de Cámara">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diagrama-vista-superior-una-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diagrama Vista Superior (Una Cámara)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instrucciones-detalladas-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Instrucciones Detalladas de Configuración
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Instrucciones Detalladas de Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-colocacion-fisica" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Colocación Física
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-composicion-del-encuadre" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Composición del Encuadre
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-configuracion-de-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Configuración de Cámara
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-iluminacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Iluminación
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-fondo" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Fondo
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rendimiento-esperado" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rendimiento Esperado
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lista-de-verificacion-de-configuracion-de-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lista de Verificación de Configuración de Cámara
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-2-estereo-con-dos-iphones-avanzado" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración 2: Estéreo con Dos iPhones (Avanzado)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración 2: Estéreo con Dos iPhones (Avanzado)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cuando-usar-configuracion-de-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cuándo Usar Configuración de Doble Cámara
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#posicionamiento-de-camaras" class="md-nav__link">
+    <span class="md-ellipsis">
+      Posicionamiento de Cámaras
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Posicionamiento de Cámaras">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-optima-45-del-plano-sagital-separacion-de-90" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración óptima: ±45° del plano sagital, separación de 90°
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagrama-vista-superior-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diagrama Vista Superior (Doble Cámara)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-detallada-de-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración Detallada de Doble Cámara
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración Detallada de Doble Cámara">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-posicionar-ambas-camaras" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paso 1: Posicionar Ambas Cámaras
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-composicion-del-encuadre-ambas-camaras" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paso 2: Composición del Encuadre (Ambas Cámaras)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-configuracion-de-camara-ambos-iphones" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paso 3: Configuración de Cámara (Ambos iPhones)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Paso 3: Configuración de Cámara (Ambos iPhones)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#critico-ambas-camaras-deben-tener-configuraciones-identicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      CRÍTICO: Ambas cámaras deben tener configuraciones idénticas
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-sincronizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paso 4: Sincronización
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Paso 4: Sincronización">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opcion-a-inicio-manual-simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opción A: Inicio manual (simple)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opcion-b-sincronizacion-de-audio-mejor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opción B: Sincronización de audio (mejor)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opcion-c-sincronizacion-por-hardware-mejor-requiere-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opción C: Sincronización por hardware (mejor, requiere equipo)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-calibracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paso 5: Calibración
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#procesamiento-de-videos-de-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Procesamiento de Videos de Doble Cámara
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Procesamiento de Videos de Doble Cámara">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opcion-a-usar-pose2sim-recomendado" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opción A: Usar Pose2Sim (recomendado)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opcion-b-futuro-soporte-estereo-de-kinemotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opción B: Futuro soporte estéreo de kinemotion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opcion-c-triangulacion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opción C: Triangulación manual
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rendimiento-esperado-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rendimiento Esperado (Doble Cámara)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lista-de-verificacion-de-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lista de Verificación de Doble Cámara
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-de-grabacion-ambas-configuraciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración de Grabación (Ambas Configuraciones)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración de Grabación (Ambas Configuraciones)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#especificaciones-de-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      Especificaciones de Video
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#por-que-60-fps-vs-30-fps" class="md-nav__link">
+    <span class="md-ellipsis">
+      ¿Por qué 60 fps vs 30 fps?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuraciones-de-camara-de-iphone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuraciones de Cámara de iPhone
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guias-de-iluminacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Guías de Iluminación
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Guías de Iluminación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grabacion-interior" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grabación Interior
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grabacion-exterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grabación Exterior
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guias-de-fondo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Guías de Fondo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errores-comunes-a-evitar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Errores Comunes a Evitar
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Errores Comunes a Evitar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#camara-no-a-angulo-de-45" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Cámara No a Ángulo de 45°
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camara-demasiado-cerca-3m" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Cámara Demasiado Cerca (\&lt;3m)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camara-demasiado-alta-o-baja" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Cámara Demasiado Alta o Baja
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encuadre-pobre" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Encuadre Pobre
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuraciones-inconsistentes-entre-camaras-duales" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Configuraciones Inconsistentes Entre Cámaras Duales
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resolución de Problemas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Resolución de Problemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advertencia-de-visibilidad-de-puntos-de-referencia-pobre" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advertencia de "Visibilidad de Puntos de Referencia Pobre"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-altura-del-salto-parece-incorrecta" class="md-nav__link">
+    <span class="md-ellipsis">
+      La Altura del Salto Parece Incorrecta
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-no-se-detecto-drop-jump" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error "No se Detectó Drop Jump"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#doble-camara-videos-no-sincronizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Doble Cámara: Videos No Sincronizados
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recomendaciones-de-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recomendaciones de Equipo
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recomendaciones de Equipo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-de-camara-unica" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración de Cámara Única
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-de-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración de Doble Cámara
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validacion-y-verificaciones-de-calidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validación y Verificaciones de Calidad
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validación y Verificaciones de Calidad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#despues-de-grabar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Después de Grabar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indicadores-de-calidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Indicadores de Calidad
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consejos-avanzados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consejos Avanzados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consejos Avanzados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#para-grabacion-consistente-multi-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Para Grabación Consistente Multi-Sesión
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimizacion-para-diferentes-tipos-de-salto" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimización para Diferentes Tipos de Salto
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#antecedentes-de-investigacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Antecedentes de Investigación
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Antecedentes de Investigación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#por-que-estas-recomendaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      ¿Por Qué Estas Recomendaciones?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitaciones-de-camara-unica" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitaciones de Cámara Única
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resumen
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Resumen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#un-iphone-a-45-configuracion-estandar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Un iPhone a 45° (Configuración Estándar)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estereo-con-dos-iphones-configuracion-avanzada" class="md-nav__link">
+    <span class="md-ellipsis">
+      Estéreo con Dos iPhones (Configuración Avanzada)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guia-de-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Guía de Decisión
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentacion-relacionada" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentación Relacionada
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      Referencias
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#descripcion-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      Descripción General
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-1-un-iphone-a-45-estandar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración 1: Un iPhone a 45° (Estándar)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración 1: Un iPhone a 45° (Estándar)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#posicionamiento-de-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Posicionamiento de Cámara
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Posicionamiento de Cámara">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diagrama-vista-superior-una-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diagrama Vista Superior (Una Cámara)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instrucciones-detalladas-de-configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Instrucciones Detalladas de Configuración
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Instrucciones Detalladas de Configuración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-colocacion-fisica" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Colocación Física
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-composicion-del-encuadre" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Composición del Encuadre
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-configuracion-de-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Configuración de Cámara
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-iluminacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Iluminación
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-fondo" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Fondo
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rendimiento-esperado" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rendimiento Esperado
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lista-de-verificacion-de-configuracion-de-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lista de Verificación de Configuración de Cámara
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-2-estereo-con-dos-iphones-avanzado" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración 2: Estéreo con Dos iPhones (Avanzado)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración 2: Estéreo con Dos iPhones (Avanzado)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cuando-usar-configuracion-de-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cuándo Usar Configuración de Doble Cámara
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#posicionamiento-de-camaras" class="md-nav__link">
+    <span class="md-ellipsis">
+      Posicionamiento de Cámaras
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Posicionamiento de Cámaras">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-optima-45-del-plano-sagital-separacion-de-90" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración óptima: ±45° del plano sagital, separación de 90°
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagrama-vista-superior-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diagrama Vista Superior (Doble Cámara)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-detallada-de-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración Detallada de Doble Cámara
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración Detallada de Doble Cámara">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-posicionar-ambas-camaras" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paso 1: Posicionar Ambas Cámaras
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-composicion-del-encuadre-ambas-camaras" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paso 2: Composición del Encuadre (Ambas Cámaras)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-configuracion-de-camara-ambos-iphones" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paso 3: Configuración de Cámara (Ambos iPhones)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Paso 3: Configuración de Cámara (Ambos iPhones)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#critico-ambas-camaras-deben-tener-configuraciones-identicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      CRÍTICO: Ambas cámaras deben tener configuraciones idénticas
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-sincronizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paso 4: Sincronización
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Paso 4: Sincronización">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opcion-a-inicio-manual-simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opción A: Inicio manual (simple)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opcion-b-sincronizacion-de-audio-mejor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opción B: Sincronización de audio (mejor)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opcion-c-sincronizacion-por-hardware-mejor-requiere-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opción C: Sincronización por hardware (mejor, requiere equipo)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-calibracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paso 5: Calibración
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#procesamiento-de-videos-de-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Procesamiento de Videos de Doble Cámara
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Procesamiento de Videos de Doble Cámara">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opcion-a-usar-pose2sim-recomendado" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opción A: Usar Pose2Sim (recomendado)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opcion-b-futuro-soporte-estereo-de-kinemotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opción B: Futuro soporte estéreo de kinemotion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opcion-c-triangulacion-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opción C: Triangulación manual
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rendimiento-esperado-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rendimiento Esperado (Doble Cámara)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lista-de-verificacion-de-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lista de Verificación de Doble Cámara
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-de-grabacion-ambas-configuraciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración de Grabación (Ambas Configuraciones)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuración de Grabación (Ambas Configuraciones)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#especificaciones-de-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      Especificaciones de Video
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#por-que-60-fps-vs-30-fps" class="md-nav__link">
+    <span class="md-ellipsis">
+      ¿Por qué 60 fps vs 30 fps?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuraciones-de-camara-de-iphone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuraciones de Cámara de iPhone
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guias-de-iluminacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Guías de Iluminación
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Guías de Iluminación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grabacion-interior" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grabación Interior
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grabacion-exterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grabación Exterior
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guias-de-fondo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Guías de Fondo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errores-comunes-a-evitar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Errores Comunes a Evitar
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Errores Comunes a Evitar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#camara-no-a-angulo-de-45" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Cámara No a Ángulo de 45°
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camara-demasiado-cerca-3m" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Cámara Demasiado Cerca (\&lt;3m)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camara-demasiado-alta-o-baja" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Cámara Demasiado Alta o Baja
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encuadre-pobre" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Encuadre Pobre
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuraciones-inconsistentes-entre-camaras-duales" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Configuraciones Inconsistentes Entre Cámaras Duales
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolucion-de-problemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resolución de Problemas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Resolución de Problemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advertencia-de-visibilidad-de-puntos-de-referencia-pobre" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advertencia de "Visibilidad de Puntos de Referencia Pobre"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-altura-del-salto-parece-incorrecta" class="md-nav__link">
+    <span class="md-ellipsis">
+      La Altura del Salto Parece Incorrecta
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-no-se-detecto-drop-jump" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error "No se Detectó Drop Jump"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#doble-camara-videos-no-sincronizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Doble Cámara: Videos No Sincronizados
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recomendaciones-de-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recomendaciones de Equipo
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recomendaciones de Equipo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-de-camara-unica" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración de Cámara Única
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-de-doble-camara" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración de Doble Cámara
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validacion-y-verificaciones-de-calidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validación y Verificaciones de Calidad
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validación y Verificaciones de Calidad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#despues-de-grabar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Después de Grabar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indicadores-de-calidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Indicadores de Calidad
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consejos-avanzados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consejos Avanzados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consejos Avanzados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#para-grabacion-consistente-multi-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Para Grabación Consistente Multi-Sesión
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimizacion-para-diferentes-tipos-de-salto" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimización para Diferentes Tipos de Salto
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#antecedentes-de-investigacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Antecedentes de Investigación
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Antecedentes de Investigación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#por-que-estas-recomendaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      ¿Por Qué Estas Recomendaciones?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitaciones-de-camara-unica" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitaciones de Cámara Única
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resumen
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Resumen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#un-iphone-a-45-configuracion-estandar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Un iPhone a 45° (Configuración Estándar)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estereo-con-dos-iphones-configuracion-avanzada" class="md-nav__link">
+    <span class="md-ellipsis">
+      Estéreo con Dos iPhones (Configuración Avanzada)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guia-de-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Guía de Decisión
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentacion-relacionada" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentación Relacionada
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      Referencias
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="guia-de-configuracion-de-camara">Guía de Configuración de Cámara<a class="headerlink" href="#guia-de-configuracion-de-camara" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>English version available:</strong> <a href="../../../guides/camera-setup/">camera-setup.md</a></p>
+</blockquote>
+<p>Esta guía proporciona las mejores prácticas para grabar videos de drop jumps y CMJ para asegurar un análisis preciso con kinemotion.</p>
+<h2 id="descripcion-general">Descripción General<a class="headerlink" href="#descripcion-general" title="Permanent link">&para;</a></h2>
+<p>Kinemotion ahora utiliza <strong>posicionamiento de cámara a 45°</strong> como configuración estándar, proporcionando mejor visibilidad de puntos de referencia y precisión de rastreo comparado con vistas laterales puras. Esta guía cubre:</p>
+<ol>
+<li><strong>Un iPhone a 45°</strong> (configuración estándar recomendada)</li>
+<li><strong>Configuración estéreo con dos iPhones</strong> (avanzado - para mayor precisión)</li>
+</ol>
+<p><strong>¿Por qué 45° en lugar de lateral (90°)?</strong></p>
+<p>La investigación muestra que el ángulo de visión de la cámara afecta significativamente la precisión de la estimación de pose. El ángulo de 45° proporciona:</p>
+<ul>
+<li><strong>Mejor visibilidad</strong>: 40-60% de visibilidad de tobillo/rodilla vs 18-27% en vista lateral</li>
+<li><strong>Oclusión reducida</strong>: Ambas piernas más visibles (menos auto-oclusión)</li>
+<li><strong>Buena captura del plano sagital</strong>: Aún mide altura de salto y movimiento vertical con precisión</li>
+<li><strong>Compromiso práctico</strong>: Entre frontal (alta visibilidad, pobre profundidad) y lateral (sagital puro, alta oclusión)</li>
+</ul>
+<hr />
+<h2 id="configuracion-1-un-iphone-a-45-estandar">Configuración 1: Un iPhone a 45° (Estándar)<a class="headerlink" href="#configuracion-1-un-iphone-a-45-estandar" title="Permanent link">&para;</a></h2>
+<h3 id="posicionamiento-de-camara">Posicionamiento de Cámara<a class="headerlink" href="#posicionamiento-de-camara" title="Permanent link">&para;</a></h3>
+<p><strong>Recomendado para:</strong> La mayoría de usuarios, entornos de entrenamiento, evaluación de atletas individuales</p>
+<h4 id="diagrama-vista-superior-una-camara">Diagrama Vista Superior (Una Cámara)<a class="headerlink" href="#diagrama-vista-superior-una-camara" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>                    N (Norte - Atleta mira hacia adelante)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                    ↑
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        [Cajón]     |
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>            |       |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>            ↓       |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>           ⬤ Atleta (salta arriba/abajo)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>            ↘
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>             ↘ ángulo 45°
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>              ↘
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>            [iPhone en Trípode]
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Visualización vista lateral:
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    Atleta            iPhone
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>       ⬤  - - - - - - [📱]
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                      ↑
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                   3-5m distancia
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                   Altura de cadera (130-150cm)
+</code></pre></div>
+<p><strong>Posicionamiento clave:</strong></p>
+<ul>
+<li><strong>Ángulo:</strong> 45° del plano sagital del atleta (entre lateral y frontal)</li>
+<li><strong>Distancia:</strong> 3-5 metros (óptimo: 4 metros)</li>
+<li><strong>Altura:</strong> Nivel de cadera (130-150 cm del suelo)</li>
+<li><strong>Orientación:</strong> Modo horizontal (apaisado)</li>
+</ul>
+<h3 id="instrucciones-detalladas-de-configuracion">Instrucciones Detalladas de Configuración<a class="headerlink" href="#instrucciones-detalladas-de-configuracion" title="Permanent link">&para;</a></h3>
+<h4 id="1-colocacion-fisica">1. Colocación Física<a class="headerlink" href="#1-colocacion-fisica" title="Permanent link">&para;</a></h4>
+<p><strong>Paso a paso:</strong></p>
+<ol>
+<li><strong>Posicione al atleta en el cajón</strong> - El atleta debe estar en su posición de salto</li>
+<li><strong>Identifique el plano sagital</strong> - Imagine una línea de adelante hacia atrás a través del centro del atleta</li>
+<li><strong>Marque la posición de 45°</strong> - Desde el lateral del atleta, muévase 45° hacia el frente</li>
+<li>Si el atleta mira al Norte, la cámara debe estar al Sureste o Suroeste</li>
+<li>La cámara ve el frente-lateral del atleta (no perfil puro)</li>
+<li><strong>Establezca la distancia</strong> - Mida 3-5m desde la posición de salto del atleta</li>
+<li><strong>Establezca la altura</strong> - Lente de cámara a altura de cadera del atleta (típicamente 130-150 cm)</li>
+<li><strong>Nivele el trípode</strong> - Asegure que la cámara esté nivelada (no inclinada arriba/abajo)</li>
+</ol>
+<h4 id="2-composicion-del-encuadre">2. Composición del Encuadre<a class="headerlink" href="#2-composicion-del-encuadre" title="Permanent link">&para;</a></h4>
+<p><strong>A 1080p (1920x1080), encuadre al atleta así:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>|--------------------------|
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|  [10-15% margen arriba]  |
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>|                          |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|         👤 Atleta        | ← Cuerpo completo visible
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>|          ↕               | ← Altura completa del salto
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|         / \              | ← Ambas piernas visibles
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>|        /   \             |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|    [Área de aterrizaje]  | ← Suelo visible
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| [10-15% margen abajo]    |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|--------------------------|
+</code></pre></div>
+<p><strong>Lista de verificación:</strong></p>
+<ul>
+<li>✅ Cuerpo entero visible (cabeza a pies)</li>
+<li>✅ 10-15% margen sobre la cabeza (para altura de salto)</li>
+<li>✅ Superficie de aterrizaje visible en el encuadre</li>
+<li>✅ Atleta permanece centrado durante todo el movimiento</li>
+<li>✅ Ambas piernas visibles (ventaja clave del ángulo de 45°)</li>
+<li>❌ No corte partes del cuerpo</li>
+<li>❌ No haga paneo o zoom durante la grabación</li>
+</ul>
+<h4 id="3-configuracion-de-camara">3. Configuración de Cámara<a class="headerlink" href="#3-configuracion-de-camara" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Configuración</th>
+<th>Especificación</th>
+<th>Razón</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Resolución</strong></td>
+<td>1080p (1920x1080)</td>
+<td>Mínimo para detección precisa de puntos de referencia</td>
+</tr>
+<tr>
+<td><strong>Velocidad de Cuadros</strong></td>
+<td>60 fps (30 fps mínimo)</td>
+<td>60 fps recomendado para tiempos de contacto cortos</td>
+</tr>
+<tr>
+<td><strong>Orientación</strong></td>
+<td>Horizontal (apaisado)</td>
+<td>Campo de visión más amplio</td>
+</tr>
+<tr>
+<td><strong>Enfoque</strong></td>
+<td>Manual (bloqueado en atleta)</td>
+<td>Previene búsqueda de autoenfoque</td>
+</tr>
+<tr>
+<td><strong>Exposición</strong></td>
+<td>Bloqueada/manual</td>
+<td>Brillo consistente durante todo el video</td>
+</tr>
+<tr>
+<td><strong>Velocidad de Obturación</strong></td>
+<td>1/120s o más rápido</td>
+<td>Reduce desenfoque de movimiento</td>
+</tr>
+<tr>
+<td><strong>Estabilización</strong></td>
+<td>Trípode (requerido)</td>
+<td>Elimina vibración de cámara</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Configuraciones específicas de iPhone:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>App Cámara → Ajustes:
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- Formato: Más Compatible (H.264)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Grabar Video: 1080p a 60fps
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Bloquear Enfoque: Toque y mantenga en el atleta
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>- Bloquear Exposición: Deslice arriba/abajo para ajustar, luego bloquee
+</code></pre></div>
+<h4 id="4-iluminacion">4. Iluminación<a class="headerlink" href="#4-iluminacion" title="Permanent link">&para;</a></h4>
+<p><strong>Mejores prácticas:</strong></p>
+<ul>
+<li>Iluminación uniforme sobre el cuerpo del atleta</li>
+<li>Evite contraluz (atleta como silueta)</li>
+<li>Interior: Luces de gimnasio generalmente suficientes</li>
+<li>Exterior: Condiciones nubladas ideales (luz suave y uniforme)</li>
+</ul>
+<p><strong>Por qué importa:</strong> MediaPipe depende del contraste visual. La iluminación deficiente reduce las puntuaciones de visibilidad de puntos de referencia y la precisión del análisis.</p>
+<h4 id="5-fondo">5. Fondo<a class="headerlink" href="#5-fondo" title="Permanent link">&para;</a></h4>
+<p><strong>Óptimo:</strong></p>
+<ul>
+<li>Pared simple o fondo de color sólido</li>
+<li>Alto contraste con la ropa del atleta</li>
+<li>Movimiento mínimo en el fondo</li>
+</ul>
+<p><strong>Evite:</strong></p>
+<ul>
+<li>Fondos ocupados (equipamiento, otras personas)</li>
+<li>Colores similares a la ropa del atleta</li>
+<li>Superficies reflectivas (espejos, ventanas)</li>
+</ul>
+<h3 id="rendimiento-esperado">Rendimiento Esperado<a class="headerlink" href="#rendimiento-esperado" title="Permanent link">&para;</a></h3>
+<p><strong>Mejoras sobre vista lateral (90°):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Vista Lateral (90°)</th>
+<th>Ángulo 45°</th>
+<th>Mejora</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Visibilidad Tobillo/Rodilla</strong></td>
+<td>18-27%</td>
+<td>40-60%</td>
+<td>+100-150%</td>
+</tr>
+<tr>
+<td><strong>Precisión Ángulo Articular</strong></td>
+<td>~10-15° error</td>
+<td>~8-12° error</td>
+<td>~20-30% mejor</td>
+</tr>
+<tr>
+<td><strong>Confiabilidad de Detección</strong></td>
+<td>Buena</td>
+<td>Excelente</td>
+<td>Más consistente</td>
+</tr>
+<tr>
+<td><strong>Detección Contacto con Suelo</strong></td>
+<td>Desafiante</td>
+<td>Más fácil</td>
+<td>Más robusto</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Limitaciones:</strong></p>
+<ul>
+<li>Aún monocular (estimación de profundidad ruidosa)</li>
+<li>Sin restricciones biomecánicas (vs Pose2Sim)</li>
+<li>No de grado de investigación (para eso, use configuración de doble cámara)</li>
+</ul>
+<h3 id="lista-de-verificacion-de-configuracion-de-camara">Lista de Verificación de Configuración de Cámara<a class="headerlink" href="#lista-de-verificacion-de-configuracion-de-camara" title="Permanent link">&para;</a></h3>
+<p>Antes de grabar, verifique:</p>
+<ul>
+<li>[ ] iPhone en trípode estable (sin movimiento durante grabación)</li>
+<li>[ ] Cámara a 45° del plano sagital del atleta</li>
+<li>[ ] Distancia: 3-5 metros del área de aterrizaje</li>
+<li>[ ] Altura: Lente de cámara a altura de cadera del atleta (130-150cm)</li>
+<li>[ ] Encuadre: Cuerpo completo visible (cabeza a pies + márgenes 10-15%)</li>
+<li>[ ] Configuración: 1080p, 60 fps, orientación horizontal</li>
+<li>[ ] Enfoque: Bloqueado en atleta (toque y mantenga)</li>
+<li>[ ] Exposición: Bloqueada (iluminación consistente)</li>
+<li>[ ] Iluminación: Uniforme, sin sombras marcadas ni contraluz</li>
+<li>[ ] Fondo: Simple, mínimas distracciones</li>
+<li>[ ] Grabación de prueba: Atleta permanece en encuadre durante todo el salto</li>
+</ul>
+<hr />
+<h2 id="configuracion-2-estereo-con-dos-iphones-avanzado">Configuración 2: Estéreo con Dos iPhones (Avanzado)<a class="headerlink" href="#configuracion-2-estereo-con-dos-iphones-avanzado" title="Permanent link">&para;</a></h2>
+<h3 id="cuando-usar-configuracion-de-doble-camara">Cuándo Usar Configuración de Doble Cámara<a class="headerlink" href="#cuando-usar-configuracion-de-doble-camara" title="Permanent link">&para;</a></h3>
+<p><strong>Recomendado para:</strong></p>
+<ul>
+<li>Aplicaciones de investigación que requieren mayor precisión</li>
+<li>Evaluación de atletas de élite</li>
+<li>Cuando la precisión de profundidad es crítica</li>
+<li>Análisis biomecánico que requiere ángulos articulares</li>
+</ul>
+<p><strong>Beneficios sobre cámara única:</strong></p>
+<ul>
+<li><strong>~50% reducción de error</strong> (30.1mm RMSE vs 56.3mm monocular)</li>
+<li><strong>Reconstrucción 3D precisa</strong> (elimina ambigüedad de profundidad)</li>
+<li><strong>Mejor visibilidad de puntos de referencia</strong> (cada cámara ve ángulos diferentes)</li>
+<li><strong>Precisión de grado de investigación</strong> (con calibración y procesamiento adecuados)</li>
+</ul>
+<p><strong>Requisitos:</strong></p>
+<ul>
+<li>2 iPhones (se recomienda mismo modelo para configuraciones coincidentes)</li>
+<li>2 trípodes</li>
+<li>Patrón de calibración (tablero ChArUco o tablero de ajedrez)</li>
+<li>Flujo de trabajo de procesamiento más complejo</li>
+</ul>
+<h3 id="posicionamiento-de-camaras">Posicionamiento de Cámaras<a class="headerlink" href="#posicionamiento-de-camaras" title="Permanent link">&para;</a></h3>
+<h4 id="configuracion-optima-45-del-plano-sagital-separacion-de-90">Configuración óptima: ±45° del plano sagital, separación de 90°<a class="headerlink" href="#configuracion-optima-45-del-plano-sagital-separacion-de-90" title="Permanent link">&para;</a></h4>
+<h4 id="diagrama-vista-superior-doble-camara">Diagrama Vista Superior (Doble Cámara)<a class="headerlink" href="#diagrama-vista-superior-doble-camara" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>                    N (Atleta mira hacia adelante)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>                    ↑
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    [iPhone 2]      |      [iPhone 1]
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    (Lado izq.)     |      (Lado der.)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>         ↘          |          ↙
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>          ↘ 45°     |      45° ↙
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>           ↘        |        ↙
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>             ↘   [Cajón]   ↙
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>               ↘    |   ↙
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>                 ↘  ↓ ↙
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                   ⬤ Atleta
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    Separación total: 90° (óptimo para triangulación)
+</code></pre></div>
+<p><strong>¿Por qué separación de 90°?</strong></p>
+<p>La investigación de Pagnon et al. (2022) y Dill et al. (2024) encontró que un ángulo de 90° entre cámaras es óptimo para reconstrucción 3D estéreo. Esto balancea:</p>
+<ul>
+<li>Precisión de triangulación (ángulos más amplios mejor)</li>
+<li>Campo de visión superpuesto (cámaras deben ver los mismos puntos de referencia)</li>
+<li>Restricciones prácticas de configuración</li>
+</ul>
+<h3 id="configuracion-detallada-de-doble-camara">Configuración Detallada de Doble Cámara<a class="headerlink" href="#configuracion-detallada-de-doble-camara" title="Permanent link">&para;</a></h3>
+<h4 id="paso-1-posicionar-ambas-camaras">Paso 1: Posicionar Ambas Cámaras<a class="headerlink" href="#paso-1-posicionar-ambas-camaras" title="Permanent link">&para;</a></h4>
+<p><strong>iPhone 1 (Cámara derecha):</strong></p>
+<ul>
+<li>Posicionar a 45° del lado derecho del atleta</li>
+<li>Si el atleta mira al Norte, la cámara está al Sureste</li>
+<li>Distancia: 3-5m del atleta</li>
+<li>Altura: Nivel de cadera (130-150cm)</li>
+</ul>
+<p><strong>iPhone 2 (Cámara izquierda):</strong></p>
+<ul>
+<li>Posicionar a 45° del lado izquierdo del atleta</li>
+<li>Si el atleta mira al Norte, la cámara está al Suroeste</li>
+<li>Distancia: 3-5m del atleta (igual que iPhone 1)</li>
+<li>Altura: Nivel de cadera (igualar iPhone 1 exactamente)</li>
+</ul>
+<p><strong>Alineación crítica:</strong></p>
+<ul>
+<li>Ambas cámaras a la <strong>misma altura</strong> (tolerancia ±2cm)</li>
+<li>Ambas cámaras a la <strong>misma distancia</strong> del atleta (tolerancia ±10cm)</li>
+<li>Ambas cámaras <strong>niveladas</strong> (no inclinadas)</li>
+<li><strong>Separación de 90°</strong> entre cámaras (tolerancia ±5°)</li>
+</ul>
+<h4 id="paso-2-composicion-del-encuadre-ambas-camaras">Paso 2: Composición del Encuadre (Ambas Cámaras)<a class="headerlink" href="#paso-2-composicion-del-encuadre-ambas-camaras" title="Permanent link">&para;</a></h4>
+<p>Ambos iPhones deben encuadrar al atleta idénticamente:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Vista de cada cámara:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>|------------------------|
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>|   [margen]             |
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>|      👤 Cuerpo comp.   | ← Mismo encuadre
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>|       ↕ Altura salto   | ← Ambas cámaras
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>|      / \               |
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>|  [Área aterrizaje]     |
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>|   [margen]             |
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>|------------------------|
+</code></pre></div>
+<p><strong>Sincronizar encuadre:</strong></p>
+<ul>
+<li>Atleta centrado en ambos encuadres</li>
+<li>Mismos márgenes (10-15% arriba/abajo)</li>
+<li>Ambas ven secuencia completa de salto</li>
+<li>Área de aterrizaje visible en ambas</li>
+</ul>
+<h4 id="paso-3-configuracion-de-camara-ambos-iphones">Paso 3: Configuración de Cámara (Ambos iPhones)<a class="headerlink" href="#paso-3-configuracion-de-camara-ambos-iphones" title="Permanent link">&para;</a></h4>
+<h5 id="critico-ambas-camaras-deben-tener-configuraciones-identicas">CRÍTICO: Ambas cámaras deben tener configuraciones idénticas<a class="headerlink" href="#critico-ambas-camaras-deben-tener-configuraciones-identicas" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>Configuración</th>
+<th>Ambas Cámaras</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Resolución</strong></td>
+<td>1080p (1920x1080) - exactamente igual</td>
+</tr>
+<tr>
+<td><strong>Velocidad de Cuadros</strong></td>
+<td>60 fps - exactamente igual</td>
+</tr>
+<tr>
+<td><strong>Orientación</strong></td>
+<td>Horizontal - exactamente igual</td>
+</tr>
+<tr>
+<td><strong>Enfoque</strong></td>
+<td>Manual, bloqueado</td>
+</tr>
+<tr>
+<td><strong>Exposición</strong></td>
+<td>Manual, bloqueada (mismo brillo)</td>
+</tr>
+<tr>
+<td><strong>Formato</strong></td>
+<td>H.264, Más Compatible</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Por qué importan configuraciones idénticas:</strong></p>
+<ul>
+<li>La sincronización requiere velocidades de cuadros coincidentes</li>
+<li>La triangulación asume la misma resolución</li>
+<li>Diferentes exposiciones afectan la detección de puntos de referencia</li>
+</ul>
+<h4 id="paso-4-sincronizacion">Paso 4: Sincronización<a class="headerlink" href="#paso-4-sincronizacion" title="Permanent link">&para;</a></h4>
+<h5 id="opcion-a-inicio-manual-simple">Opción A: Inicio manual (simple)<a class="headerlink" href="#opcion-a-inicio-manual-simple" title="Permanent link">&para;</a></h5>
+<ol>
+<li>Iniciar grabación en iPhone 1</li>
+<li>Iniciar grabación en iPhone 2 dentro de 1-2 segundos</li>
+<li><strong>Señal de sincronización:</strong> Que el atleta aplauda o salte una vez antes de la prueba real</li>
+<li>Usar este evento para sincronizar videos en post-procesamiento</li>
+</ol>
+<h5 id="opcion-b-sincronizacion-de-audio-mejor">Opción B: Sincronización de audio (mejor)<a class="headerlink" href="#opcion-b-sincronizacion-de-audio-mejor" title="Permanent link">&para;</a></h5>
+<ol>
+<li>Usar señal de audio externa (aplauso, pitido, comando de voz)</li>
+<li>Ambos iPhones graban audio</li>
+<li>Alinear videos usando forma de onda de audio en post-procesamiento</li>
+<li>Software como Pose2Sim tiene herramientas de sincronización incorporadas</li>
+</ol>
+<h5 id="opcion-c-sincronizacion-por-hardware-mejor-requiere-equipo">Opción C: Sincronización por hardware (mejor, requiere equipo)<a class="headerlink" href="#opcion-c-sincronizacion-por-hardware-mejor-requiere-equipo" title="Permanent link">&para;</a></h5>
+<ol>
+<li>Usar dispositivo de disparo externo</li>
+<li>Inicia ambas cámaras simultáneamente</li>
+<li>Sincronización más precisa</li>
+<li>Requiere hardware adicional</li>
+</ol>
+<p><strong>Recomendación:</strong> Comience con Opción A (manual + aplauso), actualice a Opción B si es necesario.</p>
+<h4 id="paso-5-calibracion">Paso 5: Calibración<a class="headerlink" href="#paso-5-calibracion" title="Permanent link">&para;</a></h4>
+<p><strong>Requerido:</strong> Calibración única antes del primer uso o si cambian las posiciones de cámara</p>
+<p><strong>Opciones de patrón de calibración:</strong></p>
+<ol>
+<li>
+<p><strong>Tablero ChArUco</strong> (recomendado - más robusto)</p>
+</li>
+<li>
+<p>Imprimir patrón ChArUco grande (A3 o mayor)</p>
+</li>
+<li>Montar en tablero rígido</li>
+<li>
+<p>Tamaño de cuadrícula: 7x5 o similar</p>
+</li>
+<li>
+<p><strong>Tablero de ajedrez</strong> (alternativa)</p>
+</li>
+<li>
+<p>Imprimir tablero de ajedrez grande (A3 o mayor)</p>
+</li>
+<li>Cuadrícula 8x6 o 9x7</li>
+<li>Asegurar perfectamente plano</li>
+</ol>
+<p><strong>Procedimiento de calibración:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Si usa Pose2Sim</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="m">1</span>.<span class="w"> </span>Grabar<span class="w"> </span>patrón<span class="w"> </span>de<span class="w"> </span>calibración<span class="w"> </span>desde<span class="w"> </span>ambas<span class="w"> </span>cámaras
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="m">2</span>.<span class="w"> </span>Mover<span class="w"> </span>patrón<span class="w"> </span>a<span class="w"> </span>través<span class="w"> </span>del<span class="w"> </span>volumen<span class="w"> </span>de<span class="w"> </span>captura<span class="w"> </span><span class="o">(</span><span class="m">10</span>-15<span class="w"> </span>posiciones<span class="w"> </span>diferentes<span class="o">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="m">3</span>.<span class="w"> </span>Asegurar<span class="w"> </span>que<span class="w"> </span>el<span class="w"> </span>patrón<span class="w"> </span>sea<span class="w"> </span>visible<span class="w"> </span>en<span class="w"> </span>ambas<span class="w"> </span>cámaras<span class="w"> </span>simultáneamente
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="m">4</span>.<span class="w"> </span>Ejecutar<span class="w"> </span>calibración:
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">   </span>Pose2Sim.calibration<span class="o">()</span>
+</code></pre></div>
+<p><strong>Salidas de calibración:</strong></p>
+<ul>
+<li>Intrínsecos de cámara (distancia focal, distorsión)</li>
+<li>Extrínsecos de cámara (posiciones relativas, rotación)</li>
+<li>Se guarda en archivo de calibración para reutilización</li>
+</ul>
+<p><strong>Re-calibrar cuando:</strong></p>
+<ul>
+<li>Las posiciones de cámara cambien</li>
+<li>Se usen diferentes lentes</li>
+<li>Después de varias semanas (verificación de deriva)</li>
+</ul>
+<h3 id="procesamiento-de-videos-de-doble-camara">Procesamiento de Videos de Doble Cámara<a class="headerlink" href="#procesamiento-de-videos-de-doble-camara" title="Permanent link">&para;</a></h3>
+<p><strong>Soporte actual de kinemotion:</strong> Solo cámara única</p>
+<p><strong>Para procesar videos estéreo, necesitará:</strong></p>
+<h4 id="opcion-a-usar-pose2sim-recomendado">Opción A: Usar Pose2Sim (recomendado)<a class="headerlink" href="#opcion-a-usar-pose2sim-recomendado" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Instalar Pose2Sim</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pip<span class="w"> </span>install<span class="w"> </span>pose2sim
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Procesar videos estéreo</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Pose2Sim.calibration<span class="o">()</span><span class="w">      </span><span class="c1"># Una vez</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Pose2Sim.poseEstimation<span class="o">()</span><span class="w">   </span><span class="c1"># Ejecutar MediaPipe en ambos videos</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Pose2Sim.synchronization<span class="o">()</span><span class="w">  </span><span class="c1"># Sincronizar videos</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Pose2Sim.triangulation<span class="o">()</span><span class="w">    </span><span class="c1"># Reconstrucción 3D</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Pose2Sim.filtering<span class="o">()</span><span class="w">        </span><span class="c1"># Suavizar trayectorias</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Pose2Sim.kinematics<span class="o">()</span><span class="w">       </span><span class="c1"># Ángulos articulares OpenSim</span>
+</code></pre></div>
+<h4 id="opcion-b-futuro-soporte-estereo-de-kinemotion">Opción B: Futuro soporte estéreo de kinemotion<a class="headerlink" href="#opcion-b-futuro-soporte-estereo-de-kinemotion" title="Permanent link">&para;</a></h4>
+<p>El soporte de doble cámara puede ser agregado a kinemotion en versiones futuras. Hoja de ruta actual:</p>
+<ul>
+<li>Módulo de triangulación estéreo</li>
+<li>Sincronización automática</li>
+<li>Flujo de trabajo de calibración integrado</li>
+</ul>
+<h4 id="opcion-c-triangulacion-manual">Opción C: Triangulación manual<a class="headerlink" href="#opcion-c-triangulacion-manual" title="Permanent link">&para;</a></h4>
+<p>Si tiene experiencia en programación, implemente triangulación estéreo usando OpenCV y la salida de MediaPipe de ambas cámaras.</p>
+<h3 id="rendimiento-esperado-doble-camara">Rendimiento Esperado (Doble Cámara)<a class="headerlink" href="#rendimiento-esperado-doble-camara" title="Permanent link">&para;</a></h3>
+<p><strong>Mejoras de precisión sobre cámara única:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Cámara Única (45°)</th>
+<th>Doble Cámara (Estéreo)</th>
+<th>Mejora</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RMSE de Posición</strong></td>
+<td>~56mm</td>
+<td>~30mm</td>
+<td>47% mejor</td>
+</tr>
+<tr>
+<td><strong>Error de Ángulo Articular</strong></td>
+<td>~8-12°</td>
+<td>~5-7°</td>
+<td>~30-40% mejor</td>
+</tr>
+<tr>
+<td><strong>Precisión de Profundidad</strong></td>
+<td>Pobre (ruidosa)</td>
+<td>Buena</td>
+<td>Elimina ambigüedad</td>
+</tr>
+<tr>
+<td><strong>Visibilidad de Puntos</strong></td>
+<td>40-60%</td>
+<td>70-90%</td>
+<td>Cobertura multi-ángulo</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Investigación validada:</strong></p>
+<ul>
+<li>Dill et al. (2024): MediaPipe estéreo logró 30.1mm RMSE vs estándar de oro Qualisys</li>
+<li>Pagnon et al. (2022): Separación de cámara de 90° óptima para triangulación</li>
+</ul>
+<h3 id="lista-de-verificacion-de-doble-camara">Lista de Verificación de Doble Cámara<a class="headerlink" href="#lista-de-verificacion-de-doble-camara" title="Permanent link">&para;</a></h3>
+<p>Antes de grabar, verifique:</p>
+<ul>
+<li>[ ] <strong>Ambos iPhones</strong> en trípodes estables</li>
+<li>[ ] <strong>Cámara 1</strong> a +45° del lado derecho del atleta</li>
+<li>[ ] <strong>Cámara 2</strong> a -45° del lado izquierdo del atleta</li>
+<li>[ ] <strong>Separación total de 90°</strong> entre cámaras</li>
+<li>[ ] <strong>Misma distancia</strong> (3-5m) del atleta para ambas cámaras</li>
+<li>[ ] <strong>Misma altura</strong> (nivel de cadera, 130-150cm) para ambas cámaras</li>
+<li>[ ] <strong>Ambas niveladas</strong> (no inclinadas arriba/abajo)</li>
+<li>[ ] <strong>Configuraciones idénticas</strong> (1080p, 60fps, horizontal)</li>
+<li>[ ] <strong>Enfoque y exposición</strong> idénticos bloqueados</li>
+<li>[ ] <strong>Método de sincronización</strong> planeado (aplauso, señal de audio, etc.)</li>
+<li>[ ] <strong>Calibración</strong> completada (una vez)</li>
+<li>[ ] <strong>Grabación de prueba</strong> desde ambas cámaras simultáneamente</li>
+</ul>
+<hr />
+<h2 id="configuracion-de-grabacion-ambas-configuraciones">Configuración de Grabación (Ambas Configuraciones)<a class="headerlink" href="#configuracion-de-grabacion-ambas-configuraciones" title="Permanent link">&para;</a></h2>
+<h3 id="especificaciones-de-video">Especificaciones de Video<a class="headerlink" href="#especificaciones-de-video" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Configuración</th>
+<th>Requisito</th>
+<th>Recomendación</th>
+<th>Razón</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Resolución</strong></td>
+<td>1080p mínimo</td>
+<td>1080p (1920x1080)</td>
+<td>Mayor resolución mejora precisión de MediaPipe</td>
+</tr>
+<tr>
+<td><strong>Velocidad de Cuadros</strong></td>
+<td>30 fps mínimo</td>
+<td><strong>60 fps</strong></td>
+<td>Mejor para tiempos de contacto cortos (150-250ms)</td>
+</tr>
+<tr>
+<td><strong>Orientación</strong></td>
+<td>Solo horizontal</td>
+<td>Horizontal</td>
+<td>Campo de visión más amplio para movimiento de salto</td>
+</tr>
+<tr>
+<td><strong>Formato</strong></td>
+<td>MP4, MOV, AVI</td>
+<td>MP4 (H.264)</td>
+<td>Compatibilidad universal</td>
+</tr>
+<tr>
+<td><strong>Bitrate</strong></td>
+<td>Más alto mejor</td>
+<td>Auto o 50+ Mbps</td>
+<td>Preserva detalle durante movimiento</td>
+</tr>
+</tbody>
+</table>
+<h3 id="por-que-60-fps-vs-30-fps">¿Por qué 60 fps vs 30 fps?<a class="headerlink" href="#por-que-60-fps-vs-30-fps" title="Permanent link">&para;</a></h3>
+<p><strong>Para drop jumps y CMJ:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>30 fps</th>
+<th>60 fps</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Resolución temporal</strong></td>
+<td>33.3ms por cuadro</td>
+<td>16.7ms por cuadro</td>
+</tr>
+<tr>
+<td><strong>Muestreo contacto con suelo</strong></td>
+<td>5-8 cuadros</td>
+<td>10-15 cuadros</td>
+</tr>
+<tr>
+<td><strong>Error de medición de tiempo</strong></td>
+<td>±33ms</td>
+<td>±16ms</td>
+</tr>
+<tr>
+<td><strong>Precisión de velocidad</strong></td>
+<td>Buena</td>
+<td>Mejor</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tiempos de contacto con suelo en drop jumps:</strong> 150-250ms</p>
+<ul>
+<li>A 30 fps: Solo 5-8 muestras durante contacto</li>
+<li>A 60 fps: 10-15 muestras durante contacto (2x mejor)</li>
+</ul>
+<p><strong>Recomendación:</strong> Use 60 fps si su iPhone lo soporta. La mejora en precisión justifica el tamaño de archivo mayor.</p>
+<h3 id="configuraciones-de-camara-de-iphone">Configuraciones de Cámara de iPhone<a class="headerlink" href="#configuraciones-de-camara-de-iphone" title="Permanent link">&para;</a></h3>
+<p><strong>Cómo configurar iPhone para grabación óptima:</strong></p>
+<ol>
+<li><strong>Abrir app Cámara</strong></li>
+<li><strong>Ajustes → Cámara → Grabar Video</strong></li>
+<li>Seleccionar: <strong>1080p a 60 fps</strong> (o 30 fps si 60 no disponible)</li>
+<li><strong>Ajustes → Cámara → Formatos</strong></li>
+<li>Seleccionar: <strong>Más Compatible</strong> (H.264, no HEVC)</li>
+<li><strong>Antes de grabar:</strong></li>
+<li><strong>Bloquear enfoque:</strong> Toque y mantenga en atleta hasta que aparezca "Bloqueo AE/AF"</li>
+<li><strong>Bloquear exposición:</strong> Deslice arriba/abajo para ajustar brillo, luego mantenga bloqueado</li>
+<li><strong>Composición de encuadre:</strong></li>
+<li>Posicionar atleta en el centro</li>
+<li>Asegurar cuerpo completo visible con márgenes</li>
+<li><strong>Iniciar grabación</strong> antes de que el atleta comience la secuencia de salto</li>
+</ol>
+<p><strong>Consejo Profesional:</strong> Grabe un video de prueba primero y verifique:</p>
+<ul>
+<li>Atleta permanece en encuadre</li>
+<li>Enfoque permanece nítido</li>
+<li>Iluminación es adecuada</li>
+<li>Sin desenfoque de movimiento</li>
+</ul>
+<hr />
+<h2 id="guias-de-iluminacion">Guías de Iluminación<a class="headerlink" href="#guias-de-iluminacion" title="Permanent link">&para;</a></h2>
+<h3 id="grabacion-interior">Grabación Interior<a class="headerlink" href="#grabacion-interior" title="Permanent link">&para;</a></h3>
+<p><strong>Recomendado:</strong></p>
+<ul>
+<li>Luces de gimnasio superiores (típicamente 400-800 lux suficiente)</li>
+<li>Iluminación uniforme a través del área de salto</li>
+<li>Evite crear sombra del atleta en el fondo</li>
+</ul>
+<p><strong>Verificar:</strong></p>
+<ul>
+<li>Cara y articulaciones del atleta claramente visibles</li>
+<li>Sin sombras marcadas en el cuerpo</li>
+<li>Sin puntos brillantes (ventanas, superficies reflectivas)</li>
+</ul>
+<h3 id="grabacion-exterior">Grabación Exterior<a class="headerlink" href="#grabacion-exterior" title="Permanent link">&para;</a></h3>
+<p><strong>Mejores condiciones:</strong></p>
+<ul>
+<li>Día nublado (iluminación suave y uniforme)</li>
+<li>Evite sol del mediodía (sombras marcadas)</li>
+<li>Evite tarde (ángulo bajo, sombras largas)</li>
+</ul>
+<p><strong>Posicionamiento:</strong></p>
+<ul>
+<li>Sol detrás o al lado de las cámaras</li>
+<li>Atleta no a contraluz (silueta)</li>
+<li>Considere hora del día para iluminación consistente</li>
+</ul>
+<hr />
+<h2 id="guias-de-fondo">Guías de Fondo<a class="headerlink" href="#guias-de-fondo" title="Permanent link">&para;</a></h2>
+<p><strong>Fondo óptimo:</strong></p>
+<ul>
+<li>Pared simple (color neutro)</li>
+<li>Contraste con ropa del atleta</li>
+<li>Sin patrones o elementos ocupados</li>
+<li>Estático (sin movimiento)</li>
+</ul>
+<p><strong>Ejemplos de contraste de color:</strong></p>
+<ul>
+<li>Atleta con ropa oscura → fondo claro (pared blanca/gris)</li>
+<li>Atleta con ropa clara → fondo oscuro (pared azul/gris)</li>
+<li>Evite: Atleta en blanco → fondo blanco (bajo contraste)</li>
+</ul>
+<p><strong>Por qué importa:</strong> MediaPipe separa figura del fondo. Alto contraste mejora precisión de detección de puntos de referencia y reduce falsos positivos.</p>
+<hr />
+<h2 id="errores-comunes-a-evitar">Errores Comunes a Evitar<a class="headerlink" href="#errores-comunes-a-evitar" title="Permanent link">&para;</a></h2>
+<h3 id="camara-no-a-angulo-de-45">❌ Cámara No a Ángulo de 45°<a class="headerlink" href="#camara-no-a-angulo-de-45" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>❌ INCORRECTO: Lateral puro (90°)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>         [Atleta]
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>             |
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>             |
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    [Cámara]←┘
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>❌ INCORRECTO: Frontal puro (0°)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    [Cámara]
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>       ↓
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    [Atleta]
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>✅ CORRECTO: Ángulo de 45°
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>         [Atleta]
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>             ↘
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>              ↘ 45°
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>            [Cámara]
+</code></pre></div>
+<p><strong>Problema con lateral:</strong> Alta oclusión, baja visibilidad de tobillo/rodilla
+<strong>Problema con frontal:</strong> Ambigüedad de profundidad, medición de altura de salto pobre
+<strong>Solución:</strong> Use ángulo de 45° como se especifica</p>
+<h3 id="camara-demasiado-cerca-3m">❌ Cámara Demasiado Cerca (\&lt;3m)<a class="headerlink" href="#camara-demasiado-cerca-3m" title="Permanent link">&para;</a></h3>
+<p><strong>Problemas:</strong></p>
+<ul>
+<li>Distorsión de perspectiva (efecto gran angular)</li>
+<li>Riesgo de que atleta salga del encuadre</li>
+<li>Distorsión de lente en bordes (líneas curvas)</li>
+</ul>
+<p><strong>Solución:</strong> Mantener distancia de 3-5m</p>
+<h3 id="camara-demasiado-alta-o-baja">❌ Cámara Demasiado Alta o Baja<a class="headerlink" href="#camara-demasiado-alta-o-baja" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>❌ Muy alta (mirando hacia abajo):
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    [Cámara]
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>       ↓ ↘
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>         [Atleta]
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>❌ Muy baja (mirando hacia arriba):
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>         [Atleta]
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>       ↗ ↑
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    [Cámara]
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>✅ Correcta (nivel de cadera):
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    [Cámara] → [Atleta]
+</code></pre></div>
+<p><strong>Problema:</strong> Error de paralaje, proporciones distorsionadas
+<strong>Solución:</strong> Lente de cámara a altura de cadera (130-150cm)</p>
+<h3 id="encuadre-pobre">❌ Encuadre Pobre<a class="headerlink" href="#encuadre-pobre" title="Permanent link">&para;</a></h3>
+<p><strong>Errores comunes:</strong></p>
+<ul>
+<li>Atleta muy pequeño en encuadre (cámara muy lejos)</li>
+<li>Atleta cortado durante salto (cámara muy cerca o baja)</li>
+<li>No centrado (atleta se sale del encuadre)</li>
+</ul>
+<p><strong>Solución:</strong></p>
+<ul>
+<li>Grabar prueba primero</li>
+<li>Ajustar encuadre para incluir salto completo con márgenes</li>
+<li>Marcar posición de salto para asegurar consistencia</li>
+</ul>
+<h3 id="configuraciones-inconsistentes-entre-camaras-duales">❌ Configuraciones Inconsistentes Entre Cámaras Duales<a class="headerlink" href="#configuraciones-inconsistentes-entre-camaras-duales" title="Permanent link">&para;</a></h3>
+<p><strong>Solo para configuración estéreo:</strong></p>
+<p><strong>Problemas:</strong></p>
+<ul>
+<li>Diferentes velocidades de cuadros → sincronización imposible</li>
+<li>Diferentes resoluciones → triangulación falla</li>
+<li>Diferentes exposiciones → detección de puntos de referencia inconsistente</li>
+</ul>
+<p><strong>Solución:</strong> Configurar ambos iPhones idénticamente (ver Lista de Verificación de Doble Cámara)</p>
+<hr />
+<h2 id="resolucion-de-problemas">Resolución de Problemas<a class="headerlink" href="#resolucion-de-problemas" title="Permanent link">&para;</a></h2>
+<h3 id="advertencia-de-visibilidad-de-puntos-de-referencia-pobre">Advertencia de "Visibilidad de Puntos de Referencia Pobre"<a class="headerlink" href="#advertencia-de-visibilidad-de-puntos-de-referencia-pobre" title="Permanent link">&para;</a></h3>
+<p><strong>Síntomas:</strong> Kinemotion reporta puntuaciones bajas de visibilidad</p>
+<p><strong>Causas:</strong></p>
+<ul>
+<li>Iluminación insuficiente</li>
+<li>Bajo contraste con el fondo</li>
+<li>Cámara desenfocada</li>
+<li>Desenfoque de movimiento (velocidad de obturación muy lenta)</li>
+</ul>
+<p><strong>Soluciones:</strong></p>
+<ol>
+<li>Agregar fuentes de iluminación</li>
+<li>Cambiar fondo o ropa del atleta para contraste</li>
+<li>Bloquear enfoque en atleta (toque y mantenga)</li>
+<li>Aumentar velocidad de obturación (reducir exposición si es necesario)</li>
+<li>Asegurar resolución 1080p</li>
+</ol>
+<h3 id="la-altura-del-salto-parece-incorrecta">La Altura del Salto Parece Incorrecta<a class="headerlink" href="#la-altura-del-salto-parece-incorrecta" title="Permanent link">&para;</a></h3>
+<p><strong>Posibles causas:</strong></p>
+<ol>
+<li>Ángulo de cámara no exactamente 45° (error de medición)</li>
+<li>Falta parámetro de calibración <code>--drop-height</code></li>
+<li>Atleta moviéndose horizontalmente (deriva durante salto)</li>
+<li>Cámara no nivelada (inclinada)</li>
+</ol>
+<p><strong>Soluciones:</strong></p>
+<ol>
+<li>Verificar ángulo de 45° con app de medición o transportador</li>
+<li>Proporcionar altura del cajón: <code>--drop-height 0.40</code></li>
+<li>Entrenar al atleta para saltar derecho hacia arriba (deriva mínima)</li>
+<li>Usar indicador de nivel de trípode o app de nivel de teléfono</li>
+</ol>
+<h3 id="error-no-se-detecto-drop-jump">Error "No se Detectó Drop Jump"<a class="headerlink" href="#error-no-se-detecto-drop-jump" title="Permanent link">&para;</a></h3>
+<p><strong>Posibles causas:</strong></p>
+<ol>
+<li>Video no incluye secuencia completa</li>
+<li>Atleta cortado en encuadre</li>
+<li>Calidad de rastreo muy pobre</li>
+</ol>
+<p><strong>Soluciones:</strong></p>
+<ol>
+<li>Iniciar grabación antes de que atleta suba al cajón</li>
+<li>Ajustar encuadre - probar con salto de práctica</li>
+<li>Mejorar calidad de video (iluminación, enfoque, resolución)</li>
+<li>Usar bandera manual <code>--drop-start-frame</code> si auto-detección falla</li>
+</ol>
+<h3 id="doble-camara-videos-no-sincronizados">Doble Cámara: Videos No Sincronizados<a class="headerlink" href="#doble-camara-videos-no-sincronizados" title="Permanent link">&para;</a></h3>
+<p><strong>Síntomas:</strong> Triangulación falla o produce poses 3D irreales</p>
+<p><strong>Soluciones:</strong></p>
+<ol>
+<li>Verificar que ambos videos tengan velocidades de cuadros idénticas</li>
+<li>Usar señal audio/visual para sincronizar (aplauso, pitido)</li>
+<li>Usar módulo de sincronización de Pose2Sim</li>
+<li>Considerar gatillo de hardware para futuras grabaciones</li>
+</ol>
+<hr />
+<h2 id="recomendaciones-de-equipo">Recomendaciones de Equipo<a class="headerlink" href="#recomendaciones-de-equipo" title="Permanent link">&para;</a></h2>
+<h3 id="configuracion-de-camara-unica">Configuración de Cámara Única<a class="headerlink" href="#configuracion-de-camara-unica" title="Permanent link">&para;</a></h3>
+<p><strong>Opción Económica ($100-300):</strong></p>
+<ul>
+<li>iPhone SE (2020 o posterior) o Android insignia</li>
+<li>Trípode básico con soporte para smartphone ($20-50)</li>
+<li>Total: ~$150-350</li>
+</ul>
+<p><strong>Gama Media ($500-800):</strong></p>
+<ul>
+<li>iPhone reciente (11 o posterior) con 4K/60fps</li>
+<li>Trípode de calidad con cabeza fluida ($100-200)</li>
+<li>Total: ~$600-1000</li>
+</ul>
+<p><strong>Lo que necesita:</strong></p>
+<ul>
+<li>iPhone capaz de 1080p @ 60fps mínimo</li>
+<li>Trípode estable (peso ligero OK para uso interior)</li>
+<li>Indicador de nivel (la mayoría de trípodes tienen nivel de burbuja)</li>
+</ul>
+<h3 id="configuracion-de-doble-camara">Configuración de Doble Cámara<a class="headerlink" href="#configuracion-de-doble-camara" title="Permanent link">&para;</a></h3>
+<p><strong>Estéreo Económico ($300-600):</strong></p>
+<ul>
+<li>2x iPhone SE o similar</li>
+<li>2x trípodes básicos</li>
+<li>Tablero de calibración (imprimir y montar, \&lt;$20)</li>
+<li>Total: ~$350-650</li>
+</ul>
+<p><strong>Estéreo Gama Media ($1000-1600):</strong></p>
+<ul>
+<li>2x iPhone reciente (mismo modelo)</li>
+<li>2x trípodes de calidad</li>
+<li>Tablero de calibración profesional</li>
+<li>Opcional: Gatillo de sincronización por hardware</li>
+<li>Total: ~$1200-1800</li>
+</ul>
+<p><strong>Lo que necesita:</strong></p>
+<ul>
+<li>2 iPhones (mismo modelo muy recomendado)</li>
+<li>2 trípodes estables (ajuste de altura idéntico)</li>
+<li>Patrón de calibración (ChArUco o tablero de ajedrez)</li>
+<li>Capacidad de procesamiento (laptop/desktop para Pose2Sim)</li>
+</ul>
+<p><strong>Comparación de costo con sistemas de grado de investigación:</strong></p>
+<ul>
+<li>MoCap basado en marcadores (Vicon, Qualisys): $50,000-$500,000</li>
+<li>Markerless comercial (Theia3D): $5,000-$20,000</li>
+<li>Doble iPhone + Pose2Sim: $300-$1,800 (¡100x más barato!)</li>
+</ul>
+<hr />
+<h2 id="validacion-y-verificaciones-de-calidad">Validación y Verificaciones de Calidad<a class="headerlink" href="#validacion-y-verificaciones-de-calidad" title="Permanent link">&para;</a></h2>
+<h3 id="despues-de-grabar">Después de Grabar<a class="headerlink" href="#despues-de-grabar" title="Permanent link">&para;</a></h3>
+<p><strong>Para cada video, verifique:</strong></p>
+<ol>
+<li>
+<p><strong>Verificación de reproducción:</strong></p>
+</li>
+<li>
+<p>Secuencia de salto completa capturada</p>
+</li>
+<li>Atleta permanece en encuadre</li>
+<li>Enfoque nítido durante todo</li>
+<li>
+<p>Sin desenfoque de movimiento</p>
+</li>
+<li>
+<p><strong>Métricas de calidad:</strong></p>
+</li>
+<li>
+<p>Tamaño de archivo apropiado (60fps 1080p ≈ 200MB/min)</p>
+</li>
+<li>Sin cuadros perdidos (reproducción suave)</li>
+<li>
+<p>Audio claro (si se usa para sincronización)</p>
+</li>
+<li>
+<p><strong>Prueba de análisis:</strong></p>
+</li>
+<li>
+<p>Ejecutar kinemotion en video</p>
+</li>
+<li>Verificar salida de superposición de depuración</li>
+<li>Verificar calidad de detección de puntos de referencia</li>
+</ol>
+<h3 id="indicadores-de-calidad">Indicadores de Calidad<a class="headerlink" href="#indicadores-de-calidad" title="Permanent link">&para;</a></h3>
+<p><strong>Video de buena calidad (listo para análisis):</strong></p>
+<ul>
+<li>✅ Puntuaciones de visibilidad de MediaPipe &gt;0.5 promedio</li>
+<li>✅ Rastreo suave de puntos de referencia (jitter mínimo)</li>
+<li>✅ Todas las fases de salto detectadas automáticamente</li>
+<li>✅ Superposición de depuración muestra rastreo consistente</li>
+</ul>
+<p><strong>Video de calidad pobre (se recomienda re-grabar):</strong></p>
+<ul>
+<li>❌ Puntuaciones de visibilidad \&lt;0.3 promedio</li>
+<li>❌ Posiciones de puntos de referencia errática (pérdida de rastreo)</li>
+<li>❌ Detección de fase fallida</li>
+<li>❌ Superposición de depuración muestra huecos o poses irreales</li>
+</ul>
+<hr />
+<h2 id="consejos-avanzados">Consejos Avanzados<a class="headerlink" href="#consejos-avanzados" title="Permanent link">&para;</a></h2>
+<h3 id="para-grabacion-consistente-multi-sesion">Para Grabación Consistente Multi-Sesión<a class="headerlink" href="#para-grabacion-consistente-multi-sesion" title="Permanent link">&para;</a></h3>
+<p><strong>Crear una configuración estandarizada:</strong></p>
+<ol>
+<li>
+<p><strong>Marcar posiciones de cámara</strong> en el suelo con cinta</p>
+</li>
+<li>
+<p>Medir ángulo de 45° con precisión</p>
+</li>
+<li>Marcar círculo de distancia de 4m</li>
+<li>
+<p>Etiquetar posiciones "Cámara 1" y "Cámara 2"</p>
+</li>
+<li>
+<p><strong>Documentar su configuración:</strong></p>
+</li>
+<li>
+<p>Tomar fotos de posiciones de cámara</p>
+</li>
+<li>Anotar configuraciones de altura de trípode</li>
+<li>
+<p>Guardar captura de pantalla de configuraciones de cámara</p>
+</li>
+<li>
+<p><strong>Usar mismo equipo</strong> a través de sesiones</p>
+</li>
+<li>
+<p>Mismo(s) iPhone(s)</p>
+</li>
+<li>Misma altura de trípode</li>
+<li>Misma habitación/ubicación si es posible</li>
+</ol>
+<p><strong>Beneficios:</strong></p>
+<ul>
+<li>Mediciones consistentes a través del tiempo</li>
+<li>Más fácil comparar progreso del atleta</li>
+<li>Configuración simplificada para cada sesión</li>
+</ul>
+<h3 id="optimizacion-para-diferentes-tipos-de-salto">Optimización para Diferentes Tipos de Salto<a class="headerlink" href="#optimizacion-para-diferentes-tipos-de-salto" title="Permanent link">&para;</a></h3>
+<p><strong>Específico para Drop Jump:</strong></p>
+<ul>
+<li>Asegurar que cajón de salto sea visible en encuadre (importante para contexto)</li>
+<li>Capturar fase de estar parado antes de caer</li>
+<li>Necesita ver contacto con suelo claramente</li>
+</ul>
+<p><strong>Específico para CMJ:</strong></p>
+<ul>
+<li>Iniciar con atleta ya en encuadre (sin cajón)</li>
+<li>Capturar fase de contramovimiento (movimiento hacia abajo)</li>
+<li>Necesita rango completo de movimiento (punto más bajo al pico)</li>
+</ul>
+<p><strong>Ambos:</strong></p>
+<ul>
+<li>60 fps beneficioso para movimientos rápidos</li>
+<li>Altura de cámara a nivel de cadera óptima</li>
+<li>Ángulo de 45° funciona para ambos tipos de salto</li>
+</ul>
+<hr />
+<h2 id="antecedentes-de-investigacion">Antecedentes de Investigación<a class="headerlink" href="#antecedentes-de-investigacion" title="Permanent link">&para;</a></h2>
+<h3 id="por-que-estas-recomendaciones">¿Por Qué Estas Recomendaciones?<a class="headerlink" href="#por-que-estas-recomendaciones" title="Permanent link">&para;</a></h3>
+<p><strong>Ángulo de cámara (45°):</strong></p>
+<ul>
+<li>Baldinger et al. (2025) mostró que el ángulo de visión de cámara afecta significativamente la validez del ángulo articular</li>
+<li>45° reduce oclusión mientras mantiene visibilidad del plano sagital</li>
+<li>Compromiso entre frontal (alta visibilidad) y lateral (sagital puro)</li>
+</ul>
+<p><strong>Separación de doble cámara de 90°:</strong></p>
+<ul>
+<li>Pagnon et al. (2022): Probó múltiples ángulos, encontró 90° óptimo para triangulación 3D</li>
+<li>Dill et al. (2024): Validó MediaPipe estéreo a 30.1mm RMSE con configuración de 90°</li>
+<li>Balance entre línea base amplia (precisión) y vistas superpuestas (coincidencia)</li>
+</ul>
+<p><strong>1080p @ 60fps:</strong></p>
+<ul>
+<li>Mayor resolución mejora detección de puntos de referencia de MediaPipe</li>
+<li>60 fps necesario para eventos temporales precisos (contacto con suelo)</li>
+<li>Validado en múltiples estudios como suficiente para biomecánica</li>
+</ul>
+<h3 id="limitaciones-de-camara-unica">Limitaciones de Cámara Única<a class="headerlink" href="#limitaciones-de-camara-unica" title="Permanent link">&para;</a></h3>
+<p><strong>Lo que cámara única (45°) NO PUEDE proporcionar:</strong></p>
+<ul>
+<li>Precisión de grado de investigación (limitado a ~8-12° errores de ángulo articular)</li>
+<li>Coordenadas 3D/profundidad precisas (eje-z ruidoso)</li>
+<li>Restricciones biomecánicas (sin modelo esquelético)</li>
+<li>Validación contra estándar de oro (necesita multi-cámara)</li>
+</ul>
+<p><strong>Lo que cámara única (45°) PUEDE proporcionar:</strong></p>
+<ul>
+<li>Mediciones de calidad para entrenamiento y evaluación</li>
+<li>Comparaciones relativas (mismo atleta a través del tiempo)</li>
+<li>Métricas clave de drop jump (tiempo de contacto, tiempo de vuelo, RSI)</li>
+<li>Métricas de CMJ (altura de salto, profundidad de contramovimiento)</li>
+</ul>
+<p><strong>Para precisión de grado de investigación:</strong> Use configuración estéreo de doble cámara con Pose2Sim o OpenCap.</p>
+<hr />
+<h2 id="resumen">Resumen<a class="headerlink" href="#resumen" title="Permanent link">&para;</a></h2>
+<h3 id="un-iphone-a-45-configuracion-estandar">Un iPhone a 45° (Configuración Estándar)<a class="headerlink" href="#un-iphone-a-45-configuracion-estandar" title="Permanent link">&para;</a></h3>
+<p><strong>Configuración rápida:</strong></p>
+<ol>
+<li>Posicionar cámara a 45° del plano sagital del atleta</li>
+<li>4 metros de distancia, altura de cadera (130-150cm)</li>
+<li>1080p @ 60 fps, horizontal, enfoque/exposición bloqueados</li>
+<li>Encuadrar cuerpo completo con márgenes de 10-15%</li>
+<li>Iluminación uniforme, fondo simple</li>
+<li>Grabar secuencia completa de salto</li>
+</ol>
+<p><strong>Precisión esperada:</strong> Buena para entrenamiento/evaluación (~8-12° ángulos articulares)</p>
+<h3 id="estereo-con-dos-iphones-configuracion-avanzada">Estéreo con Dos iPhones (Configuración Avanzada)<a class="headerlink" href="#estereo-con-dos-iphones-configuracion-avanzada" title="Permanent link">&para;</a></h3>
+<p><strong>Configuración rápida:</strong></p>
+<ol>
+<li>Posicionar Cámara 1 a +45° (derecha), Cámara 2 a -45° (izquierda)</li>
+<li>Ambas a 4m distancia, ambas a altura de cadera, separación de 90°</li>
+<li>Configuraciones idénticas: 1080p @ 60fps</li>
+<li>Calibrar con patrón ChArUco/tablero de ajedrez</li>
+<li>Sincronizar con aplauso o señal de audio</li>
+<li>Procesar con Pose2Sim para reconstrucción 3D</li>
+</ol>
+<p><strong>Precisión esperada:</strong> Grado de investigación (~5-7° ángulos articulares, 30mm RMSE)</p>
+<h3 id="guia-de-decision">Guía de Decisión<a class="headerlink" href="#guia-de-decision" title="Permanent link">&para;</a></h3>
+<p><strong>Use cámara única si:</strong></p>
+<ul>
+<li>Aplicaciones de entrenamiento/coaching</li>
+<li>Evaluar mejoras relativas</li>
+<li>Restricciones de presupuesto/equipo</li>
+<li>Se prioriza simplicidad</li>
+</ul>
+<p><strong>Use doble cámara si:</strong></p>
+<ul>
+<li>Aplicaciones de investigación</li>
+<li>Evaluación de atletas de élite</li>
+<li>Se necesita cinemática 3D precisa</li>
+<li>Publicación o validación requerida</li>
+</ul>
+<hr />
+<h2 id="documentacion-relacionada">Documentación Relacionada<a class="headerlink" href="#documentacion-relacionada" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../../../guides/camera-setup/">English Version</a></strong> - Versión en inglés de esta guía</li>
+<li><strong><a href="../../../research/sports-biomechanics-pose-estimation/">Estimación de Pose para Biomecánica Deportiva</a></strong> - Investigación completa sobre sistemas de pose</li>
+<li><strong><a href="../../../reference/pose-systems/">Referencia Rápida de Sistemas de Pose</a></strong> - Guía de comparación de sistemas</li>
+<li><a href="../../../reference/parameters/">Guía de Parámetros CLI</a> - Parámetros de análisis</li>
+<li><a href="../../../guides/cmj-guide/">Guía CMJ</a> - Especificaciones de salto con contramovimiento</li>
+<li><a href="https://github.com/feniix/kinemotion/blob/main/CLAUDE.md">CLAUDE.md</a> principal - Documentación completa del proyecto (GitHub)</li>
+</ul>
+<hr />
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<p><strong>Investigación de ángulo de cámara:</strong></p>
+<ul>
+<li>Baldinger, M., Reimer, L. M., &amp; Senner, V. (2025). Influence of the Camera Viewing Angle on OpenPose Validity in Motion Analysis. <em>Sensors</em>, 25(3), 799. <a href="https://doi.org/10.3390/s25030799">https://doi.org/10.3390/s25030799</a></li>
+</ul>
+<p><strong>Validación de cámara estéreo:</strong></p>
+<ul>
+<li>Dill, S., et al. (2024). Accuracy Evaluation of 3D Pose Reconstruction Algorithms Through Stereo Camera Information Fusion for Physical Exercises with MediaPipe Pose. <em>Sensors</em>, 24(23), 7772. <a href="https://doi.org/10.3390/s24237772">https://doi.org/10.3390/s24237772</a></li>
+</ul>
+<p><strong>Separación óptima de cámara:</strong></p>
+<ul>
+<li>Pagnon, D., Domalain, M., &amp; Reveret, L. (2022). Pose2Sim: An End-to-End Workflow for 3D Markerless Sports Kinematics—Part 2: Accuracy. <em>Sensors</em>, 22(7), 2712. <a href="https://doi.org/10.3390/s22072712">https://doi.org/10.3390/s22072712</a></li>
+</ul>
+<p>Para bibliografía completa, ver <a href="../../../research/sports-biomechanics-pose-estimation/">sports-biomechanics-pose-estimation.md</a>.</p>
+<hr />
+<p><strong>Última Actualización:</strong> 6 de noviembre, 2025</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
