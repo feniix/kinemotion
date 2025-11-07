@@ -232,11 +232,10 @@ More temporal samples = smoother velocity derivative:
 kinemotion dropjump-analyze video_30fps.mp4 \
   --smoothing-window 5 \
   --velocity-threshold 0.02 \
-  --min-contact-frames 3 \
-  --drop-height 0.40
-```text
+  --min-contact-frames 3
+```
 
-**Expected accuracy:** ~88% with calibration
+**Note:** Auto-tuning handles these parameters automatically. Manual overrides shown for illustration.
 
 ---
 
@@ -270,9 +269,8 @@ kinemotion dropjump-analyze video_30fps.mp4 \
 kinemotion dropjump-analyze video_60fps.mp4 \
   --smoothing-window 5 \
   --velocity-threshold 0.01 \      # halve (less motion per frame)
-  --min-contact-frames 6 \         # double (same time duration)
-  --drop-height 0.40
-```text
+  --min-contact-frames 6          # double (same time duration)
+```
 
 **Expected accuracy:** ~90-91% with calibration (+2-3% over 30fps)
 
@@ -310,9 +308,8 @@ kinemotion dropjump-analyze video_60fps.mp4 \
 kinemotion dropjump-analyze video_120fps.mp4 \
   --smoothing-window 5 \
   --velocity-threshold 0.005 \     # quarter (4× more frames)
-  --min-contact-frames 12 \        # quadruple
-  --drop-height 0.40
-```text
+  --min-contact-frames 12         # quadruple
+```
 
 **Expected accuracy:** ~91-92% with calibration (+3-4% over 30fps, +1% over 60fps)
 
@@ -353,9 +350,8 @@ kinemotion dropjump-analyze video_120fps.mp4 \
 kinemotion dropjump-analyze video_240fps.mp4 \
   --smoothing-window 5 \
   --velocity-threshold 0.0025 \    # 1/8× (8× more frames)
-  --min-contact-frames 24 \        # 8×
-  --drop-height 0.40
-```text
+  --min-contact-frames 24         # 8×
+```
 
 **Expected accuracy:** ~92-93% with calibration (+4-5% over 30fps, +1-2% over 60fps, +0.5% over 120fps)
 
@@ -427,9 +423,8 @@ kinemotion dropjump-analyze video_30fps.mp4 \
   --polyorder 2 \
   --velocity-threshold 0.02 \
   --min-contact-frames 3 \
-  --visibility-threshold 0.5 \
-  --drop-height 0.40
-```text
+  --visibility-threshold 0.5
+```
 
 #### 60 fps (2× frames)
 
@@ -439,9 +434,8 @@ kinemotion dropjump-analyze video_60fps.mp4 \
   --polyorder 2 \                 # same
   --velocity-threshold 0.01 \     # halve (2× more frames)
   --min-contact-frames 6 \        # double (2× more frames)
-  --visibility-threshold 0.5 \    # same
-  --drop-height 0.40
-```text
+  --visibility-threshold 0.5     # same
+```
 
 #### 120 fps (4× frames)
 
@@ -451,9 +445,8 @@ kinemotion dropjump-analyze video_120fps.mp4 \
   --polyorder 2 \                 # same
   --velocity-threshold 0.005 \    # quarter (4× more frames)
   --min-contact-frames 12 \       # quadruple (4× more frames)
-  --visibility-threshold 0.5 \    # same
-  --drop-height 0.40
-```text
+  --visibility-threshold 0.5     # same
+```
 
 #### 240 fps (8× frames)
 
@@ -463,9 +456,8 @@ kinemotion dropjump-analyze video_240fps.mp4 \
   --polyorder 2 \                 # same
   --velocity-threshold 0.0025 \   # 1/8× (8× more frames)
   --min-contact-frames 24 \       # 8× (8× more frames)
-  --visibility-threshold 0.5 \    # same
-  --drop-height 0.40
-```text
+  --visibility-threshold 0.5     # same
+```
 
 ### Auto-Detecting Frame Rate (Future Enhancement)
 

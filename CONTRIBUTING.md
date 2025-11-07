@@ -83,10 +83,10 @@ We actively welcome pull requests! Here's how to submit one:
 
 ```bash
 # Run from source
-uv run kinemotion dropjump-analyze <video_path> --drop-height 0.40
+uv run kinemotion dropjump-analyze <video_path>
 
 # With debug output
-uv run kinemotion dropjump-analyze <video_path> --drop-height 0.40 --output debug.mp4 --verbose
+uv run kinemotion dropjump-analyze <video_path> --output debug.mp4 --verbose
 ```
 
 ## Code Quality Standards

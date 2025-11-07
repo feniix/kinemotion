@@ -13,7 +13,7 @@ Kinemotion: Video-based kinematic analysis for athletic performance using MediaP
 ```bash
 asdf install        # Install Python 3.12.7 + uv
 uv sync            # Install dependencies
-uv run kinemotion dropjump-analyze video.mp4 --drop-height 0.40
+uv run kinemotion dropjump-analyze video.mp4
 uv run kinemotion cmj-analyze video.mp4
 ```
 
@@ -48,7 +48,7 @@ docs/                       # CMJ_GUIDE, TRIPLE_EXTENSION, REAL_TIME_ANALYSIS, e
 | Starting | Elevated box | Floor level |
 | Algorithm | Forward search | Backward search from peak |
 | Velocity | Absolute (magnitude) | Signed (direction matters) |
-| Parameter | `--drop-height` required | No calibration needed |
+| Parameters | Auto-tuned quality presets | Auto-tuned quality presets |
 | Key Metric | Ground contact time | Jump height from flight time |
 
 ## Critical Implementation Details
@@ -178,13 +178,13 @@ When writing new code, follow these principles to maintain low duplication:
 ### CLI
 
 ```bash
-# Drop jump (requires --drop-height)
-kinemotion dropjump-analyze video.mp4 --drop-height 0.40
+# Drop jump (auto-tuned parameters)
+kinemotion dropjump-analyze video.mp4
 
-# CMJ (no calibration needed)
+# CMJ with debug video
 kinemotion cmj-analyze video.mp4 --output debug.mp4
 
-# Batch
+# Batch processing
 kinemotion cmj-analyze videos/*.mp4 --batch --workers 4
 ```
 
@@ -193,11 +193,11 @@ kinemotion cmj-analyze videos/*.mp4 --batch --workers 4
 ```python
 # Drop jump
 from kinemotion import process_dropjump_video
-metrics = process_video("video.mp4", drop_height=0.40)
+metrics = process_dropjump_video("video.mp4", quality="balanced")
 
 # CMJ
 from kinemotion import process_cmj_video
-metrics = process_cmj_video("video.mp4")
+metrics = process_cmj_video("video.mp4", quality="balanced")
 ```
 
 ## Important Gotchas

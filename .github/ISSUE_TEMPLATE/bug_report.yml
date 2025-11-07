@@ -53,7 +53,7 @@ body:
       label: Command Used
       description: The exact command you ran (please remove any sensitive paths if needed).
       placeholder: |
-        kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --output debug.mp4
+        kinemotion dropjump-analyze video.mp4 --output debug.mp4
       render: bash
     validations:
       required: false

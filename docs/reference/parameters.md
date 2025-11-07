@@ -56,7 +56,7 @@ These parameters control batch processing mode when analyzing multiple videos:
 
 ```bash
 # Batch process with all outputs
-kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 \
+kinemotion dropjump-analyze videos/*.mp4 --batch \
   --workers 4 \
   --json-output-dir results/ \
   --output-dir debug_videos/ \
@@ -79,8 +79,8 @@ For more control, use the Python API:
 from kinemotion import DropJumpVideoConfig, process_dropjump_videos_bulk
 
 configs = [
-    DropJumpVideoConfig("video1.mp4", drop_height=0.40, quality="fast"),
-    DropJumpVideoConfig("video2.mp4", drop_height=0.30, quality="accurate"),  # Different settings per video
+    DropJumpVideoConfig("video1.mp4", quality="fast"),
+    DropJumpVideoConfig("video2.mp4", quality="accurate"),  # Different settings per video
 ]
 
 results = process_dropjump_videos_bulk(configs, max_workers=4)
@@ -234,9 +234,8 @@ kinemotion dropjump-analyze studio.mp4 \
 # Maximum accuracy setup
 kinemotion dropjump-analyze video.mp4 \
   --polyorder 3 \
-  --smoothing-window 9 \
-  --drop-height 0.40
-```text
+  --smoothing-window 9
+```
 
 **Validation rules:**
 
@@ -810,93 +809,47 @@ kinemotion dropjump-analyze video.mp4 --tracking-confidence 0.3
 
 ---
 
-## Calibration Parameters
+## Auto-Tuning System
 
-### `--drop-height` (optional, no default)
+Kinemotion uses an intelligent auto-tuning system that automatically optimizes analysis parameters based on video characteristics. This eliminates the need for manual calibration and makes the tool accessible to users without technical expertise.
 
-**What it does:**
-Specifies the height of the drop box/platform in meters to enable calibrated jump height measurement.
+### How Auto-Tuning Works
 
-**How it works:**
+The system analyzes:
 
-- Measures the actual drop distance from the box to the ground in the video
-- Calculates a scale factor to convert normalized coordinates (0-1) to real-world meters
-- Applies this scale factor to the jump height measurement
-- Significantly improves jump height accuracy from ~71% to ~88%
+- **Video frame rate** - Adjusts smoothing windows and thresholds
+- **Tracking quality** - Adapts confidence levels and filtering
+- **Landmark visibility** - Determines outlier rejection needs
+- **Quality preset** - Balances speed vs accuracy based on user selection
 
-**Technical details:**
+### Quality Presets
 
-- Only applicable for drop jumps (box → drop → landing → jump)
-- Automatically detects drop jump pattern by comparing ground phase elevations
-- Uses the initial drop phase to establish the calibration scale factor
-- Formula: `scale_factor = drop_height_m / drop_distance_normalized`
-- Applied to position-based jump height measurement (not kinematic)
+All analysis functions accept a `quality` parameter:
 
-**When to use:**
-
-- Any drop jump where you know the box height
-- When accuracy of jump height is important
-- When comparing athletes or tracking progress over time
-- For research or performance analysis
-
-**When NOT to use:**
-
-- Regular jumps without a drop box (no calibration reference available)
-- Unknown drop box height (will calculate but results won't be accurate)
-- Video doesn't show the full drop from box to ground
-
-**How to measure your drop box:**
-
-1. Use a tape measure or ruler
-2. Measure from top of box surface to ground
-3. Convert to meters (divide cm by 100)
-4. Examples:
-   - 30cm box = 0.30
-   - 40cm box = 0.40
-   - 60cm box = 0.60
-
-**Measurement methods:**
-
-```text
-Without calibration:
-- Uses kinematic method with optional empirical correction factor
-- Accuracy: ⚠️ Unvalidated - requires empirical validation
-- Provides relative measurements for comparison
-
-With calibration (--drop-height 0.40):
-- Uses position-based measurement with scale factor from known drop height
-- Theoretically more accurate (⚠️ unvalidated)
-- Provides calibrated measurements based on known reference distance
-```text
+- **`"fast"`** - Quick processing, good for batch operations (50% faster)
+- **`"balanced"`** - Default, optimal for most use cases
+- **`"accurate"`** - Research-grade, maximum precision (slower)
 
 **Example:**
 
 ```bash
-# 40cm drop box
-kinemotion dropjump-analyze video.mp4 --drop-height 0.40
+# Fast processing for batch
+kinemotion dropjump-analyze videos/*.mp4 --batch --quality fast
 
-# 60cm drop box with outputs
-kinemotion dropjump-analyze video.mp4 \
-  --drop-height 0.60 \
-  --json-output metrics.json \
-  --output debug.mp4
+# Accurate for research
+kinemotion dropjump-analyze video.mp4 --quality accurate --verbose
+```
 
-# Compare calibrated vs uncalibrated
-# Without calibration
-kinemotion dropjump-analyze video.mp4 --json-output uncalibrated.json
+**Python API:**
 
-# With calibration
-kinemotion dropjump-analyze video.mp4 --drop-height 0.40 --json-output calibrated.json
-```text
+```python
+from kinemotion import process_dropjump_video
 
-**JSON output with calibration:**
-
-```json
-{
-  "jump_height_m": 0.339,                      // Primary (calibrated)
-  "jump_height_kinematic_m": 0.256,            // Kinematic-only (fallback)
-  "jump_height_trajectory_normalized": 0.0845  // Normalized measurement
-}
+metrics = process_dropjump_video(
+    "video.mp4",
+    quality="accurate",
+    verbose=True  # Shows selected parameters
+)
 ```text
 
 **Troubleshooting:**
@@ -1012,10 +965,9 @@ kinemotion dropjump-analyze video.mp4 \
   --use-curvature \
   --adaptive-threshold \
   --use-com \
-  --drop-height 0.40 \
   --output debug_max.mp4 \
   --json-output metrics.json
-```text
+```
 
 **Effect on timing:**
 
@@ -1122,13 +1074,13 @@ kinemotion dropjump-analyze video.mp4 \
   --tracking-confidence 0.7
 ```text
 
-### Scenario 6: Drop Jump with Calibration
+### Scenario 6: Drop Jump with Expert Parameter Tuning
 
-- Standard drop jump analysis with 40cm box for accurate jump height
+- Drop jump analysis with manually tuned parameters for specific conditions
 
 ```bash
 kinemotion dropjump-analyze video.mp4 \
-  --drop-height 0.40 \
+  --quality accurate \
   --smoothing-window 5 \
   --velocity-threshold 0.02 \
   --min-contact-frames 3 \
@@ -1137,9 +1089,9 @@ kinemotion dropjump-analyze video.mp4 \
   --tracking-confidence 0.5 \
   --output debug.mp4 \
   --json-output metrics.json
-```text
+```
 
-**Note:** Calibration provides theoretical benefits by using known reference distances, but actual accuracy requires empirical validation against gold standards (force plates, 3D motion capture).
+**Note:** Expert parameters should only be adjusted when the automatic tuning doesn't work for your specific video conditions. The `--verbose` flag shows auto-selected parameters for comparison.
 
 ### Scenario 7: High-Performance Drop Jump Analysis (Maximum Accuracy)
 
@@ -1147,7 +1099,7 @@ kinemotion dropjump-analyze video.mp4 \
 
 ```bash
 kinemotion dropjump-analyze video.mp4 \
-  --drop-height 0.40 \
+  --quality accurate \
   --use-curvature \
   --outlier-rejection \
   --output debug_max.mp4 \
@@ -1158,13 +1110,13 @@ kinemotion dropjump-analyze video.mp4 \
   --visibility-threshold 0.6 \
   --detection-confidence 0.5 \
   --tracking-confidence 0.5
-```text
+```
 
-**Note:** This combines theoretical improvements for drop jumps (⚠️ all unvalidated):
+**Note:** This uses maximum accuracy settings with advanced filtering:
 
-- Calibration: Uses known reference distance for scaling
-- Curvature analysis: Enhanced timing precision (enabled by default)
-- Outlier rejection: Removes tracking glitches (enabled by default)
+- Curvature analysis: Enhanced timing precision
+- Outlier rejection: Removes tracking glitches
+- Fine-tuned expert parameters: Optimized for clean, high-quality videos
 
 ---
 
@@ -1315,7 +1267,6 @@ When bilateral-filter disabled (default):
 | visibility-threshold | None (simple comparison) |
 | detection-confidence | Medium (affects MediaPipe workload) |
 | tracking-confidence | Medium (affects MediaPipe workload) |
-| drop-height | None (scaling calculation only) |
 | use-curvature | Negligible (reuses smoothed trajectory) |
 
 **Notes:**
@@ -1390,6 +1341,7 @@ kinemotion dropjump-analyze video.mp4 --output v3.mp4 --json-output v3.json --sm
 | `visibility-threshold` | 0.5 | 0.3-0.8 | Landmark trust level | Occlusions or need high confidence |
 | `detection-confidence` | 0.5 | 0.1-0.9 | Initial pose detection | Multiple people or poor visibility |
 | `tracking-confidence` | 0.5 | 0.1-0.9 | Tracking persistence | Tracking lost or wrong person tracked |
-| `drop-height` | None | 0.1-2.0 | Jump height calibration | Drop jump with known box height |
 | `use-curvature` | enabled | enabled/disabled | Timing refinement | Default: keep enabled for best accuracy |
+| `quality` | balanced | fast/balanced/accurate | Analysis speed vs accuracy | Use fast for batch, accurate for research |
+```
 ````

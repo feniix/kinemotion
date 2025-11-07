@@ -96,8 +96,8 @@ Kinemotion supports two jump types with intelligent auto-tuning that automatical
 Analyzes reactive strength and ground contact time:
 
 ```bash
-# Drop-height is REQUIRED for accurate calibration
-kinemotion dropjump-analyze video.mp4 --drop-height 0.40
+# Automatic parameter tuning based on video characteristics
+kinemotion dropjump-analyze video.mp4
 ```
 
 ### Counter Movement Jump (CMJ) Analysis
@@ -147,9 +147,9 @@ Process multiple videos in parallel:
 
 ```bash
 # Drop jumps
-kinemotion dropjump-analyze videos/*.mp4 --batch --drop-height 0.40 --workers 4
+kinemotion dropjump-analyze videos/*.mp4 --batch --workers 4
 
-# CMJ (no drop height needed)
+# CMJ with output directories
 kinemotion cmj-analyze videos/*.mp4 --batch --workers 4 \
   --json-output-dir results/ \
   --csv-summary summary.csv
@@ -165,9 +165,8 @@ Use kinemotion as a library for automated pipelines and custom analysis.
 from kinemotion import process_dropjump_video
 
 # Process a single video
-metrics = process_video(
+metrics = process_dropjump_video(
     video_path="athlete_jump.mp4",
-    drop_height=0.40,  # 40cm drop box
     quality="balanced",
     verbose=True
 )
@@ -185,11 +184,11 @@ print(f"Flight time: {metrics.flight_time * 1000:.1f} ms")
 from kinemotion import DropJumpVideoConfig, process_dropjump_videos_bulk
 
 configs = [
-    VideoConfig("video1.mp4", drop_height=0.40),
-    VideoConfig("video2.mp4", drop_height=0.30, quality="accurate"),
+    DropJumpVideoConfig("video1.mp4", quality="balanced"),
+    DropJumpVideoConfig("video2.mp4", quality="accurate"),
 ]
 
-results = process_videos_bulk(configs, max_workers=4)
+results = process_dropjump_videos_bulk(configs, max_workers=4)
 
 # CMJ bulk processing
 from kinemotion import CMJVideoConfig, process_cmj_videos_bulk

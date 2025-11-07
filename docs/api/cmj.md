@@ -9,8 +9,9 @@ from kinemotion import process_cmj_video
 
 metrics = process_cmj_video(
     video_path="cmj.mp4",
-    output_path="debug.mp4",  # optional
-    smoothing=True
+    quality="balanced",  # fast, balanced, or accurate
+    output_video="debug.mp4",  # optional
+    verbose=True
 )
 
 print(f"Jump height: {metrics.jump_height:.2f}m")

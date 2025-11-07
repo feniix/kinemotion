@@ -52,7 +52,8 @@ Related to #
 
 ```bash
 # Example test commands
-uv run kinemotion dropjump-analyze test_video.mp4 --drop-height 0.40
+uv run kinemotion dropjump-analyze test_video.mp4
+uv run kinemotion cmj-analyze test_video.mp4
 ```
 
 ## Code Quality Checklist

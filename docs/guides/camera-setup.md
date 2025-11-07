@@ -657,17 +657,17 @@ ______________________________________________________________________
 
 **Possible causes:**
 
-1. Camera angle not exactly 45° (measurement error)
-1. Missing `--drop-height` calibration parameter
+1. Camera angle not optimal (measurement error)
 1. Athlete moving horizontally (drift during jump)
 1. Camera not level (tilted)
+1. Poor video quality affecting tracking
 
 **Solutions:**
 
-1. Verify 45° angle with measuring app or protractor
-1. Provide drop box height: `--drop-height 0.40`
+1. Verify camera angle with measuring app or protractor
 1. Coach athlete to jump straight up (minimal drift)
 1. Use tripod level indicator or phone level app
+1. Use `--quality accurate` for best results with good videos
 
 ### "No Drop Jump Detected" Error
 

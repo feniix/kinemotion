@@ -2,6 +2,8 @@
 
 This guide covers different approaches for processing large batches of videos using kinemotion as a library.
 
+> **Note:** Some code examples in this guide use low-level API calls and may reference the removed `drop_height` parameter. For production use, prefer the high-level `process_dropjump_video()` and `process_cmj_video()` functions with `quality` presets (`"fast"`, `"balanced"`, or `"accurate"`) instead. See the [API documentation](../api/overview.md) for current best practices.
+
 ## Table of Contents
 
 - [Quick Start: Local Parallel Processing](#quick-start-local-parallel-processing)
@@ -31,42 +33,16 @@ from kinemotion.dropjump import (
 )
 from kinemotion.core.auto_tuning import auto_tune_parameters
 
-def analyze_video(video_path: str, drop_height: float = 0.40) -> dict:
+def analyze_video(video_path: str, quality: str = "balanced") -> dict:
     """Analyze a single drop jump video."""
     try:
-        # Auto-tune parameters based on video
-        params = auto_tune_parameters(video_path, quality_preset="balanced")
+        # Use the high-level API which handles auto-tuning
+        from kinemotion import process_dropjump_video
 
-        # Process video
-        video = VideoProcessor(video_path)
-        tracker = PoseTracker(
-            detection_confidence=params["detection_confidence"],
-            tracking_confidence=params["tracking_confidence"]
-        )
-
-        # Extract landmarks
-        landmarks = []
-        for frame in video.read_frames():
-            pose_result = tracker.process_frame(frame)
-            if pose_result:
-                landmarks.append(pose_result)
-
-        # Detect contact states
-        foot_positions = [compute_average_foot_position(lm) for lm in landmarks]
-        contact_states = detect_ground_contact(
-            foot_positions,
-            video.fps,
-            velocity_threshold=params["velocity_threshold"],
-            min_contact_frames=params["min_contact_frames"],
-            visibility_threshold=params["visibility_threshold"]
-        )
-
-        # Calculate metrics
-        metrics = calculate_drop_jump_metrics(
-            landmarks=landmarks,
-            contact_states=contact_states,
-            fps=video.fps,
-            drop_height_m=drop_height
+        metrics = process_dropjump_video(
+            video_path,
+            quality=quality,
+            verbose=False
         )
 
         return {
@@ -74,7 +50,6 @@ def analyze_video(video_path: str, drop_height: float = 0.40) -> dict:
             "success": True,
             **metrics.to_dict()
         }
-
     except Exception as e:
         return {
             "video": video_path,
@@ -88,7 +63,7 @@ video_files = list(video_dir.glob("*.mp4"))
 
 with ProcessPoolExecutor(max_workers=8) as executor:
     results = list(executor.map(
-        lambda p: analyze_video(str(p), 0.40),
+        lambda p: analyze_video(str(p), "balanced"),
         video_files
     ))
 
@@ -134,10 +109,10 @@ Bulk video processing with Kinemotion on Modal.com
 
 Usage:
     # Process videos from URLs
-    modal run batch_processor.py --video-list videos.txt --drop-height 0.40
+    modal run batch_processor.py --video-list videos.txt --quality balanced
 
     # Process videos from S3 bucket
-    modal run batch_processor.py --s3-bucket my-videos --drop-height 0.60
+    modal run batch_processor.py --s3-bucket my-videos --quality accurate
 """
 
 import modal

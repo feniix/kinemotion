@@ -18,7 +18,7 @@ pip install kinemotion
 ### Drop Jump Analysis
 
 ```bash
-kinemotion dropjump-analyze video.mp4 --drop-height 0.40
+kinemotion dropjump-analyze video.mp4
 ```
 
 Or via Python API:
@@ -26,7 +26,7 @@ Or via Python API:
 ```python
 from kinemotion import process_dropjump_video
 
-metrics = process_video("video.mp4", drop_height=0.40)
+metrics = process_dropjump_video("video.mp4", quality="balanced")
 print(f"Ground contact time: {metrics.ground_contact_time:.3f}s")
 print(f"RSI: {metrics.reactive_strength_index:.2f}")
 ```

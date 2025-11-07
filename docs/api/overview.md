@@ -8,10 +8,10 @@ Kinemotion provides a Python API for video-based kinematic analysis. The API is 
 
 Process drop jump videos and extract kinematic metrics:
 
-- `process_video()` - Analyze a single drop jump video
-- `process_videos_bulk()` - Batch process multiple drop jump videos
-- `VideoConfig` - Configuration for drop jump analysis
-- `VideoResult` - Results from drop jump analysis
+- `process_dropjump_video()` - Analyze a single drop jump video
+- `process_dropjump_videos_bulk()` - Batch process multiple drop jump videos
+- `DropJumpVideoConfig` - Configuration for drop jump analysis
+- `DropJumpVideoResult` - Results from drop jump analysis
 - `DropJumpMetrics` - Kinematic metrics for drop jumps
 
 See [Drop Jump API](dropjump.md) for detailed documentation.
@@ -34,31 +34,35 @@ See [CMJ API](cmj.md) for detailed documentation.
 from kinemotion import process_dropjump_video, process_cmj_video
 
 # Drop jump analysis
-drop_metrics = process_video("dropjump.mp4", drop_height=0.40)
+drop_metrics = process_dropjump_video("dropjump.mp4", quality="balanced")
 
 # CMJ analysis
-cmj_metrics = process_cmj_video("cmj.mp4")
+cmj_metrics = process_cmj_video("cmj.mp4", quality="balanced")
 ```
 
 ## Batch Processing
 
 ```python
-from kinemotion import process_dropjump_videos_bulk, process_cmj_videos_bulk
+from kinemotion import (
+    DropJumpVideoConfig,
+    CMJVideoConfig,
+    process_dropjump_videos_bulk,
+    process_cmj_videos_bulk
+)
 
 # Batch drop jump analysis
-results = process_videos_bulk(
-    video_paths=["video1.mp4", "video2.mp4"],
-    drop_height=0.40,
-    output_dir="results/",
-    workers=4
-)
+configs = [
+    DropJumpVideoConfig("video1.mp4", quality="balanced"),
+    DropJumpVideoConfig("video2.mp4", quality="accurate"),
+]
+results = process_dropjump_videos_bulk(configs, max_workers=4)
 
 # Batch CMJ analysis
-cmj_results = process_cmj_videos_bulk(
-    video_paths=["cmj1.mp4", "cmj2.mp4"],
-    output_dir="results/",
-    workers=4
-)
+cmj_configs = [
+    CMJVideoConfig("cmj1.mp4", quality="balanced"),
+    CMJVideoConfig("cmj2.mp4", quality="accurate"),
+]
+cmj_results = process_cmj_videos_bulk(cmj_configs, max_workers=4)
 ```
 
 ## Core Utilities

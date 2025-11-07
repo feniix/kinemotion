@@ -9,9 +9,9 @@ from kinemotion import process_dropjump_video
 
 metrics = process_dropjump_video(
     video_path="dropjump.mp4",
-    drop_height=0.40,  # meters
-    output_path="debug.mp4",  # optional
-    smoothing=True
+    quality="balanced",  # fast, balanced, or accurate
+    output_video="debug.mp4",  # optional
+    verbose=True
 )
 
 print(f"Ground contact time: {metrics.ground_contact_time:.3f}s")
@@ -54,28 +54,53 @@ show_source: false
 
 ## Key Parameters
 
-### drop_height
+### quality
 
-**Required.** The height of the drop box in meters. This is critical for accurate velocity calculations.
+Analysis quality preset that determines processing speed and accuracy. The system automatically tunes parameters based on video characteristics and the selected preset.
+
+Options:
+
+- `"fast"` - Quick processing, lower precision
+- `"balanced"` - Default, good for most cases
+- `"accurate"` - Research-grade, slower processing
+
+Default: `"balanced"`
 
 ```python
-metrics = process_dropjump_video("video.mp4", drop_height=0.40)  # 40cm box
+metrics = process_dropjump_video("video.mp4", quality="accurate")
 ```
 
-### smoothing
-
-Apply Savitzky-Golay smoothing to landmark positions before analysis. Reduces noise but may slightly delay event detection.
-
-Default: `True`
-
-### output_path
+### output_video
 
 Path to write debug video with overlay visualization. If not provided, no debug video is created.
 
 ```python
 metrics = process_dropjump_video(
     "video.mp4",
-    drop_height=0.40,
-    output_path="debug.mp4"
+    quality="balanced",
+    output_video="debug.mp4"
 )
 ```
+
+### json_output
+
+Path to write JSON metrics output. If not provided, metrics are only returned as a Python object.
+
+```python
+metrics = process_dropjump_video(
+    "video.mp4",
+    json_output="metrics.json"
+)
+```
+
+### Expert Parameters
+
+For advanced users, you can override auto-tuned parameters:
+
+- `smoothing_window` - Override auto-tuned smoothing window size
+- `velocity_threshold` - Override velocity threshold for ground contact detection
+- `min_contact_frames` - Override minimum contact frames
+- `visibility_threshold` - Override visibility threshold
+- `detection_confidence` - Override pose detection confidence
+- `tracking_confidence` - Override pose tracking confidence
+- `drop_start_frame` - Manually specify frame where drop begins
