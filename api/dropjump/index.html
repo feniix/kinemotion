@@ -917,27 +917,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#drop_height" class="md-nav__link">
+  <a href="#quality" class="md-nav__link">
     <span class="md-ellipsis">
-      drop_height
+      quality
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#smoothing" class="md-nav__link">
+  <a href="#output_video" class="md-nav__link">
     <span class="md-ellipsis">
-      smoothing
+      output_video
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#output_path" class="md-nav__link">
+  <a href="#json_output" class="md-nav__link">
     <span class="md-ellipsis">
-      output_path
+      json_output
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expert-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Expert Parameters
     </span>
   </a>
   
@@ -1587,27 +1596,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#drop_height" class="md-nav__link">
+  <a href="#quality" class="md-nav__link">
     <span class="md-ellipsis">
-      drop_height
+      quality
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#smoothing" class="md-nav__link">
+  <a href="#output_video" class="md-nav__link">
     <span class="md-ellipsis">
-      smoothing
+      output_video
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#output_path" class="md-nav__link">
+  <a href="#json_output" class="md-nav__link">
     <span class="md-ellipsis">
-      output_path
+      json_output
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expert-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Expert Parameters
     </span>
   </a>
   
@@ -1644,9 +1662,9 @@
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">metrics</span> <span class="o">=</span> <span class="n">process_dropjump_video</span><span class="p">(</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">video_path</span><span class="o">=</span><span class="s2">&quot;dropjump.mp4&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">drop_height</span><span class="o">=</span><span class="mf">0.40</span><span class="p">,</span>  <span class="c1"># meters</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">output_path</span><span class="o">=</span><span class="s2">&quot;debug.mp4&quot;</span><span class="p">,</span>  <span class="c1"># optional</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">smoothing</span><span class="o">=</span><span class="kc">True</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span>  <span class="c1"># fast, balanced, or accurate</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">output_video</span><span class="o">=</span><span class="s2">&quot;debug.mp4&quot;</span><span class="p">,</span>  <span class="c1"># optional</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ground contact time: </span><span class="si">{</span><span class="n">metrics</span><span class="o">.</span><span class="n">ground_contact_time</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
@@ -2885,21 +2903,43 @@ show_source: false</p>
 show_root_heading: true
 show_source: false</p>
 <h2 id="key-parameters">Key Parameters<a class="headerlink" href="#key-parameters" title="Permanent link">&para;</a></h2>
-<h3 id="drop_height">drop_height<a class="headerlink" href="#drop_height" title="Permanent link">&para;</a></h3>
-<p><strong>Required.</strong> The height of the drop box in meters. This is critical for accurate velocity calculations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">metrics</span> <span class="o">=</span> <span class="n">process_dropjump_video</span><span class="p">(</span><span class="s2">&quot;video.mp4&quot;</span><span class="p">,</span> <span class="n">drop_height</span><span class="o">=</span><span class="mf">0.40</span><span class="p">)</span>  <span class="c1"># 40cm box</span>
+<h3 id="quality">quality<a class="headerlink" href="#quality" title="Permanent link">&para;</a></h3>
+<p>Analysis quality preset that determines processing speed and accuracy. The system automatically tunes parameters based on video characteristics and the selected preset.</p>
+<p>Options:</p>
+<ul>
+<li><code>"fast"</code> - Quick processing, lower precision</li>
+<li><code>"balanced"</code> - Default, good for most cases</li>
+<li><code>"accurate"</code> - Research-grade, slower processing</li>
+</ul>
+<p>Default: <code>"balanced"</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">metrics</span> <span class="o">=</span> <span class="n">process_dropjump_video</span><span class="p">(</span><span class="s2">&quot;video.mp4&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;accurate&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="smoothing">smoothing<a class="headerlink" href="#smoothing" title="Permanent link">&para;</a></h3>
-<p>Apply Savitzky-Golay smoothing to landmark positions before analysis. Reduces noise but may slightly delay event detection.</p>
-<p>Default: <code>True</code></p>
-<h3 id="output_path">output_path<a class="headerlink" href="#output_path" title="Permanent link">&para;</a></h3>
+<h3 id="output_video">output_video<a class="headerlink" href="#output_video" title="Permanent link">&para;</a></h3>
 <p>Path to write debug video with overlay visualization. If not provided, no debug video is created.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">metrics</span> <span class="o">=</span> <span class="n">process_dropjump_video</span><span class="p">(</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;video.mp4&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">drop_height</span><span class="o">=</span><span class="mf">0.40</span><span class="p">,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">output_path</span><span class="o">=</span><span class="s2">&quot;debug.mp4&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">output_video</span><span class="o">=</span><span class="s2">&quot;debug.mp4&quot;</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">)</span>
 </code></pre></div>
+<h3 id="json_output">json_output<a class="headerlink" href="#json_output" title="Permanent link">&para;</a></h3>
+<p>Path to write JSON metrics output. If not provided, metrics are only returned as a Python object.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">metrics</span> <span class="o">=</span> <span class="n">process_dropjump_video</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;video.mp4&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">json_output</span><span class="o">=</span><span class="s2">&quot;metrics.json&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">)</span>
+</code></pre></div>
+<h3 id="expert-parameters">Expert Parameters<a class="headerlink" href="#expert-parameters" title="Permanent link">&para;</a></h3>
+<p>For advanced users, you can override auto-tuned parameters:</p>
+<ul>
+<li><code>smoothing_window</code> - Override auto-tuned smoothing window size</li>
+<li><code>velocity_threshold</code> - Override velocity threshold for ground contact detection</li>
+<li><code>min_contact_frames</code> - Override minimum contact frames</li>
+<li><code>visibility_threshold</code> - Override visibility threshold</li>
+<li><code>detection_confidence</code> - Override pose detection confidence</li>
+<li><code>tracking_confidence</code> - Override pose tracking confidence</li>
+<li><code>drop_start_frame</code> - Manually specify frame where drop begins</li>
+</ul>
 
 
 

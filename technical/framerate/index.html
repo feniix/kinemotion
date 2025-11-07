@@ -1682,519 +1682,511 @@
 <a id="__codelineno-0-171" name="__codelineno-0-171" href="#__codelineno-0-171"></a>kinemotion dropjump-analyze video_30fps.mp4 \
 <a id="__codelineno-0-172" name="__codelineno-0-172" href="#__codelineno-0-172"></a>  --smoothing-window 5 \
 <a id="__codelineno-0-173" name="__codelineno-0-173" href="#__codelineno-0-173"></a>  --velocity-threshold 0.02 \
-<a id="__codelineno-0-174" name="__codelineno-0-174" href="#__codelineno-0-174"></a>  --min-contact-frames 3 \
-<a id="__codelineno-0-175" name="__codelineno-0-175" href="#__codelineno-0-175"></a>  --drop-height 0.40
-<a id="__codelineno-0-176" name="__codelineno-0-176" href="#__codelineno-0-176"></a>```text
-<a id="__codelineno-0-177" name="__codelineno-0-177" href="#__codelineno-0-177"></a>
-<a id="__codelineno-0-178" name="__codelineno-0-178" href="#__codelineno-0-178"></a>**Expected accuracy:** ~88% with calibration
-<a id="__codelineno-0-179" name="__codelineno-0-179" href="#__codelineno-0-179"></a>
-<a id="__codelineno-0-180" name="__codelineno-0-180" href="#__codelineno-0-180"></a>---
-<a id="__codelineno-0-181" name="__codelineno-0-181" href="#__codelineno-0-181"></a>
-<a id="__codelineno-0-182" name="__codelineno-0-182" href="#__codelineno-0-182"></a>### 60 fps - Sweet Spot ⭐ (Recommended)
-<a id="__codelineno-0-183" name="__codelineno-0-183" href="#__codelineno-0-183"></a>
-<a id="__codelineno-0-184" name="__codelineno-0-184" href="#__codelineno-0-184"></a>**Best for:**
-<a id="__codelineno-0-185" name="__codelineno-0-185" href="#__codelineno-0-185"></a>
-<a id="__codelineno-0-186" name="__codelineno-0-186" href="#__codelineno-0-186"></a>- Performance analysis and athlete monitoring
-<a id="__codelineno-0-187" name="__codelineno-0-187" href="#__codelineno-0-187"></a>- Research requiring good accuracy
-<a id="__codelineno-0-188" name="__codelineno-0-188" href="#__codelineno-0-188"></a>- Most drop jump scenarios
-<a id="__codelineno-0-189" name="__codelineno-0-189" href="#__codelineno-0-189"></a>- Balance of quality and practicality
-<a id="__codelineno-0-190" name="__codelineno-0-190" href="#__codelineno-0-190"></a>
-<a id="__codelineno-0-191" name="__codelineno-0-191" href="#__codelineno-0-191"></a>**Advantages:**
-<a id="__codelineno-0-192" name="__codelineno-0-192" href="#__codelineno-0-192"></a>
-<a id="__codelineno-0-193" name="__codelineno-0-193" href="#__codelineno-0-193"></a>- ✅ ±5ms timing precision (excellent)
-<a id="__codelineno-0-194" name="__codelineno-0-194" href="#__codelineno-0-194"></a>- ✅ Robust detection of brief contacts
-<a id="__codelineno-0-195" name="__codelineno-0-195" href="#__codelineno-0-195"></a>- ✅ Smooth velocity curves
-<a id="__codelineno-0-196" name="__codelineno-0-196" href="#__codelineno-0-196"></a>- ✅ Better tracking stability
-<a id="__codelineno-0-197" name="__codelineno-0-197" href="#__codelineno-0-197"></a>- ✅ Reasonable file sizes (~1GB for 5min at 1080p)
-<a id="__codelineno-0-198" name="__codelineno-0-198" href="#__codelineno-0-198"></a>- ✅ Best accuracy/cost trade-off
-<a id="__codelineno-0-199" name="__codelineno-0-199" href="#__codelineno-0-199"></a>
-<a id="__codelineno-0-200" name="__codelineno-0-200" href="#__codelineno-0-200"></a>**Limitations:**
-<a id="__codelineno-0-201" name="__codelineno-0-201" href="#__codelineno-0-201"></a>
-<a id="__codelineno-0-202" name="__codelineno-0-202" href="#__codelineno-0-202"></a>- ⚠️ 2× processing time vs 30fps
-<a id="__codelineno-0-203" name="__codelineno-0-203" href="#__codelineno-0-203"></a>- ⚠️ 2× storage requirements
-<a id="__codelineno-0-204" name="__codelineno-0-204" href="#__codelineno-0-204"></a>- ⚠️ Still some noise in high-speed movements
-<a id="__codelineno-0-205" name="__codelineno-0-205" href="#__codelineno-0-205"></a>
-<a id="__codelineno-0-206" name="__codelineno-0-206" href="#__codelineno-0-206"></a>**Recommended parameters:**
-<a id="__codelineno-0-207" name="__codelineno-0-207" href="#__codelineno-0-207"></a>
-<a id="__codelineno-0-208" name="__codelineno-0-208" href="#__codelineno-0-208"></a>```bash
-<a id="__codelineno-0-209" name="__codelineno-0-209" href="#__codelineno-0-209"></a>kinemotion dropjump-analyze video_60fps.mp4 \
-<a id="__codelineno-0-210" name="__codelineno-0-210" href="#__codelineno-0-210"></a>  --smoothing-window 5 \
-<a id="__codelineno-0-211" name="__codelineno-0-211" href="#__codelineno-0-211"></a>  --velocity-threshold 0.01 \      # halve (less motion per frame)
-<a id="__codelineno-0-212" name="__codelineno-0-212" href="#__codelineno-0-212"></a>  --min-contact-frames 6 \         # double (same time duration)
-<a id="__codelineno-0-213" name="__codelineno-0-213" href="#__codelineno-0-213"></a>  --drop-height 0.40
-<a id="__codelineno-0-214" name="__codelineno-0-214" href="#__codelineno-0-214"></a>```text
+<a id="__codelineno-0-174" name="__codelineno-0-174" href="#__codelineno-0-174"></a>  --min-contact-frames 3
+<a id="__codelineno-0-175" name="__codelineno-0-175" href="#__codelineno-0-175"></a>```
+<a id="__codelineno-0-176" name="__codelineno-0-176" href="#__codelineno-0-176"></a>
+<a id="__codelineno-0-177" name="__codelineno-0-177" href="#__codelineno-0-177"></a>**Note:** Auto-tuning handles these parameters automatically. Manual overrides shown for illustration.
+<a id="__codelineno-0-178" name="__codelineno-0-178" href="#__codelineno-0-178"></a>
+<a id="__codelineno-0-179" name="__codelineno-0-179" href="#__codelineno-0-179"></a>---
+<a id="__codelineno-0-180" name="__codelineno-0-180" href="#__codelineno-0-180"></a>
+<a id="__codelineno-0-181" name="__codelineno-0-181" href="#__codelineno-0-181"></a>### 60 fps - Sweet Spot ⭐ (Recommended)
+<a id="__codelineno-0-182" name="__codelineno-0-182" href="#__codelineno-0-182"></a>
+<a id="__codelineno-0-183" name="__codelineno-0-183" href="#__codelineno-0-183"></a>**Best for:**
+<a id="__codelineno-0-184" name="__codelineno-0-184" href="#__codelineno-0-184"></a>
+<a id="__codelineno-0-185" name="__codelineno-0-185" href="#__codelineno-0-185"></a>- Performance analysis and athlete monitoring
+<a id="__codelineno-0-186" name="__codelineno-0-186" href="#__codelineno-0-186"></a>- Research requiring good accuracy
+<a id="__codelineno-0-187" name="__codelineno-0-187" href="#__codelineno-0-187"></a>- Most drop jump scenarios
+<a id="__codelineno-0-188" name="__codelineno-0-188" href="#__codelineno-0-188"></a>- Balance of quality and practicality
+<a id="__codelineno-0-189" name="__codelineno-0-189" href="#__codelineno-0-189"></a>
+<a id="__codelineno-0-190" name="__codelineno-0-190" href="#__codelineno-0-190"></a>**Advantages:**
+<a id="__codelineno-0-191" name="__codelineno-0-191" href="#__codelineno-0-191"></a>
+<a id="__codelineno-0-192" name="__codelineno-0-192" href="#__codelineno-0-192"></a>- ✅ ±5ms timing precision (excellent)
+<a id="__codelineno-0-193" name="__codelineno-0-193" href="#__codelineno-0-193"></a>- ✅ Robust detection of brief contacts
+<a id="__codelineno-0-194" name="__codelineno-0-194" href="#__codelineno-0-194"></a>- ✅ Smooth velocity curves
+<a id="__codelineno-0-195" name="__codelineno-0-195" href="#__codelineno-0-195"></a>- ✅ Better tracking stability
+<a id="__codelineno-0-196" name="__codelineno-0-196" href="#__codelineno-0-196"></a>- ✅ Reasonable file sizes (~1GB for 5min at 1080p)
+<a id="__codelineno-0-197" name="__codelineno-0-197" href="#__codelineno-0-197"></a>- ✅ Best accuracy/cost trade-off
+<a id="__codelineno-0-198" name="__codelineno-0-198" href="#__codelineno-0-198"></a>
+<a id="__codelineno-0-199" name="__codelineno-0-199" href="#__codelineno-0-199"></a>**Limitations:**
+<a id="__codelineno-0-200" name="__codelineno-0-200" href="#__codelineno-0-200"></a>
+<a id="__codelineno-0-201" name="__codelineno-0-201" href="#__codelineno-0-201"></a>- ⚠️ 2× processing time vs 30fps
+<a id="__codelineno-0-202" name="__codelineno-0-202" href="#__codelineno-0-202"></a>- ⚠️ 2× storage requirements
+<a id="__codelineno-0-203" name="__codelineno-0-203" href="#__codelineno-0-203"></a>- ⚠️ Still some noise in high-speed movements
+<a id="__codelineno-0-204" name="__codelineno-0-204" href="#__codelineno-0-204"></a>
+<a id="__codelineno-0-205" name="__codelineno-0-205" href="#__codelineno-0-205"></a>**Recommended parameters:**
+<a id="__codelineno-0-206" name="__codelineno-0-206" href="#__codelineno-0-206"></a>
+<a id="__codelineno-0-207" name="__codelineno-0-207" href="#__codelineno-0-207"></a>```bash
+<a id="__codelineno-0-208" name="__codelineno-0-208" href="#__codelineno-0-208"></a>kinemotion dropjump-analyze video_60fps.mp4 \
+<a id="__codelineno-0-209" name="__codelineno-0-209" href="#__codelineno-0-209"></a>  --smoothing-window 5 \
+<a id="__codelineno-0-210" name="__codelineno-0-210" href="#__codelineno-0-210"></a>  --velocity-threshold 0.01 \      # halve (less motion per frame)
+<a id="__codelineno-0-211" name="__codelineno-0-211" href="#__codelineno-0-211"></a>  --min-contact-frames 6          # double (same time duration)
+<a id="__codelineno-0-212" name="__codelineno-0-212" href="#__codelineno-0-212"></a>```
+<a id="__codelineno-0-213" name="__codelineno-0-213" href="#__codelineno-0-213"></a>
+<a id="__codelineno-0-214" name="__codelineno-0-214" href="#__codelineno-0-214"></a>**Expected accuracy:** ~90-91% with calibration (+2-3% over 30fps)
 <a id="__codelineno-0-215" name="__codelineno-0-215" href="#__codelineno-0-215"></a>
-<a id="__codelineno-0-216" name="__codelineno-0-216" href="#__codelineno-0-216"></a>**Expected accuracy:** ~90-91% with calibration (+2-3% over 30fps)
+<a id="__codelineno-0-216" name="__codelineno-0-216" href="#__codelineno-0-216"></a>**💡 Recommendation:** If you can only choose one upgrade, **use 60fps video** - it provides the best return on investment for accuracy.
 <a id="__codelineno-0-217" name="__codelineno-0-217" href="#__codelineno-0-217"></a>
-<a id="__codelineno-0-218" name="__codelineno-0-218" href="#__codelineno-0-218"></a>**💡 Recommendation:** If you can only choose one upgrade, **use 60fps video** - it provides the best return on investment for accuracy.
+<a id="__codelineno-0-218" name="__codelineno-0-218" href="#__codelineno-0-218"></a>---
 <a id="__codelineno-0-219" name="__codelineno-0-219" href="#__codelineno-0-219"></a>
-<a id="__codelineno-0-220" name="__codelineno-0-220" href="#__codelineno-0-220"></a>---
+<a id="__codelineno-0-220" name="__codelineno-0-220" href="#__codelineno-0-220"></a>### 120 fps - Diminishing Returns 🔬
 <a id="__codelineno-0-221" name="__codelineno-0-221" href="#__codelineno-0-221"></a>
-<a id="__codelineno-0-222" name="__codelineno-0-222" href="#__codelineno-0-222"></a>### 120 fps - Diminishing Returns 🔬
+<a id="__codelineno-0-222" name="__codelineno-0-222" href="#__codelineno-0-222"></a>**Best for:**
 <a id="__codelineno-0-223" name="__codelineno-0-223" href="#__codelineno-0-223"></a>
-<a id="__codelineno-0-224" name="__codelineno-0-224" href="#__codelineno-0-224"></a>**Best for:**
-<a id="__codelineno-0-225" name="__codelineno-0-225" href="#__codelineno-0-225"></a>
-<a id="__codelineno-0-226" name="__codelineno-0-226" href="#__codelineno-0-226"></a>- Research requiring &lt;5ms timing precision
-<a id="__codelineno-0-227" name="__codelineno-0-227" href="#__codelineno-0-227"></a>- Analysis of explosive/reactive movements
-<a id="__codelineno-0-228" name="__codelineno-0-228" href="#__codelineno-0-228"></a>- High-speed biomechanics research
-<a id="__codelineno-0-229" name="__codelineno-0-229" href="#__codelineno-0-229"></a>- Validation studies against force plates
+<a id="__codelineno-0-224" name="__codelineno-0-224" href="#__codelineno-0-224"></a>- Research requiring &lt;5ms timing precision
+<a id="__codelineno-0-225" name="__codelineno-0-225" href="#__codelineno-0-225"></a>- Analysis of explosive/reactive movements
+<a id="__codelineno-0-226" name="__codelineno-0-226" href="#__codelineno-0-226"></a>- High-speed biomechanics research
+<a id="__codelineno-0-227" name="__codelineno-0-227" href="#__codelineno-0-227"></a>- Validation studies against force plates
+<a id="__codelineno-0-228" name="__codelineno-0-228" href="#__codelineno-0-228"></a>
+<a id="__codelineno-0-229" name="__codelineno-0-229" href="#__codelineno-0-229"></a>**Advantages:**
 <a id="__codelineno-0-230" name="__codelineno-0-230" href="#__codelineno-0-230"></a>
-<a id="__codelineno-0-231" name="__codelineno-0-231" href="#__codelineno-0-231"></a>**Advantages:**
-<a id="__codelineno-0-232" name="__codelineno-0-232" href="#__codelineno-0-232"></a>
-<a id="__codelineno-0-233" name="__codelineno-0-233" href="#__codelineno-0-233"></a>- ✅ ±2.5ms timing precision
-<a id="__codelineno-0-234" name="__codelineno-0-234" href="#__codelineno-0-234"></a>- ✅ Very robust brief contact detection
-<a id="__codelineno-0-235" name="__codelineno-0-235" href="#__codelineno-0-235"></a>- ✅ Excellent velocity curve smoothness
-<a id="__codelineno-0-236" name="__codelineno-0-236" href="#__codelineno-0-236"></a>- ✅ Captures rapid transitions accurately
+<a id="__codelineno-0-231" name="__codelineno-0-231" href="#__codelineno-0-231"></a>- ✅ ±2.5ms timing precision
+<a id="__codelineno-0-232" name="__codelineno-0-232" href="#__codelineno-0-232"></a>- ✅ Very robust brief contact detection
+<a id="__codelineno-0-233" name="__codelineno-0-233" href="#__codelineno-0-233"></a>- ✅ Excellent velocity curve smoothness
+<a id="__codelineno-0-234" name="__codelineno-0-234" href="#__codelineno-0-234"></a>- ✅ Captures rapid transitions accurately
+<a id="__codelineno-0-235" name="__codelineno-0-235" href="#__codelineno-0-235"></a>
+<a id="__codelineno-0-236" name="__codelineno-0-236" href="#__codelineno-0-236"></a>**Limitations:**
 <a id="__codelineno-0-237" name="__codelineno-0-237" href="#__codelineno-0-237"></a>
-<a id="__codelineno-0-238" name="__codelineno-0-238" href="#__codelineno-0-238"></a>**Limitations:**
-<a id="__codelineno-0-239" name="__codelineno-0-239" href="#__codelineno-0-239"></a>
-<a id="__codelineno-0-240" name="__codelineno-0-240" href="#__codelineno-0-240"></a>- ⚠️ 4× processing time vs 30fps (2× vs 60fps)
-<a id="__codelineno-0-241" name="__codelineno-0-241" href="#__codelineno-0-241"></a>- ⚠️ Large file sizes (~2GB for 5min at 1080p)
-<a id="__codelineno-0-242" name="__codelineno-0-242" href="#__codelineno-0-242"></a>- ⚠️ Only +1% accuracy over 60fps (marginal gain)
-<a id="__codelineno-0-243" name="__codelineno-0-243" href="#__codelineno-0-243"></a>- ⚠️ Requires proportional parameter adjustments
-<a id="__codelineno-0-244" name="__codelineno-0-244" href="#__codelineno-0-244"></a>- ⚠️ Other factors become limiting (tracking, calibration)
+<a id="__codelineno-0-238" name="__codelineno-0-238" href="#__codelineno-0-238"></a>- ⚠️ 4× processing time vs 30fps (2× vs 60fps)
+<a id="__codelineno-0-239" name="__codelineno-0-239" href="#__codelineno-0-239"></a>- ⚠️ Large file sizes (~2GB for 5min at 1080p)
+<a id="__codelineno-0-240" name="__codelineno-0-240" href="#__codelineno-0-240"></a>- ⚠️ Only +1% accuracy over 60fps (marginal gain)
+<a id="__codelineno-0-241" name="__codelineno-0-241" href="#__codelineno-0-241"></a>- ⚠️ Requires proportional parameter adjustments
+<a id="__codelineno-0-242" name="__codelineno-0-242" href="#__codelineno-0-242"></a>- ⚠️ Other factors become limiting (tracking, calibration)
+<a id="__codelineno-0-243" name="__codelineno-0-243" href="#__codelineno-0-243"></a>
+<a id="__codelineno-0-244" name="__codelineno-0-244" href="#__codelineno-0-244"></a>**Recommended parameters:**
 <a id="__codelineno-0-245" name="__codelineno-0-245" href="#__codelineno-0-245"></a>
-<a id="__codelineno-0-246" name="__codelineno-0-246" href="#__codelineno-0-246"></a>**Recommended parameters:**
-<a id="__codelineno-0-247" name="__codelineno-0-247" href="#__codelineno-0-247"></a>
-<a id="__codelineno-0-248" name="__codelineno-0-248" href="#__codelineno-0-248"></a>```bash
-<a id="__codelineno-0-249" name="__codelineno-0-249" href="#__codelineno-0-249"></a>kinemotion dropjump-analyze video_120fps.mp4 \
-<a id="__codelineno-0-250" name="__codelineno-0-250" href="#__codelineno-0-250"></a>  --smoothing-window 5 \
-<a id="__codelineno-0-251" name="__codelineno-0-251" href="#__codelineno-0-251"></a>  --velocity-threshold 0.005 \     # quarter (4× more frames)
-<a id="__codelineno-0-252" name="__codelineno-0-252" href="#__codelineno-0-252"></a>  --min-contact-frames 12 \        # quadruple
-<a id="__codelineno-0-253" name="__codelineno-0-253" href="#__codelineno-0-253"></a>  --drop-height 0.40
-<a id="__codelineno-0-254" name="__codelineno-0-254" href="#__codelineno-0-254"></a>```text
-<a id="__codelineno-0-255" name="__codelineno-0-255" href="#__codelineno-0-255"></a>
-<a id="__codelineno-0-256" name="__codelineno-0-256" href="#__codelineno-0-256"></a>**Expected accuracy:** ~91-92% with calibration (+3-4% over 30fps, +1% over 60fps)
-<a id="__codelineno-0-257" name="__codelineno-0-257" href="#__codelineno-0-257"></a>
-<a id="__codelineno-0-258" name="__codelineno-0-258" href="#__codelineno-0-258"></a>**💡 Note:** Only pursue 120fps if 60fps accuracy is insufficient for your application and you&#39;ve already maximized calibration quality.
-<a id="__codelineno-0-259" name="__codelineno-0-259" href="#__codelineno-0-259"></a>
-<a id="__codelineno-0-260" name="__codelineno-0-260" href="#__codelineno-0-260"></a>---
-<a id="__codelineno-0-261" name="__codelineno-0-261" href="#__codelineno-0-261"></a>
-<a id="__codelineno-0-262" name="__codelineno-0-262" href="#__codelineno-0-262"></a>### 240 fps - Overkill for Drop Jumps ❌
-<a id="__codelineno-0-263" name="__codelineno-0-263" href="#__codelineno-0-263"></a>
-<a id="__codelineno-0-264" name="__codelineno-0-264" href="#__codelineno-0-264"></a>**Best for:**
-<a id="__codelineno-0-265" name="__codelineno-0-265" href="#__codelineno-0-265"></a>
-<a id="__codelineno-0-266" name="__codelineno-0-266" href="#__codelineno-0-266"></a>- Ultra-high-speed research (e.g., ballistic movements)
-<a id="__codelineno-0-267" name="__codelineno-0-267" href="#__codelineno-0-267"></a>- Special applications requiring sub-2ms precision
-<a id="__codelineno-0-268" name="__codelineno-0-268" href="#__codelineno-0-268"></a>- Validation of measurement systems
-<a id="__codelineno-0-269" name="__codelineno-0-269" href="#__codelineno-0-269"></a>
-<a id="__codelineno-0-270" name="__codelineno-0-270" href="#__codelineno-0-270"></a>**Advantages:**
-<a id="__codelineno-0-271" name="__codelineno-0-271" href="#__codelineno-0-271"></a>
-<a id="__codelineno-0-272" name="__codelineno-0-272" href="#__codelineno-0-272"></a>- ✅ ±1.25ms timing precision (theoretical)
-<a id="__codelineno-0-273" name="__codelineno-0-273" href="#__codelineno-0-273"></a>- ✅ Maximum temporal resolution
-<a id="__codelineno-0-274" name="__codelineno-0-274" href="#__codelineno-0-274"></a>- ✅ Captures finest motion details
-<a id="__codelineno-0-275" name="__codelineno-0-275" href="#__codelineno-0-275"></a>
-<a id="__codelineno-0-276" name="__codelineno-0-276" href="#__codelineno-0-276"></a>**Limitations:**
-<a id="__codelineno-0-277" name="__codelineno-0-277" href="#__codelineno-0-277"></a>
-<a id="__codelineno-0-278" name="__codelineno-0-278" href="#__codelineno-0-278"></a>- ❌ 8× processing time vs 30fps (4× vs 60fps)
-<a id="__codelineno-0-279" name="__codelineno-0-279" href="#__codelineno-0-279"></a>- ❌ Massive file sizes (~4GB for 5min at 1080p)
-<a id="__codelineno-0-280" name="__codelineno-0-280" href="#__codelineno-0-280"></a>- ❌ Only +0.5% accuracy over 120fps (imperceptible)
-<a id="__codelineno-0-281" name="__codelineno-0-281" href="#__codelineno-0-281"></a>- ❌ Accuracy limited by other factors:
-<a id="__codelineno-0-282" name="__codelineno-0-282" href="#__codelineno-0-282"></a>  - MediaPipe tracking precision (~5-10ms equivalent)
-<a id="__codelineno-0-283" name="__codelineno-0-283" href="#__codelineno-0-283"></a>  - Motion blur (limits effective temporal resolution)
-<a id="__codelineno-0-284" name="__codelineno-0-284" href="#__codelineno-0-284"></a>  - Calibration precision (drop height measurement)
-<a id="__codelineno-0-285" name="__codelineno-0-285" href="#__codelineno-0-285"></a>  - 2D vs 3D motion assumptions
-<a id="__codelineno-0-286" name="__codelineno-0-286" href="#__codelineno-0-286"></a>- ❌ Requires specialized high-speed cameras
-<a id="__codelineno-0-287" name="__codelineno-0-287" href="#__codelineno-0-287"></a>- ❌ Difficult to achieve good lighting at 240fps
-<a id="__codelineno-0-288" name="__codelineno-0-288" href="#__codelineno-0-288"></a>
-<a id="__codelineno-0-289" name="__codelineno-0-289" href="#__codelineno-0-289"></a>**Recommended parameters:**
-<a id="__codelineno-0-290" name="__codelineno-0-290" href="#__codelineno-0-290"></a>
-<a id="__codelineno-0-291" name="__codelineno-0-291" href="#__codelineno-0-291"></a>```bash
-<a id="__codelineno-0-292" name="__codelineno-0-292" href="#__codelineno-0-292"></a>kinemotion dropjump-analyze video_240fps.mp4 \
-<a id="__codelineno-0-293" name="__codelineno-0-293" href="#__codelineno-0-293"></a>  --smoothing-window 5 \
-<a id="__codelineno-0-294" name="__codelineno-0-294" href="#__codelineno-0-294"></a>  --velocity-threshold 0.0025 \    # 1/8× (8× more frames)
-<a id="__codelineno-0-295" name="__codelineno-0-295" href="#__codelineno-0-295"></a>  --min-contact-frames 24 \        # 8×
-<a id="__codelineno-0-296" name="__codelineno-0-296" href="#__codelineno-0-296"></a>  --drop-height 0.40
-<a id="__codelineno-0-297" name="__codelineno-0-297" href="#__codelineno-0-297"></a>```text
+<a id="__codelineno-0-246" name="__codelineno-0-246" href="#__codelineno-0-246"></a>```bash
+<a id="__codelineno-0-247" name="__codelineno-0-247" href="#__codelineno-0-247"></a>kinemotion dropjump-analyze video_120fps.mp4 \
+<a id="__codelineno-0-248" name="__codelineno-0-248" href="#__codelineno-0-248"></a>  --smoothing-window 5 \
+<a id="__codelineno-0-249" name="__codelineno-0-249" href="#__codelineno-0-249"></a>  --velocity-threshold 0.005 \     # quarter (4× more frames)
+<a id="__codelineno-0-250" name="__codelineno-0-250" href="#__codelineno-0-250"></a>  --min-contact-frames 12         # quadruple
+<a id="__codelineno-0-251" name="__codelineno-0-251" href="#__codelineno-0-251"></a>```
+<a id="__codelineno-0-252" name="__codelineno-0-252" href="#__codelineno-0-252"></a>
+<a id="__codelineno-0-253" name="__codelineno-0-253" href="#__codelineno-0-253"></a>**Expected accuracy:** ~91-92% with calibration (+3-4% over 30fps, +1% over 60fps)
+<a id="__codelineno-0-254" name="__codelineno-0-254" href="#__codelineno-0-254"></a>
+<a id="__codelineno-0-255" name="__codelineno-0-255" href="#__codelineno-0-255"></a>**💡 Note:** Only pursue 120fps if 60fps accuracy is insufficient for your application and you&#39;ve already maximized calibration quality.
+<a id="__codelineno-0-256" name="__codelineno-0-256" href="#__codelineno-0-256"></a>
+<a id="__codelineno-0-257" name="__codelineno-0-257" href="#__codelineno-0-257"></a>---
+<a id="__codelineno-0-258" name="__codelineno-0-258" href="#__codelineno-0-258"></a>
+<a id="__codelineno-0-259" name="__codelineno-0-259" href="#__codelineno-0-259"></a>### 240 fps - Overkill for Drop Jumps ❌
+<a id="__codelineno-0-260" name="__codelineno-0-260" href="#__codelineno-0-260"></a>
+<a id="__codelineno-0-261" name="__codelineno-0-261" href="#__codelineno-0-261"></a>**Best for:**
+<a id="__codelineno-0-262" name="__codelineno-0-262" href="#__codelineno-0-262"></a>
+<a id="__codelineno-0-263" name="__codelineno-0-263" href="#__codelineno-0-263"></a>- Ultra-high-speed research (e.g., ballistic movements)
+<a id="__codelineno-0-264" name="__codelineno-0-264" href="#__codelineno-0-264"></a>- Special applications requiring sub-2ms precision
+<a id="__codelineno-0-265" name="__codelineno-0-265" href="#__codelineno-0-265"></a>- Validation of measurement systems
+<a id="__codelineno-0-266" name="__codelineno-0-266" href="#__codelineno-0-266"></a>
+<a id="__codelineno-0-267" name="__codelineno-0-267" href="#__codelineno-0-267"></a>**Advantages:**
+<a id="__codelineno-0-268" name="__codelineno-0-268" href="#__codelineno-0-268"></a>
+<a id="__codelineno-0-269" name="__codelineno-0-269" href="#__codelineno-0-269"></a>- ✅ ±1.25ms timing precision (theoretical)
+<a id="__codelineno-0-270" name="__codelineno-0-270" href="#__codelineno-0-270"></a>- ✅ Maximum temporal resolution
+<a id="__codelineno-0-271" name="__codelineno-0-271" href="#__codelineno-0-271"></a>- ✅ Captures finest motion details
+<a id="__codelineno-0-272" name="__codelineno-0-272" href="#__codelineno-0-272"></a>
+<a id="__codelineno-0-273" name="__codelineno-0-273" href="#__codelineno-0-273"></a>**Limitations:**
+<a id="__codelineno-0-274" name="__codelineno-0-274" href="#__codelineno-0-274"></a>
+<a id="__codelineno-0-275" name="__codelineno-0-275" href="#__codelineno-0-275"></a>- ❌ 8× processing time vs 30fps (4× vs 60fps)
+<a id="__codelineno-0-276" name="__codelineno-0-276" href="#__codelineno-0-276"></a>- ❌ Massive file sizes (~4GB for 5min at 1080p)
+<a id="__codelineno-0-277" name="__codelineno-0-277" href="#__codelineno-0-277"></a>- ❌ Only +0.5% accuracy over 120fps (imperceptible)
+<a id="__codelineno-0-278" name="__codelineno-0-278" href="#__codelineno-0-278"></a>- ❌ Accuracy limited by other factors:
+<a id="__codelineno-0-279" name="__codelineno-0-279" href="#__codelineno-0-279"></a>  - MediaPipe tracking precision (~5-10ms equivalent)
+<a id="__codelineno-0-280" name="__codelineno-0-280" href="#__codelineno-0-280"></a>  - Motion blur (limits effective temporal resolution)
+<a id="__codelineno-0-281" name="__codelineno-0-281" href="#__codelineno-0-281"></a>  - Calibration precision (drop height measurement)
+<a id="__codelineno-0-282" name="__codelineno-0-282" href="#__codelineno-0-282"></a>  - 2D vs 3D motion assumptions
+<a id="__codelineno-0-283" name="__codelineno-0-283" href="#__codelineno-0-283"></a>- ❌ Requires specialized high-speed cameras
+<a id="__codelineno-0-284" name="__codelineno-0-284" href="#__codelineno-0-284"></a>- ❌ Difficult to achieve good lighting at 240fps
+<a id="__codelineno-0-285" name="__codelineno-0-285" href="#__codelineno-0-285"></a>
+<a id="__codelineno-0-286" name="__codelineno-0-286" href="#__codelineno-0-286"></a>**Recommended parameters:**
+<a id="__codelineno-0-287" name="__codelineno-0-287" href="#__codelineno-0-287"></a>
+<a id="__codelineno-0-288" name="__codelineno-0-288" href="#__codelineno-0-288"></a>```bash
+<a id="__codelineno-0-289" name="__codelineno-0-289" href="#__codelineno-0-289"></a>kinemotion dropjump-analyze video_240fps.mp4 \
+<a id="__codelineno-0-290" name="__codelineno-0-290" href="#__codelineno-0-290"></a>  --smoothing-window 5 \
+<a id="__codelineno-0-291" name="__codelineno-0-291" href="#__codelineno-0-291"></a>  --velocity-threshold 0.0025 \    # 1/8× (8× more frames)
+<a id="__codelineno-0-292" name="__codelineno-0-292" href="#__codelineno-0-292"></a>  --min-contact-frames 24         # 8×
+<a id="__codelineno-0-293" name="__codelineno-0-293" href="#__codelineno-0-293"></a>```
+<a id="__codelineno-0-294" name="__codelineno-0-294" href="#__codelineno-0-294"></a>
+<a id="__codelineno-0-295" name="__codelineno-0-295" href="#__codelineno-0-295"></a>**Expected accuracy:** ~92-93% with calibration (+4-5% over 30fps, +1-2% over 60fps, +0.5% over 120fps)
+<a id="__codelineno-0-296" name="__codelineno-0-296" href="#__codelineno-0-296"></a>
+<a id="__codelineno-0-297" name="__codelineno-0-297" href="#__codelineno-0-297"></a>**💡 Verdict:** Not recommended for drop jumps - other factors become limiting before frame rate at this level.
 <a id="__codelineno-0-298" name="__codelineno-0-298" href="#__codelineno-0-298"></a>
-<a id="__codelineno-0-299" name="__codelineno-0-299" href="#__codelineno-0-299"></a>**Expected accuracy:** ~92-93% with calibration (+4-5% over 30fps, +1-2% over 60fps, +0.5% over 120fps)
+<a id="__codelineno-0-299" name="__codelineno-0-299" href="#__codelineno-0-299"></a>---
 <a id="__codelineno-0-300" name="__codelineno-0-300" href="#__codelineno-0-300"></a>
-<a id="__codelineno-0-301" name="__codelineno-0-301" href="#__codelineno-0-301"></a>**💡 Verdict:** Not recommended for drop jumps - other factors become limiting before frame rate at this level.
+<a id="__codelineno-0-301" name="__codelineno-0-301" href="#__codelineno-0-301"></a>## Parameter Adjustments by Frame Rate
 <a id="__codelineno-0-302" name="__codelineno-0-302" href="#__codelineno-0-302"></a>
-<a id="__codelineno-0-303" name="__codelineno-0-303" href="#__codelineno-0-303"></a>---
+<a id="__codelineno-0-303" name="__codelineno-0-303" href="#__codelineno-0-303"></a>### Proportional Scaling Rules
 <a id="__codelineno-0-304" name="__codelineno-0-304" href="#__codelineno-0-304"></a>
-<a id="__codelineno-0-305" name="__codelineno-0-305" href="#__codelineno-0-305"></a>## Parameter Adjustments by Frame Rate
+<a id="__codelineno-0-305" name="__codelineno-0-305" href="#__codelineno-0-305"></a>When changing frame rate, adjust parameters proportionally to maintain equivalent behavior:
 <a id="__codelineno-0-306" name="__codelineno-0-306" href="#__codelineno-0-306"></a>
-<a id="__codelineno-0-307" name="__codelineno-0-307" href="#__codelineno-0-307"></a>### Proportional Scaling Rules
+<a id="__codelineno-0-307" name="__codelineno-0-307" href="#__codelineno-0-307"></a>#### Rule 1: Velocity threshold scales inversely with FPS
 <a id="__codelineno-0-308" name="__codelineno-0-308" href="#__codelineno-0-308"></a>
-<a id="__codelineno-0-309" name="__codelineno-0-309" href="#__codelineno-0-309"></a>When changing frame rate, adjust parameters proportionally to maintain equivalent behavior:
-<a id="__codelineno-0-310" name="__codelineno-0-310" href="#__codelineno-0-310"></a>
-<a id="__codelineno-0-311" name="__codelineno-0-311" href="#__codelineno-0-311"></a>#### Rule 1: Velocity threshold scales inversely with FPS
-<a id="__codelineno-0-312" name="__codelineno-0-312" href="#__codelineno-0-312"></a>
-<a id="__codelineno-0-313" name="__codelineno-0-313" href="#__codelineno-0-313"></a>```text
-<a id="__codelineno-0-314" name="__codelineno-0-314" href="#__codelineno-0-314"></a>threshold_new = threshold_30fps × (30 / fps_new)
-<a id="__codelineno-0-315" name="__codelineno-0-315" href="#__codelineno-0-315"></a>
-<a id="__codelineno-0-316" name="__codelineno-0-316" href="#__codelineno-0-316"></a>Examples:
-<a id="__codelineno-0-317" name="__codelineno-0-317" href="#__codelineno-0-317"></a>30 fps → 60 fps: 0.02 → 0.01 (halve)
-<a id="__codelineno-0-318" name="__codelineno-0-318" href="#__codelineno-0-318"></a>30 fps → 120 fps: 0.02 → 0.005 (quarter)
-<a id="__codelineno-0-319" name="__codelineno-0-319" href="#__codelineno-0-319"></a>30 fps → 240 fps: 0.02 → 0.0025 (1/8×)
-<a id="__codelineno-0-320" name="__codelineno-0-320" href="#__codelineno-0-320"></a>```text
+<a id="__codelineno-0-309" name="__codelineno-0-309" href="#__codelineno-0-309"></a>```text
+<a id="__codelineno-0-310" name="__codelineno-0-310" href="#__codelineno-0-310"></a>threshold_new = threshold_30fps × (30 / fps_new)
+<a id="__codelineno-0-311" name="__codelineno-0-311" href="#__codelineno-0-311"></a>
+<a id="__codelineno-0-312" name="__codelineno-0-312" href="#__codelineno-0-312"></a>Examples:
+<a id="__codelineno-0-313" name="__codelineno-0-313" href="#__codelineno-0-313"></a>30 fps → 60 fps: 0.02 → 0.01 (halve)
+<a id="__codelineno-0-314" name="__codelineno-0-314" href="#__codelineno-0-314"></a>30 fps → 120 fps: 0.02 → 0.005 (quarter)
+<a id="__codelineno-0-315" name="__codelineno-0-315" href="#__codelineno-0-315"></a>30 fps → 240 fps: 0.02 → 0.0025 (1/8×)
+<a id="__codelineno-0-316" name="__codelineno-0-316" href="#__codelineno-0-316"></a>```text
+<a id="__codelineno-0-317" name="__codelineno-0-317" href="#__codelineno-0-317"></a>
+<a id="__codelineno-0-318" name="__codelineno-0-318" href="#__codelineno-0-318"></a>**Explanation:** Higher FPS = less motion per frame, so lower threshold needed to detect same velocity.
+<a id="__codelineno-0-319" name="__codelineno-0-319" href="#__codelineno-0-319"></a>
+<a id="__codelineno-0-320" name="__codelineno-0-320" href="#__codelineno-0-320"></a>#### Rule 2: Minimum contact frames scales linearly with FPS
 <a id="__codelineno-0-321" name="__codelineno-0-321" href="#__codelineno-0-321"></a>
-<a id="__codelineno-0-322" name="__codelineno-0-322" href="#__codelineno-0-322"></a>**Explanation:** Higher FPS = less motion per frame, so lower threshold needed to detect same velocity.
-<a id="__codelineno-0-323" name="__codelineno-0-323" href="#__codelineno-0-323"></a>
-<a id="__codelineno-0-324" name="__codelineno-0-324" href="#__codelineno-0-324"></a>#### Rule 2: Minimum contact frames scales linearly with FPS
-<a id="__codelineno-0-325" name="__codelineno-0-325" href="#__codelineno-0-325"></a>
-<a id="__codelineno-0-326" name="__codelineno-0-326" href="#__codelineno-0-326"></a>```text
-<a id="__codelineno-0-327" name="__codelineno-0-327" href="#__codelineno-0-327"></a>min_frames_new = min_frames_30fps × (fps_new / 30)
-<a id="__codelineno-0-328" name="__codelineno-0-328" href="#__codelineno-0-328"></a>
-<a id="__codelineno-0-329" name="__codelineno-0-329" href="#__codelineno-0-329"></a>Examples:
-<a id="__codelineno-0-330" name="__codelineno-0-330" href="#__codelineno-0-330"></a>30 fps → 60 fps: 3 → 6 (double)
-<a id="__codelineno-0-331" name="__codelineno-0-331" href="#__codelineno-0-331"></a>30 fps → 120 fps: 3 → 12 (quadruple)
-<a id="__codelineno-0-332" name="__codelineno-0-332" href="#__codelineno-0-332"></a>30 fps → 240 fps: 3 → 24 (8×)
-<a id="__codelineno-0-333" name="__codelineno-0-333" href="#__codelineno-0-333"></a>```text
+<a id="__codelineno-0-322" name="__codelineno-0-322" href="#__codelineno-0-322"></a>```text
+<a id="__codelineno-0-323" name="__codelineno-0-323" href="#__codelineno-0-323"></a>min_frames_new = min_frames_30fps × (fps_new / 30)
+<a id="__codelineno-0-324" name="__codelineno-0-324" href="#__codelineno-0-324"></a>
+<a id="__codelineno-0-325" name="__codelineno-0-325" href="#__codelineno-0-325"></a>Examples:
+<a id="__codelineno-0-326" name="__codelineno-0-326" href="#__codelineno-0-326"></a>30 fps → 60 fps: 3 → 6 (double)
+<a id="__codelineno-0-327" name="__codelineno-0-327" href="#__codelineno-0-327"></a>30 fps → 120 fps: 3 → 12 (quadruple)
+<a id="__codelineno-0-328" name="__codelineno-0-328" href="#__codelineno-0-328"></a>30 fps → 240 fps: 3 → 24 (8×)
+<a id="__codelineno-0-329" name="__codelineno-0-329" href="#__codelineno-0-329"></a>```text
+<a id="__codelineno-0-330" name="__codelineno-0-330" href="#__codelineno-0-330"></a>
+<a id="__codelineno-0-331" name="__codelineno-0-331" href="#__codelineno-0-331"></a>**Explanation:** To capture the same minimum contact time duration, need proportionally more frames.
+<a id="__codelineno-0-332" name="__codelineno-0-332" href="#__codelineno-0-332"></a>
+<a id="__codelineno-0-333" name="__codelineno-0-333" href="#__codelineno-0-333"></a>#### Rule 3: Smoothing window can stay constant (or adjust slightly)
 <a id="__codelineno-0-334" name="__codelineno-0-334" href="#__codelineno-0-334"></a>
-<a id="__codelineno-0-335" name="__codelineno-0-335" href="#__codelineno-0-335"></a>**Explanation:** To capture the same minimum contact time duration, need proportionally more frames.
-<a id="__codelineno-0-336" name="__codelineno-0-336" href="#__codelineno-0-336"></a>
-<a id="__codelineno-0-337" name="__codelineno-0-337" href="#__codelineno-0-337"></a>#### Rule 3: Smoothing window can stay constant (or adjust slightly)
+<a id="__codelineno-0-335" name="__codelineno-0-335" href="#__codelineno-0-335"></a>```text
+<a id="__codelineno-0-336" name="__codelineno-0-336" href="#__codelineno-0-336"></a># Keep temporal duration constant
+<a id="__codelineno-0-337" name="__codelineno-0-337" href="#__codelineno-0-337"></a>smoothing_window_new = smoothing_window_30fps × (fps_new / 30)
 <a id="__codelineno-0-338" name="__codelineno-0-338" href="#__codelineno-0-338"></a>
-<a id="__codelineno-0-339" name="__codelineno-0-339" href="#__codelineno-0-339"></a>```text
-<a id="__codelineno-0-340" name="__codelineno-0-340" href="#__codelineno-0-340"></a># Keep temporal duration constant
-<a id="__codelineno-0-341" name="__codelineno-0-341" href="#__codelineno-0-341"></a>smoothing_window_new = smoothing_window_30fps × (fps_new / 30)
-<a id="__codelineno-0-342" name="__codelineno-0-342" href="#__codelineno-0-342"></a>
-<a id="__codelineno-0-343" name="__codelineno-0-343" href="#__codelineno-0-343"></a># OR keep frame count constant for similar smoothing
-<a id="__codelineno-0-344" name="__codelineno-0-344" href="#__codelineno-0-344"></a>smoothing_window_new = smoothing_window_30fps
-<a id="__codelineno-0-345" name="__codelineno-0-345" href="#__codelineno-0-345"></a>
-<a id="__codelineno-0-346" name="__codelineno-0-346" href="#__codelineno-0-346"></a>Examples (constant duration):
-<a id="__codelineno-0-347" name="__codelineno-0-347" href="#__codelineno-0-347"></a>30 fps with window=5 → 167ms temporal window
-<a id="__codelineno-0-348" name="__codelineno-0-348" href="#__codelineno-0-348"></a>60 fps with window=10 → 167ms temporal window (same duration)
-<a id="__codelineno-0-349" name="__codelineno-0-349" href="#__codelineno-0-349"></a>120 fps with window=20 → 167ms temporal window (same duration)
-<a id="__codelineno-0-350" name="__codelineno-0-350" href="#__codelineno-0-350"></a>
-<a id="__codelineno-0-351" name="__codelineno-0-351" href="#__codelineno-0-351"></a>Examples (constant frames, recommended):
-<a id="__codelineno-0-352" name="__codelineno-0-352" href="#__codelineno-0-352"></a>30 fps with window=5 → 5 frames
-<a id="__codelineno-0-353" name="__codelineno-0-353" href="#__codelineno-0-353"></a>60 fps with window=5 → 5 frames (less temporal duration, more samples)
-<a id="__codelineno-0-354" name="__codelineno-0-354" href="#__codelineno-0-354"></a>120 fps with window=5 → 5 frames
-<a id="__codelineno-0-355" name="__codelineno-0-355" href="#__codelineno-0-355"></a>```text
+<a id="__codelineno-0-339" name="__codelineno-0-339" href="#__codelineno-0-339"></a># OR keep frame count constant for similar smoothing
+<a id="__codelineno-0-340" name="__codelineno-0-340" href="#__codelineno-0-340"></a>smoothing_window_new = smoothing_window_30fps
+<a id="__codelineno-0-341" name="__codelineno-0-341" href="#__codelineno-0-341"></a>
+<a id="__codelineno-0-342" name="__codelineno-0-342" href="#__codelineno-0-342"></a>Examples (constant duration):
+<a id="__codelineno-0-343" name="__codelineno-0-343" href="#__codelineno-0-343"></a>30 fps with window=5 → 167ms temporal window
+<a id="__codelineno-0-344" name="__codelineno-0-344" href="#__codelineno-0-344"></a>60 fps with window=10 → 167ms temporal window (same duration)
+<a id="__codelineno-0-345" name="__codelineno-0-345" href="#__codelineno-0-345"></a>120 fps with window=20 → 167ms temporal window (same duration)
+<a id="__codelineno-0-346" name="__codelineno-0-346" href="#__codelineno-0-346"></a>
+<a id="__codelineno-0-347" name="__codelineno-0-347" href="#__codelineno-0-347"></a>Examples (constant frames, recommended):
+<a id="__codelineno-0-348" name="__codelineno-0-348" href="#__codelineno-0-348"></a>30 fps with window=5 → 5 frames
+<a id="__codelineno-0-349" name="__codelineno-0-349" href="#__codelineno-0-349"></a>60 fps with window=5 → 5 frames (less temporal duration, more samples)
+<a id="__codelineno-0-350" name="__codelineno-0-350" href="#__codelineno-0-350"></a>120 fps with window=5 → 5 frames
+<a id="__codelineno-0-351" name="__codelineno-0-351" href="#__codelineno-0-351"></a>```text
+<a id="__codelineno-0-352" name="__codelineno-0-352" href="#__codelineno-0-352"></a>
+<a id="__codelineno-0-353" name="__codelineno-0-353" href="#__codelineno-0-353"></a>**Recommendation:** Keep smoothing window at 5-7 frames regardless of FPS for best results.
+<a id="__codelineno-0-354" name="__codelineno-0-354" href="#__codelineno-0-354"></a>
+<a id="__codelineno-0-355" name="__codelineno-0-355" href="#__codelineno-0-355"></a>### Complete Parameter Sets by Frame Rate
 <a id="__codelineno-0-356" name="__codelineno-0-356" href="#__codelineno-0-356"></a>
-<a id="__codelineno-0-357" name="__codelineno-0-357" href="#__codelineno-0-357"></a>**Recommendation:** Keep smoothing window at 5-7 frames regardless of FPS for best results.
+<a id="__codelineno-0-357" name="__codelineno-0-357" href="#__codelineno-0-357"></a>#### 30 fps baseline
 <a id="__codelineno-0-358" name="__codelineno-0-358" href="#__codelineno-0-358"></a>
-<a id="__codelineno-0-359" name="__codelineno-0-359" href="#__codelineno-0-359"></a>### Complete Parameter Sets by Frame Rate
-<a id="__codelineno-0-360" name="__codelineno-0-360" href="#__codelineno-0-360"></a>
-<a id="__codelineno-0-361" name="__codelineno-0-361" href="#__codelineno-0-361"></a>#### 30 fps baseline
-<a id="__codelineno-0-362" name="__codelineno-0-362" href="#__codelineno-0-362"></a>
-<a id="__codelineno-0-363" name="__codelineno-0-363" href="#__codelineno-0-363"></a>```bash
-<a id="__codelineno-0-364" name="__codelineno-0-364" href="#__codelineno-0-364"></a>kinemotion dropjump-analyze video_30fps.mp4 \
-<a id="__codelineno-0-365" name="__codelineno-0-365" href="#__codelineno-0-365"></a>  --smoothing-window 5 \
-<a id="__codelineno-0-366" name="__codelineno-0-366" href="#__codelineno-0-366"></a>  --polyorder 2 \
-<a id="__codelineno-0-367" name="__codelineno-0-367" href="#__codelineno-0-367"></a>  --velocity-threshold 0.02 \
-<a id="__codelineno-0-368" name="__codelineno-0-368" href="#__codelineno-0-368"></a>  --min-contact-frames 3 \
-<a id="__codelineno-0-369" name="__codelineno-0-369" href="#__codelineno-0-369"></a>  --visibility-threshold 0.5 \
-<a id="__codelineno-0-370" name="__codelineno-0-370" href="#__codelineno-0-370"></a>  --drop-height 0.40
-<a id="__codelineno-0-371" name="__codelineno-0-371" href="#__codelineno-0-371"></a>```text
-<a id="__codelineno-0-372" name="__codelineno-0-372" href="#__codelineno-0-372"></a>
-<a id="__codelineno-0-373" name="__codelineno-0-373" href="#__codelineno-0-373"></a>#### 60 fps (2× frames)
-<a id="__codelineno-0-374" name="__codelineno-0-374" href="#__codelineno-0-374"></a>
-<a id="__codelineno-0-375" name="__codelineno-0-375" href="#__codelineno-0-375"></a>```bash
-<a id="__codelineno-0-376" name="__codelineno-0-376" href="#__codelineno-0-376"></a>kinemotion dropjump-analyze video_60fps.mp4 \
-<a id="__codelineno-0-377" name="__codelineno-0-377" href="#__codelineno-0-377"></a>  --smoothing-window 5 \          # same (or 10 for constant duration)
-<a id="__codelineno-0-378" name="__codelineno-0-378" href="#__codelineno-0-378"></a>  --polyorder 2 \                 # same
-<a id="__codelineno-0-379" name="__codelineno-0-379" href="#__codelineno-0-379"></a>  --velocity-threshold 0.01 \     # halve (2× more frames)
-<a id="__codelineno-0-380" name="__codelineno-0-380" href="#__codelineno-0-380"></a>  --min-contact-frames 6 \        # double (2× more frames)
-<a id="__codelineno-0-381" name="__codelineno-0-381" href="#__codelineno-0-381"></a>  --visibility-threshold 0.5 \    # same
-<a id="__codelineno-0-382" name="__codelineno-0-382" href="#__codelineno-0-382"></a>  --drop-height 0.40
-<a id="__codelineno-0-383" name="__codelineno-0-383" href="#__codelineno-0-383"></a>```text
-<a id="__codelineno-0-384" name="__codelineno-0-384" href="#__codelineno-0-384"></a>
-<a id="__codelineno-0-385" name="__codelineno-0-385" href="#__codelineno-0-385"></a>#### 120 fps (4× frames)
-<a id="__codelineno-0-386" name="__codelineno-0-386" href="#__codelineno-0-386"></a>
-<a id="__codelineno-0-387" name="__codelineno-0-387" href="#__codelineno-0-387"></a>```bash
-<a id="__codelineno-0-388" name="__codelineno-0-388" href="#__codelineno-0-388"></a>kinemotion dropjump-analyze video_120fps.mp4 \
-<a id="__codelineno-0-389" name="__codelineno-0-389" href="#__codelineno-0-389"></a>  --smoothing-window 5 \          # same (or 20 for constant duration)
-<a id="__codelineno-0-390" name="__codelineno-0-390" href="#__codelineno-0-390"></a>  --polyorder 2 \                 # same
-<a id="__codelineno-0-391" name="__codelineno-0-391" href="#__codelineno-0-391"></a>  --velocity-threshold 0.005 \    # quarter (4× more frames)
-<a id="__codelineno-0-392" name="__codelineno-0-392" href="#__codelineno-0-392"></a>  --min-contact-frames 12 \       # quadruple (4× more frames)
-<a id="__codelineno-0-393" name="__codelineno-0-393" href="#__codelineno-0-393"></a>  --visibility-threshold 0.5 \    # same
-<a id="__codelineno-0-394" name="__codelineno-0-394" href="#__codelineno-0-394"></a>  --drop-height 0.40
-<a id="__codelineno-0-395" name="__codelineno-0-395" href="#__codelineno-0-395"></a>```text
-<a id="__codelineno-0-396" name="__codelineno-0-396" href="#__codelineno-0-396"></a>
-<a id="__codelineno-0-397" name="__codelineno-0-397" href="#__codelineno-0-397"></a>#### 240 fps (8× frames)
-<a id="__codelineno-0-398" name="__codelineno-0-398" href="#__codelineno-0-398"></a>
-<a id="__codelineno-0-399" name="__codelineno-0-399" href="#__codelineno-0-399"></a>```bash
-<a id="__codelineno-0-400" name="__codelineno-0-400" href="#__codelineno-0-400"></a>kinemotion dropjump-analyze video_240fps.mp4 \
-<a id="__codelineno-0-401" name="__codelineno-0-401" href="#__codelineno-0-401"></a>  --smoothing-window 5 \          # same (or 40 for constant duration)
-<a id="__codelineno-0-402" name="__codelineno-0-402" href="#__codelineno-0-402"></a>  --polyorder 2 \                 # same
-<a id="__codelineno-0-403" name="__codelineno-0-403" href="#__codelineno-0-403"></a>  --velocity-threshold 0.0025 \   # 1/8× (8× more frames)
-<a id="__codelineno-0-404" name="__codelineno-0-404" href="#__codelineno-0-404"></a>  --min-contact-frames 24 \       # 8× (8× more frames)
-<a id="__codelineno-0-405" name="__codelineno-0-405" href="#__codelineno-0-405"></a>  --visibility-threshold 0.5 \    # same
-<a id="__codelineno-0-406" name="__codelineno-0-406" href="#__codelineno-0-406"></a>  --drop-height 0.40
-<a id="__codelineno-0-407" name="__codelineno-0-407" href="#__codelineno-0-407"></a>```text
-<a id="__codelineno-0-408" name="__codelineno-0-408" href="#__codelineno-0-408"></a>
-<a id="__codelineno-0-409" name="__codelineno-0-409" href="#__codelineno-0-409"></a>### Auto-Detecting Frame Rate (Future Enhancement)
-<a id="__codelineno-0-410" name="__codelineno-0-410" href="#__codelineno-0-410"></a>
-<a id="__codelineno-0-411" name="__codelineno-0-411" href="#__codelineno-0-411"></a>Currently, you must manually specify parameters based on FPS. A future enhancement could auto-detect FPS and adjust parameters:
-<a id="__codelineno-0-412" name="__codelineno-0-412" href="#__codelineno-0-412"></a>
-<a id="__codelineno-0-413" name="__codelineno-0-413" href="#__codelineno-0-413"></a>```python
-<a id="__codelineno-0-414" name="__codelineno-0-414" href="#__codelineno-0-414"></a># Pseudo-code for future feature
-<a id="__codelineno-0-415" name="__codelineno-0-415" href="#__codelineno-0-415"></a>fps = video.get(cv2.CAP_PROP_FPS)
-<a id="__codelineno-0-416" name="__codelineno-0-416" href="#__codelineno-0-416"></a>scaling_factor = fps / 30.0
+<a id="__codelineno-0-359" name="__codelineno-0-359" href="#__codelineno-0-359"></a>```bash
+<a id="__codelineno-0-360" name="__codelineno-0-360" href="#__codelineno-0-360"></a>kinemotion dropjump-analyze video_30fps.mp4 \
+<a id="__codelineno-0-361" name="__codelineno-0-361" href="#__codelineno-0-361"></a>  --smoothing-window 5 \
+<a id="__codelineno-0-362" name="__codelineno-0-362" href="#__codelineno-0-362"></a>  --polyorder 2 \
+<a id="__codelineno-0-363" name="__codelineno-0-363" href="#__codelineno-0-363"></a>  --velocity-threshold 0.02 \
+<a id="__codelineno-0-364" name="__codelineno-0-364" href="#__codelineno-0-364"></a>  --min-contact-frames 3 \
+<a id="__codelineno-0-365" name="__codelineno-0-365" href="#__codelineno-0-365"></a>  --visibility-threshold 0.5
+<a id="__codelineno-0-366" name="__codelineno-0-366" href="#__codelineno-0-366"></a>```
+<a id="__codelineno-0-367" name="__codelineno-0-367" href="#__codelineno-0-367"></a>
+<a id="__codelineno-0-368" name="__codelineno-0-368" href="#__codelineno-0-368"></a>#### 60 fps (2× frames)
+<a id="__codelineno-0-369" name="__codelineno-0-369" href="#__codelineno-0-369"></a>
+<a id="__codelineno-0-370" name="__codelineno-0-370" href="#__codelineno-0-370"></a>```bash
+<a id="__codelineno-0-371" name="__codelineno-0-371" href="#__codelineno-0-371"></a>kinemotion dropjump-analyze video_60fps.mp4 \
+<a id="__codelineno-0-372" name="__codelineno-0-372" href="#__codelineno-0-372"></a>  --smoothing-window 5 \          # same (or 10 for constant duration)
+<a id="__codelineno-0-373" name="__codelineno-0-373" href="#__codelineno-0-373"></a>  --polyorder 2 \                 # same
+<a id="__codelineno-0-374" name="__codelineno-0-374" href="#__codelineno-0-374"></a>  --velocity-threshold 0.01 \     # halve (2× more frames)
+<a id="__codelineno-0-375" name="__codelineno-0-375" href="#__codelineno-0-375"></a>  --min-contact-frames 6 \        # double (2× more frames)
+<a id="__codelineno-0-376" name="__codelineno-0-376" href="#__codelineno-0-376"></a>  --visibility-threshold 0.5     # same
+<a id="__codelineno-0-377" name="__codelineno-0-377" href="#__codelineno-0-377"></a>```
+<a id="__codelineno-0-378" name="__codelineno-0-378" href="#__codelineno-0-378"></a>
+<a id="__codelineno-0-379" name="__codelineno-0-379" href="#__codelineno-0-379"></a>#### 120 fps (4× frames)
+<a id="__codelineno-0-380" name="__codelineno-0-380" href="#__codelineno-0-380"></a>
+<a id="__codelineno-0-381" name="__codelineno-0-381" href="#__codelineno-0-381"></a>```bash
+<a id="__codelineno-0-382" name="__codelineno-0-382" href="#__codelineno-0-382"></a>kinemotion dropjump-analyze video_120fps.mp4 \
+<a id="__codelineno-0-383" name="__codelineno-0-383" href="#__codelineno-0-383"></a>  --smoothing-window 5 \          # same (or 20 for constant duration)
+<a id="__codelineno-0-384" name="__codelineno-0-384" href="#__codelineno-0-384"></a>  --polyorder 2 \                 # same
+<a id="__codelineno-0-385" name="__codelineno-0-385" href="#__codelineno-0-385"></a>  --velocity-threshold 0.005 \    # quarter (4× more frames)
+<a id="__codelineno-0-386" name="__codelineno-0-386" href="#__codelineno-0-386"></a>  --min-contact-frames 12 \       # quadruple (4× more frames)
+<a id="__codelineno-0-387" name="__codelineno-0-387" href="#__codelineno-0-387"></a>  --visibility-threshold 0.5     # same
+<a id="__codelineno-0-388" name="__codelineno-0-388" href="#__codelineno-0-388"></a>```
+<a id="__codelineno-0-389" name="__codelineno-0-389" href="#__codelineno-0-389"></a>
+<a id="__codelineno-0-390" name="__codelineno-0-390" href="#__codelineno-0-390"></a>#### 240 fps (8× frames)
+<a id="__codelineno-0-391" name="__codelineno-0-391" href="#__codelineno-0-391"></a>
+<a id="__codelineno-0-392" name="__codelineno-0-392" href="#__codelineno-0-392"></a>```bash
+<a id="__codelineno-0-393" name="__codelineno-0-393" href="#__codelineno-0-393"></a>kinemotion dropjump-analyze video_240fps.mp4 \
+<a id="__codelineno-0-394" name="__codelineno-0-394" href="#__codelineno-0-394"></a>  --smoothing-window 5 \          # same (or 40 for constant duration)
+<a id="__codelineno-0-395" name="__codelineno-0-395" href="#__codelineno-0-395"></a>  --polyorder 2 \                 # same
+<a id="__codelineno-0-396" name="__codelineno-0-396" href="#__codelineno-0-396"></a>  --velocity-threshold 0.0025 \   # 1/8× (8× more frames)
+<a id="__codelineno-0-397" name="__codelineno-0-397" href="#__codelineno-0-397"></a>  --min-contact-frames 24 \       # 8× (8× more frames)
+<a id="__codelineno-0-398" name="__codelineno-0-398" href="#__codelineno-0-398"></a>  --visibility-threshold 0.5     # same
+<a id="__codelineno-0-399" name="__codelineno-0-399" href="#__codelineno-0-399"></a>```
+<a id="__codelineno-0-400" name="__codelineno-0-400" href="#__codelineno-0-400"></a>
+<a id="__codelineno-0-401" name="__codelineno-0-401" href="#__codelineno-0-401"></a>### Auto-Detecting Frame Rate (Future Enhancement)
+<a id="__codelineno-0-402" name="__codelineno-0-402" href="#__codelineno-0-402"></a>
+<a id="__codelineno-0-403" name="__codelineno-0-403" href="#__codelineno-0-403"></a>Currently, you must manually specify parameters based on FPS. A future enhancement could auto-detect FPS and adjust parameters:
+<a id="__codelineno-0-404" name="__codelineno-0-404" href="#__codelineno-0-404"></a>
+<a id="__codelineno-0-405" name="__codelineno-0-405" href="#__codelineno-0-405"></a>```python
+<a id="__codelineno-0-406" name="__codelineno-0-406" href="#__codelineno-0-406"></a># Pseudo-code for future feature
+<a id="__codelineno-0-407" name="__codelineno-0-407" href="#__codelineno-0-407"></a>fps = video.get(cv2.CAP_PROP_FPS)
+<a id="__codelineno-0-408" name="__codelineno-0-408" href="#__codelineno-0-408"></a>scaling_factor = fps / 30.0
+<a id="__codelineno-0-409" name="__codelineno-0-409" href="#__codelineno-0-409"></a>
+<a id="__codelineno-0-410" name="__codelineno-0-410" href="#__codelineno-0-410"></a>velocity_threshold = 0.02 / scaling_factor
+<a id="__codelineno-0-411" name="__codelineno-0-411" href="#__codelineno-0-411"></a>min_contact_frames = int(3 * scaling_factor)
+<a id="__codelineno-0-412" name="__codelineno-0-412" href="#__codelineno-0-412"></a>```text
+<a id="__codelineno-0-413" name="__codelineno-0-413" href="#__codelineno-0-413"></a>
+<a id="__codelineno-0-414" name="__codelineno-0-414" href="#__codelineno-0-414"></a>---
+<a id="__codelineno-0-415" name="__codelineno-0-415" href="#__codelineno-0-415"></a>
+<a id="__codelineno-0-416" name="__codelineno-0-416" href="#__codelineno-0-416"></a>## Accuracy Bottlenecks Beyond Frame Rate
 <a id="__codelineno-0-417" name="__codelineno-0-417" href="#__codelineno-0-417"></a>
-<a id="__codelineno-0-418" name="__codelineno-0-418" href="#__codelineno-0-418"></a>velocity_threshold = 0.02 / scaling_factor
-<a id="__codelineno-0-419" name="__codelineno-0-419" href="#__codelineno-0-419"></a>min_contact_frames = int(3 * scaling_factor)
-<a id="__codelineno-0-420" name="__codelineno-0-420" href="#__codelineno-0-420"></a>```text
+<a id="__codelineno-0-418" name="__codelineno-0-418" href="#__codelineno-0-418"></a>At high frame rates (120+ fps), other factors become limiting:
+<a id="__codelineno-0-419" name="__codelineno-0-419" href="#__codelineno-0-419"></a>
+<a id="__codelineno-0-420" name="__codelineno-0-420" href="#__codelineno-0-420"></a>### 1. MediaPipe Tracking Precision
 <a id="__codelineno-0-421" name="__codelineno-0-421" href="#__codelineno-0-421"></a>
-<a id="__codelineno-0-422" name="__codelineno-0-422" href="#__codelineno-0-422"></a>---
+<a id="__codelineno-0-422" name="__codelineno-0-422" href="#__codelineno-0-422"></a>**Tracking resolution:** ~1-2 pixels per landmark in 1080p video
 <a id="__codelineno-0-423" name="__codelineno-0-423" href="#__codelineno-0-423"></a>
-<a id="__codelineno-0-424" name="__codelineno-0-424" href="#__codelineno-0-424"></a>## Accuracy Bottlenecks Beyond Frame Rate
-<a id="__codelineno-0-425" name="__codelineno-0-425" href="#__codelineno-0-425"></a>
-<a id="__codelineno-0-426" name="__codelineno-0-426" href="#__codelineno-0-426"></a>At high frame rates (120+ fps), other factors become limiting:
-<a id="__codelineno-0-427" name="__codelineno-0-427" href="#__codelineno-0-427"></a>
-<a id="__codelineno-0-428" name="__codelineno-0-428" href="#__codelineno-0-428"></a>### 1. MediaPipe Tracking Precision
-<a id="__codelineno-0-429" name="__codelineno-0-429" href="#__codelineno-0-429"></a>
-<a id="__codelineno-0-430" name="__codelineno-0-430" href="#__codelineno-0-430"></a>**Tracking resolution:** ~1-2 pixels per landmark in 1080p video
-<a id="__codelineno-0-431" name="__codelineno-0-431" href="#__codelineno-0-431"></a>
-<a id="__codelineno-0-432" name="__codelineno-0-432" href="#__codelineno-0-432"></a>```text
-<a id="__codelineno-0-433" name="__codelineno-0-433" href="#__codelineno-0-433"></a>Example: 1 pixel error in 1080p frame
-<a id="__codelineno-0-434" name="__codelineno-0-434" href="#__codelineno-0-434"></a>→ 1/1080 = 0.0009 normalized units
-<a id="__codelineno-0-435" name="__codelineno-0-435" href="#__codelineno-0-435"></a>→ ~1mm real-world error with good calibration
-<a id="__codelineno-0-436" name="__codelineno-0-436" href="#__codelineno-0-436"></a>→ Equivalent to ~5-10ms timing error at typical jump velocities
+<a id="__codelineno-0-424" name="__codelineno-0-424" href="#__codelineno-0-424"></a>```text
+<a id="__codelineno-0-425" name="__codelineno-0-425" href="#__codelineno-0-425"></a>Example: 1 pixel error in 1080p frame
+<a id="__codelineno-0-426" name="__codelineno-0-426" href="#__codelineno-0-426"></a>→ 1/1080 = 0.0009 normalized units
+<a id="__codelineno-0-427" name="__codelineno-0-427" href="#__codelineno-0-427"></a>→ ~1mm real-world error with good calibration
+<a id="__codelineno-0-428" name="__codelineno-0-428" href="#__codelineno-0-428"></a>→ Equivalent to ~5-10ms timing error at typical jump velocities
+<a id="__codelineno-0-429" name="__codelineno-0-429" href="#__codelineno-0-429"></a>```text
+<a id="__codelineno-0-430" name="__codelineno-0-430" href="#__codelineno-0-430"></a>
+<a id="__codelineno-0-431" name="__codelineno-0-431" href="#__codelineno-0-431"></a>**Impact:** Even with 240fps, tracking precision limits effective accuracy to ~5-10ms, making frame rate improvements beyond 60fps marginal.
+<a id="__codelineno-0-432" name="__codelineno-0-432" href="#__codelineno-0-432"></a>
+<a id="__codelineno-0-433" name="__codelineno-0-433" href="#__codelineno-0-433"></a>### 2. Camera Motion Blur
+<a id="__codelineno-0-434" name="__codelineno-0-434" href="#__codelineno-0-434"></a>
+<a id="__codelineno-0-435" name="__codelineno-0-435" href="#__codelineno-0-435"></a>**Exposure time creates motion blur:**
+<a id="__codelineno-0-436" name="__codelineno-0-436" href="#__codelineno-0-436"></a>
 <a id="__codelineno-0-437" name="__codelineno-0-437" href="#__codelineno-0-437"></a>```text
-<a id="__codelineno-0-438" name="__codelineno-0-438" href="#__codelineno-0-438"></a>
-<a id="__codelineno-0-439" name="__codelineno-0-439" href="#__codelineno-0-439"></a>**Impact:** Even with 240fps, tracking precision limits effective accuracy to ~5-10ms, making frame rate improvements beyond 60fps marginal.
-<a id="__codelineno-0-440" name="__codelineno-0-440" href="#__codelineno-0-440"></a>
-<a id="__codelineno-0-441" name="__codelineno-0-441" href="#__codelineno-0-441"></a>### 2. Camera Motion Blur
-<a id="__codelineno-0-442" name="__codelineno-0-442" href="#__codelineno-0-442"></a>
-<a id="__codelineno-0-443" name="__codelineno-0-443" href="#__codelineno-0-443"></a>**Exposure time creates motion blur:**
-<a id="__codelineno-0-444" name="__codelineno-0-444" href="#__codelineno-0-444"></a>
-<a id="__codelineno-0-445" name="__codelineno-0-445" href="#__codelineno-0-445"></a>```text
-<a id="__codelineno-0-446" name="__codelineno-0-446" href="#__codelineno-0-446"></a>30 fps → typical exposure: 1/60s (16.7ms)
-<a id="__codelineno-0-447" name="__codelineno-0-447" href="#__codelineno-0-447"></a>60 fps → typical exposure: 1/120s (8.3ms)
-<a id="__codelineno-0-448" name="__codelineno-0-448" href="#__codelineno-0-448"></a>120 fps → typical exposure: 1/240s (4.2ms)
-<a id="__codelineno-0-449" name="__codelineno-0-449" href="#__codelineno-0-449"></a>240 fps → typical exposure: 1/480s (2.1ms)
-<a id="__codelineno-0-450" name="__codelineno-0-450" href="#__codelineno-0-450"></a>```text
+<a id="__codelineno-0-438" name="__codelineno-0-438" href="#__codelineno-0-438"></a>30 fps → typical exposure: 1/60s (16.7ms)
+<a id="__codelineno-0-439" name="__codelineno-0-439" href="#__codelineno-0-439"></a>60 fps → typical exposure: 1/120s (8.3ms)
+<a id="__codelineno-0-440" name="__codelineno-0-440" href="#__codelineno-0-440"></a>120 fps → typical exposure: 1/240s (4.2ms)
+<a id="__codelineno-0-441" name="__codelineno-0-441" href="#__codelineno-0-441"></a>240 fps → typical exposure: 1/480s (2.1ms)
+<a id="__codelineno-0-442" name="__codelineno-0-442" href="#__codelineno-0-442"></a>```text
+<a id="__codelineno-0-443" name="__codelineno-0-443" href="#__codelineno-0-443"></a>
+<a id="__codelineno-0-444" name="__codelineno-0-444" href="#__codelineno-0-444"></a>**Motion blur limits effective temporal resolution:**
+<a id="__codelineno-0-445" name="__codelineno-0-445" href="#__codelineno-0-445"></a>
+<a id="__codelineno-0-446" name="__codelineno-0-446" href="#__codelineno-0-446"></a>- At 30fps with 1/60s exposure: landmarks &quot;smeared&quot; over ~1.5 frames
+<a id="__codelineno-0-447" name="__codelineno-0-447" href="#__codelineno-0-447"></a>- At 240fps with 1/480s exposure: landmarks sharp, minimal blur
+<a id="__codelineno-0-448" name="__codelineno-0-448" href="#__codelineno-0-448"></a>- **But:** Pose tracking already introduces ~1-2 pixel uncertainty (5-10ms)
+<a id="__codelineno-0-449" name="__codelineno-0-449" href="#__codelineno-0-449"></a>
+<a id="__codelineno-0-450" name="__codelineno-0-450" href="#__codelineno-0-450"></a>**Conclusion:** Beyond 60fps, reduced motion blur provides minimal practical benefit given tracking limitations.
 <a id="__codelineno-0-451" name="__codelineno-0-451" href="#__codelineno-0-451"></a>
-<a id="__codelineno-0-452" name="__codelineno-0-452" href="#__codelineno-0-452"></a>**Motion blur limits effective temporal resolution:**
+<a id="__codelineno-0-452" name="__codelineno-0-452" href="#__codelineno-0-452"></a>### 3. Calibration Accuracy
 <a id="__codelineno-0-453" name="__codelineno-0-453" href="#__codelineno-0-453"></a>
-<a id="__codelineno-0-454" name="__codelineno-0-454" href="#__codelineno-0-454"></a>- At 30fps with 1/60s exposure: landmarks &quot;smeared&quot; over ~1.5 frames
-<a id="__codelineno-0-455" name="__codelineno-0-455" href="#__codelineno-0-455"></a>- At 240fps with 1/480s exposure: landmarks sharp, minimal blur
-<a id="__codelineno-0-456" name="__codelineno-0-456" href="#__codelineno-0-456"></a>- **But:** Pose tracking already introduces ~1-2 pixel uncertainty (5-10ms)
-<a id="__codelineno-0-457" name="__codelineno-0-457" href="#__codelineno-0-457"></a>
-<a id="__codelineno-0-458" name="__codelineno-0-458" href="#__codelineno-0-458"></a>**Conclusion:** Beyond 60fps, reduced motion blur provides minimal practical benefit given tracking limitations.
-<a id="__codelineno-0-459" name="__codelineno-0-459" href="#__codelineno-0-459"></a>
-<a id="__codelineno-0-460" name="__codelineno-0-460" href="#__codelineno-0-460"></a>### 3. Calibration Accuracy
+<a id="__codelineno-0-454" name="__codelineno-0-454" href="#__codelineno-0-454"></a>**Drop height measurement precision:**
+<a id="__codelineno-0-455" name="__codelineno-0-455" href="#__codelineno-0-455"></a>
+<a id="__codelineno-0-456" name="__codelineno-0-456" href="#__codelineno-0-456"></a>```text
+<a id="__codelineno-0-457" name="__codelineno-0-457" href="#__codelineno-0-457"></a>±1cm error in 40cm drop height measurement
+<a id="__codelineno-0-458" name="__codelineno-0-458" href="#__codelineno-0-458"></a>→ ±2.5% calibration error
+<a id="__codelineno-0-459" name="__codelineno-0-459" href="#__codelineno-0-459"></a>→ ±2.2% jump height error (propagates)
+<a id="__codelineno-0-460" name="__codelineno-0-460" href="#__codelineno-0-460"></a>→ Equivalent to ±8mm error on 35cm jump
 <a id="__codelineno-0-461" name="__codelineno-0-461" href="#__codelineno-0-461"></a>
-<a id="__codelineno-0-462" name="__codelineno-0-462" href="#__codelineno-0-462"></a>**Drop height measurement precision:**
-<a id="__codelineno-0-463" name="__codelineno-0-463" href="#__codelineno-0-463"></a>
-<a id="__codelineno-0-464" name="__codelineno-0-464" href="#__codelineno-0-464"></a>```text
-<a id="__codelineno-0-465" name="__codelineno-0-465" href="#__codelineno-0-465"></a>±1cm error in 40cm drop height measurement
-<a id="__codelineno-0-466" name="__codelineno-0-466" href="#__codelineno-0-466"></a>→ ±2.5% calibration error
-<a id="__codelineno-0-467" name="__codelineno-0-467" href="#__codelineno-0-467"></a>→ ±2.2% jump height error (propagates)
-<a id="__codelineno-0-468" name="__codelineno-0-468" href="#__codelineno-0-468"></a>→ Equivalent to ±8mm error on 35cm jump
-<a id="__codelineno-0-469" name="__codelineno-0-469" href="#__codelineno-0-469"></a>
-<a id="__codelineno-0-470" name="__codelineno-0-470" href="#__codelineno-0-470"></a>Frame rate improvement from 60→240fps:
-<a id="__codelineno-0-471" name="__codelineno-0-471" href="#__codelineno-0-471"></a>→ ~±1% timing improvement
-<a id="__codelineno-0-472" name="__codelineno-0-472" href="#__codelineno-0-472"></a>→ ±3.5mm jump height improvement
-<a id="__codelineno-0-473" name="__codelineno-0-473" href="#__codelineno-0-473"></a>
-<a id="__codelineno-0-474" name="__codelineno-0-474" href="#__codelineno-0-474"></a>Conclusion: Calibration accuracy dominates over frame rate
+<a id="__codelineno-0-462" name="__codelineno-0-462" href="#__codelineno-0-462"></a>Frame rate improvement from 60→240fps:
+<a id="__codelineno-0-463" name="__codelineno-0-463" href="#__codelineno-0-463"></a>→ ~±1% timing improvement
+<a id="__codelineno-0-464" name="__codelineno-0-464" href="#__codelineno-0-464"></a>→ ±3.5mm jump height improvement
+<a id="__codelineno-0-465" name="__codelineno-0-465" href="#__codelineno-0-465"></a>
+<a id="__codelineno-0-466" name="__codelineno-0-466" href="#__codelineno-0-466"></a>Conclusion: Calibration accuracy dominates over frame rate
+<a id="__codelineno-0-467" name="__codelineno-0-467" href="#__codelineno-0-467"></a>```text
+<a id="__codelineno-0-468" name="__codelineno-0-468" href="#__codelineno-0-468"></a>
+<a id="__codelineno-0-469" name="__codelineno-0-469" href="#__codelineno-0-469"></a>**Impact:** Improving drop height measurement from ±1cm to ±2mm has greater effect than upgrading from 60fps to 240fps.
+<a id="__codelineno-0-470" name="__codelineno-0-470" href="#__codelineno-0-470"></a>
+<a id="__codelineno-0-471" name="__codelineno-0-471" href="#__codelineno-0-471"></a>### 4. Out-of-Plane Motion
+<a id="__codelineno-0-472" name="__codelineno-0-472" href="#__codelineno-0-472"></a>
+<a id="__codelineno-0-473" name="__codelineno-0-473" href="#__codelineno-0-473"></a>**2D video captures only one plane:**
+<a id="__codelineno-0-474" name="__codelineno-0-474" href="#__codelineno-0-474"></a>
 <a id="__codelineno-0-475" name="__codelineno-0-475" href="#__codelineno-0-475"></a>```text
-<a id="__codelineno-0-476" name="__codelineno-0-476" href="#__codelineno-0-476"></a>
-<a id="__codelineno-0-477" name="__codelineno-0-477" href="#__codelineno-0-477"></a>**Impact:** Improving drop height measurement from ±1cm to ±2mm has greater effect than upgrading from 60fps to 240fps.
-<a id="__codelineno-0-478" name="__codelineno-0-478" href="#__codelineno-0-478"></a>
-<a id="__codelineno-0-479" name="__codelineno-0-479" href="#__codelineno-0-479"></a>### 4. Out-of-Plane Motion
-<a id="__codelineno-0-480" name="__codelineno-0-480" href="#__codelineno-0-480"></a>
-<a id="__codelineno-0-481" name="__codelineno-0-481" href="#__codelineno-0-481"></a>**2D video captures only one plane:**
-<a id="__codelineno-0-482" name="__codelineno-0-482" href="#__codelineno-0-482"></a>
-<a id="__codelineno-0-483" name="__codelineno-0-483" href="#__codelineno-0-483"></a>```text
-<a id="__codelineno-0-484" name="__codelineno-0-484" href="#__codelineno-0-484"></a>Athlete moves forward/backward during jump:
-<a id="__codelineno-0-485" name="__codelineno-0-485" href="#__codelineno-0-485"></a>→ Foot appears higher/lower than actual
-<a id="__codelineno-0-486" name="__codelineno-0-486" href="#__codelineno-0-486"></a>→ Creates systematic measurement error
-<a id="__codelineno-0-487" name="__codelineno-0-487" href="#__codelineno-0-487"></a>→ Not improved by higher frame rate
-<a id="__codelineno-0-488" name="__codelineno-0-488" href="#__codelineno-0-488"></a>```text
-<a id="__codelineno-0-489" name="__codelineno-0-489" href="#__codelineno-0-489"></a>
-<a id="__codelineno-0-490" name="__codelineno-0-490" href="#__codelineno-0-490"></a>**Typical error:** ±5-10mm from out-of-plane motion
-<a id="__codelineno-0-491" name="__codelineno-0-491" href="#__codelineno-0-491"></a>**Impact:** Comparable to timing errors at 60fps; frame rate doesn&#39;t address this
-<a id="__codelineno-0-492" name="__codelineno-0-492" href="#__codelineno-0-492"></a>
-<a id="__codelineno-0-493" name="__codelineno-0-493" href="#__codelineno-0-493"></a>### 5. Athlete Movement Variability
+<a id="__codelineno-0-476" name="__codelineno-0-476" href="#__codelineno-0-476"></a>Athlete moves forward/backward during jump:
+<a id="__codelineno-0-477" name="__codelineno-0-477" href="#__codelineno-0-477"></a>→ Foot appears higher/lower than actual
+<a id="__codelineno-0-478" name="__codelineno-0-478" href="#__codelineno-0-478"></a>→ Creates systematic measurement error
+<a id="__codelineno-0-479" name="__codelineno-0-479" href="#__codelineno-0-479"></a>→ Not improved by higher frame rate
+<a id="__codelineno-0-480" name="__codelineno-0-480" href="#__codelineno-0-480"></a>```text
+<a id="__codelineno-0-481" name="__codelineno-0-481" href="#__codelineno-0-481"></a>
+<a id="__codelineno-0-482" name="__codelineno-0-482" href="#__codelineno-0-482"></a>**Typical error:** ±5-10mm from out-of-plane motion
+<a id="__codelineno-0-483" name="__codelineno-0-483" href="#__codelineno-0-483"></a>**Impact:** Comparable to timing errors at 60fps; frame rate doesn&#39;t address this
+<a id="__codelineno-0-484" name="__codelineno-0-484" href="#__codelineno-0-484"></a>
+<a id="__codelineno-0-485" name="__codelineno-0-485" href="#__codelineno-0-485"></a>### 5. Athlete Movement Variability
+<a id="__codelineno-0-486" name="__codelineno-0-486" href="#__codelineno-0-486"></a>
+<a id="__codelineno-0-487" name="__codelineno-0-487" href="#__codelineno-0-487"></a>**Human movement is inherently variable:**
+<a id="__codelineno-0-488" name="__codelineno-0-488" href="#__codelineno-0-488"></a>
+<a id="__codelineno-0-489" name="__codelineno-0-489" href="#__codelineno-0-489"></a>```text
+<a id="__codelineno-0-490" name="__codelineno-0-490" href="#__codelineno-0-490"></a>Typical jump-to-jump variability:
+<a id="__codelineno-0-491" name="__codelineno-0-491" href="#__codelineno-0-491"></a>- Ground contact time: ±10-20ms
+<a id="__codelineno-0-492" name="__codelineno-0-492" href="#__codelineno-0-492"></a>- Flight time: ±5-15ms
+<a id="__codelineno-0-493" name="__codelineno-0-493" href="#__codelineno-0-493"></a>- Jump height: ±2-5cm
 <a id="__codelineno-0-494" name="__codelineno-0-494" href="#__codelineno-0-494"></a>
-<a id="__codelineno-0-495" name="__codelineno-0-495" href="#__codelineno-0-495"></a>**Human movement is inherently variable:**
-<a id="__codelineno-0-496" name="__codelineno-0-496" href="#__codelineno-0-496"></a>
-<a id="__codelineno-0-497" name="__codelineno-0-497" href="#__codelineno-0-497"></a>```text
-<a id="__codelineno-0-498" name="__codelineno-0-498" href="#__codelineno-0-498"></a>Typical jump-to-jump variability:
-<a id="__codelineno-0-499" name="__codelineno-0-499" href="#__codelineno-0-499"></a>- Ground contact time: ±10-20ms
-<a id="__codelineno-0-500" name="__codelineno-0-500" href="#__codelineno-0-500"></a>- Flight time: ±5-15ms
-<a id="__codelineno-0-501" name="__codelineno-0-501" href="#__codelineno-0-501"></a>- Jump height: ±2-5cm
-<a id="__codelineno-0-502" name="__codelineno-0-502" href="#__codelineno-0-502"></a>
-<a id="__codelineno-0-503" name="__codelineno-0-503" href="#__codelineno-0-503"></a>Measurement precision required:
-<a id="__codelineno-0-504" name="__codelineno-0-504" href="#__codelineno-0-504"></a>→ ~5-10ms timing precision (met by 60fps)
-<a id="__codelineno-0-505" name="__codelineno-0-505" href="#__codelineno-0-505"></a>→ Sub-millisecond precision unnecessary
-<a id="__codelineno-0-506" name="__codelineno-0-506" href="#__codelineno-0-506"></a>```text
+<a id="__codelineno-0-495" name="__codelineno-0-495" href="#__codelineno-0-495"></a>Measurement precision required:
+<a id="__codelineno-0-496" name="__codelineno-0-496" href="#__codelineno-0-496"></a>→ ~5-10ms timing precision (met by 60fps)
+<a id="__codelineno-0-497" name="__codelineno-0-497" href="#__codelineno-0-497"></a>→ Sub-millisecond precision unnecessary
+<a id="__codelineno-0-498" name="__codelineno-0-498" href="#__codelineno-0-498"></a>```text
+<a id="__codelineno-0-499" name="__codelineno-0-499" href="#__codelineno-0-499"></a>
+<a id="__codelineno-0-500" name="__codelineno-0-500" href="#__codelineno-0-500"></a>**Conclusion:** Beyond 60fps, measurement precision exceeds athlete repeatability.
+<a id="__codelineno-0-501" name="__codelineno-0-501" href="#__codelineno-0-501"></a>
+<a id="__codelineno-0-502" name="__codelineno-0-502" href="#__codelineno-0-502"></a>---
+<a id="__codelineno-0-503" name="__codelineno-0-503" href="#__codelineno-0-503"></a>
+<a id="__codelineno-0-504" name="__codelineno-0-504" href="#__codelineno-0-504"></a>## Cost-Benefit Analysis
+<a id="__codelineno-0-505" name="__codelineno-0-505" href="#__codelineno-0-505"></a>
+<a id="__codelineno-0-506" name="__codelineno-0-506" href="#__codelineno-0-506"></a>### Kinemotion Development Priorities
 <a id="__codelineno-0-507" name="__codelineno-0-507" href="#__codelineno-0-507"></a>
-<a id="__codelineno-0-508" name="__codelineno-0-508" href="#__codelineno-0-508"></a>**Conclusion:** Beyond 60fps, measurement precision exceeds athlete repeatability.
+<a id="__codelineno-0-508" name="__codelineno-0-508" href="#__codelineno-0-508"></a>**Based on current validation gaps:**
 <a id="__codelineno-0-509" name="__codelineno-0-509" href="#__codelineno-0-509"></a>
-<a id="__codelineno-0-510" name="__codelineno-0-510" href="#__codelineno-0-510"></a>---
-<a id="__codelineno-0-511" name="__codelineno-0-511" href="#__codelineno-0-511"></a>
-<a id="__codelineno-0-512" name="__codelineno-0-512" href="#__codelineno-0-512"></a>## Cost-Benefit Analysis
-<a id="__codelineno-0-513" name="__codelineno-0-513" href="#__codelineno-0-513"></a>
-<a id="__codelineno-0-514" name="__codelineno-0-514" href="#__codelineno-0-514"></a>### Kinemotion Development Priorities
-<a id="__codelineno-0-515" name="__codelineno-0-515" href="#__codelineno-0-515"></a>
-<a id="__codelineno-0-516" name="__codelineno-0-516" href="#__codelineno-0-516"></a>**Based on current validation gaps:**
-<a id="__codelineno-0-517" name="__codelineno-0-517" href="#__codelineno-0-517"></a>
-<a id="__codelineno-0-518" name="__codelineno-0-518" href="#__codelineno-0-518"></a>1. **Validation Planning** (High Priority)
-<a id="__codelineno-0-519" name="__codelineno-0-519" href="#__codelineno-0-519"></a>   - Design validation study against force plates
-<a id="__codelineno-0-520" name="__codelineno-0-520" href="#__codelineno-0-520"></a>   - Develop uncertainty quantification methods
-<a id="__codelineno-0-521" name="__codelineno-0-521" href="#__codelineno-0-521"></a>   - Create testing protocols for different conditions
-<a id="__codelineno-0-522" name="__codelineno-0-522" href="#__codelineno-0-522"></a>
-<a id="__codelineno-0-523" name="__codelineno-0-523" href="#__codelineno-0-523"></a>2. **Quality Assurance** (Medium Priority)
-<a id="__codelineno-0-524" name="__codelineno-0-524" href="#__codelineno-0-524"></a>   - Unit testing of accuracy-critical components
-<a id="__codelineno-0-525" name="__codelineno-0-525" href="#__codelineno-0-525"></a>   - Error analysis for systematic biases
-<a id="__codelineno-0-526" name="__codelineno-0-526" href="#__codelineno-0-526"></a>   - Performance benchmarking
-<a id="__codelineno-0-527" name="__codelineno-0-527" href="#__codelineno-0-527"></a>
-<a id="__codelineno-0-528" name="__codelineno-0-528" href="#__codelineno-0-528"></a>3. **User Documentation** (Medium Priority)
-<a id="__codelineno-0-529" name="__codelineno-0-529" href="#__codelineno-0-529"></a>   - Clearly communicate accuracy limitations
-<a id="__codelineno-0-530" name="__codelineno-0-530" href="#__codelineno-0-530"></a>   - Provide uncertainty guidelines
-<a id="__codelineno-0-531" name="__codelineno-0-531" href="#__codelineno-0-531"></a>   - Document appropriate use cases
-<a id="__codelineno-0-532" name="__codelineno-0-532" href="#__codelineno-0-532"></a>
-<a id="__codelineno-0-533" name="__codelineno-0-533" href="#__codelineno-0-533"></a>4. **Future Research** (Low Priority)
-<a id="__codelineno-0-534" name="__codelineno-0-534" href="#__codelineno-0-534"></a>   - Frame rate optimization after validation
-<a id="__codelineno-0-535" name="__codelineno-0-535" href="#__codelineno-0-535"></a>   - Algorithm improvements based on measured performance
-<a id="__codelineno-0-536" name="__codelineno-0-536" href="#__codelineno-0-536"></a>   - Feature expansion based on user needs
-<a id="__codelineno-0-537" name="__codelineno-0-537" href="#__codelineno-0-537"></a>
-<a id="__codelineno-0-538" name="__codelineno-0-538" href="#__codelineno-0-538"></a>**Key Finding:** Priorities should focus on **validation and testing** rather than theoretical accuracy improvements.
-<a id="__codelineno-0-539" name="__codelineno-0-539" href="#__codelineno-0-539"></a>
-<a id="__codelineno-0-540" name="__codelineno-0-540" href="#__codelineno-0-540"></a>### Processing Time vs Frame Rate
-<a id="__codelineno-0-541" name="__codelineno-0-541" href="#__codelineno-0-541"></a>
-<a id="__codelineno-0-542" name="__codelineno-0-542" href="#__codelineno-0-542"></a>**Relative processing time** (assuming 5-minute video, 1080p):
-<a id="__codelineno-0-543" name="__codelineno-0-543" href="#__codelineno-0-543"></a>
-<a id="__codelineno-0-544" name="__codelineno-0-544" href="#__codelineno-0-544"></a>| Frame Rate | Frames to Process | Relative Time | Absolute Time* |
-<a id="__codelineno-0-545" name="__codelineno-0-545" href="#__codelineno-0-545"></a>|------------|------------------|--------------|----------------|
-<a id="__codelineno-0-546" name="__codelineno-0-546" href="#__codelineno-0-546"></a>| **30 fps** | 9,000 | 1× | ~2 minutes |
-<a id="__codelineno-0-547" name="__codelineno-0-547" href="#__codelineno-0-547"></a>| **60 fps** | 18,000 | 2× | ~4 minutes |
-<a id="__codelineno-0-548" name="__codelineno-0-548" href="#__codelineno-0-548"></a>| **120 fps** | 36,000 | 4× | ~8 minutes |
-<a id="__codelineno-0-549" name="__codelineno-0-549" href="#__codelineno-0-549"></a>| **240 fps** | 72,000 | 8× | ~16 minutes |
-<a id="__codelineno-0-550" name="__codelineno-0-550" href="#__codelineno-0-550"></a>
-<a id="__codelineno-0-551" name="__codelineno-0-551" href="#__codelineno-0-551"></a>*Approximate times on M1 MacBook Pro (actual times vary by hardware)
-<a id="__codelineno-0-552" name="__codelineno-0-552" href="#__codelineno-0-552"></a>
-<a id="__codelineno-0-553" name="__codelineno-0-553" href="#__codelineno-0-553"></a>**Storage requirements** (5-minute video, 1080p, H.264):
-<a id="__codelineno-0-554" name="__codelineno-0-554" href="#__codelineno-0-554"></a>
-<a id="__codelineno-0-555" name="__codelineno-0-555" href="#__codelineno-0-555"></a>| Frame Rate | File Size | Storage for 100 videos |
-<a id="__codelineno-0-556" name="__codelineno-0-556" href="#__codelineno-0-556"></a>|------------|-----------|----------------------|
-<a id="__codelineno-0-557" name="__codelineno-0-557" href="#__codelineno-0-557"></a>| **30 fps** | ~500 MB | ~50 GB |
-<a id="__codelineno-0-558" name="__codelineno-0-558" href="#__codelineno-0-558"></a>| **60 fps** | ~1 GB | ~100 GB |
-<a id="__codelineno-0-559" name="__codelineno-0-559" href="#__codelineno-0-559"></a>| **120 fps** | ~2 GB | ~200 GB |
-<a id="__codelineno-0-560" name="__codelineno-0-560" href="#__codelineno-0-560"></a>| **240 fps** | ~4-6 GB | ~400-600 GB |
+<a id="__codelineno-0-510" name="__codelineno-0-510" href="#__codelineno-0-510"></a>1. **Validation Planning** (High Priority)
+<a id="__codelineno-0-511" name="__codelineno-0-511" href="#__codelineno-0-511"></a>   - Design validation study against force plates
+<a id="__codelineno-0-512" name="__codelineno-0-512" href="#__codelineno-0-512"></a>   - Develop uncertainty quantification methods
+<a id="__codelineno-0-513" name="__codelineno-0-513" href="#__codelineno-0-513"></a>   - Create testing protocols for different conditions
+<a id="__codelineno-0-514" name="__codelineno-0-514" href="#__codelineno-0-514"></a>
+<a id="__codelineno-0-515" name="__codelineno-0-515" href="#__codelineno-0-515"></a>2. **Quality Assurance** (Medium Priority)
+<a id="__codelineno-0-516" name="__codelineno-0-516" href="#__codelineno-0-516"></a>   - Unit testing of accuracy-critical components
+<a id="__codelineno-0-517" name="__codelineno-0-517" href="#__codelineno-0-517"></a>   - Error analysis for systematic biases
+<a id="__codelineno-0-518" name="__codelineno-0-518" href="#__codelineno-0-518"></a>   - Performance benchmarking
+<a id="__codelineno-0-519" name="__codelineno-0-519" href="#__codelineno-0-519"></a>
+<a id="__codelineno-0-520" name="__codelineno-0-520" href="#__codelineno-0-520"></a>3. **User Documentation** (Medium Priority)
+<a id="__codelineno-0-521" name="__codelineno-0-521" href="#__codelineno-0-521"></a>   - Clearly communicate accuracy limitations
+<a id="__codelineno-0-522" name="__codelineno-0-522" href="#__codelineno-0-522"></a>   - Provide uncertainty guidelines
+<a id="__codelineno-0-523" name="__codelineno-0-523" href="#__codelineno-0-523"></a>   - Document appropriate use cases
+<a id="__codelineno-0-524" name="__codelineno-0-524" href="#__codelineno-0-524"></a>
+<a id="__codelineno-0-525" name="__codelineno-0-525" href="#__codelineno-0-525"></a>4. **Future Research** (Low Priority)
+<a id="__codelineno-0-526" name="__codelineno-0-526" href="#__codelineno-0-526"></a>   - Frame rate optimization after validation
+<a id="__codelineno-0-527" name="__codelineno-0-527" href="#__codelineno-0-527"></a>   - Algorithm improvements based on measured performance
+<a id="__codelineno-0-528" name="__codelineno-0-528" href="#__codelineno-0-528"></a>   - Feature expansion based on user needs
+<a id="__codelineno-0-529" name="__codelineno-0-529" href="#__codelineno-0-529"></a>
+<a id="__codelineno-0-530" name="__codelineno-0-530" href="#__codelineno-0-530"></a>**Key Finding:** Priorities should focus on **validation and testing** rather than theoretical accuracy improvements.
+<a id="__codelineno-0-531" name="__codelineno-0-531" href="#__codelineno-0-531"></a>
+<a id="__codelineno-0-532" name="__codelineno-0-532" href="#__codelineno-0-532"></a>### Processing Time vs Frame Rate
+<a id="__codelineno-0-533" name="__codelineno-0-533" href="#__codelineno-0-533"></a>
+<a id="__codelineno-0-534" name="__codelineno-0-534" href="#__codelineno-0-534"></a>**Relative processing time** (assuming 5-minute video, 1080p):
+<a id="__codelineno-0-535" name="__codelineno-0-535" href="#__codelineno-0-535"></a>
+<a id="__codelineno-0-536" name="__codelineno-0-536" href="#__codelineno-0-536"></a>| Frame Rate | Frames to Process | Relative Time | Absolute Time* |
+<a id="__codelineno-0-537" name="__codelineno-0-537" href="#__codelineno-0-537"></a>|------------|------------------|--------------|----------------|
+<a id="__codelineno-0-538" name="__codelineno-0-538" href="#__codelineno-0-538"></a>| **30 fps** | 9,000 | 1× | ~2 minutes |
+<a id="__codelineno-0-539" name="__codelineno-0-539" href="#__codelineno-0-539"></a>| **60 fps** | 18,000 | 2× | ~4 minutes |
+<a id="__codelineno-0-540" name="__codelineno-0-540" href="#__codelineno-0-540"></a>| **120 fps** | 36,000 | 4× | ~8 minutes |
+<a id="__codelineno-0-541" name="__codelineno-0-541" href="#__codelineno-0-541"></a>| **240 fps** | 72,000 | 8× | ~16 minutes |
+<a id="__codelineno-0-542" name="__codelineno-0-542" href="#__codelineno-0-542"></a>
+<a id="__codelineno-0-543" name="__codelineno-0-543" href="#__codelineno-0-543"></a>*Approximate times on M1 MacBook Pro (actual times vary by hardware)
+<a id="__codelineno-0-544" name="__codelineno-0-544" href="#__codelineno-0-544"></a>
+<a id="__codelineno-0-545" name="__codelineno-0-545" href="#__codelineno-0-545"></a>**Storage requirements** (5-minute video, 1080p, H.264):
+<a id="__codelineno-0-546" name="__codelineno-0-546" href="#__codelineno-0-546"></a>
+<a id="__codelineno-0-547" name="__codelineno-0-547" href="#__codelineno-0-547"></a>| Frame Rate | File Size | Storage for 100 videos |
+<a id="__codelineno-0-548" name="__codelineno-0-548" href="#__codelineno-0-548"></a>|------------|-----------|----------------------|
+<a id="__codelineno-0-549" name="__codelineno-0-549" href="#__codelineno-0-549"></a>| **30 fps** | ~500 MB | ~50 GB |
+<a id="__codelineno-0-550" name="__codelineno-0-550" href="#__codelineno-0-550"></a>| **60 fps** | ~1 GB | ~100 GB |
+<a id="__codelineno-0-551" name="__codelineno-0-551" href="#__codelineno-0-551"></a>| **120 fps** | ~2 GB | ~200 GB |
+<a id="__codelineno-0-552" name="__codelineno-0-552" href="#__codelineno-0-552"></a>| **240 fps** | ~4-6 GB | ~400-600 GB |
+<a id="__codelineno-0-553" name="__codelineno-0-553" href="#__codelineno-0-553"></a>
+<a id="__codelineno-0-554" name="__codelineno-0-554" href="#__codelineno-0-554"></a>### Return on Investment
+<a id="__codelineno-0-555" name="__codelineno-0-555" href="#__codelineno-0-555"></a>
+<a id="__codelineno-0-556" name="__codelineno-0-556" href="#__codelineno-0-556"></a>**30 fps → 60 fps:**
+<a id="__codelineno-0-557" name="__codelineno-0-557" href="#__codelineno-0-557"></a>
+<a id="__codelineno-0-558" name="__codelineno-0-558" href="#__codelineno-0-558"></a>- **Cost:** 2× storage, 2× processing time, may need better camera ($0-500)
+<a id="__codelineno-0-559" name="__codelineno-0-559" href="#__codelineno-0-559"></a>- **Benefit:** +2-3% accuracy, more robust detection, better tracking
+<a id="__codelineno-0-560" name="__codelineno-0-560" href="#__codelineno-0-560"></a>- **ROI:** ⭐⭐⭐⭐⭐ **Excellent** - recommended upgrade
 <a id="__codelineno-0-561" name="__codelineno-0-561" href="#__codelineno-0-561"></a>
-<a id="__codelineno-0-562" name="__codelineno-0-562" href="#__codelineno-0-562"></a>### Return on Investment
+<a id="__codelineno-0-562" name="__codelineno-0-562" href="#__codelineno-0-562"></a>**60 fps → 120 fps:**
 <a id="__codelineno-0-563" name="__codelineno-0-563" href="#__codelineno-0-563"></a>
-<a id="__codelineno-0-564" name="__codelineno-0-564" href="#__codelineno-0-564"></a>**30 fps → 60 fps:**
-<a id="__codelineno-0-565" name="__codelineno-0-565" href="#__codelineno-0-565"></a>
-<a id="__codelineno-0-566" name="__codelineno-0-566" href="#__codelineno-0-566"></a>- **Cost:** 2× storage, 2× processing time, may need better camera ($0-500)
-<a id="__codelineno-0-567" name="__codelineno-0-567" href="#__codelineno-0-567"></a>- **Benefit:** +2-3% accuracy, more robust detection, better tracking
-<a id="__codelineno-0-568" name="__codelineno-0-568" href="#__codelineno-0-568"></a>- **ROI:** ⭐⭐⭐⭐⭐ **Excellent** - recommended upgrade
+<a id="__codelineno-0-564" name="__codelineno-0-564" href="#__codelineno-0-564"></a>- **Cost:** 2× storage, 2× processing time, high-speed camera ($500-2000)
+<a id="__codelineno-0-565" name="__codelineno-0-565" href="#__codelineno-0-565"></a>- **Benefit:** +1% accuracy, marginal robustness improvement
+<a id="__codelineno-0-566" name="__codelineno-0-566" href="#__codelineno-0-566"></a>- **ROI:** ⭐⭐ **Marginal** - only for research applications
+<a id="__codelineno-0-567" name="__codelineno-0-567" href="#__codelineno-0-567"></a>
+<a id="__codelineno-0-568" name="__codelineno-0-568" href="#__codelineno-0-568"></a>**120 fps → 240 fps:**
 <a id="__codelineno-0-569" name="__codelineno-0-569" href="#__codelineno-0-569"></a>
-<a id="__codelineno-0-570" name="__codelineno-0-570" href="#__codelineno-0-570"></a>**60 fps → 120 fps:**
-<a id="__codelineno-0-571" name="__codelineno-0-571" href="#__codelineno-0-571"></a>
-<a id="__codelineno-0-572" name="__codelineno-0-572" href="#__codelineno-0-572"></a>- **Cost:** 2× storage, 2× processing time, high-speed camera ($500-2000)
-<a id="__codelineno-0-573" name="__codelineno-0-573" href="#__codelineno-0-573"></a>- **Benefit:** +1% accuracy, marginal robustness improvement
-<a id="__codelineno-0-574" name="__codelineno-0-574" href="#__codelineno-0-574"></a>- **ROI:** ⭐⭐ **Marginal** - only for research applications
+<a id="__codelineno-0-570" name="__codelineno-0-570" href="#__codelineno-0-570"></a>- **Cost:** 2× storage, 2× processing time, pro high-speed camera ($2000-10000)
+<a id="__codelineno-0-571" name="__codelineno-0-571" href="#__codelineno-0-571"></a>- **Benefit:** +0.5% accuracy, no practical improvement
+<a id="__codelineno-0-572" name="__codelineno-0-572" href="#__codelineno-0-572"></a>- **ROI:** ⭐ **Poor** - not recommended for drop jumps
+<a id="__codelineno-0-573" name="__codelineno-0-573" href="#__codelineno-0-573"></a>
+<a id="__codelineno-0-574" name="__codelineno-0-574" href="#__codelineno-0-574"></a>---
 <a id="__codelineno-0-575" name="__codelineno-0-575" href="#__codelineno-0-575"></a>
-<a id="__codelineno-0-576" name="__codelineno-0-576" href="#__codelineno-0-576"></a>**120 fps → 240 fps:**
+<a id="__codelineno-0-576" name="__codelineno-0-576" href="#__codelineno-0-576"></a>## Limitations &amp; Research Gaps
 <a id="__codelineno-0-577" name="__codelineno-0-577" href="#__codelineno-0-577"></a>
-<a id="__codelineno-0-578" name="__codelineno-0-578" href="#__codelineno-0-578"></a>- **Cost:** 2× storage, 2× processing time, pro high-speed camera ($2000-10000)
-<a id="__codelineno-0-579" name="__codelineno-0-579" href="#__codelineno-0-579"></a>- **Benefit:** +0.5% accuracy, no practical improvement
-<a id="__codelineno-0-580" name="__codelineno-0-580" href="#__codelineno-0-580"></a>- **ROI:** ⭐ **Poor** - not recommended for drop jumps
+<a id="__codelineno-0-578" name="__codelineno-0-578" href="#__codelineno-0-578"></a>### Evidence Limitations
+<a id="__codelineno-0-579" name="__codelineno-0-579" href="#__codelineno-0-579"></a>
+<a id="__codelineno-0-580" name="__codelineno-0-580" href="#__codelineno-0-580"></a>**Sample Size Issues:**
 <a id="__codelineno-0-581" name="__codelineno-0-581" href="#__codelineno-0-581"></a>
-<a id="__codelineno-0-582" name="__codelineno-0-582" href="#__codelineno-0-582"></a>---
-<a id="__codelineno-0-583" name="__codelineno-0-583" href="#__codelineno-0-583"></a>
-<a id="__codelineno-0-584" name="__codelineno-0-584" href="#__codelineno-0-584"></a>## Limitations &amp; Research Gaps
+<a id="__codelineno-0-582" name="__codelineno-0-582" href="#__codelineno-0-582"></a>- Most validation studies use small samples (n=10-12)
+<a id="__codelineno-0-583" name="__codelineno-0-583" href="#__codelineno-0-583"></a>- Limited demographic diversity (young adults, athletes)
+<a id="__codelineno-0-584" name="__codelineno-0-584" href="#__codelineno-0-584"></a>- Short-term controlled environments
 <a id="__codelineno-0-585" name="__codelineno-0-585" href="#__codelineno-0-585"></a>
-<a id="__codelineno-0-586" name="__codelineno-0-586" href="#__codelineno-0-586"></a>### Evidence Limitations
+<a id="__codelineno-0-586" name="__codelineno-0-586" href="#__codelineno-0-586"></a>**Methodological Gaps:**
 <a id="__codelineno-0-587" name="__codelineno-0-587" href="#__codelineno-0-587"></a>
-<a id="__codelineno-0-588" name="__codelineno-0-588" href="#__codelineno-0-588"></a>**Sample Size Issues:**
-<a id="__codelineno-0-589" name="__codelineno-0-589" href="#__codelineno-0-589"></a>
-<a id="__codelineno-0-590" name="__codelineno-0-590" href="#__codelineno-0-590"></a>- Most validation studies use small samples (n=10-12)
-<a id="__codelineno-0-591" name="__codelineno-0-591" href="#__codelineno-0-591"></a>- Limited demographic diversity (young adults, athletes)
-<a id="__codelineno-0-592" name="__codelineno-0-592" href="#__codelineno-0-592"></a>- Short-term controlled environments
-<a id="__codelineno-0-593" name="__codelineno-0-593" href="#__codelineno-0-593"></a>
-<a id="__codelineno-0-594" name="__codelineno-0-594" href="#__codelineno-0-594"></a>**Methodological Gaps:**
-<a id="__codelineno-0-595" name="__codelineno-0-595" href="#__codelineno-0-595"></a>
-<a id="__codelineno-0-596" name="__codelineno-0-596" href="#__codelineno-0-596"></a>- **Drop jump specific validation lacking** - most research on CMJ or gait
-<a id="__codelineno-0-597" name="__codelineno-0-597" href="#__codelineno-0-597"></a>- **Field vs laboratory conditions** - limited real-world validation
-<a id="__codelineno-0-598" name="__codelineno-0-598" href="#__codelineno-0-598"></a>- **Camera variety** - most studies use specific camera setups
-<a id="__codelineno-0-599" name="__codelineno-0-599" href="#__codelineno-0-599"></a>- **Standardized protocols** - no consensus on best practices
+<a id="__codelineno-0-588" name="__codelineno-0-588" href="#__codelineno-0-588"></a>- **Drop jump specific validation lacking** - most research on CMJ or gait
+<a id="__codelineno-0-589" name="__codelineno-0-589" href="#__codelineno-0-589"></a>- **Field vs laboratory conditions** - limited real-world validation
+<a id="__codelineno-0-590" name="__codelineno-0-590" href="#__codelineno-0-590"></a>- **Camera variety** - most studies use specific camera setups
+<a id="__codelineno-0-591" name="__codelineno-0-591" href="#__codelineno-0-591"></a>- **Standardized protocols** - no consensus on best practices
+<a id="__codelineno-0-592" name="__codelineno-0-592" href="#__codelineno-0-592"></a>
+<a id="__codelineno-0-593" name="__codelineno-0-593" href="#__codelineno-0-593"></a>### Recommended Research Priorities
+<a id="__codelineno-0-594" name="__codelineno-0-594" href="#__codelineno-0-594"></a>
+<a id="__codelineno-0-595" name="__codelineno-0-595" href="#__codelineno-0-595"></a>1. **Comprehensive drop jump validation** across frame rates
+<a id="__codelineno-0-596" name="__codelineno-0-596" href="#__codelineno-0-596"></a>2. **Field testing** with various camera setups and conditions
+<a id="__codelineno-0-597" name="__codelineno-0-597" href="#__codelineno-0-597"></a>3. **Standardized accuracy metrics** for video-based jump analysis
+<a id="__codelineno-0-598" name="__codelineno-0-598" href="#__codelineno-0-598"></a>4. **Cross-validation studies** between different pose estimation systems
+<a id="__codelineno-0-599" name="__codelineno-0-599" href="#__codelineno-0-599"></a>5. **Cost-benefit analysis** with real-world performance data
 <a id="__codelineno-0-600" name="__codelineno-0-600" href="#__codelineno-0-600"></a>
-<a id="__codelineno-0-601" name="__codelineno-0-601" href="#__codelineno-0-601"></a>### Recommended Research Priorities
+<a id="__codelineno-0-601" name="__codelineno-0-601" href="#__codelineno-0-601"></a>### Practical Recommendations for kinemotion
 <a id="__codelineno-0-602" name="__codelineno-0-602" href="#__codelineno-0-602"></a>
-<a id="__codelineno-0-603" name="__codelineno-0-603" href="#__codelineno-0-603"></a>1. **Comprehensive drop jump validation** across frame rates
-<a id="__codelineno-0-604" name="__codelineno-0-604" href="#__codelineno-0-604"></a>2. **Field testing** with various camera setups and conditions
-<a id="__codelineno-0-605" name="__codelineno-0-605" href="#__codelineno-0-605"></a>3. **Standardized accuracy metrics** for video-based jump analysis
-<a id="__codelineno-0-606" name="__codelineno-0-606" href="#__codelineno-0-606"></a>4. **Cross-validation studies** between different pose estimation systems
-<a id="__codelineno-0-607" name="__codelineno-0-607" href="#__codelineno-0-607"></a>5. **Cost-benefit analysis** with real-world performance data
-<a id="__codelineno-0-608" name="__codelineno-0-608" href="#__codelineno-0-608"></a>
-<a id="__codelineno-0-609" name="__codelineno-0-609" href="#__codelineno-0-609"></a>### Practical Recommendations for kinemotion
-<a id="__codelineno-0-610" name="__codelineno-0-610" href="#__codelineno-0-610"></a>
-<a id="__codelineno-0-611" name="__codelineno-0-611" href="#__codelineno-0-611"></a>**For Current Users:**
-<a id="__codelineno-0-612" name="__codelineno-0-612" href="#__codelineno-0-612"></a>
-<a id="__codelineno-0-613" name="__codelineno-0-613" href="#__codelineno-0-613"></a>- **30fps/60fps** currently adequate for most applications
-<a id="__codelineno-0-614" name="__codelineno-0-614" href="#__codelineno-0-614"></a>- **Document uncertainty** in all measurements
-<a id="__codelineno-0-615" name="__codelineno-0-615" href="#__codelineno-0-615"></a>- **Consider systematic errors** potentially present in pose estimation
-<a id="__codelineno-0-616" name="__codelineno-0-616" href="#__codelineno-0-616"></a>- **Report limitations** when sharing results
-<a id="__codelineno-0-617" name="__codelineno-0-617" href="#__codelineno-0-617"></a>
-<a id="__codelineno-0-618" name="__codelineno-0-618" href="#__codelineno-0-618"></a>**For Development:**
-<a id="__codelineno-0-619" name="__codelineno-0-619" href="#__codelineno-0-619"></a>
-<a id="__codelineno-0-620" name="__codelineno-0-620" href="#__codelineno-0-620"></a>- **Focus on validation** before optimization
-<a id="__codelineno-0-621" name="__codelineno-0-621" href="#__codelineno-0-621"></a>- **Test against gold standards** (force plates, 3D systems)
-<a id="__codelineno-0-622" name="__codelineno-0-622" href="#__codelineno-0-622"></a>- **Quantify uncertainty** of all measurements
-<a id="__codelineno-0-623" name="__codelineno-0-623" href="#__codelineno-0-623"></a>- **Conduct field testing** in real conditions
+<a id="__codelineno-0-603" name="__codelineno-0-603" href="#__codelineno-0-603"></a>**For Current Users:**
+<a id="__codelineno-0-604" name="__codelineno-0-604" href="#__codelineno-0-604"></a>
+<a id="__codelineno-0-605" name="__codelineno-0-605" href="#__codelineno-0-605"></a>- **30fps/60fps** currently adequate for most applications
+<a id="__codelineno-0-606" name="__codelineno-0-606" href="#__codelineno-0-606"></a>- **Document uncertainty** in all measurements
+<a id="__codelineno-0-607" name="__codelineno-0-607" href="#__codelineno-0-607"></a>- **Consider systematic errors** potentially present in pose estimation
+<a id="__codelineno-0-608" name="__codelineno-0-608" href="#__codelineno-0-608"></a>- **Report limitations** when sharing results
+<a id="__codelineno-0-609" name="__codelineno-0-609" href="#__codelineno-0-609"></a>
+<a id="__codelineno-0-610" name="__codelineno-0-610" href="#__codelineno-0-610"></a>**For Development:**
+<a id="__codelineno-0-611" name="__codelineno-0-611" href="#__codelineno-0-611"></a>
+<a id="__codelineno-0-612" name="__codelineno-0-612" href="#__codelineno-0-612"></a>- **Focus on validation** before optimization
+<a id="__codelineno-0-613" name="__codelineno-0-613" href="#__codelineno-0-613"></a>- **Test against gold standards** (force plates, 3D systems)
+<a id="__codelineno-0-614" name="__codelineno-0-614" href="#__codelineno-0-614"></a>- **Quantify uncertainty** of all measurements
+<a id="__codelineno-0-615" name="__codelineno-0-615" href="#__codelineno-0-615"></a>- **Conduct field testing** in real conditions
+<a id="__codelineno-0-616" name="__codelineno-0-616" href="#__codelineno-0-616"></a>
+<a id="__codelineno-0-617" name="__codelineno-0-617" href="#__codelineno-0-617"></a>## Evidence-Based Summary &amp; Conclusions
+<a id="__codelineno-0-618" name="__codelineno-0-618" href="#__codelineno-0-618"></a>
+<a id="__codelineno-0-619" name="__codelineno-0-619" href="#__codelineno-0-619"></a>**⚠️ Critical Limitations:** Many accuracy claims in this field lack comprehensive peer-reviewed validation. The following conclusions are based on limited available evidence:
+<a id="__codelineno-0-620" name="__codelineno-0-620" href="#__codelineno-0-620"></a>
+<a id="__codelineno-0-621" name="__codelineno-0-621" href="#__codelineno-0-621"></a>### Current Limitations
+<a id="__codelineno-0-622" name="__codelineno-0-622" href="#__codelineno-0-622"></a>
+<a id="__codelineno-0-623" name="__codelineno-0-623" href="#__codelineno-0-623"></a>**Kinemotion-specific unknowns:**
 <a id="__codelineno-0-624" name="__codelineno-0-624" href="#__codelineno-0-624"></a>
-<a id="__codelineno-0-625" name="__codelineno-0-625" href="#__codelineno-0-625"></a>## Evidence-Based Summary &amp; Conclusions
-<a id="__codelineno-0-626" name="__codelineno-0-626" href="#__codelineno-0-626"></a>
-<a id="__codelineno-0-627" name="__codelineno-0-627" href="#__codelineno-0-627"></a>**⚠️ Critical Limitations:** Many accuracy claims in this field lack comprehensive peer-reviewed validation. The following conclusions are based on limited available evidence:
+<a id="__codelineno-0-625" name="__codelineno-0-625" href="#__codelineno-0-625"></a>- **No validation studies** exist comparing kinemotion to force plates
+<a id="__codelineno-0-626" name="__codelineno-0-626" href="#__codelineno-0-626"></a>- **Actual accuracy metrics** unknown (not theoretically estimated)
+<a id="__codelineno-0-627" name="__codelineno-0-627" href="#__codelineno-0-627"></a>- **Real-world performance** untested
 <a id="__codelineno-0-628" name="__codelineno-0-628" href="#__codelineno-0-628"></a>
-<a id="__codelineno-0-629" name="__codelineno-0-629" href="#__codelineno-0-629"></a>### Current Limitations
+<a id="__codelineno-0-629" name="__codelineno-0-629" href="#__codelineno-0-629"></a>**MediaPipe limitations (potential kinemotion limitations):**
 <a id="__codelineno-0-630" name="__codelineno-0-630" href="#__codelineno-0-630"></a>
-<a id="__codelineno-0-631" name="__codelineno-0-631" href="#__codelineno-0-631"></a>**Kinemotion-specific unknowns:**
-<a id="__codelineno-0-632" name="__codelineno-0-632" href="#__codelineno-0-632"></a>
-<a id="__codelineno-0-633" name="__codelineno-0-633" href="#__codelineno-0-633"></a>- **No validation studies** exist comparing kinemotion to force plates
-<a id="__codelineno-0-634" name="__codelineno-0-634" href="#__codelineno-0-634"></a>- **Actual accuracy metrics** unknown (not theoretically estimated)
-<a id="__codelineno-0-635" name="__codelineno-0-635" href="#__codelineno-0-635"></a>- **Real-world performance** untested
-<a id="__codelineno-0-636" name="__codelineno-0-636" href="#__codelineno-0-636"></a>
-<a id="__codelineno-0-637" name="__codelineno-0-637" href="#__codelineno-0-637"></a>**MediaPipe limitations (potential kinemotion limitations):**
-<a id="__codelineno-0-638" name="__codelineno-0-638" href="#__codelineno-0-638"></a>
-<a id="__codelineno-0-639" name="__codelineno-0-639" href="#__codelineno-0-639"></a>- **Temporal errors:** 20-50ms in pose estimation systems
-<a id="__codelineno-0-640" name="__codelineno-0-640" href="#__codelineno-0-640"></a>- **Systematic bias:** 4.8-6.2% overestimation vs 3D systems
-<a id="__codelineno-0-641" name="__codelineno-0-641" href="#__codelineno-0-641"></a>- **Detection accuracy:** 95.24-99.02% for timing events
-<a id="__codelineno-0-642" name="__codelineno-0-642" href="#__codelineno-0-642"></a>- **Strong correlation:** r = 0.992 vs force plates
-<a id="__codelineno-0-643" name="__codelineno-0-643" href="#__codelineno-0-643"></a>
-<a id="__codelineno-0-644" name="__codelineno-0-644" href="#__codelineno-0-644"></a>**Key Knowledge Gaps:**
-<a id="__codelineno-0-645" name="__codelineno-0-645" href="#__codelineno-0-645"></a>
-<a id="__codelineno-0-646" name="__codelineno-0-646" href="#__codelineno-0-646"></a>- kinemotion&#39;s **actual accuracy** vs gold standards
-<a id="__codelineno-0-647" name="__codelineno-0-647" href="#__codelineno-0-647"></a>- **Frame rate impact** on kinemotion specifically
-<a id="__codelineno-0-648" name="__codelineno-0-648" href="#__codelineno-0-648"></a>- **Calibration effectiveness** for kinemotion algorithms
-<a id="__codelineno-0-649" name="__codelineno-0-649" href="#__codelineno-0-649"></a>- **Field performance** vs laboratory conditions
+<a id="__codelineno-0-631" name="__codelineno-0-631" href="#__codelineno-0-631"></a>- **Temporal errors:** 20-50ms in pose estimation systems
+<a id="__codelineno-0-632" name="__codelineno-0-632" href="#__codelineno-0-632"></a>- **Systematic bias:** 4.8-6.2% overestimation vs 3D systems
+<a id="__codelineno-0-633" name="__codelineno-0-633" href="#__codelineno-0-633"></a>- **Detection accuracy:** 95.24-99.02% for timing events
+<a id="__codelineno-0-634" name="__codelineno-0-634" href="#__codelineno-0-634"></a>- **Strong correlation:** r = 0.992 vs force plates
+<a id="__codelineno-0-635" name="__codelineno-0-635" href="#__codelineno-0-635"></a>
+<a id="__codelineno-0-636" name="__codelineno-0-636" href="#__codelineno-0-636"></a>**Key Knowledge Gaps:**
+<a id="__codelineno-0-637" name="__codelineno-0-637" href="#__codelineno-0-637"></a>
+<a id="__codelineno-0-638" name="__codelineno-0-638" href="#__codelineno-0-638"></a>- kinemotion&#39;s **actual accuracy** vs gold standards
+<a id="__codelineno-0-639" name="__codelineno-0-639" href="#__codelineno-0-639"></a>- **Frame rate impact** on kinemotion specifically
+<a id="__codelineno-0-640" name="__codelineno-0-640" href="#__codelineno-0-640"></a>- **Calibration effectiveness** for kinemotion algorithms
+<a id="__codelineno-0-641" name="__codelineno-0-641" href="#__codelineno-0-641"></a>- **Field performance** vs laboratory conditions
+<a id="__codelineno-0-642" name="__codelineno-0-642" href="#__codelineno-0-642"></a>
+<a id="__codelineno-0-643" name="__codelineno-0-643" href="#__codelineno-0-643"></a>### Required Research
+<a id="__codelineno-0-644" name="__codelineno-0-644" href="#__codelineno-0-644"></a>
+<a id="__codelineno-0-645" name="__codelineno-0-645" href="#__codelineno-0-645"></a>1. **Kinemotion validation study** against force plates
+<a id="__codelineno-0-646" name="__codelineno-0-646" href="#__codelineno-0-646"></a>2. **Frame rate testing** with kinemotion specifically
+<a id="__codelineno-0-647" name="__codelineno-0-647" href="#__codelineno-0-647"></a>3. **Field validation** of kinemotion in real conditions
+<a id="__codelineno-0-648" name="__codelineno-0-648" href="#__codelineno-0-648"></a>4. **Error analysis** of kinemotion&#39;s systematic biases
+<a id="__codelineno-0-649" name="__codelineno-0-649" href="#__codelineno-0-649"></a>5. **Uncertainty quantification** of kinemotion measurements
 <a id="__codelineno-0-650" name="__codelineno-0-650" href="#__codelineno-0-650"></a>
-<a id="__codelineno-0-651" name="__codelineno-0-651" href="#__codelineno-0-651"></a>### Required Research
+<a id="__codelineno-0-651" name="__codelineno-0-651" href="#__codelineno-0-651"></a>**Bottom Line:** kinemotion accuracy claims are **currently theoretical** - empirical validation is required to determine real performance.
 <a id="__codelineno-0-652" name="__codelineno-0-652" href="#__codelineno-0-652"></a>
-<a id="__codelineno-0-653" name="__codelineno-0-653" href="#__codelineno-0-653"></a>1. **Kinemotion validation study** against force plates
-<a id="__codelineno-0-654" name="__codelineno-0-654" href="#__codelineno-0-654"></a>2. **Frame rate testing** with kinemotion specifically
-<a id="__codelineno-0-655" name="__codelineno-0-655" href="#__codelineno-0-655"></a>3. **Field validation** of kinemotion in real conditions
-<a id="__codelineno-0-656" name="__codelineno-0-656" href="#__codelineno-0-656"></a>4. **Error analysis** of kinemotion&#39;s systematic biases
-<a id="__codelineno-0-657" name="__codelineno-0-657" href="#__codelineno-0-657"></a>5. **Uncertainty quantification** of kinemotion measurements
+<a id="__codelineno-0-653" name="__codelineno-0-653" href="#__codelineno-0-653"></a>---
+<a id="__codelineno-0-654" name="__codelineno-0-654" href="#__codelineno-0-654"></a>
+<a id="__codelineno-0-655" name="__codelineno-0-655" href="#__codelineno-0-655"></a>## kinemotion-Specific Recommendations
+<a id="__codelineno-0-656" name="__codelineno-0-656" href="#__codelineno-0-656"></a>
+<a id="__codelineno-0-657" name="__codelineno-0-657" href="#__codelineno-0-657"></a>**Current Status:**
 <a id="__codelineno-0-658" name="__codelineno-0-658" href="#__codelineno-0-658"></a>
-<a id="__codelineno-0-659" name="__codelineno-0-659" href="#__codelineno-0-659"></a>**Bottom Line:** kinemotion accuracy claims are **currently theoretical** - empirical validation is required to determine real performance.
-<a id="__codelineno-0-660" name="__codelineno-0-660" href="#__codelineno-0-660"></a>
-<a id="__codelineno-0-661" name="__codelineno-0-661" href="#__codelineno-0-661"></a>---
+<a id="__codelineno-0-659" name="__codelineno-0-659" href="#__codelineno-0-659"></a>- **No validation studies** exist for kinemotion specifically
+<a id="__codelineno-0-660" name="__codelineno-0-660" href="#__codelineno-0-660"></a>- **Accuracy unknown** - requires empirical testing
+<a id="__codelineno-0-661" name="__codelineno-0-661" href="#__codelineno-0-661"></a>- **Focus on reliability** rather than theoretical improvements
 <a id="__codelineno-0-662" name="__codelineno-0-662" href="#__codelineno-0-662"></a>
-<a id="__codelineno-0-663" name="__codelineno-0-663" href="#__codelineno-0-663"></a>## kinemotion-Specific Recommendations
+<a id="__codelineno-0-663" name="__codelineno-0-663" href="#__codelineno-0-663"></a>**Immediate Actions:**
 <a id="__codelineno-0-664" name="__codelineno-0-664" href="#__codelineno-0-664"></a>
-<a id="__codelineno-0-665" name="__codelineno-0-665" href="#__codelineno-0-665"></a>**Current Status:**
-<a id="__codelineno-0-666" name="__codelineno-0-666" href="#__codelineno-0-666"></a>
-<a id="__codelineno-0-667" name="__codelineno-0-667" href="#__codelineno-0-667"></a>- **No validation studies** exist for kinemotion specifically
-<a id="__codelineno-0-668" name="__codelineno-0-668" href="#__codelineno-0-668"></a>- **Accuracy unknown** - requires empirical testing
-<a id="__codelineno-0-669" name="__codelineno-0-669" href="#__codelineno-0-669"></a>- **Focus on reliability** rather than theoretical improvements
-<a id="__codelineno-0-670" name="__codelineno-0-670" href="#__codelineno-0-670"></a>
-<a id="__codelineno-0-671" name="__codelineno-0-671" href="#__codelineno-0-671"></a>**Immediate Actions:**
-<a id="__codelineno-0-672" name="__codelineno-0-672" href="#__codelineno-0-672"></a>
-<a id="__codelineno-0-673" name="__codelineno-0-673" href="#__codelineno-0-673"></a>1. **Plan validation study** against force plates or 3D motion capture
-<a id="__codelineno-0-674" name="__codelineno-0-674" href="#__codelineno-0-674"></a>2. **Document current limitations** in user-facing materials
-<a id="__codelineno-0-675" name="__codelineno-0-675" href="#__codelineno-0-675"></a>3. **Implement uncertainty quantification** for all measurements
-<a id="__codelineno-0-676" name="__codelineno-0-676" href="#__codelineno-0-676"></a>4. **Test systematic biases** across different conditions
+<a id="__codelineno-0-665" name="__codelineno-0-665" href="#__codelineno-0-665"></a>1. **Plan validation study** against force plates or 3D motion capture
+<a id="__codelineno-0-666" name="__codelineno-0-666" href="#__codelineno-0-666"></a>2. **Document current limitations** in user-facing materials
+<a id="__codelineno-0-667" name="__codelineno-0-667" href="#__codelineno-0-667"></a>3. **Implement uncertainty quantification** for all measurements
+<a id="__codelineno-0-668" name="__codelineno-0-668" href="#__codelineno-0-668"></a>4. **Test systematic biases** across different conditions
+<a id="__codelineno-0-669" name="__codelineno-0-669" href="#__codelineno-0-669"></a>
+<a id="__codelineno-0-670" name="__codelineno-0-670" href="#__codelineno-0-670"></a>**Decision Framework:**
+<a id="__codelineno-0-671" name="__codelineno-0-671" href="#__codelineno-0-671"></a>
+<a id="__codelineno-0-672" name="__codelineno-0-672" href="#__codelineno-0-672"></a>```text
+<a id="__codelineno-0-673" name="__codelineno-0-673" href="#__codelineno-0-673"></a>Need precise measurements for critical applications?
+<a id="__codelineno-0-674" name="__codelineno-0-674" href="#__codelineno-0-674"></a>├─ Yes → Conduct validation study first
+<a id="__codelineno-0-675" name="__codelineno-0-675" href="#__codelineno-0-675"></a>└─ No → Use with caution, document uncertainty
+<a id="__codelineno-0-676" name="__codelineno-0-676" href="#__codelineno-0-676"></a>```text
 <a id="__codelineno-0-677" name="__codelineno-0-677" href="#__codelineno-0-677"></a>
-<a id="__codelineno-0-678" name="__codelineno-0-678" href="#__codelineno-0-678"></a>**Decision Framework:**
-<a id="__codelineno-0-679" name="__codelineno-0-679" href="#__codelineno-0-679"></a>
-<a id="__codelineno-0-680" name="__codelineno-0-680" href="#__codelineno-0-680"></a>```text
-<a id="__codelineno-0-681" name="__codelineno-0-681" href="#__codelineno-0-681"></a>Need precise measurements for critical applications?
-<a id="__codelineno-0-682" name="__codelineno-0-682" href="#__codelineno-0-682"></a>├─ Yes → Conduct validation study first
-<a id="__codelineno-0-683" name="__codelineno-0-683" href="#__codelineno-0-683"></a>└─ No → Use with caution, document uncertainty
-<a id="__codelineno-0-684" name="__codelineno-0-684" href="#__codelineno-0-684"></a>```text
-<a id="__codelineno-0-685" name="__codelineno-0-685" href="#__codelineno-0-685"></a>
-<a id="__codelineno-0-686" name="__codelineno-0-686" href="#__codelineno-0-686"></a>**Bottom Line:** kinemotion is currently **unvalidated software** - accuracy claims are theoretical until empirical validation is completed.
+<a id="__codelineno-0-678" name="__codelineno-0-678" href="#__codelineno-0-678"></a>**Bottom Line:** kinemotion is currently **unvalidated software** - accuracy claims are theoretical until empirical validation is completed.
 </code></pre></div>
 
 
