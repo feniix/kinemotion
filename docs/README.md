@@ -41,6 +41,7 @@ Welcome to the kinemotion documentation. This directory contains guides, technic
 
 - **[Validation Plan](development/validation-plan.md)** - Testing and validation strategy
 - **[Errors & Findings](development/errors-findings.md)** - Known issues and debugging information
+- **[Wall Ball No-Rep Detection](development/wallball-norep-detection.md)** - Future feature implementation plan for HYROX wall ball analysis
 
 ### 🌍 Translations
 
@@ -100,4 +101,4 @@ Ensure cross-references use relative paths and follow conventional commits forma
 
 ______________________________________________________________________
 
-**Last Updated:** November 6, 2025
+**Last Updated:** November 7, 2025
