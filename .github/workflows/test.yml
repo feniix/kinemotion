@@ -74,7 +74,10 @@ jobs:
     name: SonarQube Scan
     needs: test
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    # Only run if SONAR_TOKEN is configured and not a fork PR
+    if: |
+      secrets.SONAR_TOKEN != '' &&
+      (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository)
 
     steps:
       - name: Checkout repository
