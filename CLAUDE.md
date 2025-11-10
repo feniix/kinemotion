@@ -19,9 +19,15 @@ uv run kinemotion cmj-analyze video.mp4
 
 **Development:**
 ```bash
-uv run pytest                           # Run all 75 tests
+uv run pytest                           # Run all 75 tests with coverage (50.75%)
+uv run pytest --cov-report=html         # Generate HTML coverage report
 uv run ruff check --fix && uv run pyright  # Lint + type check
 ```
+
+**Coverage Reports:**
+- Terminal: Automatic with `uv run pytest`
+- HTML: `htmlcov/index.html` (open in browser)
+- XML: `coverage.xml` (for CI integration)
 
 ## Architecture
 
@@ -139,7 +145,7 @@ OpenCV vs NumPy ordering:
 ```bash
 uv run ruff check --fix   # Auto-fix linting
 uv run pyright            # Type check (strict)
-uv run pytest             # All 70 tests
+uv run pytest             # All 75 tests with coverage
 ```
 
 ### Standards
@@ -148,6 +154,24 @@ uv run pytest             # All 70 tests
 - Ruff (100 char lines)
 - Conventional Commits (see below)
 - **Code duplication target: < 3%**
+- **Test coverage: ≥ 50% (current: 50.75% with branch coverage)**
+
+### Coverage Analysis
+
+Current coverage: **50.75%** (2184 statements, 752 branches)
+
+**Well-tested modules (>80%):**
+- Core filtering: 87.80%
+- Core pose tracking: 88.46%
+- Drop jump kinematics: 83.94%
+- CMJ kinematics: 94.67%
+
+**Needs improvement (<30%):**
+- CLI modules: 22-23% (expected - minimal integration tests)
+- Debug overlays: 10-36% (visualization code)
+- Joint angles: 6.20% (feature module)
+
+View detailed report: `uv run pytest --cov-report=html && open htmlcov/index.html`
 
 ### Avoiding Code Duplication
 

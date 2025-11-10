@@ -50,6 +50,7 @@ packages = ["src/kinemotion"]
 [dependency-groups]
 dev = [
     "pytest>=7.4.3",
+    "pytest-cov>=5.0.0",
     "black>=23.12.0",
     "ruff>=0.1.8",
     "pyright>=1.1.380",
@@ -60,6 +61,34 @@ dev = [
     "mkdocstrings[python]>=0.24.0",
 ]
 
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+    "--cov=src/kinemotion",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+    "--cov-branch",
+]
+
+[tool.coverage.run]
+source = ["src/kinemotion"]
+branch = true
+parallel = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+precision = 2
+show_missing = true
+fail_under = 50.0  # Current baseline: 50.75% - prevent regression
 
 [tool.ruff]
 line-length = 100
