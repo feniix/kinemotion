@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.22.1 (2025-11-10)
+
+### Bug Fixes
+
+- Skip batch mode tests in CI to prevent MediaPipe multiprocessing crashes
+  ([`05dd796`](https://github.com/feniix/kinemotion/commit/05dd796b36252323c36f8d503c372d96e4108381))
+
+
 ## v0.22.0 (2025-11-10)
 
 ### Bug Fixes
