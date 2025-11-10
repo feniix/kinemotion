@@ -74,10 +74,7 @@ jobs:
     name: SonarQube Scan
     needs: test
     runs-on: ubuntu-latest
-    # Only run if SONAR_TOKEN is configured and not a fork PR
-    if: |
-      secrets.SONAR_TOKEN != '' &&
-      (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
 
     steps:
       - name: Checkout repository
@@ -92,6 +89,7 @@ jobs:
 
       - name: SonarQube Scan
         uses: SonarSource/sonarcloud-github-action@master
+        continue-on-error: true  # Don't fail workflow if SonarCloud isn't configured yet
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
