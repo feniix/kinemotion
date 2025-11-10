@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.17.4 (2025-11-10)
+
+### Bug Fixes
+
+- **ci**: Make SonarQube scan conditional on token availability
+  ([`bd62d7f`](https://github.com/feniix/kinemotion/commit/bd62d7f4d8f83a238093a1490be7316c1544ac25))
+
+
 ## v0.17.3 (2025-11-10)
 
 ### Bug Fixes
