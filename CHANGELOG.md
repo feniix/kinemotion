@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.17.1 (2025-11-10)
+
+### Bug Fixes
+
+- **ci**: Add system dependencies for OpenCV and MediaPipe
+  ([`bb48049`](https://github.com/feniix/kinemotion/commit/bb480498e04689c3deac443fdc162efe1c59e1e2))
+
+
 ## v0.17.0 (2025-11-10)
 
 ### Features
