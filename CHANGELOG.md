@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.20.0 (2025-11-10)
+
+### Features
+
+- Add platform-specific installation guide and ffprobe warnings
+  ([`b61c8c6`](https://github.com/feniix/kinemotion/commit/b61c8c6dbc2191ca321a2b813aa995c3a68b0b0b))
+
+
 ## v0.19.0 (2025-11-10)
 
 ### Features
