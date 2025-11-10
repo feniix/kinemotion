@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.23.0 (2025-11-10)
+
+### Features
+
+- Extract visibility calculation helper to improve code maintainability
+  ([`2839d6e`](https://github.com/feniix/kinemotion/commit/2839d6eca4b4f6ff8b6247501560939953282943))
+
+
 ## v0.22.1 (2025-11-10)
 
 ### Bug Fixes
