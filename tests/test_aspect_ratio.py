@@ -136,3 +136,206 @@ def test_ffprobe_not_found_warning():
 
     finally:
         Path(test_video).unlink()
+
+
+def test_ffprobe_timeout_silent():
+    """Test that ffprobe timeout is handled silently."""
+    import subprocess
+
+    test_video = create_test_video(640, 480)
+
+    try:
+        # Mock subprocess.run to raise TimeoutExpired
+        with patch(
+            "subprocess.run",
+            side_effect=subprocess.TimeoutExpired("ffprobe", timeout=5),
+        ):
+            # Should not raise exception or warning, just continue
+            video = VideoProcessor(test_video)
+            assert video.rotation == 0  # Default rotation
+            video.close()
+
+    finally:
+        Path(test_video).unlink()
+
+
+def test_ffprobe_json_decode_error_silent():
+    """Test that ffprobe JSON decode error is handled silently."""
+    import json
+
+    test_video = create_test_video(640, 480)
+
+    try:
+        # Mock subprocess.run to raise JSONDecodeError
+        with patch(
+            "subprocess.run",
+            side_effect=json.JSONDecodeError("Invalid JSON", "", 0),
+        ):
+            # Should not raise exception or warning, just continue
+            video = VideoProcessor(test_video)
+            assert video.rotation == 0  # Default rotation
+            video.close()
+
+    finally:
+        Path(test_video).unlink()
+
+
+def test_video_not_found():
+    """Test that VideoProcessor raises ValueError for non-existent video."""
+    with pytest.raises(ValueError, match="Could not open video"):
+        VideoProcessor("/nonexistent/path/to/video.mp4")
+
+
+def test_ffprobe_returncode_error():
+    """Test that ffprobe non-zero returncode is handled silently."""
+    from unittest.mock import MagicMock
+
+    test_video = create_test_video(640, 480)
+
+    try:
+        # Mock subprocess.run to return non-zero returncode
+        mock_result = MagicMock()
+        mock_result.returncode = 1
+        mock_result.stdout = ""
+
+        with patch("subprocess.run", return_value=mock_result):
+            # Should continue silently with defaults
+            video = VideoProcessor(test_video)
+            assert video.rotation == 0
+            video.close()
+
+    finally:
+        Path(test_video).unlink()
+
+
+def test_ffprobe_empty_streams():
+    """Test that ffprobe with no streams is handled silently."""
+    from unittest.mock import MagicMock
+
+    test_video = create_test_video(640, 480)
+
+    try:
+        # Mock subprocess.run to return empty streams
+        mock_result = MagicMock()
+        mock_result.returncode = 0
+        mock_result.stdout = '{"streams": []}'
+
+        with patch("subprocess.run", return_value=mock_result):
+            # Should continue silently with defaults
+            video = VideoProcessor(test_video)
+            assert video.rotation == 0
+            video.close()
+
+    finally:
+        Path(test_video).unlink()
+
+
+def test_video_rotation_90_degrees():
+    """Test video rotation handling for 90 degree rotation."""
+    from unittest.mock import MagicMock
+
+    test_video = create_test_video(640, 480)
+
+    try:
+        # Mock ffprobe to return 90 degree rotation
+        mock_result = MagicMock()
+        mock_result.returncode = 0
+        mock_result.stdout = """{
+            "streams": [{
+                "sample_aspect_ratio": "1:1",
+                "side_data_list": [{
+                    "side_data_type": "Display Matrix",
+                    "rotation": 90
+                }]
+            }]
+        }"""
+
+        with patch("subprocess.run", return_value=mock_result):
+            video = VideoProcessor(test_video)
+            assert video.rotation == 90
+
+            # Read frame and verify rotation is applied
+            frame = video.read_frame()
+            assert frame is not None
+            # After 90° rotation: width and height should be swapped
+            assert frame.shape[1] == 480  # Original height becomes width
+            assert frame.shape[0] == 640  # Original width becomes height
+
+            video.close()
+
+    finally:
+        Path(test_video).unlink()
+
+
+def test_video_rotation_negative_90_degrees():
+    """Test video rotation handling for -90 degree rotation."""
+    from unittest.mock import MagicMock
+
+    test_video = create_test_video(640, 480)
+
+    try:
+        # Mock ffprobe to return -90 degree rotation
+        mock_result = MagicMock()
+        mock_result.returncode = 0
+        mock_result.stdout = """{
+            "streams": [{
+                "sample_aspect_ratio": "1:1",
+                "side_data_list": [{
+                    "side_data_type": "Display Matrix",
+                    "rotation": -90
+                }]
+            }]
+        }"""
+
+        with patch("subprocess.run", return_value=mock_result):
+            video = VideoProcessor(test_video)
+            assert video.rotation == -90
+
+            # Read frame and verify rotation is applied
+            frame = video.read_frame()
+            assert frame is not None
+            # After -90° rotation: dimensions swapped
+            assert frame.shape[1] == 480
+            assert frame.shape[0] == 640
+
+            video.close()
+
+    finally:
+        Path(test_video).unlink()
+
+
+def test_video_rotation_180_degrees():
+    """Test video rotation handling for 180 degree rotation."""
+    from unittest.mock import MagicMock
+
+    test_video = create_test_video(640, 480)
+
+    try:
+        # Mock ffprobe to return 180 degree rotation
+        mock_result = MagicMock()
+        mock_result.returncode = 0
+        mock_result.stdout = """{
+            "streams": [{
+                "sample_aspect_ratio": "1:1",
+                "side_data_list": [{
+                    "side_data_type": "Display Matrix",
+                    "rotation": 180
+                }]
+            }]
+        }"""
+
+        with patch("subprocess.run", return_value=mock_result):
+            video = VideoProcessor(test_video)
+            assert video.rotation == 180
+
+            # Read frame and verify rotation is applied
+            frame = video.read_frame()
+            assert frame is not None
+            # After 180° rotation: dimensions stay the same
+            assert frame.shape[1] == 640
+            assert frame.shape[0] == 480
+
+            video.close()
+
+    finally:
+        Path(test_video).unlink()
