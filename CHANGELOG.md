@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.17.5 (2025-11-10)
+
+### Bug Fixes
+
+- **ci**: Correct SonarQube conditional syntax error
+  ([`650762e`](https://github.com/feniix/kinemotion/commit/650762e33041d8cd3be692adac5e492453048036))
+
+
 ## v0.17.4 (2025-11-10)
 
 ### Bug Fixes
