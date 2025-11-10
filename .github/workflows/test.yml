@@ -8,6 +8,9 @@ on:
     branches:
       - main
   workflow_call:  # Allow this workflow to be called by other workflows
+    secrets:
+      SONAR_TOKEN:
+        required: false
 
 jobs:
   test:

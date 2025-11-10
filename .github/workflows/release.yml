@@ -9,6 +9,8 @@ jobs:
   test:
     name: Run Tests
     uses: ./.github/workflows/test.yml
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   release:
     name: Create Release
