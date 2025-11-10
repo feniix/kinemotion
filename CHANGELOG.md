@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.17.3 (2025-11-10)
+
+### Bug Fixes
+
+- **ci**: Skip multiprocessing tests in CI environment
+  ([`af683eb`](https://github.com/feniix/kinemotion/commit/af683eb75994863e1cb0f7c30722086ae0084909))
+
+
 ## v0.17.2 (2025-11-10)
 
 ### Bug Fixes
