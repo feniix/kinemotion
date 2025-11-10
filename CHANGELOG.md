@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.17.2 (2025-11-10)
+
+### Bug Fixes
+
+- **ci**: Update package names for Ubuntu 24.04 compatibility
+  ([`82568dc`](https://github.com/feniix/kinemotion/commit/82568dc5ff502a4308eadaf77a576f953516317c))
+
+
 ## v0.17.1 (2025-11-10)
 
 ### Bug Fixes
