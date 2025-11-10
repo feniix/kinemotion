@@ -754,6 +754,22 @@ def compute_average_foot_position(
     return (float(np.mean(x_positions)), float(np.mean(y_positions)))
 
 
+def _calculate_average_visibility(
+    frame_landmarks: dict[str, tuple[float, float, float]],
+) -> float:
+    """Calculate average visibility of foot landmarks in a frame.
+
+    Args:
+        frame_landmarks: Landmark dictionary for a single frame
+
+    Returns:
+        Average visibility of foot landmarks (0.0 if none visible)
+    """
+    foot_keys = ["left_ankle", "right_ankle", "left_heel", "right_heel"]
+    foot_vis = [frame_landmarks[key][2] for key in foot_keys if key in frame_landmarks]
+    return float(np.mean(foot_vis)) if foot_vis else 0.0
+
+
 def extract_foot_positions_and_visibilities(
     smoothed_landmarks: list[dict[str, tuple[float, float, float]] | None],
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -775,13 +791,7 @@ def extract_foot_positions_and_visibilities(
         if frame_landmarks:
             _, foot_y = compute_average_foot_position(frame_landmarks)
             position_list.append(foot_y)
-
-            # Average visibility of foot landmarks
-            foot_vis = []
-            for key in ["left_ankle", "right_ankle", "left_heel", "right_heel"]:
-                if key in frame_landmarks:
-                    foot_vis.append(frame_landmarks[key][2])
-            visibilities_list.append(float(np.mean(foot_vis)) if foot_vis else 0.0)
+            visibilities_list.append(_calculate_average_visibility(frame_landmarks))
         else:
             # Fill missing frames with last known position or default
             position_list.append(position_list[-1] if position_list else 0.5)
