@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.20.2 (2025-11-10)
+
+### Bug Fixes
+
+- Achieve 80%+ coverage on video_io for SonarCloud quality gate
+  ([`ed77fdb`](https://github.com/feniix/kinemotion/commit/ed77fdb080f143c492c724c9f4a138b2a364ad7e))
+
+
 ## v0.20.1 (2025-11-10)
 
 ### Bug Fixes
