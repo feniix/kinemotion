@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.18.2 (2025-11-10)
+
+### Bug Fixes
+
+- Ci build
+  ([`5bbfc0f`](https://github.com/feniix/kinemotion/commit/5bbfc0fa610ff811e765dea2021602f09d02f9f8))
+
+### Testing
+
+- Add comprehensive test coverage for joint angles and CMJ analysis
+  ([`815c9be`](https://github.com/feniix/kinemotion/commit/815c9be1019414acf61563312a5d58f6305a17a4))
+
+
 ## v0.18.1 (2025-11-10)
 
 ### Bug Fixes
