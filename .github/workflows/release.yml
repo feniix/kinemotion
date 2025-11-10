@@ -66,6 +66,14 @@ jobs:
         if: steps.get_version.outputs.released == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
 
+  docs:
+    name: Deploy Documentation
+    needs: release
+    if: needs.release.outputs.released == 'true'
+    uses: ./.github/workflows/docs.yml
+    permissions:
+      contents: write
+
   docker:
     name: Build and Push Docker Image
     needs: release
