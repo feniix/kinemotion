@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.18.0 (2025-11-10)
+
+### Bug Fixes
+
+- **ci**: Pass SONAR_TOKEN to reusable test workflow
+  ([`79919d0`](https://github.com/feniix/kinemotion/commit/79919d065e5db5d039deec899324c76fa9c11960))
+
+### Features
+
+- **ci**: Streamline testing and enforce quality gates before release
+  ([`7b95bc5`](https://github.com/feniix/kinemotion/commit/7b95bc5890521bd10910c87024f77c32475a8fad))
+
+
 ## v0.17.6 (2025-11-10)
 
 ### Bug Fixes
