@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.22.0 (2025-11-10)
+
+### Bug Fixes
+
+- Make CLI batch tests resilient to processing failures in CI
+  ([`1f3dfed`](https://github.com/feniix/kinemotion/commit/1f3dfedbe88a2c9be21c907053e549ee2431c500))
+
+### Features
+
+- Comprehensive test coverage expansion and documentation refactoring
+  ([`dc3cda4`](https://github.com/feniix/kinemotion/commit/dc3cda4e022b61f635e537784aafc08e0f6e78fe))
+
+
 ## v0.21.0 (2025-11-10)
 
 ### Features
