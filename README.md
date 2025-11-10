@@ -1,13 +1,18 @@
 # Kinemotion
 
 [![PyPI version](https://img.shields.io/pypi/v/kinemotion.svg)](https://pypi.org/project/kinemotion/)
+[![Python Version](https://img.shields.io/pypi/pyversions/kinemotion.svg)](https://pypi.org/project/kinemotion/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Type checked with pyright](https://img.shields.io/badge/type%20checked-pyright-blue.svg)](https://github.com/microsoft/pyright)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=feniix_kinemotion&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=feniix_kinemotion)
 
-A video-based kinematic analysis tool for athletic performance. Analyzes vertical jump videos to estimate key performance metrics using MediaPipe pose tracking and advanced kinematics.
+[![Tests](https://github.com/feniix/kinemotion/workflows/Test%20%26%20Quality/badge.svg)](https://github.com/feniix/kinemotion/actions)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=feniix_kinemotion&metric=alert_status)](https://sonarcloud.io/summary/overall?id=feniix_kinemotion)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=feniix_kinemotion&metric=coverage)](https://sonarcloud.io/summary/overall?id=feniix_kinemotion)
+
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Type checked with pyright](https://img.shields.io/badge/type%20checked-pyright-blue.svg)](https://github.com/microsoft/pyright)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+
+> A video-based kinematic analysis tool for athletic performance. Analyzes vertical jump videos to estimate key performance metrics using MediaPipe pose tracking and advanced kinematics.
 
 **Supported jump types:**
 
