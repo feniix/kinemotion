@@ -3,7 +3,9 @@
 import numpy as np
 
 from kinemotion.cmj.analysis import (
+    compute_signed_velocity,
     detect_cmj_phases,
+    find_cmj_landing_from_position_peak,
     find_cmj_takeoff_from_velocity_peak,
     find_countermovement_start,
     find_lowest_point,
@@ -11,7 +13,10 @@ from kinemotion.cmj.analysis import (
     interpolate_threshold_crossing,
     refine_transition_with_curvature,
 )
-from kinemotion.core.smoothing import compute_velocity_from_derivative
+from kinemotion.core.smoothing import (
+    compute_acceleration_from_derivative,
+    compute_velocity_from_derivative,
+)
 
 
 def test_find_standing_phase() -> None:
@@ -395,3 +400,184 @@ def test_find_cmj_takeoff_from_velocity_peak_constant_velocity() -> None:
     # Should find first frame (argmin of constant array returns 0)
     assert isinstance(result, float)
     assert result == float(lowest_point_frame)
+
+
+# New edge case tests
+
+
+def test_compute_signed_velocity_short_array() -> None:
+    """Test compute_signed_velocity with array shorter than window."""
+    positions = np.array([0.5, 0.6])  # Only 2 elements, less than window_length=5
+
+    velocities = compute_signed_velocity(positions, window_length=5, polyorder=2)
+
+    # Should fallback to simple diff
+    assert len(velocities) == len(positions)
+    assert velocities[0] == 0.0  # prepend=positions[0]
+    assert velocities[1] > 0  # Downward motion
+
+
+def test_compute_signed_velocity_even_window() -> None:
+    """Test compute_signed_velocity adjusts even window to odd."""
+    positions = np.linspace(0.5, 0.7, 20)
+
+    # Pass even window - should be incremented to odd
+    velocities = compute_signed_velocity(positions, window_length=6, polyorder=2)
+
+    assert len(velocities) == len(positions)
+    # Should have successfully computed velocities
+    assert np.all(velocities >= 0)  # All downward motion
+
+
+def test_find_standing_phase_too_short() -> None:
+    """Test find_standing_phase with video too short."""
+    positions = np.ones(10) * 0.5  # Only 10 frames
+    velocities = np.zeros(10)
+    fps = 30.0
+
+    result = find_standing_phase(
+        positions, velocities, fps, min_standing_duration=0.5  # Requires 15 frames
+    )
+
+    # Should return None for too-short video
+    assert result is None
+
+
+def test_find_standing_phase_no_transition() -> None:
+    """Test find_standing_phase when standing detected but no clear transition."""
+    fps = 30.0
+    # Create trajectory with standing but no clear movement after
+    positions = np.ones(100) * 0.5  # All standing
+    velocities = np.zeros(100)  # No movement
+
+    result = find_standing_phase(
+        positions, velocities, fps, min_standing_duration=0.5, velocity_threshold=0.01
+    )
+
+    # May return None if no transition found
+    # Test verifies function doesn't crash
+    assert result is None or isinstance(result, int)
+
+
+def test_find_countermovement_start_no_downward_motion() -> None:
+    """Test find_countermovement_start when no sustained downward motion."""
+    # All upward or near-zero velocities
+    velocities = np.ones(50) * -0.005  # Slight upward motion
+
+    result = find_countermovement_start(
+        velocities, countermovement_threshold=0.015, min_eccentric_frames=3
+    )
+
+    # Should return None when no downward motion detected
+    assert result is None
+
+
+def test_find_lowest_point_invalid_search_range() -> None:
+    """Test find_lowest_point when peak is too early, requiring fallback range."""
+    # Create trajectory where peak is very early
+    positions = np.concatenate(
+        [
+            np.array([0.3, 0.4, 0.5]),  # Peak at frame 0
+            np.linspace(0.5, 0.7, 50),  # Rest of trajectory
+        ]
+    )
+    velocities = compute_signed_velocity(positions)
+
+    result = find_lowest_point(
+        positions, velocities, min_search_frame=80  # Search start after peak
+    )
+
+    # Should use fallback range (30-70% of video)
+    assert isinstance(result, int)
+    assert 0 <= result < len(positions)
+
+
+def test_find_lowest_point_empty_search_window() -> None:
+    """Test find_lowest_point with empty search window."""
+    positions = np.array([0.5, 0.6, 0.4, 0.5])  # Very short
+    velocities = np.array([0, 0.1, -0.1, 0])
+
+    result = find_lowest_point(positions, velocities, min_search_frame=10)
+
+    # Should handle empty search gracefully
+    assert isinstance(result, int)
+
+
+def test_refine_transition_with_curvature_invalid_range() -> None:
+    """Test refine_transition_with_curvature with invalid search range."""
+    positions = np.linspace(0.5, 0.7, 20)
+    velocities = np.ones(20) * 0.05
+
+    # Initial frame beyond valid range
+    result = refine_transition_with_curvature(
+        positions,
+        velocities,
+        initial_frame=25,  # Beyond array length
+        transition_type="landing",
+        search_radius=3,
+    )
+
+    # Should return initial frame without refinement
+    assert result == 25.0
+
+
+def test_find_cmj_landing_from_position_peak_no_search_window() -> None:
+    """Test find_cmj_landing_from_position_peak when search window invalid."""
+    positions = np.linspace(0.5, 0.7, 15)
+    velocities = np.ones(15) * 0.05
+    accelerations = compute_acceleration_from_derivative(positions)
+    fps = 30.0
+
+    # Takeoff at end of array
+    result = find_cmj_landing_from_position_peak(
+        positions, velocities, accelerations, takeoff_frame=14, fps=fps
+    )
+
+    # Should handle edge case gracefully
+    assert isinstance(result, float)
+
+
+def test_find_cmj_landing_from_position_peak_short_landing_window() -> None:
+    """Test landing detection when landing search window is too short."""
+    positions = np.concatenate([np.linspace(0.5, 0.3, 10), np.linspace(0.3, 0.6, 5)])
+    velocities = compute_signed_velocity(positions)
+    accelerations = compute_acceleration_from_derivative(positions)
+    fps = 30.0
+
+    result = find_cmj_landing_from_position_peak(
+        positions, velocities, accelerations, takeoff_frame=5, fps=fps
+    )
+
+    # Should find landing even with short window
+    assert isinstance(result, float)
+    assert 5 <= result <= len(positions)
+
+
+def test_detect_cmj_phases_peak_too_early() -> None:
+    """Test detect_cmj_phases when peak height is too early in video."""
+    # Create trajectory with peak in first 10 frames (invalid)
+    positions = np.concatenate(
+        [
+            np.array([0.5, 0.4, 0.3]),  # Peak at frame 2
+            np.linspace(0.3, 0.7, 50),  # Rest goes down
+        ]
+    )
+    fps = 30.0
+
+    result = detect_cmj_phases(positions, fps)
+
+    # Should return None for invalid peak position
+    assert result is None
+
+
+def test_find_lowest_point_with_fallback_positions() -> None:
+    """Test find_lowest_point uses position-based fallback when needed."""
+    # Peak very early, search window ends up empty
+    positions = np.array([0.3] + [0.5] * 20 + [0.7] * 30)
+    velocities = compute_signed_velocity(positions)
+
+    result = find_lowest_point(positions, velocities, min_search_frame=100)
+
+    # Should use fallback logic
+    assert isinstance(result, int)
+    assert 0 <= result < len(positions)

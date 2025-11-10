@@ -10,9 +10,12 @@ import pytest
 from kinemotion.api import (
     DropJumpVideoConfig,
     DropJumpVideoResult,
+    _apply_expert_overrides,
+    _determine_confidence_levels,
     process_dropjump_video,
     process_dropjump_videos_bulk,
 )
+from kinemotion.core.auto_tuning import AnalysisParameters, QualityPreset
 from kinemotion.dropjump.kinematics import DropJumpMetrics
 
 # Skip multiprocessing tests in CI
@@ -298,6 +301,102 @@ def test_process_videos_bulk_different_parameters(sample_video_path: str) -> Non
         # Check JSON output was created
         json_file = Path(tmpdir) / "video2.json"
         assert json_file.exists()
+
+
+# Unit tests for helper functions
+
+
+def test_determine_confidence_levels_default() -> None:
+    """Test _determine_confidence_levels with default values."""
+    detection, tracking = _determine_confidence_levels(
+        quality_preset=QualityPreset.BALANCED,
+        detection_confidence=None,
+        tracking_confidence=None,
+    )
+
+    assert detection == 0.5
+    assert tracking == 0.5
+
+
+def test_determine_confidence_levels_with_overrides() -> None:
+    """Test _determine_confidence_levels with custom confidence values."""
+    detection, tracking = _determine_confidence_levels(
+        quality_preset=QualityPreset.BALANCED,
+        detection_confidence=0.8,
+        tracking_confidence=0.7,
+    )
+
+    assert detection == 0.8
+    assert tracking == 0.7
+
+
+def test_apply_expert_overrides_all_parameters() -> None:
+    """Test _apply_expert_overrides with all parameters specified."""
+    params = AnalysisParameters(
+        smoothing_window=5,
+        velocity_threshold=0.02,
+        min_contact_frames=3,
+        visibility_threshold=0.5,
+        polyorder=2,
+        detection_confidence=0.5,
+        tracking_confidence=0.5,
+        outlier_rejection=False,
+        bilateral_filter=False,
+        use_curvature=True,
+    )
+
+    result = _apply_expert_overrides(
+        params,
+        smoothing_window=7,
+        velocity_threshold=0.03,
+        min_contact_frames=5,
+        visibility_threshold=0.6,
+    )
+
+    assert result.smoothing_window == 7
+    assert result.velocity_threshold == 0.03
+    assert result.min_contact_frames == 5
+    assert result.visibility_threshold == 0.6
+
+
+def test_apply_expert_overrides_partial() -> None:
+    """Test _apply_expert_overrides with only some parameters."""
+    params = AnalysisParameters(
+        smoothing_window=5,
+        velocity_threshold=0.02,
+        min_contact_frames=3,
+        visibility_threshold=0.5,
+        polyorder=2,
+        detection_confidence=0.5,
+        tracking_confidence=0.5,
+        outlier_rejection=False,
+        bilateral_filter=False,
+        use_curvature=True,
+    )
+
+    result = _apply_expert_overrides(
+        params,
+        smoothing_window=9,
+        velocity_threshold=None,
+        min_contact_frames=None,
+        visibility_threshold=None,
+    )
+
+    # Only smoothing_window should change
+    assert result.smoothing_window == 9
+    assert result.velocity_threshold == 0.02  # Unchanged
+    assert result.min_contact_frames == 3  # Unchanged
+    assert result.visibility_threshold == 0.5  # Unchanged
+
+
+def test_process_video_verbose_mode(sample_video_path: str, capsys) -> None:
+    """Test that verbose mode prints parameter information."""
+    process_dropjump_video(video_path=sample_video_path, quality="fast", verbose=True)
+
+    captured = capsys.readouterr()
+
+    # Check that verbose output contains expected information
+    assert "AUTO-TUNED PARAMETERS" in captured.out or "Processing" in captured.out
 
 
 # Fixtures
