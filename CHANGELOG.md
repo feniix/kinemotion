@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.18.1 (2025-11-10)
+
+### Bug Fixes
+
+- Ci build
+  ([`f45e2c3`](https://github.com/feniix/kinemotion/commit/f45e2c3c11ae241d24de3e44836206e111defc2a))
+
+### Refactoring
+
+- **ci**: Use reusable workflow for docs deployment
+  ([`013dbd1`](https://github.com/feniix/kinemotion/commit/013dbd112cd5bcbe69bc405066b39bb142996d46))
+
+
 ## v0.18.0 (2025-11-10)
 
 ### Bug Fixes
