@@ -19,7 +19,7 @@ uv run kinemotion cmj-analyze video.mp4
 
 **Development:**
 ```bash
-uv run pytest                           # Run all 70 tests
+uv run pytest                           # Run all 75 tests
 uv run ruff check --fix && uv run pyright  # Lint + type check
 ```
 
@@ -35,7 +35,7 @@ src/kinemotion/
 ├── dropjump/               # Drop jump: cli, analysis, kinematics, debug_overlay
 └── cmj/                    # CMJ: cli, analysis, kinematics, joint_angles, debug_overlay
 
-tests/                      # 70 tests total (61 drop jump, 9 CMJ)
+tests/                      # 75 tests total (61 drop jump, 9 CMJ, 5 CLI import)
 docs/                       # CMJ_GUIDE, TRIPLE_EXTENSION, REAL_TIME_ANALYSIS, etc.
 ```
 

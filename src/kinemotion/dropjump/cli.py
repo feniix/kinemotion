@@ -11,7 +11,11 @@ from typing import Any
 import click
 import numpy as np
 
-from ..api import VideoConfig, VideoResult, process_videos_bulk
+from ..api import (
+    DropJumpVideoConfig,
+    DropJumpVideoResult,
+    process_dropjump_videos_bulk,
+)
 from ..core.auto_tuning import (
     QualityPreset,
     analyze_video_sample,
@@ -446,7 +450,7 @@ def _create_video_configs(
     output_dir: str | None,
     json_output_dir: str | None,
     expert_params: AnalysisParameters,
-) -> list[VideoConfig]:
+) -> list[DropJumpVideoConfig]:
     """Build configuration objects for each video.
 
     Args:
@@ -457,9 +461,9 @@ def _create_video_configs(
         expert_params: Expert parameter overrides
 
     Returns:
-        List of VideoConfig objects
+        List of DropJumpVideoConfig objects
     """
-    configs: list[VideoConfig] = []
+    configs: list[DropJumpVideoConfig] = []
     for video_file in video_files:
         video_name = Path(video_file).stem
 
@@ -471,7 +475,7 @@ def _create_video_configs(
         if json_output_dir:
             json_file = str(Path(json_output_dir) / f"{video_name}.json")
 
-        config = VideoConfig(
+        config = DropJumpVideoConfig(
             video_path=video_file,
             quality=quality,
             output_video=debug_video,
@@ -489,7 +493,7 @@ def _create_video_configs(
     return configs
 
 
-def _compute_batch_statistics(results: list[VideoResult]) -> None:
+def _compute_batch_statistics(results: list[DropJumpVideoResult]) -> None:
     """Compute and display batch processing statistics.
 
     Args:
@@ -573,7 +577,7 @@ def _format_distance_metric(value: float | None) -> str:
     return f"{value:.3f}" if value is not None else "N/A"
 
 
-def _create_csv_row_from_result(result: VideoResult) -> list[str]:
+def _create_csv_row_from_result(result: DropJumpVideoResult) -> list[str]:
     """Create CSV row from video processing result.
 
     Args:
@@ -606,7 +610,9 @@ def _create_csv_row_from_result(result: VideoResult) -> list[str]:
 
 
 def _write_csv_summary(
-    csv_summary: str | None, results: list[VideoResult], successful: list[VideoResult]
+    csv_summary: str | None,
+    results: list[DropJumpVideoResult],
+    successful: list[DropJumpVideoResult],
 ) -> None:
     """Write CSV summary of batch processing results.
 
@@ -669,7 +675,7 @@ def _process_batch(
     # Progress callback
     completed = 0
 
-    def show_progress(result: VideoResult) -> None:
+    def show_progress(result: DropJumpVideoResult) -> None:
         nonlocal completed
         completed += 1
         status = "✓" if result.success else "✗"
@@ -684,7 +690,7 @@ def _process_batch(
 
     # Process all videos
     click.echo("\nProcessing videos...", err=True)
-    results = process_videos_bulk(
+    results = process_dropjump_videos_bulk(
         configs, max_workers=workers, progress_callback=show_progress
     )
 
