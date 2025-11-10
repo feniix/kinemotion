@@ -29,6 +29,29 @@ uv run ruff check --fix && uv run pyright  # Lint + type check
 - HTML: `htmlcov/index.html` (open in browser)
 - XML: `coverage.xml` (for CI integration)
 
+**SonarQube Cloud Integration:**
+
+The project integrates with SonarQube Cloud for continuous code quality and coverage tracking.
+
+Setup (one-time):
+1. Visit [SonarCloud](https://sonarcloud.io/) and sign in with GitHub
+2. Import the `feniix/kinemotion` repository
+3. Generate a token: My Account > Security > Generate Tokens
+4. Add token to GitHub: Repository > Settings > Secrets and variables > Actions
+   - Name: `SONAR_TOKEN`
+   - Value: Your generated token
+
+Configuration files:
+- `sonar-project.properties` - SonarQube project configuration
+- `.github/workflows/test.yml` - CI workflow with SonarQube scan
+
+The workflow automatically:
+- Runs tests with coverage on every PR and push to main
+- Uploads coverage.xml to SonarQube Cloud
+- Runs quality gate checks
+
+View results: https://sonarcloud.io/project/overview?id=feniix_kinemotion
+
 ## Architecture
 
 ### Module Structure

@@ -1,0 +1,81 @@
+name: Test & Quality
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for better SonarQube analysis
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.8.17"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run linting
+        run: |
+          uv run ruff check --output-format=github
+        continue-on-error: true  # Don't fail the build on linting errors
+
+      - name: Run type checking
+        run: |
+          uv run pyright
+        continue-on-error: true  # Don't fail the build on type errors
+
+      - name: Run tests with coverage
+        run: |
+          uv run pytest --cov --cov-report=xml --cov-report=term
+
+      - name: Upload coverage artifact
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
+          retention-days: 5
+
+  sonarqube:
+    name: SonarQube Scan
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Disable shallow clone for better analysis
+
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
