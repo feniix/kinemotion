@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.21.0 (2025-11-10)
+
+### Features
+
+- Add TypedDict and type aliases for improved type safety
+  ([`053e010`](https://github.com/feniix/kinemotion/commit/053e010cf80e1c91d5900c39d49b1d7ac2ac6ab4))
+
+
 ## v0.20.2 (2025-11-10)
 
 ### Bug Fixes
