@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.17.0 (2025-11-10)
+
+### Features
+
+- **ci**: Add SonarQube Cloud integration for coverage reporting
+  ([`cdc710f`](https://github.com/feniix/kinemotion/commit/cdc710f7a4c215e570eaa2b58a13f994ea7bae7c))
+
+
 ## v0.16.0 (2025-11-10)
 
 
