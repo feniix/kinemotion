@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.19.0 (2025-11-10)
+
+### Features
+
+- Add comprehensive badge layout to README
+  ([`e1e2ca3`](https://github.com/feniix/kinemotion/commit/e1e2ca38c67077092bfc1455acfbe8a424e5d4b4))
+
+
 ## v0.18.2 (2025-11-10)
 
 ### Bug Fixes
