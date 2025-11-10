@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.20.1 (2025-11-10)
+
+### Bug Fixes
+
+- Add test coverage for ffprobe warning path
+  ([`8ae3e55`](https://github.com/feniix/kinemotion/commit/8ae3e552a3bfb749d4e9bad10c634093db5eddee))
+
+
 ## v0.20.0 (2025-11-10)
 
 ### Features
