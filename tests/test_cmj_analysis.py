@@ -4,9 +4,12 @@ import numpy as np
 
 from kinemotion.cmj.analysis import (
     detect_cmj_phases,
+    find_cmj_takeoff_from_velocity_peak,
     find_countermovement_start,
     find_lowest_point,
     find_standing_phase,
+    interpolate_threshold_crossing,
+    refine_transition_with_curvature,
 )
 from kinemotion.core.smoothing import compute_velocity_from_derivative
 
@@ -156,3 +159,239 @@ def test_cmj_phases_without_standing() -> None:
         # Basic sanity checks if phases were detected
         assert lowest_point < takeoff
         assert takeoff < landing
+
+
+def test_interpolate_threshold_crossing_normal() -> None:
+    """Test interpolate_threshold_crossing with normal interpolation."""
+    # Velocity increases from 0.1 to 0.3, threshold at 0.2
+    vel_before = 0.1
+    vel_after = 0.3
+    threshold = 0.2
+
+    offset = interpolate_threshold_crossing(vel_before, vel_after, threshold)
+
+    # Should be 0.5 (halfway between 0.1 and 0.3)
+    assert abs(offset - 0.5) < 0.01
+
+
+def test_interpolate_threshold_crossing_edge_case_no_change() -> None:
+    """Test interpolate_threshold_crossing when velocity is not changing."""
+    # Velocity same at both frames
+    vel_before = 0.5
+    vel_after = 0.5
+    threshold = 0.5
+
+    offset = interpolate_threshold_crossing(vel_before, vel_after, threshold)
+
+    # Should return 0.5 when velocity not changing
+    assert offset == 0.5
+
+
+def test_interpolate_threshold_crossing_clamp_below_zero() -> None:
+    """Test interpolate_threshold_crossing clamps to [0, 1] range."""
+    # Threshold below vel_before (would give negative t)
+    vel_before = 0.5
+    vel_after = 0.8
+    threshold = 0.3  # Below vel_before
+
+    offset = interpolate_threshold_crossing(vel_before, vel_after, threshold)
+
+    # Should clamp to 0.0
+    assert offset == 0.0
+
+
+def test_interpolate_threshold_crossing_clamp_above_one() -> None:
+    """Test interpolate_threshold_crossing clamps to [0, 1] range."""
+    # Threshold above vel_after (would give t > 1)
+    vel_before = 0.2
+    vel_after = 0.5
+    threshold = 0.9  # Above vel_after
+
+    offset = interpolate_threshold_crossing(vel_before, vel_after, threshold)
+
+    # Should clamp to 1.0
+    assert offset == 1.0
+
+
+def test_interpolate_threshold_crossing_at_boundary() -> None:
+    """Test interpolate_threshold_crossing when threshold equals velocity."""
+    vel_before = 0.1
+    vel_after = 0.5
+    threshold = 0.1  # Exactly at vel_before
+
+    offset = interpolate_threshold_crossing(vel_before, vel_after, threshold)
+
+    # Should be 0.0 (at start)
+    assert offset == 0.0
+
+
+def test_refine_transition_with_curvature_landing() -> None:
+    """Test refine_transition_with_curvature for landing detection."""
+    # Create position data with clear impact spike
+    positions = np.concatenate(
+        [
+            np.linspace(0.3, 0.5, 20),  # Falling
+            np.array([0.5, 0.52, 0.54, 0.55, 0.55]),  # Impact
+            np.ones(10) * 0.55,  # Stable
+        ]
+    )
+    velocities = np.diff(positions, prepend=positions[0])
+    initial_frame = 20  # Around impact
+
+    result = refine_transition_with_curvature(
+        positions, velocities, initial_frame, transition_type="landing", search_radius=5
+    )
+
+    # Should refine near the impact point (blend of curvature and initial)
+    assert isinstance(result, float)
+    assert 15 <= result <= 25
+
+
+def test_refine_transition_with_curvature_takeoff() -> None:
+    """Test refine_transition_with_curvature for takeoff detection."""
+    # Create position data with acceleration change at takeoff
+    positions = np.concatenate(
+        [
+            np.ones(15) * 0.5,  # Static
+            np.array([0.5, 0.48, 0.45, 0.40, 0.35]),  # Accelerating upward
+            np.linspace(0.35, 0.2, 10),  # Flight
+        ]
+    )
+    velocities = np.diff(positions, prepend=positions[0])
+    initial_frame = 15  # Around takeoff
+
+    result = refine_transition_with_curvature(
+        positions, velocities, initial_frame, transition_type="takeoff", search_radius=5
+    )
+
+    # Should refine near the takeoff point
+    assert isinstance(result, float)
+    assert 12 <= result <= 20
+
+
+def test_refine_transition_with_curvature_empty_search_window() -> None:
+    """Test refine_transition_with_curvature with empty search window."""
+    positions = np.linspace(0.5, 0.3, 10)
+    velocities = np.diff(positions, prepend=positions[0])
+    initial_frame = 0  # At boundary
+    search_radius = 0  # No search radius
+
+    result = refine_transition_with_curvature(
+        positions,
+        velocities,
+        initial_frame,
+        transition_type="landing",
+        search_radius=search_radius,
+    )
+
+    # Should return initial frame when search window is empty
+    assert result == float(initial_frame)
+
+
+def test_refine_transition_with_curvature_invalid_type() -> None:
+    """Test refine_transition_with_curvature with invalid transition type."""
+    positions = np.linspace(0.5, 0.3, 20)
+    velocities = np.diff(positions, prepend=positions[0])
+    initial_frame = 10
+
+    result = refine_transition_with_curvature(
+        positions,
+        velocities,
+        initial_frame,
+        transition_type="invalid",  # Invalid type
+        search_radius=5,
+    )
+
+    # Should return initial frame for invalid type
+    assert result == float(initial_frame)
+
+
+def test_refine_transition_with_curvature_takeoff_empty_accel_change() -> None:
+    """Test refine_transition_with_curvature takeoff with very small search window."""
+    # Create minimal data that results in empty acceleration change
+    positions = np.linspace(0.5, 0.4, 10)
+    velocities = np.diff(positions, prepend=positions[0])
+    initial_frame = 5
+    search_radius = 0  # Will create search window with just 1 element
+
+    result = refine_transition_with_curvature(
+        positions,
+        velocities,
+        initial_frame,
+        transition_type="takeoff",
+        search_radius=search_radius,
+    )
+
+    # Should handle empty accel_change gracefully
+    assert isinstance(result, float)
+
+
+def test_find_cmj_takeoff_from_velocity_peak_normal() -> None:
+    """Test find_cmj_takeoff_from_velocity_peak with clear peak."""
+    # Create velocity data with clear upward peak (most negative)
+    positions = np.linspace(0.7, 0.3, 50)  # Dummy positions
+    velocities = np.concatenate(
+        [
+            np.linspace(-0.01, -0.05, 10),  # Accelerating upward
+            np.array([-0.08, -0.10, -0.09, -0.06]),  # Peak at index 11
+            np.linspace(-0.05, -0.01, 10),  # Decelerating
+        ]
+    )
+    lowest_point_frame = 0
+    fps = 30.0
+
+    result = find_cmj_takeoff_from_velocity_peak(
+        positions, velocities, lowest_point_frame, fps
+    )
+
+    # Should find the peak around frame 11
+    assert isinstance(result, float)
+    assert 8 <= result <= 15
+
+
+def test_find_cmj_takeoff_from_velocity_peak_search_window_too_short() -> None:
+    """Test find_cmj_takeoff_from_velocity_peak with search window at boundary."""
+    positions = np.linspace(0.5, 0.3, 10)
+    velocities = np.linspace(-0.01, -0.05, 10)
+    lowest_point_frame = 10  # Beyond array length
+    fps = 30.0
+
+    result = find_cmj_takeoff_from_velocity_peak(
+        positions, velocities, lowest_point_frame, fps
+    )
+
+    # Should return lowest_point_frame + 1 when search window too short
+    assert result == float(lowest_point_frame + 1)
+
+
+def test_find_cmj_takeoff_from_velocity_peak_at_start() -> None:
+    """Test find_cmj_takeoff_from_velocity_peak with peak at start of search."""
+    positions = np.linspace(0.5, 0.3, 30)
+    # Peak velocity right at the start
+    velocities = np.concatenate([np.array([-0.10]), np.linspace(-0.05, -0.01, 29)])
+    lowest_point_frame = 0
+    fps = 30.0
+
+    result = find_cmj_takeoff_from_velocity_peak(
+        positions, velocities, lowest_point_frame, fps
+    )
+
+    # Should find peak at or near frame 0
+    assert isinstance(result, float)
+    assert 0 <= result <= 3
+
+
+def test_find_cmj_takeoff_from_velocity_peak_constant_velocity() -> None:
+    """Test find_cmj_takeoff_from_velocity_peak with constant velocity."""
+    positions = np.linspace(0.5, 0.3, 30)
+    velocities = np.ones(30) * -0.05  # Constant velocity
+    lowest_point_frame = 5
+    fps = 30.0
+
+    result = find_cmj_takeoff_from_velocity_peak(
+        positions, velocities, lowest_point_frame, fps
+    )
+
+    # Should find first frame (argmin of constant array returns 0)
+    assert isinstance(result, float)
+    assert result == float(lowest_point_frame)
