@@ -89,7 +89,7 @@ jobs:
           name: coverage-report
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v6
         continue-on-error: true  # Don't fail workflow if SonarCloud isn't configured yet
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
