@@ -7,15 +7,12 @@ on:
   pull_request:
     branches:
       - main
+  workflow_call:  # Allow this workflow to be called by other workflows
 
 jobs:
   test:
-    name: Test (Python ${{ matrix.python-version }})
+    name: Test & Quality
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false  # Continue running other matrix jobs even if one fails
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
       - name: Checkout repository
@@ -23,10 +20,10 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for better SonarQube analysis
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.12"
 
       - name: Install system dependencies
         run: |
@@ -64,7 +61,6 @@ jobs:
           uv run pytest --cov --cov-report=xml --cov-report=term
 
       - name: Upload coverage artifact
-        if: matrix.python-version == '3.12'
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
@@ -90,7 +86,6 @@ jobs:
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
-        continue-on-error: true  # Don't fail workflow if SonarCloud isn't configured yet
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
