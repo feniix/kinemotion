@@ -2,9 +2,11 @@
 
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 import cv2
 import numpy as np
+import pytest
 
 from kinemotion.core.video_io import VideoProcessor
 from kinemotion.dropjump.debug_overlay import DebugOverlayRenderer
@@ -98,8 +100,6 @@ def test_aspect_ratio_9_16_portrait():
 
 def test_frame_dimension_validation():
     """Test that mismatched frame dimensions raise an error."""
-    import pytest
-
     output_path = tempfile.NamedTemporaryFile(suffix=".mp4", delete=False).name
 
     try:
@@ -117,3 +117,22 @@ def test_frame_dimension_validation():
 
     finally:
         Path(output_path).unlink(missing_ok=True)
+
+
+def test_ffprobe_not_found_warning():
+    """Test that warning is shown when ffprobe is not available."""
+    test_video = create_test_video(640, 480)
+
+    try:
+        # Mock subprocess.run to raise FileNotFoundError (ffprobe not found)
+        with patch(
+            "subprocess.run", side_effect=FileNotFoundError("ffprobe not found")
+        ):
+            with pytest.warns(
+                UserWarning, match="ffprobe not found.*rotation and aspect ratio"
+            ):
+                video = VideoProcessor(test_video)
+                video.close()
+
+    finally:
+        Path(test_video).unlink()
