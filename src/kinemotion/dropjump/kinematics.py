@@ -1,6 +1,9 @@
 """Kinematic calculations for drop-jump metrics."""
 
+from typing import TypedDict
+
 import numpy as np
+from numpy.typing import NDArray
 
 from ..core.smoothing import compute_acceleration_from_derivative
 from .analysis import (
@@ -10,6 +13,25 @@ from .analysis import (
     find_interpolated_phase_transitions_with_curvature,
     find_landing_from_acceleration,
 )
+
+
+class DropJumpMetricsDict(TypedDict, total=False):
+    """Type-safe dictionary for drop jump metrics JSON output."""
+
+    ground_contact_time_ms: float | None
+    flight_time_ms: float | None
+    jump_height_m: float | None
+    jump_height_kinematic_m: float | None
+    jump_height_trajectory_normalized: float | None
+    contact_start_frame: int | None
+    contact_end_frame: int | None
+    flight_start_frame: int | None
+    flight_end_frame: int | None
+    peak_height_frame: int | None
+    contact_start_frame_precise: float | None
+    contact_end_frame_precise: float | None
+    flight_start_frame_precise: float | None
+    flight_end_frame_precise: float | None
 
 
 class DropJumpMetrics:
@@ -32,7 +54,7 @@ class DropJumpMetrics:
         self.flight_start_frame_precise: float | None = None
         self.flight_end_frame_precise: float | None = None
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> DropJumpMetricsDict:
         """Convert metrics to dictionary for JSON output."""
         return {
             "ground_contact_time_ms": (
@@ -108,7 +130,7 @@ class DropJumpMetrics:
 
 def _determine_drop_start_frame(
     drop_start_frame: int | None,
-    foot_y_positions: np.ndarray,
+    foot_y_positions: NDArray[np.float64],
     fps: float,
     smoothing_window: int,
 ) -> int:
@@ -170,7 +192,7 @@ def _identify_main_contact_phase(
     phases: list[tuple[int, int, ContactState]],
     ground_phases: list[tuple[int, int, int]],
     air_phases_indexed: list[tuple[int, int, int]],
-    foot_y_positions: np.ndarray,
+    foot_y_positions: NDArray[np.float64],
 ) -> tuple[int, int, bool]:
     """Identify the main contact phase and determine if it's a drop jump.
 
@@ -260,7 +282,7 @@ def _analyze_flight_phase(
     phases: list[tuple[int, int, ContactState]],
     interpolated_phases: list[tuple[float, float, ContactState]],
     contact_end: int,
-    foot_y_positions: np.ndarray,
+    foot_y_positions: NDArray[np.float64],
     fps: float,
     smoothing_window: int,
     polyorder: int,
@@ -341,7 +363,7 @@ def _analyze_flight_phase(
 
 def calculate_drop_jump_metrics(
     contact_states: list[ContactState],
-    foot_y_positions: np.ndarray,
+    foot_y_positions: NDArray[np.float64],
     fps: float,
     drop_start_frame: int | None = None,
     velocity_threshold: float = 0.02,

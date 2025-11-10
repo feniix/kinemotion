@@ -62,8 +62,11 @@ dev = [
 ]
 
 
-[tool.pytest.ini_options]
+[tool.pytest]
+minversion = "9.0"
 testpaths = ["tests"]
+console_output_style = "times"
+strict = true
 addopts = [
     "--cov=src/kinemotion",
     "--cov-report=term-missing",

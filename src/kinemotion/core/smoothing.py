@@ -1,5 +1,7 @@
 """Landmark smoothing utilities to reduce jitter in pose tracking."""
 
+from typing import TypeAlias
+
 import numpy as np
 from scipy.signal import savgol_filter
 
@@ -8,9 +10,14 @@ from .filtering import (
     reject_outliers,
 )
 
+# Type aliases for landmark data structures
+LandmarkCoord: TypeAlias = tuple[float, float, float]  # (x, y, visibility)
+LandmarkFrame: TypeAlias = dict[str, LandmarkCoord] | None
+LandmarkSequence: TypeAlias = list[LandmarkFrame]
+
 
 def _extract_landmark_coordinates(
-    landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
+    landmark_sequence: LandmarkSequence,
     landmark_name: str,
 ) -> tuple[list[float], list[float], list[int]]:
     """
@@ -38,7 +45,7 @@ def _extract_landmark_coordinates(
 
 
 def _get_landmark_names(
-    landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
+    landmark_sequence: LandmarkSequence,
 ) -> list[str] | None:
     """
     Extract landmark names from first valid frame.
@@ -56,8 +63,8 @@ def _get_landmark_names(
 
 
 def _fill_missing_frames(
-    smoothed_sequence: list[dict[str, tuple[float, float, float]] | None],
-    landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
+    smoothed_sequence: LandmarkSequence,
+    landmark_sequence: LandmarkSequence,
 ) -> None:
     """
     Fill in any missing frames in smoothed sequence with original data.
@@ -75,8 +82,8 @@ def _fill_missing_frames(
 
 
 def _store_smoothed_landmarks(
-    smoothed_sequence: list[dict[str, tuple[float, float, float]] | None],
-    landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
+    smoothed_sequence: LandmarkSequence,
+    landmark_sequence: LandmarkSequence,
     landmark_name: str,
     x_smooth: np.ndarray,
     y_smooth: np.ndarray,
@@ -118,11 +125,11 @@ def _store_smoothed_landmarks(
 
 
 def _smooth_landmarks_core(  # NOSONAR(S1172) - polyorder used via closure capture in smoother_fn
-    landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
+    landmark_sequence: LandmarkSequence,
     window_length: int,
     polyorder: int,
     smoother_fn,  # type: ignore[no-untyped-def]
-) -> list[dict[str, tuple[float, float, float]] | None]:
+) -> LandmarkSequence:
     """
     Core smoothing logic shared by both standard and advanced smoothing.
 
@@ -170,10 +177,10 @@ def _smooth_landmarks_core(  # NOSONAR(S1172) - polyorder used via closure captu
 
 
 def smooth_landmarks(
-    landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
+    landmark_sequence: LandmarkSequence,
     window_length: int = 5,
     polyorder: int = 2,
-) -> list[dict[str, tuple[float, float, float]] | None]:
+) -> LandmarkSequence:
     """
     Smooth landmark trajectories using Savitzky-Golay filter.
 
@@ -330,7 +337,7 @@ def compute_acceleration_from_derivative(
 
 
 def smooth_landmarks_advanced(
-    landmark_sequence: list[dict[str, tuple[float, float, float]] | None],
+    landmark_sequence: LandmarkSequence,
     window_length: int = 5,
     polyorder: int = 2,
     use_outlier_rejection: bool = True,
@@ -338,7 +345,7 @@ def smooth_landmarks_advanced(
     ransac_threshold: float = 0.02,
     bilateral_sigma_spatial: float = 3.0,
     bilateral_sigma_intensity: float = 0.02,
-) -> list[dict[str, tuple[float, float, float]] | None]:
+) -> LandmarkSequence:
     """
     Advanced landmark smoothing with outlier rejection and bilateral filtering.
 

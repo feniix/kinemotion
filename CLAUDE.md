@@ -19,7 +19,7 @@ uv run kinemotion cmj-analyze video.mp4
 
 **Development:**
 ```bash
-uv run pytest                           # Run all 75 tests with coverage (50.75%)
+uv run pytest                           # Run all 146 tests with coverage (57.57%)
 uv run pytest --cov-report=html         # Generate HTML coverage report
 uv run ruff check --fix && uv run pyright  # Lint + type check
 ```
@@ -64,7 +64,7 @@ src/kinemotion/
 ├── dropjump/               # Drop jump: cli, analysis, kinematics, debug_overlay
 └── cmj/                    # CMJ: cli, analysis, kinematics, joint_angles, debug_overlay
 
-tests/                      # 75 tests total (61 drop jump, 9 CMJ, 5 CLI import)
+tests/                      # 146 tests total (comprehensive coverage across all modules)
 docs/                       # CMJ_GUIDE, TRIPLE_EXTENSION, REAL_TIME_ANALYSIS, etc.
 ```
 
@@ -168,7 +168,7 @@ OpenCV vs NumPy ordering:
 ```bash
 uv run ruff check --fix   # Auto-fix linting
 uv run pyright            # Type check (strict)
-uv run pytest             # All 75 tests with coverage
+uv run pytest             # All 146 tests with coverage
 ```
 
 ### Standards
@@ -177,22 +177,22 @@ uv run pytest             # All 75 tests with coverage
 - Ruff (100 char lines)
 - Conventional Commits (see below)
 - **Code duplication target: < 3%**
-- **Test coverage: ≥ 50% (current: 50.75% with branch coverage)**
+- **Test coverage: ≥ 50% (current: 57.57% with branch coverage)**
 
 ### Coverage Analysis
 
-Current coverage: **50.75%** (2184 statements, 752 branches)
+Current coverage: **57.57%** (2225 statements, 752 branches)
 
 **Well-tested modules (>80%):**
 - Core filtering: 87.80%
 - Core pose tracking: 88.46%
-- Drop jump kinematics: 83.94%
-- CMJ kinematics: 94.67%
+- Drop jump kinematics: 85.71%
+- CMJ kinematics: 95.65%
+- CMJ joint angles: 100.00%
 
-**Needs improvement (<30%):**
+**Expected lower coverage (<30%):**
 - CLI modules: 22-23% (expected - minimal integration tests)
 - Debug overlays: 10-36% (visualization code)
-- Joint angles: 6.20% (feature module)
 
 View detailed report: `uv run pytest --cov-report=html && open htmlcov/index.html`
 
@@ -268,6 +268,63 @@ metrics = process_cmj_video("video.mp4", quality="balanced")
 1. Convert NumPy types in `to_dict()`: `int()`, `float()`
 2. Type all functions (pyright strict)
 3. Handle None in optional fields
+4. Use TypedDict for dictionary returns
+5. Use type aliases for complex nested types
+
+### Modern Type Hints (NumPy 2.x)
+
+The project uses NumPy 2.x-compatible type hints:
+
+**TypedDict for type-safe dictionaries:**
+```python
+from typing import TypedDict
+
+class DropJumpMetricsDict(TypedDict, total=False):
+    """Type-safe dictionary for drop jump metrics JSON output."""
+    ground_contact_time_ms: float | None
+    flight_time_ms: float | None
+    # ... IDE autocomplete and type checking!
+```
+
+**Type aliases for cleaner signatures:**
+```python
+from typing import TypeAlias
+
+LandmarkCoord: TypeAlias = tuple[float, float, float]  # (x, y, visibility)
+LandmarkFrame: TypeAlias = dict[str, LandmarkCoord] | None
+LandmarkSequence: TypeAlias = list[LandmarkFrame]
+
+def smooth_landmarks(landmark_sequence: LandmarkSequence) -> LandmarkSequence:
+    # Much cleaner than list[dict[str, tuple[float, float, float]] | None]!
+```
+
+**NDArray with dtype specificity:**
+```python
+from numpy.typing import NDArray
+
+def calculate_metrics(
+    positions: NDArray[np.float64],  # Explicit dtype for arrays
+    velocities: NDArray[np.float64],
+) -> CMJMetrics:
+    ...
+```
+
+### Dependencies
+
+**Key versions:**
+- Python: 3.12.7
+- NumPy: 2.3.4 (benefits: better type hints, improved SciPy compatibility)
+- pytest: 9.0.0 (features: per-test timing, strict mode)
+- MediaPipe: 0.10.14
+
+**Pytest 9 configuration** (`pyproject.toml`):
+```toml
+[tool.pytest]
+minversion = "9.0"
+testpaths = ["tests"]
+console_output_style = "times"  # Shows execution time per test
+strict = true                    # Enables all strictness options
+```
 
 ## Documentation
 

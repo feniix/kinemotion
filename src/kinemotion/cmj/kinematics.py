@@ -1,9 +1,30 @@
 """Counter Movement Jump (CMJ) metrics calculation."""
 
 from dataclasses import dataclass
-from typing import Any
+from typing import TypedDict
 
 import numpy as np
+from numpy.typing import NDArray
+
+
+class CMJMetricsDict(TypedDict, total=False):
+    """Type-safe dictionary for CMJ metrics JSON output."""
+
+    jump_height_m: float
+    flight_time_s: float
+    countermovement_depth_m: float
+    eccentric_duration_s: float
+    concentric_duration_s: float
+    total_movement_time_s: float
+    peak_eccentric_velocity_m_s: float
+    peak_concentric_velocity_m_s: float
+    transition_time_s: float | None
+    standing_start_frame: float | None
+    lowest_point_frame: float
+    takeoff_frame: float
+    landing_frame: float
+    video_fps: float
+    tracking_method: str
 
 
 @dataclass
@@ -44,7 +65,7 @@ class CMJMetrics:
     video_fps: float
     tracking_method: str
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> CMJMetricsDict:
         """Convert metrics to JSON-serializable dictionary.
 
         Returns:
@@ -78,8 +99,8 @@ class CMJMetrics:
 
 
 def calculate_cmj_metrics(
-    positions: np.ndarray,
-    velocities: np.ndarray,
+    positions: NDArray[np.float64],
+    velocities: NDArray[np.float64],
     standing_start_frame: float | None,
     lowest_point_frame: float,
     takeoff_frame: float,
