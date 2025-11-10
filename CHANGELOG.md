@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.17.6 (2025-11-10)
+
+### Bug Fixes
+
+- **ci**: Use unified SonarQube scan action
+  ([`be20164`](https://github.com/feniix/kinemotion/commit/be20164339a545ff2256d38a8297281eb75ddfea))
+
+### Performance Improvements
+
+- **ci**: Enable uv dependency caching for faster builds
+  ([`3a2e093`](https://github.com/feniix/kinemotion/commit/3a2e0932a34953bae8ae31b9a324eb2ca2450f57))
+
+
 ## v0.17.5 (2025-11-10)
 
 ### Bug Fixes
