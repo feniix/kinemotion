@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.15.3 (2025-11-10)
+
+### Bug Fixes
+
+- **dropjump**: Correct API imports in CLI module
+  ([`b456d4c`](https://github.com/feniix/kinemotion/commit/b456d4c0a09234df70da3d67de0ed53c4fe55cfe))
+
+### Documentation
+
+- **development**: Add HYROX wall ball no-rep detection implementation plan
+  ([`f38f5ae`](https://github.com/feniix/kinemotion/commit/f38f5ae21b2cb767fdf0156f193ce988d58fee7f))
+
+
 ## v0.15.2 (2025-11-07)
 
 ### Bug Fixes
