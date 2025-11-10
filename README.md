@@ -64,27 +64,70 @@ For clinical, research, or performance assessment requiring validated accuracy, 
 
 ## Setup
 
-### Prerequisites
+### System Requirements
 
-- [asdf](https://asdf-vm.com/) version manager
-- asdf plugins for Python and uv
+**All Platforms:**
 
-### Installation
+- Python 3.10, 3.11, or 3.12
 
-1. **Install asdf plugins** (if not already installed):
+**Platform-Specific:**
+
+#### Windows
+
+No additional system dependencies required.
+
+**Recommended for mobile video support:**
+
+- [FFmpeg](https://ffmpeg.org/download.html) - Download and add to PATH
+
+#### macOS
+
+No additional system dependencies required.
+
+**Recommended for mobile video support:**
+
+```bash
+brew install ffmpeg
+```
+
+#### Linux (Ubuntu/Debian)
+
+**Recommended system libraries:**
+
+```bash
+sudo apt-get update
+sudo apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    ffmpeg
+```
+
+**Note:** `ffmpeg` provides the `ffprobe` tool for video metadata extraction (rotation, aspect ratio). Kinemotion works without it, but mobile/rotated videos may not process correctly. A warning will be shown if `ffprobe` is not available.
+
+### Installation Methods
+
+#### From PyPI (Recommended)
+
+```bash
+pip install kinemotion
+```
+
+#### From Source (Development)
+
+**Step 1:** Install asdf plugins (if not already installed):
 
 ```bash
 asdf plugin add python
 asdf plugin add uv
 ```
 
-1. **Install versions specified in `.tool-versions`**:
+**Step 2:** Install versions specified in `.tool-versions`:
 
 ```bash
 asdf install
 ```
 
-1. **Install project dependencies using uv**:
+**Step 3:** Install project dependencies using uv:
 
 ```bash
 uv sync
@@ -96,7 +139,7 @@ This will install all dependencies and make the `kinemotion` command available.
 
 Kinemotion supports two jump types with intelligent auto-tuning that automatically optimizes parameters based on video characteristics.
 
-### Drop Jump Analysis
+### Analyzing Drop Jumps
 
 Analyzes reactive strength and ground contact time:
 
@@ -105,7 +148,7 @@ Analyzes reactive strength and ground contact time:
 kinemotion dropjump-analyze video.mp4
 ```
 
-### Counter Movement Jump (CMJ) Analysis
+### Analyzing CMJ
 
 Analyzes jump height and biomechanics:
 

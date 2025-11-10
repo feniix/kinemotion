@@ -2,6 +2,7 @@
 
 import json
 import subprocess
+import warnings
 
 import cv2
 import numpy as np
@@ -147,8 +148,17 @@ class VideoProcessor:
             # Extract rotation from side_data_list (common for iPhone videos)
             self.rotation = self._extract_rotation_from_stream(stream)
 
-        except (subprocess.TimeoutExpired, FileNotFoundError, json.JSONDecodeError):
-            # If ffprobe fails, keep original dimensions (square pixels)
+        except FileNotFoundError:
+            # ffprobe not found - warn user about reduced functionality
+            warnings.warn(
+                "ffprobe not found. Video rotation and aspect ratio metadata will be "
+                "ignored. This may cause issues with mobile/rotated videos. "
+                "Install FFmpeg for full video support: https://ffmpeg.org/download.html",
+                UserWarning,
+                stacklevel=2,
+            )
+        except (subprocess.TimeoutExpired, json.JSONDecodeError):
+            # If ffprobe fails for other reasons, silently continue with defaults
             pass
 
     def read_frame(self) -> np.ndarray | None:
