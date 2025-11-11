@@ -74,15 +74,24 @@ For clinical, research, or performance assessment requiring validated accuracy, 
 
 #### Windows
 
-No additional system dependencies required.
+**Required system dependencies:**
+
+- [Microsoft Visual C++ 2022 Redistributable](https://visualstudio.microsoft.com/visual-cpp-build-tools/) - Runtime libraries for OpenCV/MediaPipe
+- Python 3.10-3.12 (64-bit) - MediaPipe requires 64-bit Python
 
 **Recommended for mobile video support:**
 
-- [FFmpeg](https://ffmpeg.org/download.html) - Download and add to PATH
+- [FFmpeg](https://ffmpeg.org/download.html) - Download and add to PATH for full video codec support
 
 #### macOS
 
-No additional system dependencies required.
+**Required system dependencies:**
+
+- Xcode Command Line Tools - Provides compilers and system frameworks
+
+  ```bash
+  xcode-select --install
+  ```
 
 **Recommended for mobile video support:**
 
@@ -97,9 +106,10 @@ brew install ffmpeg
 ```bash
 sudo apt-get update
 sudo apt-get install -y \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
-    ffmpeg
+    libgl1 \           # OpenGL library for OpenCV
+    libglib2.0-0 \     # GLib library for MediaPipe
+    libgomp1 \         # OpenMP library for multi-threading
+    ffmpeg             # Video codec support and metadata extraction
 ```
 
 **Note:** `ffmpeg` provides the `ffprobe` tool for video metadata extraction (rotation, aspect ratio). Kinemotion works without it, but mobile/rotated videos may not process correctly. A warning will be shown if `ffprobe` is not available.
