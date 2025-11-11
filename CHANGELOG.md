@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.24.0 (2025-11-11)
+
+### Features
+
+- Document platform-specific system dependencies for Windows, macOS, and Linux
+  ([`928a6ad`](https://github.com/feniix/kinemotion/commit/928a6adbef18df77f5941ae0b2e82ba9d62a38b7))
+
+
 ## v0.23.0 (2025-11-10)
 
 ### Features
