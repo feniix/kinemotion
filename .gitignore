@@ -69,3 +69,4 @@ Thumbs.db
 *.jpg
 
 .claude/settings.local.json*
+.cursor/mcp.json

@@ -1,0 +1,16 @@
+# Node.js dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+dist/
+.cache/
+
+# Demo results
+batch_results/
+
+# Generated HTML (if slides.md is the source)
+index.html
+
+# OS files
+.DS_Store

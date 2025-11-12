@@ -1,0 +1,23 @@
+# Demo output artifacts
+batch_results/
+debug_output.mp4
+*.json
+
+# Sample videos (large binary files)
+sample_videos/*.mp4
+sample_videos/*.MOV
+sample_videos/*.mov
+sample_videos/*.avi
+sample_videos/*.AVI
+
+# Export files
+*.csv
+
+# Jupyter outputs
+.ipynb_checkpoints/
+*.ipynb-meta
+
+# Keep structure
+!.gitkeep
+!README.md
+!sample_videos/README.md
