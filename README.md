@@ -50,17 +50,42 @@
 - **Metrics**: Jump height, flight time, countermovement depth, eccentric/concentric durations
 - **Validated accuracy**: 50.6cm jump (±1 frame precision)
 
-## Validation Status
+## ⚠️ Validation Status
 
-⚠️ **IMPORTANT**: This tool's accuracy has **not been validated** against gold standard measurements (force plates, 3D motion capture). All accuracy claims and improvement estimates are theoretical and based on algorithmic considerations, not empirical testing.
+**Current Status:** Pre-validation (not validated against force plates or motion capture systems)
 
-The tool provides consistent measurements and may be useful for:
+### What This Tool IS Suitable For
 
-- Tracking relative changes in an individual athlete over time
-- Comparing similar jumps under controlled conditions
-- Exploratory analysis and research
+✅ **Training monitoring** - Track relative changes within the same athlete over time
+✅ **Educational purposes** - Learn about jump biomechanics and video analysis
+✅ **Exploratory analysis** - Initial investigation before formal testing
+✅ **Proof-of-concept research** - Demonstrate feasibility of video-based methods
 
-For clinical, research, or performance assessment requiring validated accuracy, this tool should be compared against validated measurement systems before use.
+### What This Tool IS NOT Suitable For
+
+❌ **Research publications** - As a validated measurement instrument
+❌ **Clinical decision-making** - Injury assessment, return-to-play decisions
+❌ **Talent identification** - Absolute performance comparisons between athletes
+❌ **Legal/insurance assessments** - Any context requiring validated measurements
+❌ **High-stakes testing** - Draft combines, professional athlete evaluation
+
+### Known Limitations
+
+- **No force plate validation** - Accuracy claims are theoretical, not empirical
+- **MediaPipe constraints** - Accuracy affected by lighting, clothing, occlusion, camera quality
+- **Lower sampling rate** - Typical video (30-60fps) vs validated apps (120-240Hz)
+- **Indirect measurement** - Landmarks → CoM estimation introduces potential error
+- **No correction factors** - Unlike validated tools (e.g., MyJump), no systematic bias corrections applied
+
+### Recommended Use
+
+If you need validated measurements for research or clinical use, consider:
+
+- **Commercial validated apps**: MyJump 2, MyJumpLab (smartphone-based, force plate validated)
+- **Laboratory equipment**: Force plates, optical motion capture systems
+- **Validation testing**: Compare kinemotion against validated equipment in your specific use case
+
+For detailed validation status and roadmap, see [`docs/validation-status.md`](docs/validation-status.md).
 
 ## Setup
 

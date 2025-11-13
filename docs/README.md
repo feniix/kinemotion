@@ -24,6 +24,7 @@ Welcome to the kinemotion documentation. This directory contains guides, technic
 
 ### 🔬 Research & Validation
 
+- **[⚠️ Validation Status](validation-status.md)** - **READ FIRST** - Current validation status, limitations, and appropriate use cases
 - **[Sports Biomechanics Pose Estimation](research/sports-biomechanics-pose-estimation.md)** - Comprehensive research analysis on pose detection systems for sports biomechanics
   - Pose2Sim validation (3-4° accuracy)
   - Stereo MediaPipe validation (30.1mm RMSE)
@@ -39,6 +40,7 @@ Welcome to the kinemotion documentation. This directory contains guides, technic
 
 ### 👨‍💻 Development
 
+- **[Validation Roadmap](development/validation-roadmap.md)** - 3-month validation plan (no lab equipment required)
 - **[Validation Plan](development/validation-plan.md)** - Testing and validation strategy
 - **[Errors & Findings](development/errors-findings.md)** - Known issues and debugging information
 - **[Wall Ball No-Rep Detection](development/wallball-norep-detection.md)** - Future feature implementation plan for HYROX wall ball analysis
@@ -73,9 +75,15 @@ Start here:
 
 ### For Researchers
 
+#### ⚠️ IMPORTANT: Read validation status first before using in research
+
+1. [**Validation Status**](validation-status.md) - **READ FIRST** - Limitations and appropriate use
+
 1. [Sports Biomechanics Pose Estimation](research/sports-biomechanics-pose-estimation.md) - Research analysis
+
 1. [Pose Systems Quick Reference](reference/pose-systems.md) - System comparisons
-1. [Validation Plan](development/validation-plan.md) - Validation methodology
+
+1. [Validation Roadmap](development/validation-roadmap.md) - Planned validation activities
 
 ### For Developers
 
