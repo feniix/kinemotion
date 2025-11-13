@@ -19,6 +19,17 @@ from .core.auto_tuning import (
     auto_tune_parameters,
 )
 from .core.filtering import reject_outliers
+from .core.metadata import (
+    AlgorithmConfig,
+    DetectionConfig,
+    DropDetectionConfig,
+    ProcessingInfo,
+    ResultMetadata,
+    SmoothingConfig,
+    VideoInfo,
+    create_timestamp,
+    get_kinemotion_version,
+)
 from .core.pose import PoseTracker
 from .core.quality import assess_jump_quality
 from .core.smoothing import smooth_landmarks, smooth_landmarks_advanced
@@ -395,6 +406,9 @@ def process_dropjump_video(
     if not Path(video_path).exists():
         raise FileNotFoundError(f"Video file not found: {video_path}")
 
+    # Start timing
+    start_time = time.time()
+
     # Convert quality string to enum
     quality_preset = _parse_quality_preset(quality)
 
@@ -500,8 +514,64 @@ def process_dropjump_video(
             phase_count=phase_count,
         )
 
-        # Attach quality assessment to metrics
-        metrics.quality_assessment = quality_result
+        # Build complete metadata
+        processing_time = time.time() - start_time
+
+        video_info = VideoInfo(
+            source_path=video_path,
+            fps=video.fps,
+            width=video.width,
+            height=video.height,
+            duration_s=video.frame_count / video.fps,
+            frame_count=video.frame_count,
+            codec=None,
+        )
+
+        processing_info = ProcessingInfo(
+            version=get_kinemotion_version(),
+            timestamp=create_timestamp(),
+            quality_preset=quality_preset.value,
+            processing_time_s=processing_time,
+        )
+
+        # Check if drop start was auto-detected
+        drop_frame = None
+        if drop_start_frame is None and metrics.contact_start_frame is not None:
+            # Auto-detected
+            drop_frame = metrics.contact_start_frame
+
+        algorithm_config = AlgorithmConfig(
+            detection_method="forward_search",
+            tracking_method="mediapipe_pose",
+            model_complexity=1,
+            smoothing=SmoothingConfig(
+                window_size=params.smoothing_window,
+                polynomial_order=params.polyorder,
+                use_bilateral_filter=params.bilateral_filter,
+                use_outlier_rejection=params.outlier_rejection,
+            ),
+            detection=DetectionConfig(
+                velocity_threshold=params.velocity_threshold,
+                min_contact_frames=params.min_contact_frames,
+                visibility_threshold=params.visibility_threshold,
+                use_curvature_refinement=params.use_curvature,
+            ),
+            drop_detection=DropDetectionConfig(
+                auto_detect_drop_start=(drop_start_frame is None),
+                detected_drop_frame=drop_frame,
+                min_stationary_duration_s=0.5,
+            ),
+        )
+
+        result_metadata = ResultMetadata(
+            quality=quality_result,
+            video=video_info,
+            processing=processing_info,
+            algorithm=algorithm_config,
+        )
+
+        # Attach complete metadata to metrics
+        metrics.result_metadata = result_metadata
 
         if verbose and quality_result.warnings:
             print("\n⚠️  Quality Warnings:")
@@ -765,6 +835,9 @@ def process_cmj_video(
     if not Path(video_path).exists():
         raise FileNotFoundError(f"Video file not found: {video_path}")
 
+    # Start timing
+    start_time = time.time()
+
     # Convert quality string to enum
     quality_preset = _parse_quality_preset(quality)
 
@@ -882,8 +955,54 @@ def process_cmj_video(
             phase_count=phase_count,
         )
 
-        # Attach quality assessment to metrics
-        metrics.quality_assessment = quality_result
+        # Build complete metadata
+        processing_time = time.time() - start_time
+
+        video_info = VideoInfo(
+            source_path=video_path,
+            fps=video.fps,
+            width=video.width,
+            height=video.height,
+            duration_s=video.frame_count / video.fps,
+            frame_count=video.frame_count,
+            codec=None,  # TODO: Extract from video metadata if available
+        )
+
+        processing_info = ProcessingInfo(
+            version=get_kinemotion_version(),
+            timestamp=create_timestamp(),
+            quality_preset=quality_preset.value,
+            processing_time_s=processing_time,
+        )
+
+        algorithm_config = AlgorithmConfig(
+            detection_method="backward_search",
+            tracking_method="mediapipe_pose",
+            model_complexity=1,
+            smoothing=SmoothingConfig(
+                window_size=params.smoothing_window,
+                polynomial_order=params.polyorder,
+                use_bilateral_filter=params.bilateral_filter,
+                use_outlier_rejection=params.outlier_rejection,
+            ),
+            detection=DetectionConfig(
+                velocity_threshold=params.velocity_threshold,
+                min_contact_frames=params.min_contact_frames,
+                visibility_threshold=params.visibility_threshold,
+                use_curvature_refinement=params.use_curvature,
+            ),
+            drop_detection=None,  # CMJ doesn't have drop detection
+        )
+
+        result_metadata = ResultMetadata(
+            quality=quality_result,
+            video=video_info,
+            processing=processing_info,
+            algorithm=algorithm_config,
+        )
+
+        # Attach complete metadata to metrics
+        metrics.result_metadata = result_metadata
 
         if verbose and quality_result.warnings:
             print("\n⚠️  Quality Warnings:")

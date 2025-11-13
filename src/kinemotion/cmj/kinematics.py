@@ -7,11 +7,12 @@ import numpy as np
 from numpy.typing import NDArray
 
 if TYPE_CHECKING:
+    from ..core.metadata import ResultMetadata
     from ..core.quality import QualityAssessment
 
 
-class CMJMetricsDict(TypedDict, total=False):
-    """Type-safe dictionary for CMJ metrics JSON output."""
+class CMJDataDict(TypedDict, total=False):
+    """Type-safe dictionary for CMJ measurement data."""
 
     jump_height_m: float
     flight_time_s: float
@@ -26,12 +27,14 @@ class CMJMetricsDict(TypedDict, total=False):
     lowest_point_frame: float
     takeoff_frame: float
     landing_frame: float
-    video_fps: float
     tracking_method: str
-    confidence: str | None
-    quality_score: float | None
-    quality_indicators: dict | None
-    warnings: list[str] | None
+
+
+class CMJResultDict(TypedDict):
+    """Type-safe dictionary for complete CMJ result with data and metadata."""
+
+    data: CMJDataDict
+    metadata: dict  # ResultMetadata.to_dict()
 
 
 @dataclass
@@ -73,14 +76,15 @@ class CMJMetrics:
     video_fps: float
     tracking_method: str
     quality_assessment: "QualityAssessment | None" = None
+    result_metadata: "ResultMetadata | None" = None
 
-    def to_dict(self) -> CMJMetricsDict:
-        """Convert metrics to JSON-serializable dictionary.
+    def to_dict(self) -> CMJResultDict:
+        """Convert metrics to JSON-serializable dictionary with data/metadata structure.
 
         Returns:
-            Dictionary with all metrics, converting NumPy types to Python types.
+            Dictionary with nested data and metadata structure.
         """
-        result: CMJMetricsDict = {
+        data: CMJDataDict = {
             "jump_height_m": float(self.jump_height),
             "flight_time_s": float(self.flight_time),
             "countermovement_depth_m": float(self.countermovement_depth),
@@ -102,19 +106,20 @@ class CMJMetrics:
             "lowest_point_frame": float(self.lowest_point_frame),
             "takeoff_frame": float(self.takeoff_frame),
             "landing_frame": float(self.landing_frame),
-            "video_fps": float(self.video_fps),
             "tracking_method": self.tracking_method,
         }
 
-        # Add quality assessment if available
-        if self.quality_assessment is not None:
-            quality_dict = self.quality_assessment.to_dict()
-            result["confidence"] = quality_dict["confidence"]
-            result["quality_score"] = quality_dict["quality_score"]
-            result["quality_indicators"] = quality_dict["quality_indicators"]
-            result["warnings"] = quality_dict["warnings"]
+        # Build metadata from ResultMetadata if available, otherwise use legacy quality
+        if self.result_metadata is not None:
+            metadata = self.result_metadata.to_dict()
+        elif self.quality_assessment is not None:
+            # Fallback for backwards compatibility during transition
+            metadata = {"quality": self.quality_assessment.to_dict()}
+        else:
+            # No metadata available
+            metadata = {}
 
-        return result
+        return {"data": data, "metadata": metadata}
 
 
 def calculate_cmj_metrics(

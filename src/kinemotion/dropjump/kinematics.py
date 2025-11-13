@@ -15,11 +15,12 @@ from .analysis import (
 )
 
 if TYPE_CHECKING:
+    from ..core.metadata import ResultMetadata
     from ..core.quality import QualityAssessment
 
 
-class DropJumpMetricsDict(TypedDict, total=False):
-    """Type-safe dictionary for drop jump metrics JSON output."""
+class DropJumpDataDict(TypedDict, total=False):
+    """Type-safe dictionary for drop jump measurement data."""
 
     ground_contact_time_ms: float | None
     flight_time_ms: float | None
@@ -35,10 +36,13 @@ class DropJumpMetricsDict(TypedDict, total=False):
     contact_end_frame_precise: float | None
     flight_start_frame_precise: float | None
     flight_end_frame_precise: float | None
-    confidence: str | None
-    quality_score: float | None
-    quality_indicators: dict | None
-    warnings: list[str] | None
+
+
+class DropJumpResultDict(TypedDict):
+    """Type-safe dictionary for complete drop jump result with data and metadata."""
+
+    data: DropJumpDataDict
+    metadata: dict  # ResultMetadata.to_dict()
 
 
 class DropJumpMetrics:
@@ -62,10 +66,16 @@ class DropJumpMetrics:
         self.flight_end_frame_precise: float | None = None
         # Quality assessment
         self.quality_assessment: QualityAssessment | None = None
+        # Complete metadata
+        self.result_metadata: ResultMetadata | None = None
 
-    def to_dict(self) -> DropJumpMetricsDict:
-        """Convert metrics to dictionary for JSON output."""
-        result: DropJumpMetricsDict = {
+    def to_dict(self) -> DropJumpResultDict:
+        """Convert metrics to JSON-serializable dictionary with data/metadata structure.
+
+        Returns:
+            Dictionary with nested data and metadata structure.
+        """
+        data: DropJumpDataDict = {
             "ground_contact_time_ms": (
                 round(self.ground_contact_time * 1000, 2)
                 if self.ground_contact_time is not None
@@ -136,15 +146,17 @@ class DropJumpMetrics:
             ),
         }
 
-        # Add quality assessment if available
-        if self.quality_assessment is not None:
-            quality_dict = self.quality_assessment.to_dict()
-            result["confidence"] = quality_dict["confidence"]
-            result["quality_score"] = quality_dict["quality_score"]
-            result["quality_indicators"] = quality_dict["quality_indicators"]
-            result["warnings"] = quality_dict["warnings"]
+        # Build metadata from ResultMetadata if available, otherwise use legacy quality
+        if self.result_metadata is not None:
+            metadata = self.result_metadata.to_dict()
+        elif self.quality_assessment is not None:
+            # Fallback for backwards compatibility during transition
+            metadata = {"quality": self.quality_assessment.to_dict()}
+        else:
+            # No metadata available
+            metadata = {}
 
-        return result
+        return {"data": data, "metadata": metadata}
 
 
 def _determine_drop_start_frame(

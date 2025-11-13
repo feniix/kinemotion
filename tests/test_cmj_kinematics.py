@@ -90,7 +90,11 @@ def test_cmj_metrics_to_dict() -> None:
 
     result_dict = metrics.to_dict()
 
-    # Verify all expected keys are present
+    # Check new structure
+    assert "data" in result_dict
+    assert "metadata" in result_dict
+
+    # Verify all expected keys are present in data
     expected_keys = [
         "jump_height_m",
         "flight_time_s",
@@ -105,18 +109,16 @@ def test_cmj_metrics_to_dict() -> None:
         "lowest_point_frame",
         "takeoff_frame",
         "landing_frame",
-        "video_fps",
         "tracking_method",
     ]
 
     for key in expected_keys:
-        assert key in result_dict
+        assert key in result_dict["data"], f"Missing key in data: {key}"
 
     # Verify all numeric values are Python types (not NumPy)
-    assert isinstance(result_dict["jump_height_m"], float)
-    assert isinstance(result_dict["flight_time_s"], float)
-    assert isinstance(result_dict["video_fps"], float)
-    assert isinstance(result_dict["tracking_method"], str)
+    assert isinstance(result_dict["data"]["jump_height_m"], float)
+    assert isinstance(result_dict["data"]["flight_time_s"], float)
+    assert isinstance(result_dict["data"]["tracking_method"], str)
 
 
 def test_cmj_metrics_without_standing_phase() -> None:

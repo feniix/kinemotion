@@ -54,7 +54,7 @@ def test_calculate_metrics_basic():
 
 
 def test_metrics_to_dict():
-    """Test conversion to dictionary format."""
+    """Test conversion to dictionary format with new data/metadata structure."""
     contact_states = [ContactState.ON_GROUND] * 5 + [ContactState.IN_AIR] * 10
     positions = np.array(
         [0.8] * 5 + list(np.linspace(0.8, 0.4, 5)) + list(np.linspace(0.4, 0.8, 5))
@@ -63,15 +63,19 @@ def test_metrics_to_dict():
     metrics = calculate_drop_jump_metrics(contact_states, positions, 30.0)
     result = metrics.to_dict()
 
-    # Check all expected keys are present
-    assert "ground_contact_time_ms" in result
-    assert "flight_time_ms" in result
-    assert "jump_height_m" in result
-    assert "contact_start_frame" in result
-    assert "flight_start_frame" in result
+    # Check new structure has data and metadata
+    assert "data" in result
+    assert "metadata" in result
 
-    # Check fractional frame fields are present
-    assert "contact_start_frame_precise" in result
-    assert "contact_end_frame_precise" in result
-    assert "flight_start_frame_precise" in result
-    assert "flight_end_frame_precise" in result
+    # Check all expected data fields are present
+    assert "ground_contact_time_ms" in result["data"]
+    assert "flight_time_ms" in result["data"]
+    assert "jump_height_m" in result["data"]
+    assert "contact_start_frame" in result["data"]
+    assert "flight_start_frame" in result["data"]
+
+    # Check fractional frame fields are present in data
+    assert "contact_start_frame_precise" in result["data"]
+    assert "contact_end_frame_precise" in result["data"]
+    assert "flight_start_frame_precise" in result["data"]
+    assert "flight_end_frame_precise" in result["data"]

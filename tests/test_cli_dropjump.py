@@ -114,10 +114,14 @@ class TestDropJumpCLIFileOperations:
         with open(json_output) as f:
             data = json.load(f)
 
-        # Test keys exist, not their values (which may be None)
+        # Test new data/metadata structure
         assert isinstance(data, dict)
-        assert "ground_contact_time_ms" in data
-        assert "flight_time_ms" in data
+        assert "data" in data
+        assert "metadata" in data
+
+        # Test keys exist in data, not their values (which may be None)
+        assert "ground_contact_time_ms" in data["data"]
+        assert "flight_time_ms" in data["data"]
 
     def test_debug_video_output_created(self, cli_runner, minimal_video, tmp_path):
         """Test debug video file is created."""

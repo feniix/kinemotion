@@ -60,10 +60,20 @@ def test_process_video_with_json_output(sample_video_path: str) -> None:
         with open(json_path) as f:
             saved_metrics = json.load(f)
 
-        # Check that JSON structure is correct (values may be None for synthetic video)
-        assert "ground_contact_time_ms" in saved_metrics
-        assert "flight_time_ms" in saved_metrics
-        assert "jump_height_m" in saved_metrics
+        # Check that JSON structure is correct (new data/metadata structure)
+        assert "data" in saved_metrics
+        assert "metadata" in saved_metrics
+
+        # Check data fields (values may be None for synthetic video)
+        assert "ground_contact_time_ms" in saved_metrics["data"]
+        assert "flight_time_ms" in saved_metrics["data"]
+        assert "jump_height_m" in saved_metrics["data"]
+
+        # Check metadata fields
+        assert "quality" in saved_metrics["metadata"]
+        assert "video" in saved_metrics["metadata"]
+        assert "processing" in saved_metrics["metadata"]
+        assert "algorithm" in saved_metrics["metadata"]
 
 
 def test_process_video_with_debug_output(sample_video_path: str) -> None:
