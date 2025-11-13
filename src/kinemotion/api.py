@@ -18,13 +18,16 @@ from .core.auto_tuning import (
     analyze_video_sample,
     auto_tune_parameters,
 )
+from .core.filtering import reject_outliers
 from .core.pose import PoseTracker
+from .core.quality import assess_jump_quality
 from .core.smoothing import smooth_landmarks, smooth_landmarks_advanced
 from .core.video_io import VideoProcessor
 from .dropjump.analysis import (
     ContactState,
     compute_average_foot_position,
     detect_ground_contact,
+    find_contact_phases,
 )
 from .dropjump.debug_overlay import DebugOverlayRenderer
 from .dropjump.kinematics import DropJumpMetrics, calculate_drop_jump_metrics
@@ -470,6 +473,42 @@ def process_dropjump_video(
             use_curvature=params.use_curvature,
         )
 
+        # Assess quality and add confidence scores
+        if verbose:
+            print("Assessing tracking quality...")
+
+        # Detect outliers for quality scoring (doesn't affect results, just for assessment)
+        _, outlier_mask = reject_outliers(
+            vertical_positions,
+            use_ransac=True,
+            use_median=True,
+            interpolate=False,  # Don't modify, just detect
+        )
+
+        # Count phases for quality assessment
+        phases = find_contact_phases(contact_states)
+        phases_detected = len(phases) > 0
+        phase_count = len(phases)
+
+        # Perform quality assessment
+        quality_result = assess_jump_quality(
+            visibilities=visibilities,
+            positions=vertical_positions,
+            outlier_mask=outlier_mask,
+            fps=video.fps,
+            phases_detected=phases_detected,
+            phase_count=phase_count,
+        )
+
+        # Attach quality assessment to metrics
+        metrics.quality_assessment = quality_result
+
+        if verbose and quality_result.warnings:
+            print("\n⚠️  Quality Warnings:")
+            for warning in quality_result.warnings:
+                print(f"  - {warning}")
+            print()
+
         # Generate outputs (JSON and debug video)
         _generate_outputs(
             metrics,
@@ -772,7 +811,9 @@ def process_cmj_video(
         # Extract foot positions
         if verbose:
             print("Extracting foot positions...")
-        vertical_positions, _ = _extract_vertical_positions(smoothed_landmarks)
+        vertical_positions, visibilities = _extract_vertical_positions(
+            smoothed_landmarks
+        )
         tracking_method = "foot"
 
         # Detect CMJ phases
@@ -814,6 +855,41 @@ def process_cmj_video(
             video.fps,
             tracking_method=tracking_method,
         )
+
+        # Assess quality and add confidence scores
+        if verbose:
+            print("Assessing tracking quality...")
+
+        # Detect outliers for quality scoring (doesn't affect results, just for assessment)
+        _, outlier_mask = reject_outliers(
+            vertical_positions,
+            use_ransac=True,
+            use_median=True,
+            interpolate=False,  # Don't modify, just detect
+        )
+
+        # Phases detected successfully if we got here
+        phases_detected = True
+        phase_count = 4  # standing, eccentric, concentric, flight
+
+        # Perform quality assessment
+        quality_result = assess_jump_quality(
+            visibilities=visibilities,
+            positions=vertical_positions,
+            outlier_mask=outlier_mask,
+            fps=video.fps,
+            phases_detected=phases_detected,
+            phase_count=phase_count,
+        )
+
+        # Attach quality assessment to metrics
+        metrics.quality_assessment = quality_result
+
+        if verbose and quality_result.warnings:
+            print("\n⚠️  Quality Warnings:")
+            for warning in quality_result.warnings:
+                print(f"  - {warning}")
+            print()
 
         # Generate outputs if requested
         _generate_cmj_outputs(

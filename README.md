@@ -238,6 +238,55 @@ kinemotion cmj-analyze videos/*.mp4 --batch --workers 4 \
   --csv-summary summary.csv
 ```
 
+### Quality Indicators & Confidence Scores
+
+All analysis outputs include automatic quality assessment to help you know when to trust results:
+
+```json
+{
+  "jump_height_m": 0.352,
+  "flight_time_s": 0.534,
+  "confidence": "high",
+  "quality_score": 87.3,
+  "quality_indicators": {
+    "avg_visibility": 0.89,
+    "min_visibility": 0.82,
+    "tracking_stable": true,
+    "phase_detection_clear": true,
+    "outliers_detected": 2,
+    "outlier_percentage": 1.5,
+    "position_variance": 0.0008,
+    "fps": 60.0
+  },
+  "warnings": []
+}
+```
+
+**Confidence Levels:**
+
+- **High** (score ≥75): Trust these results, good tracking quality
+- **Medium** (score 50-74): Use with caution, check quality indicators
+- **Low** (score \<50): Results may be unreliable, review warnings
+
+**Common Warnings:**
+
+- Poor lighting or occlusion detected
+- Unstable landmark tracking (jitter)
+- High outlier rate (tracking glitches)
+- Low frame rate (\<30fps)
+- Unclear phase transitions
+
+**Filtering by Quality:**
+
+```python
+# Only use high-confidence results
+metrics = process_cmj_video("video.mp4")
+if metrics.quality_assessment.confidence == "high":
+    print(f"Reliable jump height: {metrics.jump_height:.3f}m")
+else:
+    print(f"Low quality - warnings: {metrics.quality_assessment.warnings}")
+```
+
 ## Python API
 
 Use kinemotion as a library for automated pipelines and custom analysis.

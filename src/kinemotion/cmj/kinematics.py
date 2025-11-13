@@ -1,10 +1,13 @@
 """Counter Movement Jump (CMJ) metrics calculation."""
 
 from dataclasses import dataclass
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
 import numpy as np
 from numpy.typing import NDArray
+
+if TYPE_CHECKING:
+    from ..core.quality import QualityAssessment
 
 
 class CMJMetricsDict(TypedDict, total=False):
@@ -25,6 +28,10 @@ class CMJMetricsDict(TypedDict, total=False):
     landing_frame: float
     video_fps: float
     tracking_method: str
+    confidence: str | None
+    quality_score: float | None
+    quality_indicators: dict | None
+    warnings: list[str] | None
 
 
 @dataclass
@@ -47,6 +54,7 @@ class CMJMetrics:
         landing_frame: Frame where athlete lands
         video_fps: Frames per second of the analyzed video
         tracking_method: Method used for tracking ("foot" or "com")
+        quality_assessment: Optional quality assessment with confidence and warnings
     """
 
     jump_height: float
@@ -64,6 +72,7 @@ class CMJMetrics:
     landing_frame: float
     video_fps: float
     tracking_method: str
+    quality_assessment: "QualityAssessment | None" = None
 
     def to_dict(self) -> CMJMetricsDict:
         """Convert metrics to JSON-serializable dictionary.
@@ -71,7 +80,7 @@ class CMJMetrics:
         Returns:
             Dictionary with all metrics, converting NumPy types to Python types.
         """
-        return {
+        result: CMJMetricsDict = {
             "jump_height_m": float(self.jump_height),
             "flight_time_s": float(self.flight_time),
             "countermovement_depth_m": float(self.countermovement_depth),
@@ -96,6 +105,16 @@ class CMJMetrics:
             "video_fps": float(self.video_fps),
             "tracking_method": self.tracking_method,
         }
+
+        # Add quality assessment if available
+        if self.quality_assessment is not None:
+            quality_dict = self.quality_assessment.to_dict()
+            result["confidence"] = quality_dict["confidence"]
+            result["quality_score"] = quality_dict["quality_score"]
+            result["quality_indicators"] = quality_dict["quality_indicators"]
+            result["warnings"] = quality_dict["warnings"]
+
+        return result
 
 
 def calculate_cmj_metrics(

@@ -1,6 +1,6 @@
 """Kinematic calculations for drop-jump metrics."""
 
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
 import numpy as np
 from numpy.typing import NDArray
@@ -13,6 +13,9 @@ from .analysis import (
     find_interpolated_phase_transitions_with_curvature,
     find_landing_from_acceleration,
 )
+
+if TYPE_CHECKING:
+    from ..core.quality import QualityAssessment
 
 
 class DropJumpMetricsDict(TypedDict, total=False):
@@ -32,6 +35,10 @@ class DropJumpMetricsDict(TypedDict, total=False):
     contact_end_frame_precise: float | None
     flight_start_frame_precise: float | None
     flight_end_frame_precise: float | None
+    confidence: str | None
+    quality_score: float | None
+    quality_indicators: dict | None
+    warnings: list[str] | None
 
 
 class DropJumpMetrics:
@@ -53,10 +60,12 @@ class DropJumpMetrics:
         self.contact_end_frame_precise: float | None = None
         self.flight_start_frame_precise: float | None = None
         self.flight_end_frame_precise: float | None = None
+        # Quality assessment
+        self.quality_assessment: QualityAssessment | None = None
 
     def to_dict(self) -> DropJumpMetricsDict:
         """Convert metrics to dictionary for JSON output."""
-        return {
+        result: DropJumpMetricsDict = {
             "ground_contact_time_ms": (
                 round(self.ground_contact_time * 1000, 2)
                 if self.ground_contact_time is not None
@@ -126,6 +135,16 @@ class DropJumpMetrics:
                 else None
             ),
         }
+
+        # Add quality assessment if available
+        if self.quality_assessment is not None:
+            quality_dict = self.quality_assessment.to_dict()
+            result["confidence"] = quality_dict["confidence"]
+            result["quality_score"] = quality_dict["quality_score"]
+            result["quality_indicators"] = quality_dict["quality_indicators"]
+            result["warnings"] = quality_dict["warnings"]
+
+        return result
 
 
 def _determine_drop_start_frame(

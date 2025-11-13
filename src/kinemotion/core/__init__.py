@@ -9,6 +9,12 @@ from .filtering import (
     remove_outliers,
 )
 from .pose import PoseTracker, compute_center_of_mass
+from .quality import (
+    QualityAssessment,
+    QualityIndicators,
+    assess_jump_quality,
+    calculate_position_stability,
+)
 from .smoothing import (
     compute_acceleration_from_derivative,
     compute_velocity,
@@ -35,6 +41,11 @@ __all__ = [
     "reject_outliers",
     "adaptive_smooth_window",
     "bilateral_temporal_filter",
+    # Quality Assessment
+    "QualityAssessment",
+    "QualityIndicators",
+    "assess_jump_quality",
+    "calculate_position_stability",
     # Video I/O
     "VideoProcessor",
 ]
