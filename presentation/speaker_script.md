@@ -162,7 +162,7 @@ ______________________________________________________________________
 ### Demo 1: Basic Analysis
 
 ```bash
-kinemotion cmj-analyze samples/cmjs/athlete_jump.mp4
+kinemotion cmj-analyze sample_data/IMG_5813.MOV
 ```
 
 "Watch how quickly this processes... \[run command\] ...There! Processing takes about 3-4 times the video length, so for this 5-second video, about 15-20 seconds. And we have all metrics: jump height of 45.2cm, flight time of 606ms."
@@ -172,17 +172,17 @@ kinemotion cmj-analyze samples/cmjs/athlete_jump.mp4
 "But numbers don't tell the whole story. Let me generate a debug video so you can see what the AI sees:"
 
 ```bash
-kinemotion cmj-analyze samples/cmjs/athlete_jump.mp4 --output debug.mp4
+kinemotion cmj-analyze sample_data/IMG_5813.MOV --output debug.mp4
 ```
 
 "\[Open video\] Look at the skeleton overlay. You can see the exact moment of takeoff, how the joints extend, and the landing mechanics. This is invaluable for coaching feedback."
 
 ### Demo 3: Batch Processing
 
-"Now imagine you recorded 20 athletes today. Instead of analyzing one by one:"
+"Now imagine you recorded multiple jumps from an athlete today. Instead of analyzing one by one:"
 
 ```bash
-kinemotion cmj-analyze samples/cmjs/*.mp4 --batch --workers 4
+kinemotion cmj-analyze sample_data/*.MOV --batch --workers 4
 ```
 
 "All videos processing in parallel. Results exported to CSV for easy analysis in Excel or any stats software."
@@ -194,7 +194,7 @@ kinemotion cmj-analyze samples/cmjs/*.mp4 --batch --workers 4
 ```python
 from kinemotion import process_cmj_video
 
-metrics = process_cmj_video("samples/cmjs/athlete_jump.mp4")
+metrics = process_cmj_video("sample_data/IMG_5813.MOV")
 print(f"Jump height: {metrics.jump_height:.3f}m")
 print(f"Flight time: {metrics.flight_time * 1000:.0f}ms")
 print(f"Countermovement depth: {metrics.countermovement_depth:.3f}m")
@@ -360,7 +360,7 @@ ______________________________________________________________________
 
 ### Q: "Can it handle multiple athletes in one video?"
 
-**A:** "Currently, it tracks one athlete at a time. Multi-athlete tracking is technically possible with MediaPipe but would require significant algorithm changes. It's a frequently requested feature we're considering."
+**A:** "Currently, it tracks one athlete at a time. The system is designed to analyze a single subject per video. Multi-athlete tracking is technically possible with MediaPipe but would require significant algorithm changes. It's a frequently requested feature we're considering for future development."
 
 ### Q: "What about markerless motion capture systems?"
 

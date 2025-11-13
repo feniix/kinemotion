@@ -33,7 +33,7 @@ def main():
     print()
 
     # Setup
-    video_dir = Path("sample_videos")
+    video_dir = Path("sample_data")
     output_dir = Path("batch_results")
     output_dir.mkdir(exist_ok=True)
 

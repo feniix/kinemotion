@@ -12,19 +12,18 @@ pip install kinemotion
 
 ### 2. Prepare Sample Videos
 
-Create a `sample_videos/` directory with 3-6 drop jump videos:
+The `sample_data/` directory contains drop jump videos from a single athlete:
 
 ```bash
-mkdir -p sample_videos
-# Add your drop jump videos here
-# Naming suggestion: athlete1_dropjump.mp4, athlete2_dropjump.mp4, etc.
+# Videos are already in sample_data/
+# Format: IMG_XXXX.MOV files
 ```
 
 ### 3. Test Demos
 
 ```bash
 # Test single video analysis
-kinemotion dropjump-analyze sample_videos/athlete1_dropjump.mp4
+kinemotion dropjump-analyze sample_data/IMG_5809.MOV
 
 # Test batch processing
 python batch_processing_demo.py
@@ -38,7 +37,7 @@ python batch_processing_demo.py
 
 ```bash
 # Simple analysis
-kinemotion dropjump-analyze sample_videos/athlete1_dropjump.mp4
+kinemotion dropjump-analyze sample_data/IMG_5809.MOV
 
 # Expected output:
 # - Ground contact time
@@ -58,7 +57,7 @@ kinemotion dropjump-analyze sample_videos/athlete1_dropjump.mp4
 **What it shows**: Visual feedback and pose tracking
 
 ```bash
-kinemotion dropjump-analyze sample_videos/athlete1_dropjump.mp4 --output debug_output.mp4
+kinemotion dropjump-analyze sample_data/IMG_5809.MOV --output debug_output.mp4
 ```
 
 **Talking points**:
@@ -80,7 +79,7 @@ python batch_processing_demo.py
 
 **What the script does**:
 
-1. Finds all videos in `sample_videos/`
+1. Finds all videos in `sample_data/`
 1. Processes with 1 worker (sequential)
 1. Processes with 4 workers (parallel)
 1. Compares performance
@@ -152,10 +151,10 @@ jupyter notebook api_demo.ipynb
 
 ```bash
 # Check directory
-ls -la sample_videos/
+ls -la sample_data/
 
 # Verify video format
-file sample_videos/*.mp4
+file sample_data/*.MOV
 ```
 
 **Import errors**:
@@ -191,10 +190,10 @@ For best demo results, use drop jump videos with:
 
 ```bash
 # Single video
-kinemotion dropjump-analyze video.mp4
+kinemotion dropjump-analyze sample_data/IMG_5809.MOV
 
 # With debug output
-kinemotion dropjump-analyze video.mp4 --output debug.mp4
+kinemotion dropjump-analyze sample_data/IMG_5809.MOV --output debug.mp4
 
 # Batch processing
 python batch_processing_demo.py

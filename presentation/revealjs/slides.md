@@ -22,7 +22,7 @@ permalink: presentation/revealjs/slides
 #### A Hobby Project Exploration
 
 **Presenter**: Sebastian Otaegui
-**Date**: November 12, 2025
+**Date**: November 13, 2025
 
 *"Transform properly recorded smartphone videos into actionable athletic performance data"*
 
@@ -234,13 +234,13 @@ Note: Backward search - find peak first, work backward. Triple extension is uniq
 ### Demo 1: Single Video Analysis
 
 ```bash
-kinemotion dropjump-analyze sample_jump.mp4
+kinemotion dropjump-analyze sample_data/IMG_5809.MOV
 ```
 
 ### Demo 2: Debug Visualization
 
 ```bash
-kinemotion dropjump-analyze jump.mp4 --output debug.mp4
+kinemotion dropjump-analyze sample_data/IMG_5809.MOV --output debug.mp4
 ```
 
 </div>
@@ -265,7 +265,7 @@ results = process_dropjump_videos_bulk(configs=configs, max_workers=4)
 ```python
 from kinemotion import process_dropjump_video
 
-metrics = process_dropjump_video("athlete.mp4")
+metrics = process_dropjump_video("sample_data/IMG_5809.MOV")
 print(f"Jump Height: {metrics.jump_height:.3f}m")
 print(f"GCT: {metrics.ground_contact_time * 1000:.0f}ms")
 print(f"RSI: {metrics.jump_height / metrics.ground_contact_time:.2f}")
@@ -338,17 +338,17 @@ pip install kinemotion
 
 ```bash
 # Single video
-kinemotion cmj-analyze video.mp4
+kinemotion cmj-analyze sample_data/IMG_5813.MOV
 
 # Batch with CSV summary
-kinemotion cmj-analyze *.mp4 --batch --csv-summary results.csv
+kinemotion cmj-analyze sample_data/*.MOV --batch --csv-summary results.csv
 ```
 
 **2. Python API** (developers, automation)
 
 ```python
 from kinemotion import process_cmj_video
-metrics = process_cmj_video("athlete.mp4")
+metrics = process_cmj_video("sample_data/IMG_5813.MOV")
 ```
 
 </div>
