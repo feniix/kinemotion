@@ -1,0 +1,15 @@
+[project]
+name = "paper-downloader"
+version = "0.1.0"
+description = "Utility to download research papers"
+requires-python = ">=3.12"
+dependencies = [
+    "PyPaperBot>=1.2.7",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["download.py", "dois.txt"]
