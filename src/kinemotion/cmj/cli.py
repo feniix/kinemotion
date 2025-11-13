@@ -8,26 +8,10 @@ from pathlib import Path
 from typing import Any
 
 import click
-import numpy as np
 
-from ..core.auto_tuning import (
-    QualityPreset,
-    analyze_video_sample,
-    auto_tune_parameters,
-)
-from ..core.cli_utils import (
-    apply_expert_param_overrides,
-    common_output_options,
-    determine_initial_confidence,
-    print_auto_tuned_params,
-    smooth_landmark_sequence,
-    track_all_frames,
-)
-from ..core.pose import PoseTracker
-from ..core.video_io import VideoProcessor
-from .analysis import detect_cmj_phases
-from .debug_overlay import CMJDebugOverlayRenderer
-from .kinematics import CMJMetrics, calculate_cmj_metrics
+from ..api import process_cmj_video
+from ..core.auto_tuning import QualityPreset
+from ..core.cli_utils import common_output_options
 
 
 @dataclass
@@ -288,44 +272,6 @@ def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters for
             sys.exit(1)
 
 
-def _get_foot_position(frame_landmarks: dict | None, last_position: float) -> float:
-    """Extract average foot position from frame landmarks."""
-    if not frame_landmarks:
-        return last_position
-
-    # Average foot position (ankles and heels)
-    foot_y_values = []
-    for key in ["left_ankle", "right_ankle", "left_heel", "right_heel"]:
-        if key in frame_landmarks:
-            foot_y_values.append(frame_landmarks[key][1])
-
-    if foot_y_values:
-        return float(np.mean(foot_y_values))
-    return last_position
-
-
-def _extract_positions_from_landmarks(
-    smoothed_landmarks: list,
-) -> tuple[np.ndarray, str]:
-    """Extract vertical foot positions from landmarks.
-
-    Args:
-        smoothed_landmarks: Smoothed landmark sequence
-
-    Returns:
-        Tuple of (positions array, tracking method name)
-    """
-    click.echo("Extracting foot positions...", err=True)
-    position_list: list[float] = []
-
-    for frame_landmarks in smoothed_landmarks:
-        last_pos = position_list[-1] if position_list else 0.5
-        position = _get_foot_position(frame_landmarks, last_pos)
-        position_list.append(position)
-
-    return np.array(position_list), "foot"
-
-
 def _process_single(
     video_path: str,
     output: str | None,
@@ -334,167 +280,33 @@ def _process_single(
     verbose: bool,
     expert_params: AnalysisParameters,
 ) -> None:
-    """Process a single CMJ video."""
+    """Process a single CMJ video by calling the API."""
     try:
-        with VideoProcessor(video_path) as video:
-            click.echo(
-                f"Video: {video.width}x{video.height} @ {video.fps:.2f} fps, "
-                f"{video.frame_count} frames",
-                err=True,
-            )
+        # Call the API function (handles all processing logic)
+        metrics = process_cmj_video(
+            video_path=video_path,
+            quality=quality_preset.value,
+            output_video=output,
+            json_output=json_output,
+            smoothing_window=expert_params.smoothing_window,
+            velocity_threshold=expert_params.velocity_threshold,
+            min_contact_frames=expert_params.min_contact_frames,
+            visibility_threshold=expert_params.visibility_threshold,
+            detection_confidence=expert_params.detection_confidence,
+            tracking_confidence=expert_params.tracking_confidence,
+            verbose=verbose,
+        )
 
-            # Determine confidence levels
-            detection_conf, tracking_conf = determine_initial_confidence(
-                quality_preset, expert_params
-            )
-
-            # Track all frames
-            tracker = PoseTracker(
-                min_detection_confidence=detection_conf,
-                min_tracking_confidence=tracking_conf,
-            )
-            frames, landmarks_sequence = track_all_frames(video, tracker)
-
-            if not landmarks_sequence:
-                click.echo("Error: No frames processed", err=True)
-                sys.exit(1)
-
-            # Auto-tune parameters
-            characteristics = analyze_video_sample(
-                landmarks_sequence, video.fps, video.frame_count
-            )
-            params = auto_tune_parameters(characteristics, quality_preset)
-            params = apply_expert_param_overrides(params, expert_params)
-
-            # Calculate countermovement threshold (FPS-adjusted)
-            # Base: +0.015 at 30fps (POSITIVE for downward motion in normalized coords)
-            countermovement_threshold = 0.015 * (30.0 / video.fps)
-            if expert_params.countermovement_threshold is not None:
-                countermovement_threshold = expert_params.countermovement_threshold
-
-            # Show parameters if verbose
-            if verbose:
-                print_auto_tuned_params(
-                    video,
-                    quality_preset,
-                    params,
-                    extra_params={
-                        "countermovement_threshold": countermovement_threshold
-                    },
-                )
-
-            # Apply smoothing
-            smoothed_landmarks = smooth_landmark_sequence(landmarks_sequence, params)
-
-            # Extract foot positions
-            vertical_positions, tracking_method = _extract_positions_from_landmarks(
-                smoothed_landmarks
-            )
-
-            # Detect CMJ phases
-            click.echo("Detecting CMJ phases...", err=True)
-            phases = detect_cmj_phases(
-                vertical_positions,
-                video.fps,
-                window_length=params.smoothing_window,
-                polyorder=params.polyorder,
-            )
-
-            if phases is None:
-                click.echo("Error: Could not detect CMJ phases", err=True)
-                sys.exit(1)
-
-            standing_end, lowest_point, takeoff_frame, landing_frame = phases
-
-            # Calculate metrics
-            click.echo("Calculating metrics...", err=True)
-
-            # Compute SIGNED velocities for CMJ metrics (need direction info)
-            from .analysis import compute_signed_velocity
-
-            velocities = compute_signed_velocity(
-                vertical_positions,
-                window_length=params.smoothing_window,
-                polyorder=params.polyorder,
-            )
-
-            metrics = calculate_cmj_metrics(
-                vertical_positions,
-                velocities,
-                standing_end,
-                lowest_point,
-                takeoff_frame,
-                landing_frame,
-                video.fps,
-                tracking_method=tracking_method,
-            )
-
-            # Output results
-            _output_results(metrics, json_output)
-
-            # Generate debug video if requested
-            if output:
-                _create_debug_video(output, video, frames, smoothed_landmarks, metrics)
+        # Print formatted summary to stdout
+        _output_results(metrics, json_output=None)  # Don't write JSON (API already did)
 
     except Exception as e:
         click.echo(f"Error processing video: {e}", err=True)
-        import traceback
+        if verbose:
+            import traceback
 
-        traceback.print_exc()
+            traceback.print_exc()
         sys.exit(1)
-
-
-def _create_debug_video(
-    output: str,
-    video: VideoProcessor,
-    frames: list,
-    smoothed_landmarks: list,
-    metrics: CMJMetrics,
-) -> None:
-    """Generate debug video with overlays.
-
-    Args:
-        output: Output video path
-        video: Video processor
-        frames: Video frames
-        smoothed_landmarks: Smoothed landmarks
-        metrics: Calculated metrics
-    """
-    click.echo(f"Generating debug video: {output}", err=True)
-    if video.display_width != video.width or video.display_height != video.height:
-        click.echo(f"Source video encoded: {video.width}x{video.height}", err=True)
-        click.echo(
-            f"Output dimensions: {video.display_width}x{video.display_height} "
-            f"(respecting display aspect ratio)",
-            err=True,
-        )
-    else:
-        click.echo(
-            f"Output dimensions: {video.width}x{video.height} "
-            f"(matching source video aspect ratio)",
-            err=True,
-        )
-
-    with CMJDebugOverlayRenderer(
-        output,
-        video.width,
-        video.height,
-        video.display_width,
-        video.display_height,
-        video.fps,
-    ) as renderer:
-        render_bar: Any
-        with click.progressbar(
-            length=len(frames), label="Rendering frames"
-        ) as render_bar:
-            for i, frame in enumerate(frames):
-                annotated = renderer.render_frame(
-                    frame, smoothed_landmarks[i], i, metrics
-                )
-                renderer.write_frame(annotated)
-                render_bar.update(1)
-
-    click.echo(f"Debug video saved: {output}", err=True)
 
 
 def _output_results(metrics: Any, json_output: str | None) -> None:

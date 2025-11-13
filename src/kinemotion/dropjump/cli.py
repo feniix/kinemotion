@@ -6,37 +6,15 @@ import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 import click
-import numpy as np
 
 from ..api import (
     DropJumpVideoConfig,
     DropJumpVideoResult,
+    process_dropjump_video,
     process_dropjump_videos_bulk,
 )
-from ..core.auto_tuning import (
-    QualityPreset,
-    analyze_video_sample,
-    auto_tune_parameters,
-)
-from ..core.cli_utils import (
-    apply_expert_param_overrides,
-    determine_initial_confidence,
-    print_auto_tuned_params,
-    smooth_landmark_sequence,
-    track_all_frames,
-)
-from ..core.pose import PoseTracker
-from ..core.video_io import VideoProcessor
-from .analysis import (
-    ContactState,
-    detect_ground_contact,
-    extract_foot_positions_and_visibilities,
-)
-from .debug_overlay import DebugOverlayRenderer
-from .kinematics import DropJumpMetrics, calculate_drop_jump_metrics
 
 
 @dataclass
@@ -250,81 +228,6 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual parameter
         )
 
 
-def _extract_positions_and_visibilities(
-    smoothed_landmarks: list,
-) -> tuple[np.ndarray, np.ndarray]:
-    """Extract vertical positions and visibilities from landmarks.
-
-    Args:
-        smoothed_landmarks: Smoothed landmark sequence
-
-    Returns:
-        Tuple of (vertical_positions, visibilities)
-    """
-    click.echo("Extracting foot positions...", err=True)
-    return extract_foot_positions_and_visibilities(smoothed_landmarks)
-
-
-def _create_debug_video(
-    output: str,
-    video: VideoProcessor,
-    frames: list,
-    smoothed_landmarks: list,
-    contact_states: list[ContactState],
-    metrics: DropJumpMetrics,
-) -> None:
-    """Generate debug video with overlays.
-
-    Args:
-        output: Output video path
-        video: Video processor
-        frames: Video frames
-        smoothed_landmarks: Smoothed landmarks
-        contact_states: Contact states
-        metrics: Calculated metrics
-    """
-    click.echo(f"Generating debug video: {output}", err=True)
-    if video.display_width != video.width or video.display_height != video.height:
-        click.echo(f"Source video encoded: {video.width}x{video.height}", err=True)
-        click.echo(
-            f"Output dimensions: {video.display_width}x{video.display_height} "
-            f"(respecting display aspect ratio)",
-            err=True,
-        )
-    else:
-        click.echo(
-            f"Output dimensions: {video.width}x{video.height} "
-            f"(matching source video aspect ratio)",
-            err=True,
-        )
-
-    with DebugOverlayRenderer(
-        output,
-        video.width,
-        video.height,
-        video.display_width,
-        video.display_height,
-        video.fps,
-    ) as renderer:
-        render_bar: Any
-        with click.progressbar(
-            length=len(frames), label="Rendering frames"
-        ) as render_bar:
-            for i, frame in enumerate(frames):
-                annotated = renderer.render_frame(
-                    frame,
-                    smoothed_landmarks[i],
-                    contact_states[i],
-                    i,
-                    metrics,
-                    use_com=False,
-                )
-                renderer.write_frame(annotated)
-                render_bar.update(1)
-
-    click.echo(f"Debug video saved: {output}", err=True)
-
-
 def _process_single(
     video_path: str,
     output: str | None,
@@ -333,96 +236,38 @@ def _process_single(
     verbose: bool,
     expert_params: AnalysisParameters,
 ) -> None:
-    """Process a single video (original CLI behavior)."""
+    """Process a single video by calling the API."""
     click.echo(f"Analyzing video: {video_path}", err=True)
 
-    quality_preset = QualityPreset(quality.lower())
-
     try:
-        with VideoProcessor(video_path) as video:
-            click.echo(
-                f"Video: {video.width}x{video.height} @ {video.fps:.2f} fps, "
-                f"{video.frame_count} frames",
-                err=True,
-            )
+        # Call the API function (handles all processing logic)
+        metrics = process_dropjump_video(
+            video_path=video_path,
+            quality=quality,
+            output_video=output,
+            json_output=json_output,
+            drop_start_frame=expert_params.drop_start_frame,
+            smoothing_window=expert_params.smoothing_window,
+            velocity_threshold=expert_params.velocity_threshold,
+            min_contact_frames=expert_params.min_contact_frames,
+            visibility_threshold=expert_params.visibility_threshold,
+            detection_confidence=expert_params.detection_confidence,
+            tracking_confidence=expert_params.tracking_confidence,
+            verbose=verbose,
+        )
 
-            # Determine confidence levels
-            detection_conf, tracking_conf = determine_initial_confidence(
-                quality_preset, expert_params
-            )
+        # Print formatted summary to stdout if no JSON output specified
+        if not json_output:
+            click.echo(json.dumps(metrics.to_dict(), indent=2))
 
-            # Track all frames
-            tracker = PoseTracker(
-                min_detection_confidence=detection_conf,
-                min_tracking_confidence=tracking_conf,
-            )
-            frames, landmarks_sequence = track_all_frames(video, tracker)
-
-            if not landmarks_sequence:
-                click.echo("Error: No frames processed", err=True)
-                sys.exit(1)
-
-            # Auto-tune parameters
-            characteristics = analyze_video_sample(
-                landmarks_sequence, video.fps, video.frame_count
-            )
-            params = auto_tune_parameters(characteristics, quality_preset)
-            params = apply_expert_param_overrides(params, expert_params)
-
-            # Show parameters if verbose
-            if verbose:
-                print_auto_tuned_params(video, quality_preset, params, characteristics)
-
-            # Apply smoothing
-            smoothed_landmarks = smooth_landmark_sequence(landmarks_sequence, params)
-
-            # Extract positions
-            vertical_positions, visibilities = _extract_positions_and_visibilities(
-                smoothed_landmarks
-            )
-
-            # Detect ground contact
-            contact_states = detect_ground_contact(
-                vertical_positions,
-                velocity_threshold=params.velocity_threshold,
-                min_contact_frames=params.min_contact_frames,
-                visibility_threshold=params.visibility_threshold,
-                visibilities=visibilities,
-                window_length=params.smoothing_window,
-                polyorder=params.polyorder,
-            )
-
-            # Calculate metrics
-            click.echo("Calculating metrics...", err=True)
-            metrics = calculate_drop_jump_metrics(
-                contact_states,
-                vertical_positions,
-                video.fps,
-                drop_start_frame=expert_params.drop_start_frame,
-                velocity_threshold=params.velocity_threshold,
-                smoothing_window=params.smoothing_window,
-                polyorder=params.polyorder,
-                use_curvature=params.use_curvature,
-            )
-
-            # Output metrics
-            metrics_json = json.dumps(metrics.to_dict(), indent=2)
-            if json_output:
-                Path(json_output).write_text(metrics_json)
-                click.echo(f"Metrics written to: {json_output}", err=True)
-            else:
-                click.echo(metrics_json)
-
-            # Generate debug video if requested
-            if output:
-                _create_debug_video(
-                    output, video, frames, smoothed_landmarks, contact_states, metrics
-                )
-
-            click.echo("Analysis complete!", err=True)
+        click.echo("Analysis complete!", err=True)
 
     except Exception as e:
         click.echo(f"Error: {str(e)}", err=True)
+        if verbose:
+            import traceback
+
+            traceback.print_exc()
         sys.exit(1)
 
 
