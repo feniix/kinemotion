@@ -532,7 +532,7 @@ def process_dropjump_video(
             height=video.height,
             duration_s=video.frame_count / video.fps,
             frame_count=video.frame_count,
-            codec=None,
+            codec=video.codec,
         )
 
         processing_info = ProcessingInfo(
@@ -973,7 +973,7 @@ def process_cmj_video(
             height=video.height,
             duration_s=video.frame_count / video.fps,
             frame_count=video.frame_count,
-            codec=None,  # TODO: Extract from video metadata if available
+            codec=video.codec,
         )
 
         processing_info = ProcessingInfo(

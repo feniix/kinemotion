@@ -50,6 +50,9 @@ class VideoProcessor:
         # OpenCV ignores rotation metadata, so we need to extract and apply it manually
         self.rotation = 0  # Will be set by _extract_video_metadata()
 
+        # Extract codec information from video metadata
+        self.codec: str | None = None  # Will be set by _extract_video_metadata()
+
         # Calculate display dimensions considering SAR (Sample Aspect Ratio)
         # Mobile videos often have non-square pixels encoded in SAR metadata
         # OpenCV doesn't directly expose SAR, but we need to handle display correctly
@@ -140,6 +143,9 @@ class VideoProcessor:
                 return
 
             stream = data["streams"][0]
+
+            # Extract codec name (e.g., "h264", "hevc", "vp9")
+            self.codec = stream.get("codec_name")
 
             # Extract and parse SAR (Sample Aspect Ratio)
             sar_str = stream.get("sample_aspect_ratio", "1:1")
