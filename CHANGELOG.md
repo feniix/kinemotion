@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.25.0 (2025-11-14)
+
+### Documentation
+
+- Add comprehensive validation status and roadmap
+  ([`207b3ab`](https://github.com/feniix/kinemotion/commit/207b3abf4790e423ab69340eee98781aa9bcadc6))
+
+- Add presentation
+  ([`0f2715a`](https://github.com/feniix/kinemotion/commit/0f2715adf93a01fd12c72cd310339daf5d072b3e))
+
+- Add research papers
+  ([`b623c2a`](https://github.com/feniix/kinemotion/commit/b623c2ab265f34bedb38b6174958368bbd5e53bf))
+
+- Google colab
+  ([`98f474c`](https://github.com/feniix/kinemotion/commit/98f474cde68d5bc5ec3b7dc7f438eb912ebc617d))
+
+- Google colab
+  ([`f6bc11b`](https://github.com/feniix/kinemotion/commit/f6bc11bb08a566e846a0eb3549cf8e752839c54d))
+
+### Features
+
+- Add automatic quality assessment and confidence scores to all outputs
+  ([`8eee0e0`](https://github.com/feniix/kinemotion/commit/8eee0e051c3ac4fee8610f05f5735676a4d50331))
+
+- Refactor CLI to call API functions, adding automatic quality assessment
+  ([`b6511cb`](https://github.com/feniix/kinemotion/commit/b6511cbbb7bb93458b827d967636d72391651d0e))
+
+- Restructure JSON output to data/metadata format
+  ([`bb00d3e`](https://github.com/feniix/kinemotion/commit/bb00d3e871c68369dcbb308429084b11eecad0e0))
+
+### Testing
+
+- Add determinism validation scripts and confirm algorithm reliability
+  ([`bd115b0`](https://github.com/feniix/kinemotion/commit/bd115b056b91a55027c5b85362cc3942cf6ea7c5))
+
+### Breaking Changes
+
+- JSON output format restructured from flat to nested {data, metadata}
+
+
 ## v0.24.0 (2025-11-11)
 
 ### Features
