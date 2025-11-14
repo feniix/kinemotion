@@ -244,6 +244,20 @@ def _apply_smoothing(
         )
 
 
+def _calculate_foot_visibility(frame_landmarks: dict) -> float:
+    """Calculate average visibility of foot landmarks.
+
+    Args:
+        frame_landmarks: Dictionary of landmarks for a frame
+
+    Returns:
+        Average visibility value (0-1)
+    """
+    foot_keys = ["left_ankle", "right_ankle", "left_heel", "right_heel"]
+    foot_vis = [frame_landmarks[key][2] for key in foot_keys if key in frame_landmarks]
+    return float(np.mean(foot_vis)) if foot_vis else 0.0
+
+
 def _extract_vertical_positions(
     smoothed_landmarks: list,
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -262,13 +276,7 @@ def _extract_vertical_positions(
         if frame_landmarks:
             _, foot_y = compute_average_foot_position(frame_landmarks)
             position_list.append(foot_y)
-
-            # Average visibility of foot landmarks
-            foot_vis = []
-            for key in ["left_ankle", "right_ankle", "left_heel", "right_heel"]:
-                if key in frame_landmarks:
-                    foot_vis.append(frame_landmarks[key][2])
-            visibilities_list.append(float(np.mean(foot_vis)) if foot_vis else 0.0)
+            visibilities_list.append(_calculate_foot_visibility(frame_landmarks))
         else:
             position_list.append(position_list[-1] if position_list else 0.5)
             visibilities_list.append(0.0)

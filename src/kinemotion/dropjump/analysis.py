@@ -235,6 +235,86 @@ def detect_drop_start(
     )
 
 
+def _filter_stationary_with_visibility(
+    is_stationary: np.ndarray,
+    visibilities: np.ndarray | None,
+    visibility_threshold: float,
+) -> np.ndarray:
+    """Apply visibility filter to stationary flags.
+
+    Args:
+        is_stationary: Boolean array indicating stationary frames
+        visibilities: Optional visibility scores for each frame
+        visibility_threshold: Minimum visibility to trust landmark
+
+    Returns:
+        Filtered is_stationary array
+    """
+    if visibilities is not None:
+        is_visible = visibilities > visibility_threshold
+        return is_stationary & is_visible
+    return is_stationary
+
+
+def _find_contact_frames(
+    is_stationary: np.ndarray,
+    min_contact_frames: int,
+) -> set[int]:
+    """Find frames with sustained contact using minimum duration filter.
+
+    Args:
+        is_stationary: Boolean array indicating stationary frames
+        min_contact_frames: Minimum consecutive frames to confirm contact
+
+    Returns:
+        Set of frame indices that meet minimum contact duration
+    """
+    contact_frames: set[int] = set()
+    current_run = []
+
+    for i, stationary in enumerate(is_stationary):
+        if stationary:
+            current_run.append(i)
+        else:
+            if len(current_run) >= min_contact_frames:
+                contact_frames.update(current_run)
+            current_run = []
+
+    # Handle last run
+    if len(current_run) >= min_contact_frames:
+        contact_frames.update(current_run)
+
+    return contact_frames
+
+
+def _assign_contact_states(
+    n_frames: int,
+    contact_frames: set[int],
+    visibilities: np.ndarray | None,
+    visibility_threshold: float,
+) -> list[ContactState]:
+    """Assign contact states based on contact frames and visibility.
+
+    Args:
+        n_frames: Total number of frames
+        contact_frames: Set of frames with confirmed contact
+        visibilities: Optional visibility scores for each frame
+        visibility_threshold: Minimum visibility to trust landmark
+
+    Returns:
+        List of ContactState for each frame
+    """
+    states = []
+    for i in range(n_frames):
+        if visibilities is not None and visibilities[i] < visibility_threshold:
+            states.append(ContactState.UNKNOWN)
+        elif i in contact_frames:
+            states.append(ContactState.ON_GROUND)
+        else:
+            states.append(ContactState.IN_AIR)
+    return states
+
+
 def detect_ground_contact(
     foot_positions: np.ndarray,
     velocity_threshold: float = 0.02,
@@ -247,7 +327,7 @@ def detect_ground_contact(
     """
     Detect when feet are in contact with ground based on vertical motion.
 
-    Uses derivative-based velocity calculation via Savitzky-Golay filter for smooth,
+    Uses derivative-based velocity calculation via Savitzky-Goyal filter for smooth,
     accurate velocity estimates. This is consistent with the velocity calculation used
     throughout the pipeline for sub-frame interpolation and curvature analysis.
 
@@ -264,52 +344,30 @@ def detect_ground_contact(
         List of ContactState for each frame
     """
     n_frames = len(foot_positions)
-    states = [ContactState.UNKNOWN] * n_frames
 
     if n_frames < 2:
-        return states
+        return [ContactState.UNKNOWN] * n_frames
 
     # Compute vertical velocity using derivative-based method
-    # This provides smoother, more accurate velocity estimates than frame-to-frame differences
-    # and is consistent with the velocity calculation used for sub-frame interpolation
     velocities = compute_velocity_from_derivative(
         foot_positions, window_length=window_length, polyorder=polyorder
     )
 
-    # Detect potential contact frames based on low velocity
+    # Detect stationary frames based on velocity threshold
     is_stationary = np.abs(velocities) < velocity_threshold
 
     # Apply visibility filter
-    if visibilities is not None:
-        is_visible = visibilities > visibility_threshold
-        is_stationary = is_stationary & is_visible
+    is_stationary = _filter_stationary_with_visibility(
+        is_stationary, visibilities, visibility_threshold
+    )
 
-    # Apply minimum contact duration filter
-    contact_frames = []
-    current_run = []
+    # Find frames with sustained contact
+    contact_frames = _find_contact_frames(is_stationary, min_contact_frames)
 
-    for i, stationary in enumerate(is_stationary):
-        if stationary:
-            current_run.append(i)
-        else:
-            if len(current_run) >= min_contact_frames:
-                contact_frames.extend(current_run)
-            current_run = []
-
-    # Don't forget the last run
-    if len(current_run) >= min_contact_frames:
-        contact_frames.extend(current_run)
-
-    # Set states
-    for i in range(n_frames):
-        if visibilities is not None and visibilities[i] < visibility_threshold:
-            states[i] = ContactState.UNKNOWN
-        elif i in contact_frames:
-            states[i] = ContactState.ON_GROUND
-        else:
-            states[i] = ContactState.IN_AIR
-
-    return states
+    # Assign states
+    return _assign_contact_states(
+        n_frames, contact_frames, visibilities, visibility_threshold
+    )
 
 
 def find_contact_phases(
