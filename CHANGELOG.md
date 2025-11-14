@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.27.0 (2025-11-14)
+
+### Features
+
+- Extract video codec from metadata
+  ([`52c7ff2`](https://github.com/feniix/kinemotion/commit/52c7ff2ee3f6620a5271f670ab60e6bca8bc38fb))
+
+
 ## v0.26.1 (2025-11-14)
 
 ### Bug Fixes
