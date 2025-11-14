@@ -19,6 +19,38 @@ if TYPE_CHECKING:
     from ..core.quality import QualityAssessment
 
 
+def _format_float_metric(
+    value: float | None, multiplier: float = 1, decimals: int = 2
+) -> float | None:
+    """Format a float metric value with optional scaling and rounding.
+
+    Args:
+        value: The value to format, or None
+        multiplier: Factor to multiply value by (default: 1)
+        decimals: Number of decimal places to round to (default: 2)
+
+    Returns:
+        Formatted value rounded to specified decimals, or None if input is None
+    """
+    if value is None:
+        return None
+    return round(value * multiplier, decimals)
+
+
+def _format_int_metric(value: float | int | None) -> int | None:
+    """Format a value as an integer.
+
+    Args:
+        value: The value to format, or None
+
+    Returns:
+        Value converted to int, or None if input is None
+    """
+    if value is None:
+        return None
+    return int(value)
+
+
 class DropJumpDataDict(TypedDict, total=False):
     """Type-safe dictionary for drop jump measurement data."""
 
@@ -69,94 +101,65 @@ class DropJumpMetrics:
         # Complete metadata
         self.result_metadata: ResultMetadata | None = None
 
+    def _build_data_dict(self) -> DropJumpDataDict:
+        """Build the data portion of the result dictionary.
+
+        Returns:
+            Dictionary containing formatted metric values.
+        """
+        return {
+            "ground_contact_time_ms": _format_float_metric(
+                self.ground_contact_time, 1000, 2
+            ),
+            "flight_time_ms": _format_float_metric(self.flight_time, 1000, 2),
+            "jump_height_m": _format_float_metric(self.jump_height, 1, 3),
+            "jump_height_kinematic_m": _format_float_metric(
+                self.jump_height_kinematic, 1, 3
+            ),
+            "jump_height_trajectory_normalized": _format_float_metric(
+                self.jump_height_trajectory, 1, 4
+            ),
+            "contact_start_frame": _format_int_metric(self.contact_start_frame),
+            "contact_end_frame": _format_int_metric(self.contact_end_frame),
+            "flight_start_frame": _format_int_metric(self.flight_start_frame),
+            "flight_end_frame": _format_int_metric(self.flight_end_frame),
+            "peak_height_frame": _format_int_metric(self.peak_height_frame),
+            "contact_start_frame_precise": _format_float_metric(
+                self.contact_start_frame_precise, 1, 3
+            ),
+            "contact_end_frame_precise": _format_float_metric(
+                self.contact_end_frame_precise, 1, 3
+            ),
+            "flight_start_frame_precise": _format_float_metric(
+                self.flight_start_frame_precise, 1, 3
+            ),
+            "flight_end_frame_precise": _format_float_metric(
+                self.flight_end_frame_precise, 1, 3
+            ),
+        }
+
+    def _build_metadata_dict(self) -> dict:
+        """Build the metadata portion of the result dictionary.
+
+        Returns:
+            Metadata dictionary from available sources.
+        """
+        if self.result_metadata is not None:
+            return self.result_metadata.to_dict()
+        if self.quality_assessment is not None:
+            return {"quality": self.quality_assessment.to_dict()}
+        return {}
+
     def to_dict(self) -> DropJumpResultDict:
         """Convert metrics to JSON-serializable dictionary with data/metadata structure.
 
         Returns:
             Dictionary with nested data and metadata structure.
         """
-        data: DropJumpDataDict = {
-            "ground_contact_time_ms": (
-                round(self.ground_contact_time * 1000, 2)
-                if self.ground_contact_time is not None
-                else None
-            ),
-            "flight_time_ms": (
-                round(self.flight_time * 1000, 2)
-                if self.flight_time is not None
-                else None
-            ),
-            "jump_height_m": (
-                round(self.jump_height, 3) if self.jump_height is not None else None
-            ),
-            "jump_height_kinematic_m": (
-                round(self.jump_height_kinematic, 3)
-                if self.jump_height_kinematic is not None
-                else None
-            ),
-            "jump_height_trajectory_normalized": (
-                round(self.jump_height_trajectory, 4)
-                if self.jump_height_trajectory is not None
-                else None
-            ),
-            "contact_start_frame": (
-                int(self.contact_start_frame)
-                if self.contact_start_frame is not None
-                else None
-            ),
-            "contact_end_frame": (
-                int(self.contact_end_frame)
-                if self.contact_end_frame is not None
-                else None
-            ),
-            "flight_start_frame": (
-                int(self.flight_start_frame)
-                if self.flight_start_frame is not None
-                else None
-            ),
-            "flight_end_frame": (
-                int(self.flight_end_frame)
-                if self.flight_end_frame is not None
-                else None
-            ),
-            "peak_height_frame": (
-                int(self.peak_height_frame)
-                if self.peak_height_frame is not None
-                else None
-            ),
-            "contact_start_frame_precise": (
-                round(self.contact_start_frame_precise, 3)
-                if self.contact_start_frame_precise is not None
-                else None
-            ),
-            "contact_end_frame_precise": (
-                round(self.contact_end_frame_precise, 3)
-                if self.contact_end_frame_precise is not None
-                else None
-            ),
-            "flight_start_frame_precise": (
-                round(self.flight_start_frame_precise, 3)
-                if self.flight_start_frame_precise is not None
-                else None
-            ),
-            "flight_end_frame_precise": (
-                round(self.flight_end_frame_precise, 3)
-                if self.flight_end_frame_precise is not None
-                else None
-            ),
+        return {
+            "data": self._build_data_dict(),
+            "metadata": self._build_metadata_dict(),
         }
-
-        # Build metadata from ResultMetadata if available, otherwise use legacy quality
-        if self.result_metadata is not None:
-            metadata = self.result_metadata.to_dict()
-        elif self.quality_assessment is not None:
-            # Fallback for backwards compatibility during transition
-            metadata = {"quality": self.quality_assessment.to_dict()}
-        else:
-            # No metadata available
-            metadata = {}
-
-        return {"data": data, "metadata": metadata}
 
 
 def _determine_drop_start_frame(
