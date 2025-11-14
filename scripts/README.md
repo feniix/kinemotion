@@ -27,7 +27,7 @@ ______________________________________________________________________
 
 **Expected result:**
 
-```
+```text
 ✅ SUCCESS: All 100 runs produced identical results
 Algorithm is DETERMINISTIC!
 ```
@@ -38,7 +38,7 @@ ______________________________________________________________________
 
 ### `test_determinism.sh`
 
-**Test-retest determinism validation**
+#### Test-retest determinism validation
 
 - Runs same video 100 times
 - Uses batch processing (realistic usage)
@@ -55,7 +55,7 @@ ______________________________________________________________________
 
 ### `analyze_determinism_variance.py`
 
-**Detailed variance analysis**
+#### Detailed variance analysis
 
 - Calculates mean, std, range for all metrics
 - Identifies which fields vary (if any)
@@ -65,7 +65,7 @@ ______________________________________________________________________
 
 **Output example:**
 
-```
+```text
 Jump Height (m):
   Mean:  0.4540739478
   Std:   0.000000000000000
@@ -93,7 +93,7 @@ ______________________________________________________________________
 
 ## Validation Workflow
 
-```
+```text
 1. Test Determinism     ← ./scripts/test_determinism.sh
    ↓ (if pass)
 2. Known Heights        ← ./scripts/test_known_heights.py (future)
@@ -125,7 +125,7 @@ ______________________________________________________________________
 
 Validation data stored in `data/` (gitignored):
 
-```
+```text
 data/
 ├── determinism_test/
 │   ├── videos/          # 100 symlinks to test video

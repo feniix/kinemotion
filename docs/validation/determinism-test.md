@@ -98,7 +98,7 @@ ______________________________________________________________________
 
 ### Success Output
 
-```
+```text
 Comparing 100 result files...
 ============================================================
 ✅ SUCCESS: All 100 runs produced identical results
@@ -116,7 +116,7 @@ This means:
 
 ### Variance Analysis
 
-```
+```text
 Jump Height (m):
   Mean:  0.4540739478
   Std:   0.000000000000000
@@ -213,19 +213,19 @@ ______________________________________________________________________
 
 ### Common Issues and Fixes
 
-**Issue: Timestamps in metadata vary**
+### Issue: Timestamps in metadata vary
 
 - **Expected!** Processing time and timestamp SHOULD vary
 - **Not a problem** - these are metadata, not measurements
 - **Fix:** Exclude these from comparison or accept variance
 
-**Issue: Small floating point differences**
+### Issue: Small floating point differences
 
 - **Acceptable** if std \< 1e-10
 - **Cause:** Floating point arithmetic order
 - **Fix:** Not needed, this is normal
 
-**Issue: Large variance in measurements**
+### Issue: Large variance in measurements
 
 - **Problem!** Algorithm is non-deterministic
 - **Fix:** Debug and fix before proceeding
