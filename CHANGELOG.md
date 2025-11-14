@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.26.0 (2025-11-14)
+
+### Features
+
+- Implement known height validation (Task 1.4)
+  ([`6f9dbf9`](https://github.com/feniix/kinemotion/commit/6f9dbf9a78f073e02593067280ee0661fd2f2545))
+
+### Refactoring
+
+- Reduce cognitive complexity in DropJumpMetrics.to_dict() from 17 to 3
+  ([`1f6c99b`](https://github.com/feniix/kinemotion/commit/1f6c99b11979b6d336d14c329f2409be0ebbc6db))
+
+
 ## v0.25.0 (2025-11-14)
 
 ### Documentation
