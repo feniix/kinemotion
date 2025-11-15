@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.28.0 (2025-11-15)
+
+### Features
+
+- Standardize numeric precision across jump types
+  ([`def84b0`](https://github.com/feniix/kinemotion/commit/def84b00ba4aef35f398ac615e328ba15e50133d))
+
+
 ## v0.27.0 (2025-11-14)
 
 ### Features
