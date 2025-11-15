@@ -38,7 +38,7 @@
 
 - **Ground contact detection** based on foot velocity and position
 - **Automatic drop jump detection** - identifies box → drop → landing → jump phases
-- **Metrics**: Ground contact time, flight time, jump height (with drop height calibration)
+- **Metrics**: Ground contact time, flight time, jump height (calculated from flight time)
 - **Reactive strength index** calculations
 
 ### Counter Movement Jump (CMJ) Analysis
@@ -238,27 +238,33 @@ kinemotion cmj-analyze videos/*.mp4 --batch --workers 4 \
   --csv-summary summary.csv
 ```
 
-### Quality Indicators & Confidence Scores
+### Quality Assessment
 
-All analysis outputs include automatic quality assessment to help you know when to trust results:
+All analysis outputs include automatic quality assessment in the metadata section to help you know when to trust results:
 
 ```json
 {
-  "jump_height_m": 0.352,
-  "flight_time_s": 0.534,
-  "confidence": "high",
-  "quality_score": 87.3,
-  "quality_indicators": {
-    "avg_visibility": 0.89,
-    "min_visibility": 0.82,
-    "tracking_stable": true,
-    "phase_detection_clear": true,
-    "outliers_detected": 2,
-    "outlier_percentage": 1.5,
-    "position_variance": 0.0008,
-    "fps": 60.0
+  "data": {
+    "jump_height_m": 0.352,
+    "flight_time_ms": 534.2
   },
-  "warnings": []
+  "metadata": {
+    "quality": {
+      "confidence": "high",
+      "quality_score": 87.3,
+      "quality_indicators": {
+        "avg_visibility": 0.89,
+        "min_visibility": 0.82,
+        "tracking_stable": true,
+        "phase_detection_clear": true,
+        "outliers_detected": 2,
+        "outlier_percentage": 1.5,
+        "position_variance": 0.0008,
+        "fps": 60.0
+      },
+      "warnings": []
+    }
+  }
 }
 ```
 
@@ -281,9 +287,9 @@ All analysis outputs include automatic quality assessment to help you know when 
 ```python
 # Only use high-confidence results
 metrics = process_cmj_video("video.mp4")
-if metrics.quality_assessment.confidence == "high":
+if metrics.quality_assessment is not None and metrics.quality_assessment.confidence == "high":
     print(f"Reliable jump height: {metrics.jump_height:.3f}m")
-else:
+elif metrics.quality_assessment is not None:
     print(f"Low quality - warnings: {metrics.quality_assessment.warnings}")
 ```
 
@@ -385,14 +391,9 @@ Kinemotion automatically optimizes parameters based on your video:
 - **Quality-based adjustments**: Adapts smoothing based on MediaPipe tracking confidence
 - **Always enabled**: Outlier rejection, curvature analysis, drop start detection
 
-### Required Parameters
+### Parameters
 
-- `--drop-height <float>` **\[REQUIRED\]**
-  - Height of drop box/platform in meters (e.g., 0.40 for 40cm)
-  - Used for accurate calibration of jump height measurements
-  - Measure your box height accurately for best results
-
-### Optional Parameters
+All parameters are optional. Kinemotion uses intelligent auto-tuning to select optimal settings based on video characteristics.
 
 - `--quality [fast|balanced|accurate]` (default: balanced)
 
@@ -431,32 +432,95 @@ For advanced users who need manual control:
 
 ## Output Format
 
-### JSON Metrics
+### Drop Jump JSON Output
 
 ```json
 {
-  "ground_contact_time_ms": 245.67,
-  "flight_time_ms": 456.78,
-  "jump_height_m": 0.339,
-  "jump_height_kinematic_m": 0.256,
-  "jump_height_trajectory_normalized": 0.0845,
-  "contact_start_frame": 45,
-  "contact_end_frame": 67,
-  "flight_start_frame": 68,
-  "flight_end_frame": 95,
-  "peak_height_frame": 82
+  "data": {
+    "ground_contact_time_ms": 245.67,
+    "flight_time_ms": 456.78,
+    "jump_height_m": 0.339,
+    "jump_height_kinematic_m": 0.339,
+    "jump_height_trajectory_normalized": 0.0845,
+    "contact_start_frame": 45,
+    "contact_end_frame": 67,
+    "flight_start_frame": 68,
+    "flight_end_frame": 95,
+    "peak_height_frame": 82,
+    "contact_start_frame_precise": 45.234,
+    "contact_end_frame_precise": 67.891,
+    "flight_start_frame_precise": 68.123,
+    "flight_end_frame_precise": 94.567
+  },
+  "metadata": {
+    "quality": { },
+    "processing_info": { }
+  }
 }
 ```
 
-**Fields**:
+**Data Fields**:
 
-- `jump_height_m`: Primary jump height measurement (calibrated if --drop-height provided, otherwise corrected kinematic)
-- `jump_height_kinematic_m`: Kinematic estimate from flight time: h = (g × t²) / 8
+- `ground_contact_time_ms`: Duration of ground contact phase in milliseconds
+- `flight_time_ms`: Duration of flight phase in milliseconds
+- `jump_height_m`: Jump height calculated from flight time: h = g × t² / 8
+- `jump_height_kinematic_m`: Kinematic estimate (same as `jump_height_m`)
 - `jump_height_trajectory_normalized`: Position-based measurement in normalized coordinates (0-1 range)
-- `contact_start_frame_precise`, `contact_end_frame_precise`: Sub-frame timing (fractional frames)
-- `flight_start_frame_precise`, `flight_end_frame_precise`: Sub-frame timing (fractional frames)
+- `contact_start_frame`: Frame index where contact begins (integer, for visualization)
+- `contact_end_frame`: Frame index where contact ends (integer, for visualization)
+- `flight_start_frame`: Frame index where flight begins (integer, for visualization)
+- `flight_end_frame`: Frame index where flight ends (integer, for visualization)
+- `peak_height_frame`: Frame index at maximum jump height (integer, for visualization)
+- `contact_start_frame_precise`: Sub-frame precise timing for contact start (fractional, for calculations)
+- `contact_end_frame_precise`: Sub-frame precise timing for contact end (fractional, for calculations)
+- `flight_start_frame_precise`: Sub-frame precise timing for flight start (fractional, for calculations)
+- `flight_end_frame_precise`: Sub-frame precise timing for flight end (fractional, for calculations)
 
-**Note**: Integer frame indices (e.g., `contact_start_frame`) are provided for visualization in debug videos. Precise fractional frames (e.g., `contact_start_frame_precise`) are used for all timing calculations and provide higher accuracy.
+**Note**: Integer frame indices are provided for visualization in debug videos. Precise fractional frames are used for all timing calculations and provide sub-frame accuracy (±10ms at 30fps).
+
+### CMJ JSON Output
+
+```json
+{
+  "data": {
+    "jump_height_m": 0.352,
+    "flight_time_ms": 534.2,
+    "countermovement_depth_m": 0.285,
+    "eccentric_duration_ms": 612.5,
+    "concentric_duration_ms": 321.8,
+    "total_movement_time_ms": 934.3,
+    "peak_eccentric_velocity_m_s": -2.145,
+    "peak_concentric_velocity_m_s": 3.789,
+    "transition_time_ms": 125.4,
+    "standing_start_frame": 12.5,
+    "lowest_point_frame": 45.2,
+    "takeoff_frame": 67.8,
+    "landing_frame": 102.3,
+    "tracking_method": "foot"
+  },
+  "metadata": {
+    "quality": { },
+    "processing_info": { }
+  }
+}
+```
+
+**Data Fields**:
+
+- `jump_height_m`: Jump height calculated from flight time: h = g × t² / 8
+- `flight_time_ms`: Duration of flight phase in milliseconds
+- `countermovement_depth_m`: Maximum downward displacement during eccentric (descent) phase
+- `eccentric_duration_ms`: Time from start of countermovement to lowest point
+- `concentric_duration_ms`: Time from lowest point to takeoff
+- `total_movement_time_ms`: Total time from countermovement start to takeoff
+- `peak_eccentric_velocity_m_s`: Maximum downward velocity during descent (negative value)
+- `peak_concentric_velocity_m_s`: Maximum upward velocity during propulsion (positive value)
+- `transition_time_ms`: Duration at lowest point (amortization phase between descent and propulsion)
+- `standing_start_frame`: Frame where standing phase ends and countermovement begins
+- `lowest_point_frame`: Frame at the lowest point of the countermovement
+- `takeoff_frame`: Frame where athlete leaves ground
+- `landing_frame`: Frame where athlete lands after jump
+- `tracking_method`: Tracking method used - "foot" (foot landmarks) or "com" (center of mass estimation)
 
 ### Debug Video
 
@@ -513,8 +577,7 @@ The debug video includes:
 
 **Solutions**:
 
-1. **Use calibration**: For drop jumps, add `--drop-height` parameter with box height in meters (e.g., `--drop-height 0.40`)
-   - Theoretically improves accuracy (⚠️ unvalidated)
+1. **Check video quality**: Ensure video frame rate is adequate (30fps or higher recommended)
 1. **Verify flight time detection**: Check `flight_start_frame` and `flight_end_frame` in JSON
 1. **Compare measurements**: JSON output includes both `jump_height_m` (primary) and `jump_height_kinematic_m` (kinematic-only)
 1. **Check for drop jump detection**: If doing a drop jump, ensure first phase is elevated enough (>5% of frame height)
@@ -552,8 +615,7 @@ The debug video includes:
 1. **Metric Calculation**:
    - Ground contact time = contact phase duration (using fractional frames)
    - Flight time = flight phase duration (using fractional frames)
-   - Jump height = calibrated position-based measurement (if --drop-height provided)
-   - Fallback: kinematic estimate (g × t²) / 8 with optional empirical correction factor (⚠️ unvalidated)
+   - Jump height = kinematic estimate from flight time: (g × t²) / 8
 
 ## Development
 
@@ -564,7 +626,7 @@ This project enforces strict code quality standards:
 - **Type safety**: Full pyright strict mode compliance with complete type annotations
 - **Linting**: Comprehensive ruff checks (pycodestyle, pyflakes, isort, pep8-naming, etc.)
 - **Formatting**: Black code style
-- **Testing**: pytest with 61 unit tests
+- **Testing**: pytest with 261 comprehensive tests (74.27% coverage)
 - **PEP 561 compliant**: Includes py.typed marker for type checking support
 
 ### Development Commands

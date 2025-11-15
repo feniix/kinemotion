@@ -21,7 +21,7 @@ uv run kinemotion cmj-analyze video.mp4
 **Development:**
 
 ```bash
-uv run pytest                           # Run all 206 tests with coverage (73.03%)
+uv run pytest                           # Run all 261 tests with coverage (74.27%)
 uv run pytest --cov-report=html         # Generate HTML coverage report
 uv run ruff check --fix && uv run pyright  # Lint + type check
 ```
@@ -118,11 +118,11 @@ uv run pytest             # All 206 tests with coverage
 - Ruff (100 char lines)
 - Conventional Commits (see below)
 - **Code duplication target: < 3%**
-- **Test coverage: ≥ 50% (current: 73.03% with branch coverage)**
+- **Test coverage: ≥ 50% (current: 74.27% with branch coverage)**
 
 ### Coverage Summary
 
-**Current:** 73.03% (206 tests, 2225 statements, 752 branches)
+**Current:** 74.27% (261 tests, 2383 statements, 788 branches)
 
 **Coverage by tier:**
 
@@ -133,7 +133,7 @@ uv run pytest             # All 206 tests with coverage
 
 **Key metrics:**
 
-- All 206 tests pass
+- All 261 tests pass
 - 0 type errors (pyright strict)
 - 0 linting errors (ruff)
 
@@ -193,10 +193,13 @@ metrics = process_cmj_video("video.mp4", quality="balanced")
 
 **Key versions:**
 
-- Python: 3.12.7
-- NumPy: 2.3.4
+- Python: 3.12.7 (supports >=3.10,<3.13)
+- NumPy: >=1.26.0
 - pytest: 9.0.0
-- MediaPipe: 0.10.14
+- MediaPipe: >=0.10.9
+- OpenCV: >=4.9.0
+- SciPy: >=1.11.0
+- uv: 0.9.9
 
 ## Documentation
 

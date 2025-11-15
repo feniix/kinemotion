@@ -4,7 +4,7 @@ Comprehensive guide to testing in the Kinemotion project.
 
 ## Current Coverage
 
-**Overall:** 73.03% (2225 statements, 752 branches, 206 tests)
+**Overall:** 74.27% (2383 statements, 788 branches, 261 tests)
 
 ### Coverage by Module Category
 
@@ -49,7 +49,7 @@ Comprehensive guide to testing in the Kinemotion project.
 
 ## Test File Organization
 
-```
+```text
 tests/
 ├── test_cli_dropjump.py      # Drop jump CLI integration (17 tests)
 ├── test_cli_cmj.py            # CMJ CLI integration (17 tests)
@@ -305,7 +305,7 @@ addopts = [
 ```bash
 uv run ruff check --fix   # Auto-fix linting
 uv run pyright            # Type check (strict)
-uv run pytest             # All 206 tests with coverage (73.03%)
+uv run pytest             # All 261 tests with coverage (74.27%)
 ```
 
 All checks must pass before committing.

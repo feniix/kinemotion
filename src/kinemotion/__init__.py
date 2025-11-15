@@ -13,7 +13,7 @@ from .api import (
 from .cmj.kinematics import CMJMetrics
 from .dropjump.kinematics import DropJumpMetrics
 
-__version__ = "0.1.0"
+__version__ = "0.27.0"
 
 __all__ = [
     # Drop jump API
