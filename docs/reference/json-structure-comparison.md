@@ -11,7 +11,7 @@ ______________________________________________________________________
 ```json
 {
   "jump_height_m": 0.352,
-  "flight_time_s": 0.534,
+  "flight_time_ms": 534.0,
   "takeoff_frame": 154.3,
   "landing_frame": 172.8,
   "confidence": "high",
@@ -121,7 +121,7 @@ ______________________________________________________________________
 ```json
 {
   "jump_height_m": 0.352,
-  "flight_time_s": 0.534,
+  "flight_time_ms": 534.0,
   "takeoff_frame": 154.3,
   "landing_frame": 172.8,
   "quality": {
@@ -185,7 +185,7 @@ ______________________________________________________________________
 class JumpData:
     """Physical measurements."""
     jump_height_m: float
-    flight_time_s: float
+    flight_time_ms: float
     ...
 
 @dataclass

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, TypedDict
 import numpy as np
 from numpy.typing import NDArray
 
+from ..core.formatting import format_float_metric, format_int_metric
 from ..core.smoothing import compute_acceleration_from_derivative
 from .analysis import (
     ContactState,
@@ -17,38 +18,6 @@ from .analysis import (
 if TYPE_CHECKING:
     from ..core.metadata import ResultMetadata
     from ..core.quality import QualityAssessment
-
-
-def _format_float_metric(
-    value: float | None, multiplier: float = 1, decimals: int = 2
-) -> float | None:
-    """Format a float metric value with optional scaling and rounding.
-
-    Args:
-        value: The value to format, or None
-        multiplier: Factor to multiply value by (default: 1)
-        decimals: Number of decimal places to round to (default: 2)
-
-    Returns:
-        Formatted value rounded to specified decimals, or None if input is None
-    """
-    if value is None:
-        return None
-    return round(value * multiplier, decimals)
-
-
-def _format_int_metric(value: float | int | None) -> int | None:
-    """Format a value as an integer.
-
-    Args:
-        value: The value to format, or None
-
-    Returns:
-        Value converted to int, or None if input is None
-    """
-    if value is None:
-        return None
-    return int(value)
 
 
 class DropJumpDataDict(TypedDict, total=False):
@@ -108,32 +77,32 @@ class DropJumpMetrics:
             Dictionary containing formatted metric values.
         """
         return {
-            "ground_contact_time_ms": _format_float_metric(
+            "ground_contact_time_ms": format_float_metric(
                 self.ground_contact_time, 1000, 2
             ),
-            "flight_time_ms": _format_float_metric(self.flight_time, 1000, 2),
-            "jump_height_m": _format_float_metric(self.jump_height, 1, 3),
-            "jump_height_kinematic_m": _format_float_metric(
+            "flight_time_ms": format_float_metric(self.flight_time, 1000, 2),
+            "jump_height_m": format_float_metric(self.jump_height, 1, 3),
+            "jump_height_kinematic_m": format_float_metric(
                 self.jump_height_kinematic, 1, 3
             ),
-            "jump_height_trajectory_normalized": _format_float_metric(
+            "jump_height_trajectory_normalized": format_float_metric(
                 self.jump_height_trajectory, 1, 4
             ),
-            "contact_start_frame": _format_int_metric(self.contact_start_frame),
-            "contact_end_frame": _format_int_metric(self.contact_end_frame),
-            "flight_start_frame": _format_int_metric(self.flight_start_frame),
-            "flight_end_frame": _format_int_metric(self.flight_end_frame),
-            "peak_height_frame": _format_int_metric(self.peak_height_frame),
-            "contact_start_frame_precise": _format_float_metric(
+            "contact_start_frame": format_int_metric(self.contact_start_frame),
+            "contact_end_frame": format_int_metric(self.contact_end_frame),
+            "flight_start_frame": format_int_metric(self.flight_start_frame),
+            "flight_end_frame": format_int_metric(self.flight_end_frame),
+            "peak_height_frame": format_int_metric(self.peak_height_frame),
+            "contact_start_frame_precise": format_float_metric(
                 self.contact_start_frame_precise, 1, 3
             ),
-            "contact_end_frame_precise": _format_float_metric(
+            "contact_end_frame_precise": format_float_metric(
                 self.contact_end_frame_precise, 1, 3
             ),
-            "flight_start_frame_precise": _format_float_metric(
+            "flight_start_frame_precise": format_float_metric(
                 self.flight_start_frame_precise, 1, 3
             ),
-            "flight_end_frame_precise": _format_float_metric(
+            "flight_end_frame_precise": format_float_metric(
                 self.flight_end_frame_precise, 1, 3
             ),
         }

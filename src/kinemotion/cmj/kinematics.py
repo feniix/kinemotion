@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING, TypedDict
 import numpy as np
 from numpy.typing import NDArray
 
+from ..core.formatting import format_float_metric
+
 if TYPE_CHECKING:
     from ..core.metadata import ResultMetadata
     from ..core.quality import QualityAssessment
@@ -15,14 +17,14 @@ class CMJDataDict(TypedDict, total=False):
     """Type-safe dictionary for CMJ measurement data."""
 
     jump_height_m: float
-    flight_time_s: float
+    flight_time_ms: float
     countermovement_depth_m: float
-    eccentric_duration_s: float
-    concentric_duration_s: float
-    total_movement_time_s: float
+    eccentric_duration_ms: float
+    concentric_duration_ms: float
+    total_movement_time_ms: float
     peak_eccentric_velocity_m_s: float
     peak_concentric_velocity_m_s: float
-    transition_time_s: float | None
+    transition_time_ms: float | None
     standing_start_frame: float | None
     lowest_point_frame: float
     takeoff_frame: float
@@ -43,14 +45,14 @@ class CMJMetrics:
 
     Attributes:
         jump_height: Maximum jump height in meters
-        flight_time: Time spent in the air in seconds
+        flight_time: Time spent in the air in milliseconds
         countermovement_depth: Vertical distance traveled during eccentric phase in meters
-        eccentric_duration: Time from countermovement start to lowest point in seconds
-        concentric_duration: Time from lowest point to takeoff in seconds
-        total_movement_time: Total time from countermovement start to takeoff in seconds
+        eccentric_duration: Time from countermovement start to lowest point in milliseconds
+        concentric_duration: Time from lowest point to takeoff in milliseconds
+        total_movement_time: Total time from countermovement start to takeoff in milliseconds
         peak_eccentric_velocity: Maximum downward velocity during countermovement in m/s
         peak_concentric_velocity: Maximum upward velocity during propulsion in m/s
-        transition_time: Duration at lowest point (amortization phase) in seconds
+        transition_time: Duration at lowest point (amortization phase) in milliseconds
         standing_start_frame: Frame where standing phase ends (countermovement begins)
         lowest_point_frame: Frame at lowest point of countermovement
         takeoff_frame: Frame where athlete leaves ground
@@ -85,19 +87,27 @@ class CMJMetrics:
             Dictionary with nested data and metadata structure.
         """
         data: CMJDataDict = {
-            "jump_height_m": float(self.jump_height),
-            "flight_time_s": float(self.flight_time),
-            "countermovement_depth_m": float(self.countermovement_depth),
-            "eccentric_duration_s": float(self.eccentric_duration),
-            "concentric_duration_s": float(self.concentric_duration),
-            "total_movement_time_s": float(self.total_movement_time),
-            "peak_eccentric_velocity_m_s": float(self.peak_eccentric_velocity),
-            "peak_concentric_velocity_m_s": float(self.peak_concentric_velocity),
-            "transition_time_s": (
-                float(self.transition_time)
-                if self.transition_time is not None
-                else None
-            ),
+            "jump_height_m": format_float_metric(self.jump_height, 1, 3),  # type: ignore[typeddict-item]
+            "flight_time_ms": format_float_metric(self.flight_time, 1000, 2),  # type: ignore[typeddict-item]
+            "countermovement_depth_m": format_float_metric(
+                self.countermovement_depth, 1, 3
+            ),  # type: ignore[typeddict-item]
+            "eccentric_duration_ms": format_float_metric(
+                self.eccentric_duration, 1000, 2
+            ),  # type: ignore[typeddict-item]
+            "concentric_duration_ms": format_float_metric(
+                self.concentric_duration, 1000, 2
+            ),  # type: ignore[typeddict-item]
+            "total_movement_time_ms": format_float_metric(
+                self.total_movement_time, 1000, 2
+            ),  # type: ignore[typeddict-item]
+            "peak_eccentric_velocity_m_s": format_float_metric(
+                self.peak_eccentric_velocity, 1, 4
+            ),  # type: ignore[typeddict-item]
+            "peak_concentric_velocity_m_s": format_float_metric(
+                self.peak_concentric_velocity, 1, 4
+            ),  # type: ignore[typeddict-item]
+            "transition_time_ms": format_float_metric(self.transition_time, 1000, 2),
             "standing_start_frame": (
                 float(self.standing_start_frame)
                 if self.standing_start_frame is not None

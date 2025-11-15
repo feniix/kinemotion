@@ -97,14 +97,14 @@ def test_cmj_metrics_to_dict() -> None:
     # Verify all expected keys are present in data
     expected_keys = [
         "jump_height_m",
-        "flight_time_s",
+        "flight_time_ms",
         "countermovement_depth_m",
-        "eccentric_duration_s",
-        "concentric_duration_s",
-        "total_movement_time_s",
+        "eccentric_duration_ms",
+        "concentric_duration_ms",
+        "total_movement_time_ms",
         "peak_eccentric_velocity_m_s",
         "peak_concentric_velocity_m_s",
-        "transition_time_s",
+        "transition_time_ms",
         "standing_start_frame",
         "lowest_point_frame",
         "takeoff_frame",
@@ -117,7 +117,7 @@ def test_cmj_metrics_to_dict() -> None:
 
     # Verify all numeric values are Python types (not NumPy)
     assert isinstance(result_dict["data"]["jump_height_m"], float)
-    assert isinstance(result_dict["data"]["flight_time_s"], float)
+    assert isinstance(result_dict["data"]["flight_time_ms"], float)
     assert isinstance(result_dict["data"]["tracking_method"], str)
 
 

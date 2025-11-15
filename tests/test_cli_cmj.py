@@ -118,7 +118,7 @@ class TestCMJCLIFileOperations:
             # Test keys exist, not their values (which may be None)
             assert isinstance(data, dict)
             assert "jump_height_m" in data
-            assert "flight_time_s" in data
+            assert "flight_time_ms" in data
 
     def test_debug_video_output_created(self, cli_runner, minimal_video, tmp_path):
         """Test debug video file is created when analysis succeeds."""

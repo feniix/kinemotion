@@ -37,14 +37,14 @@ ______________________________________________________________________
 {
   "data": {
     "jump_height_m": 0.506,
-    "flight_time_s": 0.642,
+    "flight_time_ms": 642.0,
     "countermovement_depth_m": 0.045,
-    "eccentric_duration_s": 0.412,
-    "concentric_duration_s": 0.305,
-    "total_movement_time_s": 0.717,
+    "eccentric_duration_ms": 412.0,
+    "concentric_duration_ms": 305.0,
+    "total_movement_time_ms": 717.0,
     "peak_eccentric_velocity_m_s": -1.234,
     "peak_concentric_velocity_m_s": 2.634,
-    "transition_time_s": 0.135,
+    "transition_time_ms": 135.0,
     "standing_start_frame": 145.0,
     "lowest_point_frame": 146.0,
     "takeoff_frame": 154.3,
@@ -200,14 +200,14 @@ ______________________________________________________________________
 **CMJ-specific fields:**
 
 - `jump_height_m` (float): Maximum vertical displacement
-- `flight_time_s` (float): Time in the air
+- `flight_time_ms` (float): Time in the air in milliseconds
 - `countermovement_depth_m` (float): Depth of eccentric phase
-- `eccentric_duration_s` (float): Time from start to lowest point
-- `concentric_duration_s` (float): Time from lowest point to takeoff
-- `total_movement_time_s` (float): Total time from start to takeoff
+- `eccentric_duration_ms` (float): Time from start to lowest point in milliseconds
+- `concentric_duration_ms` (float): Time from lowest point to takeoff in milliseconds
+- `total_movement_time_ms` (float): Total time from start to takeoff in milliseconds
 - `peak_eccentric_velocity_m_s` (float): Max downward velocity (negative)
 - `peak_concentric_velocity_m_s` (float): Max upward velocity (negative in coords)
-- `transition_time_s` (float | null): Amortization phase duration
+- `transition_time_ms` (float | null): Amortization phase duration in milliseconds
 - `standing_start_frame` (float | null): Frame where movement begins
 - `lowest_point_frame` (float): Frame at deepest countermovement
 - `takeoff_frame` (float): Frame where feet leave ground
@@ -414,7 +414,7 @@ ______________________________________________________________________
 {
   "data": {
     "jump_height_m": 0.352,
-    "flight_time_s": 0.534
+    "flight_time_ms": 534.0
   },
   "metadata": {
     "quality": {
