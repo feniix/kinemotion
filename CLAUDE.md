@@ -245,6 +245,44 @@ feat!: change API signature for process_video
 
 **Important**: Commit messages must never reference Claude or AI assistance. Keep messages professional and focused on the technical changes.
 
+## Specialized Subagents
+
+This project uses Claude Code's native subagent system for automatic task routing to domain experts.
+
+**Available Agents** (in `.claude/agents/`):
+
+- **project-manager**: Goal coordination, complexity/ROI analysis, task prioritization, milestone tracking
+- **computer-vision-engineer**: MediaPipe, pose tracking, video I/O, debug overlays
+- **biomechanics-specialist**: Jump metrics, RSI, triple extension, physiological validation
+- **python-backend-developer**: Algorithm optimization, NumPy, API design, code quality
+- **ml-data-scientist**: Parameter tuning, quality presets, validation, benchmarking
+- **devops-cicd-engineer**: GitHub Actions, SonarQube, CI/CD, test infrastructure
+- **technical-writer**: Documentation (Diátaxis framework), guides, API reference
+- **qa-test-engineer**: Test coverage, edge cases, fixtures, regression testing
+
+**How It Works:**
+
+Claude automatically routes tasks to the appropriate agent based on:
+
+- Task keywords (pose detection → Computer Vision Engineer)
+- Files being edited (`*analysis.py` → Biomechanics Specialist)
+- Context from the conversation
+
+**Explicit Invocation:**
+
+```bash
+Use the computer-vision-engineer agent to debug pose detection
+Use biomechanics-specialist to validate RSI calculation
+```
+
+**Managing Agents:**
+
+```bash
+/agents  # Interactive interface to view, create, edit agents
+```
+
+See [.claude/agents/README.md](.claude/agents/README.md) for complete documentation.
+
 ## MCP Servers
 
 Configured in `.mcp.json`: web-search, sequential-thinking, context7, etc.
