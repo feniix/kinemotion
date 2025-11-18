@@ -456,7 +456,9 @@ def _find_landing_frame(
 ) -> float:
     """Find landing frame after peak height."""
     landing_search_start = peak_height_frame
-    landing_search_end = min(len(accelerations), peak_height_frame + int(fps * 0.5))
+    # Search window extended to 1.0s to accommodate all realistic flight times
+    # (recreational: 0.25-0.65s, elite: 0.65-0.95s, max: 1.1s)
+    landing_search_end = min(len(accelerations), peak_height_frame + int(fps * 1.0))
     landing_accelerations = accelerations[landing_search_start:landing_search_end]
 
     if len(landing_accelerations) > 0:
