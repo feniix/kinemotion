@@ -7,6 +7,81 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.29.0 (2025-11-18)
+
+### Bug Fixes
+
+- Correct ankle angle calculation using foot_index instead of heel
+  ([`422020c`](https://github.com/feniix/kinemotion/commit/422020c33cdf95b64bb7371c27ee030a220a6e0c))
+
+- Extend landing detection search window for realistic flight times
+  ([`c4a6e7b`](https://github.com/feniix/kinemotion/commit/c4a6e7b82dff14272cad75e9db6e3a54a6da4a9e))
+
+- **ci**: Add cache invalidation to ensure fresh install of updated code
+  ([`43b3a7a`](https://github.com/feniix/kinemotion/commit/43b3a7ab0ae4112e233e719186cdefd01a16daa1))
+
+- **ci**: Disable uv cache completely to ensure fresh builds
+  ([`b109d30`](https://github.com/feniix/kinemotion/commit/b109d3020191adb31692b22d299b40a9aaaf1596))
+
+- **ci**: Force complete rebuild with --reinstall to clear stale wheel cache
+  ([`303efe6`](https://github.com/feniix/kinemotion/commit/303efe64344006ac2d87d272c61e12b0e83c95f2))
+
+- **cmj**: Improve phase detection robustness for ambiguous derivatives
+  ([`f810001`](https://github.com/feniix/kinemotion/commit/f8100013ffb321047b13248d1e2881ee641b0858))
+
+### Chores
+
+- Add justfile with clean commands for generated files
+  ([`6d82500`](https://github.com/feniix/kinemotion/commit/6d825007d77bfcdd5bd11fd5a8db654b50ee58e6))
+
+- Add subagent configuration
+  ([`81adc7a`](https://github.com/feniix/kinemotion/commit/81adc7a7d7b50d89f5134c98e94652ee1e5015e1))
+
+- Fix agent definitions
+  ([`8606c38`](https://github.com/feniix/kinemotion/commit/8606c380cd983ce29b5a629e5d5220894dbd2f30))
+
+- Store local information and serena config
+  ([`ada78aa`](https://github.com/feniix/kinemotion/commit/ada78aa099cd23e4387aebe9cdafdefaa7896bf1))
+
+### Continuous Integration
+
+- Fix stale bytecode caching in CI environment
+  ([`1673010`](https://github.com/feniix/kinemotion/commit/1673010a44773f87fad6b8b1bb62f8e5c9cd05bb))
+
+- Fix verification step to use uv run for proper environment
+  ([`5ae325d`](https://github.com/feniix/kinemotion/commit/5ae325d04812b85c3933225170a9c12ef0fa10d4))
+
+- Trigger fresh build after clearing all caches
+  ([`d3b69a3`](https://github.com/feniix/kinemotion/commit/d3b69a3c6c133e33b7f6c99fbf6b11a06c281b57))
+
+### Documentation
+
+- Clarify landing frame detection algorithm and window extension rationale
+  ([`965d60b`](https://github.com/feniix/kinemotion/commit/965d60bf310608e338ed7112ebdaafcbcf42e9aa))
+
+- Strategy
+  ([`3fc9a31`](https://github.com/feniix/kinemotion/commit/3fc9a31890315b1bad68d6c6ec89dc891123254d))
+
+- Update README and CLAUDE.md with accurate metrics and JSON examples
+  ([`f31be43`](https://github.com/feniix/kinemotion/commit/f31be4315f754528abb7e444d9c297a8ce12d41a))
+
+- Use correct naming for basic-memory
+  ([`ee55a50`](https://github.com/feniix/kinemotion/commit/ee55a504340ffed86586321e085290aed3319541))
+
+### Features
+
+- **cmj**: Expand CMJ testing with physiological bounds validation
+  ([`3289367`](https://github.com/feniix/kinemotion/commit/328936787f4d644f4a3cd8a981de99f04f438273))
+
+### Testing
+
+- Add test for cmj joint angles
+  ([`6dd97a2`](https://github.com/feniix/kinemotion/commit/6dd97a28354c4794e77dd26b2bfd3d2df6b631f1))
+
+- Adjust flight time tolerance for synthetic CMJ test
+  ([`dd196cb`](https://github.com/feniix/kinemotion/commit/dd196cb5692615a658d1a154138c3ba129e955db))
+
+
 ## v0.28.0 (2025-11-15)
 
 ### Features
