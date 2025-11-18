@@ -44,21 +44,6 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           version: "0.8.17"
-          enable-cache: false
-
-      - name: Clear Python caches and bytecode completely
-        run: |
-          # Remove all Python caches that might contain stale bytecode
-          find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
-          find . -type f -name "*.pyc" -delete 2>/dev/null || true
-          find . -type f -name "*.pyo" -delete 2>/dev/null || true
-          find . -type f -name "*.pyd" -delete 2>/dev/null || true
-
-          # Remove tool caches
-          rm -rf .pytest_cache .ruff_cache .mypy_cache .tox 2>/dev/null || true
-
-          # Remove build artifacts
-          rm -rf build dist *.egg-info 2>/dev/null || true
 
       - name: Install dependencies
         run: uv sync
@@ -73,34 +58,9 @@ jobs:
           uv run pyright
         continue-on-error: true  # Don't fail the build on type errors
 
-      - name: Verify code version (CMJ landing detection window)
-        run: |
-          uv run python << 'EOF'
-          import inspect
-          from src.kinemotion.cmj.analysis import _find_landing_frame
-          source = inspect.getsource(_find_landing_frame)
-          if 'fps * 1.0' in source:
-              print('✓ Code verified: Landing detection window is 1.0s (CORRECT)')
-              exit(0)
-          else:
-              print('✗ ERROR: Landing detection window is NOT 1.0s (STALE BYTECODE DETECTED)')
-              print('Source code snippet:')
-              print(source)
-              exit(1)
-          EOF
-
-      - name: Force Python bytecode regeneration
-        run: |
-          uv run python -B -c "import compileall; compileall.compile_dir('.', force=True, quiet=0)" || true
-
       - name: Run tests with coverage
         run: |
           uv run pytest --cov --cov-report=xml --cov-report=term
-        env:
-          # Prevent Python from caching bytecode during test execution
-          PYTHONDONTWRITEBYTECODE: "1"
-          # Randomize hash seed to break any stale import caches
-          PYTHONHASHSEED: "random"
 
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4

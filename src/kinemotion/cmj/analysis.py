@@ -417,17 +417,32 @@ def find_interpolated_takeoff_landing(
 def _find_takeoff_frame(
     velocities: np.ndarray, peak_height_frame: int, fps: float
 ) -> float:
-    """Find takeoff frame as peak upward velocity before peak height."""
+    """Find takeoff frame as peak upward velocity before peak height.
+
+    Robust detection: When velocities are nearly identical (flat), detects
+    the transition point rather than using argmin which is unstable.
+    """
     takeoff_search_start = max(0, peak_height_frame - int(fps * 0.35))
     takeoff_search_end = peak_height_frame - 2
 
     takeoff_velocities = velocities[takeoff_search_start:takeoff_search_end]
 
-    if len(takeoff_velocities) > 0:
+    if len(takeoff_velocities) == 0:
+        return float(peak_height_frame - int(fps * 0.3))
+
+    # Check if velocities are suspiciously identical (flat derivative = ambiguous)
+    vel_min = np.min(takeoff_velocities)
+    vel_max = np.max(takeoff_velocities)
+    vel_range = vel_max - vel_min
+
+    if vel_range < 1e-6:
+        # Velocities are essentially identical - algorithm is ambiguous
+        # Return the midpoint of the search window as a stable estimate
+        return float((takeoff_search_start + takeoff_search_end) / 2.0)
+    else:
+        # Velocities have variation - use argmin as before
         peak_vel_idx = int(np.argmin(takeoff_velocities))
         return float(takeoff_search_start + peak_vel_idx)
-    else:
-        return float(peak_height_frame - int(fps * 0.3))
 
 
 def _find_lowest_frame(
@@ -456,9 +471,12 @@ def _find_landing_frame(
 ) -> float:
     """Find landing frame after peak height after takeoff.
 
-    Detects landing by finding the minimum acceleration value in a search window
-    after peak height. The window is extended to 1.0s to ensure all realistic
-    flight times are captured.
+    Detects landing by finding the minimum acceleration (impact) in a search
+    window after peak height. The window is extended to 1.0s to ensure all
+    realistic flight times are captured.
+
+    Robust detection: When accelerations are nearly flat, skips the impact
+    frames near peak height and looks for the actual landing signal.
     """
     landing_search_start = peak_height_frame
     # Search window extended to 1.0s to accommodate all realistic flight times
@@ -466,11 +484,19 @@ def _find_landing_frame(
     landing_search_end = min(len(accelerations), peak_height_frame + int(fps * 1.0))
     landing_accelerations = accelerations[landing_search_start:landing_search_end]
 
-    if len(landing_accelerations) > 0:
-        landing_idx = int(np.argmin(landing_accelerations))
-        return float(landing_search_start + landing_idx)
-    else:
+    if len(landing_accelerations) == 0:
         return float(peak_height_frame + int(fps * 0.3))
+
+    # Skip the first 2 frames after peak (often have unreliable acceleration)
+    # This avoids locking onto peak height acceleration instead of impact
+    skip_frames = 2
+    if len(landing_accelerations) > skip_frames:
+        landing_accelerations_filtered = landing_accelerations[skip_frames:]
+        landing_idx = int(np.argmin(landing_accelerations_filtered)) + skip_frames
+    else:
+        landing_idx = int(np.argmin(landing_accelerations))
+
+    return float(landing_search_start + landing_idx)
 
 
 def _find_standing_end(velocities: np.ndarray, lowest_point: float) -> float | None:
