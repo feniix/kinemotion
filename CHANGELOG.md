@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.29.2 (2025-11-18)
+
+### Bug Fixes
+
+- **docs**: Resolve document generation issues
+  ([`db5c759`](https://github.com/feniix/kinemotion/commit/db5c759bb244d4a82e185ec8a1db6bed07a33e36))
+
+
 ## v0.29.1 (2025-11-18)
 
 ### Bug Fixes
