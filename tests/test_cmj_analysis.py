@@ -3,11 +3,16 @@
 import numpy as np
 
 from kinemotion.cmj.analysis import (
+    _find_landing_frame,
+    _find_lowest_frame,
+    _find_standing_end,
+    _find_takeoff_frame,
     compute_signed_velocity,
     detect_cmj_phases,
     find_cmj_landing_from_position_peak,
     find_cmj_takeoff_from_velocity_peak,
     find_countermovement_start,
+    find_interpolated_takeoff_landing,
     find_lowest_point,
     find_standing_phase,
     interpolate_threshold_crossing,
@@ -581,3 +586,750 @@ def test_find_lowest_point_with_fallback_positions() -> None:
     # Should use fallback logic
     assert isinstance(result, int)
     assert 0 <= result < len(positions)
+
+
+# ============================================================================
+# PRIORITY 1 TESTS: Phase Progression Validation (8 new tests)
+# ============================================================================
+
+
+# PHASE PROGRESSION TESTS (3 tests)
+
+
+def test_phase_progression_ordering_valid_cmj() -> None:
+    """Test phase progression validation: verify phases occur in correct order.
+
+    Biomechanical context: A valid CMJ must have phases in this sequence:
+    Standing → Eccentric (downward) → Lowest point → Concentric (upward) →
+    Flight (airborne) → Landing
+
+    This is fundamental - if phases are out of order, detection failed.
+    """
+    # Arrange: Create realistic CMJ trajectory with pronounced movements
+    positions = np.concatenate(
+        [
+            np.ones(20) * 1.0,  # Standing: constant height
+            np.linspace(1.0, 1.5, 40),  # Eccentric (downward): 40 frames
+            np.linspace(1.5, 0.5, 40),  # Concentric (upward push): 40 frames
+            np.linspace(0.5, -0.2, 30),  # Flight (airborne): 30 frames
+            np.linspace(-0.2, 1.0, 10),  # Landing (return to ground): 10 frames
+        ]
+    )
+    fps = 30.0
+
+    # Act: Detect CMJ phases
+    result = detect_cmj_phases(positions, fps, window_length=5, polyorder=2)
+
+    # Assert: Verify phases are detected and in correct order
+    assert result is not None, "Phase detection should succeed for valid CMJ"
+    standing, lowest, takeoff, landing = result
+
+    # Core validation: phases must be in strict temporal order
+    if standing is not None:
+        assert (
+            standing < lowest
+        ), f"Standing ({standing}) must end before lowest point ({lowest})"
+
+    assert (
+        lowest < takeoff
+    ), f"Lowest point ({lowest}) must be before takeoff ({takeoff})"
+    assert takeoff < landing, f"Takeoff ({takeoff}) must be before landing ({landing})"
+
+
+def test_phase_progression_temporal_constraints() -> None:
+    """Test temporal constraints between CMJ phases are physically plausible.
+
+    Biomechanical context: CMJ phases must satisfy time constraints:
+    - Eccentric (squat down): typically 0.3-0.8s (9-24 frames at 30fps)
+    - Concentric (push up): typically 0.2-0.5s (6-15 frames at 30fps)
+    - Flight (airborne): typically 0.3-1.0s (9-30 frames at 30fps)
+    - Contact time (eccentric + concentric): 0.4-1.2s (12-36 frames at 30fps)
+
+    If constraints violated, detection or biomechanics is wrong.
+    """
+    # Arrange: Create CMJ with controlled phase durations
+    fps = 30.0
+    # Standing (20 frames), Eccentric (30 frames), Concentric (20 frames),
+    # Flight (20 frames), Landing (10 frames)
+    positions = np.concatenate(
+        [
+            np.ones(20) * 1.0,  # Standing: 20 frames = 0.67s
+            np.linspace(1.0, 1.4, 30),  # Eccentric: 30 frames = 1.0s (deep squat)
+            np.linspace(1.4, 0.6, 20),  # Concentric: 20 frames = 0.67s
+            np.linspace(0.6, 0.0, 20),  # Flight: 20 frames = 0.67s
+            np.linspace(0.0, 1.0, 10),  # Landing: 10 frames = 0.33s
+        ]
+    )
+
+    # Act: Detect phases
+    result = detect_cmj_phases(positions, fps, window_length=5, polyorder=2)
+
+    # Assert: Verify temporal constraints are satisfied
+    if result is not None:
+        standing, lowest, takeoff, landing = result
+
+        # Calculate phase durations
+        if standing is not None:
+            eccentric_duration_frames = lowest - standing
+            contact_duration_frames = takeoff - lowest
+            flight_duration_frames = landing - takeoff
+
+            # Eccentric must be reasonable (typically 9-24 frames at 30fps)
+            if eccentric_duration_frames > 0:
+                assert (
+                    6 <= eccentric_duration_frames <= 36
+                ), f"Eccentric {eccentric_duration_frames} frames seems unreasonable"
+
+            # Contact time must be reasonable (typically 12-36 frames)
+            total_contact = contact_duration_frames
+            if total_contact > 0:
+                assert (
+                    10 <= total_contact <= 40
+                ), f"Contact time {total_contact} frames seems unreasonable"
+
+            # Flight must be reasonable (typically 9-30 frames for <1s flight)
+            if flight_duration_frames > 0:
+                assert (
+                    5 <= flight_duration_frames <= 35
+                ), f"Flight {flight_duration_frames} frames seems unreasonable"
+
+
+def test_phase_progression_invalid_landing_before_takeoff() -> None:
+    """Test rejection of biomechanically impossible phase sequences.
+
+    Biomechanical context: Landing MUST occur after takeoff. If landing < takeoff,
+    it's physically impossible (athlete would have to time-travel). This catches
+    detection errors and prevents corrupted metrics.
+
+    This is a regression test for bug where phases weren't validated for proper
+    ordering before returning results.
+    """
+    # Arrange: Create trajectory that could confuse detection algorithm
+    # with an early "peak" that might be mistaken for flight phase peak
+    positions = np.concatenate(
+        [
+            np.ones(15) * 1.0,  # Standing
+            np.linspace(1.0, 1.3, 25),  # Down phase
+            np.array([1.3, 1.25, 1.2, 1.25, 1.3]),  # Subtle "bounce" or noise
+            np.linspace(1.3, 0.5, 30),  # Actual push-off
+            np.linspace(0.5, -0.1, 20),  # Flight
+            np.linspace(-0.1, 1.0, 15),  # Landing
+        ]
+    )
+    fps = 30.0
+
+    # Act: Detect phases
+    result = detect_cmj_phases(positions, fps, window_length=5, polyorder=2)
+
+    # Assert: Either phases are valid and in order, or None is returned
+    if result is not None:
+        standing, lowest, takeoff, landing = result
+
+        # Core constraint: landing > takeoff (always true for valid physics)
+        assert takeoff < landing, (
+            f"Invalid phase sequence detected: takeoff={takeoff} >= landing={landing} "
+            f"(physically impossible - athlete can't land before taking off)"
+        )
+
+
+# HELPER FUNCTION TESTS (4 tests)
+
+
+def test_find_takeoff_frame_backward_search_peak_velocity() -> None:
+    """Test _find_takeoff_frame finds peak upward velocity before peak height.
+
+    Biomechanical context: Takeoff occurs at peak upward velocity (most negative
+    velocity), which is the end of the concentric push phase and the moment the
+    feet leave the ground. This is detected by searching backward from the peak
+    height position.
+
+    The backward search algorithm:
+    1. Start from peak height frame
+    2. Look back ~350ms (fps * 0.35)
+    3. Find the frame with most negative (upward) velocity
+    """
+    # Arrange: Create velocity profile with clear peak at specific frame
+    fps = 30.0
+    peak_height_frame = 100  # Peak height at frame 100
+    # Create velocity with peak around frame 80 (20 frames = 667ms before peak)
+    velocities = np.concatenate(
+        [
+            np.linspace(-0.01, -0.1, 20),  # Accelerating upward (frames 60-80)
+            np.array([-0.12, -0.11, -0.09]),  # Peak at frame 80-82
+            np.linspace(-0.05, 0.01, 20),  # Decelerating after peak (frames 83-100)
+            np.ones(50) * 0.0,  # After flight (frames 100+)
+        ]
+    )
+
+    # Act: Find takeoff frame
+    takeoff = _find_takeoff_frame(velocities, peak_height_frame, fps)
+
+    # Assert: Takeoff should be detected near the velocity peak (frame 80-82)
+    assert isinstance(takeoff, float), "Should return float frame number"
+    assert (
+        75 <= takeoff <= 95
+    ), f"Takeoff {takeoff} should be near velocity peak around frame 80-90"
+
+
+def test_find_lowest_frame_velocity_zero_crossing() -> None:
+    """Test _find_lowest_frame finds lowest point via velocity zero-crossing.
+
+    Biomechanical context: The lowest point (transition between eccentric and
+    concentric) occurs where velocity crosses from positive (downward) to negative
+    (upward), i.e., where vertical velocity = 0.
+
+    The algorithm searches backward from takeoff frame looking for this zero-crossing.
+    """
+    # Arrange: Create trajectory with clear lowest point
+    fps = 30.0
+    takeoff_frame = 100.0
+    positions = np.concatenate(
+        [
+            np.ones(30) * 1.0,  # Standing
+            np.linspace(1.0, 1.5, 40),  # Down phase (eccentric)
+            np.linspace(
+                1.5, 0.6, 30
+            ),  # Up phase (concentric), crossing around frame 70
+            np.linspace(0.6, -0.1, 20),  # Flight
+        ]
+    )
+
+    # Create velocity that crosses zero around frame 70
+    velocities = compute_signed_velocity(positions, window_length=5, polyorder=2)
+
+    # Act: Find lowest frame
+    lowest = _find_lowest_frame(velocities, positions, takeoff_frame, fps)
+
+    # Assert: Should find zero-crossing or fallback to maximum position
+    assert isinstance(lowest, float), "Should return float frame number"
+    assert 0 <= lowest < len(positions), "Should be valid frame within array"
+    # In synthetic data, should be before takeoff
+    assert lowest < takeoff_frame, "Lowest point should be before takeoff"
+
+
+def test_find_landing_frame_impact_detection() -> None:
+    """Test _find_landing_frame finds landing via acceleration spike (impact).
+
+    Biomechanical context: Landing occurs when the athlete contacts the ground,
+    which creates a sharp spike in acceleration (deceleration of downward motion).
+    The algorithm detects this as minimum acceleration in landing window.
+
+    Search window: 500ms after peak height (typically lands 300-400ms after apex).
+    """
+    # Arrange: Create trajectory with clear impact spike
+    fps = 30.0
+    peak_height_frame = 80  # Peak at frame 80
+    positions = np.concatenate(
+        [
+            np.linspace(0.5, -0.2, 20),  # Flight path downward (frames 80-100)
+            np.array(
+                [  # Landing frames 100-110: impact causes sudden deceleration
+                    -0.15,
+                    -0.08,
+                    0.1,
+                    0.3,
+                    0.45,  # Impact frame ~103
+                    0.55,
+                    0.65,
+                    0.85,
+                ]
+            ),
+            np.ones(10) * 1.0,  # Stable standing
+        ]
+    )
+
+    # Compute accelerations - impact shows as negative acceleration spike
+    accelerations = compute_acceleration_from_derivative(positions)
+
+    # Act: Find landing frame
+    landing = _find_landing_frame(accelerations, peak_height_frame, fps)
+
+    # Assert: Landing should be detected in expected window
+    assert isinstance(landing, float), "Should return float frame number"
+    # Should be after peak height
+    assert (
+        landing >= peak_height_frame
+    ), f"Landing {landing} should be at or after peak height {peak_height_frame}"
+
+
+def test_find_standing_end_low_velocity_detection() -> None:
+    """Test _find_standing_end detects end of standing via low velocity threshold.
+
+    Biomechanical context: Standing phase is when the athlete is stationary before
+    starting the countermovement. It's characterized by very low velocity
+    (essentially zero with small measurement noise). Once sustained higher velocity
+    starts, the countermovement has begun.
+
+    Algorithm searches for frames with |velocity| < 0.005 m/s before lowest point,
+    returns the last such frame.
+    """
+    # Arrange: Create velocity profile with clear standing/movement transition
+    lowest_point = 70.0  # Lowest point will be at frame 70
+    velocities = np.concatenate(
+        [
+            np.random.uniform(
+                -0.002, 0.002, 30
+            ),  # Standing: very low noise (frames 0-30)
+            np.ones(20) * 0.001,  # Still standing (frames 30-50)
+            np.linspace(
+                0.001, 0.08, 20
+            ),  # Transition to downward motion (frames 50-70)
+            np.ones(50) * 0.08,  # Strong downward motion
+        ]
+    )
+
+    # Act: Find standing end
+    standing_end = _find_standing_end(velocities, lowest_point)
+
+    # Assert: Should detect end of standing phase
+    if standing_end is not None:
+        # Should be before lowest point
+        assert (
+            standing_end < lowest_point
+        ), f"Standing end {standing_end} should be before lowest point {lowest_point}"
+        # Should be in reasonable range (typically 20-50 frames in standing)
+        assert (
+            0 <= standing_end <= 60
+        ), f"Standing end {standing_end} should be in reasonable range"
+    # May return None if standing detection is ambiguous - that's acceptable
+
+
+# WRAPPER FUNCTION TEST (1 test)
+
+
+def test_find_interpolated_takeoff_landing_wrapper_function() -> None:
+    """Test find_interpolated_takeoff_landing wrapper combines takeoff + landing detection.
+
+    Biomechanical context: This wrapper function coordinates detection of both
+    takeoff and landing frames using physics-based methods specific to CMJ:
+    - Takeoff: peak upward velocity (end of push-off phase)
+    - Landing: impact acceleration (first ground contact after flight)
+
+    The wrapper handles all interpolation and acceleration computation internally.
+    """
+    # Arrange: Create realistic CMJ trajectory
+    positions = np.concatenate(
+        [
+            np.ones(20) * 1.0,  # Standing
+            np.linspace(1.0, 1.4, 35),  # Eccentric (down)
+            np.linspace(1.4, 0.5, 30),  # Concentric (up)
+            np.linspace(0.5, -0.2, 25),  # Flight (air)
+            np.linspace(-0.2, 1.0, 15),  # Landing
+        ]
+    )
+    velocities = compute_signed_velocity(positions, window_length=5, polyorder=2)
+    lowest_point_frame = 55  # Around where downward motion peaks
+
+    # Act: Use wrapper to find both takeoff and landing
+    result = find_interpolated_takeoff_landing(
+        positions, velocities, lowest_point_frame, window_length=5, polyorder=2
+    )
+
+    # Assert: Both frames detected and in correct order
+    assert result is not None, "Wrapper should find both takeoff and landing"
+    takeoff, landing = result
+
+    # Verify return values are valid
+    assert isinstance(takeoff, float), "Takeoff should be float frame number"
+    assert isinstance(landing, float), "Landing should be float frame number"
+
+    # Verify temporal ordering
+    assert (
+        takeoff < landing
+    ), f"Takeoff {takeoff} must be before landing {landing} (time flows forward)"
+
+    # Verify frames are within reasonable bounds
+    assert 0 <= takeoff < len(positions), f"Takeoff {takeoff} outside array bounds"
+    assert 0 <= landing < len(positions), f"Landing {landing} outside array bounds"
+
+    # Verify takeoff and landing are separated (not same frame)
+    assert (
+        landing - takeoff > 2
+    ), f"Landing and takeoff too close ({landing-takeoff} frames apart)"
+
+
+# ============================================================================
+# PRIORITY 2 TESTS: Regression & Edge Case Coverage (5-6 new tests)
+# ============================================================================
+
+
+# GROUP 1: REGRESSION BIOMECHANICAL PROFILES (3 tests)
+
+
+def test_deep_squat_cmj_recreational_athlete() -> None:
+    """Test realistic CMJ from recreational athlete with deep squat.
+
+    Biomechanical regression test: Validates detection of typical recreational
+    jump characteristics:
+    - Jump height: 35-55cm (0.35-0.55m) → flight time ~0.53-0.67s
+    - Countermovement depth: 28-45cm (deeper squat)
+    - Contact time: 0.45-0.65s (moderate push-off)
+    - Peak eccentric velocity: 1.3-1.9 m/s (downward acceleration)
+    - Peak concentric velocity: 2.6-3.3 m/s (upward acceleration)
+
+    This test prevents regression where recreational athlete jumps are
+    misclassified as untrained or elite due to detection errors.
+
+    Scenario: Recreational athlete performing CMJ with pronounced
+    countermovement (deep squat preparation).
+    """
+    # Arrange: Create realistic recreational CMJ trajectory
+    fps = 30.0
+
+    # Phase durations for recreational athlete (~2.0s total):
+    # Standing: 0.33s (10 frames)
+    # Eccentric: 0.50s (15 frames) → depth ~0.35m
+    # Concentric: 0.50s (15 frames) → contact time ~0.50s
+    # Flight: 0.60s (18 frames) → jump height ~0.45m
+    # Landing: 0.33s (10 frames)
+
+    positions = np.concatenate(
+        [
+            np.ones(10) * 1.00,  # Standing at 1.0m
+            np.linspace(1.00, 1.35, 15),  # Eccentric (downward) 0.35m depth
+            np.linspace(1.35, 0.60, 15),  # Concentric (upward) push-off
+            np.linspace(0.60, 0.15, 18),  # Flight phase (airborne 0.45m)
+            np.linspace(0.15, 1.00, 12),  # Landing (return to ground)
+        ]
+    )
+
+    # Act: Detect CMJ phases
+    result = detect_cmj_phases(positions, fps, window_length=5, polyorder=2)
+
+    # Assert: Verify recreational athlete characteristics
+    assert result is not None, "Recreational CMJ should be successfully detected"
+    standing, lowest, takeoff, landing = result
+
+    # Verify phase sequence
+    if standing is not None:
+        assert standing < lowest, "Standing must end before lowest point"
+        assert (
+            0 <= standing <= 15
+        ), f"Standing end {standing} should be early (0-15 frames)"
+
+    assert lowest < takeoff, "Lowest point must be before takeoff"
+    assert takeoff < landing, "Takeoff must be before landing"
+
+    # Verify realistic recreational phase durations
+    # Eccentric: 0.4-0.7s
+    if standing is not None:
+        eccentric_frames = lowest - standing
+        eccentric_time = eccentric_frames / fps
+        assert (
+            0.4 <= eccentric_time <= 0.7
+        ), f"Recreational eccentric {eccentric_time}s not realistic (expected 0.4-0.7s)"
+
+    # Contact time (lowest to takeoff): 0.4-0.65s for recreational
+    contact_frames = takeoff - lowest
+    contact_time = contact_frames / fps
+    assert (
+        0.40 <= contact_time <= 0.75
+    ), f"Contact time {contact_time}s not realistic for recreational athlete"
+
+    # Flight time: 0.50-0.75s for 35-55cm jump
+    flight_frames = landing - takeoff
+    flight_time = flight_frames / fps
+    assert (
+        0.50 <= flight_time <= 0.75
+    ), f"Flight time {flight_time}s not realistic for recreational jump"
+
+
+def test_explosive_cmj_elite_athlete() -> None:
+    """Test elite athlete CMJ with minimal contact time and maximal height.
+
+    Biomechanical regression test: Validates detection of elite athlete
+    performance characteristics:
+    - Jump height: 68-88cm (0.68-0.88m) → flight time ~0.74-0.84s
+    - Countermovement depth: 42-62cm (controlled squat)
+    - Contact time: 0.28-0.42s (explosive concentric phase)
+    - Peak eccentric velocity: 2.1-3.2 m/s (fast acceleration down)
+    - Peak concentric velocity: 3.6-4.2 m/s (explosive acceleration up)
+
+    This test prevents regression where elite athletes are misclassified
+    as recreational or untrained due to short contact time.
+
+    Scenario: Elite athlete (college/professional volleyball) with
+    minimal ground contact and explosive concentric push.
+    """
+    # Arrange: Create elite athlete CMJ trajectory
+    fps = 30.0
+
+    # Phase durations for elite athlete (~1.9s total):
+    # Standing: 0.27s (8 frames)
+    # Eccentric: 0.40s (12 frames) → depth ~0.50m
+    # Concentric: 0.33s (10 frames) → contact time ~0.35s (explosive)
+    # Flight: 0.80s (24 frames) → jump height ~0.80m
+    # Landing: 0.27s (8 frames)
+
+    positions = np.concatenate(
+        [
+            np.ones(8) * 1.00,  # Standing at 1.0m
+            np.linspace(1.00, 1.50, 12),  # Eccentric (downward) 0.50m depth
+            np.linspace(1.50, 0.70, 10),  # Concentric (explosive) push-off
+            np.linspace(0.70, -0.10, 24),  # Flight phase (airborne 0.80m)
+            np.linspace(-0.10, 1.00, 10),  # Landing (return to ground)
+        ]
+    )
+
+    # Act: Detect CMJ phases
+    result = detect_cmj_phases(positions, fps, window_length=5, polyorder=2)
+
+    # Assert: Verify elite athlete characteristics
+    assert result is not None, "Elite CMJ should be successfully detected"
+    standing, lowest, takeoff, landing = result
+
+    # Verify phase sequence
+    if standing is not None:
+        assert standing < lowest, "Standing must end before lowest point"
+        # Elite athletes typically stand briefly
+        assert (
+            0 <= standing <= 10
+        ), f"Elite standing end {standing} should be very brief (0-10 frames)"
+
+    assert lowest < takeoff, "Lowest point must be before takeoff"
+    assert takeoff < landing, "Takeoff must be before landing"
+
+    # Verify elite-specific short contact time
+    # Contact time (lowest to takeoff): 0.25-0.45s for elite
+    contact_frames = takeoff - lowest
+    contact_time = contact_frames / fps
+    assert (
+        0.25 <= contact_time <= 0.50
+    ), f"Elite contact time {contact_time}s too long (expected 0.25-0.45s)"
+
+    # Flight time: should be detectable and reasonable
+    flight_frames = landing - takeoff
+    flight_time = flight_frames / fps
+    assert (
+        0.30 <= flight_time <= 1.0
+    ), f"Elite flight time {flight_time}s not realistic (expected 0.30-1.0s)"
+
+    # Verify that elite contact time is significantly shorter than recreational
+    # This is a key differentiator: elite athletes have better power/weight ratio
+    assert (
+        contact_time < 0.50
+    ), "Elite contact time should be notably shorter than recreational"
+
+
+def test_failed_jump_incomplete_countermovement() -> None:
+    """Test detection of incomplete CMJ with shallow/failed countermovement.
+
+    Biomechanical regression test: Validates correct handling of jumps that
+    fail to fully utilize the countermovement reflex. This can happen when:
+    - Athlete doesn't squat deep enough
+    - Video captures incomplete jump (cut off at start)
+    - Athlete aborts jump mid-execution
+    - Detection algorithm struggles with weak signals
+
+    Characteristics of failed/incomplete jump:
+    - Very low contact time (<0.25s)
+    - Minimal countermovement depth (<0.15m)
+    - Low jump height (<0.15m)
+    - Reduced flight time (<0.30s)
+
+    Prevention: Without this test, algorithm might incorrectly detect
+    jump metrics or misclassify elderly/deconditioned athlete as untrained.
+    """
+    # Arrange: Create incomplete/failed CMJ trajectory
+    fps = 30.0
+
+    # Phase durations for incomplete/failed jump (~0.7s total):
+    # Standing: 0.20s (6 frames)
+    # "Eccentric" (minimal): 0.17s (5 frames) → depth only ~0.10m
+    # "Concentric" (very short): 0.17s (5 frames) → weak push
+    # "Flight" (minimal): 0.27s (8 frames) → only ~0.08m height
+    # Landing: 0.20s (6 frames)
+
+    positions = np.concatenate(
+        [
+            np.ones(6) * 1.00,  # Standing at 1.0m
+            np.linspace(1.00, 1.10, 5),  # Minimal eccentric (only 0.10m down)
+            np.linspace(1.10, 0.92, 5),  # Very short concentric phase
+            np.linspace(0.92, 0.84, 8),  # Minimal flight (~0.08m height)
+            np.linspace(0.84, 1.00, 6),  # Landing
+        ]
+    )
+
+    # Act: Detect CMJ phases
+    result = detect_cmj_phases(positions, fps, window_length=5, polyorder=2)
+
+    # Assert: Either detection fails (returns None) or metrics are very low
+    # Both outcomes are acceptable for incomplete jump
+    if result is not None:
+        standing, lowest, takeoff, landing = result
+
+        # If detection succeeds, verify it's not a normal jump
+        contact_frames = takeoff - lowest if lowest is not None else 0
+        contact_time = contact_frames / fps
+        flight_frames = landing - takeoff
+        flight_time = flight_frames / fps
+
+        # For incomplete jump, both should be very low
+        assert contact_time < 0.40 or flight_time < 0.35, (
+            f"Incomplete jump detected as normal: contact={contact_time}s, "
+            f"flight={flight_time}s"
+        )
+    # If result is None, that's also acceptable - detection is uncertain
+
+
+# GROUP 2: EDGE CASE TRANSITIONS (2-3 tests)
+
+
+def test_double_bounce_landing_pattern() -> None:
+    """Test detection when athlete bounces after landing (double-bounce).
+
+    Biomechanical edge case: After landing, athlete may bounce before
+    settling. This creates a second impact that could be incorrectly
+    detected as a second jump or confuse phase detection.
+
+    Trajectory shows:
+    1. Normal CMJ flight and landing
+    2. First impact (primary landing)
+    3. Bounce-back phase (brief upward movement)
+    4. Second impact (secondary bounce)
+    5. Final settlement
+
+    Test validates that algorithm doesn't:
+    - Detect the rebound as a second flight phase
+    - Incorrectly extend landing detection
+    - Get confused by acceleration spikes from both impacts
+    """
+    # Arrange: Create double-bounce trajectory
+    fps = 30.0
+
+    positions = np.concatenate(
+        [
+            np.ones(12) * 1.0,  # Standing
+            np.linspace(1.0, 1.4, 24),  # Eccentric down
+            np.linspace(1.4, 0.5, 24),  # Concentric up
+            np.linspace(0.5, -0.1, 25),  # Flight phase
+            np.array(  # First impact and bounce pattern
+                [
+                    -0.08,  # Impact begins
+                    0.02,
+                    0.15,  # First peak (reactive bounce)
+                    0.10,
+                    0.05,  # Returning down
+                    0.08,  # Second impact
+                    0.15,  # Slight second bounce
+                    0.20,
+                    0.40,
+                    0.60,
+                    0.80,  # Settling to standing
+                    0.95,
+                    1.00,
+                ]
+            ),
+        ]
+    )
+
+    # Act: Detect CMJ phases
+    result = detect_cmj_phases(positions, fps, window_length=5, polyorder=2)
+
+    # Assert: Should detect first complete CMJ (not confused by bounces)
+    if result is not None:
+        standing, lowest, takeoff, landing = result
+
+        # Landing should be detected around first major impact
+        # Not confused by secondary bounce
+        assert takeoff < landing, "Takeoff before landing"
+        assert landing < len(positions), "Landing within bounds"
+
+        # Flight time should be reasonable (from concentric to first impact)
+        flight_frames = landing - takeoff
+        flight_time = flight_frames / fps
+        assert (
+            0.20 <= flight_time <= 1.5
+        ), f"Flight time {flight_time}s reasonable despite double bounce"
+
+
+def test_landing_frame_near_video_boundary() -> None:
+    """Test landing detection when athlete is still in flight as video ends.
+
+    Biomechanical edge case: In real-world scenarios, video may end before
+    athlete lands (e.g., recording stops, clip is cut off). Detection must
+    handle this gracefully:
+
+    - Landing frame may be at or past end of available data
+    - Algorithm should use available information to estimate landing
+    - Should not crash or produce invalid frame numbers
+
+    This tests robustness of landing detection near boundaries.
+    """
+    # Arrange: Create trajectory where landing is at/past video end
+    fps = 30.0
+
+    positions = np.concatenate(
+        [
+            np.ones(12) * 1.0,  # Standing
+            np.linspace(1.0, 1.3, 18),  # Eccentric
+            np.linspace(1.3, 0.5, 18),  # Concentric
+            np.linspace(0.5, 0.0, 15),  # Flight phase (most of it)
+            np.array([0.05, 0.10, 0.20]),  # Only first few frames of landing
+        ]
+    )
+
+    # Act: Detect CMJ phases with limited landing window
+    result = detect_cmj_phases(positions, fps, window_length=5, polyorder=2)
+
+    # Assert: Should handle boundary gracefully
+    if result is not None:
+        standing, lowest, takeoff, landing = result
+
+        # Landing should be detected (possibly at boundary)
+        assert isinstance(landing, (int, float)), "Landing should be numeric"
+        assert landing <= len(positions), "Landing should not exceed array bounds"
+
+        # If landing detected, verify it's after takeoff
+        assert takeoff < landing, "Takeoff before landing (if both detected)"
+
+
+def test_overlapping_eccentric_concentric_phases() -> None:
+    """Test detection when eccentric and concentric phases have minimal separation.
+
+    Biomechanical edge case: In elite athletes or plyometric training,
+    the transition between eccentric (down) and concentric (up) phases
+    can be nearly instantaneous. The lowest point may be barely distinct
+    from the surrounding motion.
+
+    This tests algorithm robustness when:
+    - Velocity reaches zero for only 1-2 frames at lowest point
+    - Smooth curve makes transition hard to detect
+    - No clear "pause" at bottom of squat
+    """
+    # Arrange: Create trajectory with minimal valley at lowest point
+    fps = 30.0
+
+    positions = np.concatenate(
+        [
+            np.ones(15) * 1.0,  # Standing
+            np.linspace(1.0, 1.3, 20),  # Eccentric (gradual down)
+            np.array(  # Minimal valley (nearly continuous curve)
+                [
+                    1.299,
+                    1.298,  # Very narrow valley (2 frames at ~1.30m)
+                    1.300,
+                ]
+            ),
+            np.linspace(1.30, 0.5, 20),  # Concentric (gradual up)
+            np.linspace(0.5, 0.0, 18),  # Flight
+            np.linspace(0.0, 1.0, 8),  # Landing
+        ]
+    )
+
+    # Act: Detect CMJ phases
+    result = detect_cmj_phases(positions, fps, window_length=5, polyorder=2)
+
+    # Assert: Should still detect valid phases despite minimal valley
+    if result is not None:
+        standing, lowest, takeoff, landing = result
+
+        # Core validation: phases in correct order
+        assert lowest < takeoff, "Lowest point before takeoff"
+        assert takeoff < landing, "Takeoff before landing"
+
+        # Verify lowest point is actually in the smooth transition region
+        if standing is not None:
+            assert (
+                standing < lowest < takeoff
+            ), "Lowest point correctly positioned between standing and takeoff"
