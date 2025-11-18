@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.29.1 (2025-11-18)
+
+### Bug Fixes
+
+- Fix test_deep_squat_cmj_recreational_athlete
+  ([`4ec6d8d`](https://github.com/feniix/kinemotion/commit/4ec6d8d0d0bd90c8e1a28a2892d7172f9849a46e))
+
+- Fix test_deep_squat_cmj_recreational_athlete
+  ([`c3a99ef`](https://github.com/feniix/kinemotion/commit/c3a99ef42be85e6963e08856353f487beff4ea07))
+
+
 ## v0.29.0 (2025-11-18)
 
 ### Bug Fixes
