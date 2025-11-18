@@ -401,7 +401,7 @@ ______________________________________________________________________
 - **"What are the risks?"** → [risk-register.md](./risk-register.md)
 - **"What decisions do we need?"** → [04-decision-points.md](./04-decision-points.md)
 - **"When does each task start?"** → [timeline-roadmap.md](./timeline-roadmap.md)
-- **"What's the full dependency graph?"** → [decision-matrix.md](./decision-matrix.md)
+- **"What's the full dependency graph?"** → [04-decision-points.md](./04-decision-points.md)
 
 ______________________________________________________________________
 

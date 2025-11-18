@@ -12,7 +12,6 @@ ______________________________________________________________________
 | **02-critical-findings.md**   | Top 5 critical issues + 8 medium risks   | Decision-makers        |
 | **03-roadmap-adjustments.md** | Changes to original 5-task plan          | Architects, PMs        |
 | **04-decision-points.md**     | 3 critical decisions needed THIS WEEK    | Leadership             |
-| **decision-matrix.md**        | Task dependencies + decision trees       | Architects, PMs        |
 | **risk-register.md**          | All risks ranked by probability × impact | Risk managers          |
 | **timeline-roadmap.md**       | Sprint-by-sprint 10-12 week plan         | All stakeholders       |
 
@@ -24,7 +23,7 @@ ______________________________________________________________________
 → 01-agent-consensus.md → 04-decision-points.md
 
 **CTO/Architecture:**
-→ 03-roadmap-adjustments.md → decision-matrix.md → risk-register.md
+→ 03-roadmap-adjustments.md → 04-decision-points.md → risk-register.md
 
 **Project Manager:**
 → timeline-roadmap.md → 02-critical-findings.md

@@ -26,7 +26,7 @@ ______________________________________________________________________
 1. [Core Objective: Rep Counting & Validation Pipeline](#1-core-objective-rep-counting--validation-pipeline)
 1. [Wall Ball Exercise Standards](#2-wall-ball-exercise-standards)
 1. [Technical Feasibility Analysis](#3-technical-feasibility-analysis)
-1. [Camera Setup - 45° Angle Advantage](#4-camera-setup---45-angle-advantage)
+1. [Camera Setup - 45-Degree Angle Advantage](#4-camera-setup---45-degree-angle-advantage)
 1. [Proposed Architecture](#5-proposed-architecture)
 1. [Implementation Phases](#6-implementation-phases)
 1. [Technical Challenges & Mitigation](#7-technical-challenges--mitigation)
@@ -885,7 +885,7 @@ def validate_ball_height(
 
 ______________________________________________________________________
 
-## 4. Camera Setup - 45° Angle Advantage
+## 4. Camera Setup - 45-Degree Angle Advantage
 
 ### 4.1 Why 45° is Superior to Pure Lateral View
 

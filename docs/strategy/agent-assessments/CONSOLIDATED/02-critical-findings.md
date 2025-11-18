@@ -370,7 +370,7 @@ ______________________________________________________________________
 
 - **"What's the impact on timeline?"** → [timeline-roadmap.md](./timeline-roadmap.md)
 - **"What are the decision criteria?"** → [04-decision-points.md](./04-decision-points.md)
-- **"How are these issues connected?"** → [decision-matrix.md](./decision-matrix.md)
+- **"How are these issues connected?"** → [04-decision-points.md](./04-decision-points.md)
 - **"What's the full risk assessment?"** → [risk-register.md](./risk-register.md)
 
 ______________________________________________________________________
