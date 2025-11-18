@@ -68,10 +68,18 @@ def calculate_ankle_angle(
     """
     Calculate ankle angle (dorsiflexion/plantarflexion).
 
-    Angle formed by: heel -> ankle -> knee
+    Angle formed by: foot_index -> ankle -> knee (primary)
+    Falls back to heel -> ankle -> knee if foot_index visibility < 0.5
+
+    Measurements:
     - 90° = neutral (foot perpendicular to shin)
     - < 90° = dorsiflexion (toes up)
     - > 90° = plantarflexion (toes down)
+
+    Technical note:
+    - foot_index (toe tip) is used for accurate plantarflexion measurement
+    - Heel is relatively static during push-off; toes (foot_index) actively plantarflex
+    - Expected range during CMJ: 80° (standing) -> 130°+ (plantarflex at takeoff)
 
     Args:
         landmarks: Pose landmarks dictionary
@@ -82,23 +90,32 @@ def calculate_ankle_angle(
     """
     prefix = "left_" if side == "left" else "right_"
 
+    foot_index_key = f"{prefix}foot_index"
     heel_key = f"{prefix}heel"
     ankle_key = f"{prefix}ankle"
     knee_key = f"{prefix}knee"
 
-    # Check visibility threshold
-    if heel_key not in landmarks or landmarks[heel_key][2] < 0.3:
-        return None
+    # Check ankle and knee visibility (required)
     if ankle_key not in landmarks or landmarks[ankle_key][2] < 0.3:
         return None
     if knee_key not in landmarks or landmarks[knee_key][2] < 0.3:
         return None
 
-    heel = (landmarks[heel_key][0], landmarks[heel_key][1])
     ankle = (landmarks[ankle_key][0], landmarks[ankle_key][1])
     knee = (landmarks[knee_key][0], landmarks[knee_key][1])
 
-    return calculate_angle_3_points(heel, ankle, knee)
+    # Try foot_index first (primary: toe tip for plantarflexion accuracy)
+    if foot_index_key in landmarks and landmarks[foot_index_key][2] > 0.5:
+        foot_point = (landmarks[foot_index_key][0], landmarks[foot_index_key][1])
+        return calculate_angle_3_points(foot_point, ankle, knee)
+
+    # Fallback to heel if foot_index visibility is insufficient
+    if heel_key in landmarks and landmarks[heel_key][2] > 0.3:
+        foot_point = (landmarks[heel_key][0], landmarks[heel_key][1])
+        return calculate_angle_3_points(foot_point, ankle, knee)
+
+    # No valid foot landmark available
+    return None
 
 
 def calculate_knee_angle(

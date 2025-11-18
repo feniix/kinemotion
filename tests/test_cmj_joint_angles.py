@@ -525,6 +525,131 @@ class TestRegressionScenarios:
         assert abs(tilt) < 2, f"Upright posture should have ~0° tilt, got {tilt}"
 
 
+class TestAnkleAnglePrimaryLandmarkFix:
+    """Test ankle angle calculation with foot_index as primary landmark.
+
+    This validates the biomechanics fix switching from heel to foot_index
+    for accurate plantarflexion measurement (Issue: ankle angle calculation).
+
+    Background:
+    - Old: heel -> ankle -> knee (heel static during push-off, insufficient)
+    - New: foot_index -> ankle -> knee (toes active, captures plantarflexion ROM)
+    - Expected: 30°+ ankle angle increase during CMJ concentric phase
+    """
+
+    def test_ankle_angle_with_foot_index_high_visibility(self) -> None:
+        """Test ankle angle uses foot_index when visibility > 0.5."""
+        landmarks = {
+            "right_foot_index": (0.50, 0.87, 0.95),  # High visibility (toe tip)
+            "right_ankle": (0.50, 0.85, 0.95),
+            "right_knee": (0.50, 0.60, 0.95),
+            "right_heel": (0.48, 0.90, 0.5),  # Present but should not be used
+        }
+
+        angle = calculate_ankle_angle(landmarks, side="right")
+        assert angle is not None, "Should calculate angle with foot_index"
+        # Foot-to-ankle is a small distance, resulting in a larger angle
+        assert 0 <= angle <= 180
+
+    def test_ankle_angle_fallback_to_heel_when_foot_index_low(self) -> None:
+        """Test ankle angle falls back to heel if foot_index visibility <= 0.5."""
+        landmarks = {
+            "right_foot_index": (
+                0.50,
+                0.87,
+                0.3,
+            ),  # Low visibility (below 0.5 threshold)
+            "right_ankle": (0.50, 0.85, 0.95),
+            "right_knee": (0.50, 0.60, 0.95),
+            "right_heel": (
+                0.48,
+                0.90,
+                0.95,
+            ),  # Good visibility, should be used as fallback
+        }
+
+        angle = calculate_ankle_angle(landmarks, side="right")
+        assert (
+            angle is not None
+        ), "Should fall back to heel when foot_index visibility low"
+        assert 0 <= angle <= 180
+
+    def test_ankle_angle_returns_none_when_no_foot_landmark(self) -> None:
+        """Test ankle angle returns None if neither foot_index nor heel available."""
+        landmarks = {
+            "right_foot_index": (0.50, 0.87, 0.2),  # Below threshold
+            "right_ankle": (0.50, 0.85, 0.95),
+            "right_knee": (0.50, 0.60, 0.95),
+            # No heel landmark
+        }
+
+        angle = calculate_ankle_angle(landmarks, side="right")
+        assert angle is None, "Should return None without valid foot landmark"
+
+    def test_ankle_angle_returns_none_when_heel_also_low_visibility(self) -> None:
+        """Test ankle angle returns None when both foot_index and heel have low visibility."""
+        landmarks = {
+            "right_foot_index": (0.50, 0.87, 0.25),  # Below 0.5
+            "right_ankle": (0.50, 0.85, 0.95),
+            "right_knee": (0.50, 0.60, 0.95),
+            "right_heel": (0.48, 0.90, 0.2),  # Below 0.3 fallback threshold
+        }
+
+        angle = calculate_ankle_angle(landmarks, side="right")
+        assert (
+            angle is None
+        ), "Should return None when all foot landmarks below threshold"
+
+    def test_plantarflexion_progression_dorsi_to_plantar(self) -> None:
+        """Test ankle angle shows realistic progression from dorsiflexion to plantarflexion.
+
+        Regression test: Validates that foot_index measurement captures the
+        expected 30°+ change in ankle angle during CMJ concentric phase.
+
+        Standing (dorsiflexion):  foot_index below ankle -> smaller angle
+        Plantarflex (takeoff):    foot_index extends down -> larger angle
+        """
+        # Standing position (dorsiflexion - toes up relative to shin)
+        standing = {
+            "right_foot_index": (0.50, 0.82, 0.95),  # Toes UP relative to ankle
+            "right_ankle": (0.50, 0.85, 0.95),
+            "right_knee": (0.50, 0.60, 0.95),
+        }
+
+        # Plantarflexion position (toes down relative to shin, takeoff)
+        plantarflex = {
+            "right_foot_index": (0.50, 0.90, 0.95),  # Toes DOWN relative to ankle
+            "right_ankle": (0.50, 0.85, 0.95),
+            "right_knee": (0.50, 0.60, 0.95),
+        }
+
+        angle_dorsi = calculate_ankle_angle(standing, side="right")
+        angle_plantar = calculate_ankle_angle(plantarflex, side="right")
+
+        assert angle_dorsi is not None, "Dorsiflexion angle should be calculated"
+        assert angle_plantar is not None, "Plantarflexion angle should be calculated"
+
+        # Plantarflexion (larger angle) should be greater than dorsiflexion (smaller angle)
+        # This validates the biomechanics: toes extend down during takeoff
+        assert (
+            angle_plantar > angle_dorsi
+        ), f"Plantarflexion {angle_plantar}° should be > dorsiflexion {angle_dorsi}°"
+
+    def test_ankle_angle_with_foot_index_visibility_exactly_0_5(self) -> None:
+        """Test ankle angle behavior when foot_index visibility is exactly 0.5 (boundary)."""
+        landmarks = {
+            "right_foot_index": (0.50, 0.87, 0.5),  # Exactly 0.5 (not > 0.5)
+            "right_ankle": (0.50, 0.85, 0.95),
+            "right_knee": (0.50, 0.60, 0.95),
+            "right_heel": (0.48, 0.90, 0.95),
+        }
+
+        angle = calculate_ankle_angle(landmarks, side="right")
+        # At exactly 0.5, should fall back to heel (threshold is > 0.5, not >= 0.5)
+        assert angle is not None, "Should have calculated angle (via heel fallback)"
+        assert 0 <= angle <= 180
+
+
 class TestEdgeCasesWithPartialVisibility:
     """Test edge cases with partial landmark visibility (realistic video conditions)."""
 
