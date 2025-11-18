@@ -283,6 +283,160 @@ Use biomechanics-specialist to validate RSI calculation
 
 See [.claude/agents/README.md](.claude/agents/README.md) for complete documentation.
 
-## MCP Servers
+## MCP Servers & Tools
 
-Configured in `.mcp.json`: web-search, sequential-thinking, context7, etc.
+This project integrates multiple MCP (Model Context Protocol) servers for enhanced capabilities. All are configured in `.mcp.json`.
+
+### Core MCP Tools
+
+#### **basic-memory** - Knowledge Management
+- **Purpose**: Store and retrieve project context, notes, and architectural decisions
+- **Scope**: **Project-scoped** - all operations are constrained to the `dropjump` project
+- **Use Cases**:
+  - Save project summaries and setup information
+  - Build context from memory notes for conversations
+  - Search across project knowledge base
+- **Key Functions**:
+  - `write_note(title, content, folder)` - Save information in organized folders
+  - `search_notes(query)` - Find relevant project context by keyword
+  - `build_context(url)` - Load context from specific memory paths (supports pattern matching like `folder/*`)
+  - `read_note(identifier)` - Retrieve a specific note by title or path
+  - `list_directory(dir_name)` - Browse memory structure
+- **Current Memory Structure**:
+  - `codebase/` - Architecture overview, module relationships
+  - `biomechanics/` - Jump metrics, RSI, triple extension formulas
+  - `development/` - Quality gates, testing standards
+  - `api/` - API reference and quick commands
+  - `project-management/` - Subagent routing guide, task prioritization
+  - `strategy/` - Roadmap and strategic priorities
+- **Usage Patterns**:
+  - **Save findings**: `write_note("New test pattern", "...", "development")`
+  - **Retrieve context**: `build_context("memory://biomechanics/*")` to load all biomechanics notes
+  - **Search knowledge**: `search_notes("CMJ triple extension")` to find relevant information
+  - **Build conversations**: Call `build_context()` before complex tasks to enhance context
+
+#### **exa** - Web Search & Code Context
+- **Purpose**: Real-time web search and code example retrieval
+- **Use Cases**:
+  - Search for libraries, SDKs, and API documentation
+  - Find code examples and best practices
+  - Retrieve fresh information beyond knowledge cutoff
+- **Key Functions**:
+  - `web_search_exa()` - Search the web with context optimization
+  - `get_code_context_exa()` - Find relevant code examples (React, Python, etc.)
+- **Example**: "React useState hook examples" returns fresh, high-quality code context
+
+#### **ref** - Documentation Search
+- **Purpose**: Search and retrieve documentation from web and private resources
+- **Use Cases**:
+  - Find API reference documentation
+  - Access framework/library guides
+  - Search private documentation (repos, PDFs)
+- **Key Functions**:
+  - `ref_search_documentation()` - Search public docs and private resources
+  - `ref_read_url()` - Fetch and read specific documentation pages
+- **Example**: Search Python pandas documentation or GitHub repo guides
+
+#### **sequential-thinking** - Complex Reasoning
+- **Purpose**: Break down complex problems into step-by-step thinking
+- **Use Cases**:
+  - Plan multi-step implementations
+  - Debug complex issues systematically
+  - Design architecture decisions with full context
+- **Key Functions**:
+  - `sequentialthinking()` - Decompose problems, revise thinking, verify solutions
+- **Features**:
+  - Branch thinking into alternative approaches
+  - Revise earlier conclusions as understanding deepens
+  - Verify hypotheses before finalizing
+
+#### **serena** - Semantic Code Analysis
+- **Purpose**: Intelligent code exploration and precise symbol manipulation
+- **Use Cases**:
+  - Understand codebase architecture efficiently
+  - Find and refactor symbols across the project
+  - Track code relationships and dependencies
+- **Key Functions**:
+  - `get_symbols_overview()` - Get high-level symbol structure
+  - `find_symbol()` - Locate classes, functions, methods
+  - `find_referencing_symbols()` - See all references to a symbol
+  - `replace_symbol_body()` - Precise code editing
+  - `search_for_pattern()` - Regex search with context
+- **Philosophy**: Read only what's necessary - use symbolic tools before full file reads
+
+### Usage Patterns
+
+**For Research & Context Building:**
+```
+exa (code context) + ref (documentation) → build_context (in basic-memory)
+```
+
+**For Complex Problem Solving:**
+```
+sequential-thinking (decompose) → serena (code analysis) → implement
+```
+
+**For Code Refactoring:**
+```
+serena (find_symbol) → sequential-thinking (plan changes) → serena (replace/insert)
+```
+
+**For Knowledge Management:**
+```
+write_note (save findings) → search_notes (retrieve later) → build_context (enhance conversations)
+```
+
+### When to Use Each Tool
+
+| Task | Primary | Secondary |
+|------|---------|-----------|
+| Understand codebase architecture | **serena** (symbols overview) | basic-memory (build_context) |
+| Find specific function/class | **serena** (find_symbol) | - |
+| Search for best practices | **exa** (get_code_context_exa) | ref (documentation) |
+| Debug complex logic | **sequential-thinking** | serena (find_referencing_symbols) |
+| Save findings for future use | **basic-memory** (write_note) | - |
+| Load project context into conversation | **basic-memory** (build_context) | - |
+| Search project knowledge base | **basic-memory** (search_notes) | - |
+| Edit code precisely | **serena** (replace_symbol_body) | - |
+| Search project code patterns | **serena** (search_for_pattern) | - |
+| Find API documentation | **ref** (ref_search_documentation) | exa (web_search_exa) |
+
+### Practical Memory Usage Examples
+
+**Example 1: Building Context for CMJ Development**
+```python
+# At start of complex CMJ work, load existing knowledge
+build_context("memory://biomechanics/*")  # Load all biomechanics notes
+# Returns context on triple extension, RSI formulas, metric validation
+
+# After discovering new pattern, save it
+write_note(
+    title="CMJ Takeoff Detection Edge Case",
+    content="Found that backward search fails when...",
+    folder="biomechanics"
+)
+```
+
+**Example 2: Retrieving API Reference During Implementation**
+```python
+# Search for quick reference while implementing
+search_notes("API reference CMJ metrics")  # Find API documentation
+# Or directly load
+build_context("memory://api/*")  # Get all API quick commands
+```
+
+**Example 3: Quality Gate Review Before Commit**
+```python
+# Load quality standards and testing patterns
+build_context("memory://development/*")  # Load quality gates
+search_notes("test coverage requirements")  # Find specific requirements
+# Use this context to ensure commit meets standards
+```
+
+**Example 4: Task Prioritization and Strategic Planning**
+```python
+# Load roadmap and priorities when planning new work
+build_context("memory://strategy/*")  # Get current roadmap
+build_context("memory://project-management/*")  # Get subagent routing
+# This helps route work to appropriate specialized agents
+```
