@@ -75,7 +75,7 @@ jobs:
 
       - name: Verify code version (CMJ landing detection window)
         run: |
-          python << 'EOF'
+          uv run python << 'EOF'
           import inspect
           from src.kinemotion.cmj.analysis import _find_landing_frame
           source = inspect.getsource(_find_landing_frame)
@@ -91,7 +91,7 @@ jobs:
 
       - name: Force Python bytecode regeneration
         run: |
-          python -B -c "import compileall; compileall.compile_dir('.', force=True, quiet=0)" || true
+          uv run python -B -c "import compileall; compileall.compile_dir('.', force=True, quiet=0)" || true
 
       - name: Run tests with coverage
         run: |
