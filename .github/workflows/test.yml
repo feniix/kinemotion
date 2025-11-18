@@ -44,16 +44,10 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           version: "0.8.17"
-          enable-cache: true
+          enable-cache: false
 
-      - name: Clear Python cache to ensure fresh install
-        run: |
-          find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
-          find . -type f -name "*.pyc" -delete 2>/dev/null || true
-          rm -rf .pytest_cache .venv build dist *.egg-info 2>/dev/null || true
-
-      - name: Install dependencies with clean build
-        run: uv sync --refresh --reinstall
+      - name: Install dependencies
+        run: uv sync
 
       - name: Run linting
         run: |
