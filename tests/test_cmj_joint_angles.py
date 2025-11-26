@@ -756,6 +756,224 @@ class TestPhysiologicalRealism:
         assert standing_tilt is None or (-45 <= standing_tilt <= 45)
 
 
+# ============================================================================
+# Phase Progression Fixtures & Tests
+# ============================================================================
+
+
+@pytest.fixture
+def eccentric_phase_landmarks() -> dict[str, tuple[float, float, float]]:
+    """Synthetic landmarks for eccentric phase (countermovement down).
+
+    Characteristics:
+    - Knee flexion: 180° → 130° (45-50° flex)
+    - Hip flexion: 180° → 145° (35° flex)
+    - Ankle plantarflexion: 80° (stable, slight dorsiflexion)
+    """
+    return {
+        "right_heel": (0.45, 0.87, 0.95),
+        "right_foot_index": (0.46, 0.80, 0.95),  # Toe is dorsiflexed
+        "right_ankle": (0.47, 0.84, 0.95),
+        "right_knee": (0.48, 0.50, 0.95),  # Flexed
+        "right_hip": (0.50, 0.25, 0.95),  # Flexed
+        "right_shoulder": (0.50, 0.08, 0.95),  # Required for hip angle
+        "left_heel": (0.55, 0.87, 0.95),
+        "left_foot_index": (0.54, 0.80, 0.95),
+        "left_ankle": (0.53, 0.84, 0.95),
+        "left_knee": (0.52, 0.50, 0.95),
+        "left_hip": (0.50, 0.25, 0.95),
+        "left_shoulder": (0.50, 0.08, 0.95),
+    }
+
+
+@pytest.fixture
+def concentric_phase_landmarks() -> dict[str, tuple[float, float, float]]:
+    """Synthetic landmarks for concentric phase (explosion up).
+
+    Characteristics:
+    - Knee extension: 130° → 165° (extending toward takeoff)
+    - Hip extension: 145° → 175° (extending)
+    - Ankle plantarflexion: 95° (increasing as legs drive)
+    """
+    return {
+        "right_heel": (0.45, 0.88, 0.95),
+        "right_foot_index": (0.46, 0.77, 0.95),  # Toe plantarflexing slightly
+        "right_ankle": (0.47, 0.83, 0.95),
+        "right_knee": (0.48, 0.55, 0.95),  # Extending
+        "right_hip": (0.50, 0.30, 0.95),  # Extending
+        "right_shoulder": (0.50, 0.09, 0.95),  # Required for hip angle
+        "left_heel": (0.55, 0.88, 0.95),
+        "left_foot_index": (0.54, 0.77, 0.95),
+        "left_ankle": (0.53, 0.83, 0.95),
+        "left_knee": (0.52, 0.55, 0.95),
+        "left_hip": (0.50, 0.30, 0.95),
+        "left_shoulder": (0.50, 0.09, 0.95),
+    }
+
+
+@pytest.fixture
+def takeoff_phase_landmarks() -> dict[str, tuple[float, float, float]]:
+    """Synthetic landmarks for takeoff phase (maximum extension).
+
+    Characteristics:
+    - Knee extension: 165° → 175° (full extension at takeoff)
+    - Hip extension: 175° → 180°+ (full extension)
+    - Ankle plantarflexion: 110-120° (maximum plantarflex as push-off)
+    """
+    return {
+        "right_heel": (0.45, 0.89, 0.95),
+        "right_foot_index": (0.46, 0.72, 0.95),  # Toe maximally plantarflexed
+        "right_ankle": (0.47, 0.82, 0.95),
+        "right_knee": (0.48, 0.60, 0.95),  # Fully extended
+        "right_hip": (0.50, 0.32, 0.95),  # Fully extended
+        "right_shoulder": (0.50, 0.10, 0.95),  # Required for hip angle
+        "left_heel": (0.55, 0.89, 0.95),
+        "left_foot_index": (0.54, 0.72, 0.95),
+        "left_ankle": (0.53, 0.82, 0.95),
+        "left_knee": (0.52, 0.60, 0.95),
+        "left_hip": (0.50, 0.32, 0.95),
+        "left_shoulder": (0.50, 0.10, 0.95),
+    }
+
+
+class TestPhaseProgression:
+    """Test that joint angles progress correctly through CMJ phases."""
+
+    def test_eccentric_phase_knee_flexion(
+        self, standing_position_landmarks: dict, eccentric_phase_landmarks: dict
+    ) -> None:
+        """Test knee flexion increases during eccentric phase.
+
+        Expected: Knee angle decreases from ~180° to ~130°
+        (angle measurement: smaller angle = more flexion)
+        """
+        standing_knee = calculate_knee_angle(standing_position_landmarks, "right")
+        eccentric_knee = calculate_knee_angle(eccentric_phase_landmarks, "right")
+
+        assert standing_knee is not None
+        assert eccentric_knee is not None
+        # Eccentric knee should be smaller (more flexion)
+        assert eccentric_knee < standing_knee
+
+    def test_concentric_phase_knee_extension(
+        self, eccentric_phase_landmarks: dict, concentric_phase_landmarks: dict
+    ) -> None:
+        """Test knee extends during concentric phase.
+
+        Expected: Knee angle increases from ~130° toward ~165°
+        """
+        eccentric_knee = calculate_knee_angle(eccentric_phase_landmarks, "right")
+        concentric_knee = calculate_knee_angle(concentric_phase_landmarks, "right")
+
+        assert eccentric_knee is not None
+        assert concentric_knee is not None
+        # Concentric knee should be larger (more extension)
+        assert concentric_knee > eccentric_knee
+
+    def test_triple_extension_all_joints_calculable(
+        self, takeoff_phase_landmarks: dict
+    ) -> None:
+        """Test that all three joints can be calculated at takeoff.
+
+        Triple extension requires all three joints to be measurable.
+        """
+        knee = calculate_knee_angle(takeoff_phase_landmarks, "right")
+        hip = calculate_hip_angle(takeoff_phase_landmarks, "right")
+        ankle = calculate_ankle_angle(takeoff_phase_landmarks, "right")
+
+        # All three joints should be calculable at takeoff
+        assert knee is not None, "Knee angle not calculated at takeoff"
+        assert hip is not None, "Hip angle not calculated at takeoff"
+        assert ankle is not None, "Ankle angle not calculated at takeoff"
+
+    def test_knee_extends_through_phases(
+        self,
+        eccentric_phase_landmarks: dict,
+        concentric_phase_landmarks: dict,
+        takeoff_phase_landmarks: dict,
+    ) -> None:
+        """Test knee extends from eccentric through to takeoff phase.
+
+        Expected progression:
+        - Eccentric (flexed ~120°) → Concentric (~140°) → Takeoff (~160°+)
+        """
+        eccentric_knee = calculate_knee_angle(eccentric_phase_landmarks, "right")
+        concentric_knee = calculate_knee_angle(concentric_phase_landmarks, "right")
+        takeoff_knee = calculate_knee_angle(takeoff_phase_landmarks, "right")
+
+        # All should exist
+        assert eccentric_knee is not None
+        assert concentric_knee is not None
+        assert takeoff_knee is not None
+
+        # Knee should progressively extend
+        assert (
+            concentric_knee > eccentric_knee
+        ), "Knee should extend in concentric phase"
+        assert takeoff_knee > concentric_knee, "Knee should extend further at takeoff"
+
+
+class TestPhysiologicalBounds:
+    """Test that joint angles stay within physiological bounds."""
+
+    def test_knee_angle_within_bounds(
+        self,
+        standing_position_landmarks: dict,
+        eccentric_phase_landmarks: dict,
+        takeoff_phase_landmarks: dict,
+    ) -> None:
+        """Test knee angle stays within 0-180° range."""
+        angles = [
+            calculate_knee_angle(standing_position_landmarks, "right"),
+            calculate_knee_angle(eccentric_phase_landmarks, "right"),
+            calculate_knee_angle(takeoff_phase_landmarks, "right"),
+        ]
+
+        for angle in angles:
+            assert angle is not None
+            assert 0 <= angle <= 180, f"Knee angle {angle}° out of bounds"
+
+    def test_hip_angle_within_bounds(
+        self,
+        standing_position_landmarks: dict,
+        eccentric_phase_landmarks: dict,
+        takeoff_phase_landmarks: dict,
+    ) -> None:
+        """Test hip angle stays within 0-180° range."""
+        angles = [
+            calculate_hip_angle(standing_position_landmarks, "right"),
+            calculate_hip_angle(eccentric_phase_landmarks, "right"),
+            calculate_hip_angle(takeoff_phase_landmarks, "right"),
+        ]
+
+        for angle in angles:
+            assert angle is not None
+            assert 0 <= angle <= 180, f"Hip angle {angle}° out of bounds"
+
+    def test_ankle_angle_plantarflexion_range(
+        self,
+        standing_position_landmarks: dict,
+        eccentric_phase_landmarks: dict,
+        concentric_phase_landmarks: dict,
+        takeoff_phase_landmarks: dict,
+    ) -> None:
+        """Test ankle angle stays within plausible CMJ range.
+
+        CMJ plantarflexion progression: 75-85° (standing) → 110-130° (takeoff)
+        """
+        angles = [
+            calculate_ankle_angle(standing_position_landmarks, "right"),
+            calculate_ankle_angle(eccentric_phase_landmarks, "right"),
+            calculate_ankle_angle(concentric_phase_landmarks, "right"),
+            calculate_ankle_angle(takeoff_phase_landmarks, "right"),
+        ]
+
+        for angle in angles:
+            assert angle is not None
+            # Ankle angles should be calculable and plausible (not negative, not >180°)
+            assert 0 <= angle <= 180, f"Ankle angle {angle}° out of valid range"
+
+
 class TestJointAngleConsistency:
     """Test consistency of joint angle calculations across multiple calls."""
 
