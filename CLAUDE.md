@@ -9,6 +9,25 @@ Kinemotion: Video-based kinematic analysis for athletic performance using MediaP
 - **Drop Jump**: Ground contact time, flight time, reactive strength index
 - **Counter Movement Jump (CMJ)**: Jump height, flight time, countermovement depth, triple extension
 
+## Current Roadmap (MVP-First Approach)
+
+**Phase 1: MVP Validation (Weeks 1-3)**
+- Issue #10 (P0): Fix CMJ ankle angle calculation
+- Issue #11 (P0): Validate CMJ metrics with phase progression tests
+- Issue #12 (P0): Build simple web UI (upload → analyze → export)
+- **Goal:** Get product in coaches' hands, gather market feedback
+
+**Phase 2: Market-Driven Development (Week 4+)**
+- Real-Time Analysis (if coaches ask for live feedback)
+- Running Gait Analysis (if runners/coaches ask for it)
+- API & Integrations (if partners request them)
+- **Goal:** Build features customers actually want
+
+**See:**
+- `docs/strategy/1-STRATEGIC_SUMMARY.md` - Strategic direction
+- `docs/strategy/MVP_VALIDATION_CHECKPOINTS.md` - Phase 2 decision gates
+- `docs/strategy/MVP_FEEDBACK_COLLECTION.md` - Feedback collection plan
+
 ## Quick Setup
 
 ```bash
