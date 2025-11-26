@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.29.3 (2025-11-26)
+
+### Bug Fixes
+
+- **docs**: Update type checker and add OpenSSF badge
+  ([`3c08a51`](https://github.com/feniix/kinemotion/commit/3c08a5199e407718087562c769577578f4a5b844))
+
+
 ## v0.29.2 (2025-11-18)
 
 ### Bug Fixes
