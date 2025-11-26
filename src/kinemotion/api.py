@@ -18,6 +18,8 @@ from .core.auto_tuning import (
     analyze_video_sample,
     auto_tune_parameters,
 )
+from .core.cmj_metrics_validator import CMJMetricsValidator
+from .core.dropjump_metrics_validator import DropJumpMetricsValidator
 from .core.filtering import reject_outliers
 from .core.metadata import (
     AlgorithmConfig,
@@ -602,6 +604,16 @@ def process_dropjump_video(
         if verbose:
             print("Analysis complete!")
 
+        # Validate metrics against physiological bounds
+        validator = DropJumpMetricsValidator()
+        validation_result = validator.validate(metrics.to_dict())  # type: ignore[arg-type]
+        metrics.validation_result = validation_result
+
+        if verbose and validation_result.issues:
+            print("\n⚠️  Validation Results:")
+            for issue in validation_result.issues:
+                print(f"  [{issue.severity.value}] {issue.metric}: {issue.message}")
+
         return metrics
 
 
@@ -1037,6 +1049,16 @@ def process_cmj_video(
             print(f"\nJump height: {metrics.jump_height:.3f}m")
             print(f"Flight time: {metrics.flight_time*1000:.1f}ms")
             print(f"Countermovement depth: {metrics.countermovement_depth:.3f}m")
+
+        # Validate metrics against physiological bounds
+        validator = CMJMetricsValidator()
+        validation_result = validator.validate(metrics.to_dict()["data"])  # type: ignore[arg-type]
+        metrics.validation_result = validation_result
+
+        if verbose and validation_result.issues:
+            print("\n⚠️  Validation Results:")
+            for issue in validation_result.issues:
+                print(f"  [{issue.severity.value}] {issue.metric}: {issue.message}")
 
         return metrics
 

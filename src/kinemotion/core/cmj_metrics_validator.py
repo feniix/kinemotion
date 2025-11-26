@@ -121,6 +121,36 @@ class ValidationResult:
         else:
             self.status = "PASS"
 
+    def to_dict(self) -> dict:
+        """Convert validation result to JSON-serializable dictionary.
+
+        Returns:
+            Dictionary with status, issues, and consistency metrics.
+        """
+        return {
+            "status": self.status,
+            "issues": [
+                {
+                    "severity": issue.severity.value,
+                    "metric": issue.metric,
+                    "message": issue.message,
+                    "value": issue.value,
+                    "bounds": issue.bounds,
+                }
+                for issue in self.issues
+            ],
+            "athlete_profile": (
+                self.athlete_profile.value if self.athlete_profile else None
+            ),
+            "rsi": self.rsi,
+            "height_flight_time_consistency_percent": (
+                self.height_flight_time_consistency
+            ),
+            "velocity_height_consistency_percent": self.velocity_height_consistency,
+            "depth_height_ratio": self.depth_height_ratio,
+            "contact_depth_ratio": self.contact_depth_ratio,
+        }
+
 
 class CMJMetricsValidator:
     """Comprehensive CMJ metrics validator."""
@@ -696,6 +726,70 @@ class CMJMetricsValidator:
                     f"Ankle angle {ankle:.1f}° within expected range for {profile.value}",
                     value=ankle,
                 )
+
+        # Detect joint compensation patterns
+        self._check_joint_compensation_pattern(angles, result, profile)
+
+    def _check_joint_compensation_pattern(
+        self, angles: dict, result: ValidationResult, profile: AthleteProfile
+    ) -> None:
+        """Detect compensatory joint patterns in triple extension.
+
+        When one joint cannot achieve full extension, others may compensate.
+        Example: Limited hip extension (160°) with excessive knee extension (185°+)
+        suggests compensation rather than balanced movement quality.
+
+        This is a biomechanical quality indicator, not an error.
+        """
+        hip = angles.get("hip_angle")
+        knee = angles.get("knee_angle")
+        ankle = angles.get("ankle_angle")
+
+        if hip is None or knee is None or ankle is None:
+            return  # Need all three to detect patterns
+
+        # Get profile-specific bounds
+        if profile == AthleteProfile.ELDERLY:
+            hip_min, hip_max = 150, 175
+            knee_min, knee_max = 155, 175
+            ankle_min, ankle_max = 100, 125
+        elif profile in (AthleteProfile.UNTRAINED, AthleteProfile.RECREATIONAL):
+            hip_min, hip_max = 160, 180
+            knee_min, knee_max = 165, 182
+            ankle_min, ankle_max = 110, 140
+        elif profile in (AthleteProfile.TRAINED, AthleteProfile.ELITE):
+            hip_min, hip_max = 170, 185
+            knee_min, knee_max = 173, 190
+            ankle_min, ankle_max = 125, 155
+        else:
+            return
+
+        # Count how many joints are near their boundaries
+        joints_at_boundary = 0
+        boundary_threshold = 3.0  # degrees from limit
+
+        if hip <= hip_min + boundary_threshold or hip >= hip_max - boundary_threshold:
+            joints_at_boundary += 1
+        if (
+            knee <= knee_min + boundary_threshold
+            or knee >= knee_max - boundary_threshold
+        ):
+            joints_at_boundary += 1
+        if (
+            ankle <= ankle_min + boundary_threshold
+            or ankle >= ankle_max - boundary_threshold
+        ):
+            joints_at_boundary += 1
+
+        # If 2+ joints at boundaries, likely compensation pattern
+        if joints_at_boundary >= 2:
+            result.add_info(
+                "joint_compensation",
+                f"Multiple joints near extension limits (hip={hip:.0f}°, "
+                f"knee={knee:.0f}°, ankle={ankle:.0f}°). "
+                f"May indicate compensatory movement pattern.",
+                value=float(joints_at_boundary),
+            )
 
     @staticmethod
     def _get_profile_range(

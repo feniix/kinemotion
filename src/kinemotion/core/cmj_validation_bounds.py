@@ -356,7 +356,9 @@ ATHLETE_PROFILES = {
 }
 
 
-def estimate_athlete_profile(metrics_dict: dict) -> AthleteProfile:
+def estimate_athlete_profile(
+    metrics_dict: dict, gender: str | None = None
+) -> AthleteProfile:
     """Estimate athlete profile from metrics.
 
     Uses jump height as primary classifier:
@@ -365,6 +367,18 @@ def estimate_athlete_profile(metrics_dict: dict) -> AthleteProfile:
     - 0.35-0.65m: Recreational
     - 0.65-0.85m: Trained
     - >0.85m: Elite
+
+    NOTE: Bounds are calibrated for adult males. Female athletes typically achieve
+    60-70% of male heights due to lower muscle mass and strength. If analyzing
+    female athletes, interpret results one level lower than classification suggests.
+    Example: Female athlete with 0.45m jump = Recreational male = Trained female.
+
+    Args:
+        metrics_dict: Dictionary with CMJ metric values
+        gender: Optional gender for context ("M"/"F"). Currently informational only.
+
+    Returns:
+        Estimated AthleteProfile
     """
     jump_height = metrics_dict.get("jump_height", 0)
 

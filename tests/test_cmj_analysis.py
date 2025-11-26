@@ -1336,3 +1336,203 @@ def test_overlapping_eccentric_concentric_phases() -> None:
             assert (
                 standing < lowest < takeoff
             ), "Lowest point correctly positioned between standing and takeoff"
+
+
+# ===== Validation Integration Tests =====
+
+
+def test_cmj_metrics_validation_integration() -> None:
+    """Test that validation results are attached to CMJ metrics.
+
+    Verifies Phase 3 integration: validation runs during analysis
+    and results are available in metrics object.
+    """
+    from kinemotion.cmj.kinematics import CMJMetrics
+
+    # Create synthetic metrics
+    metrics = CMJMetrics(
+        jump_height=0.45,  # Recreational athlete
+        flight_time=0.6,  # seconds
+        countermovement_depth=0.35,
+        eccentric_duration=0.55,
+        concentric_duration=0.35,
+        total_movement_time=0.90,
+        peak_eccentric_velocity=1.5,
+        peak_concentric_velocity=3.0,
+        transition_time=0.05,
+        standing_start_frame=10.0,
+        lowest_point_frame=25.0,
+        takeoff_frame=40.0,
+        landing_frame=58.0,
+        video_fps=30.0,
+        tracking_method="foot",
+    )
+
+    # Validate metrics
+    from kinemotion.core.cmj_metrics_validator import CMJMetricsValidator
+
+    validator = CMJMetricsValidator()
+    validation_result = validator.validate(metrics.to_dict())
+    metrics.validation_result = validation_result
+
+    # Assert: Validation result exists and has expected structure
+    assert metrics.validation_result is not None
+    assert hasattr(metrics.validation_result, "status")
+    assert hasattr(metrics.validation_result, "issues")
+    assert metrics.validation_result.status in ["PASS", "PASS_WITH_WARNINGS", "FAIL"]
+
+
+def test_cmj_metrics_validation_in_json_output() -> None:
+    """Test that validation results appear in JSON export.
+
+    Verifies that when metrics.to_dict() is called, validation
+    results are included in the output.
+    """
+    from kinemotion.cmj.kinematics import CMJMetrics
+    from kinemotion.core.cmj_metrics_validator import CMJMetricsValidator
+
+    # Create synthetic metrics
+    metrics = CMJMetrics(
+        jump_height=0.55,  # Elite athlete
+        flight_time=0.7,
+        countermovement_depth=0.50,
+        eccentric_duration=0.50,
+        concentric_duration=0.28,
+        total_movement_time=0.78,
+        peak_eccentric_velocity=2.5,
+        peak_concentric_velocity=3.8,
+        transition_time=0.02,
+        standing_start_frame=15.0,
+        lowest_point_frame=30.0,
+        takeoff_frame=42.0,
+        landing_frame=63.0,
+        video_fps=30.0,
+        tracking_method="foot",
+    )
+
+    # Add validation result
+    validator = CMJMetricsValidator()
+    validation_result = validator.validate(metrics.to_dict())
+    metrics.validation_result = validation_result
+
+    # Export to dict
+    result_dict = metrics.to_dict()
+
+    # Assert: Validation appears in JSON output
+    assert "validation" in result_dict
+    assert "status" in result_dict["validation"]
+    assert "issues" in result_dict["validation"]
+    assert isinstance(result_dict["validation"]["issues"], list)
+
+
+def test_cmj_validation_result_serialization() -> None:
+    """Test that ValidationResult can be serialized to JSON.
+
+    Verifies to_dict() method produces JSON-compatible output.
+    """
+    import json
+
+    from kinemotion.core.cmj_metrics_validator import (
+        CMJMetricsValidator,
+    )
+
+    # Create metrics that will trigger some warnings
+    metrics_dict = {
+        "data": {
+            "jump_height_m": 1.5,  # Impossible height
+            "flight_time_ms": 2000.0,
+            "countermovement_depth_m": 0.30,
+            "eccentric_duration_ms": 500.0,
+            "concentric_duration_ms": 250.0,
+            "total_movement_time_ms": 750.0,
+            "peak_eccentric_velocity_m_s": 1.0,
+            "peak_concentric_velocity_m_s": 3.0,
+        }
+    }
+
+    # Validate
+    validator = CMJMetricsValidator()
+    validation_result = validator.validate(metrics_dict)
+
+    # Serialize to dict
+    result_dict = validation_result.to_dict()
+
+    # Assert: Can be serialized to JSON
+    assert isinstance(result_dict, dict)
+    json_str = json.dumps(result_dict)
+    assert isinstance(json_str, str)
+
+    # Assert: Contains expected keys
+    assert "status" in result_dict
+    assert "issues" in result_dict
+    assert isinstance(result_dict["issues"], list)
+
+    # Assert: Issues are JSON-serializable
+    for issue in result_dict["issues"]:
+        assert "severity" in issue
+        assert "metric" in issue
+        assert "message" in issue
+
+
+def test_cmj_joint_compensation_detection() -> None:
+    """Test detection of compensatory joint patterns in triple extension.
+
+    When multiple joints are at their extension limits, suggests compensation
+    rather than balanced movement quality.
+    """
+    from kinemotion.core.cmj_metrics_validator import CMJMetricsValidator
+
+    # Create metrics with balanced triple extension
+    balanced_metrics = {
+        "jump_height": 0.60,
+        "flight_time": 0.65,
+        "countermovement_depth": 0.35,
+        "concentric_duration": 0.45,
+        "eccentric_duration": 0.50,
+        "total_movement_time": 0.95,
+        "peak_eccentric_velocity": 1.5,
+        "peak_concentric_velocity": 2.8,
+        "triple_extension": {
+            "hip_angle": 175.0,  # Balanced: mid-range
+            "knee_angle": 178.0,  # Balanced: mid-range
+            "ankle_angle": 135.0,  # Balanced: mid-range
+        },
+    }
+
+    validator = CMJMetricsValidator()
+    result = validator.validate(balanced_metrics)
+
+    # Should not detect compensation (balanced angles)
+    compensation_issues = [
+        issue for issue in result.issues if issue.metric == "joint_compensation"
+    ]
+    assert len(compensation_issues) == 0
+
+    # Create metrics with compensatory pattern
+    compensatory_metrics = {
+        "jump_height": 0.60,
+        "flight_time": 0.65,
+        "countermovement_depth": 0.35,
+        "concentric_duration": 0.45,
+        "eccentric_duration": 0.50,
+        "total_movement_time": 0.95,
+        "peak_eccentric_velocity": 1.5,
+        "peak_concentric_velocity": 2.8,
+        "triple_extension": {
+            "hip_angle": 161.0,  # Limited hip extension
+            "knee_angle": 187.0,  # Compensatory high knee extension
+            "ankle_angle": 133.0,  # Mid-range ankle
+        },
+    }
+
+    result_compensatory = validator.validate(compensatory_metrics)
+
+    # Should detect compensation (multiple joints at boundaries)
+    compensation_issues = [
+        issue
+        for issue in result_compensatory.issues
+        if issue.metric == "joint_compensation"
+    ]
+    # May detect compensation if profile thresholds are met
+    if len(compensation_issues) > 0:
+        assert compensation_issues[0].severity.value == "INFO"

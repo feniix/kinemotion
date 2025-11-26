@@ -9,6 +9,7 @@ from numpy.typing import NDArray
 from ..core.formatting import format_float_metric
 
 if TYPE_CHECKING:
+    from ..core.cmj_metrics_validator import ValidationResult
     from ..core.metadata import ResultMetadata
     from ..core.quality import QualityAssessment
 
@@ -32,11 +33,12 @@ class CMJDataDict(TypedDict, total=False):
     tracking_method: str
 
 
-class CMJResultDict(TypedDict):
+class CMJResultDict(TypedDict, total=False):
     """Type-safe dictionary for complete CMJ result with data and metadata."""
 
     data: CMJDataDict
     metadata: dict  # ResultMetadata.to_dict()
+    validation: dict  # ValidationResult.to_dict()
 
 
 @dataclass
@@ -60,6 +62,7 @@ class CMJMetrics:
         video_fps: Frames per second of the analyzed video
         tracking_method: Method used for tracking ("foot" or "com")
         quality_assessment: Optional quality assessment with confidence and warnings
+        validation_result: Optional validation result with physiological bounds checks
     """
 
     jump_height: float
@@ -79,6 +82,7 @@ class CMJMetrics:
     tracking_method: str
     quality_assessment: "QualityAssessment | None" = None
     result_metadata: "ResultMetadata | None" = None
+    validation_result: "ValidationResult | None" = None
 
     def to_dict(self) -> CMJResultDict:
         """Convert metrics to JSON-serializable dictionary with data/metadata structure.
@@ -129,7 +133,13 @@ class CMJMetrics:
             # No metadata available
             metadata = {}
 
-        return {"data": data, "metadata": metadata}
+        result: CMJResultDict = {"data": data, "metadata": metadata}
+
+        # Include validation results if available
+        if self.validation_result is not None:
+            result["validation"] = self.validation_result.to_dict()
+
+        return result
 
 
 def calculate_cmj_metrics(

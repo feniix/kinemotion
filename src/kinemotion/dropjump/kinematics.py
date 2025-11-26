@@ -16,6 +16,7 @@ from .analysis import (
 )
 
 if TYPE_CHECKING:
+    from ..core.dropjump_metrics_validator import ValidationResult
     from ..core.metadata import ResultMetadata
     from ..core.quality import QualityAssessment
 
@@ -39,11 +40,12 @@ class DropJumpDataDict(TypedDict, total=False):
     flight_end_frame_precise: float | None
 
 
-class DropJumpResultDict(TypedDict):
+class DropJumpResultDict(TypedDict, total=False):
     """Type-safe dictionary for complete drop jump result with data and metadata."""
 
     data: DropJumpDataDict
     metadata: dict  # ResultMetadata.to_dict()
+    validation: dict  # ValidationResult.to_dict()
 
 
 class DropJumpMetrics:
@@ -69,6 +71,8 @@ class DropJumpMetrics:
         self.quality_assessment: QualityAssessment | None = None
         # Complete metadata
         self.result_metadata: ResultMetadata | None = None
+        # Validation result
+        self.validation_result: ValidationResult | None = None
 
     def _build_data_dict(self) -> DropJumpDataDict:
         """Build the data portion of the result dictionary.
@@ -125,10 +129,16 @@ class DropJumpMetrics:
         Returns:
             Dictionary with nested data and metadata structure.
         """
-        return {
+        result: DropJumpResultDict = {
             "data": self._build_data_dict(),
             "metadata": self._build_metadata_dict(),
         }
+
+        # Include validation results if available
+        if self.validation_result is not None:
+            result["validation"] = self.validation_result.to_dict()
+
+        return result
 
 
 def _determine_drop_start_frame(
