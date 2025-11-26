@@ -93,12 +93,12 @@ uv run kinemotion dropjump-analyze <video_path> --output debug.mp4 --verbose
 
 This project enforces strict code quality standards. **All contributions must pass these checks** before being merged.
 
-### Type Checking (mypy)
+### Type Checking ([pyright](https://github.com/microsoft/pyright))
 
-All code must have complete type annotations and pass mypy strict mode:
+All code must have complete type annotations and pass pyright strict mode:
 
 ```bash
-uv run mypy src/kinemotion
+uv run pyright
 ```
 
 **Requirements**:
@@ -107,7 +107,7 @@ uv run mypy src/kinemotion
 - No `Any` types without justification
 - No untyped definitions
 
-### Linting (ruff)
+### Linting ([ruff](https://github.com/astral-sh/ruff))
 
 Code must pass comprehensive linting checks:
 
@@ -119,7 +119,7 @@ uv run ruff check
 uv run ruff check --fix
 ```
 
-### Code Formatting (black)
+### Code Formatting ([black](https://github.com/psf/black))
 
 All code must be formatted with Black:
 
@@ -127,7 +127,7 @@ All code must be formatted with Black:
 uv run black src/
 ```
 
-### Testing (pytest)
+### Testing ([pytest](https://docs.pytest.org/))
 
 All tests must pass:
 
@@ -147,7 +147,7 @@ uv run pytest tests/test_contact_detection.py -v
 Before submitting a PR, run all checks:
 
 ```bash
-uv run ruff check && uv run mypy src/kinemotion && uv run pytest
+uv run ruff check && uv run pyright && uv run pytest
 ```
 
 Or use the pre-commit hook (if configured):
@@ -162,7 +162,7 @@ git commit -m "Your commit message"
 ### Python Style
 
 - Follow [PEP 8](https://pep8.org/) style guide
-- Use Black for formatting (line length: 100)
+- Use [Black](https://github.com/psf/black) for formatting (line length: 100)
 - Use meaningful variable and function names
 - Add docstrings to all public functions and classes
 
@@ -184,7 +184,7 @@ def calculate_jump_height(flight_time_ms, gravity=9.81):
 ### Documentation
 
 - Add docstrings to all public functions and classes
-- Use Google-style docstrings
+- Use [Google-style docstrings](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings)
 - Document parameters, return values, and exceptions
 - Update README.md if adding new features
 
@@ -292,10 +292,10 @@ Refactor contact detection to use derivative-based velocity
 
 1. **Automated checks** run on all pull requests:
 
-   - Type checking (mypy)
-   - Linting (ruff)
-   - Tests (pytest)
-   - Code formatting (black)
+   - Type checking ([pyright](https://github.com/microsoft/pyright))
+   - Linting ([ruff](https://github.com/astral-sh/ruff))
+   - Tests ([pytest](https://docs.pytest.org/))
+   - Code formatting ([black](https://github.com/psf/black))
 
 1. **Code review** by maintainers:
 

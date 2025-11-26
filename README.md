@@ -7,6 +7,7 @@
 [![Tests](https://github.com/feniix/kinemotion/workflows/Test%20%26%20Quality/badge.svg)](https://github.com/feniix/kinemotion/actions)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=feniix_kinemotion&metric=alert_status)](https://sonarcloud.io/summary/overall?id=feniix_kinemotion)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=feniix_kinemotion&metric=coverage)](https://sonarcloud.io/summary/overall?id=feniix_kinemotion)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11506/badge)](https://www.bestpractices.dev/projects/11506)
 
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Type checked with pyright](https://img.shields.io/badge/type%20checked-pyright-blue.svg)](https://github.com/microsoft/pyright)
@@ -666,7 +667,7 @@ Before committing code, ensure all checks pass:
 1. Ensure type safety with pyright
 1. Run all tests with pytest
 
-See [CLAUDE.md](CLAUDE.md) for detailed development guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines and requirements, or [CLAUDE.md](CLAUDE.md) for detailed development guidelines.
 
 ## Limitations
 
