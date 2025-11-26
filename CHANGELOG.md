@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.30.0 (2025-11-26)
+
+### Chores
+
+- Clean up old memory file renames
+  ([`3c47d2d`](https://github.com/feniix/kinemotion/commit/3c47d2d826e6b38dd088490a707347e32fa79496))
+
+- **memory**: Rename memory files to kebab-case convention
+  ([`f747f44`](https://github.com/feniix/kinemotion/commit/f747f442da506e390f815396416817ee8a08cec8))
+
+### Documentation
+
+- **claude**: Add MVP-first roadmap section
+  ([`a9761d8`](https://github.com/feniix/kinemotion/commit/a9761d8131e0d93504aeae1f262315084a743e5f))
+
+- **memories**: Add project context and MVP strategy to serena
+  ([`e44d5eb`](https://github.com/feniix/kinemotion/commit/e44d5ebb4d92871889486dbb0cb59f69170a1db6))
+
+- **memory**: Add MVP strategy memory files to basic-memory
+  ([`3bcf7c7`](https://github.com/feniix/kinemotion/commit/3bcf7c767141b2a7eeadbf8765e82236aa86140f))
+
+- **strategy**: Pivot to MVP-first approach with validation gates
+  ([`806e77d`](https://github.com/feniix/kinemotion/commit/806e77d2a87c6dc16b92e18ce7e6109f1844a482))
+
+### Features
+
+- **validation**: Implement biomechanics specialist recommendations
+  ([`4cb440b`](https://github.com/feniix/kinemotion/commit/4cb440b35fe47b06f754c5454bcfca0479f1ed6c))
+
+### Testing
+
+- **cmj**: Add phase progression and bounds tests (Issue #11)
+  ([`9fcb033`](https://github.com/feniix/kinemotion/commit/9fcb033491abaaa3d40552478d4736bb535b8f46))
+
+
 ## v0.29.3 (2025-11-26)
 
 ### Bug Fixes
