@@ -1,10 +1,15 @@
-______________________________________________________________________
+---
+title: CMJ Physiological Bounds for Validation
+type: note
+permalink: biomechanics/cmj-physiological-bounds-for-validation
+tags:
+  - cmj
+  - validation
+  - biomechanics
+  - bounds
+---
 
-## title: CMJ Physiological Bounds for Validation type: note permalink: biomechanics/cmj-physiological-bounds-for-validation
-
-# CMJ Physiological Bounds for Validation Testing
-
-## Overview
+# CMJ Physiological Bounds for Validation
 
 This document defines realistic physiological bounds for Counter Movement Jump (CMJ) metrics used in kinemotion. These bounds prevent false positives from noise while catching real errors in video processing and phase detection.
 
@@ -28,7 +33,7 @@ From jump height formula: h = g·t²/8, therefore t = √(8h/g)
 | **Recreational Typical** | 0.40-0.65        | Untrained to moderately trained (~20-50cm jumps)                 |
 | **Elite Typical**        | 0.65-0.95        | Trained athletes (60-90cm jumps)                                 |
 | **Absolute Maximum**     | 1.1              | Elite male athletes only (>100cm jumps)                          |
-| **Error Threshold**      | \<0.08s or >1.3s | Indicates frame rate issue or detection failure                  |
+| **Error Threshold**      | <0.08s or >1.3s  | Indicates frame rate issue or detection failure                  |
 
 ### Calculation Examples
 
@@ -45,8 +50,6 @@ From jump height formula: h = g·t²/8, therefore t = √(8h/g)
 - **Lower bound**: MediaPipe requires multiple frames to detect landing phase. At 30fps, 0.10s = 3 frames (barely resolvable).
 - **Upper bound**: Human biomechanics limits maximum upward velocity to ~4.5 m/s (elite males). Using v² = 2gh: maximum jump ~103cm → t = 1.03s.
 - **Frame rate dependency**: At lower frame rates (24fps), minimum flight time increases proportionally.
-
-______________________________________________________________________
 
 ## 2. JUMP HEIGHT (meters)
 
@@ -65,7 +68,7 @@ Maximum vertical displacement during flight, calculated from flight time: h = g�
 | **Trained Typical**      | 0.50-0.75         | Athletes, active individuals                        |
 | **Elite Typical**        | 0.70-1.00         | Competitive athletes, basketball/volleyball players |
 | **Absolute Maximum**     | 1.15              | Genetic outliers, world-class performers            |
-| **Error Threshold**      | \<0.02m or >1.30m | Indicates detection failure or data corruption      |
+| **Error Threshold**      | <0.02m or >1.30m  | Indicates detection failure or data corruption      |
 
 ### Reverse Velocity Verification
 
@@ -87,8 +90,6 @@ For independent validation, jump height should satisfy: h ≈ v_peak²/(2g)
 - **Upper bound**: Peak concentric velocity physiologically maxes at ~4.5 m/s. Even elite males rarely exceed 110cm.
 - **Gender differences**: Females typically 60-70% of male values; adjust upper bounds accordingly.
 
-______________________________________________________________________
-
 ## 3. COUNTERMOVEMENT DEPTH (meters)
 
 ### Definition
@@ -105,7 +106,7 @@ Vertical distance traveled from standing position to lowest point of squat.
 | **Deep CMJ**         | 0.45-0.70         | Trained athletes, below-parallel squat           |
 | **Very Deep**        | 0.65-0.90         | Tall individuals with excellent mobility         |
 | **Absolute Maximum** | 1.00              | Only possible for very tall athletes (>6'2")     |
-| **Error Threshold**  | \<0.05m or >1.10m | Indicates pose tracking failure                  |
+| **Error Threshold**  | <0.05m or >1.10m  | Indicates pose tracking failure                  |
 
 ### Correlation with Jump Height
 
@@ -120,8 +121,6 @@ Research (Nordez et al., 2009; Lees et al., 2004):
 - **Lower bound**: Below 5cm indicates almost no squat detected; likely false standing position.
 - **Upper bound**: Human leg structure limits squat depth; >1.0m impossible without leg extension miscalculation.
 - **Athlete variation**: Tall athletes naturally deeper; short athletes naturally shallower.
-
-______________________________________________________________________
 
 ## 4. CONTACT TIME / CONCENTRIC DURATION (seconds)
 
@@ -140,7 +139,7 @@ Time from lowest point (end of eccentric phase) to takeoff (start of propulsion 
 | **Slow (Untrained)**        | 0.60-0.90         | Deconditioned, elderly                    |
 | **Very Slow**               | 0.80-1.20         | Weak, injured, or controlled movement     |
 | **Absolute Maximum**        | 1.5               | Only in severe weakness or very elderly   |
-| **Error Threshold**         | \<0.08s or >1.80s | Indicates phase detection failure         |
+| **Error Threshold**         | <0.08s or >1.80s  | Indicates phase detection failure         |
 
 ### Reactive Strength Index (RSI) Cross-Check
 
@@ -148,7 +147,7 @@ RSI = flight_time / contact_time
 
 | RSI Range | Interpretation                       |
 | --------- | ------------------------------------ |
-| \<0.3     | Error (invalid metrics)              |
+| <0.3      | Error (invalid metrics)              |
 | 0.3-0.8   | Untrained, poor reactive strength    |
 | 0.8-1.5   | Recreational, moderate RSI           |
 | 1.5-2.5   | Trained athletes                     |
@@ -157,11 +156,9 @@ RSI = flight_time / contact_time
 
 ### Why This Range
 
-- **Lower bound**: Contact time \<100ms requires ~200 m/s² acceleration (7G force); only possible with extreme training + equipment assistance.
+- **Lower bound**: Contact time <100ms requires ~200 m/s² acceleration (7G force); only possible with extreme training + equipment assistance.
 - **Upper bound**: Contact time >1.5s indicates incomplete squat or detection of standing phase (should have stopped at lowest point).
 - **RSI validation**: Contact time too short relative to flight time flags detection errors.
-
-______________________________________________________________________
 
 ## 5. PEAK ECCENTRIC VELOCITY (m/s, downward)
 
@@ -179,7 +176,7 @@ Maximum downward velocity during countermovement (negative values in signed velo
 | **Trained**          | 1.5-2.5                | Fast, controlled eccentric                 |
 | **Elite**            | 2.2-3.5                | Very fast eccentric phase                  |
 | **Absolute Maximum** | 4.0                    | Extreme athletes only                      |
-| **Error Threshold**  | \<0.10 m/s or >5.0 m/s | Indicates signal noise or tracking failure |
+| **Error Threshold**  | <0.10 m/s or >5.0 m/s  | Indicates signal noise or tracking failure |
 
 ### Relationship to Countermovement Depth
 
@@ -198,8 +195,6 @@ Expected: v_eccentric = √(2g·depth)
 - **Upper bound**: Maximum possible from v² = 2gh with 1.0m depth → v ≈ 4.4 m/s.
 - **Validation**: Cross-check with: v² ≈ 2g·countermovement_depth
 
-______________________________________________________________________
-
 ## 6. PEAK CONCENTRIC VELOCITY (m/s, upward)
 
 ### Definition
@@ -217,7 +212,7 @@ Maximum upward velocity during propulsion phase (from lowest point to takeoff).
 | **Trained**          | 2.5-3.5                | Athletes, 40-70cm jumps                 |
 | **Elite**            | 3.2-4.2                | High-level athletes, 65-90cm jumps      |
 | **Absolute Maximum** | 4.8                    | Only elite male athletes (>100cm jumps) |
-| **Error Threshold**  | \<0.20 m/s or >5.5 m/s | Indicates detection error               |
+| **Error Threshold**  | <0.20 m/s or >5.5 m/s  | Indicates detection error               |
 
 ### Jump Height Verification Formula
 
@@ -242,8 +237,6 @@ Independent validation: h = v_peak² / (2g)
 - **Upper bound**: Human physiology limits peak acceleration to ~10 m/s² in concentric phase over ~0.4s contact → ~4.0 m/s maximum.
 - **Age/gender factors**: Females typically 80-85% of male values; adjust accordingly.
 
-______________________________________________________________________
-
 ## 7. TRIPLE EXTENSION ANGLES (degrees)
 
 ### Definition
@@ -258,7 +251,7 @@ Joint angles at moment of takeoff, measuring hip, knee, ankle extension.
 | **Trained Athletes** | 170-185°        | Adequate extension                   |
 | **Recreational**     | 160-175°        | Acceptable but less efficient        |
 | **Poor Extension**   | 140-160°        | Incomplete extension, weak hip power |
-| **Error Threshold**  | \<120° or >195° | Not at takeoff or processing error   |
+| **Error Threshold**  | <120° or >195°  | Not at takeoff or processing error   |
 
 ### 7.2 KNEE ANGLE
 
@@ -268,7 +261,7 @@ Joint angles at moment of takeoff, measuring hip, knee, ankle extension.
 | **Trained Athletes** | 170-188°        | Good extension                         |
 | **Recreational**     | 160-180°        | Acceptable                             |
 | **Poor Extension**   | 140-165°        | Incomplete quad extension              |
-| **Error Threshold**  | \<130° or >200° | Not at takeoff or hyperextension error |
+| **Error Threshold**  | <130° or >200°  | Not at takeoff or hyperextension error |
 
 ### 7.3 ANKLE ANGLE (plantarflexion)
 
@@ -278,7 +271,7 @@ Joint angles at moment of takeoff, measuring hip, knee, ankle extension.
 | **Trained Athletes**       | 125-150°                      | Good plantarflexion                |
 | **Recreational**           | 115-140°                      | Acceptable                         |
 | **Limited Plantarflexion** | 100-120°                      | Poor calf involvement              |
-| **Error Threshold**        | \<90° (dorsiflexion) or >165° | Not at takeoff or tracking failure |
+| **Error Threshold**        | <90° (dorsiflexion) or >165°  | Not at takeoff or tracking failure |
 
 **Note**: Ankle angle measurement is challenging in side-view video due to foot foreshortening. MediaPipe may miss foot/ankle details.
 
@@ -290,7 +283,7 @@ Joint angles at moment of takeoff, measuring hip, knee, ankle extension.
 | **Slight Forward**    | 10-25°                    | Normal, healthy forward lean         |
 | **Moderate Forward**  | 20-35°                    | Acceptable, some forward lean        |
 | **Excessive Forward** | 30-50°                    | Poor balance or off-center jump      |
-| **Error Threshold**   | \<-10° (backward) or >60° | Likely off-balance or tracking error |
+| **Error Threshold**   | <-10° (backward) or >60°  | Likely off-balance or tracking error |
 
 ### Why These Ranges
 
@@ -298,8 +291,6 @@ Joint angles at moment of takeoff, measuring hip, knee, ankle extension.
 - **Performance correlation**: Better angles correlate with higher jump heights and lower ground contact times.
 - **Age/training effects**: Untrained athletes show incomplete extension; elderly show marked restrictions.
 - **Video challenges**: Side view may have limited ankle visibility; front view may have poor hip detail.
-
-______________________________________________________________________
 
 ## 8. ECCENTRIC AND CONCENTRIC DURATION (seconds)
 
@@ -312,9 +303,9 @@ ______________________________________________________________________
 
 | Phase              | Minimum | Recreational | Elite      | Maximum | Error Threshold   |
 | ------------------ | ------- | ------------ | ---------- | ------- | ----------------- |
-| **Eccentric**      | 0.25s   | 0.40-0.70s   | 0.35-0.60s | 1.0s    | >1.2s or \<0.20s  |
-| **Concentric**     | 0.10s   | 0.40-0.70s   | 0.25-0.45s | 1.5s    | >1.80s or \<0.08s |
-| **Total Movement** | 0.35s   | 0.80-1.40s   | 0.60-1.05s | 2.0s    | >2.2s or \<0.30s  |
+| **Eccentric**      | 0.25s   | 0.40-0.70s   | 0.35-0.60s | 1.0s    | >1.2s or <0.20s   |
+| **Concentric**     | 0.10s   | 0.40-0.70s   | 0.25-0.45s | 1.5s    | >1.80s or <0.08s  |
+| **Total Movement** | 0.35s   | 0.80-1.40s   | 0.60-1.05s | 2.0s    | >2.2s or <0.30s   |
 
 ### Eccentric-to-Concentric Ratio
 
@@ -328,8 +319,6 @@ ______________________________________________________________________
 - **Eccentric**: Longer in untrained (less neural drive, more control); shorter in trained (bouncy, reactive).
 - **Concentric**: Trained athletes generate power quickly; untrained take longer.
 - **Error flags**: If total time >2.2s, likely includes standing phase detection failure.
-
-______________________________________________________________________
 
 ## 9. ATHLETE PROFILES & EXPECTED RANGES
 
@@ -355,9 +344,7 @@ ______________________________________________________________________
 
 - Jump height ~v² / (2g): 1.2² / 19.62 ≈ 0.073m ✓ (close to 0.10-0.18m range)
 - Flight time confirmed from height: 0.10m → t = 0.286s ✓
-- RSI in expected range: 0.15 \< 0.25 ✓
-
-______________________________________________________________________
+- RSI in expected range: 0.15 < 0.25 ✓
 
 ### Profile 2: Recreational Athlete
 
@@ -382,8 +369,6 @@ ______________________________________________________________________
 - Jump height: 2.9² / 19.62 ≈ 0.43m ✓ (middle of 0.35-0.55m)
 - Flight time from 0.45m: t = √(8×0.45/9.81) = 0.604s ✓ (middle of range)
 - RSI: 0.60s / 0.50s = 1.2 ✓ (within 0.85-1.25)
-
-______________________________________________________________________
 
 ### Profile 3: Elite Male Athlete
 
@@ -410,8 +395,6 @@ ______________________________________________________________________
 - RSI: 0.80s / 0.35s = 2.29 ✓ (within 1.85-2.80)
 - Contact time much shorter than recreational profile ✓
 
-______________________________________________________________________
-
 ## 10. EDGE CASES & VALID ANOMALIES
 
 ### Edge Case 1: Minimal Countermovement ("Stiffer" Jump)
@@ -435,10 +418,8 @@ ______________________________________________________________________
 
 **Error if**:
 
-- Countermovement depth \<0.08m AND flight time >0.40s (contradictory)
+- Countermovement depth <0.08m AND flight time >0.40s (contradictory)
 - No clear phase transitions (standing → squat → takeoff)
-
-______________________________________________________________________
 
 ### Edge Case 2: Double-Bounce Pattern
 
@@ -458,8 +439,6 @@ ______________________________________________________________________
 
 **Action**: Flag with warning "Multiple bounces detected - contact time may be artificially long"
 
-______________________________________________________________________
-
 ### Edge Case 3: Incomplete Eccentric Phase
 
 **Description**: Athlete starts recording already in mid-squat (no standing phase detected)
@@ -477,8 +456,6 @@ ______________________________________________________________________
 - Marked in metadata as "incomplete eccentric phase"
 
 **Note from code**: `standing_start_frame` can be None; handled in `calculate_cmj_metrics`
-
-______________________________________________________________________
 
 ### Edge Case 4: Very Deep Squat (Extreme Flexibility)
 
@@ -500,8 +477,6 @@ ______________________________________________________________________
 
 **Example**: 0.70m depth with 0.80s contact → ratio = 1.14 s/m (valid)
 
-______________________________________________________________________
-
 ### Edge Case 5: Unexpected High RSI with Low Jump Height
 
 **Description**: Athlete shows RSI >2.0 but only jumps 30cm
@@ -521,8 +496,6 @@ ______________________________________________________________________
 - Or landing detected too early
 
 **Action**: Flag as warning "RSI appears high relative to jump height - review phase detection"
-
-______________________________________________________________________
 
 ### Edge Case 6: High Jump Height with Shallow Countermovement
 
@@ -545,9 +518,7 @@ ______________________________________________________________________
 
 **Action**: Flag as error "Countermovement depth appears inconsistent with jump height; review standing position detection"
 
-______________________________________________________________________
-
-### Edge Case 7: Very Short Contact Time (\<0.15s)
+### Edge Case 7: Very Short Contact Time (<0.15s)
 
 **Description**: Contact time 0.12s with RSI = 4.5 and jump height 0.72m
 
@@ -566,8 +537,6 @@ ______________________________________________________________________
 - Or: Frame rate assumption incorrect (30fps assumed but video was 60fps)
 
 **Action**: Flag as error "Contact time unusually short; suspect lowest point detection error or frame rate mismatch"
-
-______________________________________________________________________
 
 ## 11. VALIDATION LOGIC (Pseudo-code)
 
@@ -751,8 +720,6 @@ def validate_triple_extension(angles: dict) -> list[str]:
     return issues
 ```
 
-______________________________________________________________________
-
 ## 12. IMPLEMENTATION RECOMMENDATIONS
 
 ### For Test Suite
@@ -763,19 +730,19 @@ ______________________________________________________________________
    - Invalid values (below/above bounds)
    - Edge cases (minimal CMJ, deep squat, etc.)
 
-1. **Cross-validation tests**:
+2. **Cross-validation tests**:
 
    - Verify flight_time ↔ jump_height consistency
    - Verify peak_velocity ↔ jump_height consistency
    - Verify RSI within expected range
 
-1. **Athlete profile tests**:
+3. **Athlete profile tests**:
 
    - Generate synthetic profiles matching elderly, recreational, elite
    - Verify metrics fall within expected ranges
    - Test detection with real video samples
 
-1. **Edge case regression tests**:
+4. **Edge case regression tests**:
 
    - Minimal countermovement
    - Double-bounce patterns
@@ -790,26 +757,20 @@ ______________________________________________________________________
    - WARNING: Metrics valid but unusual; flag for review
    - INFO: Normal variation, no action needed
 
-1. **Auto-correction opportunities**:
+2. **Auto-correction opportunities**:
 
    - If jump_height and flight_time conflict, recalculate from more reliable source
    - If contact_time seems too short but RSI reasonable, trust RSI
 
-1. **Quality scoring**:
+3. **Quality scoring**:
 
    - Assign confidence score (0-100%) based on metric consistency
    - Flag low-confidence results for manual review
 
-______________________________________________________________________
-
 ## References
 
 - **Nordez, A., Augé, T., Guével, A.** (2009). Effects of plyometric training on jump performance and energy cost. *Journal of Sports Sciences*, 27(11), 1143-1152.
-
 - **Lees, A., Vanrenterghem, J., De Clercq, D.** (2004). Understanding how an arm swing enhances performance in the vertical jump. *Journal of Biomechanics*, 37(12), 1929-1940.
-
 - **Cormie, P., McGuigan, M. R., Newton, R. U.** (2011). Developing maximal neuromuscular power: Performance characteristics of male athletes. *Sports Medicine*, 41(1), 17-38.
-
 - **Bogdanis, G. C.** (2012). Effects of plyometric training on muscular performance and counter-movement jumping ability. *Journal of Strength and Conditioning Research*, 26(3), 676-695.
-
 - **Markovic, G.** (2007). Poor relationships between strength and power qualities and high-intensity aerobic performance. *Journal of Sports Science & Medicine*, 6(1), 96-105.

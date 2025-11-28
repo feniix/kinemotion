@@ -88,4 +88,19 @@ docs/                     # Documentation (Diátaxis framework)
 - Type Errors: 0
 - Linting Errors: 0
 - Code Duplication: 2.96%
-- Latest Release: 0.29.2
+- Latest Release: 0.29.3 (released November 26, 2025)
+
+## Current Phase 1 Work (Issue #10 Focus)
+
+### Issue #10: CMJ Ankle Angle Validation
+
+- **Status**: Discovery phase complete, 12-video validation protocol designed
+- **Key Discovery**: Algorithms DO NOT account for 45° camera viewing angle (systematic -5-10° underestimation)
+- **Implementation Plan**:
+  - Phase 1: Collect 12 validation videos (45°/90° × 60fps/120fps)
+  - Phase 2: Implement Option 1 (fixed correction factors, 1-2 weeks)
+  - Phase 3: Upgrade to calibration-based correction (future)
+- **Documents Created**:
+  - 12-video recording protocol (Spanish & English)
+  - Camera perspective analysis (196 lines)
+  - Technical implementation guide (397 lines)
