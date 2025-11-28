@@ -1,6 +1,14 @@
-______________________________________________________________________
-
-## title: CMJ Validation Implementation Complete type: note permalink: biomechanics/cmj-validation-implementation-complete
+---
+title: CMJ Validation Implementation Complete
+type: note
+permalink: biomechanics/cmj-validation-implementation-complete
+tags:
+  - cmj
+  - validation
+  - implementation
+  - bounds
+  - testing
+---
 
 # CMJ Validation Implementation - Complete Delivery
 

@@ -1,17 +1,14 @@
-______________________________________________________________________
-
+---
 title: CMJ Phase Detection Testing Gap Analysis
 type: note
 permalink: development/cmj-phase-detection-testing-gap-analysis
 tags:
-
-- testing
-- cmj
-- phase-detection
-- coverage-analysis
-- gap-analysis
-
-______________________________________________________________________
+  - testing
+  - cmj
+  - phase-detection
+  - coverage-analysis
+  - gap-analysis
+---
 
 # CMJ Phase Detection Testing Gap Analysis
 
