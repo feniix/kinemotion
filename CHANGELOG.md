@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.31.2 (2025-11-29)
+
+### Bug Fixes
+
+- Remove hacky vercel.json configuration
+  ([`2b57805`](https://github.com/feniix/kinemotion/commit/2b578059576824aa065180e3c1452340a7ffff20))
+
+### Chores
+
+- Add frontend vercel configuration and deployment best practice docs
+  ([`7f09a07`](https://github.com/feniix/kinemotion/commit/7f09a0740010a0a1a62086f0a346cba5fadf3cbd))
+
+
 ## v0.31.1 (2025-11-29)
 
 ### Bug Fixes
