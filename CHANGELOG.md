@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.31.4 (2025-11-29)
+
+### Bug Fixes
+
+- Add root vercel.json with explicit build configuration
+  ([`999f2c9`](https://github.com/feniix/kinemotion/commit/999f2c90a147e04fb7290f49d9de2ddbdb64ffe0))
+
+- Simplify vercel.json paths since Root Directory is set to frontend
+  ([`3696a1b`](https://github.com/feniix/kinemotion/commit/3696a1bf2149a0520a6c161a63a7e530a8769eac))
+
+
 ## v0.31.3 (2025-11-29)
 
 ### Bug Fixes
