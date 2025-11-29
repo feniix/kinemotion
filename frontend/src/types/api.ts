@@ -3,6 +3,23 @@
  */
 
 /**
+ * Validation issue reported by the API
+ */
+export interface ValidationIssue {
+  metric: string
+  severity: 'ERROR' | 'WARNING' | 'INFO'
+  message: string
+}
+
+/**
+ * Validation results from analysis
+ */
+export interface ValidationResults {
+  status: 'PASS' | 'FAIL' | 'WARNING'
+  issues: ValidationIssue[]
+}
+
+/**
  * Analysis metrics response from the API
  */
 export interface AnalysisResponse {
@@ -11,7 +28,7 @@ export interface AnalysisResponse {
   metrics?: {
     data?: Record<string, string | number>
     metadata?: Record<string, unknown>
-    validation?: Record<string, unknown>
+    validation?: ValidationResults
   }
   results_url?: string
   processing_time_s?: number

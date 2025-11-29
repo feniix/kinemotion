@@ -43,8 +43,8 @@ function ResultsDisplay({ metrics }: ResultsDisplayProps) {
 
   // Check for validation issues
   const validationStatus = metrics.metrics?.validation?.status
-  const validationIssues = metrics.metrics?.validation?.issues || []
-  const hasErrors = validationIssues.some((issue: any) => issue.severity === 'ERROR')
+  const validationIssues = metrics.metrics?.validation?.issues ?? []
+  const hasErrors = validationIssues.some(issue => issue.severity === 'ERROR')
 
   return (
     <div className="results-display" role="region" aria-live="polite" aria-label="Analysis results">
@@ -73,7 +73,7 @@ function ResultsDisplay({ metrics }: ResultsDisplayProps) {
         <div className="validation-issues">
           <h3>Validation Issues</h3>
           <ul>
-            {validationIssues.map((issue: any, idx: number) => (
+            {validationIssues.map((issue, idx) => (
               <li key={idx} className={`issue-${issue.severity.toLowerCase()}`}>
                 <strong>[{issue.severity}]</strong> {issue.metric}: {issue.message}
               </li>
