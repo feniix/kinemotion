@@ -51,6 +51,7 @@ coverage.xml
 *.json
 *.csv
 !pyproject.toml
+!vercel.json
 
 # Documentation build output
 site/
