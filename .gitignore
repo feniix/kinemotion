@@ -29,6 +29,10 @@ env/
 # uv
 .uv/
 
+# Yarn
+.pnp.cjs
+.yarn/install-state.gz
+
 # IDEs
 .vscode/
 .idea/
