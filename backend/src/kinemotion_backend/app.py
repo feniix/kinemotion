@@ -3,7 +3,6 @@
 Real metrics integration with Cloudflare R2 storage for video and results management.
 """
 
-import json
 import os
 import tempfile
 import traceback
@@ -167,12 +166,14 @@ app = FastAPI(
     version="0.1.0",
 )
 
+
 # Configure rate limiting (3 video uploads per minute per IP address)
 class NoOpLimiter:
     """No-op limiter for testing."""
 
     def limit(self, limit_string: str) -> Any:  # type: ignore[no-untyped-def]
         """Decorator that does nothing."""
+
         def decorator(func: Any) -> Any:  # type: ignore[no-untyped-def]
             return func
 
@@ -181,7 +182,9 @@ class NoOpLimiter:
 
 # Use conditional limiter based on testing state
 _testing = os.getenv("TESTING", "").lower() == "true"
-limiter: Limiter | NoOpLimiter = NoOpLimiter() if _testing else Limiter(key_func=get_remote_address)
+limiter: Limiter | NoOpLimiter = (
+    NoOpLimiter() if _testing else Limiter(key_func=get_remote_address)
+)
 app.state.limiter = limiter
 
 if not _testing:
@@ -344,6 +347,7 @@ async def analyze_video(
 
     try:
         # Validate inputs
+        print(f"DEBUG: Received jump_type={jump_type}, file={file.filename}")
         _validate_jump_type(jump_type)
         await file.seek(0)
         _validate_video_file(file)
@@ -370,6 +374,22 @@ async def analyze_video(
 
         # Process video with real kinemotion analysis
         metrics = await _process_video_async(temp_video_path, jump_type, quality)  # type: ignore[arg-type]
+        print(f"DEBUG: Metrics returned: {metrics}")
+        print(f"DEBUG: Metrics type: {type(metrics)}")
+        metrics_keys = (
+            list(metrics.keys()) if isinstance(metrics, dict) else "not a dict"
+        )
+        print(f"DEBUG: Metrics keys: {metrics_keys}")
+        metrics_len = len(metrics) if isinstance(metrics, dict) else "N/A"
+        print(f"DEBUG: Metrics length: {metrics_len}")
+        # Try to JSON serialize to see if there are issues
+        try:
+            import json
+
+            json_test = json.dumps(metrics)
+            print(f"DEBUG: JSON serializable OK, length: {len(json_test)}")
+        except Exception as e:
+            print(f"DEBUG: JSON serialization failed: {e}")
 
         # Upload results to R2 if client available
         results_url = None
@@ -404,10 +424,12 @@ async def analyze_video(
 
     except ValueError as e:
         processing_time = time.time() - start_time
+        error_message = str(e)
+        print(f"DEBUG: Validation error: {error_message}")
         response = AnalysisResponse(
             status_code=422,
             message="Validation error",
-            error=str(e),
+            error=error_message,
             processing_time_s=processing_time,
         )
         return JSONResponse(

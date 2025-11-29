@@ -286,7 +286,7 @@ class DropJumpMetricsValidator:
         contact_time_s = contact_time_ms / 1000.0
         flight_time_s = flight_time_ms / 1000.0
 
-        if contact_time_s > 0:
+        if contact_time_s > 0 and flight_time_s > 0:
             rsi = flight_time_s / contact_time_s
             result.rsi = rsi
             result.contact_flight_ratio = contact_time_s / flight_time_s

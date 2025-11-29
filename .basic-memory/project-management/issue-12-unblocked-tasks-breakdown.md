@@ -1,12 +1,12 @@
 ---
-title: Issue #12 - Unblocked Tasks Breakdown
+title: Issue
 type: note
-permalink: project-management/issue-12-unblocked-tasks-breakdown
+permalink: project-management/issue-12-unblocked-tasks-breakdown-1
 tags:
-  - issue-12
-  - web-ui
-  - unblocked
-  - scaffolding
+- issue-12
+- web-ui
+- unblocked
+- scaffolding
 ---
 
 # Issue #12: Unblocked Tasks Breakdown

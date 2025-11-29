@@ -68,7 +68,7 @@ memory_mb = 256
 # Video processing may take 60-120 seconds depending on video length
 # Process receives SIGTERM and has this many seconds to finish
 [processes]
-app = "uv run uvicorn kinemotion_backend.app:app --host 0.0.0.0 --port 8000 --workers ${WORKERS:-1} --timeout-graceful-shutdown 60"
+app = ".venv/bin/uvicorn kinemotion_backend.app:app --host 0.0.0.0 --port 8000 --workers ${WORKERS:-1} --timeout-graceful-shutdown 60"
 
 # Auto-restart configuration
 [swap]
