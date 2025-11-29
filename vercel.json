@@ -1,9 +1,5 @@
 {
-  "monorepos": [
-    {
-      "path": "frontend"
-    }
-  ],
-  "buildCommand": "yarn build",
-  "devCommand": "yarn dev"
+  "buildCommand": "cd frontend && yarn build",
+  "devCommand": "cd frontend && yarn dev",
+  "installCommand": "cd frontend && yarn install"
 }
