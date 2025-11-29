@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.31.1 (2025-11-29)
+
+### Bug Fixes
+
+- Correct Vercel configuration schema for monorepo deployment
+  ([`57f2636`](https://github.com/feniix/kinemotion/commit/57f263644c0010e5ef31596a623dc52e527bd035))
+
+- Use yarn --cwd flag for monorepo deployment
+  ([`914e184`](https://github.com/feniix/kinemotion/commit/914e18421a2f4b7964be2553b8c61d472ba9a8dc))
+
+### Chores
+
+- Add Vercel monorepo configuration and allow vercel.json in git
+  ([`9512211`](https://github.com/feniix/kinemotion/commit/951221120730dd716c2a03fbbf91be44155bb065))
+
+
 ## v0.31.0 (2025-11-29)
 
 ### Chores
