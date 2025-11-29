@@ -177,3 +177,10 @@ commit_message = "chore(release): {version} [skip ci]"
 allowed_tags = ["feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "build", "ci"]
 minor_tags = ["feat"]
 patch_tags = ["fix", "perf"]
+
+[tool.uv.workspace]
+members = [".", "backend"]
+
+[tool.uv.sources]
+# Use workspace member for local development
+kinemotion = { workspace = true }

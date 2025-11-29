@@ -1,0 +1,57 @@
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Testing and coverage
+.pytest_cache/
+htmlcov/
+coverage.xml
+.coverage
+.coverage.*
+
+# Distribution and build artifacts
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Development and IDE
+.venv
+.env
+.env.local
+.env.*.local
+*.swp
+*.swo
+*~
+.DS_Store
+.idea/
+.vscode/
+*.iml
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+docs/
+README.md
+SETUP.md
+IMPLEMENTATION_SUMMARY.md
+
+# Misc
+.pytest.ini
+pytest.ini
+setup.cfg
+tox.ini
+Makefile
+.editorconfig
+*.log

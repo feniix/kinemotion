@@ -1,0 +1,79 @@
+# Fly.io deployment configuration for Kinemotion Backend
+# Optimized for free tier with single worker and appropriate resource allocation
+
+app = "kinemotion-api"
+primary_region = "sjc"
+
+# Build configuration - uses Dockerfile
+[build]
+dockerfile = "Dockerfile"
+
+# HTTP service configuration
+[[services]]
+protocol = "tcp"
+internal_port = 8000
+processes = ["app"]
+
+  # Port mapping for Fly Machines
+  [services.ports]
+  port = 8000
+
+  # Health check configuration
+  [services.http_checks]
+  enabled = true
+  uri = "/health"
+  interval = 30000  # milliseconds
+  timeout = 10000   # milliseconds
+  grace_period = 5000  # milliseconds (startup grace period)
+  method = "GET"
+  protocol = "http"
+
+# Machine configuration for free tier
+[env]
+# Logging level (debug, info, warning, error)
+LOG_LEVEL = "info"
+
+# Uvicorn workers: 1 for free tier (keeps memory low and CPU predictable)
+# Can be increased for paid tier: 2-4 depending on machine size
+WORKERS = "1"
+
+# CORS origins - includes localhost for development and production frontend
+# Format: comma-separated list
+CORS_ORIGINS = "https://kinemotion-mvp.vercel.app"
+
+# FastAPI settings
+PYTHONUNBUFFERED = "1"
+PYTHONDONTWRITEBYTECODE = "1"
+
+# Cloudflare R2 storage credentials (set via `flyctl secrets set`)
+# These are required for video upload/download functionality
+# If not set, endpoints requiring R2 will return 500 error
+# Set via: flyctl secrets set R2_ENDPOINT=...
+# flyctl secrets set R2_ACCESS_KEY=...
+# flyctl secrets set R2_SECRET_KEY=...
+# R2_ENDPOINT = ""
+# R2_ACCESS_KEY = ""
+# R2_SECRET_KEY = ""
+# R2_BUCKET_NAME = "kinemotion"
+
+[vm]
+# Free tier sizing - 256MB memory
+# Adequate for single-worker video processing
+# Upgrade to shared-cpu-1x if needed for better performance
+cpu_kind = "shared"
+cpus = 1
+memory_mb = 256
+
+# Graceful shutdown timeout (seconds)
+# Video processing may take 60-120 seconds depending on video length
+# Process receives SIGTERM and has this many seconds to finish
+[processes]
+app = "uv run uvicorn kinemotion_backend.app:app --host 0.0.0.0 --port 8000 --workers ${WORKERS:-1} --timeout-graceful-shutdown 60"
+
+# Auto-restart configuration
+[swap]
+swap_size_mb = 0  # No swap on free tier
+
+# Monitoring and observability
+[console]
+enabled = true
