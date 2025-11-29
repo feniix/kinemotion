@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.31.3 (2025-11-29)
+
+### Bug Fixes
+
+- Remove frontend/vercel.json to let Vercel auto-detect from Root Directory
+  ([`9984b78`](https://github.com/feniix/kinemotion/commit/9984b783e725af06faedaa619b4254e38960fdd6))
+
+
 ## v0.31.2 (2025-11-29)
 
 ### Bug Fixes
