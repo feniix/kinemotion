@@ -1,0 +1,140 @@
+import { useState } from 'react'
+import { AnalysisResponse, JumpType } from '../types/api'
+
+interface UseAnalysisState {
+  file: File | null
+  jumpType: JumpType
+  loading: boolean
+  uploadProgress: number
+  metrics: AnalysisResponse | null
+  error: string | null
+}
+
+interface UseAnalysisActions {
+  setFile: (file: File | null) => void
+  setJumpType: (jumpType: JumpType) => void
+  analyze: () => Promise<void>
+  retry: () => Promise<void>
+  reset: () => void
+}
+
+/**
+ * Custom hook for managing video analysis state and logic
+ * Handles file upload, progress tracking, and error management
+ */
+export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
+  const [file, setFile] = useState<File | null>(null)
+  const [jumpType, setJumpType] = useState<JumpType>('cmj')
+  const [loading, setLoading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [metrics, setMetrics] = useState<AnalysisResponse | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const analyze = async () => {
+    if (!file) {
+      setError('Please select a video file')
+      return
+    }
+
+    setLoading(true)
+    setError(null)
+    setMetrics(null)
+    setUploadProgress(0)
+
+    const formData = new FormData()
+    formData.append('file', file)
+    // Convert frontend format (cmj/dropjump) to backend format (cmj/drop_jump)
+    const backendJumpType = jumpType === 'dropjump' ? 'drop_jump' : jumpType
+    formData.append('jump_type', backendJumpType)
+
+    try {
+      // Use environment variable for API URL in production, or relative proxy in development
+      const baseApiUrl = import.meta.env.VITE_API_URL || ''
+      const apiEndpoint = baseApiUrl ? `${baseApiUrl}/analyze` : '/api/analyze'
+
+      // Use XMLHttpRequest to track upload progress
+      const response = await new Promise<AnalysisResponse>((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+
+        // Track upload progress
+        xhr.upload.addEventListener('progress', (event) => {
+          if (event.lengthComputable) {
+            const percentComplete = (event.loaded / event.total) * 100
+            setUploadProgress(Math.round(percentComplete))
+          }
+        })
+
+        xhr.addEventListener('load', () => {
+          if (xhr.status === 200) {
+            try {
+              const data = JSON.parse(xhr.responseText) as AnalysisResponse
+              resolve(data)
+            } catch {
+              reject(new Error('Failed to parse response'))
+            }
+          } else {
+            try {
+              const errorData = JSON.parse(xhr.responseText)
+              // Backend returns error in 'error' or 'message' field
+              const errorMessage = errorData.error || errorData.message || errorData.detail || `Server error: ${xhr.status}`
+              reject(new Error(errorMessage))
+            } catch {
+              reject(new Error(`Server error: ${xhr.status}`))
+            }
+          }
+        })
+
+        xhr.addEventListener('error', () => {
+          reject(new Error('Network error: Unable to connect to the server'))
+        })
+
+        xhr.addEventListener('abort', () => {
+          reject(new Error('Request was cancelled'))
+        })
+
+        xhr.open('POST', apiEndpoint)
+        xhr.send(formData)
+      })
+
+      setMetrics(response)
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
+      setError(errorMessage)
+      console.error('Analysis error:', err)
+    } finally {
+      setLoading(false)
+      setUploadProgress(0)
+    }
+  }
+
+  const retry = async () => {
+    if (file) {
+      await analyze()
+    }
+  }
+
+  const reset = () => {
+    setFile(null)
+    setJumpType('cmj')
+    setLoading(false)
+    setUploadProgress(0)
+    setMetrics(null)
+    setError(null)
+  }
+
+  return {
+    // State
+    file,
+    jumpType,
+    loading,
+    uploadProgress,
+    metrics,
+    error,
+    // Actions
+    setFile,
+    setJumpType,
+    analyze,
+    retry,
+    reset,
+  }
+}

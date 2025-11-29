@@ -1,0 +1,54 @@
+version: 2
+# DISABLED - Uncomment below to enable Dependabot
+# updates:
+#   # Python dependencies in main project
+#   - package-ecosystem: 'pip'
+#     directory: '/'
+#     schedule:
+#       interval: 'weekly'
+#       day: 'monday'
+#       time: '03:00'
+#     open-pull-requests-limit: 5
+#     reviewers:
+#       - 'feniix'
+#     labels:
+#       - 'dependencies'
+#       - 'python'
+#     commit-message:
+#       prefix: 'chore(deps)'
+#       prefix-development: 'chore(deps)'
+#
+#   # Python dependencies in backend
+#   - package-ecosystem: 'pip'
+#     directory: '/backend'
+#     schedule:
+#       interval: 'weekly'
+#       day: 'monday'
+#       time: '03:30'
+#     open-pull-requests-limit: 5
+#     reviewers:
+#       - 'feniix'
+#     labels:
+#       - 'dependencies'
+#       - 'python'
+#       - 'backend'
+#     commit-message:
+#       prefix: 'chore(deps)'
+#       prefix-development: 'chore(deps)'
+#
+#   # GitHub Actions
+#   - package-ecosystem: 'github-actions'
+#     directory: '/'
+#     schedule:
+#       interval: 'weekly'
+#       day: 'monday'
+#       time: '04:00'
+#     open-pull-requests-limit: 3
+#     reviewers:
+#       - 'feniix'
+#     labels:
+#       - 'dependencies'
+#       - 'ci-cd'
+#     commit-message:
+#       prefix: 'ci'
+#       prefix-development: 'ci'

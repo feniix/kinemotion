@@ -1,0 +1,117 @@
+name: Deploy Backend to Fly.io
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'src/kinemotion/**'
+      - '.github/workflows/deploy.yml'
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.12']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          uv sync
+
+      - name: Run backend tests
+        run: |
+          cd backend
+          uv run pytest --tb=short
+
+      - name: Run type checking
+        run: |
+          cd backend
+          uv run pyright
+
+      - name: Run linting
+        run: |
+          cd backend
+          uv run ruff check .
+
+  build:
+    name: Build and Scan Docker Image
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: false
+          tags: kinemotion-backend:${{ github.sha }}
+          load: true
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: kinemotion-backend:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  deploy:
+    name: Deploy to Fly.io
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://kinemotion-api.fly.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Fly CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly.io
+        run: |
+          cd backend
+          flyctl deploy --remote-only --config fly.toml
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Verify deployment health
+        run: |
+          sleep 10
+          curl -sf https://kinemotion-api.fly.dev/health || exit 1
+
+      - name: Deployment notification
+        if: success()
+        run: |
+          echo "✅ Successfully deployed kinemotion-api to Fly.io"
+          echo "API URL: https://kinemotion-api.fly.dev"
+          echo "API Docs: https://kinemotion-api.fly.dev/docs"
+
+      - name: Deployment failure notification
+        if: failure()
+        run: |
+          echo "❌ Deployment to Fly.io failed"
+          exit 1
