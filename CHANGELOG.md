@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.32.0 (2025-11-29)
+
+### Bug Fixes
+
+- **vercel**: Add explicit directory context for monorepo build
+  ([`b7f4799`](https://github.com/feniix/kinemotion/commit/b7f4799a1061a5b82881f81e7fb618327a3b8eb2))
+
+- **vercel**: Remove redundant cd commands - Root Directory already sets context
+  ([`5879608`](https://github.com/feniix/kinemotion/commit/5879608ed570f1745eb693db226b51689878c1b9))
+
+### Chores
+
+- Add Yarn generated files to .gitignore
+  ([`199d122`](https://github.com/feniix/kinemotion/commit/199d12236064070197221f2edcb6e2d108d2128a))
+
+- Remove root vercel.json to rely on Vercel auto-detection
+  ([`12df352`](https://github.com/feniix/kinemotion/commit/12df3524a6506c3624be527c394589b765ccf975))
+
+- Trigger Vercel rebuild with latest commits
+  ([`b7c1bf8`](https://github.com/feniix/kinemotion/commit/b7c1bf8c5a10199029d4bdaf24d628dac3f8f996))
+
+- **frontend**: Add .yarnrc.yml for yarn 4 configuration
+  ([`5a04b21`](https://github.com/feniix/kinemotion/commit/5a04b219182781aebad00ef9ff9b0961d1d090d1))
+
+### Features
+
+- **frontend**: Upgrade to latest stable versions of all dependencies
+  ([`3c21e44`](https://github.com/feniix/kinemotion/commit/3c21e4427c5bf6564001097adefe6e233b2e5aee))
+
+
 ## v0.31.4 (2025-11-29)
 
 ### Bug Fixes
