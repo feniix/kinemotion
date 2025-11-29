@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.31.0 (2025-11-29)
+
+### Chores
+
+- Fix basic-memory frontmatter and exclude serena from mdformat
+  ([`d4ec428`](https://github.com/feniix/kinemotion/commit/d4ec428db06cf868b411ab12305af8a4d4a2c536))
+
+- Fix line length violations and reorganize documentation
+  ([`647c704`](https://github.com/feniix/kinemotion/commit/647c704c67df6aa5dc8370a39d1f1183a0594909))
+
+- Update local_dev.sh with correct module import path
+  ([`749fe8f`](https://github.com/feniix/kinemotion/commit/749fe8f03a5a1ba1e25a1e4fd61987aacc76bcef))
+
+### Documentation
+
+- **issue-10**: Add camera perspective validation analysis and recording protocols
+  ([`755f2ce`](https://github.com/feniix/kinemotion/commit/755f2cedf4249a96aa82b22d9bc22ab86b9ca696))
+
+### Features
+
+- Add React frontend application for video analysis UI
+  ([`b2d32ed`](https://github.com/feniix/kinemotion/commit/b2d32eda0ad9a3ad89d7c6de26c89ae63c23a1e2))
+
+- **backend**: Implement FastAPI video analysis backend with deployment infrastructure
+  ([`0e70728`](https://github.com/feniix/kinemotion/commit/0e70728abaffe58c6870d9ea2f6b2a221c33e4a0))
+
+- **deployment**: Add Google Cloud Run deployment infrastructure
+  ([`90da5a7`](https://github.com/feniix/kinemotion/commit/90da5a7e4e83850f4c4a3e6704a3196ab914b9da))
+
+
 ## v0.30.0 (2025-11-26)
 
 ### Chores
