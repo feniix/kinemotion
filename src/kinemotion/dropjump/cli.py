@@ -133,7 +133,8 @@ class AnalysisParameters:
     default=None,
     help="[EXPERT] Override pose tracking confidence",
 )
-def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters for each option
+def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual
+    # parameters for each option
     video_path: tuple[str, ...],
     output: str | None,
     json_output: str | None,
@@ -153,10 +154,12 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual parameter
     tracking_confidence: float | None,
 ) -> None:
     """
-    Analyze drop-jump video(s) to estimate ground contact time, flight time, and jump height.
+    Analyze drop-jump video(s) to estimate ground contact time, flight time,
+    and jump height.
 
-    Uses intelligent auto-tuning to select optimal parameters based on video characteristics.
-    Parameters are automatically adjusted for frame rate, tracking quality, and analysis preset.
+    Uses intelligent auto-tuning to select optimal parameters based on video
+    characteristics. Parameters are automatically adjusted for frame rate,
+    tracking quality, and analysis preset.
 
     VIDEO_PATH: Path(s) to video file(s). Supports glob patterns in batch mode
     (e.g., "videos/*.mp4").

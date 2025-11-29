@@ -46,8 +46,8 @@ def test_codec_extraction_with_ffprobe_available(test_video_path: str) -> None:
     """Test codec extraction when ffprobe is available."""
     video = VideoProcessor(test_video_path)
     try:
-        # If ffprobe is available, codec should be a string like "h264", "hevc", "mpeg4", etc.
-        # If ffprobe is not available, it will be None
+        # If ffprobe is available, codec should be a string like "h264",
+        # "hevc", "mpeg4", etc. If ffprobe is not available, it will be None
         if video.codec is not None:
             assert isinstance(video.codec, str)
             # Common codec names

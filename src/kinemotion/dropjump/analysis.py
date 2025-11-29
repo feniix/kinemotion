@@ -98,7 +98,8 @@ def _find_stable_baseline(
     """Find first stable period and return baseline position.
 
     Returns:
-        Tuple of (baseline_start_frame, baseline_position). Returns (-1, 0.0) if not found.
+        Tuple of (baseline_start_frame, baseline_position). Returns (-1, 0.0)
+        if not found.
     """
     stable_window = min_stable_frames
 
@@ -159,8 +160,8 @@ def _find_drop_from_baseline(
                     f"{position_change_threshold:.4f}"
                 )
                 print(
-                    f"  avg_position: {avg_position:.4f} vs "
-                    f"baseline: {baseline_position:.4f}"
+                    f"  avg_position: {avg_position:.4f} vs baseline: "
+                    f"{baseline_position:.4f}"
                 )
 
             return drop_frame
@@ -179,7 +180,8 @@ def detect_drop_start(
     debug: bool = False,
 ) -> int:
     """
-    Detect when the drop jump actually starts by finding stable period then detecting drop.
+    Detect when the drop jump actually starts by finding stable period then
+    detecting drop.
 
     Strategy:
     1. Scan forward to find first STABLE period (low variance over N frames)
@@ -191,7 +193,8 @@ def detect_drop_start(
     Args:
         positions: Array of vertical positions (0-1 normalized, y increases downward)
         fps: Video frame rate
-        min_stationary_duration: Minimum duration (seconds) of stable period (default: 1.0s)
+        min_stationary_duration: Minimum duration (seconds) of stable period
+            (default: 1.0s)
         position_change_threshold: Position change indicating start of drop
             (default: 0.02 = 2% of frame)
         smoothing_window: Window for computing position variance
@@ -832,9 +835,11 @@ def extract_foot_positions_and_visibilities(
     smoothed_landmarks: list[dict[str, tuple[float, float, float]] | None],
 ) -> tuple[np.ndarray, np.ndarray]:
     """
-    Extract vertical positions and average visibilities from smoothed landmarks.
+    Extract vertical positions and average visibilities from smoothed
+    landmarks.
 
-    This utility function eliminates code duplication between CLI and programmatic usage.
+    This utility function eliminates code duplication between CLI and
+    programmatic usage.
 
     Args:
         smoothed_landmarks: Smoothed landmark sequence from tracking

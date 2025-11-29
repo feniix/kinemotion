@@ -177,7 +177,8 @@ def _process_batch_videos(
     default=None,
     help="[EXPERT] Override pose tracking confidence",
 )
-def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters for each option
+def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters
+    # for each option
     video_path: tuple[str, ...],
     output: str | None,
     json_output: str | None,
@@ -197,10 +198,12 @@ def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters for
     tracking_confidence: float | None,
 ) -> None:
     """
-    Analyze counter movement jump (CMJ) video(s) to estimate jump performance metrics.
+    Analyze counter movement jump (CMJ) video(s) to estimate jump performance
+    metrics.
 
-    Uses intelligent auto-tuning to select optimal parameters based on video characteristics.
-    Parameters are automatically adjusted for frame rate, tracking quality, and analysis preset.
+    Uses intelligent auto-tuning to select optimal parameters based on video
+    characteristics. Parameters are automatically adjusted for frame rate,
+    tracking quality, and analysis preset.
 
     VIDEO_PATH: Path(s) to video file(s). Supports glob patterns in batch mode.
 
@@ -341,11 +344,13 @@ def _output_results(metrics: Any, json_output: str | None) -> None:
         f"Total movement time: {metrics.total_movement_time * 1000:.1f} ms", err=True
     )
     click.echo(
-        f"Peak eccentric velocity: {abs(metrics.peak_eccentric_velocity):.3f} m/s (downward)",
+        f"Peak eccentric velocity: {abs(metrics.peak_eccentric_velocity):.3f} "
+        "m/s (downward)",
         err=True,
     )
     click.echo(
-        f"Peak concentric velocity: {metrics.peak_concentric_velocity:.3f} m/s (upward)",
+        f"Peak concentric velocity: {metrics.peak_concentric_velocity:.3f} "
+        "m/s (upward)",
         err=True,
     )
     if metrics.transition_time is not None:

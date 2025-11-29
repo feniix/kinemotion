@@ -232,7 +232,9 @@ class TestCalculateKneeAngle:
         assert angle is None
 
     def test_low_visibility_ankle_and_foot_index(self) -> None:
-        """Test knee angle returns None when both ankle and foot_index low visibility."""
+        """Test knee angle returns None when ankle and foot_index low.
+
+        Both have low visibility."""
         landmarks = {
             "right_ankle": (0.5, 0.8, 0.2),
             "right_foot_index": (0.5, 0.85, 0.2),

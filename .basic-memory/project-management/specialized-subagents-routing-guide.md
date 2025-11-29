@@ -93,7 +93,7 @@ Use biomechanics-specialist to validate RSI calculation
 /agents  # Interactive interface to view, create, edit agents
 ```
 
-See [.claude/agents/README.md](.claude/agents/README.md) for complete documentation.
+See [Agents Guide](../../docs/development/agents-guide.md) for complete documentation.
 
 ## Resource Allocation (6-week sprint)
 

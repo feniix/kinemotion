@@ -223,7 +223,10 @@ class TestQualityWarnings:
         outlier_mask = np.zeros(100, dtype=bool)
 
         quality = assess_jump_quality(
-            visibilities, positions, outlier_mask, fps=24.0  # Low fps
+            visibilities,
+            positions,
+            outlier_mask,
+            fps=24.0,  # Low fps
         )
 
         warnings_text = " ".join(quality.warnings)

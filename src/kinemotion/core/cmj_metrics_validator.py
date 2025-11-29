@@ -236,7 +236,8 @@ class CMJMetricsValidator:
         elif bounds.contains(flight_time, profile):
             result.add_info(
                 "flight_time",
-                f"Flight time {flight_time:.3f}s within expected range for {profile.value}",
+                f"Flight time {flight_time:.3f}s within expected range for "
+                f"{profile.value}",
                 value=flight_time,
             )
         else:
@@ -278,7 +279,8 @@ class CMJMetricsValidator:
         elif bounds.contains(jump_height, profile):
             result.add_info(
                 "jump_height",
-                f"Jump height {jump_height:.3f}m within expected range for {profile.value}",
+                f"Jump height {jump_height:.3f}m within expected range for "
+                f"{profile.value}",
                 value=jump_height,
             )
         else:
@@ -319,7 +321,8 @@ class CMJMetricsValidator:
         elif bounds.contains(depth, profile):
             result.add_info(
                 "countermovement_depth",
-                f"Countermovement depth {depth:.3f}m within expected range for {profile.value}",
+                f"Countermovement depth {depth:.3f}m within expected range for "
+                f"{profile.value}",
                 value=depth,
             )
         else:
@@ -353,14 +356,16 @@ class CMJMetricsValidator:
             else:
                 result.add_error(
                     "concentric_duration",
-                    f"Concentric duration {duration:.3f}s likely includes standing phase",
+                    f"Concentric duration {duration:.3f}s likely includes "
+                    "standing phase",
                     value=duration,
                     bounds=(bounds.absolute_min, bounds.absolute_max),
                 )
         elif bounds.contains(duration, profile):
             result.add_info(
                 "concentric_duration",
-                f"Concentric duration {duration:.3f}s within expected range for {profile.value}",
+                f"Concentric duration {duration:.3f}s within expected range for "
+                f"{profile.value}",
                 value=duration,
             )
         else:
@@ -393,7 +398,8 @@ class CMJMetricsValidator:
         elif bounds.contains(duration, profile):
             result.add_info(
                 "eccentric_duration",
-                f"Eccentric duration {duration:.3f}s within expected range for {profile.value}",
+                f"Eccentric duration {duration:.3f}s within expected range for "
+                f"{profile.value}",
                 value=duration,
             )
         else:
@@ -424,7 +430,8 @@ class CMJMetricsValidator:
             elif bounds.contains(ecc_vel, profile):
                 result.add_info(
                     "peak_eccentric_velocity",
-                    f"Peak eccentric velocity {ecc_vel:.2f} m/s within range for {profile.value}",
+                    f"Peak eccentric velocity {ecc_vel:.2f} m/s within range "
+                    f"for {profile.value}",
                     value=ecc_vel,
                 )
             else:
@@ -445,21 +452,24 @@ class CMJMetricsValidator:
                 if con_vel < bounds.absolute_min:
                     result.add_error(
                         "peak_concentric_velocity",
-                        f"Peak concentric velocity {con_vel:.2f} m/s insufficient to leave ground",
+                        f"Peak concentric velocity {con_vel:.2f} m/s "
+                        "insufficient to leave ground",
                         value=con_vel,
                         bounds=(bounds.absolute_min, bounds.absolute_max),
                     )
                 else:
                     result.add_error(
                         "peak_concentric_velocity",
-                        f"Peak concentric velocity {con_vel:.2f} m/s exceeds elite capability",
+                        f"Peak concentric velocity {con_vel:.2f} m/s exceeds "
+                        "elite capability",
                         value=con_vel,
                         bounds=(bounds.absolute_min, bounds.absolute_max),
                     )
             elif bounds.contains(con_vel, profile):
                 result.add_info(
                     "peak_concentric_velocity",
-                    f"Peak concentric velocity {con_vel:.2f} m/s within range for {profile.value}",
+                    f"Peak concentric velocity {con_vel:.2f} m/s within range "
+                    f"for {profile.value}",
                     value=con_vel,
                 )
             else:
@@ -492,15 +502,17 @@ class CMJMetricsValidator:
         if error_pct > MetricConsistency.HEIGHT_FLIGHT_TIME_TOLERANCE:
             result.add_error(
                 "height_flight_time_consistency",
-                f"Jump height {jump_height:.3f}m inconsistent with flight time {flight_time:.3f}s "
-                f"(expected {expected_height:.3f}m, error {error_pct*100:.1f}%)",
+                f"Jump height {jump_height:.3f}m inconsistent with flight "
+                f"time {flight_time:.3f}s (expected {expected_height:.3f}m, "
+                f"error {error_pct * 100:.1f}%)",
                 value=error_pct,
                 bounds=(0, MetricConsistency.HEIGHT_FLIGHT_TIME_TOLERANCE),
             )
         else:
             result.add_info(
                 "height_flight_time_consistency",
-                f"Jump height and flight time consistent (error {error_pct*100:.1f}%)",
+                f"Jump height and flight time consistent "
+                f"(error {error_pct * 100:.1f}%)",
                 value=error_pct,
             )
 
@@ -525,7 +537,7 @@ class CMJMetricsValidator:
             error_msg = (
                 f"Peak velocity {velocity:.2f} m/s inconsistent with "
                 f"jump height {jump_height:.3f}m (expected {expected_velocity:.2f} "
-                f"m/s, error {error_pct*100:.1f}%)"
+                f"m/s, error {error_pct * 100:.1f}%)"
             )
             result.add_warning(
                 "velocity_height_consistency",
@@ -536,7 +548,8 @@ class CMJMetricsValidator:
         else:
             result.add_info(
                 "velocity_height_consistency",
-                f"Peak velocity and jump height consistent (error {error_pct*100:.1f}%)",
+                f"Peak velocity and jump height consistent "
+                f"(error {error_pct * 100:.1f}%)",
                 value=error_pct,
             )
 
@@ -577,14 +590,16 @@ class CMJMetricsValidator:
             if expected_min <= rsi <= expected_max:
                 result.add_info(
                     "rsi",
-                    f"RSI {rsi:.2f} within expected range [{expected_min:.2f}-{expected_max:.2f}] "
+                    f"RSI {rsi:.2f} within expected range "
+                    f"[{expected_min:.2f}-{expected_max:.2f}] "
                     f"for {profile.value}",
                     value=rsi,
                 )
             else:
                 result.add_warning(
                     "rsi",
-                    f"RSI {rsi:.2f} outside typical range [{expected_min:.2f}-{expected_max:.2f}] "
+                    f"RSI {rsi:.2f} outside typical range "
+                    f"[{expected_min:.2f}-{expected_max:.2f}] "
                     f"for {profile.value}",
                     value=rsi,
                     bounds=(expected_min, expected_max),
@@ -650,7 +665,8 @@ class CMJMetricsValidator:
         if ratio < MetricConsistency.CONTACT_DEPTH_RATIO_MIN:
             result.add_warning(
                 "contact_depth_ratio",
-                f"Contact time {ratio:.2f}s/m to depth ratio: Very fast for depth traversed",
+                f"Contact time {ratio:.2f}s/m to depth ratio: Very fast for "
+                "depth traversed",
                 value=ratio,
                 bounds=(
                     MetricConsistency.CONTACT_DEPTH_RATIO_MIN,
@@ -702,7 +718,8 @@ class CMJMetricsValidator:
             if not TripleExtensionBounds.knee_angle_valid(knee, profile):
                 result.add_warning(
                     "knee_angle",
-                    f"Knee angle {knee:.1f}° outside expected range for {profile.value}",
+                    f"Knee angle {knee:.1f}° outside expected range for "
+                    f"{profile.value}",
                     value=knee,
                 )
             else:
@@ -717,13 +734,15 @@ class CMJMetricsValidator:
             if not TripleExtensionBounds.ankle_angle_valid(ankle, profile):
                 result.add_warning(
                     "ankle_angle",
-                    f"Ankle angle {ankle:.1f}° outside expected range for {profile.value}",
+                    f"Ankle angle {ankle:.1f}° outside expected range for "
+                    f"{profile.value}",
                     value=ankle,
                 )
             else:
                 result.add_info(
                     "ankle_angle",
-                    f"Ankle angle {ankle:.1f}° within expected range for {profile.value}",
+                    f"Ankle angle {ankle:.1f}° within expected range for "
+                    f"{profile.value}",
                     value=ankle,
                 )
 

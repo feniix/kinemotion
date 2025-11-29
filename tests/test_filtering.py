@@ -112,9 +112,9 @@ def test_reject_outliers_combined() -> None:
     # Should detect at least 2 outliers
     assert np.sum(outliers) >= 2, "Should detect multiple outliers"
     # Cleaned trajectory should be smoother
-    assert np.max(np.abs(np.diff(cleaned))) < np.max(
-        np.abs(np.diff(positions))
-    ), "Cleaned should be smoother"
+    assert np.max(np.abs(np.diff(cleaned))) < np.max(np.abs(np.diff(positions))), (
+        "Cleaned should be smoother"
+    )
 
 
 def test_reject_outliers_ransac_only() -> None:
@@ -171,12 +171,12 @@ def test_adaptive_smooth_window_varies_with_velocity() -> None:
     )
 
     # Stationary phases should have larger windows
-    assert np.mean(windows[:20]) > np.mean(
-        windows[20:40]
-    ), "Slow motion should use larger windows"
-    assert np.mean(windows[40:]) > np.mean(
-        windows[20:40]
-    ), "Slow motion should use larger windows"
+    assert np.mean(windows[:20]) > np.mean(windows[20:40]), (
+        "Slow motion should use larger windows"
+    )
+    assert np.mean(windows[40:]) > np.mean(windows[20:40]), (
+        "Slow motion should use larger windows"
+    )
 
     # All windows should be odd
     assert np.all(windows % 2 == 1), "All windows should be odd"
@@ -213,9 +213,9 @@ def test_bilateral_temporal_filter_preserves_edges() -> None:
     post_transition = filtered[transition_idx + 2]
     transition_magnitude = abs(pre_transition - post_transition)
 
-    assert (
-        transition_magnitude > 0.2
-    ), "Bilateral filter should preserve sharp transitions"
+    assert transition_magnitude > 0.2, (
+        "Bilateral filter should preserve sharp transitions"
+    )
 
 
 def test_bilateral_temporal_filter_smooths_noise() -> None:
@@ -240,7 +240,8 @@ def test_bilateral_temporal_filter_window_size() -> None:
 
     # Even window size should be adjusted to odd
     filtered_even = bilateral_temporal_filter(
-        positions, window_size=8  # Should become 9
+        positions,
+        window_size=8,  # Should become 9
     )
     filtered_odd = bilateral_temporal_filter(positions, window_size=9)
 

@@ -307,8 +307,9 @@ def _generate_warnings(
     # Tracking stability warnings
     if not indicators.tracking_stable:
         warnings.append(
-            f"Unstable landmark tracking detected (variance {indicators.position_variance:.4f}). "
-            "This may indicate jitter or occlusion. Consider better lighting or camera position."
+            f"Unstable landmark tracking detected "
+            f"(variance {indicators.position_variance:.4f}). This may indicate "
+            "jitter or occlusion. Consider better lighting or camera position."
         )
 
     # Outlier warnings
@@ -349,8 +350,8 @@ def _generate_warnings(
     # Overall confidence warning
     if confidence == "low":
         warnings.append(
-            "⚠️ LOW CONFIDENCE: Results may be unreliable. "
-            "Review quality indicators and consider re-recording with better conditions."
+            "⚠️ LOW CONFIDENCE: Results may be unreliable. Review quality "
+            "indicators and consider re-recording with better conditions."
         )
     elif confidence == "medium":
         warnings.append(

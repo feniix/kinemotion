@@ -48,12 +48,17 @@ class CMJMetrics:
     Attributes:
         jump_height: Maximum jump height in meters
         flight_time: Time spent in the air in milliseconds
-        countermovement_depth: Vertical distance traveled during eccentric phase in meters
-        eccentric_duration: Time from countermovement start to lowest point in milliseconds
+        countermovement_depth: Vertical distance traveled during eccentric
+            phase in meters
+        eccentric_duration: Time from countermovement start to lowest point in
+            milliseconds
         concentric_duration: Time from lowest point to takeoff in milliseconds
-        total_movement_time: Total time from countermovement start to takeoff in milliseconds
-        peak_eccentric_velocity: Maximum downward velocity during countermovement in m/s
-        peak_concentric_velocity: Maximum upward velocity during propulsion in m/s
+        total_movement_time: Total time from countermovement start to takeoff
+            in milliseconds
+        peak_eccentric_velocity: Maximum downward velocity during
+            countermovement in m/s
+        peak_concentric_velocity: Maximum upward velocity during propulsion in
+            m/s
         transition_time: Duration at lowest point (amortization phase) in milliseconds
         standing_start_frame: Frame where standing phase ends (countermovement begins)
         lowest_point_frame: Frame at lowest point of countermovement

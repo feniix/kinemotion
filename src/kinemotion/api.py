@@ -62,7 +62,8 @@ def _parse_quality_preset(quality: str) -> QualityPreset:
         return QualityPreset(quality.lower())
     except ValueError as e:
         raise ValueError(
-            f"Invalid quality preset: {quality}. Must be 'fast', 'balanced', or 'accurate'"
+            f"Invalid quality preset: {quality}. "
+            "Must be 'fast', 'balanced', or 'accurate'"
         ) from e
 
 
@@ -501,7 +502,8 @@ def process_dropjump_video(
         if verbose:
             print("Assessing tracking quality...")
 
-        # Detect outliers for quality scoring (doesn't affect results, just for assessment)
+        # Detect outliers for quality scoring (doesn't affect results, just
+        # for assessment)
         _, outlier_mask = reject_outliers(
             vertical_positions,
             use_ransac=True,
@@ -626,9 +628,11 @@ def process_dropjump_videos_bulk(
     Process multiple drop jump videos in parallel using ProcessPoolExecutor.
 
     Args:
-        configs: List of DropJumpVideoConfig objects specifying video paths and parameters
+        configs: List of DropJumpVideoConfig objects specifying video paths
+            and parameters
         max_workers: Maximum number of parallel workers (default: 4)
-        progress_callback: Optional callback function called after each video completes.
+        progress_callback: Optional callback function called after each video
+            completes.
                          Receives DropJumpVideoResult object.
 
     Returns:
@@ -953,7 +957,8 @@ def process_cmj_video(
         if verbose:
             print("Assessing tracking quality...")
 
-        # Detect outliers for quality scoring (doesn't affect results, just for assessment)
+        # Detect outliers for quality scoring (doesn't affect results, just
+        # for assessment)
         _, outlier_mask = reject_outliers(
             vertical_positions,
             use_ransac=True,
@@ -1047,7 +1052,7 @@ def process_cmj_video(
 
         if verbose:
             print(f"\nJump height: {metrics.jump_height:.3f}m")
-            print(f"Flight time: {metrics.flight_time*1000:.1f}ms")
+            print(f"Flight time: {metrics.flight_time * 1000:.1f}ms")
             print(f"Countermovement depth: {metrics.countermovement_depth:.3f}m")
 
         # Validate metrics against physiological bounds
@@ -1126,7 +1131,8 @@ def process_cmj_videos_bulk(
 
 def _process_cmj_video_wrapper(config: CMJVideoConfig) -> CMJVideoResult:
     """
-    Wrapper function for parallel CMJ processing. Must be picklable (top-level function).
+    Wrapper function for parallel CMJ processing. Must be picklable
+    (top-level function).
 
     Args:
         config: CMJVideoConfig object with processing parameters

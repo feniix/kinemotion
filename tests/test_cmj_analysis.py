@@ -26,7 +26,8 @@ from kinemotion.core.smoothing import (
 
 def test_find_standing_phase() -> None:
     """Test standing phase detection."""
-    # Create trajectory with clear standing period followed by consistent downward motion
+    # Create trajectory with clear standing period followed by consistent
+    # downward motion
     fps = 30.0
 
     # Standing (0-30): constant position
@@ -441,7 +442,10 @@ def test_find_standing_phase_too_short() -> None:
     fps = 30.0
 
     result = find_standing_phase(
-        positions, velocities, fps, min_standing_duration=0.5  # Requires 15 frames
+        positions,
+        velocities,
+        fps,
+        min_standing_duration=0.5,  # Requires 15 frames
     )
 
     # Should return None for too-short video
@@ -489,7 +493,9 @@ def test_find_lowest_point_invalid_search_range() -> None:
     velocities = compute_signed_velocity(positions)
 
     result = find_lowest_point(
-        positions, velocities, min_search_frame=80  # Search start after peak
+        positions,
+        velocities,
+        min_search_frame=80,  # Search start after peak
     )
 
     # Should use fallback range (30-70% of video)
@@ -626,13 +632,13 @@ def test_phase_progression_ordering_valid_cmj() -> None:
 
     # Core validation: phases must be in strict temporal order
     if standing is not None:
-        assert (
-            standing < lowest
-        ), f"Standing ({standing}) must end before lowest point ({lowest})"
+        assert standing < lowest, (
+            f"Standing ({standing}) must end before lowest point ({lowest})"
+        )
 
-    assert (
-        lowest < takeoff
-    ), f"Lowest point ({lowest}) must be before takeoff ({takeoff})"
+    assert lowest < takeoff, (
+        f"Lowest point ({lowest}) must be before takeoff ({takeoff})"
+    )
     assert takeoff < landing, f"Takeoff ({takeoff}) must be before landing ({landing})"
 
 
@@ -676,22 +682,22 @@ def test_phase_progression_temporal_constraints() -> None:
 
             # Eccentric must be reasonable (typically 9-24 frames at 30fps)
             if eccentric_duration_frames > 0:
-                assert (
-                    6 <= eccentric_duration_frames <= 36
-                ), f"Eccentric {eccentric_duration_frames} frames seems unreasonable"
+                assert 6 <= eccentric_duration_frames <= 36, (
+                    f"Eccentric {eccentric_duration_frames} frames seems unreasonable"
+                )
 
             # Contact time must be reasonable (typically 12-36 frames)
             total_contact = contact_duration_frames
             if total_contact > 0:
-                assert (
-                    10 <= total_contact <= 40
-                ), f"Contact time {total_contact} frames seems unreasonable"
+                assert 10 <= total_contact <= 40, (
+                    f"Contact time {total_contact} frames seems unreasonable"
+                )
 
             # Flight must be reasonable (typically 9-30 frames for <1s flight)
             if flight_duration_frames > 0:
-                assert (
-                    5 <= flight_duration_frames <= 35
-                ), f"Flight {flight_duration_frames} frames seems unreasonable"
+                assert 5 <= flight_duration_frames <= 35, (
+                    f"Flight {flight_duration_frames} frames seems unreasonable"
+                )
 
 
 def test_phase_progression_invalid_landing_before_takeoff() -> None:
@@ -766,9 +772,9 @@ def test_find_takeoff_frame_backward_search_peak_velocity() -> None:
 
     # Assert: Takeoff should be detected near the velocity peak (frame 80-82)
     assert isinstance(takeoff, float), "Should return float frame number"
-    assert (
-        75 <= takeoff <= 95
-    ), f"Takeoff {takeoff} should be near velocity peak around frame 80-90"
+    assert 75 <= takeoff <= 95, (
+        f"Takeoff {takeoff} should be near velocity peak around frame 80-90"
+    )
 
 
 def test_find_lowest_frame_velocity_zero_crossing() -> None:
@@ -847,9 +853,9 @@ def test_find_landing_frame_impact_detection() -> None:
     # Assert: Landing should be detected in expected window
     assert isinstance(landing, float), "Should return float frame number"
     # Should be after peak height
-    assert (
-        landing >= peak_height_frame
-    ), f"Landing {landing} should be at or after peak height {peak_height_frame}"
+    assert landing >= peak_height_frame, (
+        f"Landing {landing} should be at or after peak height {peak_height_frame}"
+    )
 
 
 def test_find_standing_end_low_velocity_detection() -> None:
@@ -884,13 +890,13 @@ def test_find_standing_end_low_velocity_detection() -> None:
     # Assert: Should detect end of standing phase
     if standing_end is not None:
         # Should be before lowest point
-        assert (
-            standing_end < lowest_point
-        ), f"Standing end {standing_end} should be before lowest point {lowest_point}"
+        assert standing_end < lowest_point, (
+            f"Standing end {standing_end} should be before lowest point {lowest_point}"
+        )
         # Should be in reasonable range (typically 20-50 frames in standing)
-        assert (
-            0 <= standing_end <= 60
-        ), f"Standing end {standing_end} should be in reasonable range"
+        assert 0 <= standing_end <= 60, (
+            f"Standing end {standing_end} should be in reasonable range"
+        )
     # May return None if standing detection is ambiguous - that's acceptable
 
 
@@ -898,7 +904,9 @@ def test_find_standing_end_low_velocity_detection() -> None:
 
 
 def test_find_interpolated_takeoff_landing_wrapper_function() -> None:
-    """Test find_interpolated_takeoff_landing wrapper combines takeoff + landing detection.
+    """Test find_interpolated_takeoff_landing wrapper combines takeoff and landing.
+
+    Wrapper combines takeoff + landing detection.
 
     Biomechanical context: This wrapper function coordinates detection of both
     takeoff and landing frames using physics-based methods specific to CMJ:
@@ -934,18 +942,18 @@ def test_find_interpolated_takeoff_landing_wrapper_function() -> None:
     assert isinstance(landing, float), "Landing should be float frame number"
 
     # Verify temporal ordering
-    assert (
-        takeoff < landing
-    ), f"Takeoff {takeoff} must be before landing {landing} (time flows forward)"
+    assert takeoff < landing, (
+        f"Takeoff {takeoff} must be before landing {landing} (time flows forward)"
+    )
 
     # Verify frames are within reasonable bounds
     assert 0 <= takeoff < len(positions), f"Takeoff {takeoff} outside array bounds"
     assert 0 <= landing < len(positions), f"Landing {landing} outside array bounds"
 
     # Verify takeoff and landing are separated (not same frame)
-    assert (
-        landing - takeoff > 2
-    ), f"Landing and takeoff too close ({landing-takeoff} frames apart)"
+    assert landing - takeoff > 2, (
+        f"Landing and takeoff too close ({landing - takeoff} frames apart)"
+    )
 
 
 # ============================================================================
@@ -1003,9 +1011,9 @@ def test_deep_squat_cmj_recreational_athlete() -> None:
     # Verify phase sequence
     if standing is not None:
         assert standing < lowest, "Standing must end before lowest point"
-        assert (
-            0 <= standing <= 15
-        ), f"Standing end {standing} should be early (0-15 frames)"
+        assert 0 <= standing <= 15, (
+            f"Standing end {standing} should be early (0-15 frames)"
+        )
 
     assert lowest < takeoff, "Lowest point must be before takeoff"
     assert takeoff < landing, "Takeoff must be before landing"
@@ -1015,16 +1023,17 @@ def test_deep_squat_cmj_recreational_athlete() -> None:
     if standing is not None:
         eccentric_frames = lowest - standing
         eccentric_time = eccentric_frames / fps
-        assert (
-            0.4 <= eccentric_time <= 0.7
-        ), f"Recreational eccentric {eccentric_time}s not realistic (expected 0.4-0.7s)"
+        assert 0.4 <= eccentric_time <= 0.7, (
+            f"Recreational eccentric {eccentric_time}s not realistic "
+            f"(expected 0.4-0.7s)"
+        )
 
     # Contact time (lowest to takeoff): 0.4-0.65s for recreational
     contact_frames = takeoff - lowest
     contact_time = contact_frames / fps
-    assert (
-        0.40 <= contact_time <= 0.75
-    ), f"Contact time {contact_time}s not realistic for recreational athlete"
+    assert 0.40 <= contact_time <= 0.75, (
+        f"Contact time {contact_time}s not realistic for recreational athlete"
+    )
 
     # Flight time: 0.45-0.75s for 35-55cm jump
     # Note: Lower bound is 0.45s (not 0.50s) to account for phase detection
@@ -1032,9 +1041,9 @@ def test_deep_squat_cmj_recreational_athlete() -> None:
     # with natural motion patterns are more precise.
     flight_frames = landing - takeoff
     flight_time = flight_frames / fps
-    assert (
-        0.45 <= flight_time <= 0.75
-    ), f"Flight time {flight_time}s not realistic for recreational jump"
+    assert 0.45 <= flight_time <= 0.75, (
+        f"Flight time {flight_time}s not realistic for recreational jump"
+    )
 
 
 def test_explosive_cmj_elite_athlete() -> None:
@@ -1085,9 +1094,9 @@ def test_explosive_cmj_elite_athlete() -> None:
     if standing is not None:
         assert standing < lowest, "Standing must end before lowest point"
         # Elite athletes typically stand briefly
-        assert (
-            0 <= standing <= 10
-        ), f"Elite standing end {standing} should be very brief (0-10 frames)"
+        assert 0 <= standing <= 10, (
+            f"Elite standing end {standing} should be very brief (0-10 frames)"
+        )
 
     assert lowest < takeoff, "Lowest point must be before takeoff"
     assert takeoff < landing, "Takeoff must be before landing"
@@ -1096,22 +1105,22 @@ def test_explosive_cmj_elite_athlete() -> None:
     # Contact time (lowest to takeoff): 0.25-0.45s for elite
     contact_frames = takeoff - lowest
     contact_time = contact_frames / fps
-    assert (
-        0.25 <= contact_time <= 0.50
-    ), f"Elite contact time {contact_time}s too long (expected 0.25-0.45s)"
+    assert 0.25 <= contact_time <= 0.50, (
+        f"Elite contact time {contact_time}s too long (expected 0.25-0.45s)"
+    )
 
     # Flight time: should be detectable and reasonable
     flight_frames = landing - takeoff
     flight_time = flight_frames / fps
-    assert (
-        0.30 <= flight_time <= 1.0
-    ), f"Elite flight time {flight_time}s not realistic (expected 0.30-1.0s)"
+    assert 0.30 <= flight_time <= 1.0, (
+        f"Elite flight time {flight_time}s not realistic (expected 0.30-1.0s)"
+    )
 
     # Verify that elite contact time is significantly shorter than recreational
     # This is a key differentiator: elite athletes have better power/weight ratio
-    assert (
-        contact_time < 0.50
-    ), "Elite contact time should be notably shorter than recreational"
+    assert contact_time < 0.50, (
+        "Elite contact time should be notably shorter than recreational"
+    )
 
 
 def test_failed_jump_incomplete_countermovement() -> None:
@@ -1241,9 +1250,9 @@ def test_double_bounce_landing_pattern() -> None:
         # Flight time should be reasonable (from concentric to first impact)
         flight_frames = landing - takeoff
         flight_time = flight_frames / fps
-        assert (
-            0.20 <= flight_time <= 1.5
-        ), f"Flight time {flight_time}s reasonable despite double bounce"
+        assert 0.20 <= flight_time <= 1.5, (
+            f"Flight time {flight_time}s reasonable despite double bounce"
+        )
 
 
 def test_landing_frame_near_video_boundary() -> None:
@@ -1333,9 +1342,9 @@ def test_overlapping_eccentric_concentric_phases() -> None:
 
         # Verify lowest point is actually in the smooth transition region
         if standing is not None:
-            assert (
-                standing < lowest < takeoff
-            ), "Lowest point correctly positioned between standing and takeoff"
+            assert standing < lowest < takeoff, (
+                "Lowest point correctly positioned between standing and takeoff"
+            )
 
 
 # ===== Validation Integration Tests =====

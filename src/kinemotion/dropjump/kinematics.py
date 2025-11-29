@@ -235,7 +235,8 @@ def _identify_main_contact_phase(
         ]
 
         if ground_after_air and first_ground_idx < first_air_idx:
-            # Check if first ground is at higher elevation (lower y) than ground after air
+            # Check if first ground is at higher elevation (lower y) than
+            # ground after air
             first_ground_y = float(
                 np.mean(foot_y_positions[first_ground_start : first_ground_end + 1])
             )
@@ -394,8 +395,10 @@ def calculate_drop_jump_metrics(
         foot_y_positions: Vertical positions of feet (normalized 0-1)
         fps: Video frame rate
         drop_start_frame: Optional manual drop start frame
-        velocity_threshold: Velocity threshold used for contact detection (for interpolation)
-        smoothing_window: Window size for velocity/acceleration smoothing (must be odd)
+        velocity_threshold: Velocity threshold used for contact detection
+            (for interpolation)
+        smoothing_window: Window size for velocity/acceleration smoothing
+            (must be odd)
         polyorder: Polynomial order for Savitzky-Golay filter (default: 2)
         use_curvature: Whether to use curvature analysis for refining transitions
 

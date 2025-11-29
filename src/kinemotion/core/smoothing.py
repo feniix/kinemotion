@@ -124,7 +124,8 @@ def _store_smoothed_landmarks(
             )
 
 
-def _smooth_landmarks_core(  # NOSONAR(S1172) - polyorder used via closure capture in smoother_fn
+def _smooth_landmarks_core(  # NOSONAR(S1172) - polyorder used via closure
+    # capture in smoother_fn
     landmark_sequence: LandmarkSequence,
     window_length: int,
     polyorder: int,
@@ -136,7 +137,8 @@ def _smooth_landmarks_core(  # NOSONAR(S1172) - polyorder used via closure captu
     Args:
         landmark_sequence: List of landmark dictionaries from each frame
         window_length: Length of filter window (must be odd)
-        polyorder: Order of polynomial used to fit samples (captured by smoother_fn closure)
+        polyorder: Order of polynomial used to fit samples (captured by
+            smoother_fn closure)
         smoother_fn: Function that takes (x_coords, y_coords, valid_frames)
             and returns (x_smooth, y_smooth)
 

@@ -120,8 +120,10 @@ def print_auto_tuned_params(
         video: Video processor
         quality_preset: Quality preset
         params: Auto-tuned parameters
-        characteristics: Optional video characteristics (for tracking quality display)
-        extra_params: Optional extra parameters to display (e.g., countermovement_threshold)
+        characteristics: Optional video characteristics (for tracking quality
+            display)
+        extra_params: Optional extra parameters to display (e.g.,
+            countermovement_threshold)
     """
     click.echo("\n" + "=" * 60, err=True)
     click.echo("AUTO-TUNED PARAMETERS", err=True)

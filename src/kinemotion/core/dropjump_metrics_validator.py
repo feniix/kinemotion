@@ -227,7 +227,8 @@ class DropJumpMetricsValidator:
             profile_name = result.athlete_profile.value
             result.add_warning(
                 "contact_time",
-                f"Contact time {contact_time_s:.3f}s unusual for {profile_name} athlete",
+                f"Contact time {contact_time_s:.3f}s unusual for "
+                f"{profile_name} athlete",
                 value=contact_time_s,
             )
 
@@ -317,7 +318,8 @@ class DropJumpMetricsValidator:
         """Validate consistency between kinematic and trajectory-based heights.
 
         Kinematic height (h = g*t²/8) comes from flight time (objective).
-        Trajectory height comes from position tracking (subject to landmark detection noise).
+        Trajectory height comes from position tracking (subject to landmark
+        detection noise).
 
         Expected correlation: r > 0.95, absolute difference < 5% for quality video.
         """
@@ -336,8 +338,9 @@ class DropJumpMetricsValidator:
                 result.add_warning(
                     "height_consistency",
                     f"Kinematic ({jump_height_kinematic_m:.3f}m) and trajectory "
-                    f"({jump_height_trajectory_m:.3f}m) heights differ by {percent_error:.1f}%. "
-                    f"May indicate landmark detection issues or video quality problems.",
+                    f"({jump_height_trajectory_m:.3f}m) heights differ by "
+                    f"{percent_error:.1f}%. May indicate landmark detection "
+                    "issues or video quality problems.",
                     value=percent_error,
                     bounds=(0, 10),
                 )

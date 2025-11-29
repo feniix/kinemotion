@@ -108,9 +108,9 @@ def test_com_no_visible_landmarks() -> None:
     assert com_x == pytest.approx(0.5, abs=0.01), "CoM should fall back to hip center x"
     assert com_y == pytest.approx(0.5, abs=0.01), "CoM should fall back to hip center y"
     # Visibility will be the average of hip visibilities (0.3)
-    assert com_vis == pytest.approx(
-        0.3, abs=0.01
-    ), "CoM visibility should be hip average"
+    assert com_vis == pytest.approx(0.3, abs=0.01), (
+        "CoM visibility should be hip average"
+    )
 
 
 def test_com_biomechanical_weights() -> None:

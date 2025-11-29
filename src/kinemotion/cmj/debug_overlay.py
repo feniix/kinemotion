@@ -370,10 +370,10 @@ class CMJDebugOverlayRenderer(BaseDebugOverlayRenderer):
 
         metrics_text = [
             f"Jump Height: {metrics.jump_height:.3f}m",
-            f"Flight Time: {metrics.flight_time*1000:.0f}ms",
+            f"Flight Time: {metrics.flight_time * 1000:.0f}ms",
             f"CM Depth: {metrics.countermovement_depth:.3f}m",
-            f"Ecc Duration: {metrics.eccentric_duration*1000:.0f}ms",
-            f"Con Duration: {metrics.concentric_duration*1000:.0f}ms",
+            f"Ecc Duration: {metrics.eccentric_duration * 1000:.0f}ms",
+            f"Con Duration: {metrics.concentric_duration * 1000:.0f}ms",
         ]
 
         # Draw background

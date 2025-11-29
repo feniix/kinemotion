@@ -62,7 +62,8 @@ def find_standing_phase(
     """
     Find the end of standing phase (start of countermovement).
 
-    Looks for a period of low velocity (standing) followed by consistent downward motion.
+    Looks for a period of low velocity (standing) followed by consistent
+    downward motion.
 
     Args:
         positions: Array of vertical positions (normalized 0-1)
@@ -109,11 +110,13 @@ def find_countermovement_start(
     """
     Find the start of countermovement (eccentric phase).
 
-    Detects when velocity becomes consistently positive (downward motion in normalized coords).
+    Detects when velocity becomes consistently positive (downward motion in
+    normalized coords).
 
     Args:
         velocities: Array of SIGNED vertical velocities
-        countermovement_threshold: Velocity threshold for detecting downward motion (POSITIVE)
+        countermovement_threshold: Velocity threshold for detecting downward
+            motion (POSITIVE)
         min_eccentric_frames: Minimum consecutive frames of downward motion
         standing_start: Optional frame where standing phase ended
 

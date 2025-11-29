@@ -181,6 +181,7 @@ def test_cmj_velocity_calculations() -> None:
     assert metrics.eccentric_duration > 0
     assert metrics.concentric_duration > 0
 
-    # Verify velocities are calculated (may need to check signs based on coordinate system)
+    # Verify velocities are calculated (may need to check signs based on
+    # coordinate system)
     assert abs(metrics.peak_eccentric_velocity) > 1e-6
     assert abs(metrics.peak_concentric_velocity) > 1e-6

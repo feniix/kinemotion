@@ -301,9 +301,9 @@ class TestBiomechanicalAccuracy:
 
         if tall_knee is not None and short_knee is not None:
             # Angles should be within 5 degrees regardless of athlete height
-            assert (
-                abs(tall_knee - short_knee) < 5
-            ), f"Knee angles differ too much: tall={tall_knee}, short={short_knee}"
+            assert abs(tall_knee - short_knee) < 5, (
+                f"Knee angles differ too much: tall={tall_knee}, short={short_knee}"
+            )
 
     def test_triple_extension_progression(
         self,
@@ -328,9 +328,9 @@ class TestBiomechanicalAccuracy:
         if squat_hip is not None and takeoff_hip is not None:
             # Squat should show forward lean (lower hip angle typically)
             # Takeoff should be more extended
-            assert (
-                0 <= squat_hip <= 180 and 0 <= takeoff_hip <= 180
-            ), "Hip angles should be valid"
+            assert 0 <= squat_hip <= 180 and 0 <= takeoff_hip <= 180, (
+                "Hip angles should be valid"
+            )
 
     def test_dorsiflexion_vs_plantarflexion(self) -> None:
         """Test ankle angle distinction between dorsiflexion and plantarflexion.
@@ -374,11 +374,12 @@ class TestBiomechanicalAccuracy:
         assert right_tilt is not None
         assert left_tilt is not None
 
-        # Due to different reference frame (left vs right), tilts should have opposite signs
-        # but similar magnitude
-        assert (
-            abs(abs(right_tilt) - abs(left_tilt)) < 0.1
-        ), f"Trunk tilt magnitudes should be similar: right={right_tilt}, left={left_tilt}"
+        # Due to different reference frame (left vs right), tilts should have
+        # opposite signs but similar magnitude
+        assert abs(abs(right_tilt) - abs(left_tilt)) < 0.1, (
+            f"Trunk tilt magnitudes should be similar: "
+            f"right={right_tilt}, left={left_tilt}"
+        )
 
 
 class TestNumericalStability:
@@ -509,9 +510,9 @@ class TestRegressionScenarios:
 
         tilt = calculate_trunk_tilt(propulsive_phase, side="right")
         assert tilt is not None
-        assert (
-            tilt > 5
-        ), f"Forward lean should be positive during propulsion, got {tilt}"
+        assert tilt > 5, (
+            f"Forward lean should be positive during propulsion, got {tilt}"
+        )
 
     def test_upright_posture_near_zero_tilt(self) -> None:
         """Regression test: Upright posture should have near-zero trunk tilt."""
@@ -569,9 +570,9 @@ class TestAnkleAnglePrimaryLandmarkFix:
         }
 
         angle = calculate_ankle_angle(landmarks, side="right")
-        assert (
-            angle is not None
-        ), "Should fall back to heel when foot_index visibility low"
+        assert angle is not None, (
+            "Should fall back to heel when foot_index visibility low"
+        )
         assert 0 <= angle <= 180
 
     def test_ankle_angle_returns_none_when_no_foot_landmark(self) -> None:
@@ -586,8 +587,12 @@ class TestAnkleAnglePrimaryLandmarkFix:
         angle = calculate_ankle_angle(landmarks, side="right")
         assert angle is None, "Should return None without valid foot landmark"
 
-    def test_ankle_angle_returns_none_when_heel_also_low_visibility(self) -> None:
-        """Test ankle angle returns None when both foot_index and heel have low visibility."""
+    def test_ankle_angle_returns_none_when_heel_also_low_visibility(
+        self,
+    ) -> None:
+        """Test ankle angle returns None when both foot_index and heel low.
+
+        Both foot_index and heel have low visibility."""
         landmarks = {
             "right_foot_index": (0.50, 0.87, 0.25),  # Below 0.5
             "right_ankle": (0.50, 0.85, 0.95),
@@ -596,12 +601,12 @@ class TestAnkleAnglePrimaryLandmarkFix:
         }
 
         angle = calculate_ankle_angle(landmarks, side="right")
-        assert (
-            angle is None
-        ), "Should return None when all foot landmarks below threshold"
+        assert angle is None, (
+            "Should return None when all foot landmarks below threshold"
+        )
 
     def test_plantarflexion_progression_dorsi_to_plantar(self) -> None:
-        """Test ankle angle shows realistic progression from dorsiflexion to plantarflexion.
+        """Test ankle angle progression from dorsiflexion to plantarflexion.
 
         Regression test: Validates that foot_index measurement captures the
         expected 30°+ change in ankle angle during CMJ concentric phase.
@@ -629,14 +634,17 @@ class TestAnkleAnglePrimaryLandmarkFix:
         assert angle_dorsi is not None, "Dorsiflexion angle should be calculated"
         assert angle_plantar is not None, "Plantarflexion angle should be calculated"
 
-        # Plantarflexion (larger angle) should be greater than dorsiflexion (smaller angle)
-        # This validates the biomechanics: toes extend down during takeoff
-        assert (
-            angle_plantar > angle_dorsi
-        ), f"Plantarflexion {angle_plantar}° should be > dorsiflexion {angle_dorsi}°"
+        # Plantarflexion (larger angle) should be greater than dorsiflexion
+        # (smaller angle). This validates the biomechanics: toes extend down
+        # during takeoff
+        assert angle_plantar > angle_dorsi, (
+            f"Plantarflexion {angle_plantar}° should be > dorsiflexion {angle_dorsi}°"
+        )
 
-    def test_ankle_angle_with_foot_index_visibility_exactly_0_5(self) -> None:
-        """Test ankle angle behavior when foot_index visibility is exactly 0.5 (boundary)."""
+    def test_ankle_angle_with_foot_index_visibility_exactly_0_5(
+        self,
+    ) -> None:
+        """Test ankle angle when foot_index visibility exactly 0.5 (boundary)."""
         landmarks = {
             "right_foot_index": (0.50, 0.87, 0.5),  # Exactly 0.5 (not > 0.5)
             "right_ankle": (0.50, 0.85, 0.95),
@@ -699,11 +707,12 @@ class TestEdgeCasesWithPartialVisibility:
             "right_shoulder": (0.5, 0.2, 0.95),  # High visibility
         }
 
-        # Ankle calculation should return None (low visibility for heel and ankle)
+        # Ankle calculation should return None (low visibility for heel/ankle)
         ankle_angle = calculate_ankle_angle(landmarks, side="right")
         assert ankle_angle is None
 
-        # Knee calculation should return None (needs ankle/foot_index with good visibility)
+        # Knee calculation should return None (needs ankle/foot_index with
+        # good visibility)
         knee_angle = calculate_knee_angle(landmarks, side="right")
         assert knee_angle is None
 
@@ -907,9 +916,9 @@ class TestPhaseProgression:
         assert takeoff_knee is not None
 
         # Knee should progressively extend
-        assert (
-            concentric_knee > eccentric_knee
-        ), "Knee should extend in concentric phase"
+        assert concentric_knee > eccentric_knee, (
+            "Knee should extend in concentric phase"
+        )
         assert takeoff_knee > concentric_knee, "Knee should extend further at takeoff"
 
 

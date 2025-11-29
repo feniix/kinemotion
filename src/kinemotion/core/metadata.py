@@ -146,7 +146,8 @@ class AlgorithmConfig:
     """Complete algorithm configuration for reproducibility.
 
     Attributes:
-        detection_method: Algorithm used ("backward_search" for CMJ, "forward_search" for drop)
+        detection_method: Algorithm used ("backward_search" for CMJ,
+            "forward_search" for drop)
         tracking_method: Pose tracking method ("mediapipe_pose")
         model_complexity: MediaPipe model complexity (0, 1, or 2)
         smoothing: Smoothing configuration

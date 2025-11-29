@@ -127,6 +127,7 @@ See [Implementation Details](docs/technical/implementation-details.md) for compl
 
 ```bash
 uv run ruff check --fix   # Auto-fix linting
+uv run ruff format        # Format code
 uv run pyright            # Type check (strict)
 uv run pytest             # All 206 tests with coverage
 ```
@@ -134,7 +135,7 @@ uv run pytest             # All 206 tests with coverage
 ### Standards
 
 - Pyright strict mode (all functions typed)
-- Ruff (100 char lines)
+- Ruff (88 char lines, both linting and formatting)
 - Conventional Commits (see below)
 - **Code duplication target: < 3%**
 - **Test coverage: ≥ 50% (current: 74.27% with branch coverage)**
@@ -300,7 +301,7 @@ Use biomechanics-specialist to validate RSI calculation
 /agents  # Interactive interface to view, create, edit agents
 ```
 
-See [.claude/agents/README.md](.claude/agents/README.md) for complete documentation.
+See [Agents Guide](docs/development/agents-guide.md) for complete documentation.
 
 ## MCP Servers & Tools
 

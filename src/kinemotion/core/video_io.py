@@ -46,8 +46,9 @@ class VideoProcessor:
             self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-        # Extract rotation metadata from video (iPhones store rotation in side_data_list)
-        # OpenCV ignores rotation metadata, so we need to extract and apply it manually
+        # Extract rotation metadata from video (iPhones store rotation in
+        # side_data_list). OpenCV ignores rotation metadata, so we need to
+        # extract and apply it manually
         self.rotation = 0  # Will be set by _extract_video_metadata()
 
         # Extract codec information from video metadata
