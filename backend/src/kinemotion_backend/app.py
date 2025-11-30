@@ -209,9 +209,6 @@ if cors_origins_env:
     # Split by comma and strip whitespace from each origin
     prod_origins = [origin.strip() for origin in cors_origins_env.split(",")]
     cors_origins.extend(prod_origins)
-    print(f"DEBUG: CORS origins configured: {cors_origins}")
-else:
-    print("DEBUG: No CORS_ORIGINS env var set, using defaults only")
 
 app.add_middleware(
     CORSMiddleware,

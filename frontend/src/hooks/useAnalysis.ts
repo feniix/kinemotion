@@ -52,8 +52,6 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
       const baseApiUrl = import.meta.env.VITE_API_URL || ''
       const apiEndpoint = baseApiUrl ? `${baseApiUrl}/api/analyze` : '/api/analyze'
 
-      console.log('DEBUG: Sending request to:', apiEndpoint)
-
       // Use XMLHttpRequest to track upload progress
       const response = await new Promise<AnalysisResponse>((resolve, reject) => {
         const xhr = new XMLHttpRequest()
@@ -67,7 +65,6 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
         })
 
         xhr.addEventListener('load', () => {
-          console.log('DEBUG: XHR load event, status:', xhr.status)
           if (xhr.status === 200) {
             try {
               const data = JSON.parse(xhr.responseText) as AnalysisResponse
@@ -87,8 +84,7 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
           }
         })
 
-        xhr.addEventListener('error', (event) => {
-          console.error('DEBUG: XHR error event:', event)
+        xhr.addEventListener('error', () => {
           reject(new Error('Network error: Unable to connect to the server'))
         })
 
