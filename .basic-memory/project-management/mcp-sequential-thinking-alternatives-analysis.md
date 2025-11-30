@@ -1,7 +1,7 @@
 ---
 title: MCP Sequential Thinking Alternatives Analysis
 type: note
-permalink: project-management/mcp-sequential-thinking-alternatives-analysis
+permalink: project-management/mcp-sequential-thinking-alternatives-analysis-1
 tags:
 - mcp
 - sequential-thinking

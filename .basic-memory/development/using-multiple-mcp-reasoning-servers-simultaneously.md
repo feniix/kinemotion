@@ -1,7 +1,7 @@
 ---
 title: Using Multiple MCP Reasoning Servers Simultaneously
 type: note
-permalink: development/using-multiple-mcp-reasoning-servers-simultaneously
+permalink: development/using-multiple-mcp-reasoning-servers-simultaneously-1
 tags:
 - mcp
 - configuration
