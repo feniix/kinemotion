@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.32.3 (2025-11-30)
+
+### Bug Fixes
+
+- **backend**: Explicitly allow CORS headers for multipart form data
+  ([`d7ad685`](https://github.com/feniix/kinemotion/commit/d7ad685cf4bab2945b22d04d6f34c77bcccd8eac))
+
+### Chores
+
+- **frontend,backend**: Remove debug logging
+  ([`ba6b753`](https://github.com/feniix/kinemotion/commit/ba6b753369c2992a3b28311290b02290c26bc970))
+
+
 ## v0.32.2 (2025-11-30)
 
 ### Bug Fixes
