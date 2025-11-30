@@ -1,12 +1,12 @@
 ---
 title: Deployment Decision Analysis for Kinemotion
 type: note
-permalink: strategy/deployment-decision-analysis-for-kinemotion
+permalink: strategy/deployment-decision-analysis-for-kinemotion-1
 tags:
-  - deployment
-  - strategy
-  - google-cloud-run
-  - vercel
+- deployment
+- strategy
+- google-cloud-run
+- vercel
 ---
 
 # Deployment Decision: Google Cloud Run
