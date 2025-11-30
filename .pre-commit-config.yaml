@@ -5,10 +5,13 @@ repos:
     rev: v6.0.0
     hooks:
       - id: trailing-whitespace
+        exclude: 'frontend/.yarn/releases/yarn-.*\.cjs$'
       - id: end-of-file-fixer
+        exclude: 'frontend/.yarn/releases/yarn-.*\.cjs$'
       - id: check-yaml
       - id: check-added-large-files
         args: ['--maxkb=1000']
+        exclude: 'frontend/.yarn/releases/yarn-.*\.cjs$'
       - id: check-merge-conflict
       - id: check-toml
       - id: debug-statements
