@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.32.2 (2025-11-30)
+
+### Bug Fixes
+
+- **backend,frontend**: Improve CORS handling and add debug logging
+  ([`e8817cf`](https://github.com/feniix/kinemotion/commit/e8817cf8552bf0248f3492cc74c44aa14c619a0e))
+
+### Chores
+
+- **backend**: Fix CORS configuration for production
+  ([`c0270f7`](https://github.com/feniix/kinemotion/commit/c0270f7c73dc3f3a94c09334ad26205544f221c4))
+
+
 ## v0.32.1 (2025-11-30)
 
 ### Bug Fixes
