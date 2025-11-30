@@ -205,7 +205,11 @@ cors_origins = [
 
 # Add production origins from environment variable if configured
 if os.getenv("CORS_ORIGINS"):
-    cors_origins.extend(os.getenv("CORS_ORIGINS", "").split(","))
+    # Split by comma and strip whitespace from each origin
+    prod_origins = [
+        origin.strip() for origin in os.getenv("CORS_ORIGINS", "").split(",")
+    ]
+    cors_origins.extend(prod_origins)
 
 app.add_middleware(
     CORSMiddleware,
