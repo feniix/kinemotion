@@ -1,5 +1,5 @@
 {
-  "buildCommand": "yarn build",
-  "installCommand": "yarn install",
-  "outputDirectory": "dist"
+  "buildCommand": "cd frontend && yarn build",
+  "installCommand": "cd frontend && yarn install",
+  "outputDirectory": "frontend/dist"
 }
