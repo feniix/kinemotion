@@ -1,7 +1,7 @@
 ---
 title: Issue
 type: note
-permalink: project-management/issue-12-unblocked-tasks-breakdown-1
+permalink: project-management/issue-12-unblocked-tasks-breakdown
 tags:
 - issue-12
 - web-ui

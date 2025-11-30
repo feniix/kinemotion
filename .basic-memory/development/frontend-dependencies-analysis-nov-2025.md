@@ -1,7 +1,7 @@
 ---
 title: Frontend Dependencies Analysis Nov 2025
 type: note
-permalink: development/frontend-dependencies-analysis-nov-2025-1
+permalink: development/frontend-dependencies-analysis-nov-2025
 tags:
 - frontend
 - dependencies

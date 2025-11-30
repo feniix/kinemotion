@@ -1,7 +1,7 @@
 ---
 title: Deployment Decision Analysis for Kinemotion
 type: note
-permalink: strategy/deployment-decision-analysis-for-kinemotion-1
+permalink: strategy/deployment-decision-analysis-for-kinemotion
 tags:
 - deployment
 - strategy

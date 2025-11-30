@@ -1,7 +1,7 @@
 ---
 title: Vercel Monorepo Deployment Best Practice
 type: note
-permalink: deployment/vercel-monorepo-best-practice-1
+permalink: deployment/vercel-monorepo-deployment-best-practice
 tags:
 - vercel
 - deployment
