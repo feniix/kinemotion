@@ -7,6 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.32.1 (2025-11-30)
+
+### Bug Fixes
+
+- **frontend**: Correct API endpoint path for production backend
+  ([`dbda4c2`](https://github.com/feniix/kinemotion/commit/dbda4c2c7786c49844e39610fff31d39b7a7b29e))
+
+### Chores
+
+- Configure vercel.json for frontend subdirectory build
+  ([`5d755b5`](https://github.com/feniix/kinemotion/commit/5d755b5a20c0b1a99d39f28d9b3524cff4ac3ce0))
+
+- Exclude yarn binary from pre-commit hooks and embed yarn 4.12.0
+  ([`0cbfbdb`](https://github.com/feniix/kinemotion/commit/0cbfbdb8bf0b586d50b24443e2d2fcc0e8ef3e6b))
+
+- Fix basic-memory permalink naming convention
+  ([`134ceba`](https://github.com/feniix/kinemotion/commit/134cebaee4d992731ecbf008adb887f6a951a951))
+
+- Ignore generated files in ./frontend
+  ([`83207fc`](https://github.com/feniix/kinemotion/commit/83207fc94e61e4be7caff9a40f1878670fc093f0))
+
+- Update basic memory notes and configurations
+  ([`4753d57`](https://github.com/feniix/kinemotion/commit/4753d57ccb2c9c3fd21fd20e029d90e53a43d21a))
+
+- Update basic memory permalinks
+  ([`c35aa0f`](https://github.com/feniix/kinemotion/commit/c35aa0f7b381a4c57c866829aa955bbbd6cff734))
+
+- Update Claude Code hooks, MCP configuration, and gitignore
+  ([`8cb82b2`](https://github.com/feniix/kinemotion/commit/8cb82b2ef3e3ac4bc3e6ce94e11a1c55d66910b5))
+
+- **frontend**: Explicitly specify tsconfig path for tsc in build scripts
+  ([`4f83f6d`](https://github.com/feniix/kinemotion/commit/4f83f6da46dd4cf7ecb0b3843652b44276a1ffa6))
+
+- **frontend**: Simplify build script - tsc can now find tsconfig
+  ([`5560738`](https://github.com/feniix/kinemotion/commit/55607380e37955c0256fdb06f00bbb1adfde0fdf))
+
+- **frontend**: Track tsconfig files required for vercel build
+  ([`a70fd47`](https://github.com/feniix/kinemotion/commit/a70fd4759acda649df9eb1fcabfafe7daee18b86))
+
+- **vercel**: Configure yarn 4.12.0 and verify build output directory
+  ([`1a4ac40`](https://github.com/feniix/kinemotion/commit/1a4ac40426d8e24ea0d116b71fb37ce4c2a1490d))
+
+- **vercel**: Enable corepack to respect yarn 4.12.0 from packageManager field
+  ([`4e333fa`](https://github.com/feniix/kinemotion/commit/4e333fab60a3b02bda2de6d517fd403449a399f7))
+
+- **vercel**: Move vercel.json to frontend directory for correct configuration loading
+  ([`8fc5f5a`](https://github.com/feniix/kinemotion/commit/8fc5f5acfc7be62be896cab9ca57945ec604c71f))
+
+- **vercel**: Remove cd commands - Root Directory already in frontend context
+  ([`e577c75`](https://github.com/feniix/kinemotion/commit/e577c7531468f09e5f161335342d9c1ef01c277a))
+
+
 ## v0.32.0 (2025-11-29)
 
 ### Bug Fixes
