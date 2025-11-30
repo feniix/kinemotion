@@ -1,5 +1,5 @@
 {
-  "buildCommand": "corepack enable && yarn build",
-  "installCommand": "corepack enable && yarn install",
+  "buildCommand": "yarn build",
+  "installCommand": "yarn install",
   "outputDirectory": "dist"
 }
