@@ -81,3 +81,5 @@ Thumbs.db
 !.cursor/mcp.json
 .envrc
 !.mcp.json
+.vercel
+.env*.local
