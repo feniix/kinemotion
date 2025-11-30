@@ -50,7 +50,7 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
     try {
       // Use environment variable for API URL in production, or relative proxy in development
       const baseApiUrl = import.meta.env.VITE_API_URL || ''
-      const apiEndpoint = baseApiUrl ? `${baseApiUrl}/analyze` : '/api/analyze'
+      const apiEndpoint = baseApiUrl ? `${baseApiUrl}/api/analyze` : '/api/analyze'
 
       // Use XMLHttpRequest to track upload progress
       const response = await new Promise<AnalysisResponse>((resolve, reject) => {
