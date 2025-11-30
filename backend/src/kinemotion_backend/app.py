@@ -204,18 +204,20 @@ cors_origins = [
 ]
 
 # Add production origins from environment variable if configured
-if os.getenv("CORS_ORIGINS"):
+cors_origins_env = os.getenv("CORS_ORIGINS", "").strip()
+if cors_origins_env:
     # Split by comma and strip whitespace from each origin
-    prod_origins = [
-        origin.strip() for origin in os.getenv("CORS_ORIGINS", "").split(",")
-    ]
+    prod_origins = [origin.strip() for origin in cors_origins_env.split(",")]
     cors_origins.extend(prod_origins)
+    print(f"DEBUG: CORS origins configured: {cors_origins}")
+else:
+    print("DEBUG: No CORS_ORIGINS env var set, using defaults only")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_credentials=False,  # Set to False to allow wildcard headers
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
