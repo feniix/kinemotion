@@ -166,8 +166,42 @@ app = FastAPI(
     version="0.1.0",
 )
 
+# ========== CORS Configuration (added FIRST for correct middleware order) ==========
 
-# Configure rate limiting (3 video uploads per minute per IP address)
+cors_origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://localhost:8080",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:8080",
+]
+
+# Add production origins from environment variable if configured
+cors_origins_env = os.getenv("CORS_ORIGINS", "").strip()
+if cors_origins_env:
+    # Split by comma and strip whitespace from each origin
+    prod_origins = [origin.strip() for origin in cors_origins_env.split(",")]
+    cors_origins.extend(prod_origins)
+
+# Add CORS middleware FIRST so it wraps all other middleware (LIFO order)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=cors_origins,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=[
+        "Accept",
+        "Accept-Language",
+        "Content-Language",
+        "Content-Type",
+        "Authorization",
+    ],
+)
+
+# ========== Rate Limiting Configuration ==========
+
+
 class NoOpLimiter:
     """No-op limiter for testing."""
 
@@ -192,37 +226,6 @@ if not _testing:
         Exception,
         _rate_limit_exceeded_handler,  # type: ignore[arg-type]
     )
-
-# Configure CORS for localhost development and production
-cors_origins = [
-    "http://localhost:3000",
-    "http://localhost:5173",
-    "http://localhost:8080",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:8080",
-]
-
-# Add production origins from environment variable if configured
-cors_origins_env = os.getenv("CORS_ORIGINS", "").strip()
-if cors_origins_env:
-    # Split by comma and strip whitespace from each origin
-    prod_origins = [origin.strip() for origin in cors_origins_env.split(",")]
-    cors_origins.extend(prod_origins)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=cors_origins,
-    allow_credentials=False,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=[
-        "Accept",
-        "Accept-Language",
-        "Content-Language",
-        "Content-Type",
-        "Authorization",
-    ],
-)
 
 # Initialize R2 client (optional - only if credentials provided)
 r2_client: R2StorageClient | None = None
