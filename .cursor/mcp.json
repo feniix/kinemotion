@@ -1,0 +1,42 @@
+{
+  "mcpServers": {
+    "exa": {
+      "command": "direnv",
+      "args": [
+        "exec",
+        "/Users/feniix/src/personal/cursor/dropjump-claude",
+        "bunx", "-y", "exa-mcp-server"
+      ]
+    },
+    "ref": {
+      "command": "direnv",
+      "args": [
+        "exec",
+        "/Users/feniix/src/personal/cursor/dropjump-claude",
+        "bunx", "-y", "ref-tools-mcp@latest"
+      ]
+    },
+    "basic-memory": {
+      "command": "uvx",
+      "args": [
+        "basic-memory",
+        "mcp",
+        "--project=dropjump"
+      ]
+    },
+    "sequential-thinking": {
+      "command": "bunx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking@2025.7.1"
+      ]
+    },
+    "code-reasoning": {
+      "command": "bunx",
+      "args": [
+        "-y",
+        "@mettamatt/code-reasoning"
+      ]
+    }
+  }
+}

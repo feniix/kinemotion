@@ -75,4 +75,7 @@ Thumbs.db
 *.jpg
 
 .claude/settings.local.json*
-.cursor/mcp.json
+!.claude/settings.local.json
+!.cursor/mcp.json
+.envrc
+!.mcp.json

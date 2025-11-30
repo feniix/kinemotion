@@ -1,0 +1,82 @@
+{
+  "includeCoAuthoredBy": false,
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/fix-basic-memory-names.sh",
+            "statusMessage": "Normalizing basic-memory filenames to kebab-case...",
+            "timeout": 30000
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(ffprobe:*)",
+      "Bash(uv run pytest:*)",
+      "Bash(uv run dropjump-analyze:*)",
+      "Bash(uv run mypy:*)",
+      "Bash(uv run ruff:*)",
+      "Bash(uv sync:*)",
+      "mcp__web-search__freebird_fetch",
+      "mcp__web-search__freebird_search",
+      "Bash(curl:*)",
+      "mcp__sequential__sequentialthinking",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(uv run kinemotion dropjump-analyze:*)",
+      "mcp__exa__get_code_context_exa",
+      "mcp__ref__ref_search_documentation",
+      "mcp__exa__web_search_exa",
+      "mcp__ref__ref_read_url",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:sonarcloud.io)",
+      "Bash(mkdir:*)",
+      "Bash(uv run kinemotion cmj-analyze:*)",
+      "Bash(cat:*)",
+      "Bash(python3:*)",
+      "Bash(uv run pyright:*)",
+      "Bash(gh run view:*)",
+      "WebFetch(domain:www.sonarsource.com)",
+      "WebFetch(domain:docs.sonarsource.com)",
+      "WebFetch(domain:www.pyopensci.org)",
+      "WebFetch(domain:realpython.com)",
+      "WebFetch(domain:pypi.org)",
+      "Bash(wget:*)",
+      "Bash(chmod:*)",
+      "Bash(find:*)",
+      "mcp__basic-memory__write_note",
+      "mcp__serena__list_memories",
+      "mcp__basic-memory__list_memory_projects",
+      "mcp__basic-memory__search_notes",
+      "mcp__serena__get_symbols_overview",
+      "mcp__basic-memory__build_context",
+      "mcp__basic-memory__read_note",
+      "mcp__basic-memory__list_directory",
+      "mcp__basic-memory__view_note",
+      "mcp__serena__find_file",
+      "mcp__serena__find_symbol",
+      "mcp__serena__list_dir",
+      "mcp__serena__think_about_task_adherence",
+      "mcp__serena__initial_instructions",
+      "mcp__serena__check_onboarding_performed",
+      "mcp__serena__search_for_pattern",
+      "mcp__github-project-manager__list_projects",
+      "mcp__github-project-manager__list_milestones",
+      "mcp__github-project-manager__list_issues",
+      "mcp__serena__insert_before_symbol",
+      "mcp__serena__replace_symbol_body",
+      "mcp__serena__insert_after_symbol",
+      "mcp__serena__read_memory",
+      "mcp__serena__write_memory",
+      "mcp__serena__edit_memory",
+      "mcp__basic-memory__edit_note"
+    ]
+  },
+  "enableAllProjectMcpServers": true
+}
