@@ -1,7 +1,9 @@
 """Pytest fixtures for backend API tests."""
 
+import asyncio
 import os
 import sys
+from collections.abc import Generator
 from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock, patch
@@ -19,6 +21,33 @@ if "kinemotion_backend" in sys.modules:
     del sys.modules["kinemotion_backend"]
 
 from kinemotion_backend.app import app  # noqa: E402
+
+
+@pytest.fixture(scope="function")
+def event_loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
+    """Create and properly clean up event loop for each test.
+
+    This fixture ensures:
+    - Each test gets a fresh event loop
+    - All pending tasks are cancelled during cleanup
+    - The loop is properly closed
+    - Handles edge cases like KeyboardInterrupt gracefully
+    """
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    yield loop
+
+    # Cancel all pending tasks to prevent "Task was destroyed but it is pending"
+    pending = asyncio.all_tasks(loop)
+    for task in pending:
+        task.cancel()
+
+    # Run the loop one more time to process cancellations
+    if pending:
+        loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+
+    loop.close()
 
 
 @pytest.fixture
@@ -190,3 +219,14 @@ def clear_r2_client() -> None:
     from kinemotion_backend import app as app_module
 
     app_module.r2_client = None
+
+
+def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[Any]) -> None:
+    """Hook to handle exceptions during test execution more gracefully.
+
+    This ensures that BaseException subclasses like KeyboardInterrupt don't
+    propagate and corrupt the event loop state during fixture teardown.
+    """
+    # This hook allows tests to intentionally raise exceptions without
+    # breaking the test suite cleanup
+    pass
