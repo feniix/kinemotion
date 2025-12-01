@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.33.1 (2025-12-01)
+
+### Bug Fixes
+
+- **backend**: Handle KeyboardInterrupt during pytest fixture teardown
+  ([`0f83afe`](https://github.com/feniix/kinemotion/commit/0f83afe3728579a8b575ccd7681b40247f426849))
+
+### Chores
+
+- Update MCP and IDE configuration, document KeyboardInterrupt analysis
+  ([`6f1d188`](https://github.com/feniix/kinemotion/commit/6f1d188130fba6f25e2993ccb03874d8ca3bfdf6))
+
+### Continuous Integration
+
+- Add manual workflow dispatch trigger for backend deployment
+  ([`f520667`](https://github.com/feniix/kinemotion/commit/f520667fe4c063ca6a7a9755d5a632634b77005a))
+
+
 ## v0.33.0 (2025-12-01)
 
 ### Chores
