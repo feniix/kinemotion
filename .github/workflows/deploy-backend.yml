@@ -1,4 +1,4 @@
-name: Deploy Backend to Fly.io
+name: Deploy Backend to Google Cloud Run
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
     paths:
       - 'backend/**'
       - 'src/kinemotion/**'
-      - '.github/workflows/deploy.yml'
+      - '.github/workflows/deploy-backend.yml'
 
 jobs:
   test:
@@ -79,39 +79,50 @@ jobs:
           sarif_file: 'trivy-results.sarif'
 
   deploy:
-    name: Deploy to Fly.io
+    name: Deploy to Google Cloud Run
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     environment:
       name: production
-      url: https://kinemotion-api.fly.dev
+      url: https://kinemotion-backend-1008251132682.us-central1.run.app
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Fly CLI
-        uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: 'projects/1008251132682/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          service_account: 'github-actions-deploy@kinemotion-backend.iam.gserviceaccount.com'
 
-      - name: Deploy to Fly.io
-        run: |
-          cd backend
-          flyctl deploy --remote-only --config fly.toml
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: kinemotion-backend
+          region: us-central1
+          source: ./backend
+          flags: |
+            --memory=2Gi
+            --allow-unauthenticated
+            --set-env-vars=CORS_ORIGINS=https://kinemotion.vercel.app
 
       - name: Verify deployment health
         run: |
           sleep 10
-          curl -sf https://kinemotion-api.fly.dev/health || exit 1
+          curl -sf https://kinemotion-backend-1008251132682.us-central1.run.app/health || exit 1
 
       - name: Deployment notification
         if: success()
         run: |
-          echo "✅ Successfully deployed kinemotion-api to Fly.io"
-          echo "API URL: https://kinemotion-api.fly.dev"
-          echo "API Docs: https://kinemotion-api.fly.dev/docs"
+          echo "✅ Successfully deployed kinemotion-backend to Cloud Run"
+          echo "API URL: https://kinemotion-backend-1008251132682.us-central1.run.app"
+          echo "Health: https://kinemotion-backend-1008251132682.us-central1.run.app/health"
 
       - name: Deployment failure notification
         if: failure()
         run: |
-          echo "❌ Deployment to Fly.io failed"
+          echo "❌ Deployment to Cloud Run failed"
           exit 1
