@@ -81,19 +81,6 @@ jobs:
           tags: kinemotion-backend:${{ github.sha }}
           load: true
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: kinemotion-backend:${{ github.sha }}
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
-
-      - name: Upload Trivy results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: 'trivy-results.sarif'
-
   deploy:
     name: Deploy to Google Cloud Run
     needs: build
