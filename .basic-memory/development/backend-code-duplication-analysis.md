@@ -1,7 +1,7 @@
 ---
 title: Backend Code Duplication Analysis
 type: note
-permalink: development/backend-code-duplication-analysis
+permalink: development/backend-code-duplication-analysis-1
 ---
 
 # Backend Code Duplication Analysis

@@ -1,19 +1,5 @@
 {
   "includeCoAuthoredBy": false,
-  "hooks": {
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/fix-basic-memory-names.sh",
-            "statusMessage": "Normalizing basic-memory filenames to kebab-case...",
-            "timeout": 30000
-          }
-        ]
-      }
-    ]
-  },
   "permissions": {
     "allow": [
       "Bash(ffprobe:*)",
@@ -75,8 +61,23 @@
       "mcp__serena__read_memory",
       "mcp__serena__write_memory",
       "mcp__serena__edit_memory",
-      "mcp__basic-memory__edit_note"
+      "mcp__basic-memory__edit_note",
+      "mcp__code-reasoning__code-reasoning"
     ]
   },
-  "enableAllProjectMcpServers": true
+  "enableAllProjectMcpServers": true,
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/fix-basic-memory-names.sh",
+            "timeout": 30000,
+            "statusMessage": "Normalizing basic-memory filenames to kebab-case..."
+          }
+        ]
+      }
+    ]
+  }
 }

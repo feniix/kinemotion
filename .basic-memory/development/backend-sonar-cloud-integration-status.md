@@ -1,7 +1,7 @@
 ---
 title: Backend SonarCloud Integration Status
 type: note
-permalink: development/backend-sonar-cloud-integration-status
+permalink: development/backend-sonar-cloud-integration-status-1
 ---
 
 # Backend SonarCloud Integration Status
