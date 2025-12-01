@@ -11,7 +11,16 @@ from pathlib import Path
 from typing import Any, Literal, cast
 
 import boto3
-from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile, status
+from fastapi import (
+    FastAPI,
+    File,
+    Form,
+    Header,
+    HTTPException,
+    Request,
+    UploadFile,
+    status,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from kinemotion.api import process_cmj_video, process_dropjump_video
@@ -266,19 +275,73 @@ def _validate_video_file(file: UploadFile) -> None:
         raise ValueError("File size exceeds maximum of 500MB")
 
 
-def _validate_jump_type(jump_type: str) -> None:
-    """Validate jump type parameter.
+def _validate_jump_type(jump_type: str) -> str:
+    """Validate jump type parameter (case-insensitive).
 
     Args:
         jump_type: Jump type to validate
 
+    Returns:
+        Normalized jump type (lowercase)
+
     Raises:
         ValueError: If jump type is invalid
     """
+    normalized = jump_type.lower()
     valid_types: set[str] = {"drop_jump", "cmj"}
-    if jump_type not in valid_types:
+    if normalized not in valid_types:
         raise ValueError(
             f"Invalid jump type: {jump_type}. Must be one of: {', '.join(valid_types)}"
+        )
+    return normalized
+
+
+def _validate_referer(referer: str | None, x_test_password: str | None = None) -> None:
+    """Validate request comes from authorized frontend.
+
+    Args:
+        referer: Referer header from request
+        x_test_password: Optional test password header for debugging
+
+    Raises:
+        HTTPException: If referer is missing or not from allowed origins
+    """
+    # Skip validation in test mode
+    if os.getenv("TESTING", "").lower() == "true":
+        return
+
+    # Allow bypass with test password (for curl testing, debugging)
+    test_password = os.getenv("TEST_PASSWORD")
+    if test_password and x_test_password == test_password:
+        return  # Bypass referer check
+
+    allowed_referers = [
+        "https://kinemotion.vercel.app",
+        "http://localhost:5173",
+        "http://localhost:8888",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:8888",
+    ]
+
+    # Allow additional referers from env var
+    referer_env = os.getenv("ALLOWED_REFERERS", "").strip()
+    if referer_env:
+        additional = [r.strip() for r in referer_env.split(",")]
+        allowed_referers.extend(additional)
+
+    if not referer:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Direct API access not allowed. Use the web interface.",
+        )
+
+    # Check if referer starts with any allowed origin
+    referer_valid = any(referer.startswith(origin) for origin in allowed_referers)
+
+    if not referer_valid:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Request must originate from authorized frontend",
         )
 
 
@@ -334,6 +397,8 @@ async def analyze_video(
     file: UploadFile = File(...),  # noqa: B008
     jump_type: str = Form("cmj"),  # noqa: B008
     quality: str = Form("balanced"),  # noqa: B008
+    referer: str | None = Header(None),  # noqa: B008
+    x_test_password: str | None = Header(None),  # noqa: B008
 ) -> JSONResponse:
     """Analyze video and return jump metrics.
 
@@ -352,6 +417,7 @@ async def analyze_video(
     Raises:
         HTTPException: If validation or processing fails
     """
+    import json
     import time
 
     start_time = time.time()
@@ -360,9 +426,12 @@ async def analyze_video(
     r2_results_key = None
 
     try:
+        # Validate referer (prevent direct API access)
+        _validate_referer(referer, x_test_password)
+
         # Validate inputs
         print(f"DEBUG: Received jump_type={jump_type}, file={file.filename}")
-        _validate_jump_type(jump_type)
+        jump_type = _validate_jump_type(jump_type)  # Normalize to lowercase
         await file.seek(0)
         _validate_video_file(file)
 
@@ -390,16 +459,10 @@ async def analyze_video(
         metrics = await _process_video_async(temp_video_path, jump_type, quality)  # type: ignore[arg-type]
         print(f"DEBUG: Metrics returned: {metrics}")
         print(f"DEBUG: Metrics type: {type(metrics)}")
-        metrics_keys = (
-            list(metrics.keys()) if isinstance(metrics, dict) else "not a dict"
-        )
-        print(f"DEBUG: Metrics keys: {metrics_keys}")
-        metrics_len = len(metrics) if isinstance(metrics, dict) else "N/A"
-        print(f"DEBUG: Metrics length: {metrics_len}")
+        print(f"DEBUG: Metrics keys: {list(metrics.keys())}")
+        print(f"DEBUG: Metrics length: {len(metrics)}")
         # Try to JSON serialize to see if there are issues
         try:
-            import json
-
             json_test = json.dumps(metrics)
             print(f"DEBUG: JSON serializable OK, length: {len(json_test)}")
         except Exception as e:
@@ -513,7 +576,7 @@ async def analyze_local_video(
 
     try:
         # Validate inputs
-        _validate_jump_type(jump_type)
+        jump_type = _validate_jump_type(jump_type)  # Normalize to lowercase
 
         if not Path(video_path).exists():
             raise HTTPException(

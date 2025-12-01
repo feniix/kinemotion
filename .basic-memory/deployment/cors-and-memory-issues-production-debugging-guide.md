@@ -1,7 +1,7 @@
 ---
 title: CORS and Memory Issues - Production Debugging Guide
 type: note
-permalink: deployment/cors-and-memory-issues-production-debugging-guide
+permalink: deployment/cors-and-memory-issues-production-debugging-guide-1
 tags:
 - cors
 - debugging

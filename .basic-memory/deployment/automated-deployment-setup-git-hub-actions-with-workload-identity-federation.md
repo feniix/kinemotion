@@ -1,7 +1,7 @@
 ---
 title: Automated Deployment Setup - GitHub Actions with Workload Identity Federation
 type: note
-permalink: deployment/automated-deployment-setup-git-hub-actions-with-workload-identity-federation
+permalink: deployment/automated-deployment-setup-git-hub-actions-with-workload-identity-federation-1
 tags:
 - ci-cd
 - github-actions

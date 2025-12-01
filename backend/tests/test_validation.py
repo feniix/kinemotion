@@ -229,7 +229,8 @@ def test_file_without_name_rejected(
 
     assert response.status_code == 422
     data = response.json()
-    assert "error" in data
+    # FastAPI validation returns "detail", not "error"
+    assert "detail" in data or "error" in data
 
 
 def test_missing_jump_type_uses_default(
