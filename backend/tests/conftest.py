@@ -213,6 +213,23 @@ def no_kinemotion_mock() -> None:
     pass
 
 
+@pytest.fixture
+def mock_kinemotion_cmj(sample_cmj_metrics: dict[str, Any]) -> MagicMock:
+    """Mock kinemotion CMJ analysis function.
+
+    Provides direct access to the CMJ mock without disabling the autouse mock.
+    Useful for tests that need to modify or inspect the CMJ mock behavior.
+    """
+
+    class MockCMJResult:
+        def to_dict(self) -> dict[str, Any]:
+            return sample_cmj_metrics
+
+    with patch("kinemotion_backend.app.process_cmj_video") as mock_cmj:
+        mock_cmj.return_value = MockCMJResult()
+        yield mock_cmj
+
+
 @pytest.fixture(autouse=True)
 def clear_r2_client() -> None:
     """Clear R2 client before each test."""

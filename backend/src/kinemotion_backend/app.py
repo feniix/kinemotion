@@ -82,7 +82,7 @@ class R2StorageClient:
         self.endpoint = os.getenv("R2_ENDPOINT", "")
         self.access_key = os.getenv("R2_ACCESS_KEY", "")
         self.secret_key = os.getenv("R2_SECRET_KEY", "")
-        self.bucket_name = os.getenv("R2_BUCKET_NAME", "kinemotion")
+        self.bucket_name = os.getenv("R2_BUCKET_NAME") or "kinemotion"
 
         if not all([self.endpoint, self.access_key, self.secret_key]):
             raise ValueError(
