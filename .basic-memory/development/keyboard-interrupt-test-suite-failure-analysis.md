@@ -43,3 +43,23 @@ Modify `backend/tests/conftest.py` to add:
 - Custom event loop fixture with proper cleanup
 - Task cancellation before loop closes
 - Proper TestClient context management
+
+## Follow-up Fixes: R2 Integration Tests (COMPLETED ✅)
+
+After the KeyboardInterrupt fix, we discovered two additional test failures in R2 integration:
+
+### Issue 1: test_r2_bucket_name_default failure
+**Root cause**: `os.getenv("R2_BUCKET_NAME", "kinemotion")` returns empty string "" if env var is explicitly set to ""
+**Fix**: Changed to `os.getenv("R2_BUCKET_NAME") or "kinemotion"` to handle empty strings
+**File**: `backend/src/kinemotion_backend/app.py:85`
+
+### Issue 2: Missing mock_kinemotion_cmj fixture
+**Root cause**: Three tests referenced `mock_kinemotion_cmj` fixture that didn't exist in conftest.py
+**Fix**: Added new fixture that provides direct access to CMJ mock
+**File**: `backend/tests/conftest.py` (lines 216-230)
+
+### Final Status
+- **85 tests PASS** ✅
+- **1 test SKIP** (KeyboardInterrupt gracefully skipped)
+- **Commit**: c7b7940
+- **Workflow**: Ready for deployment
