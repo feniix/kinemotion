@@ -7,6 +7,12 @@ on:
       - 'backend/**'
       - 'src/kinemotion/**'
       - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual deployment'
+        required: false
+        type: string
 
 jobs:
   test:
@@ -16,6 +22,16 @@ jobs:
       matrix:
         python-version: ['3.12']
     steps:
+      - name: Display deployment reason (if manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          REASON="${{ github.event.inputs.reason }}"
+          if [ -z "$REASON" ]; then
+            echo "Manual deployment triggered"
+          else
+            echo "Manual deployment triggered: $REASON"
+          fi
+
       - uses: actions/checkout@v4
 
       - name: Set up Python
