@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.33.2 (2025-12-01)
+
+### Bug Fixes
+
+- **backend**: Resolve R2 integration test failures
+  ([`366463e`](https://github.com/feniix/kinemotion/commit/366463e1ad4cee582c7a222d46427c473908d2b1))
+
+### Documentation
+
+- Update analysis with R2 integration test fixes
+  ([`d7a2f20`](https://github.com/feniix/kinemotion/commit/d7a2f20790441fa6d25ba6785cd677eba2b45908))
+
+
 ## v0.33.1 (2025-12-01)
 
 ### Bug Fixes
