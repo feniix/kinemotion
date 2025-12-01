@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.33.0 (2025-12-01)
+
+### Chores
+
+- Trigger vercel redeploy
+  ([`59c6b24`](https://github.com/feniix/kinemotion/commit/59c6b24277af4d3cfd20bc7a299a34023f17bb73))
+
+- **backend**: Add localhost:8888 to CORS origins for local testing
+  ([`bf9db7f`](https://github.com/feniix/kinemotion/commit/bf9db7f273a3afe51a360d55b7548f25fd9bee02))
+
+- **backend**: Reorder middleware so CORS wraps rate limiter
+  ([`fb66bc4`](https://github.com/feniix/kinemotion/commit/fb66bc4ac8db6b82740418b78c1cf6eb84cde874))
+
+### Continuous Integration
+
+- Add automated Cloud Run deployment with Workload Identity Federation
+  ([`d3381ae`](https://github.com/feniix/kinemotion/commit/d3381ae853a09568c41f05bd4eada217f5c376f7))
+
+### Documentation
+
+- **deployment**: Add automated deployment setup guide with workload identity
+  ([`a483592`](https://github.com/feniix/kinemotion/commit/a48359230c2e168e40e41b99c0b992836e6547c4))
+
+- **deployment**: Add production deployment and troubleshooting guides
+  ([`006eee8`](https://github.com/feniix/kinemotion/commit/006eee8c9aa18025c1679942e4e0191d97784a55))
+
+### Features
+
+- **backend**: Add referer validation and document code quality metrics
+  ([`716efb3`](https://github.com/feniix/kinemotion/commit/716efb33329768413779dacc4c6de988c91f34a2))
+
+
 ## v0.32.3 (2025-11-30)
 
 ### Bug Fixes
