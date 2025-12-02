@@ -1,7 +1,7 @@
 ---
 title: Supabase Authentication Technical Guide
 type: note
-permalink: authentication/supabase-authentication-technical-guide
+permalink: authentication/supabase-authentication-technical-guide-1
 tags:
 - supabase
 - authentication

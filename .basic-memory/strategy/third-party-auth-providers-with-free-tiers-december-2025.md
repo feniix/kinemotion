@@ -1,7 +1,7 @@
 ---
 title: Third-Party Auth Providers with Free Tiers (December 2025)
 type: note
-permalink: strategy/third-party-auth-providers-with-free-tiers-december-2025
+permalink: strategy/third-party-auth-providers-with-free-tiers-december-2025-1
 tags:
 - '[''authentication'''
 - '''auth-providers'''

@@ -1,7 +1,7 @@
 ---
 title: Supabase Authentication Quick Start
 type: note
-permalink: authentication/supabase-authentication-quick-start
+permalink: authentication/supabase-authentication-quick-start-1
 tags:
 - supabase
 - authentication

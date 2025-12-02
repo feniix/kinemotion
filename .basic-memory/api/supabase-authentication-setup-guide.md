@@ -1,7 +1,7 @@
 ---
 title: Supabase Authentication Setup Guide
 type: note
-permalink: api/supabase-authentication-setup-guide
+permalink: api/supabase-authentication-setup-guide-1
 tags:
 - '[''supabase'''
 - '''authentication'''

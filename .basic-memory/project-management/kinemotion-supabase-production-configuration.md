@@ -1,7 +1,7 @@
 ---
 title: Kinemotion Supabase Production Configuration
 type: note
-permalink: project-management/kinemotion-supabase-production-configuration
+permalink: project-management/kinemotion-supabase-production-configuration-1
 tags:
 - supabase
 - production

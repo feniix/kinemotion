@@ -1,7 +1,7 @@
 ---
 title: Auth Providers Comparison December 2025
 type: note
-permalink: authentication/auth-providers-comparison-december-2025
+permalink: authentication/auth-providers-comparison-december-2025-1
 tags:
 - authentication
 - comparison

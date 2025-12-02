@@ -1,7 +1,7 @@
 ---
 title: Structured Logging Implementation
 type: note
-permalink: development/structured-logging-implementation
+permalink: development/structured-logging-implementation-1
 tags:
 - logging
 - structlog

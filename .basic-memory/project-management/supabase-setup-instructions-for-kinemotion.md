@@ -1,7 +1,7 @@
 ---
 title: Supabase Setup Instructions for Kinemotion
 type: note
-permalink: project-management/supabase-setup-instructions-for-kinemotion
+permalink: project-management/supabase-setup-instructions-for-kinemotion-1
 tags:
 - '[''supabase'
 ---

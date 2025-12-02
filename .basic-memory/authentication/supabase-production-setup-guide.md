@@ -1,7 +1,7 @@
 ---
 title: Supabase Production Setup Guide
 type: note
-permalink: authentication/supabase-production-setup-guide
+permalink: authentication/supabase-production-setup-guide-1
 tags:
 - supabase
 - authentication

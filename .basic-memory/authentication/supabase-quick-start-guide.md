@@ -1,7 +1,7 @@
 ---
 title: Supabase Quick Start Guide
 type: note
-permalink: authentication/supabase-quick-start-guide
+permalink: authentication/supabase-quick-start-guide-1
 tags:
 - supabase
 - authentication
