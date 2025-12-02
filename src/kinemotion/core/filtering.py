@@ -3,6 +3,8 @@
 import numpy as np
 from scipy.signal import medfilt
 
+from .experimental import unused
+
 
 def detect_outliers_ransac(
     positions: np.ndarray,
@@ -226,6 +228,11 @@ def reject_outliers(
     return cleaned_positions, outlier_mask
 
 
+@unused(
+    reason="Not called by analysis pipeline - alternative adaptive smoothing approach",
+    remove_in="1.0.0",
+    since="0.34.0",
+)
 def adaptive_smooth_window(
     positions: np.ndarray,
     base_window: int = 5,

@@ -1,7 +1,7 @@
 ---
 title: Unused and Experimental Features Strategy
 type: note
-permalink: development/unused-and-experimental-features-strategy
+permalink: development/unused-and-experimental-features-strategy-1
 tags:
 - code-quality
 - maintenance

@@ -6,6 +6,7 @@ from typing import Any, Protocol
 import click
 
 from .auto_tuning import AnalysisParameters, QualityPreset, VideoCharacteristics
+from .experimental import unused
 from .pose import PoseTracker
 from .smoothing import smooth_landmarks, smooth_landmarks_advanced
 from .video_io import VideoProcessor
@@ -22,6 +23,11 @@ class ExpertParameters(Protocol):
     visibility_threshold: float | None
 
 
+@unused(
+    reason="Not called by analysis pipeline - remnant from CLI refactoring",
+    remove_in="1.0.0",
+    since="0.34.0",
+)
 def determine_initial_confidence(
     quality_preset: QualityPreset,
     expert_params: ExpertParameters,
@@ -54,6 +60,11 @@ def determine_initial_confidence(
     return initial_detection_conf, initial_tracking_conf
 
 
+@unused(
+    reason="Not called by analysis pipeline - remnant from CLI refactoring",
+    remove_in="1.0.0",
+    since="0.34.0",
+)
 def track_all_frames(video: VideoProcessor, tracker: PoseTracker) -> tuple[list, list]:
     """Track pose landmarks in all video frames.
 
@@ -84,6 +95,11 @@ def track_all_frames(video: VideoProcessor, tracker: PoseTracker) -> tuple[list,
     return frames, landmarks_sequence
 
 
+@unused(
+    reason="Not called by analysis pipeline - remnant from CLI refactoring",
+    remove_in="1.0.0",
+    since="0.34.0",
+)
 def apply_expert_param_overrides(
     params: AnalysisParameters, expert_params: ExpertParameters
 ) -> AnalysisParameters:
@@ -107,6 +123,11 @@ def apply_expert_param_overrides(
     return params
 
 
+@unused(
+    reason="Not called by analysis pipeline - remnant from CLI refactoring",
+    remove_in="1.0.0",
+    since="0.34.0",
+)
 def print_auto_tuned_params(
     video: VideoProcessor,
     quality_preset: QualityPreset,
@@ -161,6 +182,11 @@ def print_auto_tuned_params(
     click.echo("=" * 60 + "\n", err=True)
 
 
+@unused(
+    reason="Not called by analysis pipeline - remnant from CLI refactoring",
+    remove_in="1.0.0",
+    since="0.34.0",
+)
 def smooth_landmark_sequence(
     landmarks_sequence: list, params: AnalysisParameters
 ) -> list:

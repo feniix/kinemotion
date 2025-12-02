@@ -1,7 +1,7 @@
 ---
 title: Test Suite Comprehensive Review - December 2025
 type: note
-permalink: development/test-suite-comprehensive-review-december-2025
+permalink: development/test-suite-comprehensive-review-december-2025-1
 tags:
 - testing
 - quality-assurance

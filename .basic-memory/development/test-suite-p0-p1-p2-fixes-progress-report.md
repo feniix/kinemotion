@@ -1,7 +1,7 @@
 ---
 title: Test Suite P0/P1/P2 Fixes - Progress Report
 type: note
-permalink: development/test-suite-p0-p1-p2-fixes-progress-report
+permalink: development/test-suite-p0-p1-p2-fixes-progress-report-1
 tags:
 - testing
 - progress-report
