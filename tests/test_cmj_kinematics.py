@@ -116,9 +116,10 @@ def test_cmj_metrics_to_dict() -> None:
         assert key in result_dict["data"], f"Missing key in data: {key}"
 
     # Verify all numeric values are Python types (not NumPy)
-    assert isinstance(result_dict["data"]["jump_height_m"], float)
-    assert isinstance(result_dict["data"]["flight_time_ms"], float)
-    assert isinstance(result_dict["data"]["tracking_method"], str)
+    data = result_dict["data"]
+    assert isinstance(data.get("jump_height_m"), float)
+    assert isinstance(data.get("flight_time_ms"), float)
+    assert isinstance(data.get("tracking_method"), str)
 
 
 def test_cmj_metrics_without_standing_phase() -> None:

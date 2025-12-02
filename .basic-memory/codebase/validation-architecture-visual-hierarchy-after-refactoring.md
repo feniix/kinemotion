@@ -1,7 +1,7 @@
 ---
 title: Validation Architecture - Visual Hierarchy After Refactoring
 type: note
-permalink: codebase/validation-architecture-visual-hierarchy-after-refactoring
+permalink: codebase/validation-architecture-visual-hierarchy-after-refactoring-1
 ---
 
 # Validation Architecture - After Refactoring

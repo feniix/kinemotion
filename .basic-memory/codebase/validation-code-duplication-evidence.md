@@ -1,7 +1,7 @@
 ---
 title: Validation Code Duplication Evidence
 type: note
-permalink: codebase/validation-code-duplication-evidence
+permalink: codebase/validation-code-duplication-evidence-1
 ---
 
 # Validation Code Duplication Evidence

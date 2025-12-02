@@ -1,7 +1,7 @@
 ---
 title: Validation Module Architecture Analysis
 type: note
-permalink: codebase/validation-module-architecture-analysis
+permalink: codebase/validation-module-architecture-analysis-1
 ---
 
 # Validation Module Architecture Analysis
