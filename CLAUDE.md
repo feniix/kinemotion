@@ -96,11 +96,18 @@ src/kinemotion/
 │   └── validation_bounds.py    # Drop jump bounds (DropJumpBounds)
 └── [other modules]
 
-tests/                      # 261 tests (comprehensive coverage across all modules)
+tests/                      # 438 tests (comprehensive coverage across all modules)
+├── conftest.py             # Shared fixtures (cli_runner, minimal_video, sample_video_path)
+├── core/                   # Core module tests
+├── dropjump/               # Drop jump tests
+├── cmj/                    # CMJ tests
+└── cli/                    # CLI tests
 docs/                       # CMJ_GUIDE, TRIPLE_EXTENSION, REAL_TIME_ANALYSIS, etc.
 ```
 
 **Design**: Each jump type is a sibling module with its own CLI command, metrics, validation, and visualization. Shared validation infrastructure (base classes) in `core/validation.py`.
+
+**Test Organization**: Tests mirror source structure with subdirectories for core/, dropjump/, cmj/, and cli/. Shared fixtures centralized in tests/conftest.py to eliminate duplication.
 
 ### Full-Stack Architecture
 
@@ -119,7 +126,7 @@ The project has evolved into a complete platform with three main components:
 │   ├── cli.py           # Main CLI commands
 │   ├── api.py           # Python API (used by backend)
 │   └── [modules]        # Core, dropjump, cmj
-└── tests/               # 261 comprehensive tests (74.27% coverage)
+└── tests/               # 438 comprehensive tests (77.57% coverage)
 ```
 
 **Data Flow:**
@@ -166,7 +173,7 @@ See [Implementation Details](docs/technical/implementation-details.md) for compl
 uv run ruff check --fix   # Auto-fix linting
 uv run ruff format        # Format code
 uv run pyright            # Type check (strict)
-uv run pytest             # All 206 tests with coverage
+uv run pytest             # All 438 tests with coverage
 ```
 
 ### Standards
@@ -175,24 +182,31 @@ uv run pytest             # All 206 tests with coverage
 - Ruff (88 char lines, both linting and formatting)
 - Conventional Commits (see below)
 - **Code duplication target: < 3%**
-- **Test coverage: ≥ 50% (current: 74.27% with branch coverage)**
+- **Test coverage: ≥ 50% (current: 77.57% with branch coverage)**
 
 ### Coverage Summary
 
-**Current:** 74.27% (261 tests, 2383 statements, 788 branches)
+**Current:** 77.57% (438 tests, 2966 statements, 1056 branches)
 
 **Coverage by tier:**
 
 - Core algorithms: 85-100% ✅ (analysis, kinematics, filtering, pose)
-- API/Integration: 63% ✅ (api.py)
-- CLI modules: 62-89% ✅ (dropjump: 88.75%, cmj: 62.27%)
+- API/Integration: 72% ✅ (api.py)
+- CLI modules: 74-87% ✅ (dropjump: 87.17%, cmj: 73.88%)
+- Validation: 80-100% ✅ (validators, bounds)
 - Visualization: 10-36% ✅ (debug overlays - appropriate)
 
 **Key metrics:**
 
-- All 261 tests pass
+- All 438 tests pass
 - 0 type errors (pyright strict)
 - 0 linting errors (ruff)
+
+**Test Organization:**
+
+- Mirrored source structure: tests/core/, tests/dropjump/, tests/cmj/, tests/cli/
+- Centralized fixtures in tests/conftest.py
+- Zero fixture duplication across test files
 
 See [Testing Guide](docs/development/testing.md) for:
 

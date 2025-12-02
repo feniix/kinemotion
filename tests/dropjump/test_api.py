@@ -1,17 +1,16 @@
-"""Tests for the public API module."""
+"""Tests for Drop Jump API module."""
 
 import os
 import tempfile
 from pathlib import Path
 
-import numpy as np
 import pytest
 
 from kinemotion.api import (
     DropJumpVideoConfig,
     DropJumpVideoResult,
-    _apply_expert_overrides,
-    _determine_confidence_levels,
+    _apply_expert_overrides,  # type: ignore[reportPrivateUsage]
+    _determine_confidence_levels,  # type: ignore[reportPrivateUsage]
     process_dropjump_video,
     process_dropjump_videos_bulk,
 )
@@ -308,9 +307,9 @@ def test_process_videos_bulk_different_parameters(sample_video_path: str) -> Non
         assert len(results) == 3
         assert all(r.success for r in results)
 
-        # Check JSON output was created
+        # Check JSON output was created for second video
         json_file = Path(tmpdir) / "video2.json"
-        assert json_file.exists()
+        assert json_file.exists(), "JSON output should be created for video2"
 
 
 # Unit tests for helper functions
@@ -399,7 +398,9 @@ def test_apply_expert_overrides_partial() -> None:
     assert result.visibility_threshold == 0.5  # Unchanged
 
 
-def test_process_video_verbose_mode(sample_video_path: str, capsys) -> None:
+def test_process_video_verbose_mode(
+    sample_video_path: str, capsys: pytest.CaptureFixture
+) -> None:
     """Test that verbose mode prints parameter information."""
     process_dropjump_video(video_path=sample_video_path, quality="fast", verbose=True)
 
@@ -412,24 +413,4 @@ def test_process_video_verbose_mode(sample_video_path: str, capsys) -> None:
 # Fixtures
 
 
-@pytest.fixture
-def sample_video_path(tmp_path: Path) -> str:
-    """Create a minimal synthetic video for testing."""
-    import cv2
-
-    video_path = tmp_path / "test_video.mp4"
-
-    # Create a simple test video (30 frames at 30fps = 1 second)
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    out = cv2.VideoWriter(str(video_path), fourcc, 30.0, (640, 480))
-
-    # Generate frames with a simple moving pattern
-    for i in range(30):
-        frame = np.zeros((480, 640, 3), dtype=np.uint8)
-        # Add some pattern to make pose detection possible (though it will likely fail)
-        cv2.circle(frame, (320, 240 + i * 5), 50, (255, 255, 255), -1)
-        out.write(frame)
-
-    out.release()
-
-    return str(video_path)
+# sample_video_path fixture moved to tests/conftest.py

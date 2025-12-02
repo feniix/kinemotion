@@ -62,7 +62,8 @@
       "mcp__serena__write_memory",
       "mcp__serena__edit_memory",
       "mcp__basic-memory__edit_note",
-      "mcp__code-reasoning__code-reasoning"
+      "mcp__code-reasoning__code-reasoning",
+      "mcp__sequential-thinking__process_thought"
     ]
   },
   "enableAllProjectMcpServers": true,

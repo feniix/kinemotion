@@ -26,26 +26,7 @@ skip_in_ci = pytest.mark.skipif(
 )
 
 
-@pytest.fixture
-def cli_runner() -> CliRunner:
-    """Provide Click test runner with stderr separation."""
-    return CliRunner(mix_stderr=False)
-
-
-@pytest.fixture
-def minimal_video(tmp_path: Path) -> Path:
-    """Create minimal test video for CLI testing."""
-    video_path = tmp_path / "test.mp4"
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    out = cv2.VideoWriter(str(video_path), fourcc, 30.0, (640, 480))
-
-    # Create 30 frames (1 second)
-    for _ in range(30):
-        frame = np.zeros((480, 640, 3), dtype=np.uint8)
-        out.write(frame)
-
-    out.release()
-    return video_path
+# cli_runner and minimal_video fixtures moved to tests/conftest.py
 
 
 class TestDropJumpCLIHelp:
