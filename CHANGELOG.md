@@ -7,6 +7,86 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.35.0 (2025-12-02)
+
+### Chores
+
+- Add missing Supabase client and fix TypeScript errors
+  ([`126839f`](https://github.com/feniix/kinemotion/commit/126839f8723a36ea62019b724ad43ea87b2e353f))
+
+- Exclude non-source directories from ruff linting
+  ([`af62d04`](https://github.com/feniix/kinemotion/commit/af62d04b91cba3f40eca624ce9c5c1fcd3b4c802))
+
+- **test**: Use safe dict access in CMJ kinematics test
+  ([`48dc977`](https://github.com/feniix/kinemotion/commit/48dc977ab54dae9f0e94e9da5133307348cfe72f))
+
+### Code Style
+
+- Format code with ruff and fix basic-memory permalinks
+  ([`4c3c23a`](https://github.com/feniix/kinemotion/commit/4c3c23a44501ee9357fac76884bdf09ff9f72741))
+
+### Continuous Integration
+
+- Fix docker build
+  ([`56c8cb8`](https://github.com/feniix/kinemotion/commit/56c8cb84bb4478559c9121ec47f4e22244200dd6))
+
+- Implement least-privilege service account separation for Cloud Run deployment
+  ([`2fdfaad`](https://github.com/feniix/kinemotion/commit/2fdfaad5d15c0f2fcca98d5d9263af8f6a044d2c))
+
+- Skip release workflow for deployment-only changes
+  ([`ff34ebf`](https://github.com/feniix/kinemotion/commit/ff34ebf9b12107795dd57a2462cb4e47eea211ad))
+
+- **backend**: Correct Docker port configuration for Cloud Run deployment
+  ([`35fd087`](https://github.com/feniix/kinemotion/commit/35fd0874e9aa937dde3aadb8222431bf60a39191))
+
+### Documentation
+
+- Add Google OAuth setup guide and script review documentation
+  ([`1260aff`](https://github.com/feniix/kinemotion/commit/1260aff7c9b82c19f34fbc8fb506592ac450f97d))
+
+- Add repository split migration guides for backend and frontend
+  ([`0c4d85f`](https://github.com/feniix/kinemotion/commit/0c4d85f2685a5f39791c43626d3b1cc8be4aaaf6))
+
+- Fix basic-memory documentation format issues
+  ([`a818d6c`](https://github.com/feniix/kinemotion/commit/a818d6cd54086dc43ce4b2be46a6d007cb9442cc))
+
+- Update documentation
+  ([`f302044`](https://github.com/feniix/kinemotion/commit/f302044c896cd5edbfcc3dee2bdb0f580be723ce))
+
+- Update project state and deployment documentation
+  ([`845628d`](https://github.com/feniix/kinemotion/commit/845628d8e4f6184eeb61ef4fdaa1aa3dab5dcce5))
+
+### Features
+
+- Add decorators for marking unused/experimental features
+  ([`b96076e`](https://github.com/feniix/kinemotion/commit/b96076e59bbfddbd75057ba90d36b4a36bf2a2d1))
+
+### Refactoring
+
+- Eliminate code duplication by moving interpolate_threshold_crossing to core
+  ([`1ea8da0`](https://github.com/feniix/kinemotion/commit/1ea8da03ae1a649ab51c467882cb0f83b3e16260))
+
+- Extract validation base classes and move jump-specific validators
+  ([`7c78c53`](https://github.com/feniix/kinemotion/commit/7c78c532b8a50ba3dfa64e4fc00f720b50c0180f))
+
+- Mark 6 additional unused functions in analysis modules
+  ([`631834d`](https://github.com/feniix/kinemotion/commit/631834d3550e644a0101c238c76c0e3976ba77a6))
+
+- Mark adaptive_smooth_window as unused
+  ([`b70debe`](https://github.com/feniix/kinemotion/commit/b70debef780ed8405b6a4699f85e24e1669aede1))
+
+- **test**: Reorganize test suite and centralize fixtures
+  ([`5a78e9c`](https://github.com/feniix/kinemotion/commit/5a78e9ca5f0461dd467b2bd0bbe61d9e5719ee26))
+
+### Testing
+
+- Complete P0/P1/P2 test suite improvements
+  ([`cf40ffc`](https://github.com/feniix/kinemotion/commit/cf40ffc04910ccadef1308ff6385a679c2a808bb))
+
+- Improve coverage for smoothing and CMJ CLI modules
+  ([`e728a93`](https://github.com/feniix/kinemotion/commit/e728a930c222dc0027c9a385fa7182a1dc6e0b4c))
+
+
 ## v0.34.0 (2025-12-02)
 
 ### Chores
