@@ -19,6 +19,13 @@ from click.testing import CliRunner
 
 from kinemotion.cmj.cli import cmj_analyze
 
+pytestmark = [
+    pytest.mark.integration,
+    pytest.mark.cli,
+    pytest.mark.cmj,
+    pytest.mark.requires_video,
+]
+
 # Skip batch/multiprocessing tests in CI
 # MediaPipe doesn't work with ProcessPoolExecutor in headless environments
 skip_in_ci = pytest.mark.skipif(

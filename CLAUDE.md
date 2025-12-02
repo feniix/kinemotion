@@ -40,10 +40,12 @@ uv run kinemotion cmj-analyze video.mp4
 **Development:**
 
 ```bash
-uv run pytest                           # Run all 261 tests with coverage (74.27%)
+uv run pytest                           # Run all tests (207 test functions)
 uv run pytest --cov-report=html         # Generate HTML coverage report
 uv run ruff check --fix && uv run pyright  # Lint + type check
 ```
+
+**Note**: Test count reflects 207 test functions across 24 test files. Parameterized tests generate additional test instances at runtime. Total coverage: 78.67%.
 
 **Coverage Reports:**
 
@@ -173,7 +175,7 @@ See [Implementation Details](docs/technical/implementation-details.md) for compl
 uv run ruff check --fix   # Auto-fix linting
 uv run ruff format        # Format code
 uv run pyright            # Type check (strict)
-uv run pytest             # All 519 tests with coverage
+uv run pytest             # All tests (207 test functions)
 ```
 
 ### Standards
@@ -183,10 +185,11 @@ uv run pytest             # All 519 tests with coverage
 - Conventional Commits (see below)
 - **Code duplication target: < 3%**
 - **Test coverage: ≥ 50% (current: 78.67% with branch coverage)**
+- **Test count: 207 test functions across 24 test files**
 
 ### Coverage Summary
 
-**Current:** 78.67% (519 tests, 2966 statements, 1056 branches)
+**Current:** 78.67% (207 test functions, 2966 statements, 1056 branches)
 
 **Coverage by tier:**
 

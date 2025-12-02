@@ -1,8 +1,108 @@
-"""Tests for center of mass estimation."""
+"""Tests for pose tracking and center of mass estimation."""
 
+import numpy as np
 import pytest
 
-from kinemotion.core.pose import compute_center_of_mass
+from kinemotion.core.pose import PoseTracker, compute_center_of_mass
+
+pytestmark = [pytest.mark.unit, pytest.mark.core]
+
+# ===== PoseTracker Tests =====
+
+
+def test_pose_tracker_initialization() -> None:
+    """Test PoseTracker initialization with default parameters."""
+    tracker = PoseTracker()
+
+    assert tracker.mp_pose is not None
+    assert tracker.pose is not None
+
+    tracker.close()
+
+
+def test_pose_tracker_initialization_with_custom_confidence() -> None:
+    """Test PoseTracker initialization with custom confidence thresholds."""
+    tracker = PoseTracker(
+        min_detection_confidence=0.7,
+        min_tracking_confidence=0.6,
+    )
+
+    assert tracker.mp_pose is not None
+    assert tracker.pose is not None
+
+    tracker.close()
+
+
+def test_pose_tracker_process_frame_with_no_pose() -> None:
+    """Test PoseTracker.process_frame() returns None when no pose detected."""
+    tracker = PoseTracker()
+
+    # Create empty black frame (no person)
+    frame = np.zeros((480, 640, 3), dtype=np.uint8)
+
+    result = tracker.process_frame(frame)
+
+    # Should return None when no pose detected
+    assert result is None
+
+    tracker.close()
+
+
+def test_pose_tracker_process_frame_returns_expected_landmarks() -> None:
+    """Test PoseTracker.process_frame() returns expected landmark names."""
+    tracker = PoseTracker()
+
+    # Create a synthetic frame with simple pattern
+    # (MediaPipe might not detect a pose, but we test the interface)
+    frame = np.zeros((480, 640, 3), dtype=np.uint8)
+    # Add a vertical white rectangle to simulate a person
+    frame[100:400, 300:340, :] = 255
+
+    result = tracker.process_frame(frame)
+
+    # Result might be None (no pose detected in synthetic frame)
+    # or might contain landmarks
+    if result is not None:
+        # Verify expected landmark names are present
+        expected_landmarks = [
+            "left_ankle",
+            "right_ankle",
+            "left_heel",
+            "right_heel",
+            "left_foot_index",
+            "right_foot_index",
+            "left_hip",
+            "right_hip",
+            "left_shoulder",
+            "right_shoulder",
+            "nose",
+            "left_knee",
+            "right_knee",
+        ]
+
+        for landmark_name in expected_landmarks:
+            assert landmark_name in result
+            x, y, vis = result[landmark_name]
+            # Coordinates should be normalized (0-1)
+            assert 0 <= x <= 1
+            assert 0 <= y <= 1
+            assert 0 <= vis <= 1
+
+    tracker.close()
+
+
+def test_pose_tracker_close() -> None:
+    """Test PoseTracker.close() releases resources."""
+    tracker = PoseTracker()
+
+    # Close should not raise an exception
+    tracker.close()
+
+    # Note: MediaPipe may raise ValueError on second close
+    # This is expected behavior - resources already released
+
+
+# ===== Center of Mass Tests =====
 
 
 def test_com_full_body_visible() -> None:

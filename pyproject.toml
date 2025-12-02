@@ -61,7 +61,7 @@ dev = [
 ]
 
 
-[tool.pytest]
+[tool.pytest.ini_options]
 minversion = "9.0"
 testpaths = ["tests"]
 console_output_style = "times"
@@ -72,6 +72,18 @@ addopts = [
     "--cov-report=html",
     "--cov-report=xml",
     "--cov-branch",
+    "--strict-markers",
+]
+markers = [
+    "unit: Unit tests (fast, isolated, no external dependencies)",
+    "integration: Integration tests (multiple components, may use fixtures)",
+    "slow: Tests that take >1 second to run",
+    "requires_video: Tests that require video file fixtures",
+    "core: Tests for core/ module",
+    "cmj: Tests for CMJ analysis",
+    "dropjump: Tests for drop jump analysis",
+    "cli: Tests for CLI interface",
+    "validation: Tests for validation logic",
 ]
 
 [tool.coverage.run]

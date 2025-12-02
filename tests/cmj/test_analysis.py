@@ -3,6 +3,7 @@
 from typing import cast
 
 import numpy as np
+import pytest
 
 from kinemotion.cmj.analysis import (
     compute_signed_velocity,
@@ -24,6 +25,8 @@ from kinemotion.core.smoothing import (
     compute_acceleration_from_derivative,
     compute_velocity_from_derivative,
 )
+
+pytestmark = [pytest.mark.integration, pytest.mark.cmj]
 
 
 def test_find_standing_phase() -> None:
