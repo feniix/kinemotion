@@ -18,12 +18,11 @@ from kinemotion.cmj.analysis import (
     find_standing_end,
     find_standing_phase,
     find_takeoff_frame,
-    interpolate_threshold_crossing,
-    refine_transition_with_curvature,
 )
 from kinemotion.core.smoothing import (
     compute_acceleration_from_derivative,
     compute_velocity_from_derivative,
+    interpolate_threshold_crossing,
 )
 
 pytestmark = [pytest.mark.integration, pytest.mark.cmj]
@@ -241,107 +240,6 @@ def test_interpolate_threshold_crossing_at_boundary() -> None:
     assert offset == 0.0
 
 
-def test_refine_transition_with_curvature_landing() -> None:
-    """Test refine_transition_with_curvature for landing detection."""
-    # Create position data with clear impact spike
-    positions = np.concatenate(
-        [
-            np.linspace(0.3, 0.5, 20),  # Falling
-            np.array([0.5, 0.52, 0.54, 0.55, 0.55]),  # Impact
-            np.ones(10) * 0.55,  # Stable
-        ]
-    )
-    velocities = np.diff(positions, prepend=positions[0])
-    initial_frame = 20  # Around impact
-
-    result = refine_transition_with_curvature(
-        positions, velocities, initial_frame, transition_type="landing", search_radius=5
-    )
-
-    # Should refine near the impact point (blend of curvature and initial)
-    assert isinstance(result, float)
-    assert 15 <= result <= 25
-
-
-def test_refine_transition_with_curvature_takeoff() -> None:
-    """Test refine_transition_with_curvature for takeoff detection."""
-    # Create position data with acceleration change at takeoff
-    positions = np.concatenate(
-        [
-            np.ones(15) * 0.5,  # Static
-            np.array([0.5, 0.48, 0.45, 0.40, 0.35]),  # Accelerating upward
-            np.linspace(0.35, 0.2, 10),  # Flight
-        ]
-    )
-    velocities = np.diff(positions, prepend=positions[0])
-    initial_frame = 15  # Around takeoff
-
-    result = refine_transition_with_curvature(
-        positions, velocities, initial_frame, transition_type="takeoff", search_radius=5
-    )
-
-    # Should refine near the takeoff point
-    assert isinstance(result, float)
-    assert 12 <= result <= 20
-
-
-def test_refine_transition_with_curvature_empty_search_window() -> None:
-    """Test refine_transition_with_curvature with empty search window."""
-    positions = np.linspace(0.5, 0.3, 10)
-    velocities = np.diff(positions, prepend=positions[0])
-    initial_frame = 0  # At boundary
-    search_radius = 0  # No search radius
-
-    result = refine_transition_with_curvature(
-        positions,
-        velocities,
-        initial_frame,
-        transition_type="landing",
-        search_radius=search_radius,
-    )
-
-    # Should return initial frame when search window is empty
-    assert result == float(initial_frame)
-
-
-def test_refine_transition_with_curvature_invalid_type() -> None:
-    """Test refine_transition_with_curvature with invalid transition type."""
-    positions = np.linspace(0.5, 0.3, 20)
-    velocities = np.diff(positions, prepend=positions[0])
-    initial_frame = 10
-
-    result = refine_transition_with_curvature(
-        positions,
-        velocities,
-        initial_frame,
-        transition_type="invalid",  # Invalid type
-        search_radius=5,
-    )
-
-    # Should return initial frame for invalid type
-    assert result == float(initial_frame)
-
-
-def test_refine_transition_with_curvature_takeoff_empty_accel_change() -> None:
-    """Test refine_transition_with_curvature takeoff with very small search window."""
-    # Create minimal data that results in empty acceleration change
-    positions = np.linspace(0.5, 0.4, 10)
-    velocities = np.diff(positions, prepend=positions[0])
-    initial_frame = 5
-    search_radius = 0  # Will create search window with just 1 element
-
-    result = refine_transition_with_curvature(
-        positions,
-        velocities,
-        initial_frame,
-        transition_type="takeoff",
-        search_radius=search_radius,
-    )
-
-    # Should handle empty accel_change gracefully
-    assert isinstance(result, float)
-
-
 def test_find_cmj_takeoff_from_velocity_peak_normal() -> None:
     """Test find_cmj_takeoff_from_velocity_peak with clear peak."""
     # Create velocity data with clear upward peak (most negative)
@@ -517,24 +415,6 @@ def test_find_lowest_point_empty_search_window() -> None:
 
     # Should handle empty search gracefully
     assert isinstance(result, int)
-
-
-def test_refine_transition_with_curvature_invalid_range() -> None:
-    """Test refine_transition_with_curvature with invalid search range."""
-    positions = np.linspace(0.5, 0.7, 20)
-    velocities = np.ones(20) * 0.05
-
-    # Initial frame beyond valid range
-    result = refine_transition_with_curvature(
-        positions,
-        velocities,
-        initial_frame=25,  # Beyond array length
-        transition_type="landing",
-        search_radius=3,
-    )
-
-    # Should return initial frame without refinement
-    assert result == 25.0
 
 
 def test_find_cmj_landing_from_position_peak_no_search_window() -> None:

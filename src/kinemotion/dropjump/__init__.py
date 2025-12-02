@@ -1,12 +1,12 @@
 """Drop jump analysis module."""
 
+from ..core.smoothing import interpolate_threshold_crossing
 from .analysis import (
     ContactState,
     calculate_adaptive_threshold,
     compute_average_foot_position,
     detect_ground_contact,
     find_interpolated_phase_transitions_with_curvature,
-    interpolate_threshold_crossing,
     refine_transition_with_curvature,
 )
 from .debug_overlay import DebugOverlayRenderer

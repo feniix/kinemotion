@@ -8,6 +8,7 @@ from ..core.experimental import unused
 from ..core.smoothing import (
     compute_acceleration_from_derivative,
     compute_velocity_from_derivative,
+    interpolate_threshold_crossing,
 )
 
 
@@ -421,40 +422,6 @@ def find_contact_phases(
     phases.append((phase_start, len(contact_states) - 1, current_state))
 
     return phases
-
-
-def interpolate_threshold_crossing(
-    vel_before: float,
-    vel_after: float,
-    velocity_threshold: float,
-) -> float:
-    """
-    Find fractional offset where velocity crosses threshold between two frames.
-
-    Uses linear interpolation assuming velocity changes linearly between frames.
-
-    Args:
-        vel_before: Velocity at frame boundary N (absolute value)
-        vel_after: Velocity at frame boundary N+1 (absolute value)
-        velocity_threshold: Threshold value
-
-    Returns:
-        Fractional offset from frame N (0.0 to 1.0)
-    """
-    # Handle edge cases
-    if abs(vel_after - vel_before) < 1e-9:  # Velocity not changing
-        return 0.5
-
-    # Linear interpolation: at what fraction t does velocity equal threshold?
-    # vel(t) = vel_before + t * (vel_after - vel_before)
-    # Solve for t when vel(t) = threshold:
-    # threshold = vel_before + t * (vel_after - vel_before)
-    # t = (threshold - vel_before) / (vel_after - vel_before)
-
-    t = (velocity_threshold - vel_before) / (vel_after - vel_before)
-
-    # Clamp to [0, 1] range
-    return float(max(0.0, min(1.0, t)))
 
 
 def _interpolate_phase_start(

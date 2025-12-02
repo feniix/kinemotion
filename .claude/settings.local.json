@@ -63,7 +63,8 @@
       "mcp__serena__edit_memory",
       "mcp__basic-memory__edit_note",
       "mcp__code-reasoning__code-reasoning",
-      "mcp__sequential-thinking__process_thought"
+      "mcp__sequential-thinking__process_thought",
+      "mcp__serena__find_referencing_symbols"
     ]
   },
   "enableAllProjectMcpServers": true,
