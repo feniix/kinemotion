@@ -4,6 +4,7 @@ from enum import Enum
 
 import numpy as np
 
+from ..core.experimental import unused
 from ..core.smoothing import (
     compute_acceleration_from_derivative,
     compute_velocity_from_derivative,
@@ -18,6 +19,11 @@ class ContactState(Enum):
     UNKNOWN = "unknown"
 
 
+@unused(
+    reason="Not called by analysis pipeline - awaiting CLI integration",
+    remove_in="1.0.0",
+    since="0.34.0",
+)
 def calculate_adaptive_threshold(
     positions: np.ndarray,
     fps: float,
@@ -28,6 +34,18 @@ def calculate_adaptive_threshold(
 ) -> float:
     """
     Calculate adaptive velocity threshold based on baseline motion characteristics.
+
+    .. warning::
+        **Status: Implemented but Not Integrated**
+
+        This function is fully implemented and tested but not called by the
+        analysis pipeline. See ``docs/development/errors-findings.md`` for details.
+
+        **To integrate**: Add CLI parameter ``--use-adaptive-threshold`` and
+        call this function before contact detection.
+
+        **Roadmap**: Planned for Phase 2 if users report issues with varying
+        video conditions.
 
     Analyzes the first few seconds of video (assumed to be relatively stationary,
     e.g., athlete standing on box) to determine the noise floor, then sets threshold
