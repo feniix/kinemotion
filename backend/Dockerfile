@@ -43,14 +43,14 @@ RUN uv sync --frozen --no-dev
 COPY src/ ./src/
 
 # Expose port (Cloud Run expects $PORT environment variable, defaults to 8080)
-EXPOSE 8000
+EXPOSE 8080
 
 # Health check for Cloud Run
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()" || exit 1
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:${PORT:-8080}/health').read()" || exit 1
 
 # Run the application with uvicorn
-# Cloud Run: use PORT env var (defaults to 8000)
+# Cloud Run: use PORT env var (defaults to 8080)
 # Graceful shutdown timeout of 60 seconds for video processing
-# Using exec form with sh -c for proper signal handling and env var expansion
-CMD ["sh", "-c", "exec .venv/bin/uvicorn kinemotion_backend.app:app --host 0.0.0.0 --port ${PORT:-8000} --workers ${WORKERS:-1} --timeout-graceful-shutdown 60"]
+# Using uv run to properly execute within the virtual environment
+CMD ["sh", "-c", "exec uv run uvicorn kinemotion_backend.app:app --host 0.0.0.0 --port ${PORT:-8080} --workers ${WORKERS:-1} --timeout-graceful-shutdown 60"]
