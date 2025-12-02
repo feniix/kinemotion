@@ -67,7 +67,8 @@ def process_multiple_videos_example() -> None:
     if successful:
         # Type narrowing: we know metrics and jump_height exist for all items
         avg_jump = sum(
-            r.metrics.jump_height for r in successful  # type: ignore[union-attr,misc]
+            r.metrics.jump_height
+            for r in successful  # type: ignore[union-attr,misc]
         ) / len(successful)
         print(f"\nAverage jump height: {avg_jump:.3f} m ({avg_jump * 100:.1f} cm)")
 

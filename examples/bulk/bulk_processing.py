@@ -266,7 +266,8 @@ def print_summary(results: list[DropJumpVideoResult]) -> None:
     if with_jump:
         # Type narrowing: we know metrics and jump_height exist
         avg_jump = sum(
-            r.metrics.jump_height for r in with_jump  # type: ignore[union-attr,misc]
+            r.metrics.jump_height
+            for r in with_jump  # type: ignore[union-attr,misc]
         ) / len(with_jump)
         print(f"Average jump height: {avg_jump:.3f} m")
 

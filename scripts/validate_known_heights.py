@@ -283,7 +283,9 @@ def validate_directory(
             status = (
                 "✅"
                 if result.confidence == "high"
-                else "⚠️ " if result.confidence == "medium" else "❌"
+                else "⚠️ "
+                if result.confidence == "medium"
+                else "❌"
             )
 
             print(

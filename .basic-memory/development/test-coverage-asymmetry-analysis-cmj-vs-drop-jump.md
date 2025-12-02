@@ -1,7 +1,7 @@
 ---
 title: 'Test Coverage Asymmetry Analysis: CMJ vs Drop Jump'
 type: note
-permalink: development/test-coverage-asymmetry-analysis-cmj-vs-drop-jump
+permalink: development/test-coverage-asymmetry-analysis-cmj-vs-drop-jump-1
 tags:
 - testing
 - coverage

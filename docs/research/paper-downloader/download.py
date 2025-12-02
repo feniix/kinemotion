@@ -4,6 +4,7 @@ Download research papers using requests and multiple sources.
 Reads DOIs from dois.txt and downloads papers to ../thirdparty/
 Logs progress for each paper attempt.
 """
+
 import time
 import urllib.parse
 from pathlib import Path
@@ -196,12 +197,12 @@ def main():
         if i < len(dois):
             time.sleep(3)
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("DOWNLOAD COMPLETE")
     print(f"Successful: {successful}/{len(dois)}")
     print(f"Failed: {failed}/{len(dois)}")
     print(f"Check files in: {BASE_DIR}")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
 
 
 if __name__ == "__main__":

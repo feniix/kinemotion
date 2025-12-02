@@ -1,7 +1,7 @@
 ---
 title: Test Coverage Equivalence Achievement Summary
 type: note
-permalink: development/test-coverage-equivalence-achievement-summary
+permalink: development/test-coverage-equivalence-achievement-summary-1
 tags:
 - testing
 - coverage
