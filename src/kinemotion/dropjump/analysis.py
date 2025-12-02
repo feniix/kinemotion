@@ -849,6 +849,10 @@ def _calculate_average_visibility(
     return float(np.mean(foot_vis)) if foot_vis else 0.0
 
 
+@unused(
+    reason="Alternative implementation not called by pipeline",
+    since="0.34.0",
+)
 def extract_foot_positions_and_visibilities(
     smoothed_landmarks: list[dict[str, tuple[float, float, float]] | None],
 ) -> tuple[np.ndarray, np.ndarray]:

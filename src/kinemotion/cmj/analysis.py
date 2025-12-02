@@ -5,6 +5,7 @@ from enum import Enum
 import numpy as np
 from scipy.signal import savgol_filter
 
+from ..core.experimental import unused
 from ..core.smoothing import compute_acceleration_from_derivative
 
 
@@ -52,6 +53,10 @@ class CMJPhase(Enum):
     UNKNOWN = "unknown"
 
 
+@unused(
+    reason="Alternative implementation not called by pipeline",
+    since="0.34.0",
+)
 def find_standing_phase(
     positions: np.ndarray,
     velocities: np.ndarray,
@@ -101,6 +106,10 @@ def find_standing_phase(
     return None
 
 
+@unused(
+    reason="Alternative implementation not called by pipeline",
+    since="0.34.0",
+)
 def find_countermovement_start(
     velocities: np.ndarray,
     countermovement_threshold: float = 0.015,
@@ -184,6 +193,10 @@ def find_lowest_point(
     return lowest_frame
 
 
+@unused(
+    reason="Copy-pasted from dropjump, never integrated into CMJ pipeline",
+    since="0.34.0",
+)
 def refine_transition_with_curvature(
     positions: np.ndarray,
     velocities: np.ndarray,
@@ -248,6 +261,10 @@ def refine_transition_with_curvature(
     return float(blended_frame)
 
 
+@unused(
+    reason="Code duplication with dropjump version, CMJ version unused",
+    since="0.34.0",
+)
 def interpolate_threshold_crossing(
     vel_before: float,
     vel_after: float,
@@ -372,6 +389,10 @@ def find_cmj_landing_from_position_peak(
     return float(landing_frame)
 
 
+@unused(
+    reason="Experimental alternative superseded by backward search algorithm",
+    since="0.34.0",
+)
 def find_interpolated_takeoff_landing(
     positions: np.ndarray,
     velocities: np.ndarray,
