@@ -4,18 +4,22 @@ Comprehensive test suite validating that metrics fall within realistic
 physiological bounds for different athlete profiles.
 """
 
-from kinemotion.core.cmj_metrics_validator import (
+from typing import cast
+
+from kinemotion.cmj.metrics_validator import (
     CMJMetricsValidator,
-    ValidationSeverity,
 )
-from kinemotion.core.cmj_validation_bounds import (
+from kinemotion.cmj.validation_bounds import (
     ATHLETE_PROFILES,
-    AthleteProfile,
     CMJBounds,
     MetricConsistency,
     RSIBounds,
     TripleExtensionBounds,
     estimate_athlete_profile,
+)
+from kinemotion.core.validation import (
+    AthleteProfile,
+    ValidationSeverity,
 )
 
 
@@ -241,7 +245,7 @@ class TestRSIBounds:
 
     def test_rsi_elite_range(self) -> None:
         """Elite athlete RSI should be high."""
-        rsi_min, rsi_max = RSIBounds.get_rsi_range(AthleteProfile.ELITE)
+        rsi_min, _ = RSIBounds.get_rsi_range(AthleteProfile.ELITE)
         assert rsi_min > RSIBounds.RECREATIONAL_RANGE[1]
 
 
@@ -368,7 +372,9 @@ class TestEliteAthleteProfile:
             "peak_concentric_velocity": 3.9,
         }
 
-        validator = CMJMetricsValidator(assumed_profile=profile["profile"])
+        validator = CMJMetricsValidator(
+            assumed_profile=cast(AthleteProfile, profile["profile"])
+        )
         result = validator.validate(metrics)
 
         errors = [

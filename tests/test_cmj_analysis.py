@@ -1,20 +1,22 @@
 """Tests for CMJ phase detection."""
 
+from typing import cast
+
 import numpy as np
 
 from kinemotion.cmj.analysis import (
-    _find_landing_frame,
-    _find_lowest_frame,
-    _find_standing_end,
-    _find_takeoff_frame,
     compute_signed_velocity,
     detect_cmj_phases,
     find_cmj_landing_from_position_peak,
     find_cmj_takeoff_from_velocity_peak,
     find_countermovement_start,
     find_interpolated_takeoff_landing,
+    find_landing_frame,
+    find_lowest_frame,
     find_lowest_point,
+    find_standing_end,
     find_standing_phase,
+    find_takeoff_frame,
     interpolate_threshold_crossing,
     refine_transition_with_curvature,
 )
@@ -729,7 +731,7 @@ def test_phase_progression_invalid_landing_before_takeoff() -> None:
 
     # Assert: Either phases are valid and in order, or None is returned
     if result is not None:
-        standing, lowest, takeoff, landing = result
+        _, _, takeoff, landing = result
 
         # Core constraint: landing > takeoff (always true for valid physics)
         assert takeoff < landing, (
@@ -768,7 +770,7 @@ def test_find_takeoff_frame_backward_search_peak_velocity() -> None:
     )
 
     # Act: Find takeoff frame
-    takeoff = _find_takeoff_frame(velocities, peak_height_frame, fps)
+    takeoff = find_takeoff_frame(velocities, peak_height_frame, fps)
 
     # Assert: Takeoff should be detected near the velocity peak (frame 80-82)
     assert isinstance(takeoff, float), "Should return float frame number"
@@ -804,7 +806,7 @@ def test_find_lowest_frame_velocity_zero_crossing() -> None:
     velocities = compute_signed_velocity(positions, window_length=5, polyorder=2)
 
     # Act: Find lowest frame
-    lowest = _find_lowest_frame(velocities, positions, takeoff_frame, fps)
+    lowest = find_lowest_frame(velocities, positions, takeoff_frame, fps)
 
     # Assert: Should find zero-crossing or fallback to maximum position
     assert isinstance(lowest, float), "Should return float frame number"
@@ -848,7 +850,7 @@ def test_find_landing_frame_impact_detection() -> None:
     accelerations = compute_acceleration_from_derivative(positions)
 
     # Act: Find landing frame
-    landing = _find_landing_frame(accelerations, peak_height_frame, fps)
+    landing = find_landing_frame(accelerations, peak_height_frame, fps)
 
     # Assert: Landing should be detected in expected window
     assert isinstance(landing, float), "Should return float frame number"
@@ -885,7 +887,7 @@ def test_find_standing_end_low_velocity_detection() -> None:
     )
 
     # Act: Find standing end
-    standing_end = _find_standing_end(velocities, lowest_point)
+    standing_end = find_standing_end(velocities, lowest_point)
 
     # Assert: Should detect end of standing phase
     if standing_end is not None:
@@ -1168,10 +1170,10 @@ def test_failed_jump_incomplete_countermovement() -> None:
     # Assert: Either detection fails (returns None) or metrics are very low
     # Both outcomes are acceptable for incomplete jump
     if result is not None:
-        standing, lowest, takeoff, landing = result
+        _, lowest, takeoff, landing = result
 
         # If detection succeeds, verify it's not a normal jump
-        contact_frames = takeoff - lowest if lowest is not None else 0
+        contact_frames = takeoff - lowest
         contact_time = contact_frames / fps
         flight_frames = landing - takeoff
         flight_time = flight_frames / fps
@@ -1240,7 +1242,7 @@ def test_double_bounce_landing_pattern() -> None:
 
     # Assert: Should detect first complete CMJ (not confused by bounces)
     if result is not None:
-        standing, lowest, takeoff, landing = result
+        _, _, takeoff, landing = result
 
         # Landing should be detected around first major impact
         # Not confused by secondary bounce
@@ -1286,7 +1288,7 @@ def test_landing_frame_near_video_boundary() -> None:
 
     # Assert: Should handle boundary gracefully
     if result is not None:
-        standing, lowest, takeoff, landing = result
+        _, _, takeoff, landing = result
 
         # Landing should be detected (possibly at boundary)
         assert isinstance(landing, (int, float)), "Landing should be numeric"
@@ -1378,10 +1380,10 @@ def test_cmj_metrics_validation_integration() -> None:
     )
 
     # Validate metrics
-    from kinemotion.core.cmj_metrics_validator import CMJMetricsValidator
+    from kinemotion.cmj.metrics_validator import CMJMetricsValidator
 
     validator = CMJMetricsValidator()
-    validation_result = validator.validate(metrics.to_dict())
+    validation_result = validator.validate(cast(dict, metrics.to_dict()))
     metrics.validation_result = validation_result
 
     # Assert: Validation result exists and has expected structure
@@ -1398,7 +1400,7 @@ def test_cmj_metrics_validation_in_json_output() -> None:
     results are included in the output.
     """
     from kinemotion.cmj.kinematics import CMJMetrics
-    from kinemotion.core.cmj_metrics_validator import CMJMetricsValidator
+    from kinemotion.cmj.metrics_validator import CMJMetricsValidator
 
     # Create synthetic metrics
     metrics = CMJMetrics(
@@ -1421,7 +1423,7 @@ def test_cmj_metrics_validation_in_json_output() -> None:
 
     # Add validation result
     validator = CMJMetricsValidator()
-    validation_result = validator.validate(metrics.to_dict())
+    validation_result = validator.validate(cast(dict, metrics.to_dict()))
     metrics.validation_result = validation_result
 
     # Export to dict
@@ -1441,7 +1443,7 @@ def test_cmj_validation_result_serialization() -> None:
     """
     import json
 
-    from kinemotion.core.cmj_metrics_validator import (
+    from kinemotion.cmj.metrics_validator import (
         CMJMetricsValidator,
     )
 
@@ -1489,7 +1491,7 @@ def test_cmj_joint_compensation_detection() -> None:
     When multiple joints are at their extension limits, suggests compensation
     rather than balanced movement quality.
     """
-    from kinemotion.core.cmj_metrics_validator import CMJMetricsValidator
+    from kinemotion.cmj.metrics_validator import CMJMetricsValidator
 
     # Create metrics with balanced triple extension
     balanced_metrics = {

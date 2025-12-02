@@ -1,11 +1,12 @@
 """Integration tests for drop jump validation."""
 
 import json
+from typing import cast
 
-from kinemotion.core.dropjump_metrics_validator import (
+from kinemotion.dropjump.kinematics import DropJumpMetrics
+from kinemotion.dropjump.metrics_validator import (
     DropJumpMetricsValidator,
 )
-from kinemotion.dropjump.kinematics import DropJumpMetrics
 
 
 def test_dropjump_metrics_validation_integration() -> None:
@@ -28,7 +29,7 @@ def test_dropjump_metrics_validation_integration() -> None:
 
     # Validate metrics
     validator = DropJumpMetricsValidator()
-    validation_result = validator.validate(metrics.to_dict())
+    validation_result = validator.validate(cast(dict, metrics.to_dict()))
     metrics.validation_result = validation_result
 
     # Assert: Validation result exists and has expected structure
@@ -59,7 +60,7 @@ def test_dropjump_metrics_validation_in_json_output() -> None:
 
     # Add validation result
     validator = DropJumpMetricsValidator()
-    validation_result = validator.validate(metrics.to_dict())
+    validation_result = validator.validate(cast(dict, metrics.to_dict()))
     metrics.validation_result = validation_result
 
     # Export to dict
@@ -124,7 +125,7 @@ def test_dropjump_rsi_calculation() -> None:
     metrics.jump_height = 0.80  # High jump
 
     validator = DropJumpMetricsValidator()
-    validation_result = validator.validate(metrics.to_dict())
+    validation_result = validator.validate(cast(dict, metrics.to_dict()))
 
     # Assert: RSI calculated correctly
     expected_rsi = 0.80 / 0.20  # Should be 4.0
@@ -143,7 +144,7 @@ def test_dropjump_validation_athlete_profile_estimation() -> None:
     recreational_metrics.jump_height = 0.45
 
     validator = DropJumpMetricsValidator()
-    result = validator.validate(recreational_metrics.to_dict())
+    result = validator.validate(cast(dict, recreational_metrics.to_dict()))
 
     assert result.athlete_profile is not None
     assert result.athlete_profile.value in ["recreational", "trained", "untrained"]
@@ -154,7 +155,7 @@ def test_dropjump_validation_athlete_profile_estimation() -> None:
     elite_metrics.flight_time = 0.95
     elite_metrics.jump_height = 0.90
 
-    result_elite = validator.validate(elite_metrics.to_dict())
+    result_elite = validator.validate(cast(dict, elite_metrics.to_dict()))
     assert result_elite.athlete_profile is not None
 
 
@@ -172,7 +173,7 @@ def test_dropjump_dual_height_validation_consistency() -> None:
     metrics.jump_height_trajectory = 0.62  # From position tracking (3% difference)
 
     validator = DropJumpMetricsValidator()
-    result = validator.validate(metrics.to_dict())
+    result = validator.validate(cast(dict, metrics.to_dict()))
 
     # Should detect consistency with tolerance
     assert result.height_kinematic_trajectory_consistency is not None
@@ -197,7 +198,7 @@ def test_dropjump_dual_height_validation_poor_quality() -> None:
     metrics.jump_height_trajectory = 0.55  # From position tracking (20% difference)
 
     validator = DropJumpMetricsValidator()
-    result = validator.validate(metrics.to_dict())
+    result = validator.validate(cast(dict, metrics.to_dict()))
 
     # Should detect large inconsistency and warn
     assert result.height_kinematic_trajectory_consistency is not None

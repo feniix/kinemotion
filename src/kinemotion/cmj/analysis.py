@@ -417,7 +417,7 @@ def find_interpolated_takeoff_landing(
     return (takeoff_frame, landing_frame)
 
 
-def _find_takeoff_frame(
+def find_takeoff_frame(
     velocities: np.ndarray, peak_height_frame: int, fps: float
 ) -> float:
     """Find takeoff frame as peak upward velocity before peak height.
@@ -448,7 +448,7 @@ def _find_takeoff_frame(
         return float(takeoff_search_start + peak_vel_idx)
 
 
-def _find_lowest_frame(
+def find_lowest_frame(
     velocities: np.ndarray, positions: np.ndarray, takeoff_frame: float, fps: float
 ) -> float:
     """Find lowest point frame before takeoff."""
@@ -469,7 +469,7 @@ def _find_lowest_frame(
         return float(int(takeoff_frame) - int(fps * 0.2))
 
 
-def _find_landing_frame(
+def find_landing_frame(
     accelerations: np.ndarray, peak_height_frame: int, fps: float
 ) -> float:
     """Find landing frame after peak height after takeoff.
@@ -502,7 +502,7 @@ def _find_landing_frame(
     return float(landing_search_start + landing_idx)
 
 
-def _find_standing_end(velocities: np.ndarray, lowest_point: float) -> float | None:
+def find_standing_end(velocities: np.ndarray, lowest_point: float) -> float | None:
     """Find end of standing phase before lowest point."""
     if lowest_point <= 20:
         return None
@@ -556,9 +556,9 @@ def detect_cmj_phases(
         return None  # Peak too early, invalid
 
     # Step 2-4: Find all phases using helper functions
-    takeoff_frame = _find_takeoff_frame(velocities, peak_height_frame, fps)
-    lowest_point = _find_lowest_frame(velocities, positions, takeoff_frame, fps)
-    landing_frame = _find_landing_frame(accelerations, peak_height_frame, fps)
-    standing_end = _find_standing_end(velocities, lowest_point)
+    takeoff_frame = find_takeoff_frame(velocities, peak_height_frame, fps)
+    lowest_point = find_lowest_frame(velocities, positions, takeoff_frame, fps)
+    landing_frame = find_landing_frame(accelerations, peak_height_frame, fps)
+    standing_end = find_standing_end(velocities, lowest_point)
 
     return (standing_end, lowest_point, takeoff_frame, landing_frame)

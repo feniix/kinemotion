@@ -49,8 +49,12 @@ def test_calculate_metrics_basic():
 
     # Fractional frames should be reasonably close to integer frames
     # (within 2 frames due to sub-frame interpolation and phase detection)
-    assert abs(metrics.contact_start_frame_precise - metrics.contact_start_frame) < 2.0
-    assert abs(metrics.flight_start_frame_precise - metrics.flight_start_frame) < 2.0
+    if metrics.contact_start_frame is not None:
+        diff = abs(metrics.contact_start_frame_precise - metrics.contact_start_frame)
+        assert diff < 2.0
+    if metrics.flight_start_frame is not None:
+        diff = abs(metrics.flight_start_frame_precise - metrics.flight_start_frame)
+        assert diff < 2.0
 
 
 def test_metrics_to_dict():

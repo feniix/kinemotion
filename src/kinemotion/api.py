@@ -11,6 +11,7 @@ import numpy as np
 from .cmj.analysis import detect_cmj_phases
 from .cmj.debug_overlay import CMJDebugOverlayRenderer
 from .cmj.kinematics import CMJMetrics, calculate_cmj_metrics
+from .cmj.metrics_validator import CMJMetricsValidator
 from .core.auto_tuning import (
     AnalysisParameters,
     QualityPreset,
@@ -18,8 +19,6 @@ from .core.auto_tuning import (
     analyze_video_sample,
     auto_tune_parameters,
 )
-from .core.cmj_metrics_validator import CMJMetricsValidator
-from .core.dropjump_metrics_validator import DropJumpMetricsValidator
 from .core.filtering import reject_outliers
 from .core.metadata import (
     AlgorithmConfig,
@@ -44,6 +43,7 @@ from .dropjump.analysis import (
 )
 from .dropjump.debug_overlay import DebugOverlayRenderer
 from .dropjump.kinematics import DropJumpMetrics, calculate_drop_jump_metrics
+from .dropjump.metrics_validator import DropJumpMetricsValidator
 
 
 def _parse_quality_preset(quality: str) -> QualityPreset:

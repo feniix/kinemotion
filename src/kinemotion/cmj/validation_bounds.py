@@ -15,64 +15,7 @@ References:
 - Bogdanis (2012): Plyometric training effects
 """
 
-from dataclasses import dataclass
-from enum import Enum
-
-
-class AthleteProfile(Enum):
-    """Athlete performance categories for metric bounds."""
-
-    ELDERLY = "elderly"  # 70+, deconditioned
-    UNTRAINED = "untrained"  # Sedentary, no training
-    RECREATIONAL = "recreational"  # Fitness class, moderate activity
-    TRAINED = "trained"  # Regular athlete, 3-5 years training
-    ELITE = "elite"  # Competitive athlete, college/professional level
-
-
-@dataclass
-class MetricBounds:
-    """Physiological bounds for a single metric.
-
-    Attributes:
-        absolute_min: Absolute minimum value (error threshold)
-        practical_min: Practical minimum for weakest athletes
-        recreational_min: Minimum for recreational athletes
-        recreational_max: Maximum for recreational athletes
-        elite_min: Minimum for elite athletes
-        elite_max: Maximum for elite athletes
-        absolute_max: Absolute maximum value (error threshold)
-        unit: Unit of measurement (e.g., "m", "s", "m/s", "degrees")
-    """
-
-    absolute_min: float
-    practical_min: float
-    recreational_min: float
-    recreational_max: float
-    elite_min: float
-    elite_max: float
-    absolute_max: float
-    unit: str
-
-    def contains(self, value: float, profile: AthleteProfile) -> bool:
-        """Check if value is within bounds for athlete profile."""
-        if profile == AthleteProfile.ELDERLY:
-            return self.practical_min <= value <= self.recreational_max
-        elif profile == AthleteProfile.UNTRAINED:
-            return self.practical_min <= value <= self.recreational_max
-        elif profile == AthleteProfile.RECREATIONAL:
-            return self.recreational_min <= value <= self.recreational_max
-        elif profile == AthleteProfile.TRAINED:
-            # Trained athletes: midpoint between recreational and elite
-            trained_min = (self.recreational_min + self.elite_min) / 2
-            trained_max = (self.recreational_max + self.elite_max) / 2
-            return trained_min <= value <= trained_max
-        elif profile == AthleteProfile.ELITE:
-            return self.elite_min <= value <= self.elite_max
-        return False
-
-    def is_physically_possible(self, value: float) -> bool:
-        """Check if value is within absolute physiological limits."""
-        return self.absolute_min <= value <= self.absolute_max
+from kinemotion.core.validation import AthleteProfile, MetricBounds
 
 
 class CMJBounds:

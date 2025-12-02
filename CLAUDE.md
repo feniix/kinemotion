@@ -86,14 +86,21 @@ src/kinemotion/
 ├── cli.py                  # Main CLI (registers subcommands)
 ├── api.py                  # Python API (process_video, process_cmj_video, bulk)
 ├── core/                   # Shared: pose, smoothing, filtering, auto_tuning, video_io
+│   ├── validation.py       # Base classes (ValidationResult, MetricsValidator, AthleteProfile)
+│   └── [other shared modules]
+├── cmj/                    # CMJ: cli, analysis, kinematics, joint_angles, debug_overlay
+│   ├── metrics_validator.py    # CMJ validator (extends MetricsValidator)
+│   └── validation_bounds.py    # CMJ bounds (CMJBounds, RSIBounds, etc.)
 ├── dropjump/               # Drop jump: cli, analysis, kinematics, debug_overlay
-└── cmj/                    # CMJ: cli, analysis, kinematics, joint_angles, debug_overlay
+│   ├── metrics_validator.py    # Drop jump validator (extends MetricsValidator)
+│   └── validation_bounds.py    # Drop jump bounds (DropJumpBounds)
+└── [other modules]
 
-tests/                      # 261 tests total (comprehensive coverage across all modules)
+tests/                      # 261 tests (comprehensive coverage across all modules)
 docs/                       # CMJ_GUIDE, TRIPLE_EXTENSION, REAL_TIME_ANALYSIS, etc.
 ```
 
-**Design**: Each jump type is a sibling module with its own CLI command, metrics, and visualization.
+**Design**: Each jump type is a sibling module with its own CLI command, metrics, validation, and visualization. Shared validation infrastructure (base classes) in `core/validation.py`.
 
 ### Full-Stack Architecture
 

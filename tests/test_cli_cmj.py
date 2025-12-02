@@ -9,6 +9,7 @@ These tests use maintainable patterns:
 
 import json
 import os
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -26,13 +27,13 @@ skip_in_ci = pytest.mark.skipif(
 
 
 @pytest.fixture
-def cli_runner():
+def cli_runner() -> CliRunner:
     """Provide Click test runner with stderr separation."""
     return CliRunner(mix_stderr=False)
 
 
 @pytest.fixture
-def minimal_video(tmp_path):
+def minimal_video(tmp_path: Path) -> Path:
     """Create minimal test video for CLI testing."""
     video_path = tmp_path / "test.mp4"
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
@@ -50,14 +51,14 @@ def minimal_video(tmp_path):
 class TestCMJCLIHelp:
     """Test help text accessibility."""
 
-    def test_help_displays_successfully(self, cli_runner):
+    def test_help_displays_successfully(self, cli_runner: CliRunner) -> None:
         """Test --help flag works and exits cleanly."""
         result = cli_runner.invoke(cmj_analyze, ["--help"])
 
         # ✅ STABLE: Exit code for help
         assert result.exit_code == 0
 
-    def test_help_mentions_key_options(self, cli_runner):
+    def test_help_mentions_key_options(self, cli_runner: CliRunner) -> None:
         """Test help includes critical options (not exact text)."""
         result = cli_runner.invoke(cmj_analyze, ["--help"])
 
@@ -69,14 +70,16 @@ class TestCMJCLIHelp:
 class TestCMJCLIErrors:
     """Test error handling."""
 
-    def test_missing_video_file_fails(self, cli_runner):
+    def test_missing_video_file_fails(self, cli_runner: CliRunner) -> None:
         """Test command fails for nonexistent video."""
         result = cli_runner.invoke(cmj_analyze, ["nonexistent.mp4"])
 
         # ✅ STABLE: Should fail
         assert result.exit_code != 0
 
-    def test_invalid_quality_preset_fails(self, cli_runner, minimal_video):
+    def test_invalid_quality_preset_fails(
+        self, cli_runner: CliRunner, minimal_video: Path
+    ) -> None:
         """Test invalid quality preset is rejected."""
         result = cli_runner.invoke(
             cmj_analyze, [str(minimal_video), "--quality", "invalid"]
@@ -89,7 +92,9 @@ class TestCMJCLIErrors:
 class TestCMJCLIFileOperations:
     """Test file creation behavior."""
 
-    def test_json_output_file_created(self, cli_runner, minimal_video, tmp_path):
+    def test_json_output_file_created(
+        self, cli_runner: CliRunner, minimal_video: Path, tmp_path: Path
+    ) -> None:
         """Test JSON output file is created when analysis succeeds."""
         json_output = tmp_path / "metrics.json"
 
@@ -120,7 +125,9 @@ class TestCMJCLIFileOperations:
             assert "jump_height_m" in data
             assert "flight_time_ms" in data
 
-    def test_debug_video_output_created(self, cli_runner, minimal_video, tmp_path):
+    def test_debug_video_output_created(
+        self, cli_runner: CliRunner, minimal_video: Path, tmp_path: Path
+    ) -> None:
         """Test debug video file is created when analysis succeeds."""
         debug_output = tmp_path / "debug.mp4"
 
@@ -143,7 +150,9 @@ class TestCMJCLIOptions:
     """Test option parsing and acceptance."""
 
     @pytest.mark.parametrize("quality", ["fast", "balanced", "accurate"])
-    def test_quality_presets_accepted(self, cli_runner, minimal_video, quality):
+    def test_quality_presets_accepted(
+        self, cli_runner: CliRunner, minimal_video: Path, quality: str
+    ) -> None:
         """Test all quality presets are recognized."""
         result = cli_runner.invoke(
             cmj_analyze, [str(minimal_video), "--quality", quality]
@@ -153,7 +162,9 @@ class TestCMJCLIOptions:
         # Don't check if processing succeeded, just if option was valid
         assert "Invalid quality" not in result.output
 
-    def test_expert_parameters_accepted(self, cli_runner, minimal_video):
+    def test_expert_parameters_accepted(
+        self, cli_runner: CliRunner, minimal_video: Path
+    ) -> None:
         """Test expert parameter overrides are accepted."""
         result = cli_runner.invoke(
             cmj_analyze,
@@ -175,7 +186,9 @@ class TestCMJCLIOptions:
 class TestCMJCLIBasicExecution:
     """Test basic command execution."""
 
-    def test_command_runs_without_crash(self, cli_runner, minimal_video):
+    def test_command_runs_without_crash(
+        self, cli_runner: CliRunner, minimal_video: Path
+    ) -> None:
         """Test command executes without crashing."""
         result = cli_runner.invoke(
             cmj_analyze, [str(minimal_video), "--quality", "fast"]
@@ -187,7 +200,9 @@ class TestCMJCLIBasicExecution:
         # No unhandled exception
         assert result.exception is None or result.exit_code != 0
 
-    def test_command_with_all_output_options(self, cli_runner, minimal_video, tmp_path):
+    def test_command_with_all_output_options(
+        self, cli_runner: CliRunner, minimal_video: Path, tmp_path: Path
+    ) -> None:
         """Test command with all output options together."""
         json_out = tmp_path / "metrics.json"
         video_out = tmp_path / "debug.mp4"
@@ -221,7 +236,9 @@ class TestCMJCLIBatchMode:
     """Test batch processing features."""
 
     @skip_in_ci
-    def test_batch_mode_with_multiple_videos(self, cli_runner, tmp_path):
+    def test_batch_mode_with_multiple_videos(
+        self, cli_runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test batch mode processes multiple videos."""
         # Create 2 test videos
         video1 = tmp_path / "video1.mp4"
@@ -244,7 +261,9 @@ class TestCMJCLIBatchMode:
         assert result.exception is None or result.exit_code != 0
 
     @skip_in_ci
-    def test_output_directory_creation(self, cli_runner, minimal_video, tmp_path):
+    def test_output_directory_creation(
+        self, cli_runner: CliRunner, minimal_video: Path, tmp_path: Path
+    ) -> None:
         """Test that output directories are created when batch processing succeeds."""
         # Non-existent directory path
         output_dir = tmp_path / "outputs"
@@ -279,7 +298,9 @@ class TestCMJCLIBatchMode:
             assert json_dir.is_dir()
 
     @skip_in_ci
-    def test_csv_summary_created(self, cli_runner, minimal_video, tmp_path):
+    def test_csv_summary_created(
+        self, cli_runner: CliRunner, minimal_video: Path, tmp_path: Path
+    ) -> None:
         """Test CSV summary file creation in batch mode."""
         csv_path = tmp_path / "summary.csv"
 
@@ -314,7 +335,9 @@ class TestCMJCLIBatchMode:
                 # DON'T check specific column names or values
 
     @skip_in_ci
-    def test_batch_with_multiple_videos_and_csv(self, cli_runner, tmp_path):
+    def test_batch_with_multiple_videos_and_csv(
+        self, cli_runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test batch processing multiple videos with CSV summary."""
         # Create 3 test videos
         videos = []
@@ -358,7 +381,9 @@ class TestCMJCLIBatchMode:
                 assert len(rows) >= 1  # At least something processed
 
     @skip_in_ci
-    def test_workers_option_accepted(self, cli_runner, minimal_video):
+    def test_workers_option_accepted(
+        self, cli_runner: CliRunner, minimal_video: Path
+    ) -> None:
         """Test --workers option is accepted."""
         result = cli_runner.invoke(
             cmj_analyze,

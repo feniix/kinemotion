@@ -7,113 +7,25 @@ Provides severity levels (ERROR, WARNING, INFO) for different categories
 of metric issues.
 """
 
-from dataclasses import dataclass, field
-from enum import Enum
+from dataclasses import dataclass
 
-from kinemotion.core.dropjump_validation_bounds import (
-    AthleteProfile,
+from kinemotion.core.validation import (
+    MetricsValidator,
+    ValidationResult,
+)
+from kinemotion.dropjump.validation_bounds import (
     DropJumpBounds,
     estimate_athlete_profile,
 )
 
 
-class ValidationSeverity(Enum):
-    """Severity level for validation issues."""
-
-    ERROR = "ERROR"  # Metrics invalid, likely data corruption
-    WARNING = "WARNING"  # Metrics valid but unusual, needs review
-    INFO = "INFO"  # Normal variation, informational only
-
-
 @dataclass
-class ValidationIssue:
-    """Single validation issue."""
+class DropJumpValidationResult(ValidationResult):
+    """Drop jump-specific validation result."""
 
-    severity: ValidationSeverity
-    metric: str
-    message: str
-    value: float | None = None
-    bounds: tuple[float, float] | None = None
-
-
-@dataclass
-class ValidationResult:
-    """Complete validation result for drop jump metrics."""
-
-    issues: list[ValidationIssue] = field(default_factory=list)
-    status: str = "PASS"  # "PASS", "PASS_WITH_WARNINGS", "FAIL"
-    athlete_profile: AthleteProfile | None = None
     rsi: float | None = None
     contact_flight_ratio: float | None = None
     height_kinematic_trajectory_consistency: float | None = None  # % error
-
-    def add_error(
-        self,
-        metric: str,
-        message: str,
-        value: float | None = None,
-        bounds: tuple[float, float] | None = None,
-    ) -> None:
-        """Add error-level issue."""
-        self.issues.append(
-            ValidationIssue(
-                severity=ValidationSeverity.ERROR,
-                metric=metric,
-                message=message,
-                value=value,
-                bounds=bounds,
-            )
-        )
-
-    def add_warning(
-        self,
-        metric: str,
-        message: str,
-        value: float | None = None,
-        bounds: tuple[float, float] | None = None,
-    ) -> None:
-        """Add warning-level issue."""
-        self.issues.append(
-            ValidationIssue(
-                severity=ValidationSeverity.WARNING,
-                metric=metric,
-                message=message,
-                value=value,
-                bounds=bounds,
-            )
-        )
-
-    def add_info(
-        self,
-        metric: str,
-        message: str,
-        value: float | None = None,
-    ) -> None:
-        """Add info-level issue."""
-        self.issues.append(
-            ValidationIssue(
-                severity=ValidationSeverity.INFO,
-                metric=metric,
-                message=message,
-                value=value,
-            )
-        )
-
-    def finalize_status(self) -> None:
-        """Determine final pass/fail status based on issues."""
-        has_errors = any(
-            issue.severity == ValidationSeverity.ERROR for issue in self.issues
-        )
-        has_warnings = any(
-            issue.severity == ValidationSeverity.WARNING for issue in self.issues
-        )
-
-        if has_errors:
-            self.status = "FAIL"
-        elif has_warnings:
-            self.status = "PASS_WITH_WARNINGS"
-        else:
-            self.status = "PASS"
 
     def to_dict(self) -> dict:
         """Convert validation result to JSON-serializable dictionary.
@@ -144,28 +56,19 @@ class ValidationResult:
         }
 
 
-class DropJumpMetricsValidator:
+class DropJumpMetricsValidator(MetricsValidator):
     """Comprehensive drop jump metrics validator."""
 
-    def __init__(self, assumed_profile: AthleteProfile | None = None):
-        """Initialize validator.
-
-        Args:
-            assumed_profile: If provided, validate against this specific profile.
-                            Otherwise, estimate from metrics.
-        """
-        self.assumed_profile = assumed_profile
-
-    def validate(self, metrics: dict) -> ValidationResult:
+    def validate(self, metrics: dict) -> DropJumpValidationResult:
         """Validate drop jump metrics comprehensively.
 
         Args:
             metrics: Dictionary with drop jump metric values
 
         Returns:
-            ValidationResult with all issues and status
+            DropJumpValidationResult with all issues and status
         """
-        result = ValidationResult()
+        result = DropJumpValidationResult()
 
         # Estimate athlete profile if not provided
         if self.assumed_profile:
@@ -208,7 +111,7 @@ class DropJumpMetricsValidator:
         return result
 
     def _check_contact_time(
-        self, contact_time_ms: float, result: ValidationResult
+        self, contact_time_ms: float, result: DropJumpValidationResult
     ) -> None:
         """Validate contact time."""
         contact_time_s = contact_time_ms / 1000.0
@@ -233,7 +136,7 @@ class DropJumpMetricsValidator:
             )
 
     def _check_flight_time(
-        self, flight_time_ms: float, result: ValidationResult
+        self, flight_time_ms: float, result: DropJumpValidationResult
     ) -> None:
         """Validate flight time."""
         flight_time_s = flight_time_ms / 1000.0
@@ -257,7 +160,7 @@ class DropJumpMetricsValidator:
             )
 
     def _check_jump_height(
-        self, jump_height_m: float, result: ValidationResult
+        self, jump_height_m: float, result: DropJumpValidationResult
     ) -> None:
         """Validate jump height."""
         bounds = DropJumpBounds.JUMP_HEIGHT
@@ -280,7 +183,10 @@ class DropJumpMetricsValidator:
             )
 
     def _check_rsi(
-        self, contact_time_ms: float, flight_time_ms: float, result: ValidationResult
+        self,
+        contact_time_ms: float,
+        flight_time_ms: float,
+        result: DropJumpValidationResult,
     ) -> None:
         """Validate RSI and cross-check consistency."""
         contact_time_s = contact_time_ms / 1000.0
@@ -313,7 +219,7 @@ class DropJumpMetricsValidator:
         self,
         jump_height_kinematic_m: float,
         jump_height_trajectory_m: float,
-        result: ValidationResult,
+        result: DropJumpValidationResult,
     ) -> None:
         """Validate consistency between kinematic and trajectory-based heights.
 
