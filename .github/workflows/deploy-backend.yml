@@ -14,6 +14,12 @@ on:
         required: false
         type: string
 
+env:
+  GCP_PROJECT_ID: kinemotion-backend
+  GCP_REGION: us-central1
+  REGISTRY: gcr.io
+  SERVICE_NAME: kinemotion-backend
+
 jobs:
   test:
     name: Run Tests
@@ -63,23 +69,39 @@ jobs:
           uv run ruff check .
 
   build:
-    name: Build and Scan Docker Image
+    name: Build and Push Docker Image to GCR
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: 'projects/1008251132682/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          service_account: 'github-actions-deploy@kinemotion-backend.iam.gserviceaccount.com'
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Configure Docker authentication to GCR
+        run: gcloud auth configure-docker ${{ env.REGISTRY }}
+
+      - name: Build and push Docker image to GCR
         uses: docker/build-push-action@v6
         with:
           context: ./backend
           file: ./backend/Dockerfile
-          push: false
-          tags: kinemotion-backend:${{ github.sha }}
-          load: true
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }},${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:latest
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:buildcache,mode=max
 
   deploy:
     name: Deploy to Google Cloud Run
@@ -104,9 +126,9 @@ jobs:
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v3
         with:
-          service: kinemotion-backend
-          region: us-central1
-          source: ./backend
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.GCP_REGION }}
+          image: ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
           flags: |
             --memory=2Gi
             --allow-unauthenticated
@@ -115,14 +137,14 @@ jobs:
       - name: Verify deployment health
         run: |
           sleep 10
-          curl -sf https://kinemotion-backend-1008251132682.us-central1.run.app/health || exit 1
+          curl -sf https://${{ env.SERVICE_NAME }}-1008251132682.${{ env.GCP_REGION }}.run.app/health || exit 1
 
       - name: Deployment notification
         if: success()
         run: |
-          echo "✅ Successfully deployed kinemotion-backend to Cloud Run"
-          echo "API URL: https://kinemotion-backend-1008251132682.us-central1.run.app"
-          echo "Health: https://kinemotion-backend-1008251132682.us-central1.run.app/health"
+          echo "✅ Successfully deployed ${{ env.SERVICE_NAME }} to Cloud Run"
+          echo "API URL: https://${{ env.SERVICE_NAME }}-1008251132682.${{ env.GCP_REGION }}.run.app"
+          echo "Health: https://${{ env.SERVICE_NAME }}-1008251132682.${{ env.GCP_REGION }}.run.app/health"
 
       - name: Deployment failure notification
         if: failure()
