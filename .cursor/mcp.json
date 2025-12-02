@@ -34,6 +34,19 @@
         "mcp-sequential-thinking"
       ]
     },
+    "serena": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide-assistant",
+        "--project",
+        "/Users/feniix/src/personal/cursor/dropjump-claude"
+      ]
+    },
     "code-reasoning": {
       "command": "bunx",
       "args": [

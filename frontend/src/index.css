@@ -1025,6 +1025,51 @@ a:focus-visible {
   cursor: not-allowed;
 }
 
+.google-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background-color: white;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+}
+
+.google-button:hover:not(:disabled) {
+  background-color: var(--bg-secondary);
+  border-color: #d1d5db;
+}
+
+.google-button:disabled {
+  background-color: white;
+  opacity: 0.6;
+}
+
+.google-icon {
+  flex-shrink: 0;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.auth-divider span {
+  padding: 0 1rem;
+}
+
 .auth-toggle {
   text-align: center;
   margin-top: 1.5rem;
