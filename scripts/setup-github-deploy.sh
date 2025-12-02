@@ -28,6 +28,7 @@ gcloud services enable \
   sts.googleapis.com \
   run.googleapis.com \
   cloudbuild.googleapis.com \
+  artifactregistry.googleapis.com \
   --project="$PROJECT_ID" 2>/dev/null || echo "  APIs already enabled"
 
 # Create Workload Identity Pool (idempotent)
@@ -101,6 +102,11 @@ gcloud projects add-iam-policy-binding "$PROJECT_ID" \
   --member="serviceAccount:$SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com" \
   --role="roles/cloudbuild.builds.editor" \
   --condition=None 2>/dev/null || echo "  ✓ roles/cloudbuild.builds.editor already granted"
+
+gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+  --member="serviceAccount:$SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com" \
+  --role="roles/artifactregistry.reader" \
+  --condition=None 2>/dev/null || echo "  ✓ roles/artifactregistry.reader already granted"
 
 echo "  ✓ All required roles granted"
 
