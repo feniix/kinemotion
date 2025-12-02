@@ -1,7 +1,7 @@
 ---
 title: Project State Summary - December 2025
 type: note
-permalink: project-management/project-state-summary-december-2025
+permalink: project-management/project-state-summary-december-2025-1
 tags:
 - project-status
 - architecture

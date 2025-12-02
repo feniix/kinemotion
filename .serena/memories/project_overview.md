@@ -32,29 +32,25 @@ Supports two jump types with specialized analysis algorithms:
 ## Code Structure
 
 ```
-src/kinemotion/
-├── cli.py                 # Main CLI (registers subcommands)
-├── api.py                 # Python API (process_video, bulk functions)
-├── core/                  # Shared utilities
-│   ├── pose.py           # Pose detection/smoothing
-│   ├── filtering.py      # Signal filtering
-│   ├── auto_tuning.py    # Quality preset tuning
-│   └── video_io.py       # Video reading/writing
-├── dropjump/             # Drop jump specific
-│   ├── cli.py
-│   ├── analysis.py
-│   ├── kinematics.py
-│   └── debug_overlay.py
-└── cmj/                  # CMJ specific
-    ├── cli.py
-    ├── analysis.py
-    ├── kinematics.py
-    ├── joint_angles.py
-    └── debug_overlay.py
-
-tests/                    # 261 comprehensive tests (74.27% coverage)
-docs/                     # Documentation (Diátaxis framework)
+.
+├── frontend/              # React app (Vercel) - v0.1.0
+│   ├── src/              # TypeScript + React components
+│   └── package.json      # Vite, React, Supabase client
+├── backend/              # FastAPI server (Cloud Run) - v0.1.0
+│   ├── src/              # Python API endpoints
+│   ├── Dockerfile        # Container configuration
+│   └── pyproject.toml    # FastAPI, Supabase, structlog
+├── src/kinemotion/       # CLI analysis engine - v0.34.0
+│   ├── cli.py           # Main CLI (registers subcommands)
+│   ├── api.py           # Python API (used by backend)
+│   ├── core/            # Shared: pose, filtering, auto_tuning, video_io
+│   ├── dropjump/        # Drop jump: cli, analysis, kinematics, debug_overlay
+│   └── cmj/             # CMJ: cli, analysis, kinematics, joint_angles, debug_overlay
+└── tests/               # 261 comprehensive tests (74.27% coverage)
+    └── docs/            # Documentation (Diátaxis framework)
 ```
+
+**Data Flow:** User uploads video → Frontend (React) → Backend API (FastAPI) → kinemotion CLI → Results stored in Supabase → Frontend displays results
 
 ## Quality Standards
 
@@ -88,7 +84,7 @@ docs/                     # Documentation (Diátaxis framework)
 - Type Errors: 0
 - Linting Errors: 0
 - Code Duplication: 2.96%
-- Latest Release: 0.29.3 (released November 26, 2025)
+- Latest Release: 0.34.0 (released December 2, 2025)
 
 ## Current Phase 1 Work (Issue #10 Focus)
 

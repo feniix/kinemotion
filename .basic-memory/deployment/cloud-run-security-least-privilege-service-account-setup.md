@@ -1,7 +1,7 @@
 ---
 title: 'Cloud Run Security: Least-Privilege Service Account Setup'
 type: note
-permalink: deployment/cloud-run-least-privilege-service-accounts
+permalink: deployment/cloud-run-least-privilege-service-accounts-1
 tags:
 - deployment
 - security

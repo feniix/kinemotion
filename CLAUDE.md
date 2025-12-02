@@ -89,11 +89,41 @@ src/kinemotion/
 ├── dropjump/               # Drop jump: cli, analysis, kinematics, debug_overlay
 └── cmj/                    # CMJ: cli, analysis, kinematics, joint_angles, debug_overlay
 
-tests/                      # 206 tests total (comprehensive coverage across all modules)
+tests/                      # 261 tests total (comprehensive coverage across all modules)
 docs/                       # CMJ_GUIDE, TRIPLE_EXTENSION, REAL_TIME_ANALYSIS, etc.
 ```
 
 **Design**: Each jump type is a sibling module with its own CLI command, metrics, and visualization.
+
+### Full-Stack Architecture
+
+The project has evolved into a complete platform with three main components:
+
+```text
+.
+├── frontend/              # React app (Vercel) - v0.1.0
+│   ├── src/              # TypeScript + React components
+│   └── package.json      # Vite, React, Supabase client
+├── backend/              # FastAPI server (Cloud Run) - v0.1.0
+│   ├── src/              # Python API endpoints
+│   ├── Dockerfile        # Container configuration
+│   └── pyproject.toml    # FastAPI, Supabase, structlog
+├── src/kinemotion/       # CLI analysis engine - v0.34.0
+│   ├── cli.py           # Main CLI commands
+│   ├── api.py           # Python API (used by backend)
+│   └── [modules]        # Core, dropjump, cmj
+└── tests/               # 261 comprehensive tests (74.27% coverage)
+```
+
+**Data Flow:**
+```
+User uploads video → Frontend (React) → Backend API (FastAPI) → kinemotion CLI → Results stored in Supabase → Frontend displays results
+```
+
+**Deployment:**
+- Frontend: Vercel (auto-deploy from main, manual trigger)
+- Backend: Google Cloud Run (GitHub Actions, Workload Identity Federation)
+- CLI: PyPI (v0.34.0, standalone usage + backend integration)
 
 ### Key Differences: Drop Jump vs CMJ
 
