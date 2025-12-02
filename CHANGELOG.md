@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.34.0 (2025-12-02)
+
+### Chores
+
+- Add Supabase setup scripts and update deployment script
+  ([`474ffd1`](https://github.com/feniix/kinemotion/commit/474ffd1efc16bd32810fda2c3c34edb5bf754e42))
+
+- Sync backend/uv.lock with workspace lock and update Docker build
+  ([`9021b54`](https://github.com/feniix/kinemotion/commit/9021b54c1b99f6cbb4b5146aceb53cb21f84247f))
+
+### Continuous Integration
+
+- Add artifact registry permissions to github actions setup script
+  ([`0d0ccf3`](https://github.com/feniix/kinemotion/commit/0d0ccf398ceaa5e51fae9f4b86d65b28dc89e97e))
+
+- Build and push docker images to gcr instead of cloud run source build
+  ([`9e8f7cf`](https://github.com/feniix/kinemotion/commit/9e8f7cfa9a525b1bc5006665856649c226d756f5))
+
+- Remove Trivy vulnerability scanner from build job
+  ([`c436d4f`](https://github.com/feniix/kinemotion/commit/c436d4f63626efff3d9e2a85ea0d7abcb5906956))
+
+- Update github actions to latest major versions
+  ([`38cb8b0`](https://github.com/feniix/kinemotion/commit/38cb8b047a84dadc668e9ce91d2575a596c46e59))
+
+- Update GitHub Actions to latest versions
+  ([`721c1e0`](https://github.com/feniix/kinemotion/commit/721c1e027d66926ba43ee375fa4a7563b5fb5e09))
+
+### Documentation
+
+- Move Supabase authentication documentation to basic-memory
+  ([`33957a6`](https://github.com/feniix/kinemotion/commit/33957a6017a2d913490c688b82042aeb7cdcc54f))
+
+- Update basic-memory with Supabase authentication documentation
+  ([`d37e097`](https://github.com/feniix/kinemotion/commit/d37e09768f33f127c0fe32d3e2750b2adaef8f92))
+
+### Features
+
+- Add Supabase authentication to frontend
+  ([`2a38391`](https://github.com/feniix/kinemotion/commit/2a38391cfe6141b51122ea3df554474a441e5d16))
+
+
 ## v0.33.2 (2025-12-01)
 
 ### Bug Fixes
