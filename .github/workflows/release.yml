@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '.github/workflows/deploy-backend.yml'
+      - 'backend/**'
+      - 'frontend/**'
 
 jobs:
   test:
