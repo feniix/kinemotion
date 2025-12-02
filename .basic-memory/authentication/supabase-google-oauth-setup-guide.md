@@ -1,7 +1,7 @@
 ---
 title: Supabase Google OAuth Setup Guide
 type: note
-permalink: authentication/supabase-google-oauth-setup-guide
+permalink: authentication/supabase-google-oauth-setup-guide-1
 ---
 
 # Supabase Google OAuth Setup Guide

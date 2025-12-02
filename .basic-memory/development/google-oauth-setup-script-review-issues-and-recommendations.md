@@ -1,7 +1,7 @@
 ---
 title: Google OAuth Setup Script Review - Issues and Recommendations
 type: note
-permalink: development/google-oauth-setup-script-review-issues-and-recommendations
+permalink: development/google-oauth-setup-script-review-issues-and-recommendations-1
 ---
 
 # Google OAuth Setup Script Review

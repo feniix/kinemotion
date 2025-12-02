@@ -1,7 +1,7 @@
 ---
 title: Google OAuth Setup Script - Final Review (Production Ready)
 type: note
-permalink: development/google-oauth-setup-script-final-review-production-ready
+permalink: development/google-oauth-setup-script-final-review-production-ready-1
 ---
 
 # Google OAuth Setup Script - Final Review (Post-Fix)
