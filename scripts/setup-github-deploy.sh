@@ -121,12 +121,34 @@ gcloud projects add-iam-policy-binding "$PROJECT_ID" \
   --role="roles/cloudbuild.builds.builder" \
   --condition=None 2>/dev/null || echo "  ✓ roles/cloudbuild.builds.builder already granted"
 
-gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-  --member="serviceAccount:$SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com" \
-  --role="roles/secretmanager.secretAccessor" \
-  --condition=None 2>/dev/null || echo "  ✓ roles/secretmanager.secretAccessor already granted"
+# NOTE: GitHub Actions deployment account does NOT need secretmanager.secretAccessor
+# Only the Cloud Run runtime service account needs it (it runs the container and reads secrets)
 
 echo "  ✓ All required roles granted"
+
+# Create dedicated Cloud Run runtime service account (idempotent)
+echo ""
+echo "🏃 Creating Cloud Run runtime service account..."
+RUNTIME_SERVICE_ACCOUNT_NAME="kinemotion-backend-runtime"
+if gcloud iam service-accounts describe "$RUNTIME_SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com" \
+  --project="$PROJECT_ID" &>/dev/null; then
+  echo "  ✓ Runtime service account '$RUNTIME_SERVICE_ACCOUNT_NAME' already exists"
+else
+  gcloud iam service-accounts create "$RUNTIME_SERVICE_ACCOUNT_NAME" \
+    --display-name="Kinemotion Backend Runtime" \
+    --project="$PROJECT_ID"
+  echo "  ✓ Created runtime service account '$RUNTIME_SERVICE_ACCOUNT_NAME'"
+fi
+
+# Grant Cloud Run runtime account access to specific secrets (least privilege)
+echo ""
+echo "🔐 Granting Cloud Run runtime account access to secrets..."
+for SECRET in "SUPABASE_URL" "SUPABASE_ANON_KEY"; do
+  gcloud secrets add-iam-policy-binding "$SECRET" \
+    --member="serviceAccount:$RUNTIME_SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/secretmanager.secretAccessor" \
+    --project="$PROJECT_ID" 2>/dev/null || echo "  ✓ $SECRET access already granted"
+done
 
 # Allow GitHub to impersonate service account (idempotent)
 echo ""
@@ -142,13 +164,26 @@ echo ""
 echo "✅ Setup complete!"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📝 Update your GitHub Actions workflow with these values:"
+echo "📝 GitHub Actions deployment credentials (in workflow):"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "workload_identity_provider: 'projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/$POOL_NAME/providers/$PROVIDER_NAME'"
 echo "service_account: '$SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com'"
 echo ""
 echo "These values are NOT sensitive and can be committed to your repository."
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🏃 Cloud Run runtime service account:"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "service_account: '$RUNTIME_SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com'"
+echo ""
+echo "Add this to .github/workflows/deploy-backend.yml deploy step:"
+echo "  --service-account=$RUNTIME_SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com"
+echo ""
+echo "This account has least-privilege access to only:"
+echo "  - SUPABASE_URL"
+echo "  - SUPABASE_ANON_KEY"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🧪 Test the setup:"
