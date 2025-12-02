@@ -15,6 +15,7 @@ ENV PYTHONUNBUFFERED=1 \
 # ffmpeg: Video processing
 # libsm6, libxext6, libxrender-dev: OpenCV/MediaPipe GUI support
 # libgomp1: OpenMP for NumPy optimization
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     libsm6 \
