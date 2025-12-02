@@ -31,6 +31,7 @@ gcloud services enable \
   artifactregistry.googleapis.com \
   containerregistry.googleapis.com \
   storage-component.googleapis.com \
+  secretmanager.googleapis.com \
   --project="$PROJECT_ID" 2>/dev/null || echo "  APIs already enabled"
 
 # Create Workload Identity Pool (idempotent)
@@ -119,6 +120,11 @@ gcloud projects add-iam-policy-binding "$PROJECT_ID" \
   --member="serviceAccount:$SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com" \
   --role="roles/cloudbuild.builds.builder" \
   --condition=None 2>/dev/null || echo "  ✓ roles/cloudbuild.builds.builder already granted"
+
+gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+  --member="serviceAccount:$SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor" \
+  --condition=None 2>/dev/null || echo "  ✓ roles/secretmanager.secretAccessor already granted"
 
 echo "  ✓ All required roles granted"
 
