@@ -1,7 +1,7 @@
 ---
 title: KeyboardInterrupt Test Suite Failure Analysis
 type: note
-permalink: development/keyboard-interrupt-test-suite-failure-analysis
+permalink: development/keyboard-interrupt-test-suite-failure-analysis-1
 tags:
 - pytest
 - asyncio
