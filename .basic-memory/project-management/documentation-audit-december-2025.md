@@ -1,7 +1,7 @@
 ---
 title: Documentation Audit December 2025
 type: note
-permalink: project-management/documentation-audit-december-2025
+permalink: project-management/documentation-audit-december-2025-1
 tags:
 - documentation
 - audit
