@@ -24,6 +24,13 @@ uv sync
 pip install -e .
 ```
 
+**Note on `uv.lock` files:**
+
+- This backend is part of a uv workspace (root `uv.lock` is the source of truth)
+- `backend/uv.lock` is kept in sync for Docker builds and future repository extraction
+- When dependencies change, run `uv lock` from the repository root to update both lock files
+- CI/CD automatically syncs `backend/uv.lock` with root `uv.lock` during builds
+
 ### Running the Server
 
 ```bash

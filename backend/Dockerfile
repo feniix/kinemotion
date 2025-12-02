@@ -31,7 +31,8 @@ WORKDIR /app
 
 # Copy project files for dependency installation
 COPY pyproject.toml README.md ./
-COPY uv.lock* ./
+# Copy uv.lock (workspace lock file, kept in sync with root uv.lock)
+COPY uv.lock ./
 
 # Install Python dependencies using uv
 # Using --frozen to ensure reproducible builds from lock file

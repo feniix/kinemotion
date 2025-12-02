@@ -26,9 +26,14 @@ dependencies = [
     "python-multipart>=0.0.6",
     "boto3>=1.34.0",
     "slowapi>=0.1.9",
+    "structlog>=24.1.0",
+    "supabase>=2.10.0",
+    "pyjwt>=2.8.0",
+    "httpx>=0.27.0",
     # Local development: use editable install via `uv sync`
     # Production deployment: use released package from PyPI
     "kinemotion>=0.30.0",
+    "pre-commit==4.4.0",
 ]
 
 [project.urls]

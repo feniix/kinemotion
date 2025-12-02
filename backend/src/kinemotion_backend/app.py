@@ -5,7 +5,6 @@ Real metrics integration with Cloudflare R2 storage for video and results manage
 
 import os
 import tempfile
-import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal, cast
@@ -26,6 +25,17 @@ from fastapi.responses import JSONResponse
 from kinemotion.api import process_cmj_video, process_dropjump_video
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
+
+from kinemotion_backend.logging_config import get_logger, setup_logging
+from kinemotion_backend.middleware import RequestLoggingMiddleware
+
+# Initialize structured logging
+setup_logging(
+    json_logs=os.getenv("JSON_LOGS", "false").lower() == "true",
+    log_level=os.getenv("LOG_LEVEL", "INFO"),
+)
+
+logger = get_logger(__name__)
 
 # ========== Type Definitions ==========
 
@@ -207,8 +217,13 @@ app.add_middleware(
         "Content-Language",
         "Content-Type",
         "Authorization",
+        "X-Request-ID",
+        "X-User-ID",
     ],
 )
+
+# Add request logging middleware
+app.add_middleware(RequestLoggingMiddleware)
 
 # ========== Rate Limiting Configuration ==========
 
@@ -242,8 +257,9 @@ if not _testing:
 r2_client: R2StorageClient | None = None
 try:
     r2_client = R2StorageClient()
+    logger.info("r2_storage_initialized", endpoint=r2_client.endpoint)
 except ValueError:
-    pass  # R2 credentials not provided - will error on upload endpoints
+    logger.warning("r2_storage_not_configured", message="R2 credentials not provided")
 
 
 # ========== Helper Functions ==========
@@ -430,7 +446,12 @@ async def analyze_video(
         _validate_referer(referer, x_test_password)
 
         # Validate inputs
-        print(f"DEBUG: Received jump_type={jump_type}, file={file.filename}")
+        logger.debug(
+            "analyze_request_received",
+            jump_type=jump_type,
+            filename=file.filename,
+            file_size=file.size,
+        )
         jump_type = _validate_jump_type(jump_type)  # Normalize to lowercase
         await file.seek(0)
         _validate_video_file(file)
@@ -449,7 +470,9 @@ async def analyze_video(
             r2_video_key = f"videos/{jump_type}/{timestamp}_{file.filename}"
             try:
                 r2_client.upload_file(temp_video_path, r2_video_key)
+                logger.info("video_uploaded_to_r2", key=r2_video_key)
             except OSError as e:
+                logger.error("r2_upload_failed", error=str(e), key=r2_video_key)
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                     detail=f"Failed to upload video to storage: {str(e)}",
@@ -457,16 +480,11 @@ async def analyze_video(
 
         # Process video with real kinemotion analysis
         metrics = await _process_video_async(temp_video_path, jump_type, quality)  # type: ignore[arg-type]
-        print(f"DEBUG: Metrics returned: {metrics}")
-        print(f"DEBUG: Metrics type: {type(metrics)}")
-        print(f"DEBUG: Metrics keys: {list(metrics.keys())}")
-        print(f"DEBUG: Metrics length: {len(metrics)}")
-        # Try to JSON serialize to see if there are issues
-        try:
-            json_test = json.dumps(metrics)
-            print(f"DEBUG: JSON serializable OK, length: {len(json_test)}")
-        except Exception as e:
-            print(f"DEBUG: JSON serialization failed: {e}")
+        logger.info(
+            "video_analysis_completed",
+            jump_type=jump_type,
+            metrics_count=len(metrics),
+        )
 
         # Upload results to R2 if client available
         results_url = None
@@ -478,9 +496,14 @@ async def analyze_video(
                 results_url = r2_client.put_object(
                     r2_results_key, results_json.encode()
                 )
+                logger.info(
+                    "results_uploaded_to_r2", key=r2_results_key, url=results_url
+                )
             except OSError as e:
                 # Log error but don't fail - results still available in response
-                print(f"Warning: Failed to upload results to R2: {e}")
+                logger.warning(
+                    "r2_results_upload_failed", error=str(e), key=r2_results_key
+                )
 
         processing_time = time.time() - start_time
 
@@ -502,7 +525,11 @@ async def analyze_video(
     except ValueError as e:
         processing_time = time.time() - start_time
         error_message = str(e)
-        print(f"DEBUG: Validation error: {error_message}")
+        logger.warning(
+            "validation_error",
+            error=error_message,
+            processing_time_s=processing_time,
+        )
         response = AnalysisResponse(
             status_code=422,
             message="Validation error",
@@ -517,8 +544,12 @@ async def analyze_video(
     except Exception as e:
         processing_time = time.time() - start_time
         error_detail = f"{type(e).__name__}: {str(e)}"
-        print(f"Error during video analysis: {error_detail}")
-        print(traceback.format_exc())
+        logger.error(
+            "video_analysis_failed",
+            error=error_detail,
+            processing_time_s=processing_time,
+            exc_info=True,
+        )
 
         response = AnalysisResponse(
             status_code=500,
@@ -536,8 +567,11 @@ async def analyze_video(
         if temp_video_path and Path(temp_video_path).exists():
             try:
                 Path(temp_video_path).unlink()
+                logger.debug("temp_file_cleaned", path=temp_video_path)
             except OSError as e:
-                print(f"Warning: Failed to delete temp file {temp_video_path}: {e}")
+                logger.warning(
+                    "temp_file_cleanup_failed", path=temp_video_path, error=str(e)
+                )
 
         # Clean up R2 video if results failed (optional - adjust based on policy)
         # if r2_client and r2_video_key and not results_url:
@@ -617,8 +651,13 @@ async def analyze_local_video(
     except Exception as e:
         processing_time = time.time() - start_time
         error_detail = f"{type(e).__name__}: {str(e)}"
-        print(f"Error during local video analysis: {error_detail}")
-        print(traceback.format_exc())
+        logger.error(
+            "local_video_analysis_failed",
+            error=error_detail,
+            video_path=video_path,
+            processing_time_s=processing_time,
+            exc_info=True,
+        )
 
         response = AnalysisResponse(
             status_code=500,
@@ -652,8 +691,11 @@ async def http_exception_handler(request: Any, exc: HTTPException) -> JSONRespon
 async def general_exception_handler(request: Any, exc: Exception) -> JSONResponse:
     """Handle unexpected exceptions."""
     error_detail = f"{type(exc).__name__}: {str(exc)}"
-    print(f"Unhandled exception: {error_detail}")
-    print(traceback.format_exc())
+    logger.error(
+        "unhandled_exception",
+        error=error_detail,
+        exc_info=True,
+    )
 
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
