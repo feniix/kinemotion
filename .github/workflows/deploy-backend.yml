@@ -93,17 +93,6 @@ jobs:
       - name: Configure Docker authentication to GCR
         run: gcloud auth configure-docker ${{ env.REGISTRY }}
 
-      - name: Ensure backend/uv.lock is in sync with root uv.lock
-        run: |
-          # Copy root workspace lock to backend for Docker build
-          # This ensures backend/uv.lock stays in sync and is ready for future extraction
-          cp uv.lock backend/uv.lock
-          # Verify they're in sync (optional check)
-          if ! diff -q uv.lock backend/uv.lock > /dev/null 2>&1; then
-            echo "⚠️  Warning: backend/uv.lock differs from root uv.lock"
-            echo "This is expected if backend dependencies changed. Continuing build..."
-          fi
-
       - name: Build and push Docker image to GCR
         uses: docker/build-push-action@v6
         with:
