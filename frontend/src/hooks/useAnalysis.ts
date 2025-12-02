@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AnalysisResponse, JumpType } from '../types/api'
+import { supabase } from '../lib/supabase'
 
 interface UseAnalysisState {
   file: File | null
@@ -52,6 +53,10 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
       const baseApiUrl = import.meta.env.VITE_API_URL || ''
       const apiEndpoint = baseApiUrl ? `${baseApiUrl}/api/analyze` : '/api/analyze'
 
+      // Get auth token from Supabase
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+
       // Use XMLHttpRequest to track upload progress
       const response = await new Promise<AnalysisResponse>((resolve, reject) => {
         const xhr = new XMLHttpRequest()
@@ -93,6 +98,12 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
         })
 
         xhr.open('POST', apiEndpoint)
+
+        // Add Authorization header with Supabase token
+        if (token) {
+          xhr.setRequestHeader('Authorization', `Bearer ${token}`)
+        }
+
         xhr.send(formData)
       })
 

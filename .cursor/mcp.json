@@ -25,10 +25,13 @@
       ]
     },
     "sequential-thinking": {
-      "command": "bunx",
+      "command": "uvx",
       "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking@2025.7.1"
+        "--from",
+        "git+https://github.com/arben-adm/mcp-sequential-thinking",
+        "--with",
+        "portalocker",
+        "mcp-sequential-thinking"
       ]
     },
     "code-reasoning": {
