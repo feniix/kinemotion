@@ -12,7 +12,7 @@ Kinemotion: Video-based kinematic analysis for athletic performance using MediaP
 ## Current Roadmap (MVP-First Approach)
 
 **Phase 1: MVP Validation (Weeks 1-3)**
-- Issue #10 (P0): Fix CMJ ankle angle calculation
+- Issue #10 (P0): ✅ Validated optimal camera angle for MediaPipe (45° oblique recommended)
 - Issue #11 (P0): Validate CMJ metrics with phase progression tests
 - Issue #12 (P0): Build simple web UI (upload → analyze → export)
 - **Goal:** Get product in coaches' hands, gather market feedback
@@ -163,7 +163,9 @@ User uploads video → Frontend (React) → Backend API (FastAPI) → kinemotion
 
 - Use signed velocity (not absolute)
 - Backward search algorithm (find peak first)
-- Lateral view required
+- **45° oblique view recommended** (better MediaPipe tracking than 90° lateral)
+  - At 90° lateral: MediaPipe confuses left/right feet (occlusion)
+  - At 45° oblique: Both legs clearly separated → accurate tracking
 
 See [Implementation Details](docs/technical/implementation-details.md) for complete technical reference.
 
