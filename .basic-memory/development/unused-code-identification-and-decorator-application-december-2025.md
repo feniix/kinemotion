@@ -1,7 +1,7 @@
 ---
 title: Unused Code Identification and Decorator Application - December 2025
 type: report
-permalink: development/unused-code-analysis-december-2025
+permalink: development/unused-code-analysis-december-2025-1
 tags:
 - code-quality
 - maintenance
