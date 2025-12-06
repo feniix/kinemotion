@@ -63,7 +63,8 @@
       "WebFetch(domain:realpython.com)",
       "WebFetch(domain:sonarcloud.io)",
       "WebFetch(domain:www.pyopensci.org)",
-      "WebFetch(domain:www.sonarsource.com)"
+      "WebFetch(domain:www.sonarsource.com)",
+      "Bash(ffmpeg:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
