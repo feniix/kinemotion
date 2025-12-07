@@ -347,7 +347,9 @@ def test_full_auto_tuning_workflow() -> None:
     # Verify parameters are reasonable
     assert params.smoothing_window >= 5
     assert params.polyorder >= 2
-    assert 0.005 <= params.velocity_threshold <= 0.05
+    # Updated to reflect empirically-validated velocity threshold
+    # (0.002 at 60fps, 0.004 at 30fps)
+    assert 0.001 <= params.velocity_threshold <= 0.05
     assert params.min_contact_frames >= 3
     assert 0.3 <= params.visibility_threshold <= 0.7
     assert 0.3 <= params.detection_confidence <= 0.7

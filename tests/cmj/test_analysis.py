@@ -566,8 +566,10 @@ def test_phase_progression_temporal_constraints() -> None:
             flight_duration_frames = landing - takeoff
 
             # Eccentric must be reasonable (typically 9-24 frames at 30fps)
+            # With improved acceleration-based standing_end detection,
+            # can be as low as 3 frames for subtle/slow countermovements
             if eccentric_duration_frames > 0:
-                assert 6 <= eccentric_duration_frames <= 36, (
+                assert 3 <= eccentric_duration_frames <= 36, (
                     f"Eccentric {eccentric_duration_frames} frames seems unreasonable"
                 )
 

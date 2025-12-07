@@ -57,6 +57,7 @@ class DropJumpMetrics:
         self.jump_height: float | None = None
         self.jump_height_kinematic: float | None = None  # From flight time
         self.jump_height_trajectory: float | None = None  # From position tracking
+        self.drop_start_frame: int | None = None  # Frame when athlete leaves box
         self.contact_start_frame: int | None = None
         self.contact_end_frame: int | None = None
         self.flight_start_frame: int | None = None
@@ -164,7 +165,7 @@ def _determine_drop_start_frame(
             foot_y_positions,
             fps,
             min_stationary_duration=0.5,
-            position_change_threshold=0.005,
+            position_change_threshold=0.01,  # Improved from 0.005 for better accuracy
             smoothing_window=smoothing_window,
         )
     return drop_start_frame
@@ -410,6 +411,11 @@ def calculate_drop_jump_metrics(
     # Determine drop start frame
     drop_start_frame_value = _determine_drop_start_frame(
         drop_start_frame, foot_y_positions, fps, smoothing_window
+    )
+
+    # Store drop start frame in metrics
+    metrics.drop_start_frame = (
+        drop_start_frame_value if drop_start_frame_value > 0 else None
     )
 
     # Find contact phases

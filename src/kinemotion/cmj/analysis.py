@@ -422,11 +422,59 @@ def find_landing_frame(
     return float(landing_search_start + landing_idx)
 
 
-def find_standing_end(velocities: np.ndarray, lowest_point: float) -> float | None:
-    """Find end of standing phase before lowest point."""
+def find_standing_end(
+    velocities: np.ndarray,
+    lowest_point: float,
+    positions: np.ndarray | None = None,
+    accelerations: np.ndarray | None = None,
+) -> float | None:
+    """
+    Find end of standing phase before lowest point.
+
+    Uses acceleration-based detection to identify when downward movement begins.
+    Acceleration captures movement initiation even when velocity is negligible,
+    making it ideal for detecting slow countermovement starts.
+
+    Args:
+        velocities: Signed velocity array (for backward compatibility)
+        lowest_point: Frame index of lowest point
+        positions: Position array (unused, kept for backward compatibility)
+        accelerations: Acceleration array (if provided, uses
+            acceleration-based detection)
+
+    Returns:
+        Frame index where standing ends (countermovement begins), or None
+    """
     if lowest_point <= 20:
         return None
 
+    # Acceleration-based detection (best for detecting movement initiation)
+    if accelerations is not None:
+        # Use middle section of standing phase as baseline (avoids initial settling)
+        baseline_start = 10
+        baseline_end = min(40, int(lowest_point) - 10)
+
+        if baseline_end <= baseline_start:
+            return None
+
+        # Calculate baseline acceleration statistics
+        baseline_accel = accelerations[baseline_start:baseline_end]
+        baseline_mean = float(np.mean(baseline_accel))
+        baseline_std = float(np.std(baseline_accel))
+
+        # Threshold: 3 standard deviations above baseline
+        # This detects when acceleration significantly increases (movement starts)
+        accel_threshold = baseline_mean + 3.0 * baseline_std
+
+        # Search forward from baseline for acceleration spike
+        for i in range(baseline_end, int(lowest_point)):
+            if accelerations[i] > accel_threshold:
+                # Found start of downward acceleration
+                return float(i)
+
+        return None
+
+    # Fallback: velocity-based detection (legacy)
     standing_search = velocities[: int(lowest_point)]
     low_vel = np.abs(standing_search) < 0.005
     if np.any(low_vel):
@@ -479,6 +527,6 @@ def detect_cmj_phases(
     takeoff_frame = find_takeoff_frame(velocities, peak_height_frame, fps)
     lowest_point = find_lowest_frame(velocities, positions, takeoff_frame, fps)
     landing_frame = find_landing_frame(accelerations, peak_height_frame, fps)
-    standing_end = find_standing_end(velocities, lowest_point)
+    standing_end = find_standing_end(velocities, lowest_point, positions, accelerations)
 
     return (standing_end, lowest_point, takeoff_frame, landing_frame)

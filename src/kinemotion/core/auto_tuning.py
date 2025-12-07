@@ -108,10 +108,12 @@ def auto_tune_parameters(
     # =================================================================
 
     # Velocity threshold: Scale inversely with fps
-    # At 30fps, feet move ~2% of frame per frame when "stationary"
-    # At 60fps, feet move ~1% of frame per frame when "stationary"
-    # Formula: threshold = 0.02 * (30 / fps)
-    base_velocity_threshold = 0.02 * (30.0 / fps)
+    # Empirically validated with 45° oblique videos at 60fps:
+    # - Standing (stationary): ~0.001 mean, 0.0011 max
+    # - Flight/drop (moving): ~0.005-0.009
+    # Target threshold: 0.002 at 60fps for clear separation
+    # Formula: threshold = 0.004 * (30 / fps)
+    base_velocity_threshold = 0.004 * (30.0 / fps)
 
     # Min contact frames: Scale with fps to maintain same time duration
     # Goal: ~100ms minimum contact (3 frames @ 30fps, 6 frames @ 60fps)

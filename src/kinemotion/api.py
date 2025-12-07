@@ -548,9 +548,12 @@ def process_dropjump_video(
 
         # Check if drop start was auto-detected
         drop_frame = None
-        if drop_start_frame is None and metrics.contact_start_frame is not None:
-            # Auto-detected
-            drop_frame = metrics.contact_start_frame
+        if drop_start_frame is None and metrics.drop_start_frame is not None:
+            # Auto-detected drop start from box
+            drop_frame = metrics.drop_start_frame
+        elif drop_start_frame is not None:
+            # Manual drop start provided
+            drop_frame = drop_start_frame
 
         algorithm_config = AlgorithmConfig(
             detection_method="forward_search",
