@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.36.0 (2025-12-07)
+
+### Bug Fixes
+
+- **backend**: Upgrade kinemotion to v0.35.1 to fix negative metrics bug
+  ([`492dfaa`](https://github.com/feniix/kinemotion/commit/492dfaa87251e527bef0c85822314b7d57ecd48c))
+
+### Documentation
+
+- Fix broken links in agents-guide
+  ([`1daaffb`](https://github.com/feniix/kinemotion/commit/1daaffb43de1db48c0decba66f1f73a28b56c124))
+
+### Features
+
+- Add version display in frontend footer
+  ([`cb4ed66`](https://github.com/feniix/kinemotion/commit/cb4ed669f642430f5bad4b900489d6858235eb43))
+
+
 ## v0.35.2 (2025-12-07)
 
 ### Bug Fixes
