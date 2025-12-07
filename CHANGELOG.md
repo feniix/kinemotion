@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.35.1 (2025-12-07)
+
+### Bug Fixes
+
+- **detection**: Improve event detection accuracy through empirical validation
+  ([`f9f6c91`](https://github.com/feniix/kinemotion/commit/f9f6c917904bfcb95ef9bd988867a2b824cc59c8))
+
+### Chores
+
+- Change settings and update basic memory
+  ([`41390d3`](https://github.com/feniix/kinemotion/commit/41390d336d0d8083606903f6c263841000fc2f17))
+
+- Sonar relase update
+  ([`e8edc51`](https://github.com/feniix/kinemotion/commit/e8edc510a5b9e793766cc4c5acfb033f63e8f892))
+
+### Documentation
+
+- Update CMJ camera angle recommendation to 45° oblique
+  ([`c3f09fa`](https://github.com/feniix/kinemotion/commit/c3f09faf4ebb1c12a2ddb4bacb5ba9aaeab936c7))
+
+
 ## v0.35.0 (2025-12-02)
 
 ### Chores
