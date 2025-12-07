@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.35.2 (2025-12-07)
+
+### Bug Fixes
+
+- **validation**: Resolve CMJ athlete profile misclassification
+  ([`1565514`](https://github.com/feniix/kinemotion/commit/156551412c50090c589bda9cacc8e62a542db19f))
+
+
 ## v0.35.1 (2025-12-07)
 
 ### Bug Fixes
