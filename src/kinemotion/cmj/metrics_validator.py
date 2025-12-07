@@ -68,6 +68,22 @@ class CMJValidationResult(ValidationResult):
 class CMJMetricsValidator(MetricsValidator):
     """Comprehensive CMJ metrics validator."""
 
+    @staticmethod
+    def _get_metric_value(
+        data: dict, key_with_suffix: str, key_without_suffix: str
+    ) -> float | None:
+        """Get metric value, supporting both suffixed and legacy key formats.
+
+        Args:
+            data: Dictionary containing metrics
+            key_with_suffix: Key with unit suffix (e.g., "flight_time_ms")
+            key_without_suffix: Legacy key without suffix (e.g., "flight_time")
+
+        Returns:
+            Metric value or None if not found
+        """
+        return data.get(key_with_suffix) or data.get(key_without_suffix)
+
     def validate(self, metrics: dict) -> CMJValidationResult:
         """Validate CMJ metrics comprehensively.
 
@@ -87,25 +103,28 @@ class CMJMetricsValidator(MetricsValidator):
 
         profile = result.athlete_profile
 
+        # Extract metric values (handle nested "data" structure)
+        data = metrics.get("data", metrics)  # Support both structures
+
         # PRIMARY BOUNDS CHECKS
-        self._check_flight_time(metrics, result, profile)
-        self._check_jump_height(metrics, result, profile)
-        self._check_countermovement_depth(metrics, result, profile)
-        self._check_concentric_duration(metrics, result, profile)
-        self._check_eccentric_duration(metrics, result, profile)
-        self._check_peak_velocities(metrics, result, profile)
+        self._check_flight_time(data, result, profile)
+        self._check_jump_height(data, result, profile)
+        self._check_countermovement_depth(data, result, profile)
+        self._check_concentric_duration(data, result, profile)
+        self._check_eccentric_duration(data, result, profile)
+        self._check_peak_velocities(data, result, profile)
 
         # CROSS-VALIDATION CHECKS
-        self._check_flight_time_height_consistency(metrics, result)
-        self._check_velocity_height_consistency(metrics, result)
-        self._check_rsi_validity(metrics, result, profile)
+        self._check_flight_time_height_consistency(data, result)
+        self._check_velocity_height_consistency(data, result)
+        self._check_rsi_validity(data, result, profile)
 
         # CONSISTENCY CHECKS
-        self._check_depth_height_ratio(metrics, result)
-        self._check_contact_depth_ratio(metrics, result)
+        self._check_depth_height_ratio(data, result)
+        self._check_contact_depth_ratio(data, result)
 
         # TRIPLE EXTENSION ANGLES
-        self._check_triple_extension(metrics, result, profile)
+        self._check_triple_extension(data, result, profile)
 
         # Finalize status
         result.finalize_status()
@@ -116,9 +135,17 @@ class CMJMetricsValidator(MetricsValidator):
         self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate flight time."""
-        flight_time = metrics.get("flight_time")
-        if flight_time is None:
+        flight_time_raw = self._get_metric_value(
+            metrics, "flight_time_ms", "flight_time"
+        )
+        if flight_time_raw is None:
             return
+
+        # If value is in seconds (legacy), use as-is; if in ms, convert
+        if flight_time_raw < 10:  # Likely in seconds
+            flight_time = flight_time_raw
+        else:  # In milliseconds
+            flight_time = flight_time_raw / 1000.0
 
         bounds = CMJBounds.FLIGHT_TIME
 
@@ -159,7 +186,7 @@ class CMJMetricsValidator(MetricsValidator):
         self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate jump height."""
-        jump_height = metrics.get("jump_height")
+        jump_height = self._get_metric_value(metrics, "jump_height_m", "jump_height")
         if jump_height is None:
             return
 
@@ -201,7 +228,9 @@ class CMJMetricsValidator(MetricsValidator):
         self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate countermovement depth."""
-        depth = metrics.get("countermovement_depth")
+        depth = self._get_metric_value(
+            metrics, "countermovement_depth_m", "countermovement_depth"
+        )
         if depth is None:
             return
 
@@ -243,9 +272,18 @@ class CMJMetricsValidator(MetricsValidator):
         self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate concentric duration (contact time)."""
-        duration = metrics.get("concentric_duration")
-        if duration is None:
+        duration_raw = self._get_metric_value(
+            metrics, "concentric_duration_ms", "concentric_duration"
+        )
+        if duration_raw is None:
             return
+
+        # If value is in seconds (legacy), convert to ms first
+        # Values >10 are assumed to be in ms, <10 assumed to be in seconds
+        if duration_raw < 10:  # Likely in seconds
+            duration = duration_raw
+        else:  # In milliseconds
+            duration = duration_raw / 1000.0
 
         bounds = CMJBounds.CONCENTRIC_DURATION
 
@@ -286,9 +324,17 @@ class CMJMetricsValidator(MetricsValidator):
         self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate eccentric duration."""
-        duration = metrics.get("eccentric_duration")
-        if duration is None:
+        duration_raw = self._get_metric_value(
+            metrics, "eccentric_duration_ms", "eccentric_duration"
+        )
+        if duration_raw is None:
             return
+
+        # If value is in seconds (legacy), use as-is; if in ms, convert
+        if duration_raw < 10:  # Likely in seconds
+            duration = duration_raw
+        else:  # In milliseconds
+            duration = duration_raw / 1000.0
 
         bounds = CMJBounds.ECCENTRIC_DURATION
 
@@ -321,7 +367,9 @@ class CMJMetricsValidator(MetricsValidator):
     ) -> None:
         """Validate peak eccentric and concentric velocities."""
         # Eccentric
-        ecc_vel = metrics.get("peak_eccentric_velocity")
+        ecc_vel = self._get_metric_value(
+            metrics, "peak_eccentric_velocity_m_s", "peak_eccentric_velocity"
+        )
         if ecc_vel is not None:
             bounds = CMJBounds.PEAK_ECCENTRIC_VELOCITY
             if not bounds.is_physically_possible(ecc_vel):
@@ -349,7 +397,9 @@ class CMJMetricsValidator(MetricsValidator):
                 )
 
         # Concentric
-        con_vel = metrics.get("peak_concentric_velocity")
+        con_vel = self._get_metric_value(
+            metrics, "peak_concentric_velocity_m_s", "peak_concentric_velocity"
+        )
         if con_vel is not None:
             bounds = CMJBounds.PEAK_CONCENTRIC_VELOCITY
             if not bounds.is_physically_possible(con_vel):
@@ -390,11 +440,14 @@ class CMJMetricsValidator(MetricsValidator):
         self, metrics: dict, result: CMJValidationResult
     ) -> None:
         """Verify jump height is consistent with flight time."""
-        flight_time = metrics.get("flight_time")
-        jump_height = metrics.get("jump_height")
+        flight_time_ms = metrics.get("flight_time_ms")
+        jump_height = metrics.get("jump_height_m")
 
-        if flight_time is None or jump_height is None:
+        if flight_time_ms is None or jump_height is None:
             return
+
+        # Convert ms to seconds
+        flight_time = flight_time_ms / 1000.0
 
         # h = g * t^2 / 8
         g = 9.81
@@ -424,8 +477,8 @@ class CMJMetricsValidator(MetricsValidator):
         self, metrics: dict, result: CMJValidationResult
     ) -> None:
         """Verify peak velocity is consistent with jump height."""
-        velocity = metrics.get("peak_concentric_velocity")
-        jump_height = metrics.get("jump_height")
+        velocity = metrics.get("peak_concentric_velocity_m_s")
+        jump_height = metrics.get("jump_height_m")
 
         if velocity is None or jump_height is None:
             return
@@ -461,15 +514,30 @@ class CMJMetricsValidator(MetricsValidator):
         self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate Reactive Strength Index."""
-        flight_time = metrics.get("flight_time")
-        concentric_duration = metrics.get("concentric_duration")
+        flight_time_raw = self._get_metric_value(
+            metrics, "flight_time_ms", "flight_time"
+        )
+        concentric_duration_raw = self._get_metric_value(
+            metrics, "concentric_duration_ms", "concentric_duration"
+        )
 
         if (
-            flight_time is None
-            or concentric_duration is None
-            or concentric_duration == 0
+            flight_time_raw is None
+            or concentric_duration_raw is None
+            or concentric_duration_raw == 0
         ):
             return
+
+        # Convert to seconds if needed
+        if flight_time_raw < 10:  # Likely in seconds
+            flight_time = flight_time_raw
+        else:  # In milliseconds
+            flight_time = flight_time_raw / 1000.0
+
+        if concentric_duration_raw < 10:  # Likely in seconds
+            concentric_duration = concentric_duration_raw
+        else:  # In milliseconds
+            concentric_duration = concentric_duration_raw / 1000.0
 
         rsi = flight_time / concentric_duration
         result.rsi = rsi
@@ -513,8 +581,8 @@ class CMJMetricsValidator(MetricsValidator):
         self, metrics: dict, result: CMJValidationResult
     ) -> None:
         """Check countermovement depth to jump height ratio."""
-        depth = metrics.get("countermovement_depth")
-        jump_height = metrics.get("jump_height")
+        depth = metrics.get("countermovement_depth_m")
+        jump_height = metrics.get("jump_height_m")
 
         if (
             depth is None or jump_height is None or depth < 0.05
@@ -557,12 +625,14 @@ class CMJMetricsValidator(MetricsValidator):
         self, metrics: dict, result: CMJValidationResult
     ) -> None:
         """Check contact time to countermovement depth ratio."""
-        contact = metrics.get("concentric_duration")
-        depth = metrics.get("countermovement_depth")
+        contact_ms = metrics.get("concentric_duration_ms")
+        depth = metrics.get("countermovement_depth_m")
 
-        if contact is None or depth is None or depth < 0.05:
+        if contact_ms is None or depth is None or depth < 0.05:
             return
 
+        # Convert ms to seconds for ratio calculation
+        contact = contact_ms / 1000.0
         ratio = contact / depth
         result.contact_depth_ratio = ratio
 

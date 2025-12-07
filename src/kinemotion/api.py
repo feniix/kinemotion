@@ -1060,7 +1060,7 @@ def process_cmj_video(
 
         # Validate metrics against physiological bounds
         validator = CMJMetricsValidator()
-        validation_result = validator.validate(metrics.to_dict()["data"])  # type: ignore[arg-type]
+        validation_result = validator.validate(metrics.to_dict())  # type: ignore[arg-type]
         metrics.validation_result = validation_result
 
         if verbose and validation_result.issues:

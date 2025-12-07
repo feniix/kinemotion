@@ -323,7 +323,10 @@ def estimate_athlete_profile(
     Returns:
         Estimated AthleteProfile
     """
-    jump_height = metrics_dict.get("jump_height", 0)
+    # Support both nested "data" structure and flat structure
+    # Extract with unit suffix as used in serialization, or without suffix (legacy)
+    data = metrics_dict.get("data", metrics_dict)
+    jump_height = data.get("jump_height_m") or data.get("jump_height", 0)
 
     if jump_height < 0.20:
         return AthleteProfile.ELDERLY
