@@ -391,6 +391,6 @@ When creating new agents:
 ## Resources
 
 - **Agent Configuration Files**: `.claude/agents/*.md`
-- **Project Instructions**: [CLAUDE.md](../../CLAUDE.md)
-- **Development Guides**: [Development Documentation](README.md)
+- **Project Instructions**: [CLAUDE.md](https://github.com/feniix/kinemotion/blob/main/CLAUDE.md)
+- **Development Guides**: [Testing Guide](testing.md), [Type Hints Guide](type-hints.md)
 - **Official Docs**: [Claude Code Subagents Documentation](https://docs.claude.com/en/docs/claude-code/sub-agents)
