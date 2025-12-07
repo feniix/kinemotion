@@ -7,11 +7,13 @@ import Auth from './components/Auth'
 import { useRecentUploads } from './hooks/useRecentUploads'
 import { useAnalysis } from './hooks/useAnalysis'
 import { useAuth } from './hooks/useAuth'
+import { useBackendVersion } from './hooks/useBackendVersion'
 
 function App() {
   const { user, loading: authLoading, signOut } = useAuth()
   const { file, jumpType, loading, uploadProgress, metrics, error, setFile, setJumpType, analyze, retry } = useAnalysis()
   const { recentUploads, addRecentUpload, clearRecentUploads } = useRecentUploads()
+  const { backendVersion, kinemotionVersion } = useBackendVersion()
 
   const handleAnalyze = async () => {
     await analyze()
@@ -87,6 +89,10 @@ function App() {
           <a href="https://github.com/feniix/kinemotion" target="_blank" rel="noopener noreferrer">
             GitHub
           </a>
+          {' | '}
+          <span style={{ fontSize: '0.85em', opacity: 0.8 }}>
+            Backend v{backendVersion} | Analysis v{kinemotionVersion}
+          </span>
         </p>
       </footer>
     </div>

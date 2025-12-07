@@ -6,6 +6,7 @@ Real metrics integration with Cloudflare R2 storage for video and results manage
 import os
 import tempfile
 from datetime import datetime, timezone
+from importlib.metadata import version
 from pathlib import Path
 from typing import Any, Literal, cast
 
@@ -397,10 +398,17 @@ async def health_check() -> dict[str, Any]:
     Returns:
         Status dictionary with service health information
     """
+    # Get kinemotion version safely
+    try:
+        kinemotion_version = version("kinemotion")
+    except Exception:
+        kinemotion_version = "unknown"
+
     return {
         "status": "ok",
         "service": "kinemotion-backend",
         "version": "0.1.0",
+        "kinemotion_version": kinemotion_version,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "r2_configured": r2_client is not None,
     }
