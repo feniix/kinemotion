@@ -5,6 +5,7 @@
       "Bash(cat:*)",
       "Bash(chmod:*)",
       "Bash(curl:*)",
+      "Bash(ffmpeg:*)",
       "Bash(ffprobe:*)",
       "Bash(find:*)",
       "Bash(gh run view:*)",
@@ -37,6 +38,7 @@
       "mcp__ref__ref_read_url",
       "mcp__ref__ref_search_documentation",
       "mcp__sequential__sequentialthinking",
+      "mcp__sequential-thinking__generate_summary",
       "mcp__sequential-thinking__process_thought",
       "mcp__sequential-thinking__sequentialthinking",
       "mcp__serena__check_onboarding_performed",
@@ -63,8 +65,7 @@
       "WebFetch(domain:realpython.com)",
       "WebFetch(domain:sonarcloud.io)",
       "WebFetch(domain:www.pyopensci.org)",
-      "WebFetch(domain:www.sonarsource.com)",
-      "Bash(ffmpeg:*)"
+      "WebFetch(domain:www.sonarsource.com)"
     ]
   },
   "enableAllProjectMcpServers": true,
