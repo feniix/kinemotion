@@ -417,6 +417,13 @@ def process_dropjump_video(
     if not Path(video_path).exists():
         raise FileNotFoundError(f"Video file not found: {video_path}")
 
+    # Set deterministic mode for drop jump reproducibility
+    # Note: MediaPipe has inherent non-determinism (Google issue #3945)
+    # This improves consistency but cannot eliminate all variation
+    from .core.determinism import set_deterministic_mode
+
+    set_deterministic_mode(seed=42)
+
     # Start timing
     start_time = time.time()
 

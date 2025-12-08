@@ -22,6 +22,7 @@ class PoseTracker:
         """
         self.mp_pose = mp.solutions.pose
         self.pose = self.mp_pose.Pose(
+            static_image_mode=False,  # Use tracking mode for better performance
             min_detection_confidence=min_detection_confidence,
             min_tracking_confidence=min_tracking_confidence,
             model_complexity=1,

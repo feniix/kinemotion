@@ -202,6 +202,36 @@ def _filter_phases_after_drop(
     return filtered_phases, filtered_interpolated
 
 
+def _compute_robust_phase_position(
+    foot_y_positions: NDArray[np.float64],
+    phase_start: int,
+    phase_end: int,
+    temporal_window: int = 11,
+) -> float:
+    """Compute robust position estimate using temporal averaging.
+
+    Uses median over a fixed temporal window to reduce sensitivity to
+    MediaPipe landmark noise, improving reproducibility.
+
+    Args:
+        foot_y_positions: Vertical position array
+        phase_start: Start frame of phase
+        phase_end: End frame of phase
+        temporal_window: Number of frames to average (default: 11)
+
+    Returns:
+        Robust position estimate using median
+    """
+    # Center the temporal window on the phase midpoint
+    phase_mid = (phase_start + phase_end) // 2
+    window_start = max(0, phase_mid - temporal_window // 2)
+    window_end = min(len(foot_y_positions), phase_mid + temporal_window // 2 + 1)
+
+    # Use median for robustness to outliers
+    window_positions = foot_y_positions[window_start:window_end]
+    return float(np.median(window_positions))
+
+
 def _identify_main_contact_phase(
     phases: list[tuple[int, int, ContactState]],
     ground_phases: list[tuple[int, int, int]],
@@ -237,17 +267,20 @@ def _identify_main_contact_phase(
 
         if ground_after_air and first_ground_idx < first_air_idx:
             # Check if first ground is at higher elevation (lower y) than
-            # ground after air
-            first_ground_y = float(
-                np.mean(foot_y_positions[first_ground_start : first_ground_end + 1])
+            # ground after air using robust temporal averaging
+            first_ground_y = _compute_robust_phase_position(
+                foot_y_positions, first_ground_start, first_ground_end
             )
             second_ground_start, second_ground_end, _ = ground_after_air[0]
-            second_ground_y = float(
-                np.mean(foot_y_positions[second_ground_start : second_ground_end + 1])
+            second_ground_y = _compute_robust_phase_position(
+                foot_y_positions, second_ground_start, second_ground_end
             )
 
-            # If first ground is significantly higher (>5% of frame), it's a drop jump
-            if second_ground_y - first_ground_y > 0.05:
+            # If first ground is significantly higher (>7% of frame), it's a drop jump
+            # Increased from 0.05 to 0.07 with 11-frame temporal averaging
+            # for reproducibility (balances detection sensitivity with noise robustness)
+            # Note: MediaPipe has inherent non-determinism (Google issue #3945)
+            if second_ground_y - first_ground_y > 0.07:
                 is_drop_jump = True
                 contact_start, contact_end = second_ground_start, second_ground_end
 
