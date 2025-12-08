@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.36.1 (2025-12-08)
+
+### Bug Fixes
+
+- **dropjump**: Improve analysis reproducibility with temporal averaging
+  ([`6f98b1f`](https://github.com/feniix/kinemotion/commit/6f98b1f918539e714b604ac1a0bf6187c6ff28a6))
+
+### Chores
+
+- Up the mem of the backend
+  ([`67133ca`](https://github.com/feniix/kinemotion/commit/67133ca2cded45df74ef5bfe3e9d9b7d85bde1a9))
+
+
 ## v0.36.0 (2025-12-07)
 
 ### Bug Fixes
