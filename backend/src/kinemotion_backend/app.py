@@ -682,6 +682,87 @@ async def analyze_local_video(
 # ========== Error Handlers ==========
 
 
+@app.get("/determinism/platform-info", tags=["Determinism"])
+async def get_platform_info() -> dict[str, Any]:
+    """Get platform info for cross-platform determinism testing."""
+    import platform
+
+    import cv2
+    import numpy as np
+
+    return {
+        "platform": {
+            "machine": platform.machine(),
+            "processor": platform.processor(),
+            "python_version": platform.python_version(),
+        },
+        "libraries": {
+            "numpy": np.__version__,
+            "opencv": cv2.__version__,
+        },
+    }
+
+
+@app.post("/determinism/extract-landmarks", tags=["Determinism"])
+async def extract_landmarks_determinism(video: UploadFile = File(...)) -> JSONResponse:  # noqa: B008
+    """Extract raw MediaPipe landmarks for cross-platform comparison."""
+    import platform
+
+    from kinemotion.core.pose import PoseTracker
+    from kinemotion.core.video_io import VideoProcessor
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".MOV") as tmp:
+        content = await video.read()
+        tmp.write(content)
+        tmp_path = tmp.name
+
+    try:
+        tracker = PoseTracker()
+        video_proc = VideoProcessor(tmp_path)
+
+        all_landmarks = []
+        frame_idx = 0
+
+        while True:
+            ret, frame = video_proc.cap.read()
+            if not ret:
+                break
+
+            landmarks = tracker.process_frame(frame)
+
+            if landmarks:
+                frame_landmarks = {
+                    "frame": frame_idx,
+                    "landmarks": {
+                        name: {
+                            "x": float(coords[0]),
+                            "y": float(coords[1]),
+                            "visibility": float(coords[2]),
+                        }
+                        for name, coords in landmarks.items()
+                    },
+                }
+            else:
+                frame_landmarks = {"frame": frame_idx, "landmarks": None}
+
+            all_landmarks.append(frame_landmarks)
+            frame_idx += 1
+
+        video_proc.close()
+
+        return JSONResponse(
+            content={
+                "video_filename": video.filename,
+                "platform": platform.machine(),
+                "num_frames": frame_idx,
+                "landmarks": all_landmarks,
+            }
+        )
+
+    finally:
+        os.unlink(tmp_path)
+
+
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Any, exc: HTTPException) -> JSONResponse:
     """Handle HTTP exceptions with consistent response format."""
