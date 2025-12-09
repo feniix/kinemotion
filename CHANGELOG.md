@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.38.0 (2025-12-09)
+
+### Bug Fixes
+
+- Use workspace lock with kinemotion local source for cross-platform determinism
+  ([`b6b79b9`](https://github.com/feniix/kinemotion/commit/b6b79b9424a57d6dd27bb26b1630a5a752b75608))
+
+- **backend**: Use dict unpacking for TypedDict compatibility in determinism endpoint
+  ([`c186a14`](https://github.com/feniix/kinemotion/commit/c186a1474cc34c67df188989de62de38684e3b0b))
+
+- **backend**: Use json serialization for TypedDict in determinism endpoint
+  ([`f9b64dc`](https://github.com/feniix/kinemotion/commit/f9b64dc13f718d2184605424898d24a9f45b056e))
+
+- **backend**: Use to_dict() method for DropJumpMetrics serialization
+  ([`6f3ba7c`](https://github.com/feniix/kinemotion/commit/6f3ba7c0267e126b3a16e24894909ec320585cb8))
+
+- **backend**: Use type-safe dict return for determinism endpoint
+  ([`34afd01`](https://github.com/feniix/kinemotion/commit/34afd01211332bddd096ece619023b4f7bebf1a9))
+
+### Features
+
+- **backend**: Add full drop jump analysis endpoint for determinism testing
+  ([`0b57c81`](https://github.com/feniix/kinemotion/commit/0b57c81f667dd20710493adb56d1fd32052cbd20))
+
+
 ## v0.37.0 (2025-12-09)
 
 ### Chores
