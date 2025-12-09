@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.38.1 (2025-12-09)
+
+### Bug Fixes
+
+- **backend**: Add backend README.md copy and sync backend deps for uvicorn
+  ([`996e7ed`](https://github.com/feniix/kinemotion/commit/996e7ed9a438b79e24fe6695b03aa0e0092bbc3f))
+
+### Documentation
+
+- **memory**: Add AthletePose3D investigation findings to basic-memory
+  ([`597e41c`](https://github.com/feniix/kinemotion/commit/597e41cb2dd965de69fcf46ebdaa3241dbc49ff4))
+
+
 ## v0.38.0 (2025-12-09)
 
 ### Bug Fixes
