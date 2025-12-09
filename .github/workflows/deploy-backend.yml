@@ -96,7 +96,7 @@ jobs:
       - name: Build and push Docker image to GCR
         uses: docker/build-push-action@v6
         with:
-          context: ./backend
+          context: .
           file: ./backend/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }},${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:latest

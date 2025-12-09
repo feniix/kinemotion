@@ -13,7 +13,14 @@ from .api import (
 from .cmj.kinematics import CMJMetrics
 from .dropjump.kinematics import DropJumpMetrics
 
-__version__ = "0.27.0"
+# Get version from package metadata (set in pyproject.toml)
+try:
+    from importlib.metadata import version
+
+    __version__ = version("kinemotion")
+except Exception:
+    # Fallback for development/editable installs
+    __version__ = "0.37.0"
 
 __all__ = [
     # Drop jump API

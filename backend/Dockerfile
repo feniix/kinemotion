@@ -30,18 +30,20 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 # Create app directory
 WORKDIR /app
 
-# Copy project files for dependency installation
-COPY pyproject.toml README.md ./
-# Copy uv.lock (workspace lock file, kept in sync with root uv.lock)
-COPY uv.lock ./
+# Copy workspace files
+COPY uv.lock pyproject.toml README.md ./
+COPY src/ ./src/
 
-# Install Python dependencies using uv
-# Using --frozen to ensure reproducible builds from lock file
-# This includes kinemotion from PyPI (specified in pyproject.toml)
+# Copy backend files
+COPY backend/pyproject.toml ./backend/pyproject.toml
+COPY backend/src/ ./backend/src/
+
+# Sync workspace (installs both kinemotion editable + backend deps from lock)
 RUN uv sync --frozen --no-dev
 
-# Copy application code
-COPY src/ ./src/
+# Add venv to PATH for static execution
+ENV PATH="/app/.venv/bin:$PATH" \
+    VIRTUAL_ENV="/app/.venv"
 
 # Expose port (Cloud Run expects $PORT environment variable, defaults to 8080)
 EXPOSE 8080
@@ -50,8 +52,7 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:${PORT:-8080}/health').read()" || exit 1
 
-# Run the application with uvicorn
+# Run uvicorn directly (venv is in PATH, no wrapper needed)
 # Cloud Run: use PORT env var (defaults to 8080)
 # Graceful shutdown timeout of 60 seconds for video processing
-# Using uv run to properly execute within the virtual environment
-CMD ["sh", "-c", "exec uv run uvicorn kinemotion_backend.app:app --host 0.0.0.0 --port ${PORT:-8080} --workers ${WORKERS:-1} --timeout-graceful-shutdown 60"]
+CMD ["sh", "-c", "exec uvicorn kinemotion_backend.app:app --host 0.0.0.0 --port ${PORT:-8080} --workers ${WORKERS:-1} --timeout-graceful-shutdown 60"]
