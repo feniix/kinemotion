@@ -29,6 +29,21 @@ export function useAuth(): UseAuthReturn {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!supabase) {
+      // Mock auth for development when Supabase is not configured
+      const mockUser = {
+        id: 'dev-user',
+        email: 'dev@local',
+        app_metadata: {},
+        user_metadata: {},
+        aud: 'authenticated',
+        created_at: new Date().toISOString(),
+      } as User
+      setUser(mockUser)
+      setLoading(false)
+      return
+    }
+
     // Get initial session
     supabase.auth
       .getSession()
@@ -53,6 +68,15 @@ export function useAuth(): UseAuthReturn {
   }, [])
 
   const signIn = async (email: string, password: string) => {
+    if (!supabase) {
+      // Mock sign in
+      setLoading(true)
+      await new Promise(resolve => setTimeout(resolve, 500))
+      setUser({ id: 'dev-user', email, app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User)
+      setLoading(false)
+      return
+    }
+
     try {
       setError(null)
       setLoading(true)
@@ -71,6 +95,15 @@ export function useAuth(): UseAuthReturn {
   }
 
   const signUp = async (email: string, password: string) => {
+    if (!supabase) {
+      // Mock sign up
+      setLoading(true)
+      await new Promise(resolve => setTimeout(resolve, 500))
+      alert('Mock sign up successful! You can now sign in.')
+      setLoading(false)
+      return
+    }
+
     try {
       setError(null)
       setLoading(false)
@@ -89,6 +122,11 @@ export function useAuth(): UseAuthReturn {
   }
 
   const signInWithGoogle = async () => {
+    if (!supabase) {
+      alert('Google Sign-In is not available in mock mode.')
+      return
+    }
+
     try {
       setError(null)
       const { error } = await supabase.auth.signInWithOAuth({
@@ -106,6 +144,12 @@ export function useAuth(): UseAuthReturn {
   }
 
   const signOut = async () => {
+    if (!supabase) {
+      // Mock sign out
+      setUser(null)
+      return
+    }
+
     try {
       setError(null)
       const { error } = await supabase.auth.signOut()

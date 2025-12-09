@@ -53,9 +53,12 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
       const baseApiUrl = import.meta.env.VITE_API_URL || ''
       const apiEndpoint = baseApiUrl ? `${baseApiUrl}/api/analyze` : '/api/analyze'
 
-      // Get auth token from Supabase
-      const { data: { session } } = await supabase.auth.getSession()
-      const token = session?.access_token
+      // Get auth token from Supabase if configured
+      let token
+      if (supabase) {
+        const { data: { session } } = await supabase.auth.getSession()
+        token = session?.access_token
+      }
 
       // Use XMLHttpRequest to track upload progress
       const response = await new Promise<AnalysisResponse>((resolve, reject) => {

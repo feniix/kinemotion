@@ -52,32 +52,53 @@ docs/                   # Documentation (PARAMETERS.md is key)
 
 ### Analysis Pipeline
 
+#### Drop Jump Analysis
+
 1. **Pose Tracking** (`core/pose.py`): Extracts 13 body landmarks per frame using MediaPipe.
-1. **Center of Mass (CoM) Estimation** (`core/pose.py`): Optional, more accurate tracking using a biomechanical model.
-1. **Smoothing** (`core/smoothing.py`): A Savitzky-Golay filter reduces jitter.
-1. **Contact Detection** (`dropjump/analysis.py`): Analyzes vertical velocity to determine ground contact vs. flight.
-1. **Phase Identification**: Finds continuous ground contact and flight periods.
-1. **Sub-Frame Interpolation** (`dropjump/analysis.py`): Estimates exact transition times between frames using linear interpolation on the velocity curve, improving timing precision significantly.
-1. **Trajectory Curvature Analysis** (`dropjump/analysis.py`): Refines transition timing by detecting acceleration spikes (e.g., landing impact).
-1. **Metrics Calculation** (`dropjump/kinematics.py`): Calculates ground contact time, flight time, and jump height.
-1. **Output**: Provides metrics in JSON format and an optional debug video.
+1. **Smoothing** (`core/smoothing.py`): Savitzky-Golay filter for noise reduction.
+1. **Contact Detection** (`dropjump/analysis.py`): Velocity-based ground contact detection.
+1. **Sub-Frame Interpolation**: Linear interpolation for precise timing.
+1. **Trajectory Curvature**: Acceleration-based refinement.
+1. **Metrics**: RSI, contact time, jump height.
+
+#### CMJ Analysis (`cmj/analysis.py`)
+
+1. **Strategy**: Uses a **backward search** algorithm starting from the jump peak.
+1. **Signed Velocity**: Calculates signed velocity (negative=up, positive=down) to distinguish concentric/eccentric phases.
+1. **Phase Detection Sequence**:
+   - **Peak Height**: Global minimum y-position.
+   - **Takeoff**: Peak *negative* velocity (max upward speed) found by searching backward from peak.
+   - **Lowest Point**: Maximum y-position found by searching backward from takeoff.
+   - **Landing**: Maximum *positive* acceleration (impact) found by searching forward from peak.
+   - **Standing End**: Detected via acceleration thresholds searching backward from lowest point.
 
 ## Critical Implementation Details
 
-### 1. Aspect Ratio Preservation & SAR Handling (`core/video_io.py`)
+### 1. Aspect Ratio, Rotation & SAR Handling (`core/video_io.py`)
 
-- **CRITICAL**: The tool must preserve the source video's exact aspect ratio, including Sample Aspect Ratio (SAR) from mobile videos.
-- **DO**: Get frame dimensions from the first actual frame read from the video (`frame.shape[:2]`), not from `cv2.CAP_PROP_*` properties, which can be wrong for rotated videos.
-- **DO**: Use `ffprobe` to extract SAR and calculate correct display dimensions.
-- The `DebugOverlayRenderer` uses these display dimensions for the output video.
+- **CRITICAL**: The tool must preserve the source video's exact aspect ratio and orientation.
+- **FFmpeg/FFprobe**: The `VideoProcessor` class relies on `ffprobe` to extract:
+  - **Rotation**: Metadata often ignored by OpenCV (common in mobile videos).
+  - **SAR (Sample Aspect Ratio)**: Non-square pixel data.
+- **Fallback**: If `ffprobe` is missing, a warning is issued, and defaults are used.
+- **DO**: Always use `frame.shape[:2]` from an actual read frame for dimensions, not `cv2.CAP_PROP_*`.
 
-### 2. Sub-Frame Interpolation (`dropjump/analysis.py`)
+### 2. Internal Physics Validation (`scripts/validate_known_heights.py`)
+
+- **Context**: While clinical validation is pending, the tool undergoes rigorous **internal physics validation**.
+- **Methodology**: Objects are dropped from known heights (0.5m, 1.0m, 1.5m). Measured flight times are compared against theoretical physics predictions ($t = \\sqrt{2h/g}$).
+- **Passing Criteria**:
+  - **MAE**: \< 20ms
+  - **RMSE**: \< 30ms
+  - **Correlation**: > 0.99
+
+### 3. Sub-Frame Interpolation & Robust Derivatives (`dropjump/analysis.py`, `core/smoothing.py`)
 
 - **CRITICAL**: Timing precision is achieved by interpolating between frames.
-- **Velocity Calculation**: Velocity is computed as the **first derivative of the smoothed position trajectory** using a Savitzky-Golay filter (`savgol_filter(..., deriv=1)`). This is much smoother and more accurate than simple frame-to-frame differences.
+- **Velocity/Acceleration Calculation**: Velocity is computed as the **first derivative** and acceleration as the **second derivative** of the smoothed position trajectory using a Savitzky-Golay filter (`savgol_filter(..., deriv=1)` and `deriv=2`). This approach is highly robust and accurate, minimizing noise amplification compared to simple finite-difference methods.
 - **Interpolation**: When velocity crosses the contact threshold between two frames, linear interpolation is used to find the fractional frame index of the crossing. This improves timing accuracy from ~33ms to ~10ms at 30fps.
 
-### 3. Trajectory Curvature Analysis (`dropjump/analysis.py`)
+### 4. Trajectory Curvature Analysis (`dropjump/analysis.py`)
 
 - **CRITICAL**: Event timing is further refined using acceleration patterns.
 - **Acceleration Calculation**: Acceleration is the **second derivative of the smoothed position** (`savgol_filter(..., deriv=2)`).
@@ -86,12 +107,18 @@ docs/                   # Documentation (PARAMETERS.md is key)
   - **Takeoff**: A sharp change in acceleration.
 - **Blending**: The final transition time is a weighted blend: 70% from the curvature-based estimate and 30% from the velocity-based estimate. This is enabled by default via `--use-curvature`.
 
-### 4. JSON Serialization of NumPy Types (`dropjump/kinematics.py`)
+### 5. Adaptive Velocity Threshold (`dropjump/analysis.py`)
+
+- **INSIGHT**: The `calculate_adaptive_threshold` function is implemented but currently *not integrated* into the main analysis pipeline.
+- **PURPOSE**: This feature dynamically adjusts the `velocity_threshold` based on baseline noise characteristics of the video. This can significantly improve robustness across varying camera distances, lighting conditions, and video quality by making contact detection less sensitive to noise and more resilient to false positives/negatives.
+- **STATUS**: Awaiting CLI integration. Its inclusion would enhance the tool's adaptability without manual parameter tuning.
+
+### 6. JSON Serialization of NumPy Types (`dropjump/kinematics.py`)
 
 - **CRITICAL**: Standard `json.dump` cannot serialize NumPy integer types (e.g., `np.int64`).
 - **DO**: Explicitly cast all NumPy numbers to standard Python types (`int()`, `float()`) within the `to_dict()` methods of data classes before serialization.
 
-### 5. OpenCV Frame Dimensions
+### 7. OpenCV Frame Dimensions
 
 - **CRITICAL**: Be aware of dimension ordering differences.
 - **NumPy `frame.shape`**: `(height, width, channels)`

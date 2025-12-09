@@ -80,7 +80,7 @@ function App() {
         {loading && <LoadingSpinner uploadProgress={uploadProgress} />}
         {loading && uploadProgress >= 100 && <ResultsSkeleton />}
         {error && <ErrorDisplay error={error} onRetry={handleRetry} />}
-        {metrics && !loading && <ResultsDisplay metrics={metrics} />}
+        {metrics && !loading && <ResultsDisplay metrics={metrics} videoFile={file} />}
       </main>
 
       <footer className="footer">
