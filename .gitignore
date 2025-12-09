@@ -83,3 +83,6 @@ Thumbs.db
 !.mcp.json
 .vercel
 .env*.local
+
+# athletepose3d
+data/
