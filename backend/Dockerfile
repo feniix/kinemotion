@@ -35,11 +35,14 @@ COPY uv.lock pyproject.toml README.md ./
 COPY src/ ./src/
 
 # Copy backend files
-COPY backend/pyproject.toml ./backend/pyproject.toml
+COPY backend/pyproject.toml backend/README.md ./backend/
 COPY backend/src/ ./backend/src/
 
-# Sync workspace (installs both kinemotion editable + backend deps from lock)
+# Sync workspace from root (installs kinemotion)
 RUN uv sync --frozen --no-dev
+
+# Sync backend dependencies (uvicorn, fastapi, etc)
+RUN cd backend && uv sync --frozen --no-dev
 
 # Add venv to PATH for static execution
 ENV PATH="/app/.venv/bin:$PATH" \
