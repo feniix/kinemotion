@@ -54,7 +54,7 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
       const apiEndpoint = baseApiUrl ? `${baseApiUrl}/api/analyze` : '/api/analyze'
 
       // Get auth token from Supabase if configured
-      let token
+      let token: string | undefined
       if (supabase) {
         const { data: { session } } = await supabase.auth.getSession()
         token = session?.access_token
