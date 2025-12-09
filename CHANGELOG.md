@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.37.0 (2025-12-09)
+
+### Chores
+
+- Organize permissions list and add sequential-thinking tool
+  ([`64aaf72`](https://github.com/feniix/kinemotion/commit/64aaf72b44fbb3561f84ec5e12f9ec14c2d0d05b))
+
+### Features
+
+- **backend**: Add determinism testing endpoints for M1 vs Intel comparison
+  ([`8447790`](https://github.com/feniix/kinemotion/commit/8447790f6aef2bd11fdfa086ce4e67b5226de9e2))
+
+
 ## v0.36.1 (2025-12-08)
 
 ### Bug Fixes
