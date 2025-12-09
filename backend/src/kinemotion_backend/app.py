@@ -777,14 +777,17 @@ async def analyze_dropjump_determinism(video: UploadFile = File(...)) -> JSONRes
         # Run full analysis
         result = process_dropjump_video(tmp_path)
 
-        # Add platform info
-        result["platform_info"] = {
-            "machine": platform.machine(),
-            "processor": platform.processor(),
-            "python_version": platform.python_version(),
+        # Create response with platform info (can't modify TypedDict directly)
+        response_data = {
+            **result,
+            "platform_info": {
+                "machine": platform.machine(),
+                "processor": platform.processor(),
+                "python_version": platform.python_version(),
+            },
         }
 
-        return JSONResponse(content=result)
+        return JSONResponse(content=response_data)
 
     finally:
         os.unlink(tmp_path)
