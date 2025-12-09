@@ -68,19 +68,5 @@
       "WebFetch(domain:www.sonarsource.com)"
     ]
   },
-  "enableAllProjectMcpServers": true,
-  "hooks": {
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/fix-basic-memory-names.sh",
-            "timeout": 30000,
-            "statusMessage": "Normalizing basic-memory filenames to kebab-case..."
-          }
-        ]
-      }
-    ]
-  }
+  "enableAllProjectMcpServers": true
 }

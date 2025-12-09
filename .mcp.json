@@ -21,8 +21,11 @@
       "args": [
         "basic-memory",
         "mcp",
-        "--project=dropjump"
-      ]
+        "--project=kinemotion"
+      ],
+      "env": {
+        "BASIC_MEMORY_KEBAB_FILENAMES": "true"
+      }
     },
     "sequential-thinking": {
       "command": "uvx",
