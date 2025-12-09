@@ -777,19 +777,17 @@ async def analyze_dropjump_determinism(video: UploadFile = File(...)) -> dict[st
         # Run full analysis
         result = process_dropjump_video(tmp_path)
 
-        # Build response manually from TypedDict fields
-        # Can't use .get() or item access on TypedDict in strict mode
-        import json
+        # Convert to plain dict using to_dict() method
+        result_dict = cast(dict[str, Any], result.to_dict())
 
-        result_json = json.loads(json.dumps(result))
-
-        result_json["platform_info"] = {
+        # Add platform info
+        result_dict["platform_info"] = {
             "machine": platform.machine(),
             "processor": platform.processor(),
             "python_version": platform.python_version(),
         }
 
-        return result_json
+        return result_dict
 
     finally:
         os.unlink(tmp_path)
