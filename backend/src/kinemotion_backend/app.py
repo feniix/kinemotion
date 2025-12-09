@@ -763,6 +763,33 @@ async def extract_landmarks_determinism(video: UploadFile = File(...)) -> JSONRe
         os.unlink(tmp_path)
 
 
+@app.post("/determinism/analyze-dropjump", tags=["Determinism"])
+async def analyze_dropjump_determinism(video: UploadFile = File(...)) -> JSONResponse:  # noqa: B008
+    """Run full drop jump analysis without authentication for determinism testing."""
+    import platform
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".MOV") as tmp:
+        content = await video.read()
+        tmp.write(content)
+        tmp_path = tmp.name
+
+    try:
+        # Run full analysis
+        result = process_dropjump_video(tmp_path)
+
+        # Add platform info
+        result["platform_info"] = {
+            "machine": platform.machine(),
+            "processor": platform.processor(),
+            "python_version": platform.python_version(),
+        }
+
+        return JSONResponse(content=result)
+
+    finally:
+        os.unlink(tmp_path)
+
+
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Any, exc: HTTPException) -> JSONResponse:
     """Handle HTTP exceptions with consistent response format."""
