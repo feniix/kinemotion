@@ -764,7 +764,7 @@ async def extract_landmarks_determinism(video: UploadFile = File(...)) -> JSONRe
 
 
 @app.post("/determinism/analyze-dropjump", tags=["Determinism"])
-async def analyze_dropjump_determinism(video: UploadFile = File(...)) -> JSONResponse:  # noqa: B008
+async def analyze_dropjump_determinism(video: UploadFile = File(...)) -> dict[str, Any]:  # noqa: B008
     """Run full drop jump analysis without authentication for determinism testing."""
     import platform
 
@@ -777,17 +777,18 @@ async def analyze_dropjump_determinism(video: UploadFile = File(...)) -> JSONRes
         # Run full analysis
         result = process_dropjump_video(tmp_path)
 
-        # Create response with platform info (can't modify TypedDict directly)
-        response_data = {
-            **result,
+        # Return with platform info
+        # Type-safe: return plain dict, let FastAPI serialize
+        return {
+            "data": result.get("data"),
+            "metadata": result.get("metadata"),
+            "validation": result.get("validation"),
             "platform_info": {
                 "machine": platform.machine(),
                 "processor": platform.processor(),
                 "python_version": platform.python_version(),
             },
         }
-
-        return JSONResponse(content=response_data)
 
     finally:
         os.unlink(tmp_path)
