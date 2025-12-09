@@ -777,18 +777,19 @@ async def analyze_dropjump_determinism(video: UploadFile = File(...)) -> dict[st
         # Run full analysis
         result = process_dropjump_video(tmp_path)
 
-        # Return with platform info
-        # Type-safe: return plain dict, let FastAPI serialize
-        return {
-            "data": result.get("data"),
-            "metadata": result.get("metadata"),
-            "validation": result.get("validation"),
-            "platform_info": {
-                "machine": platform.machine(),
-                "processor": platform.processor(),
-                "python_version": platform.python_version(),
-            },
+        # Build response manually from TypedDict fields
+        # Can't use .get() or item access on TypedDict in strict mode
+        import json
+
+        result_json = json.loads(json.dumps(result))
+
+        result_json["platform_info"] = {
+            "machine": platform.machine(),
+            "processor": platform.processor(),
+            "python_version": platform.python_version(),
         }
+
+        return result_json
 
     finally:
         os.unlink(tmp_path)
