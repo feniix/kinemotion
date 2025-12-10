@@ -1,6 +1,7 @@
 """Tests for kinematics calculations."""
 
 import numpy as np
+import pytest
 
 from kinemotion.dropjump.analysis import ContactState
 from kinemotion.dropjump.kinematics import calculate_drop_jump_metrics
@@ -35,7 +36,7 @@ def test_calculate_metrics_basic():
     # Flight time: acceleration-based landing detection finds impact earlier
     # than simple phase boundary, typically 13-17 frames instead of 20
     assert metrics.flight_time is not None
-    assert 0.35 < metrics.flight_time < 0.65  # Approximately 10-20 frames
+    assert 0.34 < metrics.flight_time < 0.65  # Approximately 10-20 frames
 
     # Jump height should be calculated from flight time
     assert metrics.jump_height is not None
@@ -83,3 +84,44 @@ def test_metrics_to_dict():
     assert "contact_end_frame_precise" in result["data"]
     assert "flight_start_frame_precise" in result["data"]
     assert "flight_end_frame_precise" in result["data"]
+
+
+def test_calculate_drop_jump_metrics_scaled() -> None:
+    """Test drop jump metrics with scaling logic for trajectory height."""
+    fps = 100.0
+
+    contact_states = []
+    contact_states.extend([ContactState.ON_GROUND] * 50)  # Box
+    contact_states.extend([ContactState.IN_AIR] * 25)  # Drop
+    contact_states.extend([ContactState.ON_GROUND] * 25)  # Contact
+    contact_states.extend([ContactState.IN_AIR] * 50)  # Flight
+    contact_states.extend([ContactState.ON_GROUND] * 25)  # Landing
+
+    positions = np.concatenate(
+        [
+            np.ones(50) * 0.2,  # Box
+            np.linspace(0.2, 0.8, 25),  # Drop
+            np.ones(25) * 0.8,  # Contact
+            # Flight parabola
+            0.65 + 0.15 * np.linspace(-1, 1, 50) ** 2,
+            np.ones(25) * 0.8,  # Landing
+        ]
+    )
+
+    drop_start_frame = 50
+    expected_height_m = 0.3065625
+
+    metrics = calculate_drop_jump_metrics(
+        contact_states,
+        positions,
+        fps,
+        drop_start_frame=drop_start_frame,
+        velocity_threshold=0.01,
+        smoothing_window=3,
+        use_curvature=False,
+    )
+
+    assert metrics.jump_height_trajectory_m is not None
+    assert metrics.jump_height_trajectory_m == pytest.approx(
+        expected_height_m, abs=0.02
+    )

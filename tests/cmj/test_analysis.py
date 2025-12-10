@@ -732,10 +732,11 @@ def test_find_landing_frame_impact_detection() -> None:
     )
 
     # Compute accelerations - impact shows as negative acceleration spike
+    velocities = compute_velocity_from_derivative(positions)
     accelerations = compute_acceleration_from_derivative(positions)
 
     # Act: Find landing frame
-    landing = find_landing_frame(accelerations, peak_height_frame, fps)
+    landing = find_landing_frame(accelerations, velocities, peak_height_frame, fps)
 
     # Assert: Landing should be detected in expected window
     assert isinstance(landing, float), "Should return float frame number"

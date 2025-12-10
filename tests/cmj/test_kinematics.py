@@ -186,3 +186,61 @@ def test_cmj_velocity_calculations() -> None:
     # coordinate system)
     assert abs(metrics.peak_eccentric_velocity) > 1e-6
     assert abs(metrics.peak_concentric_velocity) > 1e-6
+
+
+def test_calculate_cmj_metrics_scaled() -> None:
+    """Test CMJ metrics with scaling logic for depth and velocity."""
+    fps = 100.0
+
+    # Define phases
+    # Standing: 0.5
+    standing = np.ones(50) * 0.5
+
+    # Eccentric: 0.5 -> 0.7 (downward, positive velocity)
+    eccentric = np.linspace(0.5, 0.7, 51)[:-1]  # 50 frames
+
+    # Concentric: 0.7 -> 0.5 (upward, negative velocity)
+    concentric = np.linspace(0.7, 0.5, 26)[:-1]  # 25 frames
+
+    # Flight: 0.5 -> 0.35 -> 0.5 (upward then downward)
+    # Parabola centered at 0.5s (25 frames)
+    t = np.linspace(-1, 1, 51)
+    flight = 0.35 + 0.15 * t**2  # at t=0, 0.35. at t=1, 0.5.
+
+    # Landing
+    landing_phase = np.ones(25) * 0.5
+
+    positions = np.concatenate([standing, eccentric, concentric, flight, landing_phase])
+
+    # Compute velocities
+    velocities = np.gradient(positions)  # approximate derivative
+
+    # Frames
+    standing_start = 50.0
+    lowest_point = 100.0
+    takeoff = 125.0
+    landing = 175.0  # 125 + 50 frames flight
+
+    metrics = calculate_cmj_metrics(
+        positions,
+        velocities,
+        standing_start,
+        lowest_point,
+        takeoff,
+        landing,
+        fps,
+    )
+
+    # Check scaling logic
+    # Flight time = 0.5s
+    # Jump height = 9.81 * 0.5^2 / 8 = 0.30656 m
+    expected_height = 0.30656
+    assert metrics.jump_height == pytest.approx(expected_height, rel=1e-3)
+
+    # Flight displacement (units) = 0.5 - 0.35 = 0.15
+    # Scale factor = 0.30656 / 0.15 = 2.0437 m/unit
+    scale_factor = expected_height / 0.15
+
+    # Depth (units) = 0.7 - 0.5 = 0.2
+    # Expected depth (m) = 0.2 * scale_factor = 0.4087 m
+    assert metrics.countermovement_depth == pytest.approx(0.2 * scale_factor, rel=1e-2)

@@ -170,7 +170,9 @@ def test_dropjump_dual_height_validation_consistency() -> None:
     metrics.ground_contact_time = 0.25
     metrics.flight_time = 0.70
     metrics.jump_height_kinematic = 0.60  # From flight time
-    metrics.jump_height_trajectory = 0.62  # From position tracking (3% difference)
+    # From position tracking (3% difference)
+    metrics.jump_height_trajectory_m = 0.62
+    metrics.jump_height_trajectory = 0.15  # Normalized (doesn't matter here)
 
     validator = DropJumpMetricsValidator()
     result = validator.validate(cast(dict, metrics.to_dict()))
@@ -195,7 +197,8 @@ def test_dropjump_dual_height_validation_poor_quality() -> None:
     metrics.ground_contact_time = 0.30
     metrics.flight_time = 0.75
     metrics.jump_height_kinematic = 0.70  # From flight time
-    metrics.jump_height_trajectory = 0.55  # From position tracking (20% difference)
+    metrics.jump_height_trajectory_m = 0.55  # From position tracking (20% difference)
+    metrics.jump_height_trajectory = 0.12  # Normalized
 
     validator = DropJumpMetricsValidator()
     result = validator.validate(cast(dict, metrics.to_dict()))

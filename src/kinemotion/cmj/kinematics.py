@@ -180,6 +180,24 @@ def calculate_cmj_metrics(
     g = 9.81  # gravity in m/s^2
     jump_height = (g * flight_time**2) / 8
 
+    # Determine scaling factor (meters per normalized unit)
+    # We use the flight phase displacement in normalized units compared to
+    # kinematic jump height
+    flight_start_idx = int(takeoff_frame)
+    flight_end_idx = int(landing_frame)
+    flight_positions = positions[flight_start_idx:flight_end_idx]
+
+    scale_factor = 0.0
+    if len(flight_positions) > 0:
+        # Peak height is minimum y value (highest point in frame)
+        peak_flight_pos = np.min(flight_positions)
+        takeoff_pos = positions[flight_start_idx]
+        # Displacement is upward (takeoff_pos - peak_pos) because y decreases upward
+        flight_displacement = takeoff_pos - peak_flight_pos
+
+        if flight_displacement > 0.001:  # Avoid division by zero or noise
+            scale_factor = jump_height / flight_displacement
+
     # Calculate countermovement depth
     if standing_start_frame is not None:
         standing_position = positions[int(standing_start_frame)]
@@ -188,7 +206,10 @@ def calculate_cmj_metrics(
         standing_position = positions[0]
 
     lowest_position = positions[int(lowest_point_frame)]
-    countermovement_depth = abs(standing_position - lowest_position)
+    # Depth in normalized units
+    depth_normalized = abs(standing_position - lowest_position)
+    # Convert to meters
+    countermovement_depth = depth_normalized * scale_factor
 
     # Calculate phase durations
     if standing_start_frame is not None:
@@ -201,8 +222,12 @@ def calculate_cmj_metrics(
 
     concentric_duration = (takeoff_frame - lowest_point_frame) / fps
 
+    # Velocity scaling factor: units/frame -> meters/second
+    # v_m_s = v_units_frame * fps * scale_factor
+    velocity_scale = scale_factor * fps
+
     # Calculate peak velocities
-    # Eccentric phase: negative velocities (downward)
+    # Eccentric phase: Downward motion = Positive velocity in image coords
     if standing_start_frame is not None:
         eccentric_start_idx = int(standing_start_frame)
     else:
@@ -212,18 +237,26 @@ def calculate_cmj_metrics(
     eccentric_velocities = velocities[eccentric_start_idx:eccentric_end_idx]
 
     if len(eccentric_velocities) > 0:
-        # Peak eccentric velocity is most negative value
-        peak_eccentric_velocity = float(np.min(eccentric_velocities))
+        # Peak eccentric velocity is maximum positive value (fastest downward)
+        # We take max and ensure it's positive (it should be)
+        peak_eccentric_velocity = float(np.max(eccentric_velocities)) * velocity_scale
+        # If max is negative (weird), it means no downward motion detected
+        if peak_eccentric_velocity < 0:
+            peak_eccentric_velocity = 0.0
     else:
         peak_eccentric_velocity = 0.0
 
-    # Concentric phase: positive velocities (upward)
+    # Concentric phase: Upward motion = Negative velocity in image coords
     concentric_start_idx = int(lowest_point_frame)
     concentric_end_idx = int(takeoff_frame)
     concentric_velocities = velocities[concentric_start_idx:concentric_end_idx]
 
     if len(concentric_velocities) > 0:
-        peak_concentric_velocity = float(np.max(concentric_velocities))
+        # Peak concentric velocity is minimum value (most negative = fastest upward)
+        # We take abs to report magnitude
+        peak_concentric_velocity = (
+            abs(float(np.min(concentric_velocities))) * velocity_scale
+        )
     else:
         peak_concentric_velocity = 0.0
 

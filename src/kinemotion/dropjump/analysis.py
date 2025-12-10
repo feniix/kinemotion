@@ -704,8 +704,8 @@ def find_landing_from_acceleration(
     """
     Find landing frame by detecting impact acceleration after takeoff.
 
-    Similar to CMJ landing detection, looks for maximum positive acceleration
-    (deceleration on ground impact) after the jump peak.
+    Detects the moment of initial ground contact, characterized by a sharp
+    deceleration (positive acceleration spike) as downward velocity is arrested.
 
     Args:
         positions: Array of vertical positions (normalized 0-1)
@@ -737,28 +737,10 @@ def find_landing_from_acceleration(
         return min(len(positions) - 1, peak_frame + int(fps * 0.2))
 
     # Find impact: maximum positive acceleration after peak
+    # This corresponds to the initial contact force spike
     landing_accelerations = accelerations[landing_search_start:landing_search_end]
     impact_idx = int(np.argmax(landing_accelerations))
-    impact_frame = landing_search_start + impact_idx
-
-    # After acceleration peak, look for position stabilization (full ground contact)
-    # Check where vertical position stops decreasing (athlete stops compressing)
-    stabilization_search_start = impact_frame
-    stabilization_search_end = min(len(positions), impact_frame + int(fps * 0.2))
-
-    landing_frame = impact_frame
-    if stabilization_search_end > stabilization_search_start + 3:
-        # Find where position reaches maximum (lowest point) and starts stabilizing
-        search_positions = positions[
-            stabilization_search_start:stabilization_search_end
-        ]
-
-        # Look for the frame where position reaches its maximum (deepest landing)
-        max_pos_idx = int(np.argmax(search_positions))
-
-        # Landing is just after max position (athlete at deepest landing compression)
-        landing_frame = stabilization_search_start + max_pos_idx
-        landing_frame = min(len(positions) - 1, landing_frame)
+    landing_frame = landing_search_start + impact_idx
 
     return landing_frame
 

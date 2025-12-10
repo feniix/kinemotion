@@ -390,36 +390,90 @@ def find_lowest_frame(
 
 
 def find_landing_frame(
-    accelerations: np.ndarray, peak_height_frame: int, fps: float
+    accelerations: np.ndarray,
+    velocities: np.ndarray,
+    peak_height_frame: int,
+    fps: float,
 ) -> float:
-    """Find landing frame after peak height after takeoff.
+    """Find landing frame after peak height.
 
-    Detects landing by finding the minimum acceleration (impact) in a search
-    window after peak height. The window is extended to 1.0s to ensure all
-    realistic flight times are captured.
+    Robust detection strategy:
+    1. Find peak downward velocity (maximum positive velocity) after peak height.
+       This corresponds to the moment just before or at initial ground contact.
+    2. Look for maximum deceleration (impact) *after* the peak velocity.
+       This filters out mid-air tracking noise/flutter that can cause false
+       deceleration spikes while the athlete is still accelerating downward.
 
-    Robust detection: When accelerations are nearly flat, skips the impact
-    frames near peak height and looks for the actual landing signal.
+    Args:
+        accelerations: Vertical acceleration array (deriv=2)
+        velocities: Vertical velocity array (deriv=1)
+        peak_height_frame: Frame index of peak jump height
+        fps: Video frame rate
+
+    Returns:
+        Frame index of landing impact.
     """
-    landing_search_start = peak_height_frame
     # Search window extended to 1.0s to accommodate all realistic flight times
-    # (recreational: 0.25-0.65s, elite: 0.65-0.95s, max: 1.1s)
-    landing_search_end = min(len(accelerations), peak_height_frame + int(fps * 1.0))
+    search_end = min(len(accelerations), peak_height_frame + int(fps * 1.0))
+
+    # 1. Find peak downward velocity (max positive value)
+    # Search from peak height to end of window
+    vel_search_window = velocities[peak_height_frame:search_end]
+
+    if len(vel_search_window) == 0:
+        return float(peak_height_frame + int(fps * 0.3))
+
+    # Index relative to peak_height_frame
+    peak_vel_rel_idx = int(np.argmax(vel_search_window))
+    peak_vel_frame = peak_height_frame + peak_vel_rel_idx
+
+    # 2. Search for impact (min acceleration) starting from peak velocity
+    # We allow a small buffer (e.g., 1-2 frames) before peak velocity just in case
+    # peak velocity coincides with impact start due to smoothing
+    landing_search_start = max(peak_height_frame, peak_vel_frame - 2)
+    landing_search_end = search_end
+
     landing_accelerations = accelerations[landing_search_start:landing_search_end]
 
     if len(landing_accelerations) == 0:
+        # Fallback if window is empty
         return float(peak_height_frame + int(fps * 0.3))
 
-    # Skip the first 2 frames after peak (often have unreliable acceleration)
-    # This avoids locking onto peak height acceleration instead of impact
-    skip_frames = 2
-    if len(landing_accelerations) > skip_frames:
-        landing_accelerations_filtered = landing_accelerations[skip_frames:]
-        landing_idx = int(np.argmin(landing_accelerations_filtered)) + skip_frames
-    else:
-        landing_idx = int(np.argmin(landing_accelerations))
+    # Find minimum acceleration (maximum deceleration spike)
+    landing_rel_idx = int(np.argmin(landing_accelerations))
+    landing_frame = landing_search_start + landing_rel_idx
 
-    return float(landing_search_start + landing_idx)
+    return float(landing_frame)
+
+
+def compute_average_hip_position(
+    landmarks: dict[str, tuple[float, float, float]],
+) -> tuple[float, float]:
+    """
+    Compute average hip position from hip landmarks.
+
+    Args:
+        landmarks: Dictionary of landmark positions
+
+    Returns:
+        (x, y) average hip position in normalized coordinates
+    """
+    hip_keys = ["left_hip", "right_hip"]
+
+    x_positions = []
+    y_positions = []
+
+    for key in hip_keys:
+        if key in landmarks:
+            x, y, visibility = landmarks[key]
+            if visibility > 0.5:  # Only use visible landmarks
+                x_positions.append(x)
+                y_positions.append(y)
+
+    if not x_positions:
+        return (0.5, 0.5)  # Default to center if no visible hips
+
+    return (float(np.mean(x_positions)), float(np.mean(y_positions)))
 
 
 def find_standing_end(
@@ -490,6 +544,7 @@ def detect_cmj_phases(
     fps: float,
     window_length: int = 5,
     polyorder: int = 2,
+    landing_positions: np.ndarray | None = None,
 ) -> tuple[float | None, float, float, float] | None:
     """
     Detect all phases of a counter movement jump using a simplified, robust approach.
@@ -501,16 +556,18 @@ def detect_cmj_phases(
     4. Find landing (impact after peak height)
 
     Args:
-        positions: Array of vertical positions (normalized 0-1)
+        positions: Array of vertical positions (normalized 0-1). Typically Hips/CoM.
         fps: Video frame rate
         window_length: Window size for derivative calculations
         polyorder: Polynomial order for Savitzky-Golay filter
+        landing_positions: Optional array of positions for landing detection
+            (e.g., Feet). If None, uses `positions` (Hips) for landing too.
 
     Returns:
         Tuple of (standing_end_frame, lowest_point_frame, takeoff_frame, landing_frame)
         with fractional precision, or None if phases cannot be detected.
     """
-    # Compute SIGNED velocities and accelerations
+    # Compute SIGNED velocities and accelerations for primary signal (Hips)
     velocities = compute_signed_velocity(
         positions, window_length=window_length, polyorder=polyorder
     )
@@ -526,7 +583,32 @@ def detect_cmj_phases(
     # Step 2-4: Find all phases using helper functions
     takeoff_frame = find_takeoff_frame(velocities, peak_height_frame, fps)
     lowest_point = find_lowest_frame(velocities, positions, takeoff_frame, fps)
-    landing_frame = find_landing_frame(accelerations, peak_height_frame, fps)
-    standing_end = find_standing_end(velocities, lowest_point, positions, accelerations)
 
+    # Determine landing frame
+    if landing_positions is not None:
+        # Use specific landing signal (Feet) for landing detection
+        landing_velocities = compute_signed_velocity(
+            landing_positions, window_length=window_length, polyorder=polyorder
+        )
+        landing_accelerations = compute_acceleration_from_derivative(
+            landing_positions, window_length=window_length, polyorder=polyorder
+        )
+        # We still reference peak_height_frame from Hips, as Feet peak
+        # might be different/noisy but generally they align in time.
+        landing_frame = find_landing_frame(
+            landing_accelerations,
+            landing_velocities,
+            peak_height_frame,
+            fps,
+        )
+    else:
+        # Use primary signal (Hips)
+        landing_frame = find_landing_frame(
+            accelerations,
+            velocities,
+            peak_height_frame,
+            fps,
+        )
+
+    standing_end = find_standing_end(velocities, lowest_point, positions, accelerations)
     return (standing_end, lowest_point, takeoff_frame, landing_frame)

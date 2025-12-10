@@ -83,7 +83,7 @@ class DropJumpMetricsValidator(MetricsValidator):
         flight_time_ms = data.get("flight_time_ms")
         jump_height_m = data.get("jump_height_m")
         jump_height_kinematic_m = data.get("jump_height_kinematic_m")
-        jump_height_trajectory_m = data.get("jump_height_trajectory_normalized")
+        jump_height_trajectory_m = data.get("jump_height_trajectory_m")
 
         # Validate individual metrics
         if contact_time_ms is not None:

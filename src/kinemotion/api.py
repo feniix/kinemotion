@@ -8,7 +8,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .cmj.analysis import detect_cmj_phases
+from .cmj.analysis import compute_average_hip_position, detect_cmj_phases
 from .cmj.debug_overlay import CMJDebugOverlayRenderer
 from .cmj.kinematics import CMJMetrics, calculate_cmj_metrics
 from .cmj.metrics_validator import CMJMetricsValidator
@@ -263,11 +263,13 @@ def _calculate_foot_visibility(frame_landmarks: dict) -> float:
 
 def _extract_vertical_positions(
     smoothed_landmarks: list,
+    target: str = "foot",
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Extract vertical foot positions and visibilities from smoothed landmarks.
+    """Extract vertical positions and visibilities from smoothed landmarks.
 
     Args:
         smoothed_landmarks: Smoothed landmark sequence
+        target: Tracking target "foot" or "hip" (default: "foot")
 
     Returns:
         Tuple of (vertical_positions, visibilities) as numpy arrays
@@ -277,9 +279,23 @@ def _extract_vertical_positions(
 
     for frame_landmarks in smoothed_landmarks:
         if frame_landmarks:
-            _, foot_y = compute_average_foot_position(frame_landmarks)
-            position_list.append(foot_y)
-            visibilities_list.append(_calculate_foot_visibility(frame_landmarks))
+            if target == "hip":
+                _, y = compute_average_hip_position(frame_landmarks)
+                # For hips, we can use average visibility of hips if needed,
+                # but currently _calculate_foot_visibility is specific to feet.
+                # We'll stick to foot visibility for now as it indicates
+                # overall leg tracking quality, or we could implement
+                # _calculate_hip_visibility. For simplicity, we'll use foot
+                # visibility as a proxy for "body visibility" or just use 1.0
+                # since hips are usually visible if feet are. Actually, let's
+                # just use foot visibility for consistency in quality checks.
+                vis = _calculate_foot_visibility(frame_landmarks)
+            else:
+                _, y = compute_average_foot_position(frame_landmarks)
+                vis = _calculate_foot_visibility(frame_landmarks)
+
+            position_list.append(y)
+            visibilities_list.append(vis)
         else:
             position_list.append(position_list[-1] if position_list else 0.5)
             visibilities_list.append(0.0)
@@ -915,13 +931,21 @@ def process_cmj_video(
         # Apply smoothing
         smoothed_landmarks = _apply_smoothing(landmarks_sequence, params, verbose)
 
-        # Extract foot positions
+        # Extract vertical positions
         if verbose:
-            print("Extracting foot positions...")
+            print("Extracting vertical positions (Hip and Foot)...")
+
+        # Primary: Hips (for depth, velocity, general phases)
         vertical_positions, visibilities = _extract_vertical_positions(
-            smoothed_landmarks
+            smoothed_landmarks, target="hip"
         )
-        tracking_method = "foot"
+
+        # Secondary: Feet (for precise landing detection)
+        foot_positions, _ = _extract_vertical_positions(
+            smoothed_landmarks, target="foot"
+        )
+
+        tracking_method = "hip_hybrid"
 
         # Detect CMJ phases
         if verbose:
@@ -932,6 +956,7 @@ def process_cmj_video(
             video.fps,
             window_length=params.smoothing_window,
             polyorder=params.polyorder,
+            landing_positions=foot_positions,  # Use feet for landing
         )
 
         if phases is None:

@@ -28,6 +28,7 @@ class DropJumpDataDict(TypedDict, total=False):
     flight_time_ms: float | None
     jump_height_m: float | None
     jump_height_kinematic_m: float | None
+    jump_height_trajectory_m: float | None
     jump_height_trajectory_normalized: float | None
     contact_start_frame: int | None
     contact_end_frame: int | None
@@ -56,7 +57,10 @@ class DropJumpMetrics:
         self.flight_time: float | None = None
         self.jump_height: float | None = None
         self.jump_height_kinematic: float | None = None  # From flight time
-        self.jump_height_trajectory: float | None = None  # From position tracking
+        # From position tracking (normalized)
+        self.jump_height_trajectory: float | None = None
+        # From position tracking (meters)
+        self.jump_height_trajectory_m: float | None = None
         self.drop_start_frame: int | None = None  # Frame when athlete leaves box
         self.contact_start_frame: int | None = None
         self.contact_end_frame: int | None = None
@@ -89,6 +93,9 @@ class DropJumpMetrics:
             "jump_height_m": format_float_metric(self.jump_height, 1, 3),
             "jump_height_kinematic_m": format_float_metric(
                 self.jump_height_kinematic, 1, 3
+            ),
+            "jump_height_trajectory_m": format_float_metric(
+                self.jump_height_trajectory_m, 1, 3
             ),
             "jump_height_trajectory_normalized": format_float_metric(
                 self.jump_height_trajectory, 1, 4
@@ -407,6 +414,14 @@ def _analyze_flight_phase(
 
         height_normalized = float(takeoff_position - peak_position)
         metrics.jump_height_trajectory = height_normalized
+
+        # Calculate scale factor and metric height
+        # Scale factor = kinematic height / normalized height
+        if height_normalized > 0.001 and metrics.jump_height_kinematic is not None:
+            scale_factor = metrics.jump_height_kinematic / height_normalized
+            metrics.jump_height_trajectory_m = height_normalized * scale_factor
+        else:
+            metrics.jump_height_trajectory_m = 0.0
 
 
 def calculate_drop_jump_metrics(
