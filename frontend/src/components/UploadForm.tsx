@@ -6,9 +6,11 @@ interface UploadFormProps {
   file: File | null
   jumpType: 'cmj' | 'dropjump'
   loading: boolean
+  enableDebug: boolean
   recentUploads: RecentUpload[]
   onFileChange: (file: File | null) => void
   onJumpTypeChange: (jumpType: 'cmj' | 'dropjump') => void
+  onEnableDebugChange: (enable: boolean) => void
   onAnalyze: () => void
   onClearHistory?: () => void
 }
@@ -19,9 +21,11 @@ function UploadForm({
   file,
   jumpType,
   loading,
+  enableDebug,
   recentUploads,
   onFileChange,
   onJumpTypeChange,
+  onEnableDebugChange,
   onAnalyze,
   onClearHistory,
 }: UploadFormProps) {
@@ -155,6 +159,25 @@ function UploadForm({
           <option value="cmj">Counter Movement Jump (CMJ)</option>
           <option value="dropjump">Drop Jump</option>
         </select>
+      </div>
+
+      <div className="form-group checkbox-group">
+        <label htmlFor="enable-debug" className="checkbox-label">
+          <input
+            id="enable-debug"
+            type="checkbox"
+            checked={enableDebug}
+            onChange={(e) => onEnableDebugChange(e.target.checked)}
+            disabled={loading}
+            className="checkbox-input"
+          />
+          <span>Enable debug video overlay</span>
+        </label>
+        <p className="checkbox-hint">
+          {enableDebug
+            ? 'Debug video will be generated and available for download (~4-5 min slower)'
+            : 'Results only (faster analysis ~20 seconds)'}
+        </p>
       </div>
 
       <button

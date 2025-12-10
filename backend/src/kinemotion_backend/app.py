@@ -507,6 +507,7 @@ async def analyze_video(
     file: UploadFile = File(...),  # noqa: B008
     jump_type: str = Form("cmj"),  # noqa: B008
     quality: str = Form("balanced"),  # noqa: B008
+    debug: str = Form("false"),  # noqa: B008
     referer: str | None = Header(None),  # noqa: B008
     x_test_password: str | None = Header(None),  # noqa: B008
 ) -> JSONResponse:
@@ -520,6 +521,7 @@ async def analyze_video(
         file: Video file to analyze (multipart/form-data)
         jump_type: Type of jump ("drop_jump" or "cmj")
         quality: Analysis quality preset ("fast", "balanced", or "accurate")
+        debug: Debug overlay flag ("true" or "false", default "false")
 
     Returns:
         JSON response with metrics or error details
@@ -572,9 +574,14 @@ async def analyze_video(
             save_duration = time.time() - save_start
         logger.info("timing_video_file_save", duration_ms=round(save_duration * 1000))
 
-        # Create temporary path for debug video output
-        with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_debug:
-            temp_debug_video_path = temp_debug.name
+        # Convert debug string to boolean
+        enable_debug = debug.lower() == "true"
+
+        # Create temporary path for debug video output (only if debug enabled)
+        temp_debug_video_path = None
+        if enable_debug:
+            with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_debug:
+                temp_debug_video_path = temp_debug.name
 
         # Upload to R2 if client available
         if r2_client:
@@ -611,7 +618,7 @@ async def analyze_video(
             temp_video_path,
             jump_type,
             quality,
-            output_video=temp_debug_video_path,
+            output_video=temp_debug_video_path if enable_debug else None,
             timer=timer,
             pose_tracker=pose_tracker,
         )  # type: ignore[arg-type]

@@ -9,11 +9,13 @@ interface UseAnalysisState {
   uploadProgress: number
   metrics: AnalysisResponse | null
   error: string | null
+  enableDebug: boolean
 }
 
 interface UseAnalysisActions {
   setFile: (file: File | null) => void
   setJumpType: (jumpType: JumpType) => void
+  setEnableDebug: (enable: boolean) => void
   analyze: () => Promise<void>
   retry: () => Promise<void>
   reset: () => void
@@ -30,6 +32,7 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [metrics, setMetrics] = useState<AnalysisResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [enableDebug, setEnableDebug] = useState(false)
 
   const analyze = async () => {
     if (!file) {
@@ -47,6 +50,7 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
     // Convert frontend format (cmj/dropjump) to backend format (cmj/drop_jump)
     const backendJumpType = jumpType === 'dropjump' ? 'drop_jump' : jumpType
     formData.append('jump_type', backendJumpType)
+    formData.append('debug', enableDebug ? 'true' : 'false')
 
     try {
       // Use environment variable for API URL in production, or relative proxy in development
@@ -134,6 +138,7 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
     setUploadProgress(0)
     setMetrics(null)
     setError(null)
+    setEnableDebug(false)
   }
 
   return {
@@ -144,9 +149,11 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
     uploadProgress,
     metrics,
     error,
+    enableDebug,
     // Actions
     setFile,
     setJumpType,
+    setEnableDebug,
     analyze,
     retry,
     reset,

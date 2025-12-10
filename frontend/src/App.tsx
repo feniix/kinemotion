@@ -11,7 +11,7 @@ import { useBackendVersion } from './hooks/useBackendVersion'
 
 function App() {
   const { user, loading: authLoading, signOut } = useAuth()
-  const { file, jumpType, loading, uploadProgress, metrics, error, setFile, setJumpType, analyze, retry } = useAnalysis()
+  const { file, jumpType, loading, uploadProgress, metrics, error, enableDebug, setFile, setJumpType, setEnableDebug, analyze, retry } = useAnalysis()
   const { recentUploads, addRecentUpload, clearRecentUploads } = useRecentUploads()
   const { backendVersion, kinemotionVersion } = useBackendVersion()
 
@@ -70,9 +70,11 @@ function App() {
           file={file}
           jumpType={jumpType}
           loading={loading}
+          enableDebug={enableDebug}
           recentUploads={recentUploads}
           onFileChange={setFile}
           onJumpTypeChange={setJumpType}
+          onEnableDebugChange={setEnableDebug}
           onAnalyze={handleAnalyze}
           onClearHistory={clearRecentUploads}
         />
