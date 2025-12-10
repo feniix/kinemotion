@@ -151,12 +151,36 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
 
       {videoFile && (
         <div className="video-preview-container">
+          <h3 className="section-subtitle">Original Video</h3>
           <video
             src={URL.createObjectURL(videoFile)}
             controls
             className="analysis-video-player"
             playsInline
           />
+        </div>
+      )}
+
+      {metrics.debug_video_url && (
+        <div className="video-preview-container debug-video">
+          <h3 className="section-subtitle">Analysis Overlay</h3>
+          <video
+            src={metrics.debug_video_url}
+            controls
+            className="analysis-video-player"
+            playsInline
+          />
+          <div className="video-actions">
+            <a
+              href={metrics.debug_video_url}
+              download={`analysis_${new Date().toISOString()}.mp4`}
+              className="download-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download Overlay Video
+            </a>
+          </div>
         </div>
       )}
 

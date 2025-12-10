@@ -31,6 +31,7 @@ export interface AnalysisResponse {
     validation?: ValidationResults
   }
   results_url?: string
+  debug_video_url?: string
   processing_time_s?: number
   error?: string | null
 }

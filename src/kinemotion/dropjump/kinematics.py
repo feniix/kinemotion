@@ -417,7 +417,7 @@ def _analyze_flight_phase(
 
         # Calculate scale factor and metric height
         # Scale factor = kinematic height / normalized height
-        if height_normalized > 0.001 and metrics.jump_height_kinematic is not None:
+        if height_normalized > 0.001:
             scale_factor = metrics.jump_height_kinematic / height_normalized
             metrics.jump_height_trajectory_m = height_normalized * scale_factor
         else:

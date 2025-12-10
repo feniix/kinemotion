@@ -52,6 +52,7 @@ class AnalysisResponse:
         message: str,
         metrics: dict[str, Any] | None = None,
         results_url: str | None = None,
+        debug_video_url: str | None = None,
         error: str | None = None,
         processing_time_s: float = 0.0,
     ):
@@ -59,6 +60,7 @@ class AnalysisResponse:
         self.message = message
         self.metrics = metrics
         self.results_url = results_url
+        self.debug_video_url = debug_video_url
         self.error = error
         self.processing_time_s = processing_time_s
 
@@ -75,6 +77,9 @@ class AnalysisResponse:
 
         if self.results_url is not None:
             result["results_url"] = self.results_url
+
+        if self.debug_video_url is not None:
+            result["debug_video_url"] = self.debug_video_url
 
         if self.error is not None:
             result["error"] = self.error
@@ -366,6 +371,7 @@ async def _process_video_async(
     video_path: str,
     jump_type: JumpType,
     quality: str = "balanced",
+    output_video: str | None = None,
 ) -> dict[str, Any]:
     """Process video and return metrics.
 
@@ -373,6 +379,7 @@ async def _process_video_async(
         video_path: Path to video file
         jump_type: Type of jump analysis
         quality: Analysis quality preset
+        output_video: Optional path for debug video output
 
     Returns:
         Dictionary with metrics
@@ -381,9 +388,13 @@ async def _process_video_async(
         ValueError: If video processing fails
     """
     if jump_type == "drop_jump":
-        metrics = process_dropjump_video(video_path, quality=quality)
+        metrics = process_dropjump_video(
+            video_path, quality=quality, output_video=output_video
+        )
     else:  # cmj
-        metrics = process_cmj_video(video_path, quality=quality)
+        metrics = process_cmj_video(
+            video_path, quality=quality, output_video=output_video
+        )
 
     return cast(dict[str, Any], metrics.to_dict())
 
@@ -446,8 +457,10 @@ async def analyze_video(
 
     start_time = time.time()
     temp_video_path = None
+    temp_debug_video_path = None
     r2_video_key = None
     r2_results_key = None
+    r2_debug_video_key = None
 
     try:
         # Validate referer (prevent direct API access)
@@ -460,7 +473,8 @@ async def analyze_video(
             filename=file.filename,
             file_size=file.size,
         )
-        jump_type = _validate_jump_type(jump_type)  # Normalize to lowercase
+        # Normalize to lowercase
+        jump_type = cast(JumpType, _validate_jump_type(jump_type))
         await file.seek(0)
         _validate_video_file(file)
 
@@ -472,10 +486,13 @@ async def analyze_video(
             content = await file.read()
             temp_file.write(content)
 
+        # Create temporary path for debug video output
+        with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_debug:
+            temp_debug_video_path = temp_debug.name
+
         # Upload to R2 if client available
         if r2_client:
-            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-            r2_video_key = f"videos/{jump_type}/{timestamp}_{file.filename}"
+            r2_video_key = f"videos/{jump_type}/{file.filename}"
             try:
                 r2_client.upload_file(temp_video_path, r2_video_key)
                 logger.info("video_uploaded_to_r2", key=r2_video_key)
@@ -487,18 +504,30 @@ async def analyze_video(
                 ) from e
 
         # Process video with real kinemotion analysis
-        metrics = await _process_video_async(temp_video_path, jump_type, quality)  # type: ignore[arg-type]
+        metrics = await _process_video_async(
+            temp_video_path,
+            jump_type,
+            quality,
+            output_video=temp_debug_video_path,
+        )  # type: ignore[arg-type]
+
         logger.info(
             "video_analysis_completed",
             jump_type=jump_type,
             metrics_count=len(metrics),
         )
 
-        # Upload results to R2 if client available
+        # Upload results and debug video to R2 if client available
         results_url = None
+        debug_video_url = None
+
         if r2_client:
-            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-            r2_results_key = f"results/{jump_type}/{timestamp}_results.json"
+            # Use filename stem for derived files to keep them associated
+            # e.g. video.mp4 -> video_results.json, video_debug.mp4
+            file_stem = Path(file.filename or "video").stem
+
+            # Upload Metrics JSON
+            r2_results_key = f"results/{jump_type}/{file_stem}_results.json"
             try:
                 results_json = json.dumps(metrics, indent=2)
                 results_url = r2_client.put_object(
@@ -513,6 +542,28 @@ async def analyze_video(
                     "r2_results_upload_failed", error=str(e), key=r2_results_key
                 )
 
+            # Upload Debug Video if it was created
+            if (
+                temp_debug_video_path
+                and os.path.exists(temp_debug_video_path)
+                and os.path.getsize(temp_debug_video_path) > 0
+            ):
+                r2_debug_video_key = f"debug_videos/{jump_type}/{file_stem}_debug.mp4"
+                try:
+                    debug_video_url = r2_client.upload_file(
+                        temp_debug_video_path, r2_debug_video_key
+                    )
+                    logger.info(
+                        "debug_video_uploaded_to_r2",
+                        key=r2_debug_video_key,
+                        url=debug_video_url,
+                    )
+                except OSError as e:
+                    logger.warning(
+                        "r2_debug_video_upload_failed",
+                        error=str(e),
+                        key=r2_debug_video_key,
+                    )
         processing_time = time.time() - start_time
 
         # Build successful response
@@ -522,6 +573,7 @@ async def analyze_video(
             message=f"Successfully analyzed {jump_type_display} video",
             metrics=metrics,
             results_url=results_url,
+            debug_video_url=debug_video_url,
             processing_time_s=processing_time,
         )
 
@@ -579,6 +631,18 @@ async def analyze_video(
             except OSError as e:
                 logger.warning(
                     "temp_file_cleanup_failed", path=temp_video_path, error=str(e)
+                )
+
+        # Clean up temporary debug video file
+        if temp_debug_video_path and Path(temp_debug_video_path).exists():
+            try:
+                Path(temp_debug_video_path).unlink()
+                logger.debug("temp_debug_file_cleaned", path=temp_debug_video_path)
+            except OSError as e:
+                logger.warning(
+                    "temp_debug_file_cleanup_failed",
+                    path=temp_debug_video_path,
+                    error=str(e),
                 )
 
         # Clean up R2 video if results failed (optional - adjust based on policy)
