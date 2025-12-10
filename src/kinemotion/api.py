@@ -508,6 +508,7 @@ def process_dropjump_video(
     tracking_confidence: float | None = None,
     verbose: bool = False,
     timer: PerformanceTimer | None = None,
+    pose_tracker: "PoseTracker | None" = None,
 ) -> DropJumpMetrics:
     """
     Process a single drop jump video and return metrics.
@@ -528,6 +529,7 @@ def process_dropjump_video(
         tracking_confidence: Optional override for pose tracking confidence
         verbose: Print processing details
         timer: Optional PerformanceTimer for measuring operations
+        pose_tracker: Optional pre-initialized PoseTracker instance (reused if provided)
 
     Returns:
         DropJumpMetrics object containing analysis results
@@ -554,15 +556,9 @@ def process_dropjump_video(
     # Convert quality string to enum
     quality_preset = _parse_quality_preset(quality)
 
-    # Initialize video processor
+    # Load video
     with timer.measure("video_initialization"):
         with VideoProcessor(video_path, timer=timer) as video:
-            if verbose:
-                print(
-                    f"Video: {video.width}x{video.height} @ {video.fps:.2f} fps, "
-                    f"{video.frame_count} frames"
-                )
-
             # Determine detection/tracking confidence levels
             detection_conf, tracking_conf = _determine_confidence_levels(
                 quality_preset, detection_confidence, tracking_confidence
@@ -571,14 +567,26 @@ def process_dropjump_video(
             # Process all frames with pose tracking
             if verbose:
                 print("Processing all frames with MediaPipe pose tracking...")
-            tracker = PoseTracker(
-                min_detection_confidence=detection_conf,
-                min_tracking_confidence=tracking_conf,
-                timer=timer,
-            )
+
+            # Use provided tracker or create new one
+            tracker = pose_tracker
+            should_close_tracker = False
+
+            if tracker is None:
+                tracker = PoseTracker(
+                    min_detection_confidence=detection_conf,
+                    min_tracking_confidence=tracking_conf,
+                    timer=timer,
+                )
+                should_close_tracker = True
+
             frames, landmarks_sequence = _process_all_frames(
                 video, tracker, verbose, timer
             )
+
+            # Close tracker only if we created it (not if reusing shared instance)
+            if should_close_tracker:
+                tracker.close()
 
             # Analyze video characteristics and auto-tune parameters
             with timer.measure("parameter_auto_tuning"):
@@ -671,72 +679,47 @@ def process_dropjump_video(
                     phase_count=phase_count,
                 )
 
-            # Build complete metadata
-            with timer.measure("metadata_building"):
-                processing_time = time.time() - start_time
+            # Build algorithm configuration early (but attach metadata later)
+            drop_frame = None
+            if drop_start_frame is None and metrics.drop_start_frame is not None:
+                # Auto-detected drop start from box
+                drop_frame = metrics.drop_start_frame
+            elif drop_start_frame is not None:
+                # Manual drop start provided
+                drop_frame = drop_start_frame
 
-                video_info = VideoInfo(
-                    source_path=video_path,
-                    fps=video.fps,
-                    width=video.width,
-                    height=video.height,
-                    duration_s=video.frame_count / video.fps,
-                    frame_count=video.frame_count,
-                    codec=video.codec,
-                )
+            algorithm_config = AlgorithmConfig(
+                detection_method="forward_search",
+                tracking_method="mediapipe_pose",
+                model_complexity=1,
+                smoothing=SmoothingConfig(
+                    window_size=params.smoothing_window,
+                    polynomial_order=params.polyorder,
+                    use_bilateral_filter=params.bilateral_filter,
+                    use_outlier_rejection=params.outlier_rejection,
+                ),
+                detection=DetectionConfig(
+                    velocity_threshold=params.velocity_threshold,
+                    min_contact_frames=params.min_contact_frames,
+                    visibility_threshold=params.visibility_threshold,
+                    use_curvature_refinement=params.use_curvature,
+                ),
+                drop_detection=DropDetectionConfig(
+                    auto_detect_drop_start=(drop_start_frame is None),
+                    detected_drop_frame=drop_frame,
+                    min_stationary_duration_s=0.5,
+                ),
+            )
 
-                # Check if drop start was auto-detected
-                drop_frame = None
-                if drop_start_frame is None and metrics.drop_start_frame is not None:
-                    # Auto-detected drop start from box
-                    drop_frame = metrics.drop_start_frame
-                elif drop_start_frame is not None:
-                    # Manual drop start provided
-                    drop_frame = drop_start_frame
-
-                algorithm_config = AlgorithmConfig(
-                    detection_method="forward_search",
-                    tracking_method="mediapipe_pose",
-                    model_complexity=1,
-                    smoothing=SmoothingConfig(
-                        window_size=params.smoothing_window,
-                        polynomial_order=params.polyorder,
-                        use_bilateral_filter=params.bilateral_filter,
-                        use_outlier_rejection=params.outlier_rejection,
-                    ),
-                    detection=DetectionConfig(
-                        velocity_threshold=params.velocity_threshold,
-                        min_contact_frames=params.min_contact_frames,
-                        visibility_threshold=params.visibility_threshold,
-                        use_curvature_refinement=params.use_curvature,
-                    ),
-                    drop_detection=DropDetectionConfig(
-                        auto_detect_drop_start=(drop_start_frame is None),
-                        detected_drop_frame=drop_frame,
-                        min_stationary_duration_s=0.5,
-                    ),
-                )
-
-                # Convert timer metrics to human-readable stage names
-                stage_times = _convert_timer_to_stage_names(timer.get_metrics())
-
-                processing_info = ProcessingInfo(
-                    version=get_kinemotion_version(),
-                    timestamp=create_timestamp(),
-                    quality_preset=quality_preset.value,
-                    processing_time_s=processing_time,
-                    timing_breakdown=stage_times,
-                )
-
-                result_metadata = ResultMetadata(
-                    quality=quality_result,
-                    video=video_info,
-                    processing=processing_info,
-                    algorithm=algorithm_config,
-                )
-
-            # Attach complete metadata to metrics
-            metrics.result_metadata = result_metadata
+            video_info = VideoInfo(
+                source_path=video_path,
+                fps=video.fps,
+                width=video.width,
+                height=video.height,
+                duration_s=video.frame_count / video.fps,
+                frame_count=video.frame_count,
+                codec=video.codec,
+            )
 
             if verbose and quality_result.warnings:
                 print("\n⚠️  Quality Warnings:")
@@ -745,6 +728,7 @@ def process_dropjump_video(
                 print()
 
             # Generate outputs (JSON and debug video)
+            # This must happen BEFORE creating ProcessingInfo so timing is captured
             _generate_dropjump_outputs(
                 metrics,
                 json_output,
@@ -768,13 +752,36 @@ def process_dropjump_video(
                 for issue in validation_result.issues:
                     print(f"  [{issue.severity.value}] {issue.metric}: {issue.message}")
 
+            # NOW create ProcessingInfo with complete timing breakdown
+            # (includes debug video generation timing)
+            processing_time = time.time() - start_time
+            stage_times = _convert_timer_to_stage_names(timer.get_metrics())
+
+            processing_info = ProcessingInfo(
+                version=get_kinemotion_version(),
+                timestamp=create_timestamp(),
+                quality_preset=quality_preset.value,
+                processing_time_s=processing_time,
+                timing_breakdown=stage_times,
+            )
+
+            result_metadata = ResultMetadata(
+                quality=quality_result,
+                video=video_info,
+                processing=processing_info,
+                algorithm=algorithm_config,
+            )
+
+            # Attach complete metadata to metrics
+            metrics.result_metadata = result_metadata
+
             # Print timing summary if verbose
             if verbose:
                 total_time = time.time() - start_time
-                stage_times = _convert_timer_to_stage_names(timer.get_metrics())
+                stage_times_verbose = _convert_timer_to_stage_names(timer.get_metrics())
 
                 print("\n=== Timing Summary ===")
-                for stage, duration in stage_times.items():
+                for stage, duration in stage_times_verbose.items():
                     percentage = (duration / total_time) * 100
                     dur_ms = duration * 1000
                     print(f"{stage:.<40} {dur_ms:>6.0f}ms ({percentage:>5.1f}%)")
@@ -1032,6 +1039,7 @@ def process_cmj_video(
     tracking_confidence: float | None = None,
     verbose: bool = False,
     timer: PerformanceTimer | None = None,
+    pose_tracker: "PoseTracker | None" = None,
 ) -> CMJMetrics:
     """
     Process a single CMJ video and return metrics.
@@ -1053,6 +1061,7 @@ def process_cmj_video(
         tracking_confidence: Optional override for pose tracking confidence
         verbose: Print processing details
         timer: Optional PerformanceTimer for measuring operations
+        pose_tracker: Optional pre-initialized PoseTracker instance (reused if provided)
 
     Returns:
         CMJMetrics object containing analysis results
@@ -1098,14 +1107,26 @@ def process_cmj_video(
             # Track all frames
             if verbose:
                 print("Processing all frames with MediaPipe pose tracking...")
-            tracker = PoseTracker(
-                min_detection_confidence=det_conf,
-                min_tracking_confidence=track_conf,
-                timer=timer,
-            )
+
+            # Use provided tracker or create new one
+            tracker = pose_tracker
+            should_close_tracker = False
+
+            if tracker is None:
+                tracker = PoseTracker(
+                    min_detection_confidence=det_conf,
+                    min_tracking_confidence=track_conf,
+                    timer=timer,
+                )
+                should_close_tracker = True
+
             frames, landmarks_sequence = _process_all_frames(
                 video, tracker, verbose, timer
             )
+
+            # Close tracker only if we created it (not if reusing shared instance)
+            if should_close_tracker:
+                tracker.close()
 
             # Auto-tune parameters
             with timer.measure("parameter_auto_tuning"):
@@ -1216,59 +1237,35 @@ def process_cmj_video(
                     phase_count=phase_count,
                 )
 
-            # Build complete metadata
-            with timer.measure("metadata_building"):
-                processing_time = time.time() - start_time
+            # Build algorithm config early (but attach metadata later)
+            algorithm_config = AlgorithmConfig(
+                detection_method="backward_search",
+                tracking_method="mediapipe_pose",
+                model_complexity=1,
+                smoothing=SmoothingConfig(
+                    window_size=params.smoothing_window,
+                    polynomial_order=params.polyorder,
+                    use_bilateral_filter=params.bilateral_filter,
+                    use_outlier_rejection=params.outlier_rejection,
+                ),
+                detection=DetectionConfig(
+                    velocity_threshold=params.velocity_threshold,
+                    min_contact_frames=params.min_contact_frames,
+                    visibility_threshold=params.visibility_threshold,
+                    use_curvature_refinement=params.use_curvature,
+                ),
+                drop_detection=None,  # CMJ doesn't have drop detection
+            )
 
-                video_info = VideoInfo(
-                    source_path=video_path,
-                    fps=video.fps,
-                    width=video.width,
-                    height=video.height,
-                    duration_s=video.frame_count / video.fps,
-                    frame_count=video.frame_count,
-                    codec=video.codec,
-                )
-
-                # Convert timer metrics to human-readable stage names
-                stage_times = _convert_timer_to_stage_names(timer.get_metrics())
-
-                processing_info = ProcessingInfo(
-                    version=get_kinemotion_version(),
-                    timestamp=create_timestamp(),
-                    quality_preset=quality_preset.value,
-                    processing_time_s=processing_time,
-                    timing_breakdown=stage_times,
-                )
-
-                algorithm_config = AlgorithmConfig(
-                    detection_method="backward_search",
-                    tracking_method="mediapipe_pose",
-                    model_complexity=1,
-                    smoothing=SmoothingConfig(
-                        window_size=params.smoothing_window,
-                        polynomial_order=params.polyorder,
-                        use_bilateral_filter=params.bilateral_filter,
-                        use_outlier_rejection=params.outlier_rejection,
-                    ),
-                    detection=DetectionConfig(
-                        velocity_threshold=params.velocity_threshold,
-                        min_contact_frames=params.min_contact_frames,
-                        visibility_threshold=params.visibility_threshold,
-                        use_curvature_refinement=params.use_curvature,
-                    ),
-                    drop_detection=None,  # CMJ doesn't have drop detection
-                )
-
-                result_metadata = ResultMetadata(
-                    quality=quality_result,
-                    video=video_info,
-                    processing=processing_info,
-                    algorithm=algorithm_config,
-                )
-
-            # Attach complete metadata to metrics
-            metrics.result_metadata = result_metadata
+            video_info = VideoInfo(
+                source_path=video_path,
+                fps=video.fps,
+                width=video.width,
+                height=video.height,
+                duration_s=video.frame_count / video.fps,
+                frame_count=video.frame_count,
+                codec=video.codec,
+            )
 
             if verbose and quality_result.warnings:
                 print("\n⚠️  Quality Warnings:")
@@ -1277,6 +1274,7 @@ def process_cmj_video(
                 print()
 
             # Generate outputs if requested
+            # This must happen BEFORE creating ProcessingInfo so timing is captured
             _generate_cmj_outputs(
                 output_video,
                 json_output,
@@ -1297,6 +1295,29 @@ def process_cmj_video(
                 validator = CMJMetricsValidator()
                 validation_result = validator.validate(metrics.to_dict())  # type: ignore[arg-type]
                 metrics.validation_result = validation_result
+
+            # NOW create ProcessingInfo with complete timing breakdown
+            # (includes debug video generation timing)
+            processing_time = time.time() - start_time
+            stage_times = _convert_timer_to_stage_names(timer.get_metrics())
+
+            processing_info = ProcessingInfo(
+                version=get_kinemotion_version(),
+                timestamp=create_timestamp(),
+                quality_preset=quality_preset.value,
+                processing_time_s=processing_time,
+                timing_breakdown=stage_times,
+            )
+
+            result_metadata = ResultMetadata(
+                quality=quality_result,
+                video=video_info,
+                processing=processing_info,
+                algorithm=algorithm_config,
+            )
+
+            # Attach complete metadata to metrics
+            metrics.result_metadata = result_metadata
 
             if verbose and validation_result.issues:
                 print("\n⚠️  Validation Results:")
