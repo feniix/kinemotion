@@ -736,10 +736,10 @@ def find_landing_from_acceleration(
     if landing_search_end <= landing_search_start:
         return min(len(positions) - 1, peak_frame + int(fps * 0.2))
 
-    # Find impact: maximum positive acceleration after peak
-    # This corresponds to the initial contact force spike
+    # Find impact: maximum negative acceleration after peak (deceleration on impact)
+    # The impact creates a large upward force (negative acceleration in Y-down)
     landing_accelerations = accelerations[landing_search_start:landing_search_end]
-    impact_idx = int(np.argmax(landing_accelerations))
+    impact_idx = int(np.argmin(landing_accelerations))
     landing_frame = landing_search_start + impact_idx
 
     return landing_frame
