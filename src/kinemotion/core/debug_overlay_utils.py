@@ -28,18 +28,30 @@ def create_video_writer(
     """
     needs_resize = (display_width != width) or (display_height != height)
 
-    # Try H.264 codec first (better quality/compatibility), fallback to mp4v
-    fourcc = cv2.VideoWriter_fourcc(*"avc1")
-    writer = cv2.VideoWriter(output_path, fourcc, fps, (display_width, display_height))
+    # Try browser-compatible codecs first
+    # avc1/h264: H.264 (Most compatible)
+    # vp09: VP9 (Good compatibility)
+    # mp4v: MPEG-4 (Poor browser support, last resort)
+    codecs_to_try = ["avc1", "h264", "vp09", "mp4v"]
 
-    # Check if writer opened successfully, fallback to mp4v if not
-    if not writer.isOpened():
-        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-        writer = cv2.VideoWriter(
-            output_path, fourcc, fps, (display_width, display_height)
-        )
+    writer = None
+    for codec in codecs_to_try:
+        try:
+            fourcc = cv2.VideoWriter_fourcc(*codec)
+            writer = cv2.VideoWriter(
+                output_path, fourcc, fps, (display_width, display_height)
+            )
+            if writer.isOpened():
+                if codec == "mp4v":
+                    print(
+                        f"Warning: Fallback to {codec} codec. "
+                        "Video may not play in browsers."
+                    )
+                break
+        except Exception:
+            continue
 
-    if not writer.isOpened():
+    if writer is None or not writer.isOpened():
         raise ValueError(
             f"Failed to create video writer for {output_path} with dimensions "
             f"{display_width}x{display_height}"
