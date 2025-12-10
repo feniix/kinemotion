@@ -20,18 +20,18 @@ The project uses `uv` for dependency management and `asdf` for Python version ma
 **Key Libraries:**
 
 - **Production**: `click`, `opencv-python`, `mediapipe`, `numpy`, `scipy`.
-- **Development**: `pytest`, `black`, `ruff`, `mypy`.
+- **Development**: `pytest`, `ruff`, `pyright`.
 
 ### Development Commands
 
 - **Run CLI**: `uv run kinemotion dropjump-analyze <video_path>`
 - **Install/Sync Dependencies**: `uv sync`
 - **Run Tests**: `uv run pytest`
-- **Format Code**: `uv run black src/`
+- **Format Code**: `uv run ruff format .`
 - **Lint Code**: `uv run ruff check`
 - **Auto-fix Linting**: `uv run ruff check --fix`
-- **Type Check**: `uv run mypy src/kinemotion`
-- **Run All Checks**: `uv run ruff check && uv run mypy src/kinemotion && uv run pytest`
+- **Type Check**: `uv run pyright`
+- **Run All Checks**: `uv run ruff check && uv run pyright && uv run pytest`
 
 ## Architecture
 
@@ -127,18 +127,20 @@ docs/                   # Documentation (PARAMETERS.md is key)
 
 ## Code Quality & Workflow
 
+**CRITICAL**: Never commit code that fails sanity checks. Always run `ruff`, `pyright`, and `pytest` locally before committing.
+
 When contributing code, strictly adhere to the project's quality standards.
 
-1. **Format Code**: `uv run black src/`
+1. **Format Code**: `uv run ruff format .`
 1. **Lint and Fix**: `uv run ruff check --fix`
-1. **Type Check**: `uv run mypy src/kinemotion`
+1. **Type Check**: `uv run pyright`
 1. **Run Tests**: `uv run pytest`
 
-**Run all checks before committing**: `uv run ruff check && uv run mypy src/kinemotion && uv run pytest`
+**Run all checks before committing**: `uv run ruff check && uv run pyright && uv run pytest`
 
-- **Type Safety**: The project uses `mypy` in strict mode. All functions must have full type annotations.
+- **Type Safety**: The project uses `pyright` in strict mode. All functions must have full type annotations.
 - **Linting**: `ruff` is used for linting. Configuration is in `pyproject.toml`.
-- **Formatting**: `black` is used for code formatting.
+- **Formatting**: `ruff` is used for code formatting.
 
 ## Common Development Tasks
 
