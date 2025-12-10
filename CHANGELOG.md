@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.42.0 (2025-12-10)
+
+### Documentation
+
+- Add some more docs about cpu settings
+  ([`ebd0f5b`](https://github.com/feniix/kinemotion/commit/ebd0f5b2c9e1b25a9c95d04b32c35f27560f3584))
+
+- Performance-optimization-pose-tracker-pool
+  ([`c1b2e76`](https://github.com/feniix/kinemotion/commit/c1b2e7665371e8384261044a4f3e10202df78dc2))
+
+### Features
+
+- Add debug toggle for optional video overlay generation
+  ([`afd0b49`](https://github.com/feniix/kinemotion/commit/afd0b496d3c33d9428c71d417b9cb4b18a5dd9cc))
+
+
 ## v0.41.3 (2025-12-10)
 
 ### Bug Fixes
