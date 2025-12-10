@@ -101,6 +101,12 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
         })
 
         xhr.open('POST', apiEndpoint)
+        xhr.timeout = 120000  // 120 seconds (2 minutes) - allows ~35s analysis + network overhead
+
+        // Handle timeout
+        xhr.addEventListener('timeout', () => {
+          reject(new Error('Request timeout: Analysis took too long. Please try again.'))
+        })
 
         // Add Authorization header with Supabase token
         if (token) {
