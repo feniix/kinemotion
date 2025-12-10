@@ -515,10 +515,16 @@ async def analyze_video(
 
         # Upload to R2 if client available
         if r2_client:
+            upload_start = time.time()
             r2_video_key = f"videos/{jump_type}/{file.filename}"
             try:
                 r2_client.upload_file(temp_video_path, r2_video_key)
-                logger.info("video_uploaded_to_r2", key=r2_video_key)
+                upload_duration = time.time() - upload_start
+                logger.info(
+                    "video_uploaded_to_r2",
+                    key=r2_video_key,
+                    duration_ms=round(upload_duration * 1000),
+                )
             except OSError as e:
                 logger.error("r2_upload_failed", error=str(e), key=r2_video_key)
                 raise HTTPException(
@@ -527,17 +533,20 @@ async def analyze_video(
                 ) from e
 
         # Process video with real kinemotion analysis
+        analysis_start = time.time()
         metrics = await _process_video_async(
             temp_video_path,
             jump_type,
             quality,
             output_video=temp_debug_video_path,
         )  # type: ignore[arg-type]
+        analysis_duration = time.time() - analysis_start
 
         logger.info(
             "video_analysis_completed",
             jump_type=jump_type,
             metrics_count=len(metrics),
+            duration_ms=round(analysis_duration * 1000),
         )
 
         # Upload results and debug video to R2 if client available
@@ -552,12 +561,17 @@ async def analyze_video(
             # Upload Metrics JSON
             r2_results_key = f"results/{jump_type}/{file_stem}_results.json"
             try:
+                results_upload_start = time.time()
                 results_json = json.dumps(metrics, indent=2)
                 results_url = r2_client.put_object(
                     r2_results_key, results_json.encode()
                 )
+                results_upload_duration = time.time() - results_upload_start
                 logger.info(
-                    "results_uploaded_to_r2", key=r2_results_key, url=results_url
+                    "results_uploaded_to_r2",
+                    key=r2_results_key,
+                    url=results_url,
+                    duration_ms=round(results_upload_duration * 1000),
                 )
             except OSError as e:
                 # Log error but don't fail - results still available in response
@@ -573,13 +587,16 @@ async def analyze_video(
             ):
                 r2_debug_video_key = f"debug_videos/{jump_type}/{file_stem}_debug.mp4"
                 try:
+                    debug_upload_start = time.time()
                     debug_video_url = r2_client.upload_file(
                         temp_debug_video_path, r2_debug_video_key
                     )
+                    debug_upload_duration = time.time() - debug_upload_start
                     logger.info(
                         "debug_video_uploaded_to_r2",
                         key=r2_debug_video_key,
                         url=debug_video_url,
+                        duration_ms=round(debug_upload_duration * 1000),
                     )
                 except OSError as e:
                     logger.warning(

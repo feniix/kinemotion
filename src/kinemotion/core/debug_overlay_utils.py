@@ -3,6 +3,7 @@
 import os
 import shutil
 import subprocess
+import time
 from pathlib import Path
 
 import cv2
@@ -193,12 +194,15 @@ class BaseDebugOverlayRenderer:
                 ]
 
                 # Suppress output unless error
+                reencode_start = time.time()
                 subprocess.run(
                     cmd,
                     check=True,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.PIPE,
                 )
+                reencode_duration = time.time() - reencode_start
+                print(f"Debug video re-encoded in {reencode_duration:.2f}s")
 
                 # Overwrite original file
                 os.replace(temp_path, self.output_path)
