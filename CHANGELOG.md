@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.41.3 (2025-12-10)
+
+### Bug Fixes
+
+- Capture complete timing breakdown including debug video generation
+  ([`77486f2`](https://github.com/feniix/kinemotion/commit/77486f2056630283e83bf3990a02c3bf129df42d))
+
+- Ensure metadata is attached before JSON serialization
+  ([`59f5e98`](https://github.com/feniix/kinemotion/commit/59f5e98508ff089a5d00dceb42524908a720bcca))
+
+- Revert "Fix: Performance bottleneck due to PoseTracker re-initialization"
+  ([`548e24e`](https://github.com/feniix/kinemotion/commit/548e24eaf60f81e09db0fe978d7526e7fd840ad3))
+
+### Documentation
+
+- Add data about performace pose tracker
+  ([`00f71ab`](https://github.com/feniix/kinemotion/commit/00f71ab0ac2d57d8c3e69e6885f0916027502a39))
+
+
 ## v0.41.2 (2025-12-10)
 
 ### Bug Fixes
