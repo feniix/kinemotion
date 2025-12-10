@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.39.0 (2025-12-10)
+
+### Bug Fixes
+
+- Proxy the health endpoint to the backend
+  ([`f1d45d2`](https://github.com/feniix/kinemotion/commit/f1d45d2b194e39f96d43c0462960e80e236a8df9))
+
+- Use presigned URLs for R2 storage access
+  ([`ffd642e`](https://github.com/feniix/kinemotion/commit/ffd642e4c597447f8eee9d4275f48695a7862cf6))
+
+- **dropjump**: Use argmin for landing detection in finding acceleration spike
+  ([`1dd1e1a`](https://github.com/feniix/kinemotion/commit/1dd1e1abff7a3c4aae6675f8aa5f2ddf46de76f6))
+
+- **kinematics**: Correct scale and phase detection logic for CMJ/DJ
+  ([`283b560`](https://github.com/feniix/kinemotion/commit/283b560e69c5785a0d18c5b411e89fedc2a8a7bd))
+
+### Chores
+
+- Remove basic-memory naming hook and cleanup documentation
+  ([`b2f41ce`](https://github.com/feniix/kinemotion/commit/b2f41ce5d81a23090d2f60bd1a79451bd363bd77))
+
+### Features
+
+- Improve frontend
+  ([`241f2f5`](https://github.com/feniix/kinemotion/commit/241f2f58055c241f9919af70156f5ec586ed249f))
+
+- Improve frontend
+  ([`d6e69f3`](https://github.com/feniix/kinemotion/commit/d6e69f335cf6cee4da8affbab876b858aa04af12))
+
+- Integrate Cloudflare R2 storage and debug video overlay
+  ([`b7b05bd`](https://github.com/feniix/kinemotion/commit/b7b05bd500a26d742d78d1670079fb201af49140))
+
+### Testing
+
+- Update R2 integration tests
+  ([`955aa86`](https://github.com/feniix/kinemotion/commit/955aa8610040548635c0f34a931e402825740995))
+
+
 ## v0.38.1 (2025-12-09)
 
 ### Bug Fixes
