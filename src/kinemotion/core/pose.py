@@ -4,6 +4,8 @@ import cv2
 import mediapipe as mp
 import numpy as np
 
+from .timing import PerformanceTimer
+
 
 class PoseTracker:
     """Tracks human pose landmarks in video frames using MediaPipe."""
@@ -12,14 +14,17 @@ class PoseTracker:
         self,
         min_detection_confidence: float = 0.5,
         min_tracking_confidence: float = 0.5,
-    ):
+        timer: PerformanceTimer | None = None,
+    ) -> None:
         """
         Initialize the pose tracker.
 
         Args:
             min_detection_confidence: Minimum confidence for pose detection
             min_tracking_confidence: Minimum confidence for pose tracking
+            timer: Optional PerformanceTimer for measuring operations
         """
+        self.timer = timer
         self.mp_pose = mp.solutions.pose
         self.pose = self.mp_pose.Pose(
             static_image_mode=False,  # Use tracking mode for better performance
@@ -45,7 +50,11 @@ class PoseTracker:
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # Process the frame
-        results = self.pose.process(rgb_frame)
+        if self.timer:
+            with self.timer.measure("mediapipe_inference"):
+                results = self.pose.process(rgb_frame)
+        else:
+            results = self.pose.process(rgb_frame)
 
         if not results.pose_landmarks:
             return None

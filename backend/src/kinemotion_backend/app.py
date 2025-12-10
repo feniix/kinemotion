@@ -24,6 +24,7 @@ from fastapi import (
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from kinemotion.api import process_cmj_video, process_dropjump_video
+from kinemotion.core.timing import PerformanceTimer
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 
@@ -395,6 +396,7 @@ async def _process_video_async(
     jump_type: JumpType,
     quality: str = "balanced",
     output_video: str | None = None,
+    timer: PerformanceTimer | None = None,
 ) -> dict[str, Any]:
     """Process video and return metrics.
 
@@ -403,6 +405,7 @@ async def _process_video_async(
         jump_type: Type of jump analysis
         quality: Analysis quality preset
         output_video: Optional path for debug video output
+        timer: Optional PerformanceTimer for measuring operations
 
     Returns:
         Dictionary with metrics
@@ -412,11 +415,11 @@ async def _process_video_async(
     """
     if jump_type == "drop_jump":
         metrics = process_dropjump_video(
-            video_path, quality=quality, output_video=output_video
+            video_path, quality=quality, output_video=output_video, timer=timer
         )
     else:  # cmj
         metrics = process_cmj_video(
-            video_path, quality=quality, output_video=output_video
+            video_path, quality=quality, output_video=output_video, timer=timer
         )
 
     return cast(dict[str, Any], metrics.to_dict())
@@ -545,20 +548,15 @@ async def analyze_video(
 
         # Process video with real kinemotion analysis
         analysis_start = time.time()
+        timer = PerformanceTimer()
         metrics = await _process_video_async(
             temp_video_path,
             jump_type,
             quality,
             output_video=temp_debug_video_path,
+            timer=timer,
         )  # type: ignore[arg-type]
         analysis_duration = time.time() - analysis_start
-
-        logger.info(
-            "video_analysis_completed",
-            jump_type=jump_type,
-            metrics_count=len(metrics),
-            duration_ms=round(analysis_duration * 1000),
-        )
 
         # Log detailed timing breakdown if available in metadata
         if (
@@ -578,6 +576,13 @@ async def analyze_video(
                 stage_name = stage_key.replace("_ms", "")
                 event_name = f"timing_{stage_name}"
                 logger.info(event_name, duration_ms=round(duration_ms, 1))
+
+        logger.info(
+            "video_analysis_completed",
+            jump_type=jump_type,
+            metrics_count=len(metrics.get("data", {})),
+            duration_ms=round(analysis_duration * 1000),
+        )
 
         # Upload results and debug video to R2 if client available
         results_url = None
@@ -771,7 +776,7 @@ async def analyze_local_video(
 
     try:
         # Validate inputs
-        jump_type = _validate_jump_type(jump_type)  # Normalize to lowercase
+        jump_type = cast(JumpType, _validate_jump_type(jump_type))
 
         if not Path(video_path).exists():
             raise HTTPException(
@@ -780,7 +785,10 @@ async def analyze_local_video(
             )
 
         # Process video
-        metrics = await _process_video_async(video_path, jump_type, quality)  # type: ignore[arg-type]
+        timer = PerformanceTimer()
+        metrics = await _process_video_async(
+            video_path, jump_type, quality, timer=timer
+        )  # type: ignore[arg-type]
 
         processing_time = time.time() - start_time
 

@@ -22,6 +22,7 @@ from .smoothing import (
     smooth_landmarks,
     smooth_landmarks_advanced,
 )
+from .timing import PerformanceTimer
 from .video_io import VideoProcessor
 
 __all__ = [
@@ -46,6 +47,8 @@ __all__ = [
     "QualityIndicators",
     "assess_jump_quality",
     "calculate_position_stability",
+    # Timing
+    "PerformanceTimer",
     # Video I/O
     "VideoProcessor",
 ]

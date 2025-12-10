@@ -7,6 +7,8 @@ import warnings
 import cv2
 import numpy as np
 
+from .timing import PerformanceTimer
+
 
 class VideoProcessor:
     """
@@ -16,14 +18,16 @@ class VideoProcessor:
     No dimensions are hardcoded - all dimensions are extracted from actual frame data.
     """
 
-    def __init__(self, video_path: str):
+    def __init__(self, video_path: str, timer: PerformanceTimer | None = None) -> None:
         """
         Initialize video processor.
 
         Args:
             video_path: Path to input video file
+            timer: Optional PerformanceTimer for measuring operations
         """
         self.video_path = video_path
+        self.timer = timer
         self.cap = cv2.VideoCapture(video_path)
 
         if not self.cap.isOpened():
@@ -175,7 +179,12 @@ class VideoProcessor:
         OpenCV ignores rotation metadata, so we manually apply rotation
         based on the display matrix metadata extracted from the video.
         """
-        ret, frame = self.cap.read()
+        if self.timer:
+            with self.timer.measure("frame_read"):
+                ret, frame = self.cap.read()
+        else:
+            ret, frame = self.cap.read()
+
         if not ret:
             return None
 
