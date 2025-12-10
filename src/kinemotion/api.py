@@ -178,7 +178,6 @@ def _process_all_frames(
     tracker: PoseTracker,
     verbose: bool,
     timer: PerformanceTimer | None = None,
-    close_tracker: bool = True,
 ) -> tuple[list, list]:
     """Process all frames from video and extract pose landmarks.
 
@@ -187,7 +186,6 @@ def _process_all_frames(
         tracker: Pose tracker for landmark detection
         verbose: Print progress messages
         timer: Optional PerformanceTimer for measuring operations
-        close_tracker: Whether to close the tracker after processing (default: True)
 
     Returns:
         Tuple of (frames, landmarks_sequence)
@@ -221,8 +219,7 @@ def _process_all_frames(
             landmarks = tracker.process_frame(frame)
             landmarks_sequence.append(landmarks)
 
-    if close_tracker:
-        tracker.close()
+    tracker.close()
 
     if not landmarks_sequence:
         raise ValueError("No frames could be processed from video")
@@ -511,7 +508,6 @@ def process_dropjump_video(
     tracking_confidence: float | None = None,
     verbose: bool = False,
     timer: PerformanceTimer | None = None,
-    pose_tracker: PoseTracker | None = None,
 ) -> DropJumpMetrics:
     """
     Process a single drop jump video and return metrics.
@@ -532,7 +528,6 @@ def process_dropjump_video(
         tracking_confidence: Optional override for pose tracking confidence
         verbose: Print processing details
         timer: Optional PerformanceTimer for measuring operations
-        pose_tracker: Optional pre-initialized PoseTracker instance
 
     Returns:
         DropJumpMetrics object containing analysis results
@@ -576,21 +571,13 @@ def process_dropjump_video(
             # Process all frames with pose tracking
             if verbose:
                 print("Processing all frames with MediaPipe pose tracking...")
-
-            # Use provided tracker or create new one
-            tracker = pose_tracker
-            should_close = False
-
-            if tracker is None:
-                tracker = PoseTracker(
-                    min_detection_confidence=detection_conf,
-                    min_tracking_confidence=tracking_conf,
-                    timer=timer,
-                )
-                should_close = True
-
+            tracker = PoseTracker(
+                min_detection_confidence=detection_conf,
+                min_tracking_confidence=tracking_conf,
+                timer=timer,
+            )
             frames, landmarks_sequence = _process_all_frames(
-                video, tracker, verbose, timer, close_tracker=should_close
+                video, tracker, verbose, timer
             )
 
             # Analyze video characteristics and auto-tune parameters
@@ -1045,7 +1032,6 @@ def process_cmj_video(
     tracking_confidence: float | None = None,
     verbose: bool = False,
     timer: PerformanceTimer | None = None,
-    pose_tracker: PoseTracker | None = None,
 ) -> CMJMetrics:
     """
     Process a single CMJ video and return metrics.
@@ -1067,7 +1053,6 @@ def process_cmj_video(
         tracking_confidence: Optional override for pose tracking confidence
         verbose: Print processing details
         timer: Optional PerformanceTimer for measuring operations
-        pose_tracker: Optional pre-initialized PoseTracker instance
 
     Returns:
         CMJMetrics object containing analysis results
@@ -1113,21 +1098,13 @@ def process_cmj_video(
             # Track all frames
             if verbose:
                 print("Processing all frames with MediaPipe pose tracking...")
-
-            # Use provided tracker or create new one
-            tracker = pose_tracker
-            should_close = False
-
-            if tracker is None:
-                tracker = PoseTracker(
-                    min_detection_confidence=det_conf,
-                    min_tracking_confidence=track_conf,
-                    timer=timer,
-                )
-                should_close = True
-
+            tracker = PoseTracker(
+                min_detection_confidence=det_conf,
+                min_tracking_confidence=track_conf,
+                timer=timer,
+            )
             frames, landmarks_sequence = _process_all_frames(
-                video, tracker, verbose, timer, close_tracker=should_close
+                video, tracker, verbose, timer
             )
 
             # Auto-tune parameters

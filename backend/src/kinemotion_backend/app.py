@@ -5,7 +5,6 @@ Real metrics integration with Cloudflare R2 storage for video and results manage
 
 import os
 import tempfile
-from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from importlib.metadata import version
 from pathlib import Path
@@ -25,7 +24,6 @@ from fastapi import (
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from kinemotion.api import process_cmj_video, process_dropjump_video
-from kinemotion.core.pose import PoseTracker
 from kinemotion.core.timing import PerformanceTimer
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
@@ -209,48 +207,12 @@ class R2StorageClient:
             raise OSError(f"Failed to put object to R2: {str(e)}") from e
 
 
-# ========== Global State & Lifespan ==========
-
-global_pose_trackers: dict[str, PoseTracker] = {}
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Manage application lifecycle and global resources."""
-    logger.info("initializing_pose_trackers")
-    try:
-        # Initialize trackers for each quality preset
-        # Fast: lower confidence for speed
-        global_pose_trackers["fast"] = PoseTracker(
-            min_detection_confidence=0.3, min_tracking_confidence=0.3
-        )
-        # Balanced: standard confidence
-        global_pose_trackers["balanced"] = PoseTracker(
-            min_detection_confidence=0.5, min_tracking_confidence=0.5
-        )
-        # Accurate: high confidence
-        global_pose_trackers["accurate"] = PoseTracker(
-            min_detection_confidence=0.6, min_tracking_confidence=0.6
-        )
-        logger.info("pose_trackers_initialized")
-
-        yield
-
-    finally:
-        # Clean up resources
-        logger.info("closing_pose_trackers")
-        for tracker in global_pose_trackers.values():
-            tracker.close()
-        global_pose_trackers.clear()
-
-
 # ========== FastAPI Application ==========
 
 app = FastAPI(
     title="Kinemotion Backend API",
     description="Video-based kinematic analysis API for athletic performance",
     version="0.1.0",
-    lifespan=lifespan,
 )
 
 # ========== CORS Configuration (added FIRST for correct middleware order) ==========
@@ -435,7 +397,6 @@ async def _process_video_async(
     quality: str = "balanced",
     output_video: str | None = None,
     timer: PerformanceTimer | None = None,
-    pose_tracker: PoseTracker | None = None,
 ) -> dict[str, Any]:
     """Process video and return metrics.
 
@@ -445,7 +406,6 @@ async def _process_video_async(
         quality: Analysis quality preset
         output_video: Optional path for debug video output
         timer: Optional PerformanceTimer for measuring operations
-        pose_tracker: Optional shared PoseTracker instance
 
     Returns:
         Dictionary with metrics
@@ -455,19 +415,11 @@ async def _process_video_async(
     """
     if jump_type == "drop_jump":
         metrics = process_dropjump_video(
-            video_path,
-            quality=quality,
-            output_video=output_video,
-            timer=timer,
-            pose_tracker=pose_tracker,
+            video_path, quality=quality, output_video=output_video, timer=timer
         )
     else:  # cmj
         metrics = process_cmj_video(
-            video_path,
-            quality=quality,
-            output_video=output_video,
-            timer=timer,
-            pose_tracker=pose_tracker,
+            video_path, quality=quality, output_video=output_video, timer=timer
         )
 
     return cast(dict[str, Any], metrics.to_dict())
@@ -496,7 +448,6 @@ async def health_check() -> dict[str, Any]:
         "kinemotion_version": kinemotion_version,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "r2_configured": r2_client is not None,
-        "trackers_initialized": len(global_pose_trackers) > 0,
     }
 
 
@@ -598,23 +549,12 @@ async def analyze_video(
         # Process video with real kinemotion analysis
         analysis_start = time.time()
         timer = PerformanceTimer()
-
-        # Select appropriate pre-initialized tracker
-        # Default to balanced if quality not found or trackers not initialized
-        # (e.g. testing)
-        tracker_key = quality.lower()
-        if tracker_key not in global_pose_trackers:
-            tracker_key = "balanced"
-
-        pose_tracker = global_pose_trackers.get(tracker_key)
-
         metrics = await _process_video_async(
             temp_video_path,
             jump_type,
             quality,
             output_video=temp_debug_video_path,
             timer=timer,
-            pose_tracker=pose_tracker,
         )  # type: ignore[arg-type]
         analysis_duration = time.time() - analysis_start
 
@@ -846,16 +786,8 @@ async def analyze_local_video(
 
         # Process video
         timer = PerformanceTimer()
-
-        # Select appropriate pre-initialized tracker
-        tracker_key = quality.lower()
-        if tracker_key not in global_pose_trackers:
-            tracker_key = "balanced"
-
-        pose_tracker = global_pose_trackers.get(tracker_key)
-
         metrics = await _process_video_async(
-            video_path, jump_type, quality, timer=timer, pose_tracker=pose_tracker
+            video_path, jump_type, quality, timer=timer
         )  # type: ignore[arg-type]
 
         processing_time = time.time() - start_time
