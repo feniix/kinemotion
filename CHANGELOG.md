@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.39.1 (2025-12-10)
+
+### Bug Fixes
+
+- Prioritize browser-compatible video codecs
+  ([`76ea08f`](https://github.com/feniix/kinemotion/commit/76ea08fd6edb3d0e0269b2e05db90a98e99777c1))
+
+- Use ffmpeg re-encoding only as a fallback
+  ([`d55923f`](https://github.com/feniix/kinemotion/commit/d55923f9c09d0d8507519c140b58485eaabb4f86))
+
+
 ## v0.39.0 (2025-12-10)
 
 ### Bug Fixes
