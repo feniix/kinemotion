@@ -115,6 +115,29 @@ class R2StorageClient:
             region_name="auto",
         )
 
+    def generate_presigned_url(self, key: str, expiration: int = 3600) -> str:
+        """Generate presigned URL for object.
+
+        Args:
+            key: Object key
+            expiration: Expiration in seconds (default 1 hour)
+
+        Returns:
+            Presigned URL string
+
+        Raises:
+            OSError: If generation fails
+        """
+        try:
+            url = self.client.generate_presigned_url(
+                "get_object",
+                Params={"Bucket": self.bucket_name, "Key": key},
+                ExpiresIn=expiration,
+            )
+            return cast(str, url)
+        except Exception as e:
+            raise OSError(f"Failed to generate presigned URL: {str(e)}") from e
+
     def upload_file(self, local_path: str, remote_key: str) -> str:
         """Upload file to R2 storage.
 
@@ -123,14 +146,14 @@ class R2StorageClient:
             remote_key: S3 object key in R2 bucket
 
         Returns:
-            S3 URL of uploaded file
+            Presigned URL of uploaded file
 
         Raises:
-            IOError: If upload fails
+            OSError: If upload fails
         """
         try:
             self.client.upload_file(local_path, self.bucket_name, remote_key)
-            return f"{self.endpoint}/{self.bucket_name}/{remote_key}"
+            return self.generate_presigned_url(remote_key)
         except Exception as e:
             raise OSError(f"Failed to upload to R2: {str(e)}") from e
 
@@ -142,7 +165,7 @@ class R2StorageClient:
             local_path: Local path to save downloaded file
 
         Raises:
-            IOError: If download fails
+            OSError: If download fails
         """
         try:
             self.client.download_file(self.bucket_name, remote_key, local_path)
@@ -156,7 +179,7 @@ class R2StorageClient:
             remote_key: S3 object key in R2 bucket
 
         Raises:
-            IOError: If deletion fails
+            OSError: If deletion fails
         """
         try:
             self.client.delete_object(Bucket=self.bucket_name, Key=remote_key)
@@ -171,14 +194,14 @@ class R2StorageClient:
             body: Binary content to store
 
         Returns:
-            S3 URL of uploaded object
+            Presigned URL of uploaded object
 
         Raises:
-            IOError: If upload fails
+            OSError: If upload fails
         """
         try:
             self.client.put_object(Bucket=self.bucket_name, Key=key, Body=body)
-            return f"{self.endpoint}/{self.bucket_name}/{key}"
+            return self.generate_presigned_url(key)
         except Exception as e:
             raise OSError(f"Failed to put object to R2: {str(e)}") from e
 
