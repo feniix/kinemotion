@@ -88,13 +88,22 @@ def test_r2_upload_file_success() -> None:
         with patch("kinemotion_backend.app.boto3.client") as mock_boto3:
             mock_s3 = MagicMock()
             mock_boto3.return_value = mock_s3
+            mock_s3.generate_presigned_url.return_value = (
+                "https://r2.example.com/presigned-url"
+            )
 
             client = R2StorageClient()
-            client.upload_file("/tmp/test.mp4", "videos/test.mp4")
+            url = client.upload_file("/tmp/test.mp4", "videos/test.mp4")
 
             mock_s3.upload_file.assert_called_once_with(
                 "/tmp/test.mp4", "kinemotion", "videos/test.mp4"
             )
+            mock_s3.generate_presigned_url.assert_called_once_with(
+                "get_object",
+                Params={"Bucket": "kinemotion", "Key": "videos/test.mp4"},
+                ExpiresIn=3600,
+            )
+            assert url == "https://r2.example.com/presigned-url"
 
 
 def test_r2_upload_file_returns_url() -> None:
@@ -107,11 +116,16 @@ def test_r2_upload_file_returns_url() -> None:
             "R2_SECRET_KEY": "test_secret",
         },
     ):
-        with patch("kinemotion_backend.app.boto3.client"):
+        with patch("kinemotion_backend.app.boto3.client") as mock_boto3:
+            mock_s3 = MagicMock()
+            mock_boto3.return_value = mock_s3
+            presigned_url = "https://r2.example.com/presigned-url"
+            mock_s3.generate_presigned_url.return_value = presigned_url
+
             client = R2StorageClient()
             url = client.upload_file("/tmp/test.mp4", "videos/test.mp4")
 
-            assert url == "https://r2.example.com/kinemotion/videos/test.mp4"
+            assert url == presigned_url
 
 
 def test_r2_upload_file_error_handling() -> None:
@@ -240,12 +254,20 @@ def test_r2_put_object_success() -> None:
         with patch("kinemotion_backend.app.boto3.client") as mock_boto3:
             mock_s3 = MagicMock()
             mock_boto3.return_value = mock_s3
+            mock_s3.generate_presigned_url.return_value = (
+                "https://r2.example.com/presigned-url"
+            )
 
             client = R2StorageClient()
             url = client.put_object("results/test.json", b'{"status": "ok"}')
 
             mock_s3.put_object.assert_called_once()
-            assert url == "https://r2.example.com/kinemotion/results/test.json"
+            mock_s3.generate_presigned_url.assert_called_once_with(
+                "get_object",
+                Params={"Bucket": "kinemotion", "Key": "results/test.json"},
+                ExpiresIn=3600,
+            )
+            assert url == "https://r2.example.com/presigned-url"
 
 
 def test_r2_put_object_error_handling() -> None:
