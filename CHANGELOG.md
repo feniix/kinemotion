@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.41.1 (2025-12-10)
+
+### Bug Fixes
+
+- Add 120s timeout to API requests to prevent duplicate retries
+  ([`132c67d`](https://github.com/feniix/kinemotion/commit/132c67dc89ba1b7e9f43b0548e3b5596ecd4ad8b))
+
+
 ## v0.41.0 (2025-12-10)
 
 ### Features
