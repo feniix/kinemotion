@@ -1,5 +1,10 @@
 """Shared debug overlay utilities for video rendering."""
 
+import os
+import shutil
+import subprocess
+from pathlib import Path
+
 import cv2
 import numpy as np
 
@@ -11,7 +16,7 @@ def create_video_writer(
     display_width: int,
     display_height: int,
     fps: float,
-) -> tuple[cv2.VideoWriter, bool]:
+) -> tuple[cv2.VideoWriter, bool, str]:
     """
     Create a video writer with fallback codec support.
 
@@ -24,7 +29,7 @@ def create_video_writer(
         fps: Frames per second
 
     Returns:
-        Tuple of (video_writer, needs_resize)
+        Tuple of (video_writer, needs_resize, used_codec)
     """
     needs_resize = (display_width != width) or (display_height != height)
 
@@ -35,6 +40,8 @@ def create_video_writer(
     codecs_to_try = ["avc1", "h264", "vp09", "mp4v"]
 
     writer = None
+    used_codec = "mp4v"  # Default fallback
+
     for codec in codecs_to_try:
         try:
             fourcc = cv2.VideoWriter_fourcc(*codec)
@@ -42,6 +49,7 @@ def create_video_writer(
                 output_path, fourcc, fps, (display_width, display_height)
             )
             if writer.isOpened():
+                used_codec = codec
                 if codec == "mp4v":
                     print(
                         f"Warning: Fallback to {codec} codec. "
@@ -57,7 +65,7 @@ def create_video_writer(
             f"{display_width}x{display_height}"
         )
 
-    return writer, needs_resize
+    return writer, needs_resize, used_codec
 
 
 def write_overlay_frame(
@@ -107,11 +115,12 @@ class BaseDebugOverlayRenderer:
             display_height: Display height (considering SAR)
             fps: Frames per second
         """
+        self.output_path = output_path
         self.width = width
         self.height = height
         self.display_width = display_width
         self.display_height = display_height
-        self.writer, self.needs_resize = create_video_writer(
+        self.writer, self.needs_resize, self.used_codec = create_video_writer(
             output_path, width, height, display_width, display_height, fps
         )
 
@@ -145,8 +154,63 @@ class BaseDebugOverlayRenderer:
         write_overlay_frame(self.writer, frame, self.display_width, self.display_height)
 
     def close(self) -> None:
-        """Release video writer."""
+        """Release video writer and re-encode if possible."""
         self.writer.release()
+
+        # Post-process with ffmpeg ONLY if we fell back to the incompatible mp4v codec
+        if self.used_codec == "mp4v" and shutil.which("ffmpeg"):
+            temp_path = None
+            try:
+                temp_path = str(
+                    Path(self.output_path).with_suffix(
+                        ".temp" + Path(self.output_path).suffix
+                    )
+                )
+
+                # Convert to H.264 with yuv420p pixel format for browser compatibility
+                # -y: Overwrite output file
+                # -vcodec libx264: Use H.264 codec
+                # -pix_fmt yuv420p: Required for wide browser support (Chrome,
+                #                   Safari, Firefox)
+                # -preset fast: Reasonable speed/compression tradeoff
+                # -crf 23: Standard quality
+                # -an: Remove audio (debug video has no audio)
+                cmd = [
+                    "ffmpeg",
+                    "-y",
+                    "-i",
+                    self.output_path,
+                    "-vcodec",
+                    "libx264",
+                    "-pix_fmt",
+                    "yuv420p",
+                    "-preset",
+                    "fast",
+                    "-crf",
+                    "23",
+                    "-an",
+                    temp_path,
+                ]
+
+                # Suppress output unless error
+                subprocess.run(
+                    cmd,
+                    check=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.PIPE,
+                )
+
+                # Overwrite original file
+                os.replace(temp_path, self.output_path)
+
+            except subprocess.CalledProcessError as e:
+                print(f"Warning: Failed to re-encode debug video with ffmpeg: {e}")
+                if temp_path and os.path.exists(temp_path):
+                    os.remove(temp_path)
+            except Exception as e:
+                print(f"Warning: Error during video post-processing: {e}")
+                if temp_path and os.path.exists(temp_path):
+                    os.remove(temp_path)
 
     def __enter__(self) -> "BaseDebugOverlayRenderer":
         return self
