@@ -178,6 +178,7 @@ def _process_all_frames(
     tracker: PoseTracker,
     verbose: bool,
     timer: PerformanceTimer | None = None,
+    close_tracker: bool = True,
 ) -> tuple[list, list]:
     """Process all frames from video and extract pose landmarks.
 
@@ -186,6 +187,7 @@ def _process_all_frames(
         tracker: Pose tracker for landmark detection
         verbose: Print progress messages
         timer: Optional PerformanceTimer for measuring operations
+        close_tracker: Whether to close the tracker after processing (default: True)
 
     Returns:
         Tuple of (frames, landmarks_sequence)
@@ -219,7 +221,8 @@ def _process_all_frames(
             landmarks = tracker.process_frame(frame)
             landmarks_sequence.append(landmarks)
 
-    tracker.close()
+    if close_tracker:
+        tracker.close()
 
     if not landmarks_sequence:
         raise ValueError("No frames could be processed from video")
@@ -581,12 +584,8 @@ def process_dropjump_video(
                 should_close_tracker = True
 
             frames, landmarks_sequence = _process_all_frames(
-                video, tracker, verbose, timer
+                video, tracker, verbose, timer, close_tracker=should_close_tracker
             )
-
-            # Close tracker only if we created it (not if reusing shared instance)
-            if should_close_tracker:
-                tracker.close()
 
             # Analyze video characteristics and auto-tune parameters
             with timer.measure("parameter_auto_tuning"):
@@ -727,19 +726,56 @@ def process_dropjump_video(
                     print(f"  - {warning}")
                 print()
 
-            # Generate outputs (JSON and debug video)
-            # This must happen BEFORE creating ProcessingInfo so timing is captured
-            _generate_dropjump_outputs(
-                metrics,
-                json_output,
-                output_video,
-                frames,
-                smoothed_landmarks,
-                contact_states,
-                video,
-                verbose,
-                timer,
-            )
+            # Generate debug video (but not JSON yet - we need to attach metadata first)
+            if output_video:
+                if verbose:
+                    print(f"Generating debug video: {output_video}")
+
+                if timer:
+                    with timer.measure("debug_video_generation"):
+                        with DebugOverlayRenderer(
+                            output_video,
+                            video.width,
+                            video.height,
+                            video.display_width,
+                            video.display_height,
+                            video.fps,
+                        ) as renderer:
+                            for i, frame in enumerate(frames):
+                                annotated = renderer.render_frame(
+                                    frame,
+                                    smoothed_landmarks[i],
+                                    contact_states[i],
+                                    i,
+                                    metrics,
+                                    use_com=False,
+                                )
+                                renderer.write_frame(annotated)
+                    # Capture re-encoding duration separately
+                    with timer.measure("debug_video_reencode"):
+                        pass  # Re-encoding happens in context manager __exit__
+                else:
+                    with DebugOverlayRenderer(
+                        output_video,
+                        video.width,
+                        video.height,
+                        video.display_width,
+                        video.display_height,
+                        video.fps,
+                    ) as renderer:
+                        for i, frame in enumerate(frames):
+                            annotated = renderer.render_frame(
+                                frame,
+                                smoothed_landmarks[i],
+                                contact_states[i],
+                                i,
+                                metrics,
+                                use_com=False,
+                            )
+                            renderer.write_frame(annotated)
+
+                if verbose:
+                    print(f"Debug video saved: {output_video}")
 
             # Validate metrics against physiological bounds
             with timer.measure("metrics_validation"):
@@ -774,6 +810,27 @@ def process_dropjump_video(
 
             # Attach complete metadata to metrics
             metrics.result_metadata = result_metadata
+
+            # NOW write JSON after metadata is attached
+            if json_output:
+                if timer:
+                    with timer.measure("json_serialization"):
+                        output_path = Path(json_output)
+                        metrics_dict = metrics.to_dict()
+                        import json
+
+                        json_str = json.dumps(metrics_dict, indent=2)
+                        output_path.write_text(json_str)
+                else:
+                    output_path = Path(json_output)
+                    metrics_dict = metrics.to_dict()
+                    import json
+
+                    json_str = json.dumps(metrics_dict, indent=2)
+                    output_path.write_text(json_str)
+
+                if verbose:
+                    print(f"Metrics written to: {json_output}")
 
             # Print timing summary if verbose
             if verbose:
@@ -1121,12 +1178,8 @@ def process_cmj_video(
                 should_close_tracker = True
 
             frames, landmarks_sequence = _process_all_frames(
-                video, tracker, verbose, timer
+                video, tracker, verbose, timer, close_tracker=should_close_tracker
             )
-
-            # Close tracker only if we created it (not if reusing shared instance)
-            if should_close_tracker:
-                tracker.close()
 
             # Auto-tune parameters
             with timer.measure("parameter_auto_tuning"):
@@ -1273,22 +1326,46 @@ def process_cmj_video(
                     print(f"  - {warning}")
                 print()
 
-            # Generate outputs if requested
-            # This must happen BEFORE creating ProcessingInfo so timing is captured
-            _generate_cmj_outputs(
-                output_video,
-                json_output,
-                metrics,
-                frames,
-                smoothed_landmarks,
-                video.width,
-                video.height,
-                video.display_width,
-                video.display_height,
-                video.fps,
-                verbose,
-                timer,
-            )
+            # Generate debug video (but not JSON yet - we need to attach metadata first)
+            if output_video:
+                if verbose:
+                    print(f"Generating debug video: {output_video}")
+
+                if timer:
+                    with timer.measure("debug_video_generation"):
+                        with CMJDebugOverlayRenderer(
+                            output_video,
+                            video.width,
+                            video.height,
+                            video.display_width,
+                            video.display_height,
+                            video.fps,
+                        ) as renderer:
+                            for i, frame in enumerate(frames):
+                                annotated = renderer.render_frame(
+                                    frame, smoothed_landmarks[i], i, metrics
+                                )
+                                renderer.write_frame(annotated)
+                    # Capture re-encoding duration separately
+                    with timer.measure("debug_video_reencode"):
+                        pass  # Re-encoding happens in context manager __exit__
+                else:
+                    with CMJDebugOverlayRenderer(
+                        output_video,
+                        video.width,
+                        video.height,
+                        video.display_width,
+                        video.display_height,
+                        video.fps,
+                    ) as renderer:
+                        for i, frame in enumerate(frames):
+                            annotated = renderer.render_frame(
+                                frame, smoothed_landmarks[i], i, metrics
+                            )
+                            renderer.write_frame(annotated)
+
+                if verbose:
+                    print(f"Debug video saved: {output_video}")
 
             # Validate metrics against physiological bounds
             with timer.measure("metrics_validation"):
@@ -1318,6 +1395,27 @@ def process_cmj_video(
 
             # Attach complete metadata to metrics
             metrics.result_metadata = result_metadata
+
+            # NOW write JSON after metadata is attached
+            if json_output:
+                if timer:
+                    with timer.measure("json_serialization"):
+                        output_path = Path(json_output)
+                        metrics_dict = metrics.to_dict()
+                        import json
+
+                        json_str = json.dumps(metrics_dict, indent=2)
+                        output_path.write_text(json_str)
+                else:
+                    output_path = Path(json_output)
+                    metrics_dict = metrics.to_dict()
+                    import json
+
+                    json_str = json.dumps(metrics_dict, indent=2)
+                    output_path.write_text(json_str)
+
+                if verbose:
+                    print(f"Metrics written to: {json_output}")
 
             if verbose and validation_result.issues:
                 print("\n⚠️  Validation Results:")
