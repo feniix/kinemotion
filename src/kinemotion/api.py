@@ -303,7 +303,7 @@ def _extract_vertical_positions(
     return np.array(position_list), np.array(visibilities_list)
 
 
-def _generate_outputs(
+def _generate_dropjump_outputs(
     metrics: DropJumpMetrics,
     json_output: str | None,
     output_video: str | None,
@@ -312,7 +312,7 @@ def _generate_outputs(
     contact_states: list[ContactState],
     video: VideoProcessor,
     verbose: bool,
-) -> None:
+) -> tuple[float, float, float]:
     """Generate JSON and debug video outputs if requested.
 
     Args:
@@ -324,13 +324,25 @@ def _generate_outputs(
         contact_states: Ground contact state for each frame
         video: Video processor with dimensions and fps
         verbose: Print progress messages
+
+    Returns:
+        Tuple of (generation_duration, reencode_duration, json_duration) in seconds
+        (0.0, 0.0, 0.0) if not applicable
     """
+    generation_duration = 0.0
+    reencode_duration = 0.0
+    json_duration = 0.0
+
     # Save JSON if requested
     if json_output:
         import json
 
         output_path = Path(json_output)
-        output_path.write_text(json.dumps(metrics.to_dict(), indent=2))
+        json_start = time.time()
+        metrics_dict = metrics.to_dict()
+        json_str = json.dumps(metrics_dict, indent=2)
+        output_path.write_text(json_str)
+        json_duration = time.time() - json_start
         if verbose:
             print(f"Metrics written to: {json_output}")
 
@@ -347,6 +359,7 @@ def _generate_outputs(
             video.display_height,
             video.fps,
         ) as renderer:
+            generation_start = time.time()
             for i, frame in enumerate(frames):
                 annotated = renderer.render_frame(
                     frame,
@@ -357,9 +370,15 @@ def _generate_outputs(
                     use_com=False,
                 )
                 renderer.write_frame(annotated)
+            generation_duration = time.time() - generation_start
+
+        # Capture re-encoding duration after context manager closes
+        reencode_duration = renderer.reencode_duration_s
 
         if verbose:
             print(f"Debug video saved: {output_video}")
+
+    return generation_duration, reencode_duration, json_duration
 
 
 @dataclass
@@ -442,17 +461,21 @@ def process_dropjump_video(
 
     # Start timing
     start_time = time.time()
+    stage_times: dict[str, float] = {}
 
     # Convert quality string to enum
     quality_preset = _parse_quality_preset(quality)
 
     # Initialize video processor
+    stage_start = time.time()
     with VideoProcessor(video_path) as video:
         if verbose:
+            init_duration = time.time() - stage_start
             print(
                 f"Video: {video.width}x{video.height} @ {video.fps:.2f} fps, "
                 f"{video.frame_count} frames"
             )
+            print(f"[Timing] Video initialization: {init_duration * 1000:.0f}ms")
 
         # Determine detection/tracking confidence levels
         detection_conf, tracking_conf = _determine_confidence_levels(
@@ -460,13 +483,21 @@ def process_dropjump_video(
         )
 
         # Process all frames with pose tracking
+        if verbose:
+            print("Processing all frames with MediaPipe pose tracking...")
+        stage_start = time.time()
         tracker = PoseTracker(
             min_detection_confidence=detection_conf,
             min_tracking_confidence=tracking_conf,
         )
         frames, landmarks_sequence = _process_all_frames(video, tracker, verbose)
+        if verbose:
+            tracking_duration = time.time() - stage_start
+            stage_times["Pose tracking"] = tracking_duration
+            print(f"[Timing] Pose tracking: {tracking_duration * 1000:.0f}ms")
 
         # Analyze video characteristics and auto-tune parameters
+        stage_start = time.time()
         characteristics = analyze_video_sample(
             landmarks_sequence, video.fps, video.frame_count
         )
@@ -483,19 +514,36 @@ def process_dropjump_video(
 
         # Show selected parameters if verbose
         if verbose:
+            tuning_duration = time.time() - stage_start
+            stage_times["Parameter auto-tuning"] = tuning_duration
             _print_verbose_parameters(video, characteristics, quality_preset, params)
+            print(f"[Timing] Parameter auto-tuning: {tuning_duration * 1000:.0f}ms")
 
         # Apply smoothing with auto-tuned parameters
+        stage_start = time.time()
         smoothed_landmarks = _apply_smoothing(landmarks_sequence, params, verbose)
+        if verbose:
+            smoothing_duration = time.time() - stage_start
+            stage_times["Smoothing"] = smoothing_duration
+            print(f"[Timing] Smoothing: {smoothing_duration * 1000:.0f}ms")
 
         # Extract vertical positions from feet
         if verbose:
             print("Extracting foot positions...")
+        stage_start = time.time()
         vertical_positions, visibilities = _extract_vertical_positions(
             smoothed_landmarks
         )
+        if verbose:
+            extraction_duration = time.time() - stage_start
+            stage_times["Vertical position extraction"] = extraction_duration
+            duration_ms = extraction_duration * 1000
+            print(f"[Timing] Vertical position extraction: {duration_ms:.0f}ms")
 
         # Detect ground contact
+        if verbose:
+            print("Detecting ground contact...")
+        stage_start = time.time()
         contact_states = detect_ground_contact(
             vertical_positions,
             velocity_threshold=params.velocity_threshold,
@@ -505,10 +553,15 @@ def process_dropjump_video(
             window_length=params.smoothing_window,
             polyorder=params.polyorder,
         )
+        if verbose:
+            contact_duration = time.time() - stage_start
+            stage_times["Ground contact detection"] = contact_duration
+            print(f"[Timing] Ground contact detection: {contact_duration * 1000:.0f}ms")
 
         # Calculate metrics
         if verbose:
             print("Calculating metrics...")
+        stage_start = time.time()
 
         metrics = calculate_drop_jump_metrics(
             contact_states,
@@ -521,9 +574,15 @@ def process_dropjump_video(
             use_curvature=params.use_curvature,
         )
 
+        if verbose:
+            metrics_duration = time.time() - stage_start
+            stage_times["Metrics calculation"] = metrics_duration
+            print(f"[Timing] Metrics calculation: {metrics_duration * 1000:.0f}ms")
+
         # Assess quality and add confidence scores
         if verbose:
             print("Assessing tracking quality...")
+        stage_start = time.time()
 
         # Detect outliers for quality scoring (doesn't affect results, just
         # for assessment)
@@ -549,9 +608,15 @@ def process_dropjump_video(
             phase_count=phase_count,
         )
 
+        if verbose:
+            quality_duration = time.time() - stage_start
+            stage_times["Quality assessment"] = quality_duration
+            print(f"[Timing] Quality assessment: {quality_duration * 1000:.0f}ms")
+
         # Build complete metadata
         processing_time = time.time() - start_time
 
+        metadata_start = time.time()
         video_info = VideoInfo(
             source_path=video_path,
             fps=video.fps,
@@ -567,6 +632,7 @@ def process_dropjump_video(
             timestamp=create_timestamp(),
             quality_preset=quality_preset.value,
             processing_time_s=processing_time,
+            timing_breakdown=stage_times if stage_times else None,
         )
 
         # Check if drop start was auto-detected
@@ -607,6 +673,9 @@ def process_dropjump_video(
             processing=processing_info,
             algorithm=algorithm_config,
         )
+        metadata_duration = time.time() - metadata_start
+        if verbose:
+            stage_times["Metadata building"] = metadata_duration
 
         # Attach complete metadata to metrics
         metrics.result_metadata = result_metadata
@@ -618,24 +687,54 @@ def process_dropjump_video(
             print()
 
         # Generate outputs (JSON and debug video)
-        _generate_outputs(
-            metrics,
-            json_output,
-            output_video,
-            frames,
-            smoothed_landmarks,
-            contact_states,
-            video,
-            verbose,
+        stage_start = time.time()
+        generation_duration, reencode_duration, json_duration = (
+            _generate_dropjump_outputs(
+                metrics,
+                json_output,
+                output_video,
+                frames,
+                smoothed_landmarks,
+                contact_states,
+                video,
+                verbose,
+            )
         )
 
         if verbose:
+            output_duration = time.time() - stage_start
+            if output_video or json_output:
+                stage_times["Output generation"] = output_duration
+                print(f"[Timing] Output generation: {output_duration * 1000:.0f}ms")
+            # Add JSON serialization timing
+            if json_duration > 0:
+                stage_times["JSON serialization"] = json_duration
+            # Add debug video generation timing
+            if generation_duration > 0:
+                stage_times["Debug video generation"] = generation_duration
+            # Add debug video re-encoding timing if applicable
+            if reencode_duration > 0:
+                stage_times["Debug video re-encoding"] = reencode_duration
+
+            # Print timing summary
+            total_time = time.time() - start_time
+            print("\n=== Timing Summary ===")
+            for stage, duration in stage_times.items():
+                percentage = (duration / total_time) * 100
+                print(f"{stage:.<40} {duration * 1000:>6.0f}ms ({percentage:>5.1f}%)")
+            print(f"{'Total':.>40} {total_time * 1000:>6.0f}ms (100.0%)")
+            print()
+
             print("Analysis complete!")
 
         # Validate metrics against physiological bounds
+        validator_start = time.time()
         validator = DropJumpMetricsValidator()
         validation_result = validator.validate(metrics.to_dict())  # type: ignore[arg-type]
         metrics.validation_result = validation_result
+        validator_duration = time.time() - validator_start
+        if verbose:
+            stage_times["Metrics validation"] = validator_duration
 
         if verbose and validation_result.issues:
             print("\n⚠️  Validation Results:")
@@ -801,13 +900,26 @@ def _generate_cmj_outputs(
     video_display_height: int,
     video_fps: float,
     verbose: bool,
-) -> None:
-    """Generate JSON and debug video outputs for CMJ analysis."""
+) -> tuple[float, float, float]:
+    """Generate JSON and debug video outputs for CMJ analysis.
+
+    Returns:
+        Tuple of (generation_duration, reencode_duration, json_duration) in seconds
+        (0.0, 0.0, 0.0) if not applicable
+    """
+    generation_duration = 0.0
+    reencode_duration = 0.0
+    json_duration = 0.0
+
     if json_output:
         import json
 
         output_path = Path(json_output)
-        output_path.write_text(json.dumps(metrics.to_dict(), indent=2))
+        json_start = time.time()
+        metrics_dict = metrics.to_dict()
+        json_str = json.dumps(metrics_dict, indent=2)
+        output_path.write_text(json_str)
+        json_duration = time.time() - json_start
         if verbose:
             print(f"Metrics written to: {json_output}")
 
@@ -823,14 +935,21 @@ def _generate_cmj_outputs(
             video_display_height,
             video_fps,
         ) as renderer:
+            generation_start = time.time()
             for i, frame in enumerate(frames):
                 annotated = renderer.render_frame(
                     frame, smoothed_landmarks[i], i, metrics
                 )
                 renderer.write_frame(annotated)
+            generation_duration = time.time() - generation_start
+
+        # Capture re-encoding duration after context manager closes
+        reencode_duration = renderer.reencode_duration_s
 
         if verbose:
             print(f"Debug video saved: {output_video}")
+
+    return generation_duration, reencode_duration, json_duration
 
 
 def process_cmj_video(
@@ -887,17 +1006,22 @@ def process_cmj_video(
 
     # Start timing
     start_time = time.time()
+    stage_times: dict[str, float] = {}
 
     # Convert quality string to enum
     quality_preset = _parse_quality_preset(quality)
 
     # Initialize video processor
+    stage_start = time.time()
     with VideoProcessor(video_path) as video:
         if verbose:
+            init_duration = time.time() - stage_start
+            stage_times["Video initialization"] = init_duration
             print(
                 f"Video: {video.width}x{video.height} @ {video.fps:.2f} fps, "
                 f"{video.frame_count} frames"
             )
+            print(f"[Timing] Video initialization: {init_duration * 1000:.0f}ms")
 
         # Determine confidence levels
         det_conf, track_conf = _determine_confidence_levels(
@@ -905,12 +1029,20 @@ def process_cmj_video(
         )
 
         # Track all frames
+        if verbose:
+            print("Processing all frames with MediaPipe pose tracking...")
+        stage_start = time.time()
         tracker = PoseTracker(
             min_detection_confidence=det_conf, min_tracking_confidence=track_conf
         )
         frames, landmarks_sequence = _process_all_frames(video, tracker, verbose)
+        if verbose:
+            tracking_duration = time.time() - stage_start
+            stage_times["Pose tracking"] = tracking_duration
+            print(f"[Timing] Pose tracking: {tracking_duration * 1000:.0f}ms")
 
         # Auto-tune parameters
+        stage_start = time.time()
         characteristics = analyze_video_sample(
             landmarks_sequence, video.fps, video.frame_count
         )
@@ -926,14 +1058,23 @@ def process_cmj_video(
         )
 
         if verbose:
+            tuning_duration = time.time() - stage_start
+            stage_times["Parameter auto-tuning"] = tuning_duration
             _print_verbose_parameters(video, characteristics, quality_preset, params)
+            print(f"[Timing] Parameter auto-tuning: {tuning_duration * 1000:.0f}ms")
 
         # Apply smoothing
+        stage_start = time.time()
         smoothed_landmarks = _apply_smoothing(landmarks_sequence, params, verbose)
+        if verbose:
+            smoothing_duration = time.time() - stage_start
+            stage_times["Smoothing"] = smoothing_duration
+            print(f"[Timing] Smoothing: {smoothing_duration * 1000:.0f}ms")
 
         # Extract vertical positions
         if verbose:
             print("Extracting vertical positions (Hip and Foot)...")
+        stage_start = time.time()
 
         # Primary: Hips (for depth, velocity, general phases)
         vertical_positions, visibilities = _extract_vertical_positions(
@@ -947,9 +1088,16 @@ def process_cmj_video(
 
         tracking_method = "hip_hybrid"
 
+        if verbose:
+            extraction_duration = time.time() - stage_start
+            stage_times["Vertical position extraction"] = extraction_duration
+            duration_ms = extraction_duration * 1000
+            print(f"[Timing] Vertical position extraction: {duration_ms:.0f}ms")
+
         # Detect CMJ phases
         if verbose:
             print("Detecting CMJ phases...")
+        stage_start = time.time()
 
         phases = detect_cmj_phases(
             vertical_positions,
@@ -959,6 +1107,11 @@ def process_cmj_video(
             landing_positions=foot_positions,  # Use feet for landing
         )
 
+        if verbose:
+            phase_duration = time.time() - stage_start
+            stage_times["Phase detection"] = phase_duration
+            print(f"[Timing] Phase detection: {phase_duration * 1000:.0f}ms")
+
         if phases is None:
             raise ValueError("Could not detect CMJ phases in video")
 
@@ -967,6 +1120,7 @@ def process_cmj_video(
         # Calculate metrics
         if verbose:
             print("Calculating metrics...")
+        stage_start = time.time()
 
         # Use signed velocity for CMJ (need direction information)
         from .cmj.analysis import compute_signed_velocity
@@ -988,9 +1142,15 @@ def process_cmj_video(
             tracking_method=tracking_method,
         )
 
+        if verbose:
+            metrics_duration = time.time() - stage_start
+            stage_times["Metrics calculation"] = metrics_duration
+            print(f"[Timing] Metrics calculation: {metrics_duration * 1000:.0f}ms")
+
         # Assess quality and add confidence scores
         if verbose:
             print("Assessing tracking quality...")
+        stage_start = time.time()
 
         # Detect outliers for quality scoring (doesn't affect results, just
         # for assessment)
@@ -1015,9 +1175,15 @@ def process_cmj_video(
             phase_count=phase_count,
         )
 
+        if verbose:
+            quality_duration = time.time() - stage_start
+            stage_times["Quality assessment"] = quality_duration
+            print(f"[Timing] Quality assessment: {quality_duration * 1000:.0f}ms")
+
         # Build complete metadata
         processing_time = time.time() - start_time
 
+        metadata_start = time.time()
         video_info = VideoInfo(
             source_path=video_path,
             fps=video.fps,
@@ -1033,6 +1199,7 @@ def process_cmj_video(
             timestamp=create_timestamp(),
             quality_preset=quality_preset.value,
             processing_time_s=processing_time,
+            timing_breakdown=stage_times if stage_times else None,
         )
 
         algorithm_config = AlgorithmConfig(
@@ -1060,6 +1227,9 @@ def process_cmj_video(
             processing=processing_info,
             algorithm=algorithm_config,
         )
+        metadata_duration = time.time() - metadata_start
+        if verbose:
+            stage_times["Metadata building"] = metadata_duration
 
         # Attach complete metadata to metrics
         metrics.result_metadata = result_metadata
@@ -1071,7 +1241,8 @@ def process_cmj_video(
             print()
 
         # Generate outputs if requested
-        _generate_cmj_outputs(
+        stage_start = time.time()
+        generation_duration, reencode_duration, json_duration = _generate_cmj_outputs(
             output_video,
             json_output,
             metrics,
@@ -1086,14 +1257,41 @@ def process_cmj_video(
         )
 
         if verbose:
+            output_duration = time.time() - stage_start
+            if output_video or json_output:
+                stage_times["Output generation"] = output_duration
+                print(f"[Timing] Output generation: {output_duration * 1000:.0f}ms")
+            # Add JSON serialization timing
+            if json_duration > 0:
+                stage_times["JSON serialization"] = json_duration
+            # Add debug video generation timing
+            if generation_duration > 0:
+                stage_times["Debug video generation"] = generation_duration
+            # Add debug video re-encoding timing if applicable
+            if reencode_duration > 0:
+                stage_times["Debug video re-encoding"] = reencode_duration
+
+            # Print timing summary
+            total_time = time.time() - start_time
+            print("\n=== Timing Summary ===")
+            for stage, duration in stage_times.items():
+                percentage = (duration / total_time) * 100
+                print(f"{stage:.<40} {duration * 1000:>6.0f}ms ({percentage:>5.1f}%)")
+            print(f"{'Total':.>40} {total_time * 1000:>6.0f}ms (100.0%)")
+            print()
+
             print(f"\nJump height: {metrics.jump_height:.3f}m")
             print(f"Flight time: {metrics.flight_time * 1000:.1f}ms")
             print(f"Countermovement depth: {metrics.countermovement_depth:.3f}m")
 
         # Validate metrics against physiological bounds
+        validator_start = time.time()
         validator = CMJMetricsValidator()
         validation_result = validator.validate(metrics.to_dict())  # type: ignore[arg-type]
         metrics.validation_result = validation_result
+        validator_duration = time.time() - validator_start
+        if verbose:
+            stage_times["Metrics validation"] = validator_duration
 
         if verbose and validation_result.issues:
             print("\n⚠️  Validation Results:")

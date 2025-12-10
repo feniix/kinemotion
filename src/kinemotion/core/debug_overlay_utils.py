@@ -121,6 +121,8 @@ class BaseDebugOverlayRenderer:
         self.height = height
         self.display_width = display_width
         self.display_height = display_height
+        # Duration of ffmpeg re-encoding (0.0 if not needed)
+        self.reencode_duration_s = 0.0
         self.writer, self.needs_resize, self.used_codec = create_video_writer(
             output_path, width, height, display_width, display_height, fps
         )
@@ -201,8 +203,8 @@ class BaseDebugOverlayRenderer:
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.PIPE,
                 )
-                reencode_duration = time.time() - reencode_start
-                print(f"Debug video re-encoded in {reencode_duration:.2f}s")
+                self.reencode_duration_s = time.time() - reencode_start
+                print(f"Debug video re-encoded in {self.reencode_duration_s:.2f}s")
 
                 # Overwrite original file
                 os.replace(temp_path, self.output_path)

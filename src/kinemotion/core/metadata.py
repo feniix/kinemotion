@@ -49,21 +49,29 @@ class ProcessingInfo:
         timestamp: ISO 8601 timestamp of when analysis was performed
         quality_preset: Quality preset used ("fast", "balanced", "accurate")
         processing_time_s: Time taken to process video in seconds
+        timing_breakdown: Optional dict mapping stage names to duration in seconds
     """
 
     version: str
     timestamp: str
     quality_preset: str
     processing_time_s: float
+    timing_breakdown: dict[str, float] | None = None
 
     def to_dict(self) -> dict:
         """Convert to JSON-serializable dictionary."""
-        return {
+        result: dict = {
             "version": self.version,
             "timestamp": self.timestamp,
             "quality_preset": self.quality_preset,
             "processing_time_s": round(self.processing_time_s, 3),
         }
+        if self.timing_breakdown:
+            result["timing_breakdown_ms"] = {
+                stage: round(duration * 1000, 1)
+                for stage, duration in self.timing_breakdown.items()
+            }
+        return result
 
 
 @dataclass

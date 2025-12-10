@@ -499,15 +499,26 @@ async def analyze_video(
         # Normalize to lowercase
         jump_type = cast(JumpType, _validate_jump_type(jump_type))
         await file.seek(0)
+
+        # Validate video file
+        validation_start = time.time()
         _validate_video_file(file)
+        validation_duration = time.time() - validation_start
+        logger.info(
+            "timing_video_validation",
+            duration_ms=round(validation_duration * 1000),
+        )
 
         # Create temporary file for processing
         suffix = Path(file.filename or "video.mp4").suffix
         with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temp_file:
             temp_video_path = temp_file.name
             # Write uploaded file to temp location
+            save_start = time.time()
             content = await file.read()
             temp_file.write(content)
+            save_duration = time.time() - save_start
+        logger.info("timing_video_file_save", duration_ms=round(save_duration * 1000))
 
         # Create temporary path for debug video output
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_debug:
@@ -521,7 +532,7 @@ async def analyze_video(
                 r2_client.upload_file(temp_video_path, r2_video_key)
                 upload_duration = time.time() - upload_start
                 logger.info(
-                    "video_uploaded_to_r2",
+                    "timing_r2_input_video_upload",
                     key=r2_video_key,
                     duration_ms=round(upload_duration * 1000),
                 )
@@ -549,6 +560,25 @@ async def analyze_video(
             duration_ms=round(analysis_duration * 1000),
         )
 
+        # Log detailed timing breakdown if available in metadata
+        if (
+            "metadata" in metrics
+            and "processing" in metrics["metadata"]
+            and "timing_breakdown_ms" in metrics["metadata"]["processing"]
+        ):
+            timing_breakdown = metrics["metadata"]["processing"]["timing_breakdown_ms"]
+            # Normalize keys for easier jq parsing: spaces → underscores, lowercase
+            normalized_timings = {
+                stage.lower().replace(" ", "_") + "_ms": duration
+                for stage, duration in timing_breakdown.items()
+            }
+            # Log each timing stage as a separate event for granular monitoring
+            for stage_key, duration_ms in normalized_timings.items():
+                # Remove "_ms" suffix and create timing event name
+                stage_name = stage_key.replace("_ms", "")
+                event_name = f"timing_{stage_name}"
+                logger.info(event_name, duration_ms=round(duration_ms, 1))
+
         # Upload results and debug video to R2 if client available
         results_url = None
         debug_video_url = None
@@ -568,7 +598,7 @@ async def analyze_video(
                 )
                 results_upload_duration = time.time() - results_upload_start
                 logger.info(
-                    "results_uploaded_to_r2",
+                    "timing_r2_results_upload",
                     key=r2_results_key,
                     url=results_url,
                     duration_ms=round(results_upload_duration * 1000),
@@ -593,7 +623,7 @@ async def analyze_video(
                     )
                     debug_upload_duration = time.time() - debug_upload_start
                     logger.info(
-                        "debug_video_uploaded_to_r2",
+                        "timing_r2_debug_video_upload",
                         key=r2_debug_video_key,
                         url=debug_video_url,
                         duration_ms=round(debug_upload_duration * 1000),
@@ -617,9 +647,18 @@ async def analyze_video(
             processing_time_s=processing_time,
         )
 
+        # Serialize response to JSON
+        serialization_start = time.time()
+        response_dict = response.to_dict()
+        serialization_duration = time.time() - serialization_start
+        logger.info(
+            "timing_response_serialization",
+            duration_ms=round(serialization_duration * 1000),
+        )
+
         return JSONResponse(
             status_code=200,
-            content=response.to_dict(),
+            content=response_dict,
         )
 
     except ValueError as e:
@@ -663,6 +702,9 @@ async def analyze_video(
         )
 
     finally:
+        # Clean up temporary files
+        cleanup_start = time.time()
+
         # Clean up temporary video file
         if temp_video_path and Path(temp_video_path).exists():
             try:
@@ -684,6 +726,13 @@ async def analyze_video(
                     path=temp_debug_video_path,
                     error=str(e),
                 )
+
+        cleanup_duration = time.time() - cleanup_start
+        if cleanup_duration > 0:
+            logger.info(
+                "timing_temp_file_cleanup",
+                duration_ms=round(cleanup_duration * 1000),
+            )
 
         # Clean up R2 video if results failed (optional - adjust based on policy)
         # if r2_client and r2_video_key and not results_url:
