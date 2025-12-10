@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.41.0 (2025-12-10)
+
+### Features
+
+- Add comprehensive timing instrumentation across backend and core pipeline
+  ([`acb3df6`](https://github.com/feniix/kinemotion/commit/acb3df65d2895fbdae7fcc7f52a73bf7b6fb36d1))
+
+- Implement hybrid timing instrumentation with PerformanceTimer abstraction
+  ([`b207193`](https://github.com/feniix/kinemotion/commit/b207193e047c869e52dfe5303616806f491f938f))
+
+
 ## v0.40.0 (2025-12-10)
 
 ### Documentation
