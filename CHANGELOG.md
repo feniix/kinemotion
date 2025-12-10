@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.40.0 (2025-12-10)
+
+### Documentation
+
+- Switch formatting tool from black to ruff in GEMINI.md
+  ([`7bf2e3e`](https://github.com/feniix/kinemotion/commit/7bf2e3e073fea368470359a0bdff65b8568e48e1))
+
+### Features
+
+- Add detailed timing logs to analysis pipeline
+  ([`4c75820`](https://github.com/feniix/kinemotion/commit/4c758201be03dbd06f463e2434ca287bb123bfd5))
+
+### Testing
+
+- Relax flight time assertion in kinematics test
+  ([`b360c4d`](https://github.com/feniix/kinemotion/commit/b360c4de88c92e365657775041fe7eea04892a27))
+
+
 ## v0.39.1 (2025-12-10)
 
 ### Bug Fixes
