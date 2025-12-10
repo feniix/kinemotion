@@ -79,6 +79,7 @@ Thumbs.db
 .claude/settings.local.json*
 !.claude/settings.local.json
 !.cursor/mcp.json
+!.envrc
 !.mcp.json
 .vercel
 .env*.local
