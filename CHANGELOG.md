@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.44.0 (2025-12-11)
+
+### Features
+
+- Optimize debug video generation and fix logging warning
+  ([`619ccd5`](https://github.com/feniix/kinemotion/commit/619ccd53a4013457033749481cf6792f44529d93))
+
+
 ## v0.43.0 (2025-12-11)
 
 ### Continuous Integration
