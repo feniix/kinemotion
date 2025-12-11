@@ -318,8 +318,6 @@ def process_dropjump_video(
                                     use_com=False,
                                 )
                                 renderer.write_frame(annotated)
-                    with timer.measure("debug_video_reencode"):
-                        pass
                 else:
                     with DebugOverlayRenderer(
                         output_video,
@@ -738,8 +736,6 @@ def process_cmj_video(
                                     frame, smoothed_landmarks[idx], idx, metrics
                                 )
                                 renderer.write_frame(annotated)
-                    with timer.measure("debug_video_reencode"):
-                        pass
                 else:
                     with CMJDebugOverlayRenderer(
                         output_video,
