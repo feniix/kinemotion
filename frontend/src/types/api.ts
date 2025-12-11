@@ -15,7 +15,7 @@ export interface ValidationIssue {
  * Validation results from analysis
  */
 export interface ValidationResults {
-  status: 'PASS' | 'FAIL' | 'WARNING'
+  status: 'PASS' | 'FAIL' | 'WARNING' | 'PASS_WITH_WARNINGS'
   issues: ValidationIssue[]
 }
 

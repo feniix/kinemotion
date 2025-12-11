@@ -230,8 +230,10 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
       {validationStatus && (
         <div className={`validation-banner ${validationStatus.toLowerCase()}`}>
           <div className="validation-header">
-            <span className="status-icon">{validationStatus === 'PASS' ? '✓' : '⚠️'}</span>
-            <strong>Quality Check: {validationStatus}</strong>
+            <span className="status-icon">
+              {validationStatus === 'PASS' ? '✓' : validationStatus === 'PASS_WITH_WARNINGS' ? 'ℹ' : '⚠️'}
+            </span>
+            <strong>Quality Check: {validationStatus.replace(/_/g, ' ')}</strong>
           </div>
           {hasErrors && (
              <p>Issues detected that may affect accuracy.</p>

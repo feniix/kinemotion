@@ -122,6 +122,27 @@ describe('ResultsDisplay', () => {
     expect(screen.getByText('Jump height too low')).toBeInTheDocument();
   });
 
+  it('renders informational validation banner for PASS_WITH_WARNINGS with correct icon and text', () => {
+    const warningMetrics: AnalysisResponse = {
+      ...commonMetrics,
+      metrics: {
+        ...commonMetrics.metrics,
+        validation: {
+          status: 'PASS_WITH_WARNINGS' as ValidationResults['status'],
+          issues: [{ metric: 'form_detection', severity: 'INFO', message: 'Minor form inconsistencies detected.' }],
+        },
+      },
+    };
+
+    render(<ResultsDisplay metrics={warningMetrics} />);
+    expect(screen.getByText('Quality Check: PASS WITH WARNINGS')).toBeInTheDocument();
+    expect(screen.getByText('Minor form inconsistencies detected.')).toBeInTheDocument();
+    // Check for the info icon. Vitest/JSDOM might not render actual emojis, so we check content
+    const statusIcon = screen.getByText('ℹ');
+    expect(statusIcon).toBeInTheDocument();
+  });
+
+
   it('renders video previews when debug_video_url or videoFile are provided', () => {
     const metricsWithVideos: AnalysisResponse = {
       ...commonMetrics,

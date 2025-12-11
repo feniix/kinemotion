@@ -354,6 +354,49 @@ body {
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
+.validation-banner {
+  background-color: var(--bg-secondary);
+  padding: 0;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+.validation-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.validation-banner.pass {
+  border-color: rgba(16, 185, 129, 0.3);
+  background-color: rgba(16, 185, 129, 0.05);
+}
+
+.validation-banner.pass .status-icon {
+  color: var(--success-color);
+}
+
+.validation-banner.fail {
+  border-color: rgba(239, 68, 68, 0.3);
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+.validation-banner.fail .status-icon {
+  color: var(--error-color);
+}
+
+.validation-banner.pass_with_warnings {
+  border-color: rgba(59, 130, 246, 0.3);
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+.validation-banner.pass_with_warnings .status-icon {
+  color: var(--primary-color);
+}
+
 /* Recent uploads */
 .recent-uploads {
   margin-top: 2rem;
