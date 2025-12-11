@@ -356,7 +356,7 @@ body {
 
 .validation-banner {
   background-color: var(--bg-secondary);
-  padding: 0;
+  padding: 1.5rem 2rem;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
   border: 1px solid var(--border-color);
