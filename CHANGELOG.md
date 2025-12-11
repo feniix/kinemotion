@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.45.1 (2025-12-11)
+
+### Bug Fixes
+
+- **refactor**: Improve type safety and reduce cognitive complexity
+  ([`040f2dc`](https://github.com/feniix/kinemotion/commit/040f2dc02594e40cf30fa9d3ecb5f7d03145707e))
+
+### Chores
+
+- Upgrade frontend packages
+  ([`a138481`](https://github.com/feniix/kinemotion/commit/a1384815f19ce10f56700536afc5e908fe62dbf3))
+
+
 ## v0.45.0 (2025-12-11)
 
 ### Bug Fixes
