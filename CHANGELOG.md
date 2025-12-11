@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.45.0 (2025-12-11)
+
+### Bug Fixes
+
+- **frontend**: Align Quality Check with Key Performance Indicators
+  ([`b071025`](https://github.com/feniix/kinemotion/commit/b0710259c25f501473b9bda3d5f22258a4bb2bb8))
+
+- **frontend**: Exclude test files from tsconfig.json
+  ([`493a2ef`](https://github.com/feniix/kinemotion/commit/493a2efb36113717ef1c1e94e7f10e53a5be1366))
+
+### Features
+
+- **frontend**: Implement comprehensive testing suite and UI refactoring
+  ([`6dce4c6`](https://github.com/feniix/kinemotion/commit/6dce4c619a73c6594944d713e493e94a1abcb965))
+
+- **frontend**: Improve validation banner display and fix type error
+  ([`d9be44d`](https://github.com/feniix/kinemotion/commit/d9be44d0c7100c9de055311556f1bf58f0733fa5))
+
+### Testing
+
+- Update sonar project version
+  ([`7f132ea`](https://github.com/feniix/kinemotion/commit/7f132ea20935e9d74303a7e8ad348577cd6c40a0))
+
+
 ## v0.44.0 (2025-12-11)
 
 ### Features
