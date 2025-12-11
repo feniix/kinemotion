@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.43.0 (2025-12-11)
+
+### Continuous Integration
+
+- Remove b ad workflow
+  ([`7584229`](https://github.com/feniix/kinemotion/commit/7584229682eb94ddf13a6becac7ad31b96d62f0f))
+
+### Features
+
+- Optimize debug video generation and improve code quality
+  ([`81ce698`](https://github.com/feniix/kinemotion/commit/81ce698d5a0fa8dff6c20c6870a7bee52080cef0))
+
+### Testing
+
+- Optimize test suite execution speed
+  ([`26ea210`](https://github.com/feniix/kinemotion/commit/26ea21072745ef606405b5f6f5277dd422636baf))
+
+
 ## v0.42.0 (2025-12-10)
 
 ### Documentation
