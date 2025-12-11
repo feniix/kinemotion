@@ -1,17 +1,19 @@
 """Command-line interface for counter movement jump (CMJ) analysis."""
 
-import glob
 import json
 import sys
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any
 
 import click
 
 from ..api import process_cmj_video
 from ..core.auto_tuning import QualityPreset
-from ..core.cli_utils import common_output_options
+from ..core.cli_utils import (
+    collect_video_files,
+    common_output_options,
+    generate_batch_output_paths,
+)
 
 
 @dataclass
@@ -25,33 +27,6 @@ class AnalysisParameters:
     visibility_threshold: float | None = None
     detection_confidence: float | None = None
     tracking_confidence: float | None = None
-
-
-def _collect_video_files(video_path: tuple[str, ...]) -> list[str]:
-    """Expand glob patterns and collect all video files."""
-    video_files: list[str] = []
-    for pattern in video_path:
-        expanded = glob.glob(pattern)
-        if expanded:
-            video_files.extend(expanded)
-        elif Path(pattern).exists():
-            video_files.append(pattern)
-        else:
-            click.echo(f"Warning: No files found for pattern: {pattern}", err=True)
-    return video_files
-
-
-def _generate_output_paths(
-    video: str, output_dir: str | None, json_output_dir: str | None
-) -> tuple[str | None, str | None]:
-    """Generate output paths for debug video and JSON."""
-    out_path = None
-    json_path = None
-    if output_dir:
-        out_path = str(Path(output_dir) / f"{Path(video).stem}_debug.mp4")
-    if json_output_dir:
-        json_path = str(Path(json_output_dir) / f"{Path(video).stem}.json")
-    return out_path, json_path
 
 
 def _process_batch_videos(
@@ -74,7 +49,7 @@ def _process_batch_videos(
     for video in video_files:
         try:
             click.echo(f"\nProcessing: {video}", err=True)
-            out_path, json_path = _generate_output_paths(
+            out_path, json_path = generate_batch_output_paths(
                 video, output_dir, json_output_dir
             )
             _process_single(
@@ -209,25 +184,25 @@ def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters
 
     Examples:
 
-    \\b
+    \b
     # Basic analysis
     kinemotion cmj-analyze video.mp4
 
-    \\b
+    \b
     # With debug video output
     kinemotion cmj-analyze video.mp4 --output debug.mp4
 
-    \\b
+    \b
     # Batch mode with glob pattern
     kinemotion cmj-analyze videos/*.mp4 --batch --workers 4
 
-    \\b
+    \b
     # Batch with output directories
-    kinemotion cmj-analyze videos/*.mp4 --batch \\
+    kinemotion cmj-analyze videos/*.mp4 --batch \
         --json-output-dir results/ --csv-summary summary.csv
     """
     # Expand glob patterns and collect all video files
-    video_files = _collect_video_files(video_path)
+    video_files = collect_video_files(video_path)
 
     if not video_files:
         click.echo("Error: No video files found", err=True)

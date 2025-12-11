@@ -1,7 +1,6 @@
 """Command-line interface for drop jump analysis."""
 
 import csv
-import glob
 import json
 import sys
 from dataclasses import dataclass
@@ -14,6 +13,10 @@ from ..api import (
     DropJumpVideoResult,
     process_dropjump_video,
     process_dropjump_videos_bulk,
+)
+from ..core.cli_utils import (
+    collect_video_files,
+    generate_batch_output_paths,
 )
 
 
@@ -176,20 +179,11 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual
 
     \b
     # Batch with output directories
-    kinemotion dropjump-analyze videos/*.mp4 --batch \\
+    kinemotion dropjump-analyze videos/*.mp4 --batch \
         --json-output-dir results/ --csv-summary summary.csv
     """
     # Expand glob patterns and collect all video files
-    video_files: list[str] = []
-    for pattern in video_path:
-        expanded = glob.glob(pattern)
-        if expanded:
-            video_files.extend(expanded)
-        elif Path(pattern).exists():
-            # Direct path (not a glob pattern)
-            video_files.append(pattern)
-        else:
-            click.echo(f"Warning: No files found for pattern: {pattern}", err=True)
+    video_files = collect_video_files(video_path)
 
     if not video_files:
         click.echo("Error: No video files found", err=True)
@@ -275,7 +269,8 @@ def _process_single(
 
 
 def _setup_batch_output_dirs(
-    output_dir: str | None, json_output_dir: str | None
+    output_dir: str | None,
+    json_output_dir: str | None,
 ) -> None:
     """Create output directories for batch processing.
 
@@ -313,15 +308,9 @@ def _create_video_configs(
     """
     configs: list[DropJumpVideoConfig] = []
     for video_file in video_files:
-        video_name = Path(video_file).stem
-
-        debug_video = None
-        if output_dir:
-            debug_video = str(Path(output_dir) / f"{video_name}_debug.mp4")
-
-        json_file = None
-        if json_output_dir:
-            json_file = str(Path(json_output_dir) / f"{video_name}.json")
+        debug_video, json_file = generate_batch_output_paths(
+            video_file, output_dir, json_output_dir
+        )
 
         config = DropJumpVideoConfig(
             video_path=video_file,
