@@ -64,7 +64,6 @@ def setup_logging(*, json_logs: bool = False, log_level: str = "INFO") -> None:
         structlog.configure(
             processors=shared_processors
             + [
-                structlog.processors.ExceptionRenderer(),
                 structlog.dev.ConsoleRenderer(colors=True),
             ],
             wrapper_class=structlog.stdlib.BoundLogger,

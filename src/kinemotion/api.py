@@ -6,6 +6,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
 
+import cv2
 import numpy as np
 
 from .cmj.analysis import compute_average_hip_position, detect_cmj_phases
@@ -178,8 +179,14 @@ def _process_all_frames(
     verbose: bool,
     timer: PerformanceTimer | None = None,
     close_tracker: bool = True,
-) -> tuple[list, list]:
+    target_debug_fps: float = 30.0,
+    max_debug_dim: int = 720,
+) -> tuple[list, list, list]:
     """Process all frames from video and extract pose landmarks.
+
+    Optimizes memory and speed by:
+    1. Decimating frames stored for debug video (to target_debug_fps)
+    2. Pre-resizing stored frames (to max_debug_dim)
 
     Args:
         video: Video processor to read frames from
@@ -187,9 +194,11 @@ def _process_all_frames(
         verbose: Print progress messages
         timer: Optional PerformanceTimer for measuring operations
         close_tracker: Whether to close the tracker after processing (default: True)
+        target_debug_fps: Target FPS for debug video (default: 30.0)
+        max_debug_dim: Max dimension for debug video frames (default: 720)
 
     Returns:
-        Tuple of (frames, landmarks_sequence)
+        Tuple of (debug_frames, landmarks_sequence, frame_indices)
 
     Raises:
         ValueError: If no frames could be processed
@@ -198,7 +207,24 @@ def _process_all_frames(
         print("Tracking pose landmarks...")
 
     landmarks_sequence = []
-    frames = []
+    debug_frames = []
+    frame_indices = []
+
+    # Calculate decimation and resize parameters
+    step = max(1, int(video.fps / target_debug_fps))
+
+    # Calculate resize dimensions maintaining aspect ratio
+    # Logic mirrors BaseDebugOverlayRenderer to ensure consistency
+    w, h = video.display_width, video.display_height
+    scale = 1.0
+    if max(w, h) > max_debug_dim:
+        scale = max_debug_dim / max(w, h)
+
+    debug_w = int(w * scale) // 2 * 2
+    debug_h = int(h * scale) // 2 * 2
+    should_resize = (debug_w != video.width) or (debug_h != video.height)
+
+    frame_idx = 0
 
     if timer:
         with timer.measure("pose_tracking"):
@@ -207,18 +233,46 @@ def _process_all_frames(
                 if frame is None:
                     break
 
-                frames.append(frame)
+                # 1. Track on FULL resolution frame (preserves accuracy)
                 landmarks = tracker.process_frame(frame)
                 landmarks_sequence.append(landmarks)
+
+                # 2. Store frame for debug video ONLY if matches step
+                if frame_idx % step == 0:
+                    # Pre-resize to save memory and later encoding time
+                    if should_resize:
+                        # Use simple linear interpolation for speed (debug only)
+                        processed_frame = cv2.resize(
+                            frame, (debug_w, debug_h), interpolation=cv2.INTER_LINEAR
+                        )
+                    else:
+                        processed_frame = frame
+
+                    debug_frames.append(processed_frame)
+                    frame_indices.append(frame_idx)
+
+                frame_idx += 1
     else:
         while True:
             frame = video.read_frame()
             if frame is None:
                 break
 
-            frames.append(frame)
             landmarks = tracker.process_frame(frame)
             landmarks_sequence.append(landmarks)
+
+            if frame_idx % step == 0:
+                if should_resize:
+                    processed_frame = cv2.resize(
+                        frame, (debug_w, debug_h), interpolation=cv2.INTER_LINEAR
+                    )
+                else:
+                    processed_frame = frame
+
+                debug_frames.append(processed_frame)
+                frame_indices.append(frame_idx)
+
+            frame_idx += 1
 
     if close_tracker:
         tracker.close()
@@ -226,7 +280,7 @@ def _process_all_frames(
     if not landmarks_sequence:
         raise ValueError("No frames could be processed from video")
 
-    return frames, landmarks_sequence
+    return debug_frames, landmarks_sequence, frame_indices
 
 
 def _apply_smoothing(
@@ -492,11 +546,11 @@ def process_dropjump_video(
                 )
                 should_close_tracker = True
 
-            frames, landmarks_sequence = _process_all_frames(
+            frames, landmarks_sequence, frame_indices = _process_all_frames(
                 video, tracker, verbose, timer, close_tracker=should_close_tracker
             )
 
-            # Analyze video characteristics and auto-tune parameters
+            # Auto-tune parameters
             with timer.measure("parameter_auto_tuning"):
                 characteristics = analyze_video_sample(
                     landmarks_sequence, video.fps, video.frame_count
@@ -640,23 +694,35 @@ def process_dropjump_video(
                 if verbose:
                     print(f"Generating debug video: {output_video}")
 
+                # Determine debug video properties from the pre-processed frames
+                debug_h, debug_w = frames[0].shape[:2]
+                if video.fps > 30:
+                    debug_fps = video.fps / (video.fps / 30.0)
+                else:
+                    debug_fps = video.fps
+                # Use approximate 30fps if decimated, or actual if not
+                if len(frames) < len(landmarks_sequence):
+                    # Re-calculate step to get precise FPS
+                    step = max(1, int(video.fps / 30.0))
+                    debug_fps = video.fps / step
+
                 if timer:
                     with timer.measure("debug_video_generation"):
                         with DebugOverlayRenderer(
                             output_video,
-                            video.width,
-                            video.height,
-                            video.display_width,
-                            video.display_height,
-                            video.fps,
+                            debug_w,  # Encoded width = pre-resized width
+                            debug_h,  # Encoded height
+                            debug_w,  # Display width (already corrected)
+                            debug_h,  # Display height
+                            debug_fps,
                             timer=timer,
                         ) as renderer:
-                            for i, frame in enumerate(frames):
+                            for frame, idx in zip(frames, frame_indices, strict=True):
                                 annotated = renderer.render_frame(
                                     frame,
-                                    smoothed_landmarks[i],
-                                    contact_states[i],
-                                    i,
+                                    smoothed_landmarks[idx],
+                                    contact_states[idx],
+                                    idx,
                                     metrics,
                                     use_com=False,
                                 )
@@ -667,19 +733,19 @@ def process_dropjump_video(
                 else:
                     with DebugOverlayRenderer(
                         output_video,
-                        video.width,
-                        video.height,
-                        video.display_width,
-                        video.display_height,
-                        video.fps,
+                        debug_w,
+                        debug_h,
+                        debug_w,
+                        debug_h,
+                        debug_fps,
                         timer=timer,
                     ) as renderer:
-                        for i, frame in enumerate(frames):
+                        for frame, idx in zip(frames, frame_indices, strict=True):
                             annotated = renderer.render_frame(
                                 frame,
-                                smoothed_landmarks[i],
-                                contact_states[i],
-                                i,
+                                smoothed_landmarks[idx],
+                                contact_states[idx],
+                                idx,
                                 metrics,
                                 use_com=False,
                             )
@@ -999,7 +1065,7 @@ def process_cmj_video(
                 )
                 should_close_tracker = True
 
-            frames, landmarks_sequence = _process_all_frames(
+            frames, landmarks_sequence, frame_indices = _process_all_frames(
                 video, tracker, verbose, timer, close_tracker=should_close_tracker
             )
 
@@ -1153,20 +1219,25 @@ def process_cmj_video(
                 if verbose:
                     print(f"Generating debug video: {output_video}")
 
+                # Determine debug video properties from the pre-processed frames
+                debug_h, debug_w = frames[0].shape[:2]
+                step = max(1, int(video.fps / 30.0))
+                debug_fps = video.fps / step
+
                 if timer:
                     with timer.measure("debug_video_generation"):
                         with CMJDebugOverlayRenderer(
                             output_video,
-                            video.width,
-                            video.height,
-                            video.display_width,
-                            video.display_height,
-                            video.fps,
+                            debug_w,
+                            debug_h,
+                            debug_w,
+                            debug_h,
+                            debug_fps,
                             timer=timer,  # Passing timer here too
                         ) as renderer:
-                            for i, frame in enumerate(frames):
+                            for frame, idx in zip(frames, frame_indices, strict=True):
                                 annotated = renderer.render_frame(
-                                    frame, smoothed_landmarks[i], i, metrics
+                                    frame, smoothed_landmarks[idx], idx, metrics
                                 )
                                 renderer.write_frame(annotated)
                     # Capture re-encoding duration separately
@@ -1175,16 +1246,16 @@ def process_cmj_video(
                 else:
                     with CMJDebugOverlayRenderer(
                         output_video,
-                        video.width,
-                        video.height,
-                        video.display_width,
-                        video.display_height,
-                        video.fps,
+                        debug_w,
+                        debug_h,
+                        debug_w,
+                        debug_h,
+                        debug_fps,
                         timer=timer,  # Passing timer here too
                     ) as renderer:
-                        for i, frame in enumerate(frames):
+                        for frame, idx in zip(frames, frame_indices, strict=True):
                             annotated = renderer.render_frame(
-                                frame, smoothed_landmarks[i], i, metrics
+                                frame, smoothed_landmarks[idx], idx, metrics
                             )
                             renderer.write_frame(annotated)
 
