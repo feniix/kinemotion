@@ -165,8 +165,10 @@ def test_aspect_ratio_16_9():
         cap = cv2.VideoCapture(output_path)
         ret, frame = cap.read()
         assert ret
-        assert frame.shape[0] == 1080  # height
-        assert frame.shape[1] == 1920  # width
+        # Dimensions are downscaled to max 720p and even numbers
+        # 1920x1080 -> scale 0.375 -> 720x405 -> 720x404 (even)
+        assert frame.shape[0] == 404  # height
+        assert frame.shape[1] == 720  # width
         cap.release()
 
         Path(output_path).unlink()
@@ -200,6 +202,27 @@ def test_aspect_ratio_9_16_portrait():
         assert video.width == 1080
         assert video.height == 1920
         video.close()
+
+        # Create output video
+        output_path = tempfile.NamedTemporaryFile(suffix=".mp4", delete=False).name
+        renderer = DebugOverlayRenderer(output_path, 1080, 1920, 1080, 1920, 30.0)
+
+        # Write test frame
+        test_frame = np.zeros((1920, 1080, 3), dtype=np.uint8)
+        renderer.write_frame(test_frame)
+        renderer.close()
+
+        # Verify output dimensions
+        cap = cv2.VideoCapture(output_path)
+        ret, frame = cap.read()
+        assert ret
+        # Dimensions are downscaled to max 720p and even numbers
+        # 1080x1920 -> scale 0.375 -> 405x720 -> 404x720 (even)
+        assert frame.shape[0] == 720  # height
+        assert frame.shape[1] == 404  # width
+        cap.release()
+
+        Path(output_path).unlink()
 
     finally:
         Path(test_video).unlink()

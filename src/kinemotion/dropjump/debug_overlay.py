@@ -138,42 +138,53 @@ class DebugOverlayRenderer(BaseDebugOverlayRenderer):
         Returns:
             Frame with debug overlay
         """
-        annotated = frame.copy()
+        if self.timer:
+            with self.timer.measure("debug_video_copy"):
+                annotated = frame.copy()
+        else:
+            annotated = frame.copy()
 
-        # Draw landmarks
-        if landmarks:
-            if use_com:
-                self._draw_com_visualization(annotated, landmarks, contact_state)
-            else:
-                self._draw_foot_visualization(annotated, landmarks, contact_state)
+        def _draw_overlays() -> None:
+            # Draw landmarks
+            if landmarks:
+                if use_com:
+                    self._draw_com_visualization(annotated, landmarks, contact_state)
+                else:
+                    self._draw_foot_visualization(annotated, landmarks, contact_state)
 
-        # Draw contact state
-        state_color = (
-            (0, 255, 0) if contact_state == ContactState.ON_GROUND else (0, 0, 255)
-        )
-        cv2.putText(
-            annotated,
-            f"State: {contact_state.value}",
-            (10, 30),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            1,
-            state_color,
-            2,
-        )
+            # Draw contact state
+            state_color = (
+                (0, 255, 0) if contact_state == ContactState.ON_GROUND else (0, 0, 255)
+            )
+            cv2.putText(
+                annotated,
+                f"State: {contact_state.value}",
+                (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1,
+                state_color,
+                2,
+            )
 
-        # Draw frame number
-        cv2.putText(
-            annotated,
-            f"Frame: {frame_idx}",
-            (10, 70),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.7,
-            (255, 255, 255),
-            2,
-        )
+            # Draw frame number
+            cv2.putText(
+                annotated,
+                f"Frame: {frame_idx}",
+                (10, 70),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.7,
+                (255, 255, 255),
+                2,
+            )
 
-        # Draw phase labels
-        if metrics:
-            self._draw_phase_labels(annotated, frame_idx, metrics)
+            # Draw phase labels
+            if metrics:
+                self._draw_phase_labels(annotated, frame_idx, metrics)
+
+        if self.timer:
+            with self.timer.measure("debug_video_draw"):
+                _draw_overlays()
+        else:
+            _draw_overlays()
 
         return annotated

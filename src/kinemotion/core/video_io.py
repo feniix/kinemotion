@@ -189,15 +189,27 @@ class VideoProcessor:
             return None
 
         # Apply rotation if video has rotation metadata
-        if self.rotation == -90 or self.rotation == 270:
-            # -90 degrees = rotate 90 degrees clockwise
-            frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
-        elif self.rotation == 90 or self.rotation == -270:
-            # 90 degrees = rotate 90 degrees counter-clockwise
-            frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
-        elif self.rotation == 180 or self.rotation == -180:
-            # 180 degrees rotation
-            frame = cv2.rotate(frame, cv2.ROTATE_180)
+        if self.timer:
+            with self.timer.measure("frame_rotation"):
+                if self.rotation == -90 or self.rotation == 270:
+                    # -90 degrees = rotate 90 degrees clockwise
+                    frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+                elif self.rotation == 90 or self.rotation == -270:
+                    # 90 degrees = rotate 90 degrees counter-clockwise
+                    frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                elif self.rotation == 180 or self.rotation == -180:
+                    # 180 degrees rotation
+                    frame = cv2.rotate(frame, cv2.ROTATE_180)
+        else:
+            if self.rotation == -90 or self.rotation == 270:
+                # -90 degrees = rotate 90 degrees clockwise
+                frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+            elif self.rotation == 90 or self.rotation == -270:
+                # 90 degrees = rotate 90 degrees counter-clockwise
+                frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+            elif self.rotation == 180 or self.rotation == -180:
+                # 180 degrees rotation
+                frame = cv2.rotate(frame, cv2.ROTATE_180)
 
         return frame
 

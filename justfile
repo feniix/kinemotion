@@ -1,3 +1,14 @@
+# Check python sanity
+python-check:
+    @echo "Running pyright..."
+    uv run pyright
+    (cd backend && uv run pyright)
+    @echo "Running ruff check and format..."
+    uv run ruff check --fix
+    uv run ruff format
+    (cd backend && uv run ruff check --fix)
+    (cd backend && uv run ruff format)
+
 # Clean generated and temporary files (preserves .claude/, .cursor/, .mcp.json)
 clean:
     @echo "Cleaning generated files..."

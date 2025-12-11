@@ -1,4 +1,4 @@
-"""Public API for programmatic use of kinemotion analysis."""
+"Public API for programmatic use of kinemotion analysis."
 
 import time
 from collections.abc import Callable
@@ -37,7 +37,6 @@ from .core.smoothing import smooth_landmarks, smooth_landmarks_advanced
 from .core.timing import PerformanceTimer
 from .core.video_io import VideoProcessor
 from .dropjump.analysis import (
-    ContactState,
     compute_average_foot_position,
     detect_ground_contact,
     find_contact_phases,
@@ -370,103 +369,13 @@ def _convert_timer_to_stage_names(
         "json_serialization": "JSON serialization",
         "debug_video_generation": "Debug video generation",
         "debug_video_reencode": "Debug video re-encoding",
+        "frame_rotation": "Frame rotation",
+        "debug_video_resize": "Debug video resizing",
+        "debug_video_copy": "Debug video frame copy",
+        "debug_video_draw": "Debug video drawing",
+        "debug_video_write": "Debug video encoding",
     }
     return {mapping.get(k, k): v for k, v in timer_metrics.items()}
-
-
-def _generate_dropjump_outputs(
-    metrics: DropJumpMetrics,
-    json_output: str | None,
-    output_video: str | None,
-    frames: list,
-    smoothed_landmarks: list,
-    contact_states: list[ContactState],
-    video: VideoProcessor,
-    verbose: bool,
-    timer: PerformanceTimer | None = None,
-) -> None:
-    """Generate JSON and debug video outputs if requested.
-
-    Args:
-        metrics: Calculated drop jump metrics
-        json_output: Optional path for JSON output
-        output_video: Optional path for debug video
-        frames: List of video frames
-        smoothed_landmarks: Smoothed landmark sequence
-        contact_states: Ground contact state for each frame
-        video: Video processor with dimensions and fps
-        verbose: Print progress messages
-        timer: Optional PerformanceTimer for measuring operations
-    """
-    # Save JSON if requested
-    if json_output:
-        import json
-
-        if timer:
-            with timer.measure("json_serialization"):
-                output_path = Path(json_output)
-                metrics_dict = metrics.to_dict()
-                json_str = json.dumps(metrics_dict, indent=2)
-                output_path.write_text(json_str)
-        else:
-            output_path = Path(json_output)
-            metrics_dict = metrics.to_dict()
-            json_str = json.dumps(metrics_dict, indent=2)
-            output_path.write_text(json_str)
-
-        if verbose:
-            print(f"Metrics written to: {json_output}")
-
-    # Generate debug video if requested
-    if output_video:
-        if verbose:
-            print(f"Generating debug video: {output_video}")
-
-        if timer:
-            with timer.measure("debug_video_generation"):
-                with DebugOverlayRenderer(
-                    output_video,
-                    video.width,
-                    video.height,
-                    video.display_width,
-                    video.display_height,
-                    video.fps,
-                ) as renderer:
-                    for i, frame in enumerate(frames):
-                        annotated = renderer.render_frame(
-                            frame,
-                            smoothed_landmarks[i],
-                            contact_states[i],
-                            i,
-                            metrics,
-                            use_com=False,
-                        )
-                        renderer.write_frame(annotated)
-            # Capture re-encoding duration separately
-            with timer.measure("debug_video_reencode"):
-                pass  # Re-encoding happens in context manager __exit__
-        else:
-            with DebugOverlayRenderer(
-                output_video,
-                video.width,
-                video.height,
-                video.display_width,
-                video.display_height,
-                video.fps,
-            ) as renderer:
-                for i, frame in enumerate(frames):
-                    annotated = renderer.render_frame(
-                        frame,
-                        smoothed_landmarks[i],
-                        contact_states[i],
-                        i,
-                        metrics,
-                        use_com=False,
-                    )
-                    renderer.write_frame(annotated)
-
-        if verbose:
-            print(f"Debug video saved: {output_video}")
 
 
 @dataclass
@@ -740,6 +649,7 @@ def process_dropjump_video(
                             video.display_width,
                             video.display_height,
                             video.fps,
+                            timer=timer,
                         ) as renderer:
                             for i, frame in enumerate(frames):
                                 annotated = renderer.render_frame(
@@ -762,6 +672,7 @@ def process_dropjump_video(
                         video.display_width,
                         video.display_height,
                         video.fps,
+                        timer=timer,
                     ) as renderer:
                         for i, frame in enumerate(frames):
                             annotated = renderer.render_frame(
@@ -843,7 +754,7 @@ def process_dropjump_video(
                     dur_ms = duration * 1000
                     print(f"{stage:.<40} {dur_ms:>6.0f}ms ({percentage:>5.1f}%)")
                 total_ms = total_time * 1000
-                print(f"{'Total':.>40} {total_ms:>6.0f}ms (100.0%)")
+                print(f"{('Total'):.>40} {total_ms:>6.0f}ms (100.0%)")
                 print()
                 print("Analysis complete!")
 
@@ -992,95 +903,6 @@ class CMJVideoResult:
     metrics: CMJMetrics | None = None
     error: str | None = None
     processing_time: float = 0.0
-
-
-def _generate_cmj_outputs(
-    output_video: str | None,
-    json_output: str | None,
-    metrics: CMJMetrics,
-    frames: list,
-    smoothed_landmarks: list,
-    video_width: int,
-    video_height: int,
-    video_display_width: int,
-    video_display_height: int,
-    video_fps: float,
-    verbose: bool,
-    timer: PerformanceTimer | None = None,
-) -> None:
-    """Generate JSON and debug video outputs for CMJ analysis.
-
-    Args:
-        output_video: Optional path for debug video output
-        json_output: Optional path for JSON output
-        metrics: Calculated CMJ metrics
-        frames: List of video frames
-        smoothed_landmarks: Smoothed landmark sequence
-        video_width: Video width in pixels
-        video_height: Video height in pixels
-        video_display_width: Display width considering aspect ratio
-        video_display_height: Display height considering aspect ratio
-        video_fps: Video frames per second
-        verbose: Print progress messages
-        timer: Optional PerformanceTimer for measuring operations
-    """
-    if json_output:
-        import json
-
-        if timer:
-            with timer.measure("json_serialization"):
-                output_path = Path(json_output)
-                metrics_dict = metrics.to_dict()
-                json_str = json.dumps(metrics_dict, indent=2)
-                output_path.write_text(json_str)
-        else:
-            output_path = Path(json_output)
-            metrics_dict = metrics.to_dict()
-            json_str = json.dumps(metrics_dict, indent=2)
-            output_path.write_text(json_str)
-
-        if verbose:
-            print(f"Metrics written to: {json_output}")
-
-    if output_video:
-        if verbose:
-            print(f"Generating debug video: {output_video}")
-
-        if timer:
-            with timer.measure("debug_video_generation"):
-                with CMJDebugOverlayRenderer(
-                    output_video,
-                    video_width,
-                    video_height,
-                    video_display_width,
-                    video_display_height,
-                    video_fps,
-                ) as renderer:
-                    for i, frame in enumerate(frames):
-                        annotated = renderer.render_frame(
-                            frame, smoothed_landmarks[i], i, metrics
-                        )
-                        renderer.write_frame(annotated)
-            # Capture re-encoding duration separately
-            with timer.measure("debug_video_reencode"):
-                pass  # Re-encoding happens in context manager __exit__
-        else:
-            with CMJDebugOverlayRenderer(
-                output_video,
-                video_width,
-                video_height,
-                video_display_width,
-                video_display_height,
-                video_fps,
-            ) as renderer:
-                for i, frame in enumerate(frames):
-                    annotated = renderer.render_frame(
-                        frame, smoothed_landmarks[i], i, metrics
-                    )
-                    renderer.write_frame(annotated)
-
-        if verbose:
-            print(f"Debug video saved: {output_video}")
 
 
 def process_cmj_video(
@@ -1340,6 +1162,7 @@ def process_cmj_video(
                             video.display_width,
                             video.display_height,
                             video.fps,
+                            timer=timer,  # Passing timer here too
                         ) as renderer:
                             for i, frame in enumerate(frames):
                                 annotated = renderer.render_frame(
@@ -1357,6 +1180,7 @@ def process_cmj_video(
                         video.display_width,
                         video.display_height,
                         video.fps,
+                        timer=timer,  # Passing timer here too
                     ) as renderer:
                         for i, frame in enumerate(frames):
                             annotated = renderer.render_frame(
@@ -1433,7 +1257,7 @@ def process_cmj_video(
                     dur_ms = duration * 1000
                     print(f"{stage:.<40} {dur_ms:>6.0f}ms ({percentage:>5.1f}%)")
                 total_ms = total_time * 1000
-                print(f"{'Total':.>40} {total_ms:>6.0f}ms (100.0%)")
+                print(f"{('Total'):.>40} {total_ms:>6.0f}ms (100.0%)")
                 print()
 
                 print(f"\nJump height: {metrics.jump_height:.3f}m")

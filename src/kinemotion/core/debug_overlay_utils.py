@@ -9,6 +9,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from .timing import PerformanceTimer
+
 
 def create_video_writer(
     output_path: str,
@@ -104,6 +106,7 @@ class BaseDebugOverlayRenderer:
         display_width: int,
         display_height: int,
         fps: float,
+        timer: PerformanceTimer | None = None,
     ):
         """
         Initialize overlay renderer.
@@ -115,16 +118,30 @@ class BaseDebugOverlayRenderer:
             display_width: Display width (considering SAR)
             display_height: Display height (considering SAR)
             fps: Frames per second
+            timer: Optional PerformanceTimer for measuring operations
         """
         self.output_path = output_path
         self.width = width
         self.height = height
-        self.display_width = display_width
-        self.display_height = display_height
+        self.timer = timer
+
+        # Optimize debug video resolution: Cap max dimension to 720p
+        # Reduces software encoding time on single-core Cloud Run instances.
+        # while keeping sufficient quality for visual debugging.
+        max_dimension = 720
+        if max(display_width, display_height) > max_dimension:
+            scale = max_dimension / max(display_width, display_height)
+            # Ensure dimensions are even for codec compatibility
+            self.display_width = int(display_width * scale) // 2 * 2
+            self.display_height = int(display_height * scale) // 2 * 2
+        else:
+            self.display_width = display_width
+            self.display_height = display_height
+
         # Duration of ffmpeg re-encoding (0.0 if not needed)
         self.reencode_duration_s = 0.0
         self.writer, self.needs_resize, self.used_codec = create_video_writer(
-            output_path, width, height, display_width, display_height, fps
+            output_path, width, height, self.display_width, self.display_height, fps
         )
 
     def write_frame(self, frame: np.ndarray) -> None:
@@ -148,13 +165,29 @@ class BaseDebugOverlayRenderer:
 
         # Resize to display dimensions if needed (to handle SAR)
         if self.needs_resize:
-            frame = cv2.resize(
-                frame,
-                (self.display_width, self.display_height),
-                interpolation=cv2.INTER_LANCZOS4,
-            )
+            if self.timer:
+                with self.timer.measure("debug_video_resize"):
+                    frame = cv2.resize(
+                        frame,
+                        (self.display_width, self.display_height),
+                        interpolation=cv2.INTER_LINEAR,
+                    )
+            else:
+                frame = cv2.resize(
+                    frame,
+                    (self.display_width, self.display_height),
+                    interpolation=cv2.INTER_LINEAR,
+                )
 
-        write_overlay_frame(self.writer, frame, self.display_width, self.display_height)
+        if self.timer:
+            with self.timer.measure("debug_video_write"):
+                write_overlay_frame(
+                    self.writer, frame, self.display_width, self.display_height
+                )
+        else:
+            write_overlay_frame(
+                self.writer, frame, self.display_width, self.display_height
+            )
 
     def close(self) -> None:
         """Release video writer and re-encode if possible."""
