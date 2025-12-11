@@ -9,13 +9,15 @@ import pytest
 from kinemotion.api import (
     CMJVideoConfig,
     CMJVideoResult,
-    _apply_expert_overrides,  # type: ignore[reportPrivateUsage]
-    _determine_confidence_levels,  # type: ignore[reportPrivateUsage]
     process_cmj_video,
     process_cmj_videos_bulk,
 )
 from kinemotion.cmj.kinematics import CMJMetrics
 from kinemotion.core.auto_tuning import AnalysisParameters, QualityPreset
+from kinemotion.core.pipeline_utils import (
+    apply_expert_overrides,
+    determine_confidence_levels,
+)
 
 # Skip multiprocessing tests in CI
 # MediaPipe doesn't work well with ProcessPoolExecutor in headless environments
@@ -346,8 +348,8 @@ def test_process_cmj_videos_bulk_different_parameters(sample_video_path: str) ->
 
 
 def test_determine_confidence_levels_default() -> None:
-    """Test _determine_confidence_levels with default values."""
-    detection, tracking = _determine_confidence_levels(
+    """Test determine_confidence_levels with default values."""
+    detection, tracking = determine_confidence_levels(
         quality_preset=QualityPreset.BALANCED,
         detection_confidence=None,
         tracking_confidence=None,
@@ -358,8 +360,8 @@ def test_determine_confidence_levels_default() -> None:
 
 
 def test_determine_confidence_levels_with_overrides() -> None:
-    """Test _determine_confidence_levels with custom confidence values."""
-    detection, tracking = _determine_confidence_levels(
+    """Test determine_confidence_levels with custom confidence values."""
+    detection, tracking = determine_confidence_levels(
         quality_preset=QualityPreset.BALANCED,
         detection_confidence=0.8,
         tracking_confidence=0.7,
@@ -370,7 +372,7 @@ def test_determine_confidence_levels_with_overrides() -> None:
 
 
 def test_apply_expert_overrides_all_parameters() -> None:
-    """Test _apply_expert_overrides with all parameters specified."""
+    """Test apply_expert_overrides with all parameters specified."""
     params = AnalysisParameters(
         smoothing_window=5,
         velocity_threshold=0.02,
@@ -384,7 +386,7 @@ def test_apply_expert_overrides_all_parameters() -> None:
         use_curvature=True,
     )
 
-    result = _apply_expert_overrides(
+    result = apply_expert_overrides(
         params,
         smoothing_window=7,
         velocity_threshold=0.03,
@@ -399,7 +401,7 @@ def test_apply_expert_overrides_all_parameters() -> None:
 
 
 def test_apply_expert_overrides_partial() -> None:
-    """Test _apply_expert_overrides with only some parameters."""
+    """Test apply_expert_overrides with only some parameters."""
     params = AnalysisParameters(
         smoothing_window=5,
         velocity_threshold=0.02,
@@ -413,7 +415,7 @@ def test_apply_expert_overrides_partial() -> None:
         use_curvature=True,
     )
 
-    result = _apply_expert_overrides(
+    result = apply_expert_overrides(
         params,
         smoothing_window=9,
         velocity_threshold=None,
