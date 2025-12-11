@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import time
 from pathlib import Path
+from typing import Self
 
 import cv2
 import numpy as np
@@ -251,7 +252,7 @@ class BaseDebugOverlayRenderer:
                 if temp_path and os.path.exists(temp_path):
                     os.remove(temp_path)
 
-    def __enter__(self) -> "BaseDebugOverlayRenderer":
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:  # type: ignore[no-untyped-def]

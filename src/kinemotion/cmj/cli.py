@@ -3,11 +3,10 @@
 import json
 import sys
 from dataclasses import dataclass
-from typing import Any
 
 import click
 
-from ..api import process_cmj_video
+from ..api import CMJMetrics, process_cmj_video
 from ..core.auto_tuning import QualityPreset
 from ..core.cli_utils import (
     collect_video_files,
@@ -287,7 +286,7 @@ def _process_single(
         sys.exit(1)
 
 
-def _output_results(metrics: Any, json_output: str | None) -> None:
+def _output_results(metrics: CMJMetrics, json_output: str | None) -> None:
     """Output analysis results."""
     results = metrics.to_dict()
 

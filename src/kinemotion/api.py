@@ -78,6 +78,69 @@ class DropJumpVideoConfig:
     tracking_confidence: float | None = None
 
 
+def _generate_debug_video(
+    output_video: str,
+    frames: list,
+    frame_indices: list[int],
+    video_fps: float,
+    smoothed_landmarks: list,
+    contact_states: list,
+    metrics: DropJumpMetrics,
+    timer: PerformanceTimer | None,
+    verbose: bool,
+) -> None:
+    """Generate debug video with overlay."""
+    if verbose:
+        print(f"Generating debug video: {output_video}")
+
+    if not frames:
+        return
+
+    debug_h, debug_w = frames[0].shape[:2]
+
+    if video_fps > 30:
+        debug_fps = video_fps / (video_fps / 30.0)
+    else:
+        debug_fps = video_fps
+
+    if len(frames) < len(smoothed_landmarks):
+        step = max(1, int(video_fps / 30.0))
+        debug_fps = video_fps / step
+
+    def _render_frames(renderer: DebugOverlayRenderer) -> None:
+        for frame, idx in zip(frames, frame_indices, strict=True):
+            annotated = renderer.render_frame(
+                frame,
+                smoothed_landmarks[idx],
+                contact_states[idx],
+                idx,
+                metrics,
+                use_com=False,
+            )
+            renderer.write_frame(annotated)
+
+    renderer_context = DebugOverlayRenderer(
+        output_video,
+        debug_w,
+        debug_h,
+        debug_w,
+        debug_h,
+        debug_fps,
+        timer=timer,
+    )
+
+    if timer:
+        with timer.measure("debug_video_generation"):
+            with renderer_context as renderer:
+                _render_frames(renderer)
+    else:
+        with renderer_context as renderer:
+            _render_frames(renderer)
+
+    if verbose:
+        print(f"Debug video saved: {output_video}")
+
+
 def process_dropjump_video(
     video_path: str,
     quality: str = "balanced",
@@ -285,62 +348,17 @@ def process_dropjump_video(
                 print()
 
             if output_video:
-                if verbose:
-                    print(f"Generating debug video: {output_video}")
-
-                debug_h, debug_w = frames[0].shape[:2]
-                if video.fps > 30:
-                    debug_fps = video.fps / (video.fps / 30.0)
-                else:
-                    debug_fps = video.fps
-                if len(frames) < len(landmarks_sequence):
-                    step = max(1, int(video.fps / 30.0))
-                    debug_fps = video.fps / step
-
-                if timer:
-                    with timer.measure("debug_video_generation"):
-                        with DebugOverlayRenderer(
-                            output_video,
-                            debug_w,
-                            debug_h,
-                            debug_w,
-                            debug_h,
-                            debug_fps,
-                            timer=timer,
-                        ) as renderer:
-                            for frame, idx in zip(frames, frame_indices, strict=True):
-                                annotated = renderer.render_frame(
-                                    frame,
-                                    smoothed_landmarks[idx],
-                                    contact_states[idx],
-                                    idx,
-                                    metrics,
-                                    use_com=False,
-                                )
-                                renderer.write_frame(annotated)
-                else:
-                    with DebugOverlayRenderer(
-                        output_video,
-                        debug_w,
-                        debug_h,
-                        debug_w,
-                        debug_h,
-                        debug_fps,
-                        timer=timer,
-                    ) as renderer:
-                        for frame, idx in zip(frames, frame_indices, strict=True):
-                            annotated = renderer.render_frame(
-                                frame,
-                                smoothed_landmarks[idx],
-                                contact_states[idx],
-                                idx,
-                                metrics,
-                                use_com=False,
-                            )
-                            renderer.write_frame(annotated)
-
-                if verbose:
-                    print(f"Debug video saved: {output_video}")
+                _generate_debug_video(
+                    output_video,
+                    frames,
+                    frame_indices,
+                    video.fps,
+                    smoothed_landmarks,
+                    contact_states,
+                    metrics,
+                    timer,
+                    verbose,
+                )
 
             with timer.measure("metrics_validation"):
                 validator = DropJumpMetricsValidator()
