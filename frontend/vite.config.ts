@@ -24,4 +24,10 @@ export default defineConfig({
     sourcemap: false,
     minify: 'terser',
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
+    css: false, // Disable CSS processing for tests
+  },
 })

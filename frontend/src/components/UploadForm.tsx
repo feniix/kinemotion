@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import RecentUploads from './RecentUploads'
 import { RecentUpload } from '../hooks/useRecentUploads'
 
@@ -31,6 +31,7 @@ function UploadForm({
 }: UploadFormProps) {
   const [validationError, setValidationError] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null); // Create a ref for the file input
 
   const validateFile = (selectedFile: File): boolean => {
     // Validate file size
@@ -102,9 +103,38 @@ function UploadForm({
   }
 
   return (
-    <div className="upload-form">
-      <div className="form-group">
-        <label htmlFor="video-upload">Select Video</label>
+    <div className="upload-controller">
+      {/* 1. Context Configuration Bar */}
+      <div className="config-bar">
+        <div className="jump-selector">
+          <button
+            className={`type-btn ${jumpType === 'cmj' ? 'active' : ''}`}
+            onClick={() => onJumpTypeChange('cmj')}
+            title="Counter Movement Jump"
+          >
+            CMJ
+          </button>
+          <button
+            className={`type-btn ${jumpType === 'dropjump' ? 'active' : ''}`}
+            onClick={() => onJumpTypeChange('dropjump')}
+            title="Drop Jump"
+          >
+            Drop Jump
+          </button>
+        </div>
+
+        <label className="debug-toggle">
+          <input
+            type="checkbox"
+            checked={enableDebug}
+            onChange={(e) => onEnableDebugChange(e.target.checked)}
+          />
+          <span className="toggle-label">Generate Overlay</span>
+        </label>
+      </div>
+
+      {/* 2. Unified Action Zone */}
+      <div className={`drop-zone-container ${file ? 'has-file' : ''}`}>
         <div
           className={`upload-drop-zone ${isDragging ? 'dragging' : ''}`}
           onDragOver={handleDragOver}
@@ -112,24 +142,34 @@ function UploadForm({
           onDrop={handleDrop}
         >
           <input
-            id="video-upload"
             type="file"
             accept="video/*"
             onChange={handleFileChange}
-            disabled={loading}
             className="file-input"
+            disabled={loading}
+            data-testid="file-input"
+            ref={fileInputRef} // Assign the ref to the input
           />
-          <div className="drop-hint">
-            {isDragging ? (
-              <p>Drop your video file here</p>
-            ) : (
-              <>
-                <p>Drag and drop your video file here</p>
-                <p className="or-text">or</p>
-                <p className="click-text">Click to browse</p>
-              </>
-            )}
-          </div>
+
+          {!file ? (
+            <div className="empty-state">
+              <div className="upload-icon">⏏</div>
+              <p>Drag analysis video here</p>
+              <span className="sub-text">or click to browse (max 500MB)</span>
+            </div>
+          ) : (
+            <div className="file-ready-state">
+              <div className="file-preview-icon">🎬</div>
+              <div className="file-details">
+                <span className="filename">{file.name}</span>
+                <span className="filesize">{(file.size / 1024 / 1024).toFixed(1)} MB</span>
+              </div>
+              <button className="change-file-btn" onClick={() => {
+                onFileChange(null);
+                if (fileInputRef.current) fileInputRef.current.value = ''; // Reset file input using ref
+              }}>Change</button>
+            </div>
+          )}
         </div>
 
         {validationError && (
@@ -138,67 +178,25 @@ function UploadForm({
           </div>
         )}
 
-        {file && (
-          <div className="file-info">
-            <span>✓ {file.name}</span>
-            <span className="file-size">
-              ({(file.size / 1024 / 1024).toFixed(1)} MB)
-            </span>
-          </div>
-        )}
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="jump-type">Jump Type</label>
-        <select
-          id="jump-type"
-          value={jumpType}
-          onChange={(e) => onJumpTypeChange(e.target.value as 'cmj' | 'dropjump')}
-          disabled={loading}
+        {/* 3. Primary Action attached to the file */}
+        <button
+          className="analyze-hero-button"
+          onClick={onAnalyze}
+          disabled={!file || loading}
         >
-          <option value="cmj">Counter Movement Jump (CMJ)</option>
-          <option value="dropjump">Drop Jump</option>
-        </select>
+          {loading ? (
+            <span className="loading-pulse">Analyzing...</span>
+          ) : (
+            <>Run Analysis <span className="arrow">→</span></>
+          )}
+        </button>
       </div>
-
-      <div className="form-group checkbox-group">
-        <label htmlFor="enable-debug" className="checkbox-label">
-          <input
-            id="enable-debug"
-            type="checkbox"
-            checked={enableDebug}
-            onChange={(e) => onEnableDebugChange(e.target.checked)}
-            disabled={loading}
-            className="checkbox-input"
-          />
-          <span>Enable debug video overlay</span>
-        </label>
-        <p className="checkbox-hint">
-          {enableDebug
-            ? 'Debug video will be generated and available for download (~4-5 min slower)'
-            : 'Results only (faster analysis ~20 seconds)'}
-        </p>
-      </div>
-
-      <button
-        className="analyze-button"
-        onClick={onAnalyze}
-        disabled={!file || loading}
-      >
-        {loading ? 'Analyzing...' : 'Analyze Video'}
-      </button>
 
       <RecentUploads
         uploads={recentUploads}
         onSelect={handleSelectRecentUpload}
         onClear={onClearHistory || (() => {})}
       />
-
-      <div className="info-text">
-        <p>Supported formats: MP4, MOV, AVI</p>
-        <p>Max file size: 500MB</p>
-        <p>Analysis typically takes 10-60 seconds</p>
-      </div>
     </div>
   )
 }

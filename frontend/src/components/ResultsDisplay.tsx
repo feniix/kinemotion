@@ -12,9 +12,14 @@ interface MetricCardProps {
   description?: string
   trend?: 'neutral' | 'positive' | 'negative'
   highlight?: boolean
+  large?: boolean
 }
 
-function MetricCard({ label, value, unit, description, highlight = false }: MetricCardProps) {
+interface FormattedMetric extends MetricCardProps {
+  key: string
+}
+
+function MetricCard({ label, value, unit, description, highlight = false, large = false }: MetricCardProps) {
   return (
     <div className={`metric-card ${highlight ? 'highlight' : ''}`} title={description}>
       <div className="metric-card-header">
@@ -22,8 +27,41 @@ function MetricCard({ label, value, unit, description, highlight = false }: Metr
         {description && <span className="info-icon" title={description}>ⓘ</span>}
       </div>
       <div className="metric-card-value">
-        <span className="value-text">{value}</span>
+        <span className={`value-text ${large ? 'large' : ''}`}>{value}</span>
         <span className="value-unit">{unit}</span>
+      </div>
+    </div>
+  )
+}
+
+interface PhaseCardProps {
+  title: string
+  metrics: Array<FormattedMetric | null>
+}
+
+function PhaseCard({ title, metrics }: PhaseCardProps) {
+  const validMetrics = metrics.filter((m): m is FormattedMetric => m !== null)
+
+  if (validMetrics.length === 0) return null
+
+  return (
+    <div className="phase-card">
+      <div className="phase-header">
+        <span>{title}</span>
+      </div>
+      <div className="phase-metrics">
+        {validMetrics.map((m) => {
+          const { key, ...props } = m
+          return (
+            <div key={key} className="metric-compact" title={props.description}>
+              <span className="label">{props.label}</span>
+              <div>
+                <span className="value">{props.value}</span>
+                <span className="unit">{props.unit}</span>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -37,7 +75,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
   const hasErrors = validationIssues.some(issue => issue.severity === 'ERROR')
 
   // Helper to safely get and format a metric
-  const getMetric = (keyPatterns: string[], asCm = false) => {
+  const getMetric = (keyPatterns: string[], asCm = false, labelOverride?: string): FormattedMetric | null => {
     // Find the first matching key in the data
     const key = keyPatterns.find(k => k in metricsData)
     if (!key) return null
@@ -62,57 +100,97 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
 
     return {
       key,
+      label: labelOverride || key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '), // Simple fallback label
       value: formattedValue,
       unit: asCm ? 'cm' : (metadata.unit || ''),
       description: metadata.description || ''
     }
   }
 
+  const renderMetricCard = (metric: FormattedMetric | null, props: Partial<MetricCardProps> = {}) => {
+    if (!metric) return null
+    const { key, ...rest } = metric
+    return <MetricCard key={key} {...rest} {...props} />
+  }
+
   // Determine Jump Type context based on available metrics
   const isDropJump = 'ground_contact_time_ms' in metricsData || 'reactive_strength_index' in metricsData
 
-  // Define Key Metrics based on jump type
-  const renderKeyMetrics = () => {
-    const cards = []
+  // --- Render Logic ---
 
+  const renderScoreboard = () => {
     if (isDropJump) {
-      const rsi = getMetric(['reactive_strength_index'])
-      if (rsi) cards.push(<MetricCard key="rsi" label="RSI" value={rsi.value} unit={rsi.unit} description={rsi.description} highlight />)
+      const rsi = getMetric(['reactive_strength_index'], false, 'RSI')
+      const height = getMetric(['jump_height_m', 'jump_height'], true, 'Height')
+      const gct = getMetric(['ground_contact_time_ms', 'ground_contact_time'], false, 'Contact Time')
 
-      const height = getMetric(['jump_height_m', 'jump_height'], true)
-      if (height) cards.push(<MetricCard key="height" label="Jump Height" value={height.value} unit={height.unit} description={height.description} highlight />)
-
-      const gct = getMetric(['ground_contact_time_ms', 'ground_contact_time'])
-      if (gct) cards.push(<MetricCard key="gct" label="Ground Contact" value={gct.value} unit={gct.unit} description={gct.description} />)
-
-      const ft = getMetric(['flight_time_ms', 'flight_time'])
-      if (ft) cards.push(<MetricCard key="ft" label="Flight Time" value={ft.value} unit={ft.unit} description={ft.description} />)
+      return (
+        <div className="kpi-grid">
+          {renderMetricCard(rsi, { highlight: true, large: true })}
+          {renderMetricCard(height)}
+          {renderMetricCard(gct)}
+        </div>
+      )
     } else {
       // CMJ
-      const height = getMetric(['jump_height_m', 'jump_height'], true)
-      if (height) cards.push(<MetricCard key="height" label="Jump Height" value={height.value} unit={height.unit} description={height.description} highlight />)
+      const height = getMetric(['jump_height_m', 'jump_height'], true, 'Jump Height')
+      const velocity = getMetric(['peak_concentric_velocity_m_s', 'takeoff_velocity_mps'], false, 'Peak Velocity')
+      const power = getMetric(['peak_power_w', 'peak_power'], false, 'Peak Power')
 
-      const velocity = getMetric(['peak_concentric_velocity_m_s', 'takeoff_velocity_mps'])
-      if (velocity) cards.push(<MetricCard key="vel" label="Peak Velocity" value={velocity.value} unit={velocity.unit} description={velocity.description} />)
-
-      const depth = getMetric(['countermovement_depth_m', 'countermovement_depth'], true)
-      if (depth) cards.push(<MetricCard key="depth" label="Squat Depth" value={depth.value} unit={depth.unit} description={depth.description} />)
-
-      const totalTime = getMetric(['total_movement_time_ms'])
-      if (totalTime) cards.push(<MetricCard key="total" label="Total Time" value={totalTime.value} unit={totalTime.unit} description={totalTime.description} />)
+      return (
+        <div className="kpi-grid">
+          {renderMetricCard(height, { highlight: true, large: true })}
+          {renderMetricCard(velocity)}
+          {renderMetricCard(power)}
+        </div>
+      )
     }
-
-    return cards
   }
 
-  // Render secondary metrics in a grid
+  const renderTimeline = () => {
+    // Phase 1: Preparation / Loading (Eccentric)
+    const loadingMetrics = [
+      getMetric(['countermovement_depth_m', 'countermovement_depth'], true, 'Depth'),
+      getMetric(['eccentric_duration_ms', 'eccentric_duration'], false, 'Duration'),
+      getMetric(['peak_eccentric_velocity_m_s'], false, 'Peak Vel'),
+    ]
+
+    // Phase 2: Explosion / Propulsion (Concentric)
+    const explosionMetrics = [
+      getMetric(['peak_concentric_velocity_m_s', 'takeoff_velocity_mps'], false, 'Peak Vel'),
+      getMetric(['concentric_duration_ms', 'concentric_duration'], false, 'Duration'),
+      getMetric(['peak_force_n'], false, 'Peak Force'),
+    ]
+
+    // Phase 3: Outcome (Flight & Landing)
+    const outcomeMetrics = [
+      getMetric(['flight_time_ms', 'flight_time'], false, 'Air Time'),
+      getMetric(['jump_height_m', 'jump_height'], true, 'Height'),
+      getMetric(['landing_force_normalized'], false, 'Landing Impact'),
+    ]
+
+    return (
+      <div className="jump-timeline">
+        <PhaseCard key="loading-phase" title="Loading (Eccentric)" metrics={loadingMetrics} />
+        <div className="arrow">→</div>
+        <PhaseCard key="explosion-phase" title="Explosion (Concentric)" metrics={explosionMetrics} />
+        <div className="arrow">→</div>
+        <PhaseCard key="outcome-phase" title="Outcome (Flight)" metrics={outcomeMetrics} />
+      </div>
+    )
+  }
+
+  // Render secondary metrics in a grid (everything else)
   const renderDetails = () => {
     const excludeKeys = new Set([
-      'reactive_strength_index', 'jump_height', 'jump_height_m',
+      'reactive_strength_index', 'jump_height', 'jump_height_m', 'jump_height_cm',
       'ground_contact_time', 'ground_contact_time_ms',
-      'flight_time', 'flight_time_ms',
-      'peak_concentric_velocity_m_s', 'countermovement_depth_m', 'countermovement_depth',
-      'tracking_method' // Hide metadata
+      'flight_time', 'flight_time_ms', 'flight_time_s',
+      'peak_concentric_velocity_m_s', 'takeoff_velocity_mps',
+      'countermovement_depth_m', 'countermovement_depth', 'countermovement_depth_cm',
+      'eccentric_duration_ms', 'concentric_duration_ms',
+      'tracking_method', 'peak_eccentric_velocity_m_s', 'landing_force_normalized',
+      'peak_force_n'
     ])
 
     return Object.entries(metricsData)
@@ -149,41 +227,6 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
         </div>
       </div>
 
-      {videoFile && (
-        <div className="video-preview-container">
-          <h3 className="section-subtitle">Original Video</h3>
-          <video
-            src={URL.createObjectURL(videoFile)}
-            controls
-            className="analysis-video-player"
-            playsInline
-          />
-        </div>
-      )}
-
-      {metrics.debug_video_url && (
-        <div className="video-preview-container debug-video">
-          <h3 className="section-subtitle">Analysis Overlay</h3>
-          <video
-            src={metrics.debug_video_url}
-            controls
-            className="analysis-video-player"
-            playsInline
-          />
-          <div className="video-actions">
-            <a
-              href={metrics.debug_video_url}
-              download={`analysis_${new Date().toISOString()}.mp4`}
-              className="download-link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Download Overlay Video
-            </a>
-          </div>
-        </div>
-      )}
-
       {validationStatus && (
         <div className={`validation-banner ${validationStatus.toLowerCase()}`}>
           <div className="validation-header">
@@ -205,13 +248,63 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
         </div>
       )}
 
+      {/* 1. The Scoreboard (Hero Metrics) */}
       <div className="metrics-dashboard">
         <h3 className="section-title">Key Performance Indicators</h3>
-        <div className="kpi-grid">
-          {renderKeyMetrics()}
-        </div>
+        {renderScoreboard()}
+      </div>
 
-        <h3 className="section-title">Detailed Breakdown</h3>
+      {/* 2. The Phase Timeline */}
+      <div className="metrics-dashboard">
+        <h3 className="section-title">Jump Phase Analysis</h3>
+        {renderTimeline()}
+      </div>
+
+      {/* 3. Video Previews (Split view if debug video exists) */}
+      <div className="metrics-dashboard" style={{ display: 'grid', gridTemplateColumns: metrics.debug_video_url ? '1fr 1fr' : '1fr', gap: '2rem' }}>
+        {videoFile && (
+          <div className="video-preview-container">
+            <video
+              src={URL.createObjectURL(videoFile)}
+              controls
+              className="analysis-video-player"
+              playsInline
+              title="Original Video"
+            />
+          </div>
+        )}
+
+        {metrics.debug_video_url && (
+          <div className="video-preview-container debug-video">
+            <video
+              src={metrics.debug_video_url}
+              controls
+              className="analysis-video-player"
+              playsInline
+              title="Analysis Overlay"
+            />
+          </div>
+        )}
+      </div>
+
+      {metrics.debug_video_url && (
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+           <a
+              href={metrics.debug_video_url}
+              download={`analysis_${new Date().toISOString()}.mp4`}
+              className="download-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'var(--primary-color)', fontWeight: 500 }}
+            >
+              Download Analysis Video
+            </a>
+        </div>
+      )}
+
+      {/* 4. Detailed Breakdown */}
+      <div className="metrics-dashboard">
+        <h3 className="section-title">Additional Metrics</h3>
         <div className="details-grid">
           {renderDetails()}
         </div>

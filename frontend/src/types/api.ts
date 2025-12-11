@@ -113,6 +113,10 @@ export const METRIC_METADATA: Record<string, MetricMetadata> = {
     unit: 'ms',
     description: 'Total time for countermovement and jump',
   },
+  peak_power_w: {
+    unit: 'W',
+    description: 'Maximum power output during the jump',
+  },
   peak_eccentric_velocity_m_s: {
     unit: 'm/s',
     description: 'Maximum velocity during the downward phase',
