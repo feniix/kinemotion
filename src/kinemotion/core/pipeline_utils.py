@@ -1,4 +1,4 @@
-"""Shared pipeline utilities for kinematic analysis."""
+"Shared pipeline utilities for kinematic analysis."
 
 from collections.abc import Callable
 from concurrent.futures import ProcessPoolExecutor, as_completed
@@ -140,6 +140,44 @@ def print_verbose_parameters(
     print("=" * 60 + "\n")
 
 
+def _process_frames_loop(
+    video: VideoProcessor,
+    tracker: PoseTracker,
+    step: int,
+    should_resize: bool,
+    debug_w: int,
+    debug_h: int,
+) -> tuple[list, list, list]:
+    """Internal loop for processing frames to reduce complexity."""
+    landmarks_sequence = []
+    debug_frames = []
+    frame_indices = []
+    frame_idx = 0
+
+    while True:
+        frame = video.read_frame()
+        if frame is None:
+            break
+
+        landmarks = tracker.process_frame(frame)
+        landmarks_sequence.append(landmarks)
+
+        if frame_idx % step == 0:
+            if should_resize:
+                processed_frame = cv2.resize(
+                    frame, (debug_w, debug_h), interpolation=cv2.INTER_LINEAR
+                )
+            else:
+                processed_frame = frame
+
+            debug_frames.append(processed_frame)
+            frame_indices.append(frame_idx)
+
+        frame_idx += 1
+
+    return debug_frames, landmarks_sequence, frame_indices
+
+
 def process_all_frames(
     video: VideoProcessor,
     tracker: PoseTracker,
@@ -169,10 +207,6 @@ def process_all_frames(
     if verbose:
         print("Tracking pose landmarks...")
 
-    landmarks_sequence = []
-    debug_frames = []
-    frame_indices = []
-
     step = max(1, int(video.fps / target_debug_fps))
 
     w, h = video.display_width, video.display_height
@@ -184,51 +218,15 @@ def process_all_frames(
     debug_h = int(h * scale) // 2 * 2
     should_resize = (debug_w != video.width) or (debug_h != video.height)
 
-    frame_idx = 0
-
     if timer:
         with timer.measure("pose_tracking"):
-            while True:
-                frame = video.read_frame()
-                if frame is None:
-                    break
-
-                landmarks = tracker.process_frame(frame)
-                landmarks_sequence.append(landmarks)
-
-                if frame_idx % step == 0:
-                    if should_resize:
-                        processed_frame = cv2.resize(
-                            frame, (debug_w, debug_h), interpolation=cv2.INTER_LINEAR
-                        )
-                    else:
-                        processed_frame = frame
-
-                    debug_frames.append(processed_frame)
-                    frame_indices.append(frame_idx)
-
-                frame_idx += 1
+            debug_frames, landmarks_sequence, frame_indices = _process_frames_loop(
+                video, tracker, step, should_resize, debug_w, debug_h
+            )
     else:
-        while True:
-            frame = video.read_frame()
-            if frame is None:
-                break
-
-            landmarks = tracker.process_frame(frame)
-            landmarks_sequence.append(landmarks)
-
-            if frame_idx % step == 0:
-                if should_resize:
-                    processed_frame = cv2.resize(
-                        frame, (debug_w, debug_h), interpolation=cv2.INTER_LINEAR
-                    )
-                else:
-                    processed_frame = frame
-
-                debug_frames.append(processed_frame)
-                frame_indices.append(frame_idx)
-
-            frame_idx += 1
+        debug_frames, landmarks_sequence, frame_indices = _process_frames_loop(
+            video, tracker, step, should_resize, debug_w, debug_h
+        )
 
     if close_tracker:
         tracker.close()
@@ -256,22 +254,19 @@ def apply_smoothing(
     Returns:
         Smoothed landmarks sequence
     """
-    if params.outlier_rejection or params.bilateral_filter:
-        if verbose:
+    use_advanced = params.outlier_rejection or params.bilateral_filter
+
+    if verbose:
+        if use_advanced:
             if params.outlier_rejection:
                 print("Smoothing landmarks with outlier rejection...")
             if params.bilateral_filter:
                 print("Using bilateral temporal filter...")
-        if timer:
-            with timer.measure("smoothing"):
-                return smooth_landmarks_advanced(
-                    landmarks_sequence,
-                    window_length=params.smoothing_window,
-                    polyorder=params.polyorder,
-                    use_outlier_rejection=params.outlier_rejection,
-                    use_bilateral=params.bilateral_filter,
-                )
         else:
+            print("Smoothing landmarks...")
+
+    def _run_smoothing() -> list:
+        if use_advanced:
             return smooth_landmarks_advanced(
                 landmarks_sequence,
                 window_length=params.smoothing_window,
@@ -279,22 +274,17 @@ def apply_smoothing(
                 use_outlier_rejection=params.outlier_rejection,
                 use_bilateral=params.bilateral_filter,
             )
-    else:
-        if verbose:
-            print("Smoothing landmarks...")
-        if timer:
-            with timer.measure("smoothing"):
-                return smooth_landmarks(
-                    landmarks_sequence,
-                    window_length=params.smoothing_window,
-                    polyorder=params.polyorder,
-                )
         else:
             return smooth_landmarks(
                 landmarks_sequence,
                 window_length=params.smoothing_window,
                 polyorder=params.polyorder,
             )
+
+    if timer:
+        with timer.measure("smoothing"):
+            return _run_smoothing()
+    return _run_smoothing()
 
 
 def calculate_foot_visibility(frame_landmarks: dict) -> float:
