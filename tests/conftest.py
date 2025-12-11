@@ -22,20 +22,22 @@ def cli_runner() -> CliRunner:
     return CliRunner(mix_stderr=False)
 
 
-@pytest.fixture
-def minimal_video(tmp_path: Path) -> Path:
+@pytest.fixture(scope="session")
+def minimal_video(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """Create minimal test video for CLI testing.
 
     Generates a 1-second video (30 frames at 30fps) with black frames.
     Suitable for testing CLI argument parsing and basic video handling.
+    Created once per session to improve test speed.
 
     Args:
-        tmp_path: Pytest's temporary directory fixture
+        tmp_path_factory: Pytest's session-scoped temporary directory fixture
 
     Returns:
         Path to the generated test video file
     """
-    video_path = tmp_path / "test.mp4"
+    video_dir = tmp_path_factory.mktemp("video_data")
+    video_path = video_dir / "test.mp4"
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
     out = cv2.VideoWriter(str(video_path), fourcc, 30.0, (640, 480))
 
@@ -48,21 +50,23 @@ def minimal_video(tmp_path: Path) -> Path:
     return video_path
 
 
-@pytest.fixture
-def sample_video_path(tmp_path: Path) -> str:
+@pytest.fixture(scope="session")
+def sample_video_path(tmp_path_factory: pytest.TempPathFactory) -> str:
     """Create a minimal synthetic video for API testing.
 
     Generates a 1-second video with a moving white circle pattern.
     The motion pattern allows for basic pose detection attempts,
     though detection may not succeed with synthetic data.
+    Created once per session to improve test speed.
 
     Args:
-        tmp_path: Pytest's temporary directory fixture
+        tmp_path_factory: Pytest's session-scoped temporary directory fixture
 
     Returns:
         String path to the generated test video file
     """
-    video_path = tmp_path / "test_video.mp4"
+    video_dir = tmp_path_factory.mktemp("api_video_data")
+    video_path = video_dir / "test_video.mp4"
 
     # Create a simple test video (30 frames at 30fps = 1 second)
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")

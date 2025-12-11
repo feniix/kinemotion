@@ -18,6 +18,7 @@ import pytest
 from click.testing import CliRunner
 
 from kinemotion.cmj.cli import cmj_analyze
+from kinemotion.cmj.kinematics import CMJMetrics
 
 pytestmark = [
     pytest.mark.integration,
@@ -37,6 +38,58 @@ skip_in_ci = pytest.mark.skipif(
 # cli_runner and minimal_video fixtures moved to tests/conftest.py
 
 
+@pytest.fixture
+def mock_cmj_metrics() -> CMJMetrics:
+    """Create a dummy CMJMetrics object."""
+    return CMJMetrics(
+        jump_height=0.4,
+        flight_time=0.5,
+        countermovement_depth=0.3,
+        eccentric_duration=0.4,
+        concentric_duration=0.3,
+        total_movement_time=0.7,
+        peak_eccentric_velocity=-2.0,
+        peak_concentric_velocity=2.5,
+        transition_time=0.1,
+        standing_start_frame=10.0,
+        lowest_point_frame=20.0,
+        takeoff_frame=30.0,
+        landing_frame=45.0,
+        video_fps=30.0,
+        tracking_method="foot",
+    )
+
+
+@pytest.fixture
+def mock_cmj_api(mock_cmj_metrics: CMJMetrics):
+    """Mock process_cmj_video to avoid real analysis."""
+    with patch("kinemotion.cmj.cli.process_cmj_video") as mock:
+
+        def side_effect(
+            video_path,
+            output_video=None,
+            json_output=None,
+            **kwargs,
+        ):
+            # Create dummy output files if requested
+            if output_video:
+                Path(output_video).parent.mkdir(parents=True, exist_ok=True)
+                with open(output_video, "wb") as f:
+                    f.write(b"fake video content")
+
+            if json_output:
+                Path(json_output).parent.mkdir(parents=True, exist_ok=True)
+                # Write minimal valid JSON to satisfy tests that read it
+                with open(json_output, "w") as f:
+                    json.dump(mock_cmj_metrics.to_dict(), f)
+
+            return mock_cmj_metrics
+
+        mock.side_effect = side_effect
+        yield mock
+
+
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLIHelp:
     """Test help text accessibility."""
 
@@ -78,6 +131,7 @@ class TestCMJCLIErrors:
         assert result.exit_code != 0
 
 
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLIFileOperations:
     """Test file creation behavior."""
 
@@ -111,8 +165,9 @@ class TestCMJCLIFileOperations:
 
             # Test keys exist, not their values (which may be None)
             assert isinstance(data, dict)
-            assert "jump_height_m" in data
-            assert "flight_time_ms" in data
+            assert "data" in data
+            assert "jump_height_m" in data["data"]
+            assert "flight_time_ms" in data["data"]
 
     def test_debug_video_output_created(
         self, cli_runner: CliRunner, minimal_video: Path, tmp_path: Path
@@ -135,6 +190,7 @@ class TestCMJCLIFileOperations:
             assert debug_output.stat().st_size > 0
 
 
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLIOptions:
     """Test option parsing and acceptance."""
 
@@ -172,6 +228,7 @@ class TestCMJCLIOptions:
         assert "invalid" not in result.output.lower() or result.exit_code == 0
 
 
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLIBasicExecution:
     """Test basic command execution."""
 
@@ -221,6 +278,7 @@ class TestCMJCLIBasicExecution:
 # Tier 2: Advanced features
 
 
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLIBatchMode:
     """Test batch processing features."""
 
@@ -386,6 +444,7 @@ class TestCMJCLIBatchMode:
 # Tier 3: Error handling and edge cases
 
 
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLICollectVideoFiles:
     """Test video file collection edge cases."""
 
@@ -518,6 +577,7 @@ class TestCMJCLIExceptionHandling:
         assert result.exception is None or result.exit_code != 0
 
 
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLIOutputResults:
     """Test output formatting and file creation."""
 
@@ -579,6 +639,7 @@ class TestCMJCLIOutputResults:
             assert any(metric in result.output for metric in metrics)
 
 
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLIQualityPresets:
     """Test quality preset handling."""
 
@@ -605,6 +666,7 @@ class TestCMJCLIQualityPresets:
         assert result.exit_code != 0
 
 
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLIExpertParameters:
     """Test expert parameter validation and usage."""
 
@@ -660,6 +722,7 @@ class TestCMJCLIExpertParameters:
         assert result.exception is None or result.exit_code != 0
 
 
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLIMultipleVideos:
     """Test handling of multiple video arguments."""
 
@@ -729,6 +792,7 @@ class TestCMJCLIWarnings:
         assert result.exception is None or result.exit_code != 0
 
 
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLIDirectFilePath:
     """Test direct file path handling (not glob pattern)."""
 
@@ -772,6 +836,7 @@ class TestCMJCLIDirectFilePath:
         assert result.exception is None or result.exit_code != 0
 
 
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLINullOutputResults:
     """Test output results function with various metrics."""
 
@@ -804,6 +869,7 @@ class TestCMJCLINullOutputResults:
             assert len(result.output) > 0
 
 
+@pytest.mark.usefixtures("mock_cmj_api")
 class TestCMJCLIBatchExceptionContinuation:
     """Test batch processing error continuation."""
 
@@ -867,10 +933,11 @@ class TestCMJCLISingleProcessingException:
         invalid_video.write_text("not a video")
 
         result = cli_runner.invoke(
-            cmj_analyze, [str(invalid_video), "--verbose", "--quality", "fast"]
+            cmj_analyze,
+            [str(invalid_video), "--verbose", "--quality", "fast"],
         )
 
-        # Should fail and may show traceback
+        # Should fail with non-zero exit code in verbose mode
         assert result.exit_code != 0
 
     def test_single_processing_api_exception(

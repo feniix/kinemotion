@@ -10,13 +10,16 @@ These tests use maintainable patterns:
 import json
 import os
 from pathlib import Path
+from unittest.mock import patch
 
 import cv2
 import numpy as np
 import pytest
 from click.testing import CliRunner
 
+from kinemotion.api import DropJumpVideoResult
 from kinemotion.dropjump.cli import dropjump_analyze
+from kinemotion.dropjump.kinematics import DropJumpMetrics
 
 # Skip batch/multiprocessing tests in CI
 # MediaPipe doesn't work with ProcessPoolExecutor in headless environments
@@ -29,6 +32,103 @@ skip_in_ci = pytest.mark.skipif(
 # cli_runner and minimal_video fixtures moved to tests/conftest.py
 
 
+@pytest.fixture
+def mock_dropjump_metrics() -> DropJumpMetrics:
+    """Create a dummy DropJumpMetrics object."""
+    metrics = DropJumpMetrics()
+    metrics.ground_contact_time = 0.2
+    metrics.flight_time = 0.5
+    metrics.jump_height = 0.3
+    metrics.jump_height_kinematic = 0.3
+    metrics.jump_height_trajectory_m = 0.3
+    metrics.drop_start_frame = 10
+    metrics.contact_start_frame = 20
+    metrics.contact_end_frame = 26
+    metrics.flight_start_frame = 26
+    metrics.flight_end_frame = 41
+    metrics.peak_height_frame = 33
+    return metrics
+
+
+@pytest.fixture
+def mock_dropjump_api(mock_dropjump_metrics: DropJumpMetrics):
+    """Mock process_dropjump_video and bulk processing to avoid real analysis."""
+    # Mock for single video processing
+    with (
+        patch("kinemotion.dropjump.cli.process_dropjump_video") as mock_single,
+        patch("kinemotion.dropjump.cli.process_dropjump_videos_bulk") as mock_bulk,
+    ):
+
+        def single_side_effect(
+            video_path,
+            output_video=None,
+            json_output=None,
+            **kwargs,
+        ):
+            # Create dummy output files if requested
+            if output_video:
+                Path(output_video).parent.mkdir(parents=True, exist_ok=True)
+                with open(output_video, "wb") as f:
+                    f.write(b"fake video content")
+
+            if json_output:
+                Path(json_output).parent.mkdir(parents=True, exist_ok=True)
+                # Write minimal valid JSON to satisfy tests that read it
+                with open(json_output, "w") as f:
+                    # Manually construct dict since to_dict might need metadata
+                    data = {
+                        "data": {
+                            "ground_contact_time_ms": 200.0,
+                            "flight_time_ms": 500.0,
+                            "jump_height_m": 0.3,
+                        },
+                        "metadata": {},
+                    }
+                    json.dump(data, f)
+
+            return mock_dropjump_metrics
+
+        mock_single.side_effect = single_side_effect
+
+        def bulk_side_effect(configs, max_workers=None, progress_callback=None):
+            results = []
+            for config in configs:
+                # Create dummy outputs for each config
+                if config.output_video:
+                    Path(config.output_video).parent.mkdir(parents=True, exist_ok=True)
+                    with open(config.output_video, "wb") as f:
+                        f.write(b"fake video content")
+
+                if config.json_output:
+                    Path(config.json_output).parent.mkdir(parents=True, exist_ok=True)
+                    with open(config.json_output, "w") as f:
+                        data = {
+                            "data": {
+                                "ground_contact_time_ms": 200.0,
+                                "flight_time_ms": 500.0,
+                                "jump_height_m": 0.3,
+                            },
+                            "metadata": {},
+                        }
+                        json.dump(data, f)
+
+                result = DropJumpVideoResult(
+                    video_path=config.video_path,
+                    success=True,
+                    metrics=mock_dropjump_metrics,
+                    processing_time=0.1,
+                )
+                results.append(result)
+                if progress_callback:
+                    progress_callback(result)
+            return results
+
+        mock_bulk.side_effect = bulk_side_effect
+
+        yield (mock_single, mock_bulk)
+
+
+@pytest.mark.usefixtures("mock_dropjump_api")
 class TestDropJumpCLIHelp:
     """Test help text accessibility."""
 
@@ -70,6 +170,7 @@ class TestDropJumpCLIErrors:
         assert result.exit_code != 0
 
 
+@pytest.mark.usefixtures("mock_dropjump_api")
 class TestDropJumpCLIFileOperations:
     """Test file creation behavior."""
 
@@ -129,6 +230,7 @@ class TestDropJumpCLIFileOperations:
         assert debug_output.stat().st_size > 0
 
 
+@pytest.mark.usefixtures("mock_dropjump_api")
 class TestDropJumpCLIOptions:
     """Test option parsing and acceptance."""
 
@@ -168,6 +270,7 @@ class TestDropJumpCLIOptions:
         assert "invalid" not in result.output.lower() or result.exit_code == 0
 
 
+@pytest.mark.usefixtures("mock_dropjump_api")
 class TestDropJumpCLIBasicExecution:
     """Test basic command execution."""
 
@@ -216,6 +319,7 @@ class TestDropJumpCLIBasicExecution:
 # Tier 2: Advanced features
 
 
+@pytest.mark.usefixtures("mock_dropjump_api")
 class TestDropJumpCLIBatchMode:
     """Test batch processing features."""
 
