@@ -55,7 +55,7 @@ class Tracer:  # Dummy for type hints if actual Tracer is not available
 
 
 if _otel_tracer_class:
-    Tracer = _otel_tracer_class  # Override dummy if actual Tracer is available
+    Tracer = _otel_tracer_class  # type: ignore # Override dummy if actual Tracer is available
 
 # This _OPENTELEMETRY_AVAILABLE variable is assigned only once,
 # after the try-except block
