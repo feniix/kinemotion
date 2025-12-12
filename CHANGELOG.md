@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.47.2 (2025-12-12)
+
+### Bug Fixes
+
+- **telemetry**: Use structlog for robust error handling
+  ([`0c66c5f`](https://github.com/feniix/kinemotion/commit/0c66c5f486c4f034e5833ee0016d37fc31e9240d))
+
+### Documentation
+
+- Update CLAUDE.md with test count and coverage improvements
+  ([`1132324`](https://github.com/feniix/kinemotion/commit/1132324fe9bfe907bc6850397fd5370668b1bfa6))
+
+### Refactoring
+
+- Reduce cognitive complexity across validation, kinematics, and API
+  ([`04a88cb`](https://github.com/feniix/kinemotion/commit/04a88cbcec3b52bf1767e9647627b839ca842ecf))
+
+
 ## v0.47.1 (2025-12-12)
 
 ### Bug Fixes
