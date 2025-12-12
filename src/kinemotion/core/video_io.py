@@ -7,7 +7,7 @@ import warnings
 import cv2
 import numpy as np
 
-from .timing import PerformanceTimer
+from .timing import NULL_TIMER, Timer
 
 
 class VideoProcessor:
@@ -18,16 +18,16 @@ class VideoProcessor:
     No dimensions are hardcoded - all dimensions are extracted from actual frame data.
     """
 
-    def __init__(self, video_path: str, timer: PerformanceTimer | None = None) -> None:
+    def __init__(self, video_path: str, timer: Timer | None = None) -> None:
         """
         Initialize video processor.
 
         Args:
             video_path: Path to input video file
-            timer: Optional PerformanceTimer for measuring operations
+            timer: Optional Timer for measuring operations
         """
         self.video_path = video_path
-        self.timer = timer
+        self.timer = timer or NULL_TIMER
         self.cap = cv2.VideoCapture(video_path)
 
         if not self.cap.isOpened():
@@ -179,28 +179,14 @@ class VideoProcessor:
         OpenCV ignores rotation metadata, so we manually apply rotation
         based on the display matrix metadata extracted from the video.
         """
-        if self.timer:
-            with self.timer.measure("frame_read"):
-                ret, frame = self.cap.read()
-        else:
+        with self.timer.measure("frame_read"):
             ret, frame = self.cap.read()
 
         if not ret:
             return None
 
         # Apply rotation if video has rotation metadata
-        if self.timer:
-            with self.timer.measure("frame_rotation"):
-                if self.rotation == -90 or self.rotation == 270:
-                    # -90 degrees = rotate 90 degrees clockwise
-                    frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
-                elif self.rotation == 90 or self.rotation == -270:
-                    # 90 degrees = rotate 90 degrees counter-clockwise
-                    frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
-                elif self.rotation == 180 or self.rotation == -180:
-                    # 180 degrees rotation
-                    frame = cv2.rotate(frame, cv2.ROTATE_180)
-        else:
+        with self.timer.measure("frame_rotation"):
             if self.rotation == -90 or self.rotation == 270:
                 # -90 degrees = rotate 90 degrees clockwise
                 frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)

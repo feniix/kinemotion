@@ -9,6 +9,7 @@ from .filtering import (
     bilateral_temporal_filter,
     reject_outliers,
 )
+from .timing import NULL_TIMER, Timer
 
 # Type aliases for landmark data structures
 LandmarkCoord: TypeAlias = tuple[float, float, float]  # (x, y, visibility)
@@ -347,6 +348,7 @@ def smooth_landmarks_advanced(
     ransac_threshold: float = 0.02,
     bilateral_sigma_spatial: float = 3.0,
     bilateral_sigma_intensity: float = 0.02,
+    timer: Timer | None = None,
 ) -> LandmarkSequence:
     """
     Advanced landmark smoothing with outlier rejection and bilateral filtering.
@@ -365,10 +367,12 @@ def smooth_landmarks_advanced(
         ransac_threshold: Threshold for RANSAC outlier detection
         bilateral_sigma_spatial: Spatial sigma for bilateral filter
         bilateral_sigma_intensity: Intensity sigma for bilateral filter
+        timer: Optional Timer for measuring operations
 
     Returns:
         Smoothed landmark sequence with same structure as input
     """
+    timer = timer or NULL_TIMER
     if len(landmark_sequence) < window_length:
         return landmark_sequence
 
@@ -382,37 +386,40 @@ def smooth_landmarks_advanced(
 
         # Step 1: Outlier rejection
         if use_outlier_rejection:
-            x_array, _ = reject_outliers(
-                x_array,
-                use_ransac=True,
-                use_median=True,
-                ransac_threshold=ransac_threshold,
-            )
-            y_array, _ = reject_outliers(
-                y_array,
-                use_ransac=True,
-                use_median=True,
-                ransac_threshold=ransac_threshold,
-            )
+            with timer.measure("smoothing_outlier_rejection"):
+                x_array, _ = reject_outliers(
+                    x_array,
+                    use_ransac=True,
+                    use_median=True,
+                    ransac_threshold=ransac_threshold,
+                )
+                y_array, _ = reject_outliers(
+                    y_array,
+                    use_ransac=True,
+                    use_median=True,
+                    ransac_threshold=ransac_threshold,
+                )
 
         # Step 2: Smoothing (bilateral or Savitzky-Golay)
         if use_bilateral:
-            x_smooth = bilateral_temporal_filter(
-                x_array,
-                window_size=window_length,
-                sigma_spatial=bilateral_sigma_spatial,
-                sigma_intensity=bilateral_sigma_intensity,
-            )
-            y_smooth = bilateral_temporal_filter(
-                y_array,
-                window_size=window_length,
-                sigma_spatial=bilateral_sigma_spatial,
-                sigma_intensity=bilateral_sigma_intensity,
-            )
+            with timer.measure("smoothing_bilateral"):
+                x_smooth = bilateral_temporal_filter(
+                    x_array,
+                    window_size=window_length,
+                    sigma_spatial=bilateral_sigma_spatial,
+                    sigma_intensity=bilateral_sigma_intensity,
+                )
+                y_smooth = bilateral_temporal_filter(
+                    y_array,
+                    window_size=window_length,
+                    sigma_spatial=bilateral_sigma_spatial,
+                    sigma_intensity=bilateral_sigma_intensity,
+                )
         else:
             # Standard Savitzky-Golay
-            x_smooth = savgol_filter(x_array, window_length, polyorder)
-            y_smooth = savgol_filter(y_array, window_length, polyorder)
+            with timer.measure("smoothing_savgol"):
+                x_smooth = savgol_filter(x_array, window_length, polyorder)
+                y_smooth = savgol_filter(y_array, window_length, polyorder)
 
         return x_smooth, y_smooth
 

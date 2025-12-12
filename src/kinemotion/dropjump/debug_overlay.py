@@ -138,10 +138,7 @@ class DebugOverlayRenderer(BaseDebugOverlayRenderer):
         Returns:
             Frame with debug overlay
         """
-        if self.timer:
-            with self.timer.measure("debug_video_copy"):
-                annotated = frame.copy()
-        else:
+        with self.timer.measure("debug_video_copy"):
             annotated = frame.copy()
 
         def _draw_overlays() -> None:
@@ -181,10 +178,7 @@ class DebugOverlayRenderer(BaseDebugOverlayRenderer):
             if metrics:
                 self._draw_phase_labels(annotated, frame_idx, metrics)
 
-        if self.timer:
-            with self.timer.measure("debug_video_draw"):
-                _draw_overlays()
-        else:
+        with self.timer.measure("debug_video_draw"):
             _draw_overlays()
 
         return annotated

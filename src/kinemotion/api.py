@@ -39,7 +39,7 @@ from .core.pipeline_utils import (
 )
 from .core.pose import PoseTracker
 from .core.quality import assess_jump_quality
-from .core.timing import PerformanceTimer
+from .core.timing import NULL_TIMER, PerformanceTimer, Timer
 from .core.video_io import VideoProcessor
 from .dropjump.analysis import (
     detect_ground_contact,
@@ -86,7 +86,7 @@ def _generate_debug_video(
     smoothed_landmarks: list,
     contact_states: list,
     metrics: DropJumpMetrics,
-    timer: PerformanceTimer | None,
+    timer: Timer | None,
     verbose: bool,
 ) -> None:
     """Generate debug video with overlay."""
@@ -96,6 +96,7 @@ def _generate_debug_video(
     if not frames:
         return
 
+    timer = timer or NULL_TIMER
     debug_h, debug_w = frames[0].shape[:2]
 
     if video_fps > 30:
@@ -129,11 +130,7 @@ def _generate_debug_video(
         timer=timer,
     )
 
-    if timer:
-        with timer.measure("debug_video_generation"):
-            with renderer_context as renderer:
-                _render_frames(renderer)
-    else:
+    with timer.measure("debug_video_generation"):
         with renderer_context as renderer:
             _render_frames(renderer)
 
@@ -154,7 +151,7 @@ def process_dropjump_video(
     detection_confidence: float | None = None,
     tracking_confidence: float | None = None,
     verbose: bool = False,
-    timer: PerformanceTimer | None = None,
+    timer: Timer | None = None,
     pose_tracker: "PoseTracker | None" = None,
 ) -> DropJumpMetrics:
     """
@@ -175,7 +172,7 @@ def process_dropjump_video(
         detection_confidence: Optional override for pose detection confidence
         tracking_confidence: Optional override for pose tracking confidence
         verbose: Print processing details
-        timer: Optional PerformanceTimer for measuring operations
+        timer: Optional Timer for measuring operations
         pose_tracker: Optional pre-initialized PoseTracker instance (reused if provided)
 
     Returns:
@@ -263,6 +260,7 @@ def process_dropjump_video(
                     visibilities=visibilities,
                     window_length=params.smoothing_window,
                     polyorder=params.polyorder,
+                    timer=timer,
                 )
 
             if verbose:
@@ -277,6 +275,7 @@ def process_dropjump_video(
                     smoothing_window=params.smoothing_window,
                     polyorder=params.polyorder,
                     use_curvature=params.use_curvature,
+                    timer=timer,
                 )
 
             if verbose:
@@ -391,13 +390,7 @@ def process_dropjump_video(
             metrics.result_metadata = result_metadata
 
             if json_output:
-                if timer:
-                    with timer.measure("json_serialization"):
-                        output_path = Path(json_output)
-                        metrics_dict = metrics.to_dict()
-                        json_str = json.dumps(metrics_dict, indent=2)
-                        output_path.write_text(json_str)
-                else:
+                with timer.measure("json_serialization"):
                     output_path = Path(json_output)
                     metrics_dict = metrics.to_dict()
                     json_str = json.dumps(metrics_dict, indent=2)
@@ -528,7 +521,7 @@ def process_cmj_video(
     detection_confidence: float | None = None,
     tracking_confidence: float | None = None,
     verbose: bool = False,
-    timer: PerformanceTimer | None = None,
+    timer: Timer | None = None,
     pose_tracker: "PoseTracker | None" = None,
 ) -> CMJMetrics:
     """
@@ -550,7 +543,7 @@ def process_cmj_video(
         detection_confidence: Optional override for pose detection confidence
         tracking_confidence: Optional override for pose tracking confidence
         verbose: Print processing details
-        timer: Optional PerformanceTimer for measuring operations
+        timer: Optional Timer for measuring operations
         pose_tracker: Optional pre-initialized PoseTracker instance (reused if provided)
 
     Returns:
@@ -644,6 +637,7 @@ def process_cmj_video(
                     window_length=params.smoothing_window,
                     polyorder=params.polyorder,
                     landing_positions=foot_positions,
+                    timer=timer,
                 )
 
             if phases is None:
@@ -738,23 +732,7 @@ def process_cmj_video(
                 step = max(1, int(video.fps / 30.0))
                 debug_fps = video.fps / step
 
-                if timer:
-                    with timer.measure("debug_video_generation"):
-                        with CMJDebugOverlayRenderer(
-                            output_video,
-                            debug_w,
-                            debug_h,
-                            debug_w,
-                            debug_h,
-                            debug_fps,
-                            timer=timer,
-                        ) as renderer:
-                            for frame, idx in zip(frames, frame_indices, strict=True):
-                                annotated = renderer.render_frame(
-                                    frame, smoothed_landmarks[idx], idx, metrics
-                                )
-                                renderer.write_frame(annotated)
-                else:
+                with timer.measure("debug_video_generation"):
                     with CMJDebugOverlayRenderer(
                         output_video,
                         debug_w,
@@ -799,13 +777,7 @@ def process_cmj_video(
             metrics.result_metadata = result_metadata
 
             if json_output:
-                if timer:
-                    with timer.measure("json_serialization"):
-                        output_path = Path(json_output)
-                        metrics_dict = metrics.to_dict()
-                        json_str = json.dumps(metrics_dict, indent=2)
-                        output_path.write_text(json_str)
-                else:
+                with timer.measure("json_serialization"):
                     output_path = Path(json_output)
                     metrics_dict = metrics.to_dict()
                     json_str = json.dumps(metrics_dict, indent=2)

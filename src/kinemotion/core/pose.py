@@ -4,7 +4,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 
-from .timing import PerformanceTimer
+from .timing import NULL_TIMER, Timer
 
 
 class PoseTracker:
@@ -14,7 +14,7 @@ class PoseTracker:
         self,
         min_detection_confidence: float = 0.5,
         min_tracking_confidence: float = 0.5,
-        timer: PerformanceTimer | None = None,
+        timer: Timer | None = None,
     ) -> None:
         """
         Initialize the pose tracker.
@@ -22,9 +22,9 @@ class PoseTracker:
         Args:
             min_detection_confidence: Minimum confidence for pose detection
             min_tracking_confidence: Minimum confidence for pose tracking
-            timer: Optional PerformanceTimer for measuring operations
+            timer: Optional Timer for measuring operations
         """
-        self.timer = timer
+        self.timer = timer or NULL_TIMER
         self.mp_pose = mp.solutions.pose
         self.pose = self.mp_pose.Pose(
             static_image_mode=False,  # Use tracking mode for better performance
@@ -47,42 +47,41 @@ class PoseTracker:
             or None if no pose detected. Coordinates are normalized (0-1).
         """
         # Convert BGR to RGB
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        with self.timer.measure("frame_conversion"):
+            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # Process the frame
-        if self.timer:
-            with self.timer.measure("mediapipe_inference"):
-                results = self.pose.process(rgb_frame)
-        else:
+        with self.timer.measure("mediapipe_inference"):
             results = self.pose.process(rgb_frame)
 
         if not results.pose_landmarks:
             return None
 
         # Extract key landmarks for feet tracking and CoM estimation
-        landmarks = {}
-        landmark_names = {
-            # Feet landmarks
-            self.mp_pose.PoseLandmark.LEFT_ANKLE: "left_ankle",
-            self.mp_pose.PoseLandmark.RIGHT_ANKLE: "right_ankle",
-            self.mp_pose.PoseLandmark.LEFT_HEEL: "left_heel",
-            self.mp_pose.PoseLandmark.RIGHT_HEEL: "right_heel",
-            self.mp_pose.PoseLandmark.LEFT_FOOT_INDEX: "left_foot_index",
-            self.mp_pose.PoseLandmark.RIGHT_FOOT_INDEX: "right_foot_index",
-            # Torso landmarks for CoM estimation
-            self.mp_pose.PoseLandmark.LEFT_HIP: "left_hip",
-            self.mp_pose.PoseLandmark.RIGHT_HIP: "right_hip",
-            self.mp_pose.PoseLandmark.LEFT_SHOULDER: "left_shoulder",
-            self.mp_pose.PoseLandmark.RIGHT_SHOULDER: "right_shoulder",
-            # Additional landmarks for better CoM estimation
-            self.mp_pose.PoseLandmark.NOSE: "nose",
-            self.mp_pose.PoseLandmark.LEFT_KNEE: "left_knee",
-            self.mp_pose.PoseLandmark.RIGHT_KNEE: "right_knee",
-        }
+        with self.timer.measure("landmark_extraction"):
+            landmarks = {}
+            landmark_names = {
+                # Feet landmarks
+                self.mp_pose.PoseLandmark.LEFT_ANKLE: "left_ankle",
+                self.mp_pose.PoseLandmark.RIGHT_ANKLE: "right_ankle",
+                self.mp_pose.PoseLandmark.LEFT_HEEL: "left_heel",
+                self.mp_pose.PoseLandmark.RIGHT_HEEL: "right_heel",
+                self.mp_pose.PoseLandmark.LEFT_FOOT_INDEX: "left_foot_index",
+                self.mp_pose.PoseLandmark.RIGHT_FOOT_INDEX: "right_foot_index",
+                # Torso landmarks for CoM estimation
+                self.mp_pose.PoseLandmark.LEFT_HIP: "left_hip",
+                self.mp_pose.PoseLandmark.RIGHT_HIP: "right_hip",
+                self.mp_pose.PoseLandmark.LEFT_SHOULDER: "left_shoulder",
+                self.mp_pose.PoseLandmark.RIGHT_SHOULDER: "right_shoulder",
+                # Additional landmarks for better CoM estimation
+                self.mp_pose.PoseLandmark.NOSE: "nose",
+                self.mp_pose.PoseLandmark.LEFT_KNEE: "left_knee",
+                self.mp_pose.PoseLandmark.RIGHT_KNEE: "right_knee",
+            }
 
-        for landmark_id, name in landmark_names.items():
-            lm = results.pose_landmarks.landmark[landmark_id]
-            landmarks[name] = (lm.x, lm.y, lm.visibility)
+            for landmark_id, name in landmark_names.items():
+                lm = results.pose_landmarks.landmark[landmark_id]
+                landmarks[name] = (lm.x, lm.y, lm.visibility)
 
         return landmarks
 

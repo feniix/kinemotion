@@ -12,7 +12,7 @@ from ..dropjump.analysis import compute_average_foot_position
 from .auto_tuning import AnalysisParameters, QualityPreset, VideoCharacteristics
 from .pose import PoseTracker
 from .smoothing import smooth_landmarks, smooth_landmarks_advanced
-from .timing import PerformanceTimer
+from .timing import NULL_TIMER, Timer
 from .video_io import VideoProcessor
 
 TResult = TypeVar("TResult")
@@ -182,7 +182,7 @@ def process_all_frames(
     video: VideoProcessor,
     tracker: PoseTracker,
     verbose: bool,
-    timer: PerformanceTimer | None = None,
+    timer: Timer | None = None,
     close_tracker: bool = True,
     target_debug_fps: float = 30.0,
     max_debug_dim: int = 720,
@@ -193,7 +193,7 @@ def process_all_frames(
         video: Video processor to read frames from
         tracker: Pose tracker for landmark detection
         verbose: Print progress messages
-        timer: Optional PerformanceTimer for measuring operations
+        timer: Optional Timer for measuring operations
         close_tracker: Whether to close the tracker after processing (default: True)
         target_debug_fps: Target FPS for debug video (default: 30.0)
         max_debug_dim: Max dimension for debug video frames (default: 720)
@@ -207,6 +207,7 @@ def process_all_frames(
     if verbose:
         print("Tracking pose landmarks...")
 
+    timer = timer or NULL_TIMER
     step = max(1, int(video.fps / target_debug_fps))
 
     w, h = video.display_width, video.display_height
@@ -218,12 +219,7 @@ def process_all_frames(
     debug_h = int(h * scale) // 2 * 2
     should_resize = (debug_w != video.width) or (debug_h != video.height)
 
-    if timer:
-        with timer.measure("pose_tracking"):
-            debug_frames, landmarks_sequence, frame_indices = _process_frames_loop(
-                video, tracker, step, should_resize, debug_w, debug_h
-            )
-    else:
+    with timer.measure("pose_tracking"):
         debug_frames, landmarks_sequence, frame_indices = _process_frames_loop(
             video, tracker, step, should_resize, debug_w, debug_h
         )
@@ -241,7 +237,7 @@ def apply_smoothing(
     landmarks_sequence: list,
     params: AnalysisParameters,
     verbose: bool,
-    timer: PerformanceTimer | None = None,
+    timer: Timer | None = None,
 ) -> list:
     """Apply smoothing to landmark sequence with auto-tuned parameters.
 
@@ -249,11 +245,12 @@ def apply_smoothing(
         landmarks_sequence: Sequence of landmarks from all frames
         params: Auto-tuned parameters containing smoothing settings
         verbose: Print progress messages
-        timer: Optional PerformanceTimer for measuring operations
+        timer: Optional Timer for measuring operations
 
     Returns:
         Smoothed landmarks sequence
     """
+    timer = timer or NULL_TIMER
     use_advanced = params.outlier_rejection or params.bilateral_filter
 
     if verbose:
@@ -273,6 +270,7 @@ def apply_smoothing(
                 polyorder=params.polyorder,
                 use_outlier_rejection=params.outlier_rejection,
                 use_bilateral=params.bilateral_filter,
+                timer=timer,
             )
         else:
             return smooth_landmarks(
@@ -281,10 +279,8 @@ def apply_smoothing(
                 polyorder=params.polyorder,
             )
 
-    if timer:
-        with timer.measure("smoothing"):
-            return _run_smoothing()
-    return _run_smoothing()
+    with timer.measure("smoothing"):
+        return _run_smoothing()
 
 
 def calculate_foot_visibility(frame_landmarks: dict) -> float:
@@ -341,7 +337,7 @@ def convert_timer_to_stage_names(
     """Convert timer metric names to human-readable stage names.
 
     Args:
-        timer_metrics: Dictionary from PerformanceTimer.get_metrics()
+        timer_metrics: Dictionary from Timer.get_metrics()
 
     Returns:
         Dictionary with human-readable stage names as keys
@@ -366,6 +362,24 @@ def convert_timer_to_stage_names(
         "debug_video_copy": "Debug video frame copy",
         "debug_video_draw": "Debug video drawing",
         "debug_video_write": "Debug video encoding",
+        # Granular metrics
+        "frame_conversion": "Frame BGR-RGB conversion",
+        "mediapipe_inference": "MediaPipe inference",
+        "landmark_extraction": "Landmark extraction",
+        "smoothing_outlier_rejection": "Smoothing (outlier rejection)",
+        "smoothing_bilateral": "Smoothing (bilateral)",
+        "smoothing_savgol": "Smoothing (Savitzky-Golay)",
+        "cmj_compute_derivatives": "CMJ derivatives computation",
+        "cmj_find_takeoff": "CMJ takeoff detection",
+        "cmj_find_lowest_point": "CMJ lowest point detection",
+        "cmj_find_landing": "CMJ landing detection",
+        "cmj_find_standing_end": "CMJ standing end detection",
+        "dj_compute_velocity": "DJ velocity computation",
+        "dj_find_contact_frames": "DJ contact frame search",
+        "dj_detect_drop_start": "DJ drop start detection",
+        "dj_find_phases": "DJ phase finding",
+        "dj_identify_contact": "DJ contact identification",
+        "dj_analyze_flight": "DJ flight analysis",
     }
     return {mapping.get(k, k): v for k, v in timer_metrics.items()}
 

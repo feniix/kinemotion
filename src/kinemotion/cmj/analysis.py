@@ -7,6 +7,7 @@ from scipy.signal import savgol_filter
 
 from ..core.experimental import unused
 from ..core.smoothing import compute_acceleration_from_derivative
+from ..core.timing import NULL_TIMER, Timer
 
 
 def compute_signed_velocity(
@@ -545,6 +546,7 @@ def detect_cmj_phases(
     window_length: int = 5,
     polyorder: int = 2,
     landing_positions: np.ndarray | None = None,
+    timer: Timer | None = None,
 ) -> tuple[float | None, float, float, float] | None:
     """
     Detect all phases of a counter movement jump using a simplified, robust approach.
@@ -562,18 +564,22 @@ def detect_cmj_phases(
         polyorder: Polynomial order for Savitzky-Golay filter
         landing_positions: Optional array of positions for landing detection
             (e.g., Feet). If None, uses `positions` (Hips) for landing too.
+        timer: Optional Timer for measuring operations
 
     Returns:
         Tuple of (standing_end_frame, lowest_point_frame, takeoff_frame, landing_frame)
         with fractional precision, or None if phases cannot be detected.
     """
+    timer = timer or NULL_TIMER
+
     # Compute SIGNED velocities and accelerations for primary signal (Hips)
-    velocities = compute_signed_velocity(
-        positions, window_length=window_length, polyorder=polyorder
-    )
-    accelerations = compute_acceleration_from_derivative(
-        positions, window_length=window_length, polyorder=polyorder
-    )
+    with timer.measure("cmj_compute_derivatives"):
+        velocities = compute_signed_velocity(
+            positions, window_length=window_length, polyorder=polyorder
+        )
+        accelerations = compute_acceleration_from_derivative(
+            positions, window_length=window_length, polyorder=polyorder
+        )
 
     # Step 1: Find peak height (global minimum y = highest point in frame)
     peak_height_frame = int(np.argmin(positions))
@@ -581,34 +587,42 @@ def detect_cmj_phases(
         return None  # Peak too early, invalid
 
     # Step 2-4: Find all phases using helper functions
-    takeoff_frame = find_takeoff_frame(velocities, peak_height_frame, fps)
-    lowest_point = find_lowest_frame(velocities, positions, takeoff_frame, fps)
+    with timer.measure("cmj_find_takeoff"):
+        takeoff_frame = find_takeoff_frame(velocities, peak_height_frame, fps)
+
+    with timer.measure("cmj_find_lowest_point"):
+        lowest_point = find_lowest_frame(velocities, positions, takeoff_frame, fps)
 
     # Determine landing frame
-    if landing_positions is not None:
-        # Use specific landing signal (Feet) for landing detection
-        landing_velocities = compute_signed_velocity(
-            landing_positions, window_length=window_length, polyorder=polyorder
-        )
-        landing_accelerations = compute_acceleration_from_derivative(
-            landing_positions, window_length=window_length, polyorder=polyorder
-        )
-        # We still reference peak_height_frame from Hips, as Feet peak
-        # might be different/noisy but generally they align in time.
-        landing_frame = find_landing_frame(
-            landing_accelerations,
-            landing_velocities,
-            peak_height_frame,
-            fps,
-        )
-    else:
-        # Use primary signal (Hips)
-        landing_frame = find_landing_frame(
-            accelerations,
-            velocities,
-            peak_height_frame,
-            fps,
+    with timer.measure("cmj_find_landing"):
+        if landing_positions is not None:
+            # Use specific landing signal (Feet) for landing detection
+            landing_velocities = compute_signed_velocity(
+                landing_positions, window_length=window_length, polyorder=polyorder
+            )
+            landing_accelerations = compute_acceleration_from_derivative(
+                landing_positions, window_length=window_length, polyorder=polyorder
+            )
+            # We still reference peak_height_frame from Hips, as Feet peak
+            # might be different/noisy but generally they align in time.
+            landing_frame = find_landing_frame(
+                landing_accelerations,
+                landing_velocities,
+                peak_height_frame,
+                fps,
+            )
+        else:
+            # Use primary signal (Hips)
+            landing_frame = find_landing_frame(
+                accelerations,
+                velocities,
+                peak_height_frame,
+                fps,
+            )
+
+    with timer.measure("cmj_find_standing_end"):
+        standing_end = find_standing_end(
+            velocities, lowest_point, positions, accelerations
         )
 
-    standing_end = find_standing_end(velocities, lowest_point, positions, accelerations)
     return (standing_end, lowest_point, takeoff_frame, landing_frame)

@@ -26,7 +26,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from kinemotion.api import process_cmj_video, process_dropjump_video
 from kinemotion.core.pose import PoseTracker
-from kinemotion.core.timing import PerformanceTimer
+from kinemotion.core.timing import PerformanceTimer, Timer
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 
@@ -434,7 +434,7 @@ async def _process_video_async(
     jump_type: JumpType,
     quality: str = "balanced",
     output_video: str | None = None,
-    timer: PerformanceTimer | None = None,
+    timer: Timer | None = None,
     pose_tracker: "PoseTracker | None" = None,
 ) -> dict[str, Any]:
     """Process video and return metrics.
@@ -444,7 +444,7 @@ async def _process_video_async(
         jump_type: Type of jump analysis
         quality: Analysis quality preset
         output_video: Optional path for debug video output
-        timer: Optional PerformanceTimer for measuring operations
+        timer: Optional Timer for measuring operations
         pose_tracker: Optional shared PoseTracker instance
 
     Returns:

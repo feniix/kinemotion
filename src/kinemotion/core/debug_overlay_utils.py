@@ -10,7 +10,7 @@ from typing import Self
 import cv2
 import numpy as np
 
-from .timing import PerformanceTimer
+from .timing import NULL_TIMER, Timer
 
 
 def create_video_writer(
@@ -107,7 +107,7 @@ class BaseDebugOverlayRenderer:
         display_width: int,
         display_height: int,
         fps: float,
-        timer: PerformanceTimer | None = None,
+        timer: Timer | None = None,
     ):
         """
         Initialize overlay renderer.
@@ -119,12 +119,12 @@ class BaseDebugOverlayRenderer:
             display_width: Display width (considering SAR)
             display_height: Display height (considering SAR)
             fps: Frames per second
-            timer: Optional PerformanceTimer for measuring operations
+            timer: Optional Timer for measuring operations
         """
         self.output_path = output_path
         self.width = width
         self.height = height
-        self.timer = timer
+        self.timer = timer or NULL_TIMER
 
         # Optimize debug video resolution: Cap max dimension to 720p
         # Reduces software encoding time on single-core Cloud Run instances.
@@ -166,26 +166,14 @@ class BaseDebugOverlayRenderer:
 
         # Resize to display dimensions if needed (to handle SAR)
         if self.needs_resize:
-            if self.timer:
-                with self.timer.measure("debug_video_resize"):
-                    frame = cv2.resize(
-                        frame,
-                        (self.display_width, self.display_height),
-                        interpolation=cv2.INTER_LINEAR,
-                    )
-            else:
+            with self.timer.measure("debug_video_resize"):
                 frame = cv2.resize(
                     frame,
                     (self.display_width, self.display_height),
                     interpolation=cv2.INTER_LINEAR,
                 )
 
-        if self.timer:
-            with self.timer.measure("debug_video_write"):
-                write_overlay_frame(
-                    self.writer, frame, self.display_width, self.display_height
-                )
-        else:
+        with self.timer.measure("debug_video_write"):
             write_overlay_frame(
                 self.writer, frame, self.display_width, self.display_height
             )

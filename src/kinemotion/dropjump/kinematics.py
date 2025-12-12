@@ -7,6 +7,7 @@ from numpy.typing import NDArray
 
 from ..core.formatting import format_float_metric, format_int_metric
 from ..core.smoothing import compute_acceleration_from_derivative
+from ..core.timing import NULL_TIMER, Timer
 from .analysis import (
     ContactState,
     detect_drop_start,
@@ -433,6 +434,7 @@ def calculate_drop_jump_metrics(
     smoothing_window: int = 5,
     polyorder: int = 2,
     use_curvature: bool = True,
+    timer: Timer | None = None,
 ) -> DropJumpMetrics:
     """
     Calculate drop-jump metrics from contact states and positions.
@@ -450,16 +452,19 @@ def calculate_drop_jump_metrics(
             (must be odd)
         polyorder: Polynomial order for Savitzky-Golay filter (default: 2)
         use_curvature: Whether to use curvature analysis for refining transitions
+        timer: Optional Timer for measuring operations
 
     Returns:
         DropJumpMetrics object with calculated values
     """
+    timer = timer or NULL_TIMER
     metrics = DropJumpMetrics()
 
     # Determine drop start frame
-    drop_start_frame_value = _determine_drop_start_frame(
-        drop_start_frame, foot_y_positions, fps, smoothing_window
-    )
+    with timer.measure("dj_detect_drop_start"):
+        drop_start_frame_value = _determine_drop_start_frame(
+            drop_start_frame, foot_y_positions, fps, smoothing_window
+        )
 
     # Store drop start frame in metrics
     metrics.drop_start_frame = (
@@ -467,15 +472,16 @@ def calculate_drop_jump_metrics(
     )
 
     # Find contact phases
-    phases = find_contact_phases(contact_states)
-    interpolated_phases = find_interpolated_phase_transitions_with_curvature(
-        foot_y_positions,
-        contact_states,
-        velocity_threshold,
-        smoothing_window,
-        polyorder,
-        use_curvature,
-    )
+    with timer.measure("dj_find_phases"):
+        phases = find_contact_phases(contact_states)
+        interpolated_phases = find_interpolated_phase_transitions_with_curvature(
+            foot_y_positions,
+            contact_states,
+            velocity_threshold,
+            smoothing_window,
+            polyorder,
+            use_curvature,
+        )
 
     if not phases:
         return metrics
@@ -504,9 +510,10 @@ def calculate_drop_jump_metrics(
         return metrics
 
     # Identify main contact phase
-    contact_start, contact_end, _ = _identify_main_contact_phase(
-        phases, ground_phases, air_phases_indexed, foot_y_positions
-    )
+    with timer.measure("dj_identify_contact"):
+        contact_start, contact_end, _ = _identify_main_contact_phase(
+            phases, ground_phases, air_phases_indexed, foot_y_positions
+        )
 
     # Store integer frame indices
     metrics.contact_start_frame = contact_start
@@ -524,15 +531,16 @@ def calculate_drop_jump_metrics(
     metrics.contact_end_frame_precise = contact_end_frac
 
     # Analyze flight phase and calculate jump height
-    _analyze_flight_phase(
-        metrics,
-        phases,
-        interpolated_phases,
-        contact_end,
-        foot_y_positions,
-        fps,
-        smoothing_window,
-        polyorder,
-    )
+    with timer.measure("dj_analyze_flight"):
+        _analyze_flight_phase(
+            metrics,
+            phases,
+            interpolated_phases,
+            contact_end,
+            foot_y_positions,
+            fps,
+            smoothing_window,
+            polyorder,
+        )
 
     return metrics

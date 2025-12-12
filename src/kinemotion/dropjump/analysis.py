@@ -10,6 +10,7 @@ from ..core.smoothing import (
     compute_velocity_from_derivative,
     interpolate_threshold_crossing,
 )
+from ..core.timing import NULL_TIMER, Timer
 
 
 class ContactState(Enum):
@@ -345,6 +346,7 @@ def detect_ground_contact(
     visibilities: np.ndarray | None = None,
     window_length: int = 5,
     polyorder: int = 2,
+    timer: Timer | None = None,
 ) -> list[ContactState]:
     """
     Detect when feet are in contact with ground based on vertical motion.
@@ -361,19 +363,22 @@ def detect_ground_contact(
         visibilities: Array of visibility scores for each frame
         window_length: Window size for velocity derivative calculation (must be odd)
         polyorder: Polynomial order for Savitzky-Golay filter (default: 2)
+        timer: Optional Timer for measuring operations
 
     Returns:
         List of ContactState for each frame
     """
+    timer = timer or NULL_TIMER
     n_frames = len(foot_positions)
 
     if n_frames < 2:
         return [ContactState.UNKNOWN] * n_frames
 
     # Compute vertical velocity using derivative-based method
-    velocities = compute_velocity_from_derivative(
-        foot_positions, window_length=window_length, polyorder=polyorder
-    )
+    with timer.measure("dj_compute_velocity"):
+        velocities = compute_velocity_from_derivative(
+            foot_positions, window_length=window_length, polyorder=polyorder
+        )
 
     # Detect stationary frames based on velocity threshold
     is_stationary = np.abs(velocities) < velocity_threshold
@@ -384,7 +389,8 @@ def detect_ground_contact(
     )
 
     # Find frames with sustained contact
-    contact_frames = _find_contact_frames(is_stationary, min_contact_frames)
+    with timer.measure("dj_find_contact_frames"):
+        contact_frames = _find_contact_frames(is_stationary, min_contact_frames)
 
     # Assign states
     return _assign_contact_states(
