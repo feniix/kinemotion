@@ -89,7 +89,6 @@ def _assess_dropjump_quality(
     visibilities: "NDArray",
     contact_states: list,
     fps: float,
-    timer: Timer,
 ) -> tuple:
     """Assess tracking quality and detect phases.
 
@@ -428,7 +427,7 @@ def process_dropjump_video(
                 print("Assessing tracking quality...")
             with timer.measure("quality_assessment"):
                 quality_result, _, _, _ = _assess_dropjump_quality(
-                    vertical_positions, visibilities, contact_states, video.fps, timer
+                    vertical_positions, visibilities, contact_states, video.fps
                 )
 
             if verbose and quality_result.warnings:
