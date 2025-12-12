@@ -6,13 +6,14 @@ from dataclasses import dataclass
 
 import click
 
-from ..api import CMJMetrics, process_cmj_video
 from ..core.auto_tuning import QualityPreset
 from ..core.cli_utils import (
     collect_video_files,
     common_output_options,
     generate_batch_output_paths,
 )
+from .api import process_cmj_video
+from .kinematics import CMJMetrics
 
 
 @dataclass

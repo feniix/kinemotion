@@ -24,9 +24,7 @@ from .smoothing import (
 )
 from .timing import (
     NULL_TIMER,
-    CompositeTimer,
     NullTimer,
-    OpenTelemetryTimer,
     PerformanceTimer,
     Timer,
 )
@@ -59,8 +57,6 @@ __all__ = [
     "Timer",
     "NullTimer",
     "NULL_TIMER",
-    "CompositeTimer",
-    "OpenTelemetryTimer",
     # Video I/O
     "VideoProcessor",
 ]
