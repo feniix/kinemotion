@@ -7,10 +7,15 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import numpy as np
+from numpy.typing import NDArray
+
 if TYPE_CHECKING:
     pass
 
 from ..core.auto_tuning import (
+    AnalysisParameters,
+    QualityPreset,
     analyze_video_sample,
     auto_tune_parameters,
 )
@@ -37,13 +42,170 @@ from ..core.pipeline_utils import (
     process_videos_bulk_generic,
 )
 from ..core.pose import PoseTracker
-from ..core.quality import assess_jump_quality
+from ..core.quality import QualityAssessment, assess_jump_quality
 from ..core.timing import PerformanceTimer, Timer
+from ..core.validation import ValidationResult
 from ..core.video_io import VideoProcessor
 from .analysis import compute_signed_velocity, detect_cmj_phases
 from .debug_overlay import CMJDebugOverlayRenderer
 from .kinematics import CMJMetrics, calculate_cmj_metrics
 from .metrics_validator import CMJMetricsValidator
+
+
+def _generate_debug_video(
+    output_video: str,
+    frames: list[NDArray[np.uint8]],
+    frame_indices: list[int],
+    smoothed_landmarks: list,
+    metrics: CMJMetrics,
+    video_fps: float,
+    timer: Timer,
+    verbose: bool,
+) -> None:
+    """Generate debug video with CMJ analysis overlay."""
+    if verbose:
+        print(f"Generating debug video: {output_video}")
+
+    debug_h, debug_w = frames[0].shape[:2]
+    step = max(1, int(video_fps / 30.0))
+    debug_fps = video_fps / step
+
+    with timer.measure("debug_video_generation"):
+        with CMJDebugOverlayRenderer(
+            output_video,
+            debug_w,
+            debug_h,
+            debug_w,
+            debug_h,
+            debug_fps,
+            timer=timer,
+        ) as renderer:
+            for frame, idx in zip(frames, frame_indices, strict=True):
+                annotated = renderer.render_frame(
+                    frame, smoothed_landmarks[idx], idx, metrics
+                )
+                renderer.write_frame(annotated)
+
+    if verbose:
+        print(f"Debug video saved: {output_video}")
+
+
+def _save_metrics_to_json(
+    metrics: CMJMetrics, json_output: str, timer: Timer, verbose: bool
+) -> None:
+    """Save metrics to JSON file."""
+    with timer.measure("json_serialization"):
+        output_path = Path(json_output)
+        metrics_dict = metrics.to_dict()
+        json_str = json.dumps(metrics_dict, indent=2)
+        output_path.write_text(json_str)
+
+    if verbose:
+        print(f"Metrics written to: {json_output}")
+
+
+def _print_timing_summary(start_time: float, timer: Timer, metrics: CMJMetrics) -> None:
+    """Print verbose timing summary and metrics."""
+    total_time = time.time() - start_time
+    stage_times = convert_timer_to_stage_names(timer.get_metrics())
+
+    print("\n=== Timing Summary ===")
+    for stage, duration in stage_times.items():
+        percentage = (duration / total_time) * 100
+        dur_ms = duration * 1000
+        print(f"{stage:. <40} {dur_ms:>6.0f}ms ({percentage:>5.1f}%)")
+    total_ms = total_time * 1000
+    print(f"{('Total'):.>40} {total_ms:>6.0f}ms (100.0%)")
+    print()
+
+    print(f"\nJump height: {metrics.jump_height:.3f}m")
+    print(f"Flight time: {metrics.flight_time * 1000:.1f}ms")
+    print(f"Countermovement depth: {metrics.countermovement_depth:.3f}m")
+
+
+def _print_quality_warnings(quality_result: QualityAssessment, verbose: bool) -> None:
+    """Print quality warnings if present."""
+    if verbose and quality_result.warnings:
+        print("\n⚠️  Quality Warnings:")
+        for warning in quality_result.warnings:
+            print(f"  - {warning}")
+        print()
+
+
+def _print_validation_results(
+    validation_result: ValidationResult, verbose: bool
+) -> None:
+    """Print validation issues if present."""
+    if verbose and validation_result.issues:
+        print("\n⚠️  Validation Results:")
+        for issue in validation_result.issues:
+            print(f"  [{issue.severity.value}] {issue.metric}: {issue.message}")
+
+
+def _create_algorithm_config(params: AnalysisParameters) -> AlgorithmConfig:
+    """Create algorithm configuration from parameters."""
+    return AlgorithmConfig(
+        detection_method="backward_search",
+        tracking_method="mediapipe_pose",
+        model_complexity=1,
+        smoothing=SmoothingConfig(
+            window_size=params.smoothing_window,
+            polynomial_order=params.polyorder,
+            use_bilateral_filter=params.bilateral_filter,
+            use_outlier_rejection=params.outlier_rejection,
+        ),
+        detection=DetectionConfig(
+            velocity_threshold=params.velocity_threshold,
+            min_contact_frames=params.min_contact_frames,
+            visibility_threshold=params.visibility_threshold,
+            use_curvature_refinement=params.use_curvature,
+        ),
+        drop_detection=None,
+    )
+
+
+def _create_video_info(video_path: str, video: VideoProcessor) -> VideoInfo:
+    """Create video information metadata."""
+    return VideoInfo(
+        source_path=video_path,
+        fps=video.fps,
+        width=video.width,
+        height=video.height,
+        duration_s=video.frame_count / video.fps,
+        frame_count=video.frame_count,
+        codec=video.codec,
+    )
+
+
+def _create_processing_info(
+    start_time: float, quality_preset: QualityPreset, timer: Timer
+) -> ProcessingInfo:
+    """Create processing information metadata."""
+    processing_time = time.time() - start_time
+    stage_times = convert_timer_to_stage_names(timer.get_metrics())
+
+    return ProcessingInfo(
+        version=get_kinemotion_version(),
+        timestamp=create_timestamp(),
+        quality_preset=quality_preset.value,
+        processing_time_s=processing_time,
+        timing_breakdown=stage_times,
+    )
+
+
+def _create_result_metadata(
+    quality_result: QualityAssessment,
+    video_info: VideoInfo,
+    processing_info: ProcessingInfo,
+    algorithm_config: AlgorithmConfig,
+) -> ResultMetadata:
+    """Create result metadata from components."""
+    return ResultMetadata(
+        quality=quality_result,
+        video=video_info,
+        processing=processing_info,
+        algorithm=algorithm_config,
+    )
 
 
 @dataclass
@@ -121,9 +283,7 @@ def process_cmj_video(
         raise FileNotFoundError(f"Video file not found: {video_path}")
 
     start_time = time.time()
-    if timer is None:
-        timer = PerformanceTimer()
-
+    timer = timer or PerformanceTimer()
     quality_preset = parse_quality_preset(quality)
 
     with timer.measure("video_initialization"):
@@ -141,16 +301,12 @@ def process_cmj_video(
             if verbose:
                 print("Processing all frames with MediaPipe pose tracking...")
 
-            tracker = pose_tracker
-            should_close_tracker = False
-
-            if tracker is None:
-                tracker = PoseTracker(
-                    min_detection_confidence=det_conf,
-                    min_tracking_confidence=track_conf,
-                    timer=timer,
-                )
-                should_close_tracker = True
+            tracker = pose_tracker or PoseTracker(
+                min_detection_confidence=det_conf,
+                min_tracking_confidence=track_conf,
+                timer=timer,
+            )
+            should_close_tracker = pose_tracker is None
 
             frames, landmarks_sequence, frame_indices = process_all_frames(
                 video, tracker, verbose, timer, close_tracker=should_close_tracker
@@ -161,7 +317,6 @@ def process_cmj_video(
                     landmarks_sequence, video.fps, video.frame_count
                 )
                 params = auto_tune_parameters(characteristics, quality_preset)
-
                 params = apply_expert_overrides(
                     params,
                     smoothing_window,
@@ -185,12 +340,9 @@ def process_cmj_video(
                 vertical_positions, visibilities = extract_vertical_positions(
                     smoothed_landmarks, target="hip"
                 )
-
                 foot_positions, _ = extract_vertical_positions(
                     smoothed_landmarks, target="foot"
                 )
-
-            tracking_method = "hip_hybrid"
 
             if verbose:
                 print("Detecting CMJ phases...")
@@ -217,7 +369,6 @@ def process_cmj_video(
                     window_length=params.smoothing_window,
                     polyorder=params.polyorder,
                 )
-
                 metrics = calculate_cmj_metrics(
                     vertical_positions,
                     velocities,
@@ -226,7 +377,7 @@ def process_cmj_video(
                     takeoff_frame,
                     landing_frame,
                     video.fps,
-                    tracking_method=tracking_method,
+                    tracking_method="hip_hybrid",
                 )
 
             if verbose:
@@ -238,137 +389,49 @@ def process_cmj_video(
                     use_median=True,
                     interpolate=False,
                 )
-
-                phases_detected = True
-                phase_count = 4
-
                 quality_result = assess_jump_quality(
                     visibilities=visibilities,
                     positions=vertical_positions,
                     outlier_mask=outlier_mask,
                     fps=video.fps,
-                    phases_detected=phases_detected,
-                    phase_count=phase_count,
+                    phases_detected=True,
+                    phase_count=4,
                 )
 
-            algorithm_config = AlgorithmConfig(
-                detection_method="backward_search",
-                tracking_method="mediapipe_pose",
-                model_complexity=1,
-                smoothing=SmoothingConfig(
-                    window_size=params.smoothing_window,
-                    polynomial_order=params.polyorder,
-                    use_bilateral_filter=params.bilateral_filter,
-                    use_outlier_rejection=params.outlier_rejection,
-                ),
-                detection=DetectionConfig(
-                    velocity_threshold=params.velocity_threshold,
-                    min_contact_frames=params.min_contact_frames,
-                    visibility_threshold=params.visibility_threshold,
-                    use_curvature_refinement=params.use_curvature,
-                ),
-                drop_detection=None,
-            )
-
-            video_info = VideoInfo(
-                source_path=video_path,
-                fps=video.fps,
-                width=video.width,
-                height=video.height,
-                duration_s=video.frame_count / video.fps,
-                frame_count=video.frame_count,
-                codec=video.codec,
-            )
-
-            if verbose and quality_result.warnings:
-                print("\n⚠️  Quality Warnings:")
-                for warning in quality_result.warnings:
-                    print(f"  - {warning}")
-                print()
+            _print_quality_warnings(quality_result, verbose)
 
             if output_video:
-                if verbose:
-                    print(f"Generating debug video: {output_video}")
-
-                debug_h, debug_w = frames[0].shape[:2]
-                step = max(1, int(video.fps / 30.0))
-                debug_fps = video.fps / step
-
-                with timer.measure("debug_video_generation"):
-                    with CMJDebugOverlayRenderer(
-                        output_video,
-                        debug_w,
-                        debug_h,
-                        debug_w,
-                        debug_h,
-                        debug_fps,
-                        timer=timer,
-                    ) as renderer:
-                        for frame, idx in zip(frames, frame_indices, strict=True):
-                            annotated = renderer.render_frame(
-                                frame, smoothed_landmarks[idx], idx, metrics
-                            )
-                            renderer.write_frame(annotated)
-
-                if verbose:
-                    print(f"Debug video saved: {output_video}")
+                _generate_debug_video(
+                    output_video,
+                    frames,
+                    frame_indices,
+                    smoothed_landmarks,
+                    metrics,
+                    video.fps,
+                    timer,
+                    verbose,
+                )
 
             with timer.measure("metrics_validation"):
                 validator = CMJMetricsValidator()
                 validation_result = validator.validate(metrics.to_dict())  # type: ignore[arg-type]
                 metrics.validation_result = validation_result
 
-            processing_time = time.time() - start_time
-            stage_times = convert_timer_to_stage_names(timer.get_metrics())
-
-            processing_info = ProcessingInfo(
-                version=get_kinemotion_version(),
-                timestamp=create_timestamp(),
-                quality_preset=quality_preset.value,
-                processing_time_s=processing_time,
-                timing_breakdown=stage_times,
+            algorithm_config = _create_algorithm_config(params)
+            video_info = _create_video_info(video_path, video)
+            processing_info = _create_processing_info(start_time, quality_preset, timer)
+            result_metadata = _create_result_metadata(
+                quality_result, video_info, processing_info, algorithm_config
             )
-
-            result_metadata = ResultMetadata(
-                quality=quality_result,
-                video=video_info,
-                processing=processing_info,
-                algorithm=algorithm_config,
-            )
-
             metrics.result_metadata = result_metadata
 
             if json_output:
-                with timer.measure("json_serialization"):
-                    output_path = Path(json_output)
-                    metrics_dict = metrics.to_dict()
-                    json_str = json.dumps(metrics_dict, indent=2)
-                    output_path.write_text(json_str)
+                _save_metrics_to_json(metrics, json_output, timer, verbose)
 
-                if verbose:
-                    print(f"Metrics written to: {json_output}")
-
-            if verbose and validation_result.issues:
-                print("\n⚠️  Validation Results:")
-                for issue in validation_result.issues:
-                    print(f"  [{issue.severity.value}] {issue.metric}: {issue.message}")
+            _print_validation_results(validation_result, verbose)
 
             if verbose:
-                total_time = time.time() - start_time
-                stage_times = convert_timer_to_stage_names(timer.get_metrics())
-
-                print("\n=== Timing Summary ===")
-                for stage, duration in stage_times.items():
-                    percentage = (duration / total_time) * 100
-                    dur_ms = duration * 1000
-                    print(f"{stage:. <40} {dur_ms:>6.0f}ms ({percentage:>5.1f}%)")
-                total_ms = total_time * 1000
-                print(f"{('Total'):.>40} {total_ms:>6.0f}ms (100.0%)")
-                print()
-
-                print(f"\nJump height: {metrics.jump_height:.3f}m")
-                print(f"Flight time: {metrics.flight_time * 1000:.1f}ms")
-                print(f"Countermovement depth: {metrics.countermovement_depth:.3f}m")
+                _print_timing_summary(start_time, timer, metrics)
 
             return metrics
 
