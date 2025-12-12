@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.47.3 (2025-12-12)
+
+### Bug Fixes
+
+- **api**: Remove unused timer parameter from _assess_dropjump_quality
+  ([`31ac8ef`](https://github.com/feniix/kinemotion/commit/31ac8efc8b474383f9de72eccc50ea02d408eb86))
+
+### Refactoring
+
+- **api**: Split large api.py into modular architecture
+  ([`6eb3f06`](https://github.com/feniix/kinemotion/commit/6eb3f06ab52534e7f97ad85d6e9a361b657cabb8))
+
+
 ## v0.47.2 (2025-12-12)
 
 ### Bug Fixes
