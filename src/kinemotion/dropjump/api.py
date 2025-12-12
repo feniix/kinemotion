@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 from ..core.auto_tuning import (
     AnalysisParameters,
     QualityPreset,
+    VideoCharacteristics,
     analyze_video_sample,
     auto_tune_parameters,
 )
@@ -219,6 +220,179 @@ def _print_dropjump_summary(
     print("Analysis complete!")
 
 
+def _setup_pose_tracker(
+    quality_preset: QualityPreset,
+    detection_confidence: float | None,
+    tracking_confidence: float | None,
+    pose_tracker: "PoseTracker | None",
+    timer: Timer,
+) -> tuple["PoseTracker", bool]:
+    """Set up pose tracker and determine if it should be closed."""
+    detection_conf, tracking_conf = determine_confidence_levels(
+        quality_preset, detection_confidence, tracking_confidence
+    )
+
+    tracker = pose_tracker
+    should_close_tracker = False
+
+    if tracker is None:
+        tracker = PoseTracker(
+            min_detection_confidence=detection_conf,
+            min_tracking_confidence=tracking_conf,
+            timer=timer,
+        )
+        should_close_tracker = True
+
+    return tracker, should_close_tracker
+
+
+def _process_frames_and_landmarks(
+    video: "VideoProcessor",
+    tracker: "PoseTracker",
+    should_close_tracker: bool,
+    verbose: bool,
+    timer: Timer,
+) -> tuple[list, list, list[int]]:
+    """Process all video frames and extract landmarks."""
+    if verbose:
+        print("Processing all frames with MediaPipe pose tracking...")
+
+    frames, landmarks_sequence, frame_indices = process_all_frames(
+        video, tracker, verbose, timer, close_tracker=should_close_tracker
+    )
+
+    return frames, landmarks_sequence, frame_indices
+
+
+def _tune_and_smooth(
+    landmarks_sequence: list,
+    video_fps: float,
+    frame_count: int,
+    quality_preset: QualityPreset,
+    smoothing_window: int | None,
+    velocity_threshold: float | None,
+    min_contact_frames: int | None,
+    visibility_threshold: float | None,
+    timer: Timer,
+    verbose: bool,
+) -> tuple[list, AnalysisParameters, VideoCharacteristics]:
+    """Tune parameters and apply smoothing to landmarks.
+
+    Returns:
+        Tuple of (smoothed_landmarks, params, characteristics)
+    """
+    with timer.measure("parameter_auto_tuning"):
+        characteristics = analyze_video_sample(
+            landmarks_sequence, video_fps, frame_count
+        )
+        params = auto_tune_parameters(characteristics, quality_preset)
+
+        params = apply_expert_overrides(
+            params,
+            smoothing_window,
+            velocity_threshold,
+            min_contact_frames,
+            visibility_threshold,
+        )
+
+    smoothed_landmarks = apply_smoothing(landmarks_sequence, params, verbose, timer)
+
+    return smoothed_landmarks, params, characteristics
+
+
+def _extract_positions_and_detect_contact(
+    smoothed_landmarks: list,
+    params: AnalysisParameters,
+    timer: Timer,
+    verbose: bool,
+) -> tuple["NDArray", "NDArray", list]:
+    """Extract vertical positions and detect ground contact."""
+    if verbose:
+        print("Extracting foot positions...")
+    with timer.measure("vertical_position_extraction"):
+        vertical_positions, visibilities = extract_vertical_positions(
+            smoothed_landmarks
+        )
+
+    if verbose:
+        print("Detecting ground contact...")
+    with timer.measure("ground_contact_detection"):
+        contact_states = detect_ground_contact(
+            vertical_positions,
+            velocity_threshold=params.velocity_threshold,
+            min_contact_frames=params.min_contact_frames,
+            visibility_threshold=params.visibility_threshold,
+            visibilities=visibilities,
+            window_length=params.smoothing_window,
+            polyorder=params.polyorder,
+            timer=timer,
+        )
+
+    return vertical_positions, visibilities, contact_states
+
+
+def _calculate_metrics_and_assess_quality(
+    contact_states: list,
+    vertical_positions: "NDArray",
+    visibilities: "NDArray",
+    video_fps: float,
+    drop_start_frame: int | None,
+    params: AnalysisParameters,
+    timer: Timer,
+    verbose: bool,
+) -> tuple[DropJumpMetrics, QualityAssessment]:
+    """Calculate metrics and assess quality."""
+    if verbose:
+        print("Calculating metrics...")
+    with timer.measure("metrics_calculation"):
+        metrics = calculate_drop_jump_metrics(
+            contact_states,
+            vertical_positions,
+            video_fps,
+            drop_start_frame=drop_start_frame,
+            velocity_threshold=params.velocity_threshold,
+            smoothing_window=params.smoothing_window,
+            polyorder=params.polyorder,
+            use_curvature=params.use_curvature,
+            timer=timer,
+        )
+
+    if verbose:
+        print("Assessing tracking quality...")
+    with timer.measure("quality_assessment"):
+        quality_result, _, _, _ = _assess_dropjump_quality(
+            vertical_positions, visibilities, contact_states, video_fps
+        )
+
+    return metrics, quality_result
+
+
+def _print_quality_warnings(quality_result: QualityAssessment, verbose: bool) -> None:
+    """Print quality warnings if present."""
+    if verbose and quality_result.warnings:
+        print("\n⚠️  Quality Warnings:")
+        for warning in quality_result.warnings:
+            print(f"  - {warning}")
+        print()
+
+
+def _validate_metrics_and_print_results(
+    metrics: DropJumpMetrics,
+    timer: Timer,
+    verbose: bool,
+) -> None:
+    """Validate metrics and print validation results if verbose."""
+    with timer.measure("metrics_validation"):
+        validator = DropJumpMetricsValidator()
+        validation_result = validator.validate(metrics.to_dict())  # type: ignore[arg-type]
+        metrics.validation_result = validation_result
+
+    if verbose and validation_result.issues:
+        print("\n⚠️  Validation Results:")
+        for issue in validation_result.issues:
+            print(f"  [{issue.severity.value}] {issue.metric}: {issue.message}")
+
+
 def _generate_debug_video(
     output_video: str,
     frames: list,
@@ -331,106 +505,57 @@ def process_dropjump_video(
     set_deterministic_mode(seed=42)
 
     start_time = time.time()
-    if timer is None:
-        timer = PerformanceTimer()
-
+    timer = timer or PerformanceTimer()
     quality_preset = parse_quality_preset(quality)
 
     with timer.measure("video_initialization"):
         with VideoProcessor(video_path, timer=timer) as video:
-            detection_conf, tracking_conf = determine_confidence_levels(
-                quality_preset, detection_confidence, tracking_confidence
+            tracker, should_close_tracker = _setup_pose_tracker(
+                quality_preset,
+                detection_confidence,
+                tracking_confidence,
+                pose_tracker,
+                timer,
+            )
+
+            frames, landmarks_sequence, frame_indices = _process_frames_and_landmarks(
+                video, tracker, should_close_tracker, verbose, timer
+            )
+
+            smoothed_landmarks, params, characteristics = _tune_and_smooth(
+                landmarks_sequence,
+                video.fps,
+                video.frame_count,
+                quality_preset,
+                smoothing_window,
+                velocity_threshold,
+                min_contact_frames,
+                visibility_threshold,
+                timer,
+                verbose,
             )
 
             if verbose:
-                print("Processing all frames with MediaPipe pose tracking...")
+                print_verbose_parameters(video, characteristics, quality_preset, params)
 
-            tracker = pose_tracker
-            should_close_tracker = False
-
-            if tracker is None:
-                tracker = PoseTracker(
-                    min_detection_confidence=detection_conf,
-                    min_tracking_confidence=tracking_conf,
-                    timer=timer,
+            vertical_positions, visibilities, contact_states = (
+                _extract_positions_and_detect_contact(
+                    smoothed_landmarks, params, timer, verbose
                 )
-                should_close_tracker = True
-
-            frames, landmarks_sequence, frame_indices = process_all_frames(
-                video, tracker, verbose, timer, close_tracker=should_close_tracker
             )
 
-            with timer.measure("parameter_auto_tuning"):
-                characteristics = analyze_video_sample(
-                    landmarks_sequence, video.fps, video.frame_count
-                )
-                params = auto_tune_parameters(characteristics, quality_preset)
-
-                params = apply_expert_overrides(
-                    params,
-                    smoothing_window,
-                    velocity_threshold,
-                    min_contact_frames,
-                    visibility_threshold,
-                )
-
-                if verbose:
-                    print_verbose_parameters(
-                        video, characteristics, quality_preset, params
-                    )
-
-            smoothed_landmarks = apply_smoothing(
-                landmarks_sequence, params, verbose, timer
+            metrics, quality_result = _calculate_metrics_and_assess_quality(
+                contact_states,
+                vertical_positions,
+                visibilities,
+                video.fps,
+                drop_start_frame,
+                params,
+                timer,
+                verbose,
             )
 
-            if verbose:
-                print("Extracting foot positions...")
-            with timer.measure("vertical_position_extraction"):
-                vertical_positions, visibilities = extract_vertical_positions(
-                    smoothed_landmarks
-                )
-
-            if verbose:
-                print("Detecting ground contact...")
-            with timer.measure("ground_contact_detection"):
-                contact_states = detect_ground_contact(
-                    vertical_positions,
-                    velocity_threshold=params.velocity_threshold,
-                    min_contact_frames=params.min_contact_frames,
-                    visibility_threshold=params.visibility_threshold,
-                    visibilities=visibilities,
-                    window_length=params.smoothing_window,
-                    polyorder=params.polyorder,
-                    timer=timer,
-                )
-
-            if verbose:
-                print("Calculating metrics...")
-            with timer.measure("metrics_calculation"):
-                metrics = calculate_drop_jump_metrics(
-                    contact_states,
-                    vertical_positions,
-                    video.fps,
-                    drop_start_frame=drop_start_frame,
-                    velocity_threshold=params.velocity_threshold,
-                    smoothing_window=params.smoothing_window,
-                    polyorder=params.polyorder,
-                    use_curvature=params.use_curvature,
-                    timer=timer,
-                )
-
-            if verbose:
-                print("Assessing tracking quality...")
-            with timer.measure("quality_assessment"):
-                quality_result, _, _, _ = _assess_dropjump_quality(
-                    vertical_positions, visibilities, contact_states, video.fps
-                )
-
-            if verbose and quality_result.warnings:
-                print("\n⚠️  Quality Warnings:")
-                for warning in quality_result.warnings:
-                    print(f"  - {warning}")
-                print()
+            _print_quality_warnings(quality_result, verbose)
 
             if output_video:
                 _generate_debug_video(
@@ -445,15 +570,7 @@ def process_dropjump_video(
                     verbose,
                 )
 
-            with timer.measure("metrics_validation"):
-                validator = DropJumpMetricsValidator()
-                validation_result = validator.validate(metrics.to_dict())  # type: ignore[arg-type]
-                metrics.validation_result = validation_result
-
-            if verbose and validation_result.issues:
-                print("\n⚠️  Validation Results:")
-                for issue in validation_result.issues:
-                    print(f"  [{issue.severity.value}] {issue.metric}: {issue.message}")
+            _validate_metrics_and_print_results(metrics, timer, verbose)
 
             processing_time = time.time() - start_time
             result_metadata = _build_dropjump_metadata(
