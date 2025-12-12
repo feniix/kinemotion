@@ -3,12 +3,13 @@
 Enables OpenTelemetry tracing and logging if OTEL_EXPORTER_OTLP_ENDPOINT is set.
 """
 
-import logging
 import os
 
 from fastapi import FastAPI
 
-logger = logging.getLogger(__name__)
+from kinemotion_backend.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 
 def setup_telemetry(app: FastAPI) -> bool:
