@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.47.0 (2025-12-12)
+
+### Documentation
+
+- Add basic memory about instrumentation
+  ([`8b1dcab`](https://github.com/feniix/kinemotion/commit/8b1dcab83ba14aefbb28bfd03752208089d4bfe4))
+
+### Features
+
+- **core**: Implement granular timing instrumentation using Null Object pattern
+  ([`a6a4fdf`](https://github.com/feniix/kinemotion/commit/a6a4fdf7cf9a16090eed5f172ce084cd4ab5879f))
+
+- **telemetry**: Add OpenTelemetry integration and dependencies
+  ([`10a56b9`](https://github.com/feniix/kinemotion/commit/10a56b96e4a488c34c62ae6d3a698bf716af3a77))
+
+
 ## v0.46.0 (2025-12-12)
 
 ### Features
