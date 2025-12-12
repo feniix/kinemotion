@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.46.0 (2025-12-12)
+
+### Features
+
+- **core**: Enhance timing with high-precision measurement and zero-overhead option
+  ([`756821e`](https://github.com/feniix/kinemotion/commit/756821e0a050266f09a2d16a20fe014b875e2a0e))
+
+
 ## v0.45.1 (2025-12-11)
 
 ### Bug Fixes
