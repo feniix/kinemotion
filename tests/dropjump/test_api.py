@@ -135,12 +135,18 @@ def test_process_video_quality_presets(sample_video_path: str) -> None:
 
 def test_process_video_with_expert_overrides(sample_video_path: str) -> None:
     """Test that expert parameter overrides work."""
-    metrics = process_dropjump_video(
-        video_path=sample_video_path,
+    from kinemotion.dropjump.api import AnalysisOverrides
+
+    overrides = AnalysisOverrides(
         smoothing_window=7,
         velocity_threshold=0.025,
         min_contact_frames=5,
         visibility_threshold=0.6,
+    )
+
+    metrics = process_dropjump_video(
+        video_path=sample_video_path,
+        overrides=overrides,
         verbose=False,
     )
 
@@ -286,6 +292,8 @@ def test_process_videos_bulk_progress_callback(sample_video_path: str) -> None:
 @skip_in_ci
 def test_process_videos_bulk_different_parameters(sample_video_path: str) -> None:
     """Test bulk processing with different parameter combinations."""
+    from kinemotion.dropjump.api import AnalysisOverrides
+
     with tempfile.TemporaryDirectory() as tmpdir:
         configs = [
             DropJumpVideoConfig(
@@ -300,7 +308,7 @@ def test_process_videos_bulk_different_parameters(sample_video_path: str) -> Non
             DropJumpVideoConfig(
                 video_path=sample_video_path,
                 quality="fast",
-                smoothing_window=7,
+                overrides=AnalysisOverrides(smoothing_window=7),
             ),
         ]
 

@@ -17,6 +17,7 @@ from .cmj.kinematics import CMJMetrics
 
 # Drop jump API
 from .dropjump.api import (
+    AnalysisOverrides,
     DropJumpVideoConfig,
     DropJumpVideoResult,
     process_dropjump_video,
@@ -25,6 +26,7 @@ from .dropjump.api import (
 
 __all__ = [
     # Drop jump
+    "AnalysisOverrides",
     "DropJumpVideoConfig",
     "DropJumpVideoResult",
     "process_dropjump_video",

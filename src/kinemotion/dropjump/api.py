@@ -54,6 +54,20 @@ from .metrics_validator import DropJumpMetricsValidator
 
 
 @dataclass
+class AnalysisOverrides:
+    """Optional overrides for analysis parameters.
+
+    Allows fine-tuning of specific analysis parameters beyond quality presets.
+    If None, values will be determined by the quality preset.
+    """
+
+    smoothing_window: int | None = None
+    velocity_threshold: float | None = None
+    min_contact_frames: int | None = None
+    visibility_threshold: float | None = None
+
+
+@dataclass
 class DropJumpVideoResult:
     """Result of processing a single drop jump video."""
 
@@ -73,10 +87,7 @@ class DropJumpVideoConfig:
     output_video: str | None = None
     json_output: str | None = None
     drop_start_frame: int | None = None
-    smoothing_window: int | None = None
-    velocity_threshold: float | None = None
-    min_contact_frames: int | None = None
-    visibility_threshold: float | None = None
+    overrides: AnalysisOverrides | None = None
     detection_confidence: float | None = None
     tracking_confidence: float | None = None
 
@@ -269,14 +280,20 @@ def _tune_and_smooth(
     video_fps: float,
     frame_count: int,
     quality_preset: QualityPreset,
-    smoothing_window: int | None,
-    velocity_threshold: float | None,
-    min_contact_frames: int | None,
-    visibility_threshold: float | None,
+    overrides: AnalysisOverrides | None,
     timer: Timer,
     verbose: bool,
 ) -> tuple[list, AnalysisParameters, VideoCharacteristics]:
     """Tune parameters and apply smoothing to landmarks.
+
+    Args:
+        landmarks_sequence: Sequence of pose landmarks
+        video_fps: Video frame rate
+        frame_count: Total number of frames
+        quality_preset: Quality preset for analysis
+        overrides: Optional parameter overrides
+        timer: Performance timer
+        verbose: Verbose output flag
 
     Returns:
         Tuple of (smoothed_landmarks, params, characteristics)
@@ -287,13 +304,23 @@ def _tune_and_smooth(
         )
         params = auto_tune_parameters(characteristics, quality_preset)
 
-        params = apply_expert_overrides(
-            params,
-            smoothing_window,
-            velocity_threshold,
-            min_contact_frames,
-            visibility_threshold,
-        )
+        # Apply overrides if provided
+        if overrides:
+            params = apply_expert_overrides(
+                params,
+                overrides.smoothing_window,
+                overrides.velocity_threshold,
+                overrides.min_contact_frames,
+                overrides.visibility_threshold,
+            )
+        else:
+            params = apply_expert_overrides(
+                params,
+                None,
+                None,
+                None,
+                None,
+            )
 
     smoothed_landmarks = apply_smoothing(landmarks_sequence, params, verbose, timer)
 
@@ -459,10 +486,7 @@ def process_dropjump_video(
     output_video: str | None = None,
     json_output: str | None = None,
     drop_start_frame: int | None = None,
-    smoothing_window: int | None = None,
-    velocity_threshold: float | None = None,
-    min_contact_frames: int | None = None,
-    visibility_threshold: float | None = None,
+    overrides: AnalysisOverrides | None = None,
     detection_confidence: float | None = None,
     tracking_confidence: float | None = None,
     verbose: bool = False,
@@ -480,10 +504,7 @@ def process_dropjump_video(
         output_video: Optional path for debug video output
         json_output: Optional path for JSON metrics output
         drop_start_frame: Optional manual drop start frame
-        smoothing_window: Optional override for smoothing window
-        velocity_threshold: Optional override for velocity threshold
-        min_contact_frames: Optional override for minimum contact frames
-        visibility_threshold: Optional override for visibility threshold
+        overrides: Optional AnalysisOverrides for fine-tuning parameters
         detection_confidence: Optional override for pose detection confidence
         tracking_confidence: Optional override for pose tracking confidence
         verbose: Print processing details
@@ -527,10 +548,7 @@ def process_dropjump_video(
                 video.fps,
                 video.frame_count,
                 quality_preset,
-                smoothing_window,
-                velocity_threshold,
-                min_contact_frames,
-                visibility_threshold,
+                overrides,
                 timer,
                 verbose,
             )
@@ -629,10 +647,7 @@ def _process_dropjump_video_wrapper(config: DropJumpVideoConfig) -> DropJumpVide
             output_video=config.output_video,
             json_output=config.json_output,
             drop_start_frame=config.drop_start_frame,
-            smoothing_window=config.smoothing_window,
-            velocity_threshold=config.velocity_threshold,
-            min_contact_frames=config.min_contact_frames,
-            visibility_threshold=config.visibility_threshold,
+            overrides=config.overrides,
             detection_confidence=config.detection_confidence,
             tracking_confidence=config.tracking_confidence,
             verbose=False,

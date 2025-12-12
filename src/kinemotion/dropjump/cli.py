@@ -237,6 +237,25 @@ def _process_single(
     click.echo(f"Analyzing video: {video_path}", err=True)
 
     try:
+        # Create AnalysisOverrides if any expert parameters are set
+        from .api import AnalysisOverrides
+
+        overrides = None
+        if any(
+            [
+                expert_params.smoothing_window is not None,
+                expert_params.velocity_threshold is not None,
+                expert_params.min_contact_frames is not None,
+                expert_params.visibility_threshold is not None,
+            ]
+        ):
+            overrides = AnalysisOverrides(
+                smoothing_window=expert_params.smoothing_window,
+                velocity_threshold=expert_params.velocity_threshold,
+                min_contact_frames=expert_params.min_contact_frames,
+                visibility_threshold=expert_params.visibility_threshold,
+            )
+
         # Call the API function (handles all processing logic)
         metrics = process_dropjump_video(
             video_path=video_path,
@@ -244,10 +263,7 @@ def _process_single(
             output_video=output,
             json_output=json_output,
             drop_start_frame=expert_params.drop_start_frame,
-            smoothing_window=expert_params.smoothing_window,
-            velocity_threshold=expert_params.velocity_threshold,
-            min_contact_frames=expert_params.min_contact_frames,
-            visibility_threshold=expert_params.visibility_threshold,
+            overrides=overrides,
             detection_confidence=expert_params.detection_confidence,
             tracking_confidence=expert_params.tracking_confidence,
             verbose=verbose,
@@ -312,16 +328,32 @@ def _create_video_configs(
             video_file, output_dir, json_output_dir
         )
 
+        # Create AnalysisOverrides if any expert parameters are set
+        from .api import AnalysisOverrides
+
+        overrides = None
+        if any(
+            [
+                expert_params.smoothing_window is not None,
+                expert_params.velocity_threshold is not None,
+                expert_params.min_contact_frames is not None,
+                expert_params.visibility_threshold is not None,
+            ]
+        ):
+            overrides = AnalysisOverrides(
+                smoothing_window=expert_params.smoothing_window,
+                velocity_threshold=expert_params.velocity_threshold,
+                min_contact_frames=expert_params.min_contact_frames,
+                visibility_threshold=expert_params.visibility_threshold,
+            )
+
         config = DropJumpVideoConfig(
             video_path=video_file,
             quality=quality,
             output_video=debug_video,
             json_output=json_file,
             drop_start_frame=expert_params.drop_start_frame,
-            smoothing_window=expert_params.smoothing_window,
-            velocity_threshold=expert_params.velocity_threshold,
-            min_contact_frames=expert_params.min_contact_frames,
-            visibility_threshold=expert_params.visibility_threshold,
+            overrides=overrides,
             detection_confidence=expert_params.detection_confidence,
             tracking_confidence=expert_params.tracking_confidence,
         )
