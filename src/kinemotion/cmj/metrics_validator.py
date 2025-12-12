@@ -449,7 +449,7 @@ class CMJMetricsValidator(MetricsValidator):
         # Convert ms to seconds
         flight_time = flight_time_ms / 1000.0
 
-        # h = g * t^2 / 8
+        # Calculate expected height using kinematic formula: h = g*t²/8
         g = 9.81
         expected_height = (g * flight_time**2) / 8
         error_pct = abs(jump_height - expected_height) / expected_height
@@ -483,7 +483,7 @@ class CMJMetricsValidator(MetricsValidator):
         if velocity is None or jump_height is None:
             return
 
-        # h = v^2 / (2*g)
+        # Calculate expected velocity using kinematic formula: v² = 2*g*h
         g = 9.81
         expected_velocity = (2 * g * jump_height) ** 0.5
         error_pct = abs(velocity - expected_velocity) / expected_velocity

@@ -70,6 +70,59 @@ class DropJumpBounds:
     )
 
 
+def _score_jump_height(jump_height: float) -> float:
+    """Convert jump height to athlete profile score (0-4).
+
+    Args:
+        jump_height: Jump height in meters
+
+    Returns:
+        Score from 0 (elderly) to 4 (elite)
+    """
+    thresholds = [(0.25, 0), (0.35, 1), (0.50, 2), (0.70, 3)]
+    for threshold, score in thresholds:
+        if jump_height < threshold:
+            return float(score)
+    return 4.0  # Elite
+
+
+def _score_contact_time(contact_time_s: float) -> float:
+    """Convert contact time to athlete profile score (0-4).
+
+    Args:
+        contact_time_s: Ground contact time in seconds
+
+    Returns:
+        Score from 0 (elderly) to 4 (elite)
+    """
+    thresholds = [(0.60, 0), (0.50, 1), (0.45, 2), (0.40, 3)]
+    for threshold, score in thresholds:
+        if contact_time_s > threshold:
+            return float(score)
+    return 4.0  # Elite
+
+
+def _classify_combined_score(combined_score: float) -> AthleteProfile:
+    """Classify combined score into athlete profile.
+
+    Args:
+        combined_score: Weighted score from height and contact time
+
+    Returns:
+        Athlete profile classification
+    """
+    thresholds = [
+        (1.0, AthleteProfile.ELDERLY),
+        (1.7, AthleteProfile.UNTRAINED),
+        (2.7, AthleteProfile.RECREATIONAL),
+        (3.7, AthleteProfile.TRAINED),
+    ]
+    for threshold, profile in thresholds:
+        if combined_score < threshold:
+            return profile
+    return AthleteProfile.ELITE
+
+
 def estimate_athlete_profile(
     metrics: dict, gender: str | None = None
 ) -> AthleteProfile:
@@ -92,48 +145,14 @@ def estimate_athlete_profile(
     contact_time = metrics.get("data", {}).get("ground_contact_time_ms")
 
     if jump_height is None or contact_time is None:
-        return AthleteProfile.RECREATIONAL  # Default
+        return AthleteProfile.RECREATIONAL
 
-    # Convert contact_time from ms to seconds
     contact_time_s = contact_time / 1000.0
 
-    # Decision logic: Use weighted combination to avoid over-weighting single metrics
-    # Calculate profile scores based on each metric
-    height_score = 0.0
-    if jump_height < 0.25:
-        height_score = 0  # Elderly
-    elif jump_height < 0.35:
-        height_score = 1  # Untrained
-    elif jump_height < 0.50:
-        height_score = 2  # Recreational
-    elif jump_height < 0.70:
-        height_score = 3  # Trained
-    else:
-        height_score = 4  # Elite
-
-    contact_score = 0.0
-    if contact_time_s > 0.60:
-        contact_score = 0  # Elderly
-    elif contact_time_s > 0.50:
-        contact_score = 1  # Untrained
-    elif contact_time_s > 0.45:
-        contact_score = 2  # Recreational
-    elif contact_time_s > 0.40:
-        contact_score = 3  # Trained
-    else:
-        contact_score = 4  # Elite
-
-    # Weight height more heavily (70%) than contact time (30%)
+    # Calculate weighted combination: height (70%) + contact time (30%)
     # Height is more reliable indicator across populations
+    height_score = _score_jump_height(jump_height)
+    contact_score = _score_contact_time(contact_time_s)
     combined_score = (height_score * 0.70) + (contact_score * 0.30)
 
-    if combined_score < 1.0:
-        return AthleteProfile.ELDERLY
-    elif combined_score < 1.7:
-        return AthleteProfile.UNTRAINED
-    elif combined_score < 2.7:
-        return AthleteProfile.RECREATIONAL
-    elif combined_score < 3.7:
-        return AthleteProfile.TRAINED
-    else:
-        return AthleteProfile.ELITE
+    return _classify_combined_score(combined_score)

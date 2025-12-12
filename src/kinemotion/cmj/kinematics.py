@@ -147,6 +147,165 @@ class CMJMetrics:
         return result
 
 
+def _calculate_scale_factor(
+    positions: NDArray[np.float64],
+    takeoff_frame: float,
+    landing_frame: float,
+    jump_height: float,
+) -> float:
+    """Calculate meters per normalized unit scaling factor from flight phase.
+
+    Args:
+        positions: Array of vertical positions
+        takeoff_frame: Takeoff frame index
+        landing_frame: Landing frame index
+        jump_height: Calculated jump height in meters
+
+    Returns:
+        Scale factor (meters per normalized unit)
+    """
+    flight_start_idx = int(takeoff_frame)
+    flight_end_idx = int(landing_frame)
+    flight_positions = positions[flight_start_idx:flight_end_idx]
+
+    if len(flight_positions) == 0:
+        return 0.0
+
+    peak_flight_pos = np.min(flight_positions)
+    takeoff_pos = positions[flight_start_idx]
+    flight_displacement = takeoff_pos - peak_flight_pos
+
+    if flight_displacement > 0.001:
+        return jump_height / flight_displacement
+    return 0.0
+
+
+def _calculate_countermovement_depth(
+    positions: NDArray[np.float64],
+    standing_start_frame: float | None,
+    lowest_point_frame: float,
+    scale_factor: float,
+) -> float:
+    """Calculate countermovement depth in meters.
+
+    Args:
+        positions: Array of vertical positions
+        standing_start_frame: Standing phase end frame (or None)
+        lowest_point_frame: Lowest point frame index
+        scale_factor: Meters per normalized unit
+
+    Returns:
+        Countermovement depth in meters
+    """
+    standing_position = (
+        positions[int(standing_start_frame)]
+        if standing_start_frame is not None
+        else positions[0]
+    )
+    lowest_position = positions[int(lowest_point_frame)]
+    depth_normalized = abs(standing_position - lowest_position)
+    return depth_normalized * scale_factor
+
+
+def _calculate_phase_durations(
+    standing_start_frame: float | None,
+    lowest_point_frame: float,
+    takeoff_frame: float,
+    fps: float,
+) -> tuple[float, float, float]:
+    """Calculate phase durations in seconds.
+
+    Args:
+        standing_start_frame: Standing phase end frame (or None)
+        lowest_point_frame: Lowest point frame index
+        takeoff_frame: Takeoff frame index
+        fps: Frames per second
+
+    Returns:
+        Tuple of (eccentric_duration, concentric_duration, total_movement_time)
+    """
+    if standing_start_frame is not None:
+        eccentric_duration = (lowest_point_frame - standing_start_frame) / fps
+        total_movement_time = (takeoff_frame - standing_start_frame) / fps
+    else:
+        eccentric_duration = lowest_point_frame / fps
+        total_movement_time = takeoff_frame / fps
+
+    concentric_duration = (takeoff_frame - lowest_point_frame) / fps
+    return eccentric_duration, concentric_duration, total_movement_time
+
+
+def _calculate_peak_velocities(
+    velocities: NDArray[np.float64],
+    standing_start_frame: float | None,
+    lowest_point_frame: float,
+    takeoff_frame: float,
+    velocity_scale: float,
+) -> tuple[float, float]:
+    """Calculate peak eccentric and concentric velocities.
+
+    Args:
+        velocities: Array of velocities
+        standing_start_frame: Standing phase end frame (or None)
+        lowest_point_frame: Lowest point frame index
+        takeoff_frame: Takeoff frame index
+        velocity_scale: Velocity scaling factor
+
+    Returns:
+        Tuple of (peak_eccentric_velocity, peak_concentric_velocity)
+    """
+    eccentric_start_idx = int(standing_start_frame) if standing_start_frame else 0
+    eccentric_end_idx = int(lowest_point_frame)
+    eccentric_velocities = velocities[eccentric_start_idx:eccentric_end_idx]
+
+    peak_eccentric_velocity = 0.0
+    if len(eccentric_velocities) > 0:
+        peak = float(np.max(eccentric_velocities)) * velocity_scale
+        peak_eccentric_velocity = max(0.0, peak)
+
+    concentric_start_idx = int(lowest_point_frame)
+    concentric_end_idx = int(takeoff_frame)
+    concentric_velocities = velocities[concentric_start_idx:concentric_end_idx]
+
+    peak_concentric_velocity = 0.0
+    if len(concentric_velocities) > 0:
+        peak_concentric_velocity = (
+            abs(float(np.min(concentric_velocities))) * velocity_scale
+        )
+
+    return peak_eccentric_velocity, peak_concentric_velocity
+
+
+def _calculate_transition_time(
+    velocities: NDArray[np.float64],
+    lowest_point_frame: float,
+    fps: float,
+) -> float | None:
+    """Calculate transition/amortization time around lowest point.
+
+    Args:
+        velocities: Array of velocities
+        lowest_point_frame: Lowest point frame index
+        fps: Frames per second
+
+    Returns:
+        Transition time in seconds, or None if no transition detected
+    """
+    transition_threshold = 0.005
+    search_window = int(fps * 0.1)
+
+    transition_start_idx = max(0, int(lowest_point_frame) - search_window)
+    transition_end_idx = min(len(velocities), int(lowest_point_frame) + search_window)
+
+    transition_frames = sum(
+        1
+        for i in range(transition_start_idx, transition_end_idx)
+        if abs(velocities[i]) < transition_threshold
+    )
+
+    return transition_frames / fps if transition_frames > 0 else None
+
+
 def calculate_cmj_metrics(
     positions: NDArray[np.float64],
     velocities: NDArray[np.float64],
@@ -172,108 +331,35 @@ def calculate_cmj_metrics(
     Returns:
         CMJMetrics object with all calculated metrics.
     """
-    # Calculate flight time from takeoff to landing
+    # Calculate jump height from flight time using kinematic formula: h = g*t²/8
+    g = 9.81
     flight_time = (landing_frame - takeoff_frame) / fps
-
-    # Calculate jump height from flight time using kinematic formula
-    # h = g * t^2 / 8 (where t is total flight time)
-    g = 9.81  # gravity in m/s^2
     jump_height = (g * flight_time**2) / 8
 
-    # Determine scaling factor (meters per normalized unit)
-    # We use the flight phase displacement in normalized units compared to
-    # kinematic jump height
-    flight_start_idx = int(takeoff_frame)
-    flight_end_idx = int(landing_frame)
-    flight_positions = positions[flight_start_idx:flight_end_idx]
+    # Calculate scaling factor and derived metrics
+    scale_factor = _calculate_scale_factor(
+        positions, takeoff_frame, landing_frame, jump_height
+    )
+    countermovement_depth = _calculate_countermovement_depth(
+        positions, standing_start_frame, lowest_point_frame, scale_factor
+    )
 
-    scale_factor = 0.0
-    if len(flight_positions) > 0:
-        # Peak height is minimum y value (highest point in frame)
-        peak_flight_pos = np.min(flight_positions)
-        takeoff_pos = positions[flight_start_idx]
-        # Displacement is upward (takeoff_pos - peak_pos) because y decreases upward
-        flight_displacement = takeoff_pos - peak_flight_pos
-
-        if flight_displacement > 0.001:  # Avoid division by zero or noise
-            scale_factor = jump_height / flight_displacement
-
-    # Calculate countermovement depth
-    if standing_start_frame is not None:
-        standing_position = positions[int(standing_start_frame)]
-    else:
-        # Use position at start of recording if standing not detected
-        standing_position = positions[0]
-
-    lowest_position = positions[int(lowest_point_frame)]
-    # Depth in normalized units
-    depth_normalized = abs(standing_position - lowest_position)
-    # Convert to meters
-    countermovement_depth = depth_normalized * scale_factor
-
-    # Calculate phase durations
-    if standing_start_frame is not None:
-        eccentric_duration = (lowest_point_frame - standing_start_frame) / fps
-        total_movement_time = (takeoff_frame - standing_start_frame) / fps
-    else:
-        # If no standing phase detected, measure from start
-        eccentric_duration = lowest_point_frame / fps
-        total_movement_time = takeoff_frame / fps
-
-    concentric_duration = (takeoff_frame - lowest_point_frame) / fps
-
-    # Velocity scaling factor: units/frame -> meters/second
-    # v_m_s = v_units_frame * fps * scale_factor
-    velocity_scale = scale_factor * fps
-
-    # Calculate peak velocities
-    # Eccentric phase: Downward motion = Positive velocity in image coords
-    if standing_start_frame is not None:
-        eccentric_start_idx = int(standing_start_frame)
-    else:
-        eccentric_start_idx = 0
-
-    eccentric_end_idx = int(lowest_point_frame)
-    eccentric_velocities = velocities[eccentric_start_idx:eccentric_end_idx]
-
-    if len(eccentric_velocities) > 0:
-        # Peak eccentric velocity is maximum positive value (fastest downward)
-        # We take max and ensure it's positive (it should be)
-        peak_eccentric_velocity = float(np.max(eccentric_velocities)) * velocity_scale
-        # If max is negative (weird), it means no downward motion detected
-        if peak_eccentric_velocity < 0:
-            peak_eccentric_velocity = 0.0
-    else:
-        peak_eccentric_velocity = 0.0
-
-    # Concentric phase: Upward motion = Negative velocity in image coords
-    concentric_start_idx = int(lowest_point_frame)
-    concentric_end_idx = int(takeoff_frame)
-    concentric_velocities = velocities[concentric_start_idx:concentric_end_idx]
-
-    if len(concentric_velocities) > 0:
-        # Peak concentric velocity is minimum value (most negative = fastest upward)
-        # We take abs to report magnitude
-        peak_concentric_velocity = (
-            abs(float(np.min(concentric_velocities))) * velocity_scale
+    eccentric_duration, concentric_duration, total_movement_time = (
+        _calculate_phase_durations(
+            standing_start_frame, lowest_point_frame, takeoff_frame, fps
         )
-    else:
-        peak_concentric_velocity = 0.0
+    )
 
-    # Estimate transition time (amortization phase)
-    # Look for period around lowest point where velocity is near zero
-    transition_threshold = 0.005  # Very low velocity threshold
-    search_window = int(fps * 0.1)  # Search within ±100ms
+    velocity_scale = scale_factor * fps
+    peak_eccentric_velocity, peak_concentric_velocity = _calculate_peak_velocities(
+        velocities,
+        standing_start_frame,
+        lowest_point_frame,
+        takeoff_frame,
+        velocity_scale,
+    )
 
-    transition_start_idx = max(0, int(lowest_point_frame) - search_window)
-    transition_end_idx = min(len(velocities), int(lowest_point_frame) + search_window)
-
-    transition_frames = 0
-    for i in range(transition_start_idx, transition_end_idx):
-        if abs(velocities[i]) < transition_threshold:
-            transition_frames += 1
-
-    transition_time = transition_frames / fps if transition_frames > 0 else None
+    transition_time = _calculate_transition_time(velocities, lowest_point_frame, fps)
 
     return CMJMetrics(
         jump_height=jump_height,

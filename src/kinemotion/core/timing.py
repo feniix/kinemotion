@@ -152,11 +152,12 @@ class NullTimer:
         The context manager protocol (__enter__/__exit__) has minimal overhead.
 
         Args:
-            name: Ignored - kept for protocol compatibility
+            name: Operation name (unused in no-op implementation)
 
         Returns:
             Singleton null context manager
         """
+        del name  # Intentionally unused - satisfies Timer protocol
         return _NULL_CONTEXT
 
     def get_metrics(self) -> dict[str, float]:

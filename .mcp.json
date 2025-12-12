@@ -27,6 +27,19 @@
         "BASIC_MEMORY_KEBAB_FILENAMES": "true"
       }
     },
+    "sonarqube": {
+      "command": "direnv",
+      "args": [
+        "exec",
+        "/Users/feniix/src/personal/cursor/kinemotion",
+        "java",
+        "-jar",
+        "/tmp/sonarqube-mcp-server-1.4.0.1666.jar"
+      ],
+      "env": {
+        "STORAGE_PATH": "/tmp/sonarqube"
+      }
+    },
     "sequential-thinking": {
       "command": "uvx",
       "args": [

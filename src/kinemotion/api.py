@@ -5,12 +5,18 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
 
 from .cmj.analysis import detect_cmj_phases
 from .cmj.debug_overlay import CMJDebugOverlayRenderer
 from .cmj.kinematics import CMJMetrics, calculate_cmj_metrics
 from .cmj.metrics_validator import CMJMetricsValidator
 from .core.auto_tuning import (
+    AnalysisParameters,
+    QualityPreset,
     analyze_video_sample,
     auto_tune_parameters,
 )
@@ -38,7 +44,7 @@ from .core.pipeline_utils import (
     process_videos_bulk_generic,
 )
 from .core.pose import PoseTracker
-from .core.quality import assess_jump_quality
+from .core.quality import QualityAssessment, assess_jump_quality
 from .core.timing import NULL_TIMER, PerformanceTimer, Timer
 from .core.video_io import VideoProcessor
 from .dropjump.analysis import (
@@ -76,6 +82,146 @@ class DropJumpVideoConfig:
     visibility_threshold: float | None = None
     detection_confidence: float | None = None
     tracking_confidence: float | None = None
+
+
+def _assess_dropjump_quality(
+    vertical_positions: "NDArray",
+    visibilities: "NDArray",
+    contact_states: list,
+    fps: float,
+    timer: Timer,
+) -> tuple:
+    """Assess tracking quality and detect phases.
+
+    Returns:
+        Tuple of (quality_result, outlier_mask, phases_detected, phase_count)
+    """
+    _, outlier_mask = reject_outliers(
+        vertical_positions,
+        use_ransac=True,
+        use_median=True,
+        interpolate=False,
+    )
+
+    phases = find_contact_phases(contact_states)
+    phases_detected = len(phases) > 0
+    phase_count = len(phases)
+
+    quality_result = assess_jump_quality(
+        visibilities=visibilities,
+        positions=vertical_positions,
+        outlier_mask=outlier_mask,
+        fps=fps,
+        phases_detected=phases_detected,
+        phase_count=phase_count,
+    )
+
+    return quality_result, outlier_mask, phases_detected, phase_count
+
+
+def _build_dropjump_metadata(
+    video_path: str,
+    video: "VideoProcessor",
+    params: "AnalysisParameters",
+    quality_result: QualityAssessment,
+    drop_start_frame: int | None,
+    metrics: DropJumpMetrics,
+    processing_time: float,
+    quality_preset: "QualityPreset",
+    timer: Timer,
+) -> ResultMetadata:
+    """Build complete result metadata."""
+    drop_frame = None
+    if drop_start_frame is None and metrics.drop_start_frame is not None:
+        drop_frame = metrics.drop_start_frame
+    elif drop_start_frame is not None:
+        drop_frame = drop_start_frame
+
+    algorithm_config = AlgorithmConfig(
+        detection_method="forward_search",
+        tracking_method="mediapipe_pose",
+        model_complexity=1,
+        smoothing=SmoothingConfig(
+            window_size=params.smoothing_window,
+            polynomial_order=params.polyorder,
+            use_bilateral_filter=params.bilateral_filter,
+            use_outlier_rejection=params.outlier_rejection,
+        ),
+        detection=DetectionConfig(
+            velocity_threshold=params.velocity_threshold,
+            min_contact_frames=params.min_contact_frames,
+            visibility_threshold=params.visibility_threshold,
+            use_curvature_refinement=params.use_curvature,
+        ),
+        drop_detection=DropDetectionConfig(
+            auto_detect_drop_start=(drop_start_frame is None),
+            detected_drop_frame=drop_frame,
+            min_stationary_duration_s=0.5,
+        ),
+    )
+
+    video_info = VideoInfo(
+        source_path=video_path,
+        fps=video.fps,
+        width=video.width,
+        height=video.height,
+        duration_s=video.frame_count / video.fps,
+        frame_count=video.frame_count,
+        codec=video.codec,
+    )
+
+    stage_times = convert_timer_to_stage_names(timer.get_metrics())
+
+    processing_info = ProcessingInfo(
+        version=get_kinemotion_version(),
+        timestamp=create_timestamp(),
+        quality_preset=quality_preset.value,
+        processing_time_s=processing_time,
+        timing_breakdown=stage_times,
+    )
+
+    return ResultMetadata(
+        quality=quality_result,
+        video=video_info,
+        processing=processing_info,
+        algorithm=algorithm_config,
+    )
+
+
+def _save_dropjump_json(
+    json_output: str,
+    metrics: DropJumpMetrics,
+    timer: Timer,
+    verbose: bool,
+) -> None:
+    """Save metrics to JSON file."""
+    with timer.measure("json_serialization"):
+        output_path = Path(json_output)
+        metrics_dict = metrics.to_dict()
+        json_str = json.dumps(metrics_dict, indent=2)
+        output_path.write_text(json_str)
+
+    if verbose:
+        print(f"Metrics written to: {json_output}")
+
+
+def _print_dropjump_summary(
+    start_time: float,
+    timer: Timer,
+) -> None:
+    """Print verbose timing summary."""
+    total_time = time.time() - start_time
+    stage_times = convert_timer_to_stage_names(timer.get_metrics())
+
+    print("\n=== Timing Summary ===")
+    for stage, duration in stage_times.items():
+        percentage = (duration / total_time) * 100
+        dur_ms = duration * 1000
+        print(f"{stage:.<40} {dur_ms:>6.0f}ms ({percentage:>5.1f}%)")
+    total_ms = total_time * 1000
+    print(f"{('Total'):.>40} {total_ms:>6.0f}ms (100.0%)")
+    print()
+    print("Analysis complete!")
 
 
 def _generate_debug_video(
@@ -281,64 +427,9 @@ def process_dropjump_video(
             if verbose:
                 print("Assessing tracking quality...")
             with timer.measure("quality_assessment"):
-                _, outlier_mask = reject_outliers(
-                    vertical_positions,
-                    use_ransac=True,
-                    use_median=True,
-                    interpolate=False,
+                quality_result, _, _, _ = _assess_dropjump_quality(
+                    vertical_positions, visibilities, contact_states, video.fps, timer
                 )
-
-                phases = find_contact_phases(contact_states)
-                phases_detected = len(phases) > 0
-                phase_count = len(phases)
-
-                quality_result = assess_jump_quality(
-                    visibilities=visibilities,
-                    positions=vertical_positions,
-                    outlier_mask=outlier_mask,
-                    fps=video.fps,
-                    phases_detected=phases_detected,
-                    phase_count=phase_count,
-                )
-
-            drop_frame = None
-            if drop_start_frame is None and metrics.drop_start_frame is not None:
-                drop_frame = metrics.drop_start_frame
-            elif drop_start_frame is not None:
-                drop_frame = drop_start_frame
-
-            algorithm_config = AlgorithmConfig(
-                detection_method="forward_search",
-                tracking_method="mediapipe_pose",
-                model_complexity=1,
-                smoothing=SmoothingConfig(
-                    window_size=params.smoothing_window,
-                    polynomial_order=params.polyorder,
-                    use_bilateral_filter=params.bilateral_filter,
-                    use_outlier_rejection=params.outlier_rejection,
-                ),
-                detection=DetectionConfig(
-                    velocity_threshold=params.velocity_threshold,
-                    min_contact_frames=params.min_contact_frames,
-                    visibility_threshold=params.visibility_threshold,
-                    use_curvature_refinement=params.use_curvature,
-                ),
-                drop_detection=DropDetectionConfig(
-                    auto_detect_drop_start=(drop_start_frame is None),
-                    detected_drop_frame=drop_frame,
-                    min_stationary_duration_s=0.5,
-                ),
-            )
-
-            video_info = VideoInfo(
-                source_path=video_path,
-                fps=video.fps,
-                width=video.width,
-                height=video.height,
-                duration_s=video.frame_count / video.fps,
-                frame_count=video.frame_count,
-                codec=video.codec,
-            )
 
             if verbose and quality_result.warnings:
                 print("\n⚠️  Quality Warnings:")
@@ -370,48 +461,24 @@ def process_dropjump_video(
                     print(f"  [{issue.severity.value}] {issue.metric}: {issue.message}")
 
             processing_time = time.time() - start_time
-            stage_times = convert_timer_to_stage_names(timer.get_metrics())
-
-            processing_info = ProcessingInfo(
-                version=get_kinemotion_version(),
-                timestamp=create_timestamp(),
-                quality_preset=quality_preset.value,
-                processing_time_s=processing_time,
-                timing_breakdown=stage_times,
+            result_metadata = _build_dropjump_metadata(
+                video_path,
+                video,
+                params,
+                quality_result,
+                drop_start_frame,
+                metrics,
+                processing_time,
+                quality_preset,
+                timer,
             )
-
-            result_metadata = ResultMetadata(
-                quality=quality_result,
-                video=video_info,
-                processing=processing_info,
-                algorithm=algorithm_config,
-            )
-
             metrics.result_metadata = result_metadata
 
             if json_output:
-                with timer.measure("json_serialization"):
-                    output_path = Path(json_output)
-                    metrics_dict = metrics.to_dict()
-                    json_str = json.dumps(metrics_dict, indent=2)
-                    output_path.write_text(json_str)
-
-                if verbose:
-                    print(f"Metrics written to: {json_output}")
+                _save_dropjump_json(json_output, metrics, timer, verbose)
 
             if verbose:
-                total_time = time.time() - start_time
-                stage_times_verbose = convert_timer_to_stage_names(timer.get_metrics())
-
-                print("\n=== Timing Summary ===")
-                for stage, duration in stage_times_verbose.items():
-                    percentage = (duration / total_time) * 100
-                    dur_ms = duration * 1000
-                    print(f"{stage:.<40} {dur_ms:>6.0f}ms ({percentage:>5.1f}%)")
-                total_ms = total_time * 1000
-                print(f"{('Total'):.>40} {total_ms:>6.0f}ms (100.0%)")
-                print()
-                print("Analysis complete!")
+                _print_dropjump_summary(start_time, timer)
 
             return metrics
 

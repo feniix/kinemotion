@@ -480,7 +480,7 @@ def compute_average_hip_position(
 def find_standing_end(
     velocities: np.ndarray,
     lowest_point: float,
-    positions: np.ndarray | None = None,
+    _positions: np.ndarray | None = None,
     accelerations: np.ndarray | None = None,
 ) -> float | None:
     """
@@ -493,7 +493,7 @@ def find_standing_end(
     Args:
         velocities: Signed velocity array (for backward compatibility)
         lowest_point: Frame index of lowest point
-        positions: Position array (unused, kept for backward compatibility)
+        _positions: Intentionally unused - kept for backward compatibility
         accelerations: Acceleration array (if provided, uses
             acceleration-based detection)
 
