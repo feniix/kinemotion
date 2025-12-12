@@ -4,6 +4,7 @@ Real metrics integration with Cloudflare R2 storage for video and results manage
 """
 
 import os
+import re
 import tempfile
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
@@ -672,9 +673,10 @@ async def analyze_video(
             and "timing_breakdown_ms" in metrics["metadata"]["processing"]
         ):
             timing_breakdown = metrics["metadata"]["processing"]["timing_breakdown_ms"]
-            # Normalize keys for easier jq parsing: spaces → underscores, lowercase
+            # Normalize keys: remove special chars, spaces → underscores, lowercase
             normalized_timings = {
-                stage.lower().replace(" ", "_") + "_ms": duration
+                re.sub(r"[^\w\s]", "", stage).lower().replace(" ", "_")
+                + "_ms": duration
                 for stage, duration in timing_breakdown.items()
             }
             # Log each timing stage as a separate event for granular monitoring
