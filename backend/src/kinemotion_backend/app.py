@@ -26,12 +26,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from kinemotion.api import process_cmj_video, process_dropjump_video
 from kinemotion.core.pose import PoseTracker
-from kinemotion.core.timing import PerformanceTimer, Timer
+from kinemotion.core.timing import (
+    CompositeTimer,
+    OpenTelemetryTimer,
+    PerformanceTimer,
+    Timer,
+)
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 
 from kinemotion_backend.logging_config import get_logger, setup_logging
 from kinemotion_backend.middleware import RequestLoggingMiddleware
+from kinemotion_backend.telemetry import setup_telemetry
 
 # Initialize structured logging
 setup_logging(
@@ -217,6 +223,9 @@ global_pose_trackers: dict[str, PoseTracker] = {}
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Manage application lifecycle and global resources."""
+    # Initialize telemetry
+    app.state.telemetry_enabled = setup_telemetry(app)
+
     logger.info("initializing_pose_trackers")
     try:
         # Initialize trackers for each quality preset
@@ -604,7 +613,13 @@ async def analyze_video(
 
         # Process video with real kinemotion analysis
         analysis_start = time.time()
-        timer = PerformanceTimer()
+
+        # Initialize timer (with optional telemetry)
+        base_timer = PerformanceTimer()
+        if getattr(request.app.state, "telemetry_enabled", False):
+            timer = CompositeTimer([base_timer, OpenTelemetryTimer()])
+        else:
+            timer = base_timer
 
         # Select appropriate pre-initialized tracker from pool
         # Default to balanced if quality not found or trackers not initialized
@@ -851,7 +866,12 @@ async def analyze_local_video(
             )
 
         # Process video
-        timer = PerformanceTimer()
+        # Initialize timer (with optional telemetry)
+        base_timer = PerformanceTimer()
+        if getattr(request.app.state, "telemetry_enabled", False):
+            timer = CompositeTimer([base_timer, OpenTelemetryTimer()])
+        else:
+            timer = base_timer
 
         # Select appropriate pre-initialized tracker from pool
         tracker_key = quality.lower()

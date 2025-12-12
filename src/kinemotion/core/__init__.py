@@ -22,7 +22,14 @@ from .smoothing import (
     smooth_landmarks,
     smooth_landmarks_advanced,
 )
-from .timing import NULL_TIMER, NullTimer, PerformanceTimer, Timer
+from .timing import (
+    NULL_TIMER,
+    CompositeTimer,
+    NullTimer,
+    OpenTelemetryTimer,
+    PerformanceTimer,
+    Timer,
+)
 from .video_io import VideoProcessor
 
 __all__ = [
@@ -52,6 +59,8 @@ __all__ = [
     "Timer",
     "NullTimer",
     "NULL_TIMER",
+    "CompositeTimer",
+    "OpenTelemetryTimer",
     # Video I/O
     "VideoProcessor",
 ]
