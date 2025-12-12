@@ -5,13 +5,9 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import numpy as np
 from numpy.typing import NDArray
-
-if TYPE_CHECKING:
-    pass
 
 from ..core.auto_tuning import (
     AnalysisParameters,
@@ -248,7 +244,7 @@ def process_cmj_video(
     tracking_confidence: float | None = None,
     verbose: bool = False,
     timer: Timer | None = None,
-    pose_tracker: "PoseTracker | None" = None,
+    pose_tracker: PoseTracker | None = None,
 ) -> CMJMetrics:
     """
     Process a single CMJ video and return metrics.
