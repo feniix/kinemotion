@@ -45,7 +45,7 @@ uv run pytest --cov-report=html         # Generate HTML coverage report
 uv run ruff check --fix && uv run pyright  # Lint + type check
 ```
 
-**Note**: Test count reflects 207 test functions across 24 test files. Parameterized tests generate additional test instances at runtime. Total coverage: 78.67%.
+**Note**: Test count reflects 620 passing tests across 24 test files. Parameterized tests generate additional test instances at runtime. Total coverage: 80.86%.
 
 **Coverage Reports:**
 
@@ -98,7 +98,7 @@ src/kinemotion/
 │   └── validation_bounds.py    # Drop jump bounds (DropJumpBounds)
 └── [other modules]
 
-tests/                      # 519 tests (comprehensive coverage across all modules)
+tests/                      # 620 tests (comprehensive coverage across all modules)
 ├── conftest.py             # Shared fixtures (cli_runner, minimal_video, sample_video_path)
 ├── core/                   # Core module tests (9 files)
 ├── dropjump/               # Drop jump tests (6 files)
@@ -128,7 +128,7 @@ The project has evolved into a complete platform with three main components:
 │   ├── cli.py           # Main CLI commands
 │   ├── api.py           # Python API (used by backend)
 │   └── [modules]        # Core, dropjump, cmj
-└── tests/               # 519 comprehensive tests (78.67% coverage)
+└── tests/               # 620 comprehensive tests (80.86% coverage)
 ```
 
 **Data Flow:**
@@ -186,27 +186,29 @@ uv run pytest             # All tests (207 test functions)
 - Ruff (88 char lines, both linting and formatting)
 - Conventional Commits (see below)
 - **Code duplication target: < 3%**
-- **Test coverage: ≥ 50% (current: 78.67% with branch coverage)**
-- **Test count: 207 test functions across 24 test files**
+- **Test coverage: ≥ 50% (current: 80.86% with branch coverage)**
+- **Test count: 620 tests across 24 test files**
+- **SonarQube maintainability: 86% of issues resolved (6/7)**
 
 ### Coverage Summary
 
-**Current:** 78.67% (207 test functions, 2966 statements, 1056 branches)
+**Current:** 80.86% (620 tests, 3296 statements, 1088 branches)
 
 **Coverage by tier:**
 
 - Core algorithms: 89-100% ✅ (smoothing: 100%, filtering: 89%, analysis: 88-94%)
-- API/Integration: 72% ✅ (api.py)
-- CLI modules: 76-87% ✅ (dropjump: 87.17%, cmj: 76.12%)
+- API/Integration: 66% ✅ (api.py - improved with helper extraction)
+- CLI modules: 90-91% ✅ (dropjump: 90.24%, cmj: 91.26%)
 - Validation: 80-100% ✅ (validators, bounds)
-- Visualization: 10-36% ✅ (debug overlays - appropriate)
+- Kinematics: 92-93% ✅ (cmj: 92.25%, dropjump: 93.03%)
+- Visualization: 10-40% ✅ (debug overlays - appropriate)
 
 **Key metrics:**
 
-- All 519 tests pass
-- 0 type errors (pyright strict)
-- 0 linting errors (ruff)
-- 100% coverage on critical modules (smoothing, formatting, validation_bounds)
+- All 620 tests pass ✅
+- 0 type errors (pyright strict) ✅
+- 0 linting errors (ruff) ✅
+- 100% coverage on critical modules (smoothing, formatting, validation_bounds) ✅
 
 **Test Organization:**
 
@@ -227,6 +229,8 @@ View HTML report: `uv run pytest --cov-report=html && open htmlcov/index.html`
 ### Code Quality
 
 - **Duplication target:** < 3% (current: 2.96%)
+- **SonarQube maintainability:** 86% issues resolved
+- **Cognitive complexity:** Target ≤15 per function
 - **Check:** `npx jscpd src/kinemotion`
 
 **Principles:**
@@ -235,6 +239,13 @@ View HTML report: `uv run pytest --cov-report=html && open htmlcov/index.html`
 2. Use inheritance for shared behavior
 3. Create helper functions (testable, reusable)
 4. Use function composition (pass functions as parameters)
+5. Apply Extract Method pattern for complex functions (see recent refactoring)
+
+**Maintainability Patterns:**
+- Extract Method: Break down functions with complexity >15
+- Parameter Object: Bundle related parameters into dataclasses
+- Early Return: Reduce nesting by handling edge cases first
+- Helper Functions: Single Responsibility Principle for all helpers
 
 See [Testing Guide](docs/development/testing.md) for detailed duplication avoidance strategies.
 
