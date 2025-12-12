@@ -12,7 +12,7 @@ from ..core.cli_utils import (
     common_output_options,
     generate_batch_output_paths,
 )
-from .api import process_cmj_video
+from .api import AnalysisOverrides, process_cmj_video
 from .kinematics import CMJMetrics
 
 
@@ -260,16 +260,21 @@ def _process_single(
 ) -> None:
     """Process a single CMJ video by calling the API."""
     try:
+        # Create overrides from expert parameters
+        overrides = AnalysisOverrides(
+            smoothing_window=expert_params.smoothing_window,
+            velocity_threshold=expert_params.velocity_threshold,
+            min_contact_frames=expert_params.min_contact_frames,
+            visibility_threshold=expert_params.visibility_threshold,
+        )
+
         # Call the API function (handles all processing logic)
         metrics = process_cmj_video(
             video_path=video_path,
             quality=quality_preset.value,
             output_video=output,
             json_output=json_output,
-            smoothing_window=expert_params.smoothing_window,
-            velocity_threshold=expert_params.velocity_threshold,
-            min_contact_frames=expert_params.min_contact_frames,
-            visibility_threshold=expert_params.visibility_threshold,
+            overrides=overrides,
             detection_confidence=expert_params.detection_confidence,
             tracking_confidence=expert_params.tracking_confidence,
             verbose=verbose,

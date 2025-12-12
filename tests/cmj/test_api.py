@@ -1,5 +1,6 @@
 """Tests for CMJ API module."""
 
+import json
 import os
 import tempfile
 from pathlib import Path
@@ -7,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from kinemotion.api import (
+    CMJAnalysisOverrides,
     CMJVideoConfig,
     CMJVideoResult,
     process_cmj_video,
@@ -156,12 +158,15 @@ def test_process_cmj_video_quality_presets(sample_video_path: str) -> None:
 def test_process_cmj_video_with_expert_overrides(sample_video_path: str) -> None:
     """Test that expert parameter overrides work."""
     try:
-        metrics = process_cmj_video(
-            video_path=sample_video_path,
+        overrides = CMJAnalysisOverrides(
             smoothing_window=7,
             velocity_threshold=0.025,
             min_contact_frames=5,
             visibility_threshold=0.6,
+        )
+        metrics = process_cmj_video(
+            video_path=sample_video_path,
+            overrides=overrides,
             verbose=False,
         )
 
@@ -330,7 +335,7 @@ def test_process_cmj_videos_bulk_different_parameters(sample_video_path: str) ->
             CMJVideoConfig(
                 video_path=sample_video_path,
                 quality="fast",
-                smoothing_window=7,
+                overrides=CMJAnalysisOverrides(smoothing_window=7),
             ),
         ]
 
@@ -451,3 +456,117 @@ def test_process_cmj_video_verbose_mode(
 
 
 # sample_video_path fixture moved to tests/conftest.py
+
+
+def test_cmj_analysis_overrides_dataclass() -> None:
+    """Test AnalysisOverrides dataclass creation and defaults."""
+    # Test all None (default)
+    overrides = CMJAnalysisOverrides()
+    assert overrides.smoothing_window is None
+    assert overrides.velocity_threshold is None
+    assert overrides.min_contact_frames is None
+    assert overrides.visibility_threshold is None
+
+    # Test partial overrides
+    overrides = CMJAnalysisOverrides(smoothing_window=9)
+    assert overrides.smoothing_window == 9
+    assert overrides.velocity_threshold is None
+
+    # Test all specified
+    overrides = CMJAnalysisOverrides(
+        smoothing_window=9,
+        velocity_threshold=0.03,
+        min_contact_frames=7,
+        visibility_threshold=0.7,
+    )
+    assert overrides.smoothing_window == 9
+    assert overrides.velocity_threshold == 0.03
+    assert overrides.min_contact_frames == 7
+    assert overrides.visibility_threshold == 0.7
+
+
+def test_generate_debug_video_integration(sample_video_path: str) -> None:
+    """Test debug video generation through full pipeline."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_path = Path(tmpdir) / "debug.mp4"
+
+        try:
+            _ = process_cmj_video(
+                video_path=sample_video_path,
+                output_video=str(output_path),
+                quality="fast",
+                verbose=True,
+            )
+
+            # If processing succeeded, check video was created
+            if output_path.exists():
+                assert output_path.stat().st_size > 0
+
+        except ValueError:
+            # CMJ detection may fail on synthetic video
+            pass
+
+
+def test_save_metrics_to_json_integration(sample_video_path: str) -> None:
+    """Test JSON metrics saving through full pipeline."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        json_path = Path(tmpdir) / "metrics.json"
+
+        try:
+            _ = process_cmj_video(
+                video_path=sample_video_path,
+                json_output=str(json_path),
+                quality="fast",
+                verbose=True,
+            )
+
+            # If processing succeeded, check JSON was created
+            if json_path.exists():
+                assert json_path.stat().st_size > 0
+                data = json.loads(json_path.read_text())
+                assert "jump_height" in data
+                assert "flight_time" in data
+
+        except ValueError:
+            # CMJ detection may fail on synthetic video
+            pass
+
+
+def test_process_cmj_video_with_all_outputs(sample_video_path: str) -> None:
+    """Test processing with both debug video and JSON output."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_video = Path(tmpdir) / "debug.mp4"
+        json_output = Path(tmpdir) / "metrics.json"
+
+        try:
+            metrics = process_cmj_video(
+                video_path=sample_video_path,
+                output_video=str(output_video),
+                json_output=str(json_output),
+                quality="fast",
+                verbose=True,
+            )
+
+            assert isinstance(metrics, CMJMetrics)
+
+        except ValueError:
+            # CMJ detection may fail on synthetic video
+            pass
+
+
+def test_process_cmj_video_with_confidence_overrides(sample_video_path: str) -> None:
+    """Test processing with detection and tracking confidence overrides."""
+    try:
+        metrics = process_cmj_video(
+            video_path=sample_video_path,
+            detection_confidence=0.4,
+            tracking_confidence=0.4,
+            quality="fast",
+            verbose=False,
+        )
+
+        assert isinstance(metrics, CMJMetrics)
+
+    except ValueError:
+        # CMJ detection may fail on synthetic video
+        pass

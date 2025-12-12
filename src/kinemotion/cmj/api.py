@@ -48,6 +48,20 @@ from .kinematics import CMJMetrics, calculate_cmj_metrics
 from .metrics_validator import CMJMetricsValidator
 
 
+@dataclass
+class AnalysisOverrides:
+    """Optional overrides for analysis parameters.
+
+    Allows fine-tuning of specific analysis parameters beyond quality presets.
+    If None, values will be determined by the quality preset.
+    """
+
+    smoothing_window: int | None = None
+    velocity_threshold: float | None = None
+    min_contact_frames: int | None = None
+    visibility_threshold: float | None = None
+
+
 def _generate_debug_video(
     output_video: str,
     frames: list[NDArray[np.uint8]],
@@ -109,9 +123,9 @@ def _print_timing_summary(start_time: float, timer: Timer, metrics: CMJMetrics) 
     for stage, duration in stage_times.items():
         percentage = (duration / total_time) * 100
         dur_ms = duration * 1000
-        print(f"{stage:. <40} {dur_ms:>6.0f}ms ({percentage:>5.1f}%)")
+        print(f"{stage:.<40} {dur_ms:>6.0f}ms ({percentage:>5.1f}%)")
     total_ms = total_time * 1000
-    print(f"{('Total'):.>40} {total_ms:>6.0f}ms (100.0%)")
+    print(f"{'Total':.<40} {total_ms:>6.0f}ms (100.0%)")
     print()
 
     print(f"\nJump height: {metrics.jump_height:.3f}m")
@@ -212,10 +226,7 @@ class CMJVideoConfig:
     quality: str = "balanced"
     output_video: str | None = None
     json_output: str | None = None
-    smoothing_window: int | None = None
-    velocity_threshold: float | None = None
-    min_contact_frames: int | None = None
-    visibility_threshold: float | None = None
+    overrides: AnalysisOverrides | None = None
     detection_confidence: float | None = None
     tracking_confidence: float | None = None
 
@@ -236,10 +247,7 @@ def process_cmj_video(
     quality: str = "balanced",
     output_video: str | None = None,
     json_output: str | None = None,
-    smoothing_window: int | None = None,
-    velocity_threshold: float | None = None,
-    min_contact_frames: int | None = None,
-    visibility_threshold: float | None = None,
+    overrides: AnalysisOverrides | None = None,
     detection_confidence: float | None = None,
     tracking_confidence: float | None = None,
     verbose: bool = False,
@@ -258,10 +266,7 @@ def process_cmj_video(
         quality: Analysis quality preset ("fast", "balanced", or "accurate")
         output_video: Optional path for debug video output
         json_output: Optional path for JSON metrics output
-        smoothing_window: Optional override for smoothing window
-        velocity_threshold: Optional override for velocity threshold
-        min_contact_frames: Optional override for minimum contact frames
-        visibility_threshold: Optional override for visibility threshold
+        overrides: Optional AnalysisOverrides with parameter fine-tuning
         detection_confidence: Optional override for pose detection confidence
         tracking_confidence: Optional override for pose tracking confidence
         verbose: Print processing details
@@ -315,10 +320,10 @@ def process_cmj_video(
                 params = auto_tune_parameters(characteristics, quality_preset)
                 params = apply_expert_overrides(
                     params,
-                    smoothing_window,
-                    velocity_threshold,
-                    min_contact_frames,
-                    visibility_threshold,
+                    overrides.smoothing_window if overrides else None,
+                    overrides.velocity_threshold if overrides else None,
+                    overrides.min_contact_frames if overrides else None,
+                    overrides.visibility_threshold if overrides else None,
                 )
 
                 if verbose:
@@ -463,10 +468,7 @@ def _process_cmj_video_wrapper(config: CMJVideoConfig) -> CMJVideoResult:
             quality=config.quality,
             output_video=config.output_video,
             json_output=config.json_output,
-            smoothing_window=config.smoothing_window,
-            velocity_threshold=config.velocity_threshold,
-            min_contact_frames=config.min_contact_frames,
-            visibility_threshold=config.visibility_threshold,
+            overrides=config.overrides,
             detection_confidence=config.detection_confidence,
             tracking_confidence=config.tracking_confidence,
             verbose=False,

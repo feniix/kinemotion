@@ -8,6 +8,9 @@ The actual implementations have been moved to their respective submodules:
 
 # CMJ API
 from .cmj.api import (
+    AnalysisOverrides as CMJAnalysisOverrides,
+)
+from .cmj.api import (
     CMJVideoConfig,
     CMJVideoResult,
     process_cmj_video,
@@ -32,6 +35,7 @@ __all__ = [
     "process_dropjump_video",
     "process_dropjump_videos_bulk",
     # CMJ
+    "CMJAnalysisOverrides",
     "CMJMetrics",
     "CMJVideoConfig",
     "CMJVideoResult",
