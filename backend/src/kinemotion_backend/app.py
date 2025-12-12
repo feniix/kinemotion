@@ -59,6 +59,7 @@ class AnalysisResponse:
         metrics: dict[str, Any] | None = None,
         results_url: str | None = None,
         debug_video_url: str | None = None,
+        original_video_url: str | None = None,
         error: str | None = None,
         processing_time_s: float = 0.0,
     ):
@@ -67,6 +68,7 @@ class AnalysisResponse:
         self.metrics = metrics
         self.results_url = results_url
         self.debug_video_url = debug_video_url
+        self.original_video_url = original_video_url
         self.error = error
         self.processing_time_s = processing_time_s
 
@@ -87,6 +89,9 @@ class AnalysisResponse:
         if self.debug_video_url is not None:
             result["debug_video_url"] = self.debug_video_url
 
+        if self.original_video_url is not None:
+            result["original_video_url"] = self.original_video_url
+
         if self.error is not None:
             result["error"] = self.error
 
@@ -105,6 +110,16 @@ class R2StorageClient:
         self.access_key = os.getenv("R2_ACCESS_KEY", "")
         self.secret_key = os.getenv("R2_SECRET_KEY", "")
         self.bucket_name = os.getenv("R2_BUCKET_NAME") or "kinemotion"
+        # Optional: if set, we will return stable public URLs instead of presigned URLs.
+        # Example: https://<your-public-domain> (custom domain) or https://<bucket>.<account>.r2.dev
+        self.public_base_url = (os.getenv("R2_PUBLIC_BASE_URL") or "").rstrip("/")
+        # Fallback: presigned URL expiration seconds (default 1 hour)
+        try:
+            self.presign_expiration_s = int(
+                os.getenv("R2_PRESIGN_EXPIRATION_S") or "3600"
+            )
+        except ValueError:
+            self.presign_expiration_s = 3600
 
         if not all([self.endpoint, self.access_key, self.secret_key]):
             raise ValueError(
@@ -144,6 +159,19 @@ class R2StorageClient:
         except Exception as e:
             raise OSError(f"Failed to generate presigned URL: {str(e)}") from e
 
+    def get_object_url(self, key: str) -> str:
+        """Return a long-lived shareable URL for an object key.
+
+        Prefers a stable public URL if `R2_PUBLIC_BASE_URL` is configured.
+        Otherwise, falls back to a presigned URL with `R2_PRESIGN_EXPIRATION_S`.
+        """
+        normalized_key = key.lstrip("/")
+        if self.public_base_url:
+            return f"{self.public_base_url}/{normalized_key}"
+        return self.generate_presigned_url(
+            normalized_key, expiration=self.presign_expiration_s
+        )
+
     def upload_file(self, local_path: str, remote_key: str) -> str:
         """Upload file to R2 storage.
 
@@ -159,7 +187,7 @@ class R2StorageClient:
         """
         try:
             self.client.upload_file(local_path, self.bucket_name, remote_key)
-            return self.generate_presigned_url(remote_key)
+            return self.get_object_url(remote_key)
         except Exception as e:
             raise OSError(f"Failed to upload to R2: {str(e)}") from e
 
@@ -207,7 +235,7 @@ class R2StorageClient:
         """
         try:
             self.client.put_object(Bucket=self.bucket_name, Key=key, Body=body)
-            return self.generate_presigned_url(key)
+            return self.get_object_url(key)
         except Exception as e:
             raise OSError(f"Failed to put object to R2: {str(e)}") from e
 
@@ -534,6 +562,7 @@ async def analyze_video(
     """
     import json
     import time
+    import uuid
 
     start_time = time.time()
     temp_video_path = None
@@ -541,6 +570,9 @@ async def analyze_video(
     r2_video_key = None
     r2_results_key = None
     r2_debug_video_key = None
+
+    upload_id = uuid.uuid4().hex
+    upload_suffix = Path(file.filename or "video.mp4").suffix or ".mp4"
 
     try:
         # Validate referer (prevent direct API access)
@@ -587,15 +619,19 @@ async def analyze_video(
                 temp_debug_video_path = temp_debug.name
 
         # Upload to R2 if client available
+        original_video_url = None
         if r2_client:
             upload_start = time.time()
-            r2_video_key = f"videos/{jump_type}/{file.filename}"
+            r2_video_key = f"videos/{jump_type}/{upload_id}{upload_suffix}"
             try:
-                r2_client.upload_file(temp_video_path, r2_video_key)
+                original_video_url = r2_client.upload_file(
+                    temp_video_path, r2_video_key
+                )
                 upload_duration = time.time() - upload_start
                 logger.info(
                     "timing_r2_input_video_upload",
                     key=r2_video_key,
+                    url=original_video_url,
                     duration_ms=round(upload_duration * 1000),
                 )
             except OSError as e:
@@ -660,12 +696,8 @@ async def analyze_video(
         debug_video_url = None
 
         if r2_client:
-            # Use filename stem for derived files to keep them associated
-            # e.g. video.mp4 -> video_results.json, video_debug.mp4
-            file_stem = Path(file.filename or "video").stem
-
             # Upload Metrics JSON
-            r2_results_key = f"results/{jump_type}/{file_stem}_results.json"
+            r2_results_key = f"results/{jump_type}/{upload_id}_results.json"
             try:
                 results_upload_start = time.time()
                 results_json = json.dumps(metrics, indent=2)
@@ -691,7 +723,7 @@ async def analyze_video(
                 and os.path.exists(temp_debug_video_path)
                 and os.path.getsize(temp_debug_video_path) > 0
             ):
-                r2_debug_video_key = f"debug_videos/{jump_type}/{file_stem}_debug.mp4"
+                r2_debug_video_key = f"debug_videos/{jump_type}/{upload_id}_debug.mp4"
                 try:
                     debug_upload_start = time.time()
                     debug_video_url = r2_client.upload_file(
@@ -720,6 +752,7 @@ async def analyze_video(
             metrics=metrics,
             results_url=results_url,
             debug_video_url=debug_video_url,
+            original_video_url=original_video_url,
             processing_time_s=processing_time,
         )
 

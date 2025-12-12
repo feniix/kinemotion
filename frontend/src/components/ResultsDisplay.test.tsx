@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ResultsDisplay from './ResultsDisplay';
@@ -161,12 +162,21 @@ describe('ResultsDisplay', () => {
 
     expect(screen.getByTitle('Original Video')).toBeInTheDocument();
     expect(screen.getByTitle('Analysis Overlay')).toBeInTheDocument();
+    expect(screen.getByText('Download Original Video')).toBeInTheDocument();
     expect(screen.getByText('Download Analysis Video')).toBeInTheDocument();
 
-    // Test with only original video
+    // Test with only original video (local file)
     rerender(<ResultsDisplay metrics={{...commonMetrics, metrics: {...commonMetrics.metrics, validation: {status: 'PASS' as ValidationResults['status'], issues: []}}}} videoFile={mockFile} />);
     expect(screen.getByTitle('Original Video')).toBeInTheDocument();
     expect(screen.queryByTitle('Analysis Overlay')).not.toBeInTheDocument();
+    expect(screen.getByText('Download Original Video')).toBeInTheDocument();
+    expect(screen.queryByText('Download Analysis Video')).not.toBeInTheDocument();
+
+    // Test with R2 original video URL
+    rerender(<ResultsDisplay metrics={{...commonMetrics, original_video_url: 'https://r2.example.com/videos/test.mp4', metrics: {...commonMetrics.metrics, validation: {status: 'PASS' as ValidationResults['status'], issues: []}}}} />);
+    expect(screen.getByTitle('Original Video')).toBeInTheDocument();
+    expect(screen.queryByTitle('Analysis Overlay')).not.toBeInTheDocument();
+    expect(screen.getByText('Download Original Video')).toBeInTheDocument();
     expect(screen.queryByText('Download Analysis Video')).not.toBeInTheDocument();
   });
 

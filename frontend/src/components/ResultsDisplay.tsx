@@ -1,4 +1,5 @@
 import { AnalysisResponse, METRIC_METADATA } from '../types/api'
+import { useEffect, useState } from 'react'
 
 interface ResultsDisplayProps {
   metrics: AnalysisResponse
@@ -68,6 +69,25 @@ function PhaseCard({ title, metrics }: PhaseCardProps) {
 }
 
 function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
+  const [localOriginalUrl, setLocalOriginalUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!videoFile) {
+      setLocalOriginalUrl(null)
+      return
+    }
+
+    const url = URL.createObjectURL(videoFile)
+    setLocalOriginalUrl(url)
+
+    return () => {
+      URL.revokeObjectURL(url)
+    }
+  }, [videoFile])
+
+  const originalSrc = metrics.original_video_url || localOriginalUrl || undefined
+  const showOriginal = Boolean(originalSrc)
+  const showDebug = Boolean(metrics.debug_video_url)
   // Extract data
   const metricsData = metrics.metrics?.data || {}
   const validationStatus = metrics.metrics?.validation?.status
@@ -263,11 +283,11 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
       </div>
 
       {/* 3. Video Previews (Split view if debug video exists) */}
-      <div className="metrics-dashboard" style={{ display: 'grid', gridTemplateColumns: metrics.debug_video_url ? '1fr 1fr' : '1fr', gap: '2rem' }}>
-        {videoFile && (
+      <div className="metrics-dashboard" style={{ display: 'grid', gridTemplateColumns: (showOriginal && showDebug) ? '1fr 1fr' : '1fr', gap: '2rem' }}>
+        {showOriginal && (
           <div className="video-preview-container">
             <video
-              src={URL.createObjectURL(videoFile)}
+              src={originalSrc}
               controls
               className="analysis-video-player"
               playsInline
@@ -276,7 +296,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
           </div>
         )}
 
-        {metrics.debug_video_url && (
+        {showDebug && (
           <div className="video-preview-container debug-video">
             <video
               src={metrics.debug_video_url}
@@ -289,9 +309,23 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
         )}
       </div>
 
-      {metrics.debug_video_url && (
+      {(showOriginal || showDebug) && (
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-           <a
+          {showOriginal && (
+            <a
+              href={originalSrc}
+              download={`original_${new Date().toISOString()}.mp4`}
+              className="download-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'var(--primary-color)', fontWeight: 500, marginRight: showDebug ? '1rem' : undefined }}
+            >
+              Download Original Video
+            </a>
+          )}
+
+          {showDebug && (
+            <a
               href={metrics.debug_video_url}
               download={`analysis_${new Date().toISOString()}.mp4`}
               className="download-link"
@@ -301,6 +335,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
             >
               Download Analysis Video
             </a>
+          )}
         </div>
       )}
 

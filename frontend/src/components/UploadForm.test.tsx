@@ -1,7 +1,22 @@
+import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 import UploadForm from './UploadForm';
 import { RecentUpload } from '../hooks/useRecentUploads';
+
+interface UploadFormProps {
+  file: File | null
+  jumpType: 'cmj' | 'dropjump'
+  loading: boolean
+  enableDebug: boolean
+  recentUploads: RecentUpload[]
+  onFileChange: (file: File | null) => void
+  onJumpTypeChange: (jumpType: 'cmj' | 'dropjump') => void
+  onEnableDebugChange: (enable: boolean) => void
+  onAnalyze: () => void
+  onClearHistory?: () => void
+}
 
 describe('UploadForm', () => {
   let mockOnAnalyze: ReturnType<typeof vi.fn>;
@@ -13,7 +28,7 @@ describe('UploadForm', () => {
   let currentProps: any;
 
   // Helper to create fresh props for each test
-  const createProps = (overrides?: Partial<typeof defaultProps>) => {
+  const createProps = (overrides?: Partial<UploadFormProps>) => {
     const props = {
       file: null,
       jumpType: 'cmj' as 'cmj' | 'dropjump',
@@ -233,7 +248,7 @@ describe('UploadForm', () => {
     const recentUploads: RecentUpload[] = [{
       filename: 'old-jump.mp4',
       jumpType: 'cmj',
-      timestamp: new Date().toISOString(),
+      timestamp: Date.now(),
       id: '123'
     }];
     currentProps = createProps({ recentUploads: recentUploads });

@@ -32,6 +32,7 @@ export interface AnalysisResponse {
   }
   results_url?: string
   debug_video_url?: string
+  original_video_url?: string
   processing_time_s?: number
   error?: string | null
 }
