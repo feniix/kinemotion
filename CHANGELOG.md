@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.47.4 (2025-12-12)
+
+### Bug Fixes
+
+- **cmj**: Remove empty TYPE_CHECKING block
+  ([`fb91da8`](https://github.com/feniix/kinemotion/commit/fb91da8b49aebdb52c15e413a22c50f9d952c54b))
+
+### Refactoring
+
+- **cmj**: Reduce cognitive complexity of process_cmj_video from 32 to ≤15
+  ([`e646fe0`](https://github.com/feniix/kinemotion/commit/e646fe0d41e857e4a0ca5f3bab1533a966fa1088))
+
+
 ## v0.47.3 (2025-12-12)
 
 ### Bug Fixes
