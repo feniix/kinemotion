@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.47.1 (2025-12-12)
+
+### Bug Fixes
+
+- **core**: Ensure correct timing.py linting and type safety
+  ([`84ea7cf`](https://github.com/feniix/kinemotion/commit/84ea7cf269c81299cf0939b0c28f83c51910a523))
+
+
 ## v0.47.0 (2025-12-12)
 
 ### Documentation
