@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.48.0 (2025-12-12)
+
+### Chores
+
+- Configure cursor mcp
+  ([`0f344f5`](https://github.com/feniix/kinemotion/commit/0f344f57f9613459de8d6f306b0566f82ff64997))
+
+### Features
+
+- Serve original videos from R2 storage instead of Vercel
+  ([`fe74d1f`](https://github.com/feniix/kinemotion/commit/fe74d1fc51103df2fb505a1cdc1f0e1f53845c3f))
+
+- **backend**: Improve R2 storage configuration and testing
+  ([`0a8579d`](https://github.com/feniix/kinemotion/commit/0a8579dafaeb0b823e43aefea36b94c08dbe834d))
+
+### Refactoring
+
+- **cmj**: Apply AnalysisOverrides pattern and fix verbose print bug
+  ([`3e3c3b8`](https://github.com/feniix/kinemotion/commit/3e3c3b8acc2021d2fb4655027258e195ce0c17c7))
+
+- **dropjump**: Reduce cognitive complexity in process_dropjump_video
+  ([`bf4ebfb`](https://github.com/feniix/kinemotion/commit/bf4ebfb3dede9a4a9761d66dcb376633dc980932))
+
+- **dropjump**: Reduce parameters with AnalysisOverrides dataclass
+  ([`35f1dce`](https://github.com/feniix/kinemotion/commit/35f1dce09b50ff78cdd34e7967b0258e3469437b))
+
+
 ## v0.47.4 (2025-12-12)
 
 ### Bug Fixes

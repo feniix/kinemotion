@@ -894,7 +894,7 @@ wheels = [
 
 [[package]]
 name = "kinemotion"
-version = "0.47.4"
+version = "0.48.0"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
