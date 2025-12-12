@@ -92,6 +92,52 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
+## Environment Configuration
+
+### Required Environment Variables
+
+#### R2 Storage (for video persistence)
+
+```bash
+R2_ENDPOINT=https://abc123.r2.cloudflarestorage.com
+R2_ACCESS_KEY=your_access_key_from_cloudflare
+R2_SECRET_KEY=your_secret_key_from_cloudflare
+R2_BUCKET_NAME=kinemotion  # Default bucket name
+```
+
+#### Optional R2 URL Strategy
+
+**Public URLs (Recommended for Production):**
+
+```bash
+# Use custom domain (requires R2 bucket custom domain setup)
+R2_PUBLIC_BASE_URL=https://kinemotion-public.example.com
+
+# Or use R2.dev public URL (simpler, but R2-branded domain)
+R2_PUBLIC_BASE_URL=https://kinemotion.abc123.r2.dev
+```
+
+**Presigned URLs (Fallback):**
+
+```bash
+# If R2_PUBLIC_BASE_URL is not set, presigned URLs are used
+# Default expiration: 7 days (604800 seconds)
+R2_PRESIGN_EXPIRATION_S=604800  # Optional, defaults to 7 days
+```
+
+**Trade-offs:**
+
+- **Public URLs**: Stable, long-lived, better for production (requires bucket to be public or custom domain)
+- **Presigned URLs**: Temporary access, expire after N seconds, no custom domain needed
+
+#### CORS Configuration
+
+```bash
+CORS_ORIGINS=https://kinemotion-mvp.vercel.app,https://app.example.com
+```
+
+______________________________________________________________________
+
 ## Deployment Steps (Quick Version)
 
 ### Prerequisites
@@ -128,7 +174,12 @@ gcloud run deploy kinemotion-backend \
   --cpu 1 \
   --max-instances 10 \
   --set-env-vars "CORS_ORIGINS=https://kinemotion-mvp.vercel.app" \
-  --set-env-vars "WORKERS=1"
+  --set-env-vars "WORKERS=1" \
+  --set-env-vars "R2_ENDPOINT=https://xxx.r2.cloudflarestorage.com" \
+  --set-env-vars "R2_ACCESS_KEY=your_access_key" \
+  --set-env-vars "R2_SECRET_KEY=your_secret_key" \
+  --set-env-vars "R2_BUCKET_NAME=kinemotion" \
+  --set-env-vars "R2_PUBLIC_BASE_URL=https://kinemotion-public.example.com"
 
 # Get URL
 BACKEND_URL=$(gcloud run services describe kinemotion-backend \

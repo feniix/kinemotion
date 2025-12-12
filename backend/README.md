@@ -60,7 +60,20 @@ R2_ENDPOINT=https://abc123.r2.cloudflarestorage.com
 R2_ACCESS_KEY=your_access_key
 R2_SECRET_KEY=your_secret_key
 R2_BUCKET_NAME=kinemotion  # Default
+
+# Optional: Serve videos via public URL instead of presigned URLs
+R2_PUBLIC_BASE_URL=https://kinemotion-public.example.com  # Custom domain
+# Or use R2.dev public URL: https://kinemotion.abc123.r2.dev
+
+# Optional: Presigned URL expiration (default: 604800 = 7 days)
+R2_PRESIGN_EXPIRATION_S=604800
 ```
+
+**URL Strategy:**
+
+- If `R2_PUBLIC_BASE_URL` is set, videos are served via stable public URLs (recommended for production)
+- Otherwise, presigned URLs are generated with configurable expiration (default 7 days)
+- Presigned URLs expire after `R2_PRESIGN_EXPIRATION_S` seconds (max 604800 = 7 days)
 
 If R2 credentials are not provided, the API will still work but won't store files on R2 (videos are processed locally and deleted after analysis).
 
@@ -400,6 +413,13 @@ R2_ENDPOINT=https://xxx.r2.cloudflarestorage.com
 R2_ACCESS_KEY=your_access_key
 R2_SECRET_KEY=your_secret_key
 R2_BUCKET_NAME=kinemotion
+
+# Optional: Public URL for serving videos (recommended)
+R2_PUBLIC_BASE_URL=https://kinemotion-public.example.com
+# Or: R2_PUBLIC_BASE_URL=https://kinemotion.abc123.r2.dev
+
+# Optional: Presigned URL expiration in seconds (default: 604800 = 7 days)
+R2_PRESIGN_EXPIRATION_S=604800
 
 # CORS (Add production domain)
 CORS_ORIGINS=https://myapp.example.com

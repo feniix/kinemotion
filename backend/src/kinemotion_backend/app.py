@@ -113,13 +113,13 @@ class R2StorageClient:
         # Optional: if set, we will return stable public URLs instead of presigned URLs.
         # Example: https://<your-public-domain> (custom domain) or https://<bucket>.<account>.r2.dev
         self.public_base_url = (os.getenv("R2_PUBLIC_BASE_URL") or "").rstrip("/")
-        # Fallback: presigned URL expiration seconds (default 1 hour)
+        # Fallback: presigned URL expiration seconds (default 7 days, S3 max)
         try:
             self.presign_expiration_s = int(
-                os.getenv("R2_PRESIGN_EXPIRATION_S") or "3600"
+                os.getenv("R2_PRESIGN_EXPIRATION_S") or "604800"
             )
         except ValueError:
-            self.presign_expiration_s = 3600
+            self.presign_expiration_s = 604800
 
         if not all([self.endpoint, self.access_key, self.secret_key]):
             raise ValueError(

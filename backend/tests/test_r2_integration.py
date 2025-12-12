@@ -26,6 +26,72 @@ def test_r2_client_initialization_with_credentials() -> None:
         assert client.access_key == "test_key"
         assert client.secret_key == "test_secret"
         assert client.bucket_name == "kinemotion"
+        assert client.public_base_url == ""
+        assert client.presign_expiration_s == 604800  # 7 days default
+
+
+def test_r2_client_initialization_with_public_url() -> None:
+    """Test R2 client initialization with public base URL."""
+    with patch.dict(
+        "os.environ",
+        {
+            "R2_ENDPOINT": "https://r2.example.com",
+            "R2_ACCESS_KEY": "test_key",
+            "R2_SECRET_KEY": "test_secret",
+            "R2_PUBLIC_BASE_URL": "https://kinemotion-public.example.com",
+        },
+    ):
+        client = R2StorageClient()
+
+        assert client.public_base_url == "https://kinemotion-public.example.com"
+
+
+def test_r2_client_initialization_strips_trailing_slash_from_public_url() -> None:
+    """Test that trailing slash is stripped from public base URL."""
+    with patch.dict(
+        "os.environ",
+        {
+            "R2_ENDPOINT": "https://r2.example.com",
+            "R2_ACCESS_KEY": "test_key",
+            "R2_SECRET_KEY": "test_secret",
+            "R2_PUBLIC_BASE_URL": "https://kinemotion-public.example.com/",
+        },
+    ):
+        client = R2StorageClient()
+
+        assert client.public_base_url == "https://kinemotion-public.example.com"
+
+
+def test_r2_client_initialization_custom_presign_expiration() -> None:
+    """Test R2 client initialization with custom presigned expiration."""
+    with patch.dict(
+        "os.environ",
+        {
+            "R2_ENDPOINT": "https://r2.example.com",
+            "R2_ACCESS_KEY": "test_key",
+            "R2_SECRET_KEY": "test_secret",
+            "R2_PRESIGN_EXPIRATION_S": "86400",  # 1 day
+        },
+    ):
+        client = R2StorageClient()
+
+        assert client.presign_expiration_s == 86400
+
+
+def test_r2_client_initialization_invalid_presign_expiration() -> None:
+    """Test R2 client falls back to default with invalid expiration."""
+    with patch.dict(
+        "os.environ",
+        {
+            "R2_ENDPOINT": "https://r2.example.com",
+            "R2_ACCESS_KEY": "test_key",
+            "R2_SECRET_KEY": "test_secret",
+            "R2_PRESIGN_EXPIRATION_S": "not_a_number",
+        },
+    ):
+        client = R2StorageClient()
+
+        assert client.presign_expiration_s == 604800  # Falls back to 7 days
 
 
 def test_r2_client_initialization_missing_endpoint() -> None:
@@ -101,9 +167,105 @@ def test_r2_upload_file_success() -> None:
             mock_s3.generate_presigned_url.assert_called_once_with(
                 "get_object",
                 Params={"Bucket": "kinemotion", "Key": "videos/test.mp4"},
-                ExpiresIn=3600,
+                ExpiresIn=604800,  # 7 days default
             )
             assert url == "https://r2.example.com/presigned-url"
+
+
+def test_get_object_url_with_public_base_url() -> None:
+    """Test that get_object_url returns public URL when configured."""
+    with patch.dict(
+        "os.environ",
+        {
+            "R2_ENDPOINT": "https://r2.example.com",
+            "R2_ACCESS_KEY": "test_key",
+            "R2_SECRET_KEY": "test_secret",
+            "R2_PUBLIC_BASE_URL": "https://kinemotion-public.example.com",
+        },
+    ):
+        with patch("kinemotion_backend.app.boto3.client"):
+            client = R2StorageClient()
+            url = client.get_object_url("videos/test.mp4")
+
+            assert url == "https://kinemotion-public.example.com/videos/test.mp4"
+
+
+def test_get_object_url_without_public_base_url() -> None:
+    """Test that get_object_url falls back to presigned URL when no public base."""
+    with patch.dict(
+        "os.environ",
+        {
+            "R2_ENDPOINT": "https://r2.example.com",
+            "R2_ACCESS_KEY": "test_key",
+            "R2_SECRET_KEY": "test_secret",
+        },
+    ):
+        with patch("kinemotion_backend.app.boto3.client") as mock_boto3:
+            mock_s3 = MagicMock()
+            mock_boto3.return_value = mock_s3
+            mock_s3.generate_presigned_url.return_value = (
+                "https://r2.example.com/presigned-url?expires=123"
+            )
+
+            client = R2StorageClient()
+            url = client.get_object_url("videos/test.mp4")
+
+            # Should call generate_presigned_url with default expiration
+            mock_s3.generate_presigned_url.assert_called_once_with(
+                "get_object",
+                Params={"Bucket": "kinemotion", "Key": "videos/test.mp4"},
+                ExpiresIn=604800,  # 7 days
+            )
+            assert url == "https://r2.example.com/presigned-url?expires=123"
+
+
+def test_get_object_url_strips_leading_slash() -> None:
+    """Test that get_object_url normalizes keys by stripping leading slash."""
+    with patch.dict(
+        "os.environ",
+        {
+            "R2_ENDPOINT": "https://r2.example.com",
+            "R2_ACCESS_KEY": "test_key",
+            "R2_SECRET_KEY": "test_secret",
+            "R2_PUBLIC_BASE_URL": "https://kinemotion-public.example.com",
+        },
+    ):
+        with patch("kinemotion_backend.app.boto3.client"):
+            client = R2StorageClient()
+            url = client.get_object_url("/videos/test.mp4")  # Leading slash
+
+            # Should strip leading slash
+            assert url == "https://kinemotion-public.example.com/videos/test.mp4"
+
+
+def test_get_object_url_with_custom_expiration() -> None:
+    """Test that get_object_url respects custom presigned expiration."""
+    with patch.dict(
+        "os.environ",
+        {
+            "R2_ENDPOINT": "https://r2.example.com",
+            "R2_ACCESS_KEY": "test_key",
+            "R2_SECRET_KEY": "test_secret",
+            "R2_PRESIGN_EXPIRATION_S": "3600",  # 1 hour
+        },
+    ):
+        with patch("kinemotion_backend.app.boto3.client") as mock_boto3:
+            mock_s3 = MagicMock()
+            mock_boto3.return_value = mock_s3
+            mock_s3.generate_presigned_url.return_value = (
+                "https://r2.example.com/presigned"
+            )
+
+            client = R2StorageClient()
+            url = client.get_object_url("videos/test.mp4")
+
+            # Should use custom expiration
+            mock_s3.generate_presigned_url.assert_called_once_with(
+                "get_object",
+                Params={"Bucket": "kinemotion", "Key": "videos/test.mp4"},
+                ExpiresIn=3600,  # Custom expiration
+            )
+            assert url == "https://r2.example.com/presigned"
 
 
 def test_r2_upload_file_returns_url() -> None:
@@ -265,7 +427,7 @@ def test_r2_put_object_success() -> None:
             mock_s3.generate_presigned_url.assert_called_once_with(
                 "get_object",
                 Params={"Bucket": "kinemotion", "Key": "results/test.json"},
-                ExpiresIn=3600,
+                ExpiresIn=604800,  # 7 days default
             )
             assert url == "https://r2.example.com/presigned-url"
 
