@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.1.1 (2025-12-13)
+
+### Bug Fixes
+
+- **docs**: Enhance api module docstring with examples and analysis types
+  ([`94e32f1`](https://github.com/feniix/kinemotion/commit/94e32f1061505747c0345e8683a61bcf8dc60ee3))
+
+
 ## v0.1.0 (2025-12-13)
 
 - Initial Release
