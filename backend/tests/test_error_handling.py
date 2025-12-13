@@ -53,7 +53,7 @@ def test_validation_error_response_format(
     data = response.json()
 
     # Required error fields
-    assert data["status_code"] == 422
+    assert data["status"] == 422
     assert "message" in data
     assert "error" in data
     assert "processing_time_s" in data
@@ -103,7 +103,7 @@ def test_processing_error_response_format(
     data = response.json()
 
     # Required error fields (ValueError processing errors return 422)
-    assert data["status_code"] == 422
+    assert data["status"] == 422
     assert "message" in data
     assert "error" in data
     assert "processing_time_s" in data
@@ -121,7 +121,7 @@ def test_processing_error_contains_error_type(
     data = response.json()
     # Error should include error details (though exact message depends on kinemotion)
     assert "error" in data
-    assert data["status_code"] == 422
+    assert data["status"] == 422
 
 
 def test_file_cleanup_on_processing_error(
