@@ -1,4 +1,21 @@
-"""Landmark smoothing utilities to reduce jitter in pose tracking."""
+"""Landmark smoothing utilities to reduce jitter in pose tracking.
+
+This module provides filtering and smoothing techniques to improve the quality of
+MediaPipe pose landmarks by removing noise and jitter while preserving key movement
+features. Techniques include:
+
+- Savitzky-Golay filtering: Smooth temporal data while preserving edges
+- Bilateral temporal filtering: Edge-preserving smoothing with adaptive weights
+- Outlier rejection: Remove erratic landmark detections
+
+Used extensively in jump analysis to ensure accurate velocity and position calculations
+across video frames.
+
+Example:
+    from kinemotion.core.smoothing import smooth_landmarks
+
+    smoothed = smooth_landmarks(raw_landmarks, quality="balanced")
+"""
 
 from typing import TypeAlias
 

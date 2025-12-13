@@ -1,4 +1,22 @@
-"""API endpoints for analysis sessions and coach feedback."""
+"""API endpoints for analysis sessions and coach feedback.
+
+This module provides FastAPI endpoints for managing video analysis sessions and
+coach feedback. Key responsibilities:
+
+- Create and retrieve analysis sessions for uploaded videos
+- Process video analysis requests through the kinemotion engine
+- Store and retrieve coach feedback linked to analysis sessions
+- Handle authentication via Supabase JWT tokens
+- Manage session state and error handling
+
+Endpoints:
+    POST /api/analysis/sessions - Create a new analysis session
+    GET /api/analysis/sessions/{session_id} - Retrieve session details
+    POST /api/analysis/sessions/{session_id}/feedback - Add coach feedback
+    GET /api/analysis/sessions/{session_id}/feedback - Retrieve feedback
+
+All endpoints require JWT authentication via Authorization header.
+"""
 
 from typing import Any
 
