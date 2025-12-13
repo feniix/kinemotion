@@ -28,14 +28,9 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     strategy:
       matrix:
         python-version: ['3.12']
-    outputs:
-      version: ${{ steps.get_version.outputs.version }}
-      released: ${{ steps.get_version.outputs.released }}
     steps:
       - name: Display deployment reason (if manual trigger)
         if: github.event_name == 'workflow_dispatch'
@@ -77,6 +72,31 @@ jobs:
           cd backend
           uv run ruff check .
 
+  release:
+    name: Create Release
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+      released: ${{ steps.get_version.outputs.released }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          uv sync
+
       - name: Create Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -100,7 +120,7 @@ jobs:
 
   build:
     name: Build and Push Docker Image to GCR
-    needs: test
+    needs: release
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -129,7 +149,7 @@ jobs:
           context: .
           file: ./backend/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ needs.test.outputs.version }},${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }},${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:latest
+          tags: ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ needs.release.outputs.version }},${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }},${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:latest
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:buildcache,mode=max
 
