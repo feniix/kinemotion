@@ -1,6 +1,18 @@
 """FastAPI application for Kinemotion video analysis backend.
 
-Real metrics integration with Cloudflare R2 storage for video and results management.
+This module provides a REST API for analyzing jump mechanics from video files.
+It handles video uploads, processes them through the kinemotion analysis engine
+(drop jump and counter-movement jump analysis), stores results in Supabase, and
+manages video/result artifacts in Cloudflare R2 storage.
+
+Key features:
+- Video upload and processing for multiple jump types
+- Integration with MediaPipe pose tracking
+- Metrics calculation (RSI, flight time, jump height, etc.)
+- Result persistence in Supabase database
+- Artifact management in Cloudflare R2 storage
+- Rate limiting and request logging middleware
+- CORS support for frontend integration
 """
 
 import os
