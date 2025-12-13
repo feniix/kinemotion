@@ -179,6 +179,9 @@ class AnalysisService:
             # Calculate processing time
             processing_time = time.time() - start_time
 
+            # Count metrics from the data field
+            metrics_count = len(metrics.get("data", {}))
+
             # Log response serialization timing
             serialization_start = time.time()
             response_data = AnalysisResponse(
@@ -209,9 +212,6 @@ class AnalysisService:
                 duration_ms=round(cleanup_duration_ms, 1),
             )
 
-            metrics_count = (
-                len(response_data.metrics.to_dict()) if response_data.metrics else 0
-            )
             logger.info(
                 "video_analysis_completed",
                 jump_type=normalized_jump_type,
