@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.49.0 (2025-12-13)
+
+### Bug Fixes
+
+- Normalize timing log event names to proper snake_case keys
+  ([`ecbb154`](https://github.com/feniix/kinemotion/commit/ecbb154dc19f2de47c10bea9f638b13eb71026b4))
+
+### Chores
+
+- Update sonar app version
+  ([`2975f7b`](https://github.com/feniix/kinemotion/commit/2975f7bf0ab4732ca92f7c9728ed3d8911992ca1))
+
+### Features
+
+- Implement comprehensive feedback system with Supabase database integration
+  ([`9bcf73f`](https://github.com/feniix/kinemotion/commit/9bcf73f79436e2b4de900b58f95258719fcdce80))
+
+
 ## v0.48.0 (2025-12-12)
 
 ### Chores
