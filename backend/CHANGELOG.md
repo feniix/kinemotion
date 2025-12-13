@@ -2,6 +2,22 @@
 
 <!-- version list -->
 
+## v0.52.0 (2025-12-13)
+
+### Features
+
+- Implement continuous deployment with optional semantic releases
+  ([`3596e47`](https://github.com/feniix/kinemotion/commit/3596e47e055dd54dda130bba9d7e78c14c4b2819))
+
+### Refactoring
+
+- Decouple semantic-release configs with directory-specific filtering
+  ([`b7d4fef`](https://github.com/feniix/kinemotion/commit/b7d4fefcff2972d2d347dfef69a830b1f2473cfc))
+
+- Separate release job in backend deployment workflow
+  ([`521f03f`](https://github.com/feniix/kinemotion/commit/521f03f4d32c6bcf0b048c2fba3d54d74c7c0677))
+
+
 ## v0.51.0 (2025-12-13)
 
 ### Bug Fixes
