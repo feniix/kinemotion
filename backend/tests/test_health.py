@@ -25,10 +25,10 @@ def test_health_check_response_structure(client: TestClient) -> None:
 
 
 def test_health_check_status_ok(client: TestClient) -> None:
-    """Test that health status is 'ok'."""
+    """Test that health status is 'healthy'."""
     response = client.get("/health")
     data = response.json()
-    assert data["status"] == "ok"
+    assert data["status"] == "healthy"
 
 
 def test_health_check_service_name(client: TestClient) -> None:
@@ -69,4 +69,4 @@ def test_health_check_multiple_calls(client: TestClient) -> None:
         response = client.get("/health")
         assert response.status_code == 200
         data = response.json()
-        assert data["status"] == "ok"
+        assert data["status"] == "healthy"

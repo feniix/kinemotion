@@ -3,7 +3,14 @@
 import structlog
 from fastapi import APIRouter, File, Form, Header, Request, UploadFile
 from fastapi.responses import JSONResponse
-from fastapi_limiter.depends import RateLimiter
+
+try:
+    from fastapi_limiter.depends import RateLimiter
+
+    fastapi_limiter_available = True
+except ImportError:
+    fastapi_limiter_available = False
+    RateLimiter = None  # type: ignore[assignment]
 
 from ..models.responses import AnalysisResponse
 from ..services import AnalysisService, validate_referer
@@ -12,9 +19,12 @@ from ..utils import NoOpLimiter
 logger = structlog.get_logger()
 router = APIRouter(prefix="/api", tags=["Analysis"])
 
-# Rate limiting (use NoOpLimiter for testing)
+# Rate limiting (use NoOpLimiter for testing or when fastapi_limiter unavailable)
 _testing = False  # This should be set from environment
-limiter = NoOpLimiter() if _testing else RateLimiter()
+if _testing or not fastapi_limiter_available:
+    limiter = NoOpLimiter()
+else:
+    limiter = RateLimiter()  # type: ignore[operator]
 
 
 @router.post("/analyze")
@@ -53,16 +63,44 @@ async def analyze_video(
     analysis_service = AnalysisService()
 
     try:
+        # Convert debug string to boolean
+        enable_debug = debug.lower() == "true"
+
         # Perform analysis using service layer
         result: AnalysisResponse = await analysis_service.analyze_video(
             file=file,
             jump_type=jump_type,
             quality=quality,
+            debug=enable_debug,
             user_id=None,  # TODO: Extract from auth when available
         )
 
         # Return JSON response
         return JSONResponse(content=result.to_dict())
+
+    except ValueError as e:
+        logger.error(
+            "Validation failed",
+            upload_id=request.headers.get("x-upload-id", "unknown"),
+            error=str(e),
+        )
+
+        # Return validation error
+        error_result = AnalysisResponse(
+            status=422,
+            message=str(e),
+            error="validation_error",
+            metrics=None,
+            results_url=None,
+            debug_video_url=None,
+            original_video_url=None,
+            processing_time_s=0.0,
+        )
+
+        return JSONResponse(
+            status_code=422,
+            content=error_result.to_dict(),
+        )
 
     except Exception as e:
         logger.error(
@@ -72,15 +110,19 @@ async def analyze_video(
             exc_info=True,
         )
 
-        # Return error response using service layer error handling
-        error_result = await analysis_service.analyze_video(
-            file=file,
-            jump_type=jump_type,
-            quality=quality,
-            user_id=None,
+        # Return generic server error
+        error_result = AnalysisResponse(
+            status=500,
+            message="Internal server error during analysis",
+            error=str(e),
+            metrics=None,
+            results_url=None,
+            debug_video_url=None,
+            original_video_url=None,
+            processing_time_s=0.0,
         )
 
         return JSONResponse(
-            status_code=error_result.status_code,
+            status_code=500,
             content=error_result.to_dict(),
         )

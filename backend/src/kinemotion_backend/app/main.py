@@ -133,7 +133,7 @@ def _add_exception_handlers(app: FastAPI) -> None:
             content={"message": "Internal server error"},
         )
 
-    app.add_exception_handler(HTTPException, http_exception_handler)
+    app.add_exception_handler(HTTPException, http_exception_handler)  # type: ignore[arg-type]
     app.add_exception_handler(Exception, general_exception_handler)
 
 

@@ -25,7 +25,8 @@ def validate_video_file(file: UploadFile) -> None:
             f"Supported formats: {', '.join(valid_extensions)}"
         )
 
-    # Check file size (max 500MB for practical limits)
+    # Check file size if available (UploadFile.size is often None in test client)
+    # We'll rely on the analysis service to check actual content size
     if file.size and file.size > 500 * 1024 * 1024:
         raise ValueError("File size exceeds maximum of 500MB")
 

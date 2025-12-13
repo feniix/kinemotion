@@ -391,7 +391,9 @@ def _validate_video_file(file: UploadFile) -> None:
         )
 
     # Check file size (max 500MB for practical limits)
-    if file.size and file.size > 500 * 1024 * 1024:
+    # Note: file.size may be None, so we need to check from the file object itself
+    max_size = 500 * 1024 * 1024
+    if file.size is not None and file.size > max_size:
         raise ValueError("File size exceeds maximum of 500MB")
 
 
@@ -623,6 +625,12 @@ async def analyze_video(
             # Write uploaded file to temp location
             save_start = time.time()
             content = await file.read()
+
+            # Validate file size after reading
+            max_size = 500 * 1024 * 1024
+            if len(content) > max_size:
+                raise ValueError("File size exceeds maximum of 500MB")
+
             temp_file.write(content)
             save_duration = time.time() - save_start
         logger.info("timing_video_file_save", duration_ms=round(save_duration * 1000))

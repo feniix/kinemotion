@@ -1,0 +1,23 @@
+[run]
+branch = True
+data_file = .coverage
+omit =
+    */site-packages/*
+    */distutils/*
+    */venv/*
+    */.venv/*
+    */kinemotion/core/*
+    */kinemotion/cmj/*
+    */kinemotion/dropjump/*
+    */kinemotion/cli/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    @abstractmethod
+    @abc.abstractmethod

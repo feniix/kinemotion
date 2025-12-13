@@ -20,7 +20,15 @@ from kinemotion_backend.models import (
 logger = structlog.get_logger()
 router = APIRouter(prefix="/api/analysis", tags=["Analysis"])
 security = HTTPBearer()
-auth = SupabaseAuth()
+auth: SupabaseAuth | None = None
+
+
+def get_auth() -> SupabaseAuth:
+    """Get SupabaseAuth instance (lazy initialization)."""
+    global auth
+    if auth is None:
+        auth = SupabaseAuth()
+    return auth
 
 
 async def get_current_user_id(
@@ -28,7 +36,7 @@ async def get_current_user_id(
 ) -> str:
     """Extract user ID from JWT token."""
     try:
-        return auth.get_user_id(credentials.credentials)
+        return get_auth().get_user_id(credentials.credentials)
     except Exception as e:
         logger.warning("user_authentication_failed", error=str(e))
         raise HTTPException(

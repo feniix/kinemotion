@@ -61,13 +61,22 @@ dev = [
     "pyright>=1.1.380",
 ]
 
-[tool.pytest]
+[tool.pytest.ini_options]
 minversion = "7.4"
 testpaths = ["tests"]
 asyncio_mode = "auto"
 addopts = [
     "--strict-markers",
     "--tb=short",
+]
+filterwarnings = [
+    # Suppress Pydantic V2 deprecation warnings from storage3 (Supabase) library
+    # storage3 still uses deprecated pydantic.config.Extra syntax
+    # This can be removed when storage3 updates to Pydantic V2 compliant code
+    "ignore::DeprecationWarning:storage3",
+    # Suppress Google protobuf deprecation warnings
+    # These are transitive dependencies from third-party libraries (e.g., via grpc/storage)
+    "ignore:Type.*uses PyType_Spec:DeprecationWarning",
 ]
 
 [tool.ruff]
@@ -85,6 +94,27 @@ select = [
     "B",   # flake8-bugbear
     "C4",  # flake8-comprehensions
 ]
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "*/site-packages/*",
+    "*/distutils/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+precision = 2
+
+[tool.coverage.html]
+# Silent mode - suppress coverage.py warnings
+show_contexts = false
 
 [tool.pyright]
 include = ["src"]

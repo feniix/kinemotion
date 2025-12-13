@@ -54,9 +54,9 @@ class StorageService:
             Unique storage key
         """
         import uuid
-        from datetime import datetime
+        from datetime import datetime, timezone
 
-        timestamp = datetime.utcnow().strftime("%Y/%m/%d")
+        timestamp = datetime.now(timezone.utc).strftime("%Y/%m/%d")
         file_id = str(uuid.uuid4())
         extension = Path(filename).suffix
 

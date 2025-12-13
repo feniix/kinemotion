@@ -1,8 +1,8 @@
 from typing import Any, cast
 
 from kinemotion import process_cmj_video, process_dropjump_video
-from pose_tracker import PoseTracker
-from timer import Timer
+from kinemotion.core.pose import PoseTracker
+from kinemotion.core.timing import Timer
 
 
 class VideoProcessorService:

@@ -19,6 +19,7 @@ def test_file_size_under_limit_passes(
 def test_file_size_over_limit_rejected(
     client: TestClient,
     large_video_bytes: bytes,
+    no_kinemotion_mock,
 ) -> None:
     """Test that files over 500MB are rejected."""
     files = {"file": ("large.mp4", BytesIO(large_video_bytes), "video/mp4")}
@@ -27,7 +28,7 @@ def test_file_size_over_limit_rejected(
     assert response.status_code == 422
     data = response.json()
     assert "error" in data
-    assert "500MB" in data["error"]
+    assert "500MB" in data["message"]
 
 
 def test_mp4_format_accepted(
@@ -107,7 +108,7 @@ def test_txt_format_rejected(
     assert response.status_code == 422
     data = response.json()
     assert "error" in data
-    assert "Invalid video format" in data["error"]
+    assert "Invalid video format" in data["message"]
 
 
 def test_jpg_format_rejected(
@@ -178,7 +179,7 @@ def test_invalid_jump_type_rejected(
     assert response.status_code == 422
     data = response.json()
     assert "error" in data
-    assert "Invalid jump type" in data["error"]
+    assert "Invalid jump type" in data["message"]
 
 
 def test_jump_type_case_insensitive(

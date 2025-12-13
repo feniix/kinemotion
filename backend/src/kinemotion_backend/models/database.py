@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class AnalysisSessionCreate(BaseModel):
@@ -43,6 +43,8 @@ class AnalysisSessionCreate(BaseModel):
 class AnalysisSessionResponse(BaseModel):
     """Model for analysis session response."""
 
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     user_id: UUID
     jump_type: str
@@ -55,9 +57,6 @@ class AnalysisSessionResponse(BaseModel):
     upload_id: str | None
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class CoachFeedbackCreate(BaseModel):
@@ -81,6 +80,8 @@ class CoachFeedbackCreate(BaseModel):
 class CoachFeedbackResponse(BaseModel):
     """Model for coach feedback response."""
 
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     analysis_session_id: UUID
     coach_user_id: UUID
@@ -89,9 +90,6 @@ class CoachFeedbackResponse(BaseModel):
     tags: list[str]
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class AnalysisSessionWithFeedback(AnalysisSessionResponse):
