@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.50.0 (2025-12-13)
+
+### Bug Fixes
+
+- Resolve model import conflicts after refactoring
+  ([`75fd4f2`](https://github.com/feniix/kinemotion/commit/75fd4f2e266787512f1691e249ba5a7295ead8cb))
+
+### Features
+
+- Start FastAPI modular architecture refactoring
+  ([`eac69f6`](https://github.com/feniix/kinemotion/commit/eac69f6edafaf484c10edfdca0bdad1ce8a9cf34))
+
+### Refactoring
+
+- Complete FastAPI modular architecture refactoring
+  ([`6086adf`](https://github.com/feniix/kinemotion/commit/6086adf007c6667e6132cab457cb8a361e4223a6))
+
+- Create modular directory structure
+  ([`1f50da6`](https://github.com/feniix/kinemotion/commit/1f50da637c0afed9a492eed9aef46655c51f8aa6))
+
+- Create modular main application structure
+  ([`3ba2bb5`](https://github.com/feniix/kinemotion/commit/3ba2bb55fc83e4a78b6e85ed6a5c58e641de5879))
+
+- Create service layer with business logic
+  ([`53319e0`](https://github.com/feniix/kinemotion/commit/53319e05e6f996b83c577d264f40261ebc675c4a))
+
+- Extract models from app.py
+  ([`23d601d`](https://github.com/feniix/kinemotion/commit/23d601d46c41dccf9834314f89454e47d9a89340))
+
+- Fix frontend-backend API compatibility in modular architecture
+  ([`1f78863`](https://github.com/feniix/kinemotion/commit/1f7886335091927508ca5eca69a634dafea503a7))
+
+- Modularize routes into separate modules
+  ([`10d2efe`](https://github.com/feniix/kinemotion/commit/10d2efe7eeba344dea06753cba8263e6776c5f44))
+
+
 ## v0.49.0 (2025-12-13)
 
 ### Bug Fixes
