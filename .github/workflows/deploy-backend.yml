@@ -106,17 +106,24 @@ jobs:
           cd backend
           uv run semantic-release version
 
-      - name: Get version from backend/pyproject.toml
+      - name: Determine version and release status
         id: get_version
         run: |
-          VERSION=$(grep '^version = ' backend/pyproject.toml | cut -d'"' -f2)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          # Check if semantic-release created a new release by checking if there's a new tag
+          # Check if semantic-release created a new release (tagged commit)
           if git describe --exact-match --tags HEAD 2>/dev/null; then
-            echo "released=true" >> $GITHUB_OUTPUT
+            # Semantic release was created - use version from pyproject.toml
+            VERSION=$(grep '^version = ' backend/pyproject.toml | cut -d'"' -f2)
+            RELEASED="true"
           else
-            echo "released=false" >> $GITHUB_OUTPUT
+            # No semantic release - use fallback version (dev-{short_sha})
+            SHORT_SHA=$(git rev-parse --short HEAD)
+            VERSION="dev-${SHORT_SHA}"
+            RELEASED="false"
           fi
+
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "released=${RELEASED}" >> $GITHUB_OUTPUT
+          echo "Version: ${VERSION} (released: ${RELEASED})"
 
   build:
     name: Build and Push Docker Image to GCR
