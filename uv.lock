@@ -943,7 +943,7 @@ dev = [
 
 [[package]]
 name = "kinemotion-backend"
-version = "0.1.0"
+version = "0.51.0"
 source = { editable = "backend" }
 dependencies = [
     { name = "boto3" },
@@ -966,6 +966,7 @@ dev = [
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
+    { name = "python-semantic-release" },
     { name = "ruff" },
 ]
 
@@ -991,6 +992,7 @@ dev = [
     { name = "pytest", specifier = ">=7.4.3" },
     { name = "pytest-asyncio", specifier = ">=0.23.0" },
     { name = "pytest-cov", specifier = ">=4.1.0" },
+    { name = "python-semantic-release", specifier = ">=9.8.2" },
     { name = "ruff", specifier = ">=0.1.8" },
 ]
 
