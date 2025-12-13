@@ -59,6 +59,7 @@ dev = [
     "httpx>=0.26.0",
     "ruff>=0.1.8",
     "pyright>=1.1.380",
+    "python-semantic-release>=9.8.2",
 ]
 
 [tool.pytest.ini_options]
@@ -153,3 +154,25 @@ reportUnusedClass = "warning"
 reportUnusedFunction = "warning"
 reportUnusedVariable = "warning"
 reportDuplicateImport = "warning"
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+branch = "main"
+changelog_file = "CHANGELOG.md"
+build_command = """\
+    uv lock --upgrade-package "$PACKAGE_NAME"
+    git add uv.lock
+    uv build
+"""
+dist_path = "dist/"
+upload_to_vcs_release = true
+remove_dist = false
+patch_without_tag = false
+major_on_zero = false
+allow_zero_version = true
+commit_message = "chore(release): {version} [skip ci]"
+
+[tool.semantic_release.commit_parser_options]
+allowed_tags = ["feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "build", "ci"]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf"]
