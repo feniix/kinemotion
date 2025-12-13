@@ -1,6 +1,6 @@
 [project]
 name = "kinemotion-backend"
-version = "0.52.0"
+version = "0.1.0"
 description = "FastAPI backend for Kinemotion video analysis"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
@@ -159,6 +159,7 @@ reportDuplicateImport = "warning"
 version_toml = ["pyproject.toml:project.version"]
 branch = "main"
 changelog_file = "CHANGELOG.md"
+tagFormat = "kinemotion-backend-v${version}"
 build_command = """\
     uv lock --upgrade-package "$PACKAGE_NAME"
     git add ../uv.lock

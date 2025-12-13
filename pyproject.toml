@@ -178,6 +178,7 @@ reportDuplicateImport = "warning"
 version_toml = ["pyproject.toml:project.version"]
 branch = "main"
 changelog_file = "CHANGELOG.md"
+tagFormat = "kinemotion-v${version}"
 build_command = """
     uv lock --upgrade-package "$PACKAGE_NAME"
     git add uv.lock
