@@ -56,6 +56,10 @@ async def analyze_video(
     Raises:
         HTTPException: If validation or processing fails
     """
+    import time
+
+    start_time = time.time()
+
     # Validate referer (prevent direct API access)
     validate_referer(referer, x_test_password)
 
@@ -66,6 +70,14 @@ async def analyze_video(
         # Convert debug string to boolean
         enable_debug = debug.lower() == "true"
 
+        logger.info(
+            "analyze_endpoint_processing",
+            jump_type=jump_type,
+            quality=quality,
+            debug=enable_debug,
+            filename=file.filename,
+        )
+
         # Perform analysis using service layer
         result: AnalysisResponse = await analysis_service.analyze_video(
             file=file,
@@ -75,14 +87,25 @@ async def analyze_video(
             user_id=None,  # TODO: Extract from auth when available
         )
 
+        # Log successful response
+        elapsed = time.time() - start_time
+        logger.info(
+            "analyze_endpoint_success",
+            status_code=result.status,
+            processing_time_s=round(elapsed, 2),
+            has_metrics=result.metrics is not None,
+        )
+
         # Return JSON response
         return JSONResponse(content=result.to_dict())
 
     except ValueError as e:
-        logger.error(
-            "Validation failed",
+        elapsed = time.time() - start_time
+        logger.warning(
+            "analyze_endpoint_validation_error",
             upload_id=request.headers.get("x-upload-id", "unknown"),
             error=str(e),
+            processing_time_s=round(elapsed, 2),
         )
 
         # Return validation error
@@ -94,7 +117,7 @@ async def analyze_video(
             results_url=None,
             debug_video_url=None,
             original_video_url=None,
-            processing_time_s=0.0,
+            processing_time_s=elapsed,
         )
 
         return JSONResponse(
@@ -103,10 +126,13 @@ async def analyze_video(
         )
 
     except Exception as e:
+        elapsed = time.time() - start_time
         logger.error(
-            "Video analysis failed",
+            "analyze_endpoint_error",
             upload_id=request.headers.get("x-upload-id", "unknown"),
             error=str(e),
+            error_type=type(e).__name__,
+            processing_time_s=round(elapsed, 2),
             exc_info=True,
         )
 
@@ -119,7 +145,7 @@ async def analyze_video(
             results_url=None,
             debug_video_url=None,
             original_video_url=None,
-            processing_time_s=0.0,
+            processing_time_s=elapsed,
         )
 
         return JSONResponse(

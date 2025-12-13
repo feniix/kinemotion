@@ -1,8 +1,11 @@
 from typing import Any, cast
 
+import structlog
 from kinemotion import process_cmj_video, process_dropjump_video
 from kinemotion.core.pose import PoseTracker
 from kinemotion.core.timing import Timer
+
+logger = structlog.get_logger(__name__)
 
 
 class VideoProcessorService:
@@ -33,21 +36,47 @@ class VideoProcessorService:
         Raises:
             ValueError: If video processing fails
         """
-        if jump_type == "drop_jump":
-            metrics = process_dropjump_video(
-                video_path,
-                quality=quality,
-                output_video=output_video,
-                timer=timer,
-                pose_tracker=pose_tracker,
-            )
-        else:  # cmj
-            metrics = process_cmj_video(
-                video_path,
-                quality=quality,
-                output_video=output_video,
-                timer=timer,
-                pose_tracker=pose_tracker,
+        logger.info(
+            "video_processor_starting",
+            jump_type=jump_type,
+            quality=quality,
+            video_path=video_path,
+            has_debug_output=output_video is not None,
+        )
+
+        try:
+            if jump_type == "drop_jump":
+                logger.info("processing_drop_jump_video")
+                metrics = process_dropjump_video(
+                    video_path,
+                    quality=quality,
+                    output_video=output_video,
+                    timer=timer,
+                    pose_tracker=pose_tracker,
+                )
+            else:  # cmj
+                logger.info("processing_cmj_video")
+                metrics = process_cmj_video(
+                    video_path,
+                    quality=quality,
+                    output_video=output_video,
+                    timer=timer,
+                    pose_tracker=pose_tracker,
+                )
+
+            logger.info(
+                "video_processor_completed",
+                jump_type=jump_type,
+                metrics_extracted=True,
             )
 
-        return cast(dict[str, Any], metrics.to_dict())
+            return cast(dict[str, Any], metrics.to_dict())
+        except Exception as e:
+            logger.error(
+                "video_processor_failed",
+                jump_type=jump_type,
+                error=str(e),
+                error_type=type(e).__name__,
+                exc_info=True,
+            )
+            raise
