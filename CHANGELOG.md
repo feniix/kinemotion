@@ -7,6 +7,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.51.0 (2025-12-13)
+
+### Bug Fixes
+
+- Correct MetricsData instantiation and metrics_count calculation
+  ([`e2ebca1`](https://github.com/feniix/kinemotion/commit/e2ebca1d5614faa86cdb3c4e23ef9fa034cd8d2a))
+
+- Correct uv.lock path in backend semantic-release build command
+  ([`650c3bc`](https://github.com/feniix/kinemotion/commit/650c3bc7b1a18814f179e7f1e4835000186ee45c))
+
+- Remove invalid search_tag_format and fix tag_format syntax
+  ([`46c2a2a`](https://github.com/feniix/kinemotion/commit/46c2a2af5fa97a833256896253b300c307d3a528))
+
+- Update error handling tests to use 'status' field instead of 'status_code'
+  ([`890e54b`](https://github.com/feniix/kinemotion/commit/890e54b6ac7bead9dceb0f34fdaeb4789e3b3dbd))
+
+- **docs**: Enhance api module docstring with examples and analysis types
+  ([`94e32f1`](https://github.com/feniix/kinemotion/commit/94e32f1061505747c0345e8683a61bcf8dc60ee3))
+
+- **docs**: Improve app.py module docstring with comprehensive feature overview
+  ([`eab977c`](https://github.com/feniix/kinemotion/commit/eab977c237f2318f5dc0b94a32f4b736053bfc00))
+
+- **docs**: Improve module docstrings in src/kinemotion and backend/src/
+  ([`f59d649`](https://github.com/feniix/kinemotion/commit/f59d6494c8735fa3e83f8bdbedefce0b6c405cf5))
+
+### Continuous Integration
+
+- Add semantic-release configuration to backend
+  ([`f8e447c`](https://github.com/feniix/kinemotion/commit/f8e447c86b03d7ad6cf9e40d67217371f642f254))
+
+- Improve workflow configuration and add backend versioning
+  ([`8d86933`](https://github.com/feniix/kinemotion/commit/8d8693398b6aec20c847ae0616488dd3b90c35af))
+
+- Use shared concurrency group to prevent race conditions between CLI and backend release workflows
+  ([`038e744`](https://github.com/feniix/kinemotion/commit/038e744ed13aa52c78557df8257995861de5308e))
+
+### Features
+
+- Add comprehensive granular logging for pipeline stage timing
+  ([`0489222`](https://github.com/feniix/kinemotion/commit/04892221faf2cb39f355867475242b8baafa34cd))
+
+- Implement continuous deployment with optional semantic releases
+  ([`3596e47`](https://github.com/feniix/kinemotion/commit/3596e47e055dd54dda130bba9d7e78c14c4b2819))
+
+### Refactoring
+
+- Decouple semantic-release configs with directory-specific filtering
+  ([`b7d4fef`](https://github.com/feniix/kinemotion/commit/b7d4fefcff2972d2d347dfef69a830b1f2473cfc))
+
+- Namespace semantic-release tags and reset backend to 0.1.0
+  ([`76d9c5b`](https://github.com/feniix/kinemotion/commit/76d9c5b4cedebfd56c5e5ec5272e260620520cd3))
+
+- Restore search_tag_format for decoupled version detection
+  ([`e9f163d`](https://github.com/feniix/kinemotion/commit/e9f163dd85aa81b0dce52d26339bcc858e9b6ef5))
+
+- Separate release job in backend deployment workflow
+  ([`521f03f`](https://github.com/feniix/kinemotion/commit/521f03f4d32c6bcf0b048c2fba3d54d74c7c0677))
+
+
 ## v0.50.0 (2025-12-13)
 
 ### Bug Fixes
