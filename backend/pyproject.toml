@@ -159,9 +159,7 @@ reportDuplicateImport = "warning"
 version_toml = ["pyproject.toml:project.version"]
 branch = "main"
 changelog_file = "CHANGELOG.md"
-tagFormat = "kinemotion-backend-v${version}"
-# Match only backend-specific tags when determining current version
-search_tag_format = "kinemotion-backend-v(?P<version>.*)"
+tag_format = "kinemotion-backend-v{version}"
 build_command = """\
     uv lock --upgrade-package "$PACKAGE_NAME"
     git add ../uv.lock
