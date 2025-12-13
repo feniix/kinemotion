@@ -176,3 +176,9 @@ commit_message = "chore(release): {version} [skip ci]"
 allowed_tags = ["feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "build", "ci"]
 minor_tags = ["feat"]
 patch_tags = ["fix", "perf"]
+
+[tool.semantic_release.publish]
+# Only process commits affecting backend/src/kinemotion_backend/ for backend releases
+# Tests (backend/tests/) are excluded since they are not part of the public API
+# This decouples backend versioning from root CLI versioning
+directories = ["backend/src/kinemotion_backend"]

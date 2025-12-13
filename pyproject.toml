@@ -196,6 +196,11 @@ allowed_tags = ["feat", "fix", "docs", "style", "refactor", "perf", "test", "cho
 minor_tags = ["feat"]
 patch_tags = ["fix", "perf"]
 
+[tool.semantic_release.publish]
+# Only process commits affecting src/kinemotion/ for root CLI releases
+# This decouples root CLI versioning from backend versioning
+directories = ["src/kinemotion"]
+
 [tool.uv.workspace]
 members = [".", "backend"]
 
