@@ -19,6 +19,10 @@ on:
       - '.gemini/**'
       - '.mcp/**'
 
+concurrency:
+  group: release-all
+  cancel-in-progress: false
+
 jobs:
   test:
     name: Run Tests

@@ -18,6 +18,10 @@ on:
       - '!.vscode/**'
       - '!.gitignore'
 
+concurrency:
+  group: release-all
+  cancel-in-progress: false
+
 env:
   GCP_PROJECT_ID: kinemotion-backend
   GCP_REGION: us-central1
