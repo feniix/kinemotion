@@ -179,6 +179,8 @@ version_toml = ["pyproject.toml:project.version"]
 branch = "main"
 changelog_file = "CHANGELOG.md"
 tagFormat = "kinemotion-v${version}"
+# Match only CLI-specific tags when determining current version
+search_tag_format = "kinemotion-v(?P<version>.*)"
 build_command = """
     uv lock --upgrade-package "$PACKAGE_NAME"
     git add uv.lock
