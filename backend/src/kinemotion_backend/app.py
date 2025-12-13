@@ -34,6 +34,8 @@ from kinemotion.core.timing import (
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 
+from kinemotion_backend.analysis_api import router as analysis_router
+from kinemotion_backend.database import get_database_client
 from kinemotion_backend.logging_config import get_logger, setup_logging
 from kinemotion_backend.middleware import RequestLoggingMiddleware
 
@@ -361,6 +363,8 @@ try:
 except ValueError:
     logger.warning("r2_storage_not_configured", message="R2 credentials not provided")
 
+# Include analysis API router
+app.include_router(analysis_router)
 
 # ========== Helper Functions ==========
 
@@ -521,6 +525,18 @@ async def health_check() -> dict[str, Any]:
     except Exception:
         kinemotion_version = "unknown"
 
+    # Check database connection
+    database_connected = False
+    try:
+        from kinemotion_backend.database import get_database_client
+
+        db_client = get_database_client()
+        # Test database with a simple query
+        db_client.client.table("analysis_sessions").select("id").limit(1).execute()
+        database_connected = True
+    except Exception as db_error:
+        logger.warning("database_health_check_failed", error=str(db_error))
+
     return {
         "status": "ok",
         "service": "kinemotion-backend",
@@ -529,6 +545,7 @@ async def health_check() -> dict[str, Any]:
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "r2_configured": r2_client is not None,
         "trackers_initialized": len(global_pose_trackers) > 0,
+        "database_connected": database_connected,
     }
 
 
@@ -745,6 +762,51 @@ async def analyze_video(
                         key=r2_debug_video_key,
                     )
         processing_time = time.time() - start_time
+
+        # Optionally store analysis session in database if user is authenticated
+        user_id = None
+        try:
+            auth_header = request.headers.get("Authorization")
+            if auth_header and auth_header.startswith("Bearer "):
+                from kinemotion_backend.auth import SupabaseAuth
+
+                auth = SupabaseAuth()
+                token = auth_header.split(" ")[1]
+                user_id = auth.get_user_id(token)
+                logger.info("user_authenticated_for_analysis", user_id=user_id)
+        except Exception as e:
+            logger.info("analysis_save_no_auth", reason=str(e))
+            user_id = None
+
+        # Store in database if authenticated
+        session_id = None
+        if user_id:
+            try:
+                db_client = get_database_client()
+                session_record = await db_client.create_analysis_session(
+                    user_id=user_id,
+                    jump_type=jump_type,
+                    quality_preset=quality,
+                    analysis_data=metrics,
+                    original_video_url=original_video_url,
+                    debug_video_url=debug_video_url,
+                    results_json_url=results_url,
+                    processing_time_s=processing_time,
+                    upload_id=upload_id,
+                )
+                session_id = session_record["id"]
+                logger.info(
+                    "analysis_session_saved",
+                    session_id=session_id,
+                    user_id=user_id,
+                )
+            except Exception as e:
+                # Log error but don't fail the analysis - this is optional storage
+                logger.warning(
+                    "analysis_session_save_failed",
+                    error=str(e),
+                    user_id=user_id,
+                )
 
         # Build successful response
         jump_type_display = "drop_jump" if jump_type == "drop_jump" else "cmj"

@@ -40,6 +40,8 @@ Welcome to the kinemotion documentation. This directory contains guides, technic
 
 ### 👨‍💻 Development
 
+- **[Coach Feedback System Setup](development/feedback-system-setup.md)** - Supabase database integration for coach feedback and analysis sessions
+- **[Feature Request System](development/feature-request-system.md)** - Frontend feedback and feature request system configuration
 - **[Validation Roadmap](development/validation-roadmap.md)** - 3-month validation plan (no lab equipment required)
 - **[Validation Plan](development/validation-plan.md)** - Testing and validation strategy
 - **[Errors & Findings](development/errors-findings.md)** - Known issues and debugging information
