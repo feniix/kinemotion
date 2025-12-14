@@ -87,7 +87,7 @@ async def analyze_video(
 
         # Return validation error
         error_result = AnalysisResponse(
-            status=422,
+            status_code=422,
             message=str(e),
             error="validation_error",
             metrics=None,
@@ -112,7 +112,7 @@ async def analyze_video(
 
         # Return generic server error
         error_result = AnalysisResponse(
-            status=500,
+            status_code=500,
             message="Internal server error during analysis",
             error=str(e),
             metrics=None,

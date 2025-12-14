@@ -114,7 +114,7 @@ class AnalysisService:
                 Path(temp_debug_video_path).unlink(missing_ok=True)
 
             return AnalysisResponse(
-                status=200,
+                status_code=200,
                 message="Analysis completed successfully",
                 metrics=MetricsData(**metrics),
                 results_url=results_url,
@@ -141,7 +141,7 @@ class AnalysisService:
 
             processing_time = time.time() - start_time
             return AnalysisResponse(
-                status=500,
+                status_code=500,
                 message=f"Analysis failed: {str(e)}",
                 error=str(e),
                 metrics=None,

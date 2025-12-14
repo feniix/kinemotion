@@ -78,7 +78,7 @@ class AnalysisResponse:
     def to_dict(self) -> dict[str, Any]:
         """Convert response to JSON-serializable dictionary."""
         result: dict[str, Any] = {
-            "status": self.status_code,
+            "status_code": self.status_code,
             "message": self.message,
             "processing_time_s": self.processing_time_s,
         }
@@ -1145,7 +1145,7 @@ async def http_exception_handler(request: Any, exc: HTTPException) -> JSONRespon
     return JSONResponse(
         status_code=exc.status_code,
         content={
-            "status": exc.status_code,
+            "status_code": exc.status_code,
             "message": "HTTP Error",
             "error": exc.detail,
         },
@@ -1165,7 +1165,7 @@ async def general_exception_handler(request: Any, exc: Exception) -> JSONRespons
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
-            "status": 500,
+            "status_code": 500,
             "message": "Internal server error",
             "error": error_detail,
         },

@@ -41,13 +41,13 @@ def test_analyze_cmj_response_structure(
     data = response.json()
 
     # Required fields
-    assert "status" in data
+    assert "status_code" in data
     assert "message" in data
     assert "metrics" in data
     assert "processing_time_s" in data
 
     # Verify status code
-    assert data["status"] == 200
+    assert data["status_code"] == 200
 
     # Verify metrics structure
     assert isinstance(data["metrics"], dict)
@@ -68,7 +68,7 @@ def test_analyze_dropjump_response_structure(
     data = response.json()
 
     # Required fields
-    assert "status" in data
+    assert "status_code" in data
     assert "message" in data
     assert "metrics" in data
     assert "processing_time_s" in data

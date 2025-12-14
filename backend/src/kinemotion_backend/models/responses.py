@@ -37,7 +37,7 @@ class MetricsData(BaseModel):
 class AnalysisResponse(BaseModel):
     """Response structure for video analysis results."""
 
-    status: int = Field(..., description="HTTP status code")
+    status_code: int = Field(..., description="HTTP status code")
     message: str = Field(..., description="Response message")
     metrics: MetricsData | None = Field(None, description="Analysis metrics")
     results_url: str | None = Field(None, description="URL to analysis results")
