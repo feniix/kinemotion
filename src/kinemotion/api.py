@@ -4,7 +4,6 @@ This module provides a unified interface for both drop jump and CMJ video analys
 The actual implementations have been moved to their respective submodules:
 - Drop jump: kinemotion.dropjump.api
 - CMJ: kinemotion.cmj.api
-
 """
 
 # CMJ API
