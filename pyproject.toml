@@ -185,7 +185,7 @@ build_command = """
     uv build
 """
 dist_path = "dist/"
-upload_to_vcs_release = true
+upload_to_vcs_release = false
 remove_dist = false
 patch_without_tag = false
 major_on_zero = false

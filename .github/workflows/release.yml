@@ -66,6 +66,20 @@ jobs:
             echo "released=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Create GitHub Release with Custom Name
+        if: steps.get_version.outputs.released == 'true'
+        run: |
+          VERSION=${{ steps.get_version.outputs.version }}
+          TAG="kinemotion-v${VERSION}"
+          RELEASE_NAME="kinemotion-v${VERSION}"
+
+          gh release create "$TAG" \
+            --title "$RELEASE_NAME" \
+            --generate-notes \
+            --repo "${{ github.repository }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Publish to PyPI
         if: steps.get_version.outputs.released == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
