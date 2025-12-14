@@ -80,6 +80,10 @@ jobs:
             echo "released=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Build distribution packages
+        if: steps.get_version.outputs.released == 'true'
+        run: uv build
+
       - name: Publish to PyPI
         if: steps.get_version.outputs.released == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
