@@ -1,5 +1,9 @@
 {
   "includeCoAuthoredBy": false,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "Bash(cat:*)",
@@ -22,7 +26,7 @@
       "WebFetch(domain:docs.sonarsource.com)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:pypi.org)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:realpython.com)",
       "WebFetch(domain:sonarcloud.io)",
       "WebFetch(domain:www.pyopensci.org)",
@@ -68,7 +72,7 @@
       "mcp__sonarqube__search_sonar_issues_in_projects",
       "mcp__sonarqube__show_rule",
       "mcp__web-search__freebird_fetch",
-      "mcp__web-search__freebird_search",
+      "mcp__web-search__freebird_search"
     ]
   },
   "enableAllProjectMcpServers": true
