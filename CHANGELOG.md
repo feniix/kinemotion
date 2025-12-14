@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.57.0 (2025-12-14)
+
+### Feat
+
+- export __version__ in public API
+
 ## kinemotion-v0.56.0 (2025-12-14)
 
 ### Feat
