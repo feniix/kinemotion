@@ -1,5 +1,7 @@
 """Video analysis routes for kinemotion backend."""
 
+import time
+
 import structlog
 from fastapi import APIRouter, File, Form, Header, Request, UploadFile
 from fastapi.responses import JSONResponse
@@ -56,6 +58,8 @@ async def analyze_video(
     Raises:
         HTTPException: If validation or processing fails
     """
+    start_time = time.time()
+
     # Validate referer (prevent direct API access)
     validate_referer(referer, x_test_password)
 
@@ -66,6 +70,14 @@ async def analyze_video(
         # Convert debug string to boolean
         enable_debug = debug.lower() == "true"
 
+        # Log analysis start
+        logger.info(
+            "analyzing_video_started",
+            jump_type=jump_type,
+            quality=quality,
+            debug=enable_debug,
+        )
+
         # Perform analysis using service layer
         result: AnalysisResponse = await analysis_service.analyze_video(
             file=file,
@@ -75,14 +87,24 @@ async def analyze_video(
             user_id=None,  # TODO: Extract from auth when available
         )
 
+        # Log analysis completion
+        analysis_duration = time.time() - start_time
+        logger.info(
+            "analyzing_video_completed",
+            duration_ms=round(analysis_duration * 1000, 1),
+            status_code=result.status_code,
+        )
+
         # Return JSON response
         return JSONResponse(content=result.to_dict())
 
     except ValueError as e:
-        logger.error(
-            "Validation failed",
+        elapsed = time.time() - start_time
+        logger.warning(
+            "analyze_endpoint_validation_error",
             upload_id=request.headers.get("x-upload-id", "unknown"),
             error=str(e),
+            processing_time_s=round(elapsed, 2),
         )
 
         # Return validation error
@@ -94,7 +116,7 @@ async def analyze_video(
             results_url=None,
             debug_video_url=None,
             original_video_url=None,
-            processing_time_s=0.0,
+            processing_time_s=elapsed,
         )
 
         return JSONResponse(
@@ -103,10 +125,13 @@ async def analyze_video(
         )
 
     except Exception as e:
+        elapsed = time.time() - start_time
         logger.error(
-            "Video analysis failed",
+            "analyze_endpoint_error",
             upload_id=request.headers.get("x-upload-id", "unknown"),
             error=str(e),
+            error_type=type(e).__name__,
+            processing_time_s=round(elapsed, 2),
             exc_info=True,
         )
 
@@ -119,7 +144,7 @@ async def analyze_video(
             results_url=None,
             debug_video_url=None,
             original_video_url=None,
-            processing_time_s=0.0,
+            processing_time_s=elapsed,
         )
 
         return JSONResponse(
