@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.51.0 (2025-12-14)
+
+### Chores
+
+- Sync version with PyPI 0.51.0
+  ([`13a3806`](https://github.com/feniix/kinemotion/commit/13a380695f9499935c05f3088d7d409df6b7ccf3))
+
+### Features
+
+- Bump version
+  ([`751e190`](https://github.com/feniix/kinemotion/commit/751e1908768fee2cf193d79c672174546955c445))
+
+- Sync versions
+  ([`03e6413`](https://github.com/feniix/kinemotion/commit/03e6413388142e3b04d535f9c07d653d5f73144e))
+
+
 ## v0.50.1 (2025-12-14)
 
 ### Bug Fixes
