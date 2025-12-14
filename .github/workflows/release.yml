@@ -46,39 +46,37 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Create Release
+      - name: Bump version and create changelog
+        id: cz
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git_name: github-actions
+          git_email: github-actions@github.com
+
+      - name: Create GitHub Release
+        if: steps.cz.outputs.revision != ''
+        run: |
+          TAG="${{ steps.cz.outputs.tag }}"
+          BODY="${{ steps.cz.outputs.change_log }}"
+
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --notes "$BODY" \
+            --repo "${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          uv run semantic-release version
 
-      - name: Get version from pyproject.toml
+      - name: Set release info for downstream jobs
         id: get_version
         run: |
-          VERSION=$(grep '^version = ' pyproject.toml | cut -d'"' -f2)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          # Check if semantic-release created a new release by checking if there's a new tag
-          if git describe --exact-match --tags HEAD 2>/dev/null; then
+          if [ "${{ steps.cz.outputs.revision }}" != "" ]; then
+            VERSION=$(grep '^version = ' pyproject.toml | cut -d'"' -f2)
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
             echo "released=true" >> $GITHUB_OUTPUT
           else
             echo "released=false" >> $GITHUB_OUTPUT
           fi
-
-      - name: Create GitHub Release with Custom Name
-        if: steps.get_version.outputs.released == 'true'
-        run: |
-          VERSION=${{ steps.get_version.outputs.version }}
-          TAG="kinemotion-v${VERSION}"
-          RELEASE_NAME="kinemotion-v${VERSION}"
-
-          gh release create "$TAG" \
-            --title "$RELEASE_NAME" \
-            --generate-notes \
-            --repo "${{ github.repository }}"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to PyPI
         if: steps.get_version.outputs.released == 'true'
