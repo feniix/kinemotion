@@ -2,7 +2,6 @@
 
 import time
 
-import structlog
 from fastapi import APIRouter, File, Form, Header, Request, UploadFile
 from fastapi.responses import JSONResponse
 
@@ -14,11 +13,12 @@ except ImportError:
     fastapi_limiter_available = False
     RateLimiter = None  # type: ignore[assignment]
 
+from ..logging_config import get_logger
 from ..models.responses import AnalysisResponse
 from ..services import AnalysisService, validate_referer
 from ..utils import NoOpLimiter
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 router = APIRouter(prefix="/api", tags=["Analysis"])
 
 # Rate limiting (use NoOpLimiter for testing or when fastapi_limiter unavailable)

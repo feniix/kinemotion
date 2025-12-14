@@ -1,15 +1,15 @@
 import time
 from pathlib import Path
 
-import structlog
 from fastapi import UploadFile
 
+from ..logging_config import get_logger
 from ..models.responses import AnalysisResponse, MetricsData
 from .storage_service import StorageService
 from .validation import validate_jump_type, validate_video_file
 from .video_processor import VideoProcessorService
 
-logger = structlog.get_logger(__name__)
+logger = get_logger(__name__)
 
 
 class AnalysisService:
