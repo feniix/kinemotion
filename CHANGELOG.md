@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.53.0 (2025-12-14)
+
+### Features
+
+- Test new release name
+  ([`408a825`](https://github.com/feniix/kinemotion/commit/408a82534056822252dd6425920e6a05a80a595a))
+
+
 ## v0.52.0 (2025-12-14)
 
 ### Features
