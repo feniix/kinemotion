@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.52.0 (2025-12-14)
+
+### Features
+
+- Bump version
+  ([`6f0f055`](https://github.com/feniix/kinemotion/commit/6f0f055bd806f947371467dfa3b60720fddbff39))
+
+
 ## v0.51.0 (2025-12-14)
 
 ### Chores
