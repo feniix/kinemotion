@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.50.1 (2025-12-14)
+
+### Bug Fixes
+
+- Fix version
+  ([`e030ed2`](https://github.com/feniix/kinemotion/commit/e030ed2b76315bfcfa21ae61e0d65d99b7e8ba49))
+
+- **backend**: Use configured logger from logging_config
+  ([`e38e3bf`](https://github.com/feniix/kinemotion/commit/e38e3bff973ac47efa9c5735a7e45fead2b219f8))
+
+
 ## v0.50.0 (2025-12-13)
 
 ### Bug Fixes
