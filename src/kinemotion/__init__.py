@@ -20,7 +20,7 @@ try:
     __version__ = version("kinemotion")
 except Exception:
     # Fallback for development/editable installs
-    __version__ = "0.37.0"
+    __version__ = "0.0.0.dev0"
 
 __all__ = [
     # Drop jump API
