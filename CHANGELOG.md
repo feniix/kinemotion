@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## v0.54.0 (2025-12-14)
+
+### Continuous Integration
+
+- Upgrade GitHub Actions to latest major versions
+  ([`e38da26`](https://github.com/feniix/kinemotion/commit/e38da26da82668d2147576fea581537e4463cd10))
+
+### Features
+
+- Test new release name
+  ([`4c1cebc`](https://github.com/feniix/kinemotion/commit/4c1cebc7bbc2a7e70e4513044f3a61645e92b36a))
+
+
 ## v0.53.0 (2025-12-14)
 
 ### Features
