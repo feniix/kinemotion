@@ -35,4 +35,5 @@ __all__ = [
     "CMJVideoConfig",
     "CMJVideoResult",
     "CMJMetrics",
+    "__version__",
 ]
