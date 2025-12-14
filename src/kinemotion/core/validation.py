@@ -47,16 +47,23 @@ class AthleteProfile(Enum):
 
 @dataclass
 class MetricBounds:
-    """Physiological bounds for a single metric.
+    """Physiological bounds for a single metric across athlete performance levels.
+
+    Defines nested ranges for validating metrics: absolute limits mark impossible
+    values (likely data corruption), while performance-level ranges assess whether
+    results are typical for an athlete's training background.
+
+    Bounds are ordered: absolute_min < practical_min < recreational_min < elite_min
+    and elite_max < recreational_max < absolute_max (symmetric about typical values).
 
     Attributes:
-        absolute_min: Absolute minimum value (error threshold)
-        practical_min: Practical minimum for weakest athletes
-        recreational_min: Minimum for recreational athletes
+        absolute_min: Absolute minimum (error threshold, marks data corruption)
+        practical_min: Minimum for untrained/elderly athletes
+        recreational_min: Minimum for recreational athletes (moderate activity)
         recreational_max: Maximum for recreational athletes
-        elite_min: Minimum for elite athletes
+        elite_min: Minimum for elite athletes (competitive level)
         elite_max: Maximum for elite athletes
-        absolute_max: Absolute maximum value (error threshold)
+        absolute_max: Absolute maximum (error threshold, marks data corruption)
         unit: Unit of measurement (e.g., "m", "s", "m/s", "degrees")
     """
 
