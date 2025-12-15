@@ -182,5 +182,91 @@
     "english": "English",
     "spanish": "Español",
     "french": "Français"
+  },
+  "loading": {
+    "analyzingVideo": "Analyse de la Vidéo",
+    "uploadingVideo": "Téléchargement de la Vidéo",
+    "estimatedTime": "Cela prend généralement 10-60 secondes en fonction de la durée de la vidéo",
+    "uploadProgress": "Progression du téléchargement: {{progress}}%",
+    "steps": {
+      "uploading": "Téléchargement de la vidéo",
+      "processing": "Traitement des images vidéo",
+      "detecting": "Détection des repères de pose",
+      "calculating": "Calcul des métriques de saut"
+    }
+  },
+  "auth": {
+    "signUp": "S'inscrire",
+    "signIn": "Se Connecter",
+    "signUpSubtitle": "Créez un compte pour analyser les vidéos de saut",
+    "signInSubtitle": "Connectez-vous pour analyser les vidéos de saut",
+    "signInWithGoogle": "Se connecter avec Google",
+    "signInToggle": "Vous avez déjà un compte?",
+    "signUpToggle": "Vous n'avez pas de compte?",
+    "email": "Email",
+    "password": "Mot de passe",
+    "loading": "Chargement...",
+    "errors": {
+      "fillAllFields": "Veuillez remplir tous les champs",
+      "passwordLength": "Le mot de passe doit contenir au moins 6 caractères"
+    },
+    "success": "Vérifiez votre email pour le lien de confirmation!"
+  },
+  "feedback": {
+    "heading": "Retours du Coach - Analyse {{jumpType}}",
+    "subtitle": "Partagez vos remarques et notes d'entraînement pour cette analyse",
+    "overallRating": "Évaluation Globale",
+    "ratingLabels": {
+      "excellent": "Excellent",
+      "good": "Bon",
+      "average": "Moyen",
+      "needsWork": "À Améliorer",
+      "poor": "Faible"
+    },
+    "tags": "Étiquettes",
+    "coachNotes": "Notes du Coach",
+    "addCustomTag": "Ajouter une étiquette personnalisée...",
+    "addButton": "Ajouter",
+    "cancel": "Annuler",
+    "saveFeedback": "Enregistrer les Retours",
+    "saving": "Enregistrement...",
+    "notesHelp": "Concentrez-vous sur des points d'entraînement actionnables et des observations spécifiques sur la qualité du mouvement.",
+    "commonTags": [
+      "Technique",
+      "Puissance",
+      "Cohérence",
+      "Équilibre",
+      "Vitesse",
+      "Forme",
+      "Explosif",
+      "Contrôle",
+      "À Améliorer",
+      "Bon Progrès",
+      "Niveau Elite",
+      "Débutant",
+      "Intermédiaire",
+      "Avancé"
+    ]
+  },
+  "recentUploads": {
+    "heading": "Téléchargements Récents",
+    "clear": "Effacer",
+    "clearTitle": "Effacer l'historique",
+    "reuploadTitle": "Retélécharger: {{filename}}",
+    "timeLabels": {
+      "justNow": "À l'instant",
+      "minutesAgo": "Il y a {{minutes}}m",
+      "hoursAgo": "Il y a {{hours}}h"
+    },
+    "jumpTypes": {
+      "cmj": "CMJ",
+      "dropJump": "Saut de Chute"
+    }
+  },
+  "errorBoundary": {
+    "heading": "Quelque chose s'est mal passé",
+    "message": "Une erreur inattendue s'est produite. Veuillez essayer de rafraîchir la page ou contacter le support si le problème persiste.",
+    "details": "Détails de l'Erreur",
+    "retryButton": "Réessayer"
   }
 }

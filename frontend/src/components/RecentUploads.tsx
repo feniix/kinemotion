@@ -1,4 +1,5 @@
 import { RecentUpload } from '../hooks/useRecentUploads'
+import { useLanguage } from '../hooks/useLanguage'
 
 interface RecentUploadsProps {
   uploads: RecentUpload[]
@@ -7,6 +8,8 @@ interface RecentUploadsProps {
 }
 
 function RecentUploads({ uploads, onSelect, onClear }: RecentUploadsProps) {
+  const { t } = useLanguage()
+
   if (uploads.length === 0) {
     return null
   }
@@ -18,16 +21,16 @@ function RecentUploads({ uploads, onSelect, onClear }: RecentUploadsProps) {
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
 
     if (hours > 0) {
-      return `${hours}h ago`
+      return t('recentUploads.timeLabels.hoursAgo', { hours })
     }
     if (minutes > 0) {
-      return `${minutes}m ago`
+      return t('recentUploads.timeLabels.minutesAgo', { minutes })
     }
-    return 'Just now'
+    return t('recentUploads.timeLabels.justNow')
   }
 
   const formatJumpType = (type: string): string => {
-    return type === 'cmj' ? 'CMJ' : 'Drop Jump'
+    return type === 'cmj' ? t('recentUploads.jumpTypes.cmj') : t('recentUploads.jumpTypes.dropJump')
   }
 
   return (

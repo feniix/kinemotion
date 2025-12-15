@@ -1,4 +1,5 @@
 import { Component, ReactNode } from 'react'
+import { useLanguage } from '../hooks/useLanguage'
 
 interface Props {
   children: ReactNode
@@ -9,8 +10,8 @@ interface State {
   error: Error | null
 }
 
-class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
+class ErrorBoundaryImpl extends Component<Props & { t: (key: string) => string }, State> {
+  constructor(props: Props & { t: (key: string) => string }) {
     super(props)
     this.state = { hasError: false, error: null }
   }
@@ -28,20 +29,22 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   render() {
+    const { t } = this.props
+
     if (this.state.hasError) {
       return (
         <div className="error-boundary">
           <div className="error-icon">🔧</div>
-          <h2>Something went wrong</h2>
+          <h2>{t('errorBoundary.heading')}</h2>
           <p className="error-message">
-            An unexpected error occurred. Please try refreshing the page or contact support if the issue persists.
+            {t('errorBoundary.message')}
           </p>
           <details className="error-details">
-            <summary>Error Details</summary>
+            <summary>{t('errorBoundary.details')}</summary>
             <pre>{this.state.error?.message}</pre>
           </details>
           <button onClick={this.handleReset} className="retry-button">
-            Try Again
+            {t('errorBoundary.retryButton')}
           </button>
         </div>
       )
@@ -49,6 +52,16 @@ class ErrorBoundary extends Component<Props, State> {
 
     return this.props.children
   }
+}
+
+function ErrorBoundary({ children }: Props) {
+  const { t } = useLanguage()
+
+  return (
+    <ErrorBoundaryImpl t={t}>
+      {children}
+    </ErrorBoundaryImpl>
+  )
 }
 
 export default ErrorBoundary

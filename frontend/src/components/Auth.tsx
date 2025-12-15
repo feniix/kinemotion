@@ -4,12 +4,14 @@
 
 import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import { useLanguage } from '../hooks/useLanguage'
 
 interface AuthProps {
   onSuccess?: () => void
 }
 
 export default function Auth({ onSuccess }: AuthProps) {
+  const { t } = useLanguage()
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -23,12 +25,12 @@ export default function Auth({ onSuccess }: AuthProps) {
     setLocalError(null)
 
     if (!email || !password) {
-      setLocalError('Please fill in all fields')
+      setLocalError(t('auth.errors.fillAllFields'))
       return
     }
 
     if (password.length < 6) {
-      setLocalError('Password must be at least 6 characters')
+      setLocalError(t('auth.errors.passwordLength'))
       return
     }
 
@@ -36,7 +38,7 @@ export default function Auth({ onSuccess }: AuthProps) {
       if (isSignUp) {
         await signUp(email, password)
         setLocalError(null)
-        alert('Check your email for confirmation link!')
+        alert(t('auth.success'))
       } else {
         await signIn(email, password)
         setLocalError(null)
@@ -51,11 +53,9 @@ export default function Auth({ onSuccess }: AuthProps) {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>{isSignUp ? 'Sign Up' : 'Sign In'}</h2>
+        <h2>{isSignUp ? t('auth.signUp') : t('auth.signIn')}</h2>
         <p className="auth-subtitle">
-          {isSignUp
-            ? 'Create an account to analyze jump videos'
-            : 'Sign in to analyze jump videos'}
+          {isSignUp ? t('auth.signUpSubtitle') : t('auth.signInSubtitle')}
         </p>
 
         <button
@@ -95,7 +95,7 @@ export default function Auth({ onSuccess }: AuthProps) {
               fill="#EA4335"
             />
           </svg>
-          Sign in with Google
+          {t('auth.signInWithGoogle')}
         </button>
 
         <div className="auth-divider">
@@ -104,7 +104,7 @@ export default function Auth({ onSuccess }: AuthProps) {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t('auth.email')}</label>
             <input
               id="email"
               type="email"
@@ -117,7 +117,7 @@ export default function Auth({ onSuccess }: AuthProps) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t('auth.password')}</label>
             <input
               id="password"
               type="password"
@@ -137,16 +137,12 @@ export default function Auth({ onSuccess }: AuthProps) {
             className="auth-button"
             disabled={loading}
           >
-            {loading
-              ? 'Loading...'
-              : isSignUp
-              ? 'Sign Up'
-              : 'Sign In'}
+            {loading ? t('auth.loading') : isSignUp ? t('auth.signUp') : t('auth.signIn')}
           </button>
         </form>
 
         <div className="auth-toggle">
-          {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+          {isSignUp ? t('auth.signInToggle') : t('auth.signUpToggle')}{' '}
           <button
             onClick={() => {
               setIsSignUp(!isSignUp)
@@ -155,7 +151,7 @@ export default function Auth({ onSuccess }: AuthProps) {
             className="toggle-button"
             disabled={loading}
           >
-            {isSignUp ? 'Sign In' : 'Sign Up'}
+            {isSignUp ? t('auth.signIn') : t('auth.signUp')}
           </button>
         </div>
       </div>

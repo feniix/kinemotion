@@ -182,5 +182,91 @@
     "english": "English",
     "spanish": "Español",
     "french": "Français"
+  },
+  "loading": {
+    "analyzingVideo": "Analizando Vídeo",
+    "uploadingVideo": "Subiendo Vídeo",
+    "estimatedTime": "Esto generalmente toma 10-60 segundos dependiendo de la duración del vídeo",
+    "uploadProgress": "Progreso de carga: {{progress}}%",
+    "steps": {
+      "uploading": "Subiendo vídeo",
+      "processing": "Procesando fotogramas del vídeo",
+      "detecting": "Detectando puntos de referencia de pose",
+      "calculating": "Calculando métricas de salto"
+    }
+  },
+  "auth": {
+    "signUp": "Registrarse",
+    "signIn": "Iniciar Sesión",
+    "signUpSubtitle": "Crea una cuenta para analizar vídeos de saltos",
+    "signInSubtitle": "Inicia sesión para analizar vídeos de saltos",
+    "signInWithGoogle": "Iniciar sesión con Google",
+    "signInToggle": "¿Ya tienes una cuenta?",
+    "signUpToggle": "¿No tienes una cuenta?",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "loading": "Cargando...",
+    "errors": {
+      "fillAllFields": "Por favor completa todos los campos",
+      "passwordLength": "La contraseña debe tener al menos 6 caracteres"
+    },
+    "success": "¡Revisa tu correo electrónico para el enlace de confirmación!"
+  },
+  "feedback": {
+    "heading": "Comentarios del Entrenador - Análisis {{jumpType}}",
+    "subtitle": "Comparte tus ideas y notas de entrenamiento para este análisis",
+    "overallRating": "Calificación General",
+    "ratingLabels": {
+      "excellent": "Excelente",
+      "good": "Bueno",
+      "average": "Promedio",
+      "needsWork": "Necesita Mejora",
+      "poor": "Pobre"
+    },
+    "tags": "Etiquetas",
+    "coachNotes": "Notas del Entrenador",
+    "addCustomTag": "Agregar etiqueta personalizada...",
+    "addButton": "Agregar",
+    "cancel": "Cancelar",
+    "saveFeedback": "Guardar Comentarios",
+    "saving": "Guardando...",
+    "notesHelp": "Enfócate en puntos de entrenamiento accionables y observaciones específicas sobre la calidad del movimiento.",
+    "commonTags": [
+      "Técnica",
+      "Potencia",
+      "Consistencia",
+      "Equilibrio",
+      "Velocidad",
+      "Forma",
+      "Explosivo",
+      "Control",
+      "Necesita Mejora",
+      "Buen Progreso",
+      "Nivel Élite",
+      "Principiante",
+      "Intermedio",
+      "Avanzado"
+    ]
+  },
+  "recentUploads": {
+    "heading": "Cargas Recientes",
+    "clear": "Limpiar",
+    "clearTitle": "Limpiar historial",
+    "reuploadTitle": "Volver a subir: {{filename}}",
+    "timeLabels": {
+      "justNow": "Justo ahora",
+      "minutesAgo": "Hace {{minutes}}m",
+      "hoursAgo": "Hace {{hours}}h"
+    },
+    "jumpTypes": {
+      "cmj": "CMJ",
+      "dropJump": "Salto de Caída"
+    }
+  },
+  "errorBoundary": {
+    "heading": "Algo salió mal",
+    "message": "Ocurrió un error inesperado. Por favor intenta actualizar la página o contacta al soporte si el problema persiste.",
+    "details": "Detalles del Error",
+    "retryButton": "Intentar de Nuevo"
   }
 }

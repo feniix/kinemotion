@@ -182,5 +182,91 @@
     "english": "English",
     "spanish": "Español",
     "french": "Français"
+  },
+  "loading": {
+    "analyzingVideo": "Analyzing Video",
+    "uploadingVideo": "Uploading Video",
+    "estimatedTime": "This typically takes 10-60 seconds depending on video length",
+    "uploadProgress": "Upload progress: {{progress}}%",
+    "steps": {
+      "uploading": "Uploading video",
+      "processing": "Processing video frames",
+      "detecting": "Detecting pose landmarks",
+      "calculating": "Calculating jump metrics"
+    }
+  },
+  "auth": {
+    "signUp": "Sign Up",
+    "signIn": "Sign In",
+    "signUpSubtitle": "Create an account to analyze jump videos",
+    "signInSubtitle": "Sign in to analyze jump videos",
+    "signInWithGoogle": "Sign in with Google",
+    "signInToggle": "Already have an account?",
+    "signUpToggle": "Don't have an account?",
+    "email": "Email",
+    "password": "Password",
+    "loading": "Loading...",
+    "errors": {
+      "fillAllFields": "Please fill in all fields",
+      "passwordLength": "Password must be at least 6 characters"
+    },
+    "success": "Check your email for confirmation link!"
+  },
+  "feedback": {
+    "heading": "Coach Feedback - {{jumpType}} Analysis",
+    "subtitle": "Share your insights and coaching notes for this analysis",
+    "overallRating": "Overall Rating",
+    "ratingLabels": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "average": "Average",
+      "needsWork": "Needs Work",
+      "poor": "Poor"
+    },
+    "tags": "Tags",
+    "coachNotes": "Coach Notes",
+    "addCustomTag": "Add custom tag...",
+    "addButton": "Add",
+    "cancel": "Cancel",
+    "saveFeedback": "Save Feedback",
+    "saving": "Saving...",
+    "notesHelp": "Focus on actionable coaching points and specific observations about the movement quality.",
+    "commonTags": [
+      "Technique",
+      "Power",
+      "Consistency",
+      "Balance",
+      "Speed",
+      "Form",
+      "Explosive",
+      "Control",
+      "Improvement Needed",
+      "Good Progress",
+      "Elite Level",
+      "Beginner",
+      "Intermediate",
+      "Advanced"
+    ]
+  },
+  "recentUploads": {
+    "heading": "Recent Uploads",
+    "clear": "Clear",
+    "clearTitle": "Clear history",
+    "reuploadTitle": "Re-upload: {{filename}}",
+    "timeLabels": {
+      "justNow": "Just now",
+      "minutesAgo": "{{minutes}}m ago",
+      "hoursAgo": "{{hours}}h ago"
+    },
+    "jumpTypes": {
+      "cmj": "CMJ",
+      "dropJump": "Drop Jump"
+    }
+  },
+  "errorBoundary": {
+    "heading": "Something went wrong",
+    "message": "An unexpected error occurred. Please try refreshing the page or contact support if the issue persists.",
+    "details": "Error Details",
+    "retryButton": "Try Again"
   }
 }

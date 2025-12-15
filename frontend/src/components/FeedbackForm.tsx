@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AnalysisResponse } from '../types/api'
+import { useLanguage } from '../hooks/useLanguage'
 
 interface FeedbackFormProps {
   analysisResponse: AnalysisResponse
@@ -13,24 +14,9 @@ interface FeedbackData {
   tags: string[]
 }
 
-const COMMON_TAGS = [
-  'Technique',
-  'Power',
-  'Consistency',
-  'Balance',
-  'Speed',
-  'Form',
-  'Explosive',
-  'Control',
-  'Improvement Needed',
-  'Good Progress',
-  'Elite Level',
-  'Beginner',
-  'Intermediate',
-  'Advanced'
-]
-
 export default function FeedbackForm({ analysisResponse, onSubmit, onCancel }: FeedbackFormProps) {
+  const { t } = useLanguage()
+  const COMMON_TAGS = t('feedback.commonTags', { returnObjects: true }) as string[]
   const [feedback, setFeedback] = useState<FeedbackData>({
     notes: '',
     rating: null,
@@ -84,14 +70,14 @@ export default function FeedbackForm({ analysisResponse, onSubmit, onCancel }: F
     <div className="feedback-form-container">
       <div className="feedback-form">
         <div className="feedback-header">
-          <h3>Coach Feedback - {jumpType} Analysis</h3>
-          <p>Share your insights and coaching notes for this analysis</p>
+          <h3>{t('feedback.heading', { jumpType })}</h3>
+          <p>{t('feedback.subtitle')}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="feedback-form-content">
           {/* Rating */}
           <div className="form-section">
-            <label className="form-label">Overall Rating</label>
+            <label className="form-label">{t('feedback.overallRating')}</label>
             <div className="rating-container">
               {[1, 2, 3, 4, 5].map(star => (
                 <button
@@ -105,10 +91,10 @@ export default function FeedbackForm({ analysisResponse, onSubmit, onCancel }: F
               ))}
               {feedback.rating && (
                 <span className="rating-text">
-                  {feedback.rating === 5 ? 'Excellent' :
-                   feedback.rating === 4 ? 'Good' :
-                   feedback.rating === 3 ? 'Average' :
-                   feedback.rating === 2 ? 'Needs Work' : 'Poor'}
+                  {feedback.rating === 5 ? t('feedback.ratingLabels.excellent') :
+                   feedback.rating === 4 ? t('feedback.ratingLabels.good') :
+                   feedback.rating === 3 ? t('feedback.ratingLabels.average') :
+                   feedback.rating === 2 ? t('feedback.ratingLabels.needsWork') : t('feedback.ratingLabels.poor')}
                 </span>
               )}
             </div>
@@ -116,7 +102,7 @@ export default function FeedbackForm({ analysisResponse, onSubmit, onCancel }: F
 
           {/* Tags */}
           <div className="form-section">
-            <label className="form-label">Tags</label>
+            <label className="form-label">{t('feedback.tags')}</label>
             <div className="tags-container">
               <div className="common-tags">
                 {COMMON_TAGS.map(tag => (
@@ -136,7 +122,7 @@ export default function FeedbackForm({ analysisResponse, onSubmit, onCancel }: F
                   type="text"
                   value={customTag}
                   onChange={(e) => setCustomTag(e.target.value)}
-                  placeholder="Add custom tag..."
+                  placeholder={t('feedback.addCustomTag')}
                   className="tag-input"
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddCustomTag())}
                 />
@@ -146,7 +132,7 @@ export default function FeedbackForm({ analysisResponse, onSubmit, onCancel }: F
                   className="add-tag-button"
                   disabled={!customTag.trim()}
                 >
-                  Add
+                  {t('feedback.addButton')}
                 </button>
               </div>
 
@@ -172,7 +158,7 @@ export default function FeedbackForm({ analysisResponse, onSubmit, onCancel }: F
           {/* Notes */}
           <div className="form-section">
             <label className="form-label" htmlFor="feedback-notes">
-              Coach Notes
+              {t('feedback.coachNotes')}
             </label>
             <textarea
               id="feedback-notes"
@@ -183,7 +169,7 @@ export default function FeedbackForm({ analysisResponse, onSubmit, onCancel }: F
               rows={6}
             />
             <div className="notes-help">
-              Focus on actionable coaching points and specific observations about the movement quality.
+              {t('feedback.notesHelp')}
             </div>
           </div>
 
@@ -195,14 +181,14 @@ export default function FeedbackForm({ analysisResponse, onSubmit, onCancel }: F
               className="cancel-button"
               disabled={isSubmitting}
             >
-              Cancel
+              {t('feedback.cancel')}
             </button>
             <button
               type="submit"
               className="submit-button"
               disabled={!isValid || isSubmitting}
             >
-              {isSubmitting ? 'Saving...' : 'Save Feedback'}
+              {isSubmitting ? t('feedback.saving') : t('feedback.saveFeedback')}
             </button>
           </div>
         </form>
