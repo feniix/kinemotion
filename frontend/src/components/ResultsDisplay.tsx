@@ -148,8 +148,11 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
   const handleFeedbackSubmit = async (feedback: { notes: string; rating: number | null; tags: string[] }) => {
     try {
       const token = session?.access_token
+      console.log('[Feedback] Session:', session)
+      console.log('[Feedback] Token:', token)
 
       if (!token) {
+        console.error('[Feedback] No token available. Session:', session)
         alert('Please log in to save feedback')
         return
       }
