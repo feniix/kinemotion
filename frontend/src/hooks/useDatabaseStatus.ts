@@ -22,11 +22,8 @@ export function useDatabaseStatus() {
           import.meta.env.VITE_API_URL ||
           (typeof window !== 'undefined' ? window.location.origin : '')
 
-        const healthUrl = `${backendUrl}/health`
-        console.log('[useDatabaseStatus] Fetching from:', healthUrl)
-
         // Try the health endpoint to check database status
-        const response = await fetch(healthUrl)
+        const response = await fetch(`${backendUrl}/health`)
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`)
