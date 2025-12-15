@@ -39,6 +39,9 @@ def setup_test_environment() -> None:
     os.environ["R2_BUCKET_NAME"] = "test-bucket"
     os.environ["SUPABASE_URL"] = "https://test.supabase.co"
     os.environ["SUPABASE_ANON_KEY"] = "test-anon-key"
+    # Test password for /analyze endpoint authentication bypass
+    os.environ["TEST_PASSWORD"] = "test-password-12345"
+    os.environ["TEST_USER_ID"] = "test-user-00000000-0000-0000-0000-000000000000"
 
     yield
 
@@ -51,6 +54,8 @@ def setup_test_environment() -> None:
         "R2_BUCKET_NAME",
         "SUPABASE_URL",
         "SUPABASE_ANON_KEY",
+        "TEST_PASSWORD",
+        "TEST_USER_ID",
     ]
     for key in env_vars:
         os.environ.pop(key, None)
@@ -126,8 +131,11 @@ def app() -> FastAPI:
 
 @pytest.fixture
 def client(app: FastAPI) -> TestClient:
-    """Test client for the FastAPI application."""
-    return TestClient(app)
+    """Test client for the FastAPI application with test authentication."""
+    test_client = TestClient(app)
+    # Add test password header to all requests for authentication bypass
+    test_client.headers["x-test-password"] = "test-password-12345"
+    return test_client
 
 
 @pytest.fixture

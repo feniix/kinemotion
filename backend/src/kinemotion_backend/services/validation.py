@@ -51,6 +51,19 @@ def validate_jump_type(jump_type: str) -> str:
     return normalized
 
 
+def is_test_password_valid(x_test_password: str | None = None) -> bool:
+    """Check if test password is valid (for debugging backdoor).
+
+    Args:
+        x_test_password: Optional test password header
+
+    Returns:
+        True if test password is configured and matches
+    """
+    test_password = os.getenv("TEST_PASSWORD")
+    return bool(test_password and x_test_password == test_password)
+
+
 def validate_referer(referer: str | None, x_test_password: str | None = None) -> None:
     """Validate request comes from authorized frontend.
 
@@ -66,8 +79,7 @@ def validate_referer(referer: str | None, x_test_password: str | None = None) ->
         return
 
     # Allow bypass with test password (for curl testing, debugging)
-    test_password = os.getenv("TEST_PASSWORD")
-    if test_password and x_test_password == test_password:
+    if is_test_password_valid(x_test_password):
         return  # Bypass referer check
 
     allowed_referers = [

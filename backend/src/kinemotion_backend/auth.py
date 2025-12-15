@@ -31,7 +31,10 @@ class SupabaseAuth:
     def __init__(self) -> None:
         """Initialize Supabase authentication."""
         self.supabase_url = os.getenv("SUPABASE_URL", "")
-        self.supabase_anon_key = os.getenv("SUPABASE_ANON_KEY", "")
+        # Prefer modern keys, fall back to legacy for compatibility
+        self.supabase_anon_key = (
+            os.getenv("SUPABASE_PUBLISHABLE_KEY") or os.getenv("SUPABASE_ANON_KEY") or ""
+        )
 
         if not self.supabase_url:
             raise ValueError("SUPABASE_URL must be set")

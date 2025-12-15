@@ -1,8 +1,19 @@
 """Video analysis routes for kinemotion backend."""
 
+import os
 import time
 
-from fastapi import APIRouter, File, Form, Header, Request, UploadFile
+from fastapi import (
+    APIRouter,
+    Depends,
+    File,
+    Form,
+    Header,
+    HTTPException,
+    Request,
+    UploadFile,
+    status,
+)
 from fastapi.responses import JSONResponse
 
 try:
@@ -13,9 +24,10 @@ except ImportError:
     fastapi_limiter_available = False
     RateLimiter = None  # type: ignore[assignment]
 
+from ..auth import SupabaseAuth
 from ..logging_config import get_logger
 from ..models.responses import AnalysisResponse
-from ..services import AnalysisService, validate_referer
+from ..services import AnalysisService, is_test_password_valid, validate_referer
 from ..utils import NoOpLimiter
 
 logger = get_logger(__name__)
@@ -29,6 +41,51 @@ else:
     limiter = RateLimiter()  # type: ignore[operator]
 
 
+async def get_user_id_for_analysis(
+    request: Request,
+    x_test_password: str | None = Header(None),  # noqa: B008
+) -> str:
+    """Extract user ID from JWT token or use test backdoor.
+
+    Args:
+        request: HTTP request (to access Authorization header)
+        x_test_password: Optional test password for debugging
+
+    Returns:
+        User ID (from token or test backdoor)
+
+    Raises:
+        HTTPException: If authentication fails and test password not provided
+    """
+    # Allow bypass with test password (for curl testing, debugging)
+    if is_test_password_valid(x_test_password):
+        test_user_id = os.getenv("TEST_USER_ID", "test-user-00000000-0000-0000-0000-000000000000")
+        logger.info("analysis_test_password_used", user_id=test_user_id)
+        return test_user_id
+
+    # Otherwise require valid JWT token from Authorization header
+    auth_header = request.headers.get("authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required",
+        )
+
+    token = auth_header.replace("Bearer ", "")
+    try:
+        auth = SupabaseAuth()
+        user_id = auth.get_user_id(token)
+        return user_id
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("user_id_extraction_failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+        ) from e
+
+
 @router.post("/analyze")
 @limiter.limit("3/minute")
 async def analyze_video(
@@ -39,6 +96,7 @@ async def analyze_video(
     debug: str = Form("false"),  # noqa: B008
     referer: str | None = Header(None),  # noqa: B008
     x_test_password: str | None = Header(None),  # noqa: B008
+    user_id: str = Depends(get_user_id_for_analysis),  # noqa: B008
 ) -> JSONResponse:
     """Analyze video and return jump metrics.
 
@@ -46,17 +104,21 @@ async def analyze_video(
     - Drop Jump: Analyzes ground contact and flight time
     - CMJ: Analyzes jump height, countermovement depth, and phases
 
+    Requires authentication via JWT token in Authorization header, or TEST_PASSWORD
+    header for testing/debugging.
+
     Args:
         file: Video file to analyze (multipart/form-data)
         jump_type: Type of jump ("drop_jump" or "cmj")
         quality: Analysis quality preset ("fast", "balanced", or "accurate")
         debug: Debug overlay flag ("true" or "false", default "false")
+        user_id: Authenticated user ID (extracted from JWT or test password)
 
     Returns:
         JSON response with metrics or error details
 
     Raises:
-        HTTPException: If validation or processing fails
+        HTTPException: If authentication or processing fails
     """
     start_time = time.time()
 
@@ -76,6 +138,7 @@ async def analyze_video(
             jump_type=jump_type,
             quality=quality,
             debug=enable_debug,
+            user_id=user_id,
         )
 
         # Perform analysis using service layer
@@ -84,7 +147,7 @@ async def analyze_video(
             jump_type=jump_type,
             quality=quality,
             debug=enable_debug,
-            user_id=None,  # TODO: Extract from auth when available
+            user_id=user_id,
         )
 
         # Log analysis completion

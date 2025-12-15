@@ -54,8 +54,8 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         auth_header = request.headers.get("authorization")
         if auth_header and auth_header.startswith("Bearer ") and supabase_auth:
             token = auth_header.replace("Bearer ", "")
+            auth_start = time.time()
             try:
-                auth_start = time.time()
                 user_id = supabase_auth.get_user_id(token)
                 user_email = supabase_auth.get_user_email(token)
                 auth_duration_ms = (time.time() - auth_start) * 1000
