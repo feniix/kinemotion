@@ -154,6 +154,9 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
         return
       }
 
+      // Get backend URL from environment
+      const backendUrl = import.meta.env.VITE_API_URL || window.location.origin
+
       // For now, we'll create a session first, then add feedback
       // In a real implementation, the session ID should be returned from the analyze endpoint
       const sessionData = {
@@ -167,7 +170,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
       }
 
       // First create the analysis session
-      const sessionResponse = await fetch('/api/analysis/sessions', {
+      const sessionResponse = await fetch(`${backendUrl}/api/analysis/sessions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -190,7 +193,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
         tags: feedback.tags
       }
 
-      const feedbackResponse = await fetch(`/api/analysis/sessions/${sessionId}/feedback`, {
+      const feedbackResponse = await fetch(`${backendUrl}/api/analysis/sessions/${sessionId}/feedback`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
