@@ -17,7 +17,7 @@ from kinemotion_backend.models import (
     DatabaseError,
 )
 
-logger = structlog.get_logger()
+logger: structlog.stdlib.BoundLogger = structlog.get_logger()
 router = APIRouter(prefix="/api/analysis", tags=["Analysis"])
 security = HTTPBearer()
 auth: SupabaseAuth | None = None

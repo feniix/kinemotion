@@ -11,7 +11,7 @@ from starlette.types import ASGIApp
 
 from kinemotion_backend.auth import SupabaseAuth
 
-logger = structlog.get_logger(__name__)
+logger: structlog.stdlib.BoundLogger = structlog.get_logger(__name__)
 
 # Initialize Supabase auth (optional - only if credentials provided)
 supabase_auth: SupabaseAuth | None = None

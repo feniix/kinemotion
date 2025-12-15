@@ -1,10 +1,9 @@
 import os
-from typing import cast
 
 import boto3
 import structlog
 
-logger = structlog.get_logger(__name__)
+logger: structlog.stdlib.BoundLogger = structlog.get_logger(__name__)
 
 
 class R2StorageClient:
@@ -54,12 +53,11 @@ class R2StorageClient:
             OSError: If generation fails
         """
         try:
-            url = self.client.generate_presigned_url(
+            return self.client.generate_presigned_url(
                 "get_object",
                 Params={"Bucket": self.bucket_name, "Key": key},
                 ExpiresIn=expiration,
             )
-            return cast(str, url)
         except Exception as e:
             raise OSError(f"Failed to generate presigned URL: {str(e)}") from e
 

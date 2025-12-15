@@ -6,7 +6,7 @@ from typing import Any
 import structlog
 from supabase import Client, create_client
 
-logger = structlog.get_logger()
+logger: structlog.stdlib.BoundLogger = structlog.get_logger()
 
 
 class DatabaseClient:

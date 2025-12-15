@@ -17,7 +17,7 @@ import structlog
 from fastapi import HTTPException, status
 from jwt import PyJWKClient
 
-log = structlog.get_logger(__name__)
+log: structlog.stdlib.BoundLogger = structlog.get_logger(__name__)
 
 
 class SupabaseAuth:

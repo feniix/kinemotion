@@ -9,7 +9,7 @@ from fastapi import APIRouter, Header
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-logger = structlog.get_logger()
+logger: structlog.stdlib.BoundLogger = structlog.get_logger()
 router = APIRouter(prefix="/api/analysis", tags=["Analysis"])
 
 

@@ -87,7 +87,7 @@ def setup_logging(*, json_logs: bool = False, log_level: str = "INFO") -> None:
     logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
-def get_logger(name: str | None = None) -> Any:
+def get_logger(name: str | None = None) -> structlog.stdlib.BoundLogger:
     """Get a structured logger instance.
 
     Args:

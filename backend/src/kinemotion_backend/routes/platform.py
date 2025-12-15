@@ -5,7 +5,7 @@ import os
 import structlog
 from fastapi import APIRouter
 
-logger = structlog.get_logger()
+logger: structlog.stdlib.BoundLogger = structlog.get_logger()
 router = APIRouter(prefix="/api", tags=["Platform"])
 
 
