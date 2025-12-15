@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.60.1 (2025-12-15)
+
+### Fix
+
+- prevent auth_duration_ms from polluting non-auth logs
+
 ## kinemotion-v0.60.0 (2025-12-15)
 
 ### Feat
