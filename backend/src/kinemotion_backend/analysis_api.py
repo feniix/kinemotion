@@ -31,12 +31,12 @@ def get_auth() -> SupabaseAuth:
     return auth
 
 
-async def get_current_user_id(
+async def get_current_user_email(
     credentials: HTTPAuthorizationCredentials = Depends(security),  # noqa: B008
 ) -> str:
-    """Extract user ID from JWT token."""
+    """Extract user email from JWT token."""
     try:
-        return get_auth().get_user_id(credentials.credentials)
+        return get_auth().get_user_email(credentials.credentials)
     except Exception as e:
         logger.warning("user_authentication_failed", error=str(e))
         raise HTTPException(
@@ -53,7 +53,7 @@ async def get_current_user_id(
 )
 async def create_analysis_session(
     session_data: AnalysisSessionCreate,
-    user_id: str = Depends(get_current_user_id),
+    email: str = Depends(get_current_user_email),
 ) -> AnalysisSessionResponse:
     """Create a new analysis session record.
 
@@ -63,7 +63,7 @@ async def create_analysis_session(
     try:
         db_client = get_database_client()
         session_record = await db_client.create_analysis_session(
-            user_id=user_id,
+            user_id=email,
             jump_type=session_data.jump_type,
             quality_preset=session_data.quality_preset,
             analysis_data=session_data.analysis_data,
@@ -77,7 +77,7 @@ async def create_analysis_session(
         logger.info(
             "analysis_session_api_created",
             session_id=session_record["id"],
-            user_id=user_id,
+            email=email,
             jump_type=session_data.jump_type,
         )
 
@@ -87,7 +87,7 @@ async def create_analysis_session(
         logger.error(
             "create_analysis_session_api_error",
             error=str(e),
-            user_id=user_id,
+            email=email,
             exc_info=True,
         )
         raise HTTPException(
@@ -103,7 +103,7 @@ async def create_analysis_session(
 )
 async def get_user_analysis_sessions(
     limit: int = 50,
-    user_id: str = Depends(get_current_user_id),
+    email: str = Depends(get_current_user_email),
 ) -> list[AnalysisSessionResponse]:
     """Get analysis sessions for the current user.
 
@@ -118,11 +118,11 @@ async def get_user_analysis_sessions(
             )
 
         db_client = get_database_client()
-        sessions = await db_client.get_user_analysis_sessions(user_id=user_id, limit=limit)
+        sessions = await db_client.get_user_analysis_sessions(user_id=email, limit=limit)
 
         logger.info(
             "user_analysis_sessions_api_retrieved",
-            user_id=user_id,
+            email=email,
             count=len(sessions),
         )
 
@@ -134,7 +134,7 @@ async def get_user_analysis_sessions(
         logger.error(
             "get_user_analysis_sessions_api_error",
             error=str(e),
-            user_id=user_id,
+            email=email,
             exc_info=True,
         )
         raise HTTPException(
@@ -154,7 +154,7 @@ async def get_user_analysis_sessions(
 )
 async def get_analysis_session(
     session_id: str,
-    user_id: str = Depends(get_current_user_id),
+    email: str = Depends(get_current_user_email),
 ) -> AnalysisSessionWithFeedback:
     """Get a specific analysis session with feedback.
 
@@ -162,7 +162,7 @@ async def get_analysis_session(
     """
     try:
         db_client = get_database_client()
-        session = await db_client.get_analysis_session(session_id=session_id, user_id=user_id)
+        session = await db_client.get_analysis_session(session_id=session_id, user_id=email)
 
         if not session:
             raise HTTPException(
@@ -176,7 +176,7 @@ async def get_analysis_session(
         logger.info(
             "analysis_session_api_retrieved",
             session_id=session_id,
-            user_id=user_id,
+            email=email,
             feedback_count=len(feedback),
         )
 
@@ -192,7 +192,7 @@ async def get_analysis_session(
             "get_analysis_session_api_error",
             error=str(e),
             session_id=session_id,
-            user_id=user_id,
+            email=email,
             exc_info=True,
         )
         raise HTTPException(
@@ -244,7 +244,7 @@ async def get_database_status() -> dict[str, Any]:
 async def create_coach_feedback(
     session_id: str,
     feedback_data: CoachFeedbackCreate,
-    coach_user_id: str = Depends(get_current_user_id),
+    coach_email: str = Depends(get_current_user_email),
 ) -> CoachFeedbackResponse:
     """Add coach feedback to an analysis session.
 
@@ -253,9 +253,7 @@ async def create_coach_feedback(
     try:
         # Validate that the session exists
         db_client = get_database_client()
-        session = await db_client.get_analysis_session(
-            session_id=session_id, user_id=coach_user_id
-        )
+        session = await db_client.get_analysis_session(session_id=session_id, user_id=coach_email)
 
         if not session:
             # Try to get session without user restriction
@@ -274,7 +272,7 @@ async def create_coach_feedback(
 
         feedback_record = await db_client.create_coach_feedback(
             analysis_session_id=session_id,
-            coach_user_id=coach_user_id,
+            coach_user_id=coach_email,
             notes=feedback_data.notes,
             rating=feedback_data.rating,
             tags=feedback_data.tags,
@@ -284,7 +282,7 @@ async def create_coach_feedback(
             "coach_feedback_api_created",
             feedback_id=feedback_record["id"],
             session_id=session_id,
-            coach_user_id=coach_user_id,
+            coach_email=coach_email,
         )
 
         return CoachFeedbackResponse(**feedback_record)
@@ -296,7 +294,7 @@ async def create_coach_feedback(
             "create_coach_feedback_api_error",
             error=str(e),
             session_id=session_id,
-            coach_user_id=coach_user_id,
+            coach_email=coach_email,
             exc_info=True,
         )
         raise HTTPException(
