@@ -3,16 +3,17 @@
 Supabase database schema setup script for Kinemotion.
 
 This script automates the creation of database tables and Row Level Security (RLS) policies.
-It requires SUPABASE_URL and SUPABASE_KEY (or SUPABASE_ANON_KEY) to be set.
+It requires SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY to be set.
 
 Usage:
     python scripts/setup_supabase_db.py
 
 Environment variables:
     SUPABASE_URL: Your Supabase project URL (e.g., https://project.supabase.co)
-    SUPABASE_KEY: Your Supabase API key (anon or service role)
-    SUPABASE_ANON_KEY: Alternative name for SUPABASE_KEY
-    SUPABASE_SERVICE_ROLE_KEY: Service role key for admin operations
+    SUPABASE_PUBLISHABLE_KEY: Your Supabase publishable key (format: sb_publishable_...)
+    SUPABASE_SECRET_KEY: Your Supabase secret key for admin operations (format: sb_secret_...)
+
+Note: Modern API keys (publishable/secret) are recommended over legacy anon/service_role keys.
 """
 
 import os
@@ -80,11 +81,18 @@ def validate_credentials() -> tuple[str, str]:
         print("Set it with: export SUPABASE_URL='https://your-project.supabase.co'")
         sys.exit(1)
 
-    # Try SUPABASE_KEY first, then SUPABASE_ANON_KEY
-    key = os.getenv("SUPABASE_KEY") or os.getenv("SUPABASE_ANON_KEY")
+    # Prefer SUPABASE_PUBLISHABLE_KEY, fall back to legacy keys for compatibility
+    key = (os.getenv("SUPABASE_PUBLISHABLE_KEY") or
+           os.getenv("SUPABASE_SECRET_KEY") or
+           os.getenv("SUPABASE_KEY") or
+           os.getenv("SUPABASE_ANON_KEY"))
+
     if not key:
-        print_error("SUPABASE_KEY or SUPABASE_ANON_KEY not found")
-        print("Set it with: export SUPABASE_KEY='sb_anon_your-key'")
+        print_error("No Supabase API key found")
+        print("\nRecommended (modern): export SUPABASE_PUBLISHABLE_KEY='sb_publishable_...'")
+        print("Or for admin operations: export SUPABASE_SECRET_KEY='sb_secret_...'")
+        print("\nLegacy (not recommended):")
+        print("  export SUPABASE_KEY='...' or SUPABASE_ANON_KEY='...'")
         sys.exit(1)
 
     return url, key
@@ -159,16 +167,16 @@ ALTER TABLE analysis_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE coach_feedback ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policy: Users can only see their own analysis sessions
-CREATE POLICY IF NOT EXISTS "users_can_read_own_sessions" ON analysis_sessions
+CREATE POLICY "users_can_read_own_sessions" ON analysis_sessions
     FOR SELECT
     USING (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "users_can_create_own_sessions" ON analysis_sessions
+CREATE POLICY "users_can_create_own_sessions" ON analysis_sessions
     FOR INSERT
     WITH CHECK (auth.uid() = user_id);
 
 -- RLS Policy: Coaches can read feedback for their own analyses or sessions they're coaching
-CREATE POLICY IF NOT EXISTS "coaches_can_read_feedback" ON coach_feedback
+CREATE POLICY "coaches_can_read_feedback" ON coach_feedback
     FOR SELECT
     USING (
         auth.uid() = coach_user_id OR
@@ -178,11 +186,11 @@ CREATE POLICY IF NOT EXISTS "coaches_can_read_feedback" ON coach_feedback
         )
     );
 
-CREATE POLICY IF NOT EXISTS "coaches_can_create_feedback" ON coach_feedback
+CREATE POLICY "coaches_can_create_feedback" ON coach_feedback
     FOR INSERT
     WITH CHECK (auth.uid() = coach_user_id);
 
-CREATE POLICY IF NOT EXISTS "coaches_can_update_own_feedback" ON coach_feedback
+CREATE POLICY "coaches_can_update_own_feedback" ON coach_feedback
     FOR UPDATE
     USING (auth.uid() = coach_user_id)
     WITH CHECK (auth.uid() = coach_user_id);

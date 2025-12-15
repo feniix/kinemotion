@@ -15,13 +15,24 @@ class DatabaseClient:
     def __init__(self) -> None:
         """Initialize Supabase client."""
         self.supabase_url = os.getenv("SUPABASE_URL", "")
-        self.supabase_key = os.getenv("SUPABASE_ANON_KEY", "")
+
+        # Prefer modern keys, fall back to legacy for compatibility
+        self.supabase_key = (
+            os.getenv("SUPABASE_PUBLISHABLE_KEY")
+            or os.getenv("SUPABASE_SECRET_KEY")
+            or os.getenv("SUPABASE_ANON_KEY")
+            or os.getenv("SUPABASE_KEY")
+        )
 
         if not self.supabase_url:
             raise ValueError("SUPABASE_URL must be set")
 
         if not self.supabase_key:
-            raise ValueError("SUPABASE_ANON_KEY must be set")
+            raise ValueError(
+                "No Supabase API key found. Set one of: "
+                "SUPABASE_PUBLISHABLE_KEY, SUPABASE_SECRET_KEY, "
+                "SUPABASE_ANON_KEY, or SUPABASE_KEY"
+            )
 
         self.client: Client = create_client(self.supabase_url, self.supabase_key)
         logger.info("database_client_initialized", supabase_url=self.supabase_url)

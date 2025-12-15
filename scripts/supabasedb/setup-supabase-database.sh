@@ -20,17 +20,25 @@ if [ -z "$SUPABASE_URL" ]; then
     echo -e "${RED}❌ Error: SUPABASE_URL is not set${NC}"
     echo "Please run setup-supabase-local.sh first or set environment variables:"
     echo "  export SUPABASE_URL='https://your-project.supabase.co'"
-    echo "  export SUPABASE_KEY='sb_anon_your-key'"
+    echo "  export SUPABASE_PUBLISHABLE_KEY='sb_publishable_...'"
     exit 1
 fi
 
-if [ -z "$SUPABASE_KEY" ] && [ -z "$SUPABASE_ANON_KEY" ]; then
-    echo -e "${RED}❌ Error: SUPABASE_KEY or SUPABASE_ANON_KEY is not set${NC}"
+# Prefer modern keys, fall back to legacy for compatibility
+if [ -z "$SUPABASE_PUBLISHABLE_KEY" ] && [ -z "$SUPABASE_SECRET_KEY" ] && \
+   [ -z "$SUPABASE_KEY" ] && [ -z "$SUPABASE_ANON_KEY" ]; then
+    echo -e "${RED}❌ Error: No Supabase API key found${NC}"
+    echo ""
+    echo "Recommended (modern): export SUPABASE_PUBLISHABLE_KEY='sb_publishable_...'"
+    echo "Or for admin operations: export SUPABASE_SECRET_KEY='sb_secret_...'"
+    echo ""
+    echo "Legacy (not recommended):"
+    echo "  export SUPABASE_KEY='...' or SUPABASE_ANON_KEY='...'"
     exit 1
 fi
 
-# Use SUPABASE_KEY if set, otherwise use SUPABASE_ANON_KEY
-API_KEY="${SUPABASE_KEY:-$SUPABASE_ANON_KEY}"
+# Use SUPABASE_PUBLISHABLE_KEY if set, otherwise fall back to legacy keys
+API_KEY="${SUPABASE_PUBLISHABLE_KEY:-${SUPABASE_SECRET_KEY:-${SUPABASE_KEY:-$SUPABASE_ANON_KEY}}}"
 
 echo -e "${BLUE}Project URL:${NC} $SUPABASE_URL"
 echo ""
@@ -98,16 +106,16 @@ ALTER TABLE analysis_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE coach_feedback ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policy: Users can only see their own analysis sessions
-CREATE POLICY IF NOT EXISTS "users_can_read_own_sessions" ON analysis_sessions
+CREATE POLICY "users_can_read_own_sessions" ON analysis_sessions
     FOR SELECT
     USING (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "users_can_create_own_sessions" ON analysis_sessions
+CREATE POLICY "users_can_create_own_sessions" ON analysis_sessions
     FOR INSERT
     WITH CHECK (auth.uid() = user_id);
 
 -- RLS Policy: Coaches can read feedback for their own analyses or sessions they'"'"'re coaching
-CREATE POLICY IF NOT EXISTS "coaches_can_read_feedback" ON coach_feedback
+CREATE POLICY "coaches_can_read_feedback" ON coach_feedback
     FOR SELECT
     USING (
         auth.uid() = coach_user_id OR
@@ -117,11 +125,11 @@ CREATE POLICY IF NOT EXISTS "coaches_can_read_feedback" ON coach_feedback
         )
     );
 
-CREATE POLICY IF NOT EXISTS "coaches_can_create_feedback" ON coach_feedback
+CREATE POLICY "coaches_can_create_feedback" ON coach_feedback
     FOR INSERT
     WITH CHECK (auth.uid() = coach_user_id);
 
-CREATE POLICY IF NOT EXISTS "coaches_can_update_own_feedback" ON coach_feedback
+CREATE POLICY "coaches_can_update_own_feedback" ON coach_feedback
     FOR UPDATE
     USING (auth.uid() = coach_user_id)
     WITH CHECK (auth.uid() = coach_user_id);
@@ -181,7 +189,7 @@ echo -e "${YELLOW}⚠️  Environment Variables${NC}"
 echo ""
 echo "Your current setup:"
 echo "  SUPABASE_URL: $SUPABASE_URL"
-echo "  SUPABASE_KEY: ${API_KEY:0:20}... (hidden)"
+echo "  API_KEY: ${API_KEY:0:20}... (hidden)"
 echo ""
 
 echo -e "${BLUE}═══════════════════════════════════════════════════════${NC}"
@@ -200,11 +208,11 @@ if [ -f "backend/.env" ]; then
         echo "Please add it manually or run setup-supabase-local.sh"
     fi
 
-    if grep -q "SUPABASE_KEY=" backend/.env || grep -q "SUPABASE_ANON_KEY=" backend/.env; then
-        echo "✅ SUPABASE_KEY (or SUPABASE_ANON_KEY) configured in backend/.env"
+    if grep -q "SUPABASE_PUBLISHABLE_KEY=" backend/.env || grep -q "SUPABASE_SECRET_KEY=" backend/.env || grep -q "SUPABASE_KEY=" backend/.env || grep -q "SUPABASE_ANON_KEY=" backend/.env; then
+        echo "✅ Supabase API key configured in backend/.env"
     else
-        echo -e "${YELLOW}⚠️  SUPABASE_KEY not found in backend/.env${NC}"
-        echo "Please add it manually or run setup-supabase-local.sh"
+        echo -e "${YELLOW}⚠️  No Supabase API key found in backend/.env${NC}"
+        echo "Please add SUPABASE_PUBLISHABLE_KEY or SUPABASE_SECRET_KEY manually or run setup-supabase-local.sh"
     fi
 else
     echo -e "${YELLOW}⚠️  backend/.env not found${NC}"

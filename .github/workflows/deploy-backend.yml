@@ -134,7 +134,7 @@ jobs:
             --allow-unauthenticated
             --service-account=kinemotion-backend-runtime@${{ env.GCP_PROJECT_ID }}.iam.gserviceaccount.com
             --set-env-vars=CORS_ORIGINS=https://kinemotion.vercel.app,JSON_LOGS=true,LOG_LEVEL=INFO
-            --set-secrets=SUPABASE_URL=SUPABASE_URL:latest,SUPABASE_ANON_KEY=SUPABASE_ANON_KEY:latest,R2_ENDPOINT=R2_ENDPOINT:latest,R2_ACCESS_KEY=R2_ACCESS_KEY:latest,R2_SECRET_KEY=R2_SECRET_KEY:latest,R2_BUCKET_NAME=R2_BUCKET_NAME:latest
+            --set-secrets=SUPABASE_URL=SUPABASE_URL:latest,SUPABASE_PUBLISHABLE_KEY=SUPABASE_PUBLISHABLE_KEY:latest,SUPABASE_SECRET_KEY=SUPABASE_SECRET_KEY:latest,R2_ENDPOINT=R2_ENDPOINT:latest,R2_ACCESS_KEY=R2_ACCESS_KEY:latest,R2_SECRET_KEY=R2_SECRET_KEY:latest,R2_BUCKET_NAME=R2_BUCKET_NAME:latest
 
       - name: Verify deployment health
         run: |
