@@ -84,6 +84,7 @@ Thumbs.db
 !.mcp.json
 .vercel
 .env*.local
+!pyrightconfig.json
 
 # athletepose3d
 data/
