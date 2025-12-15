@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.61.0 (2025-12-15)
+
+### Feat
+
+- update Supabase integration to use modern API keys
+- update frontend to use modern Supabase publishable key
+
 ## kinemotion-v0.60.1 (2025-12-15)
 
 ### Fix
