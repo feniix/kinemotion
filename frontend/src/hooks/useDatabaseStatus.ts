@@ -17,17 +17,13 @@ export function useDatabaseStatus() {
         setLoading(true)
         setError(null)
 
-        // Try the specific database status endpoint first
-        let response = await fetch('/api/analysis/database-status')
+        // Get backend URL from environment or use current origin
+        const backendUrl =
+          import.meta.env.VITE_API_URL ||
+          (typeof window !== 'undefined' ? window.location.origin : '')
 
-        if (response.ok) {
-          const data = await response.json()
-          setStatus(data)
-          return
-        }
-
-        // Fallback to the health endpoint
-        response = await fetch('/health')
+        // Try the health endpoint to check database status
+        const response = await fetch(`${backendUrl}/health`)
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`)
@@ -39,7 +35,7 @@ export function useDatabaseStatus() {
           tables_exist: healthData.database_connected || false,
           message: healthData.database_connected
             ? 'Database connection successful'
-            : 'Database connection failed - using health check fallback'
+            : 'Database connection failed'
         })
 
       } catch (err) {
