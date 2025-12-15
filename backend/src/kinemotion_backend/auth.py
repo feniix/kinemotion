@@ -8,6 +8,7 @@ See: https://supabase.com/docs/guides/auth/jwts
 """
 
 import os
+import time
 from typing import Any
 
 import httpx
@@ -65,9 +66,12 @@ class SupabaseAuth:
         Raises:
             HTTPException: If token is invalid or expired
         """
+        start_time = time.time()
+
         # Try JWKS verification first (RS256)
         if self.jwks_client:
             try:
+                jwks_start = time.time()
                 signing_key = self.jwks_client.get_signing_key_from_jwt(token)
                 payload = jwt.decode(
                     token,
@@ -76,7 +80,14 @@ class SupabaseAuth:
                     audience="authenticated",
                     options={"verify_aud": True},
                 )
-                log.debug("token_verified_via_jwks")
+                jwks_duration_ms = (time.time() - jwks_start) * 1000
+                total_duration_ms = (time.time() - start_time) * 1000
+
+                log.info(
+                    "token_verified_via_jwks",
+                    jwks_duration_ms=round(jwks_duration_ms, 2),
+                    total_duration_ms=round(total_duration_ms, 2),
+                )
                 return payload
             except jwt.PyJWKClientError:
                 # JWKS might be empty for HS256 projects, try fallback
@@ -87,20 +98,35 @@ class SupabaseAuth:
                     detail="Token has expired",
                 ) from e
             except jwt.InvalidTokenError as e:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail=f"Invalid token: {str(e)}",
-                ) from e
+                # Check if this is an algorithm mismatch (HS256 token with RS256 check)
+                if "alg" in str(e).lower():
+                    log.debug("algorithm_mismatch_trying_fallback", error=str(e))
+                else:
+                    raise HTTPException(
+                        status_code=status.HTTP_401_UNAUTHORIZED,
+                        detail=f"Invalid token: {str(e)}",
+                    ) from e
 
         # Fallback: Verify via Supabase Auth server (works for all projects)
-        return self._verify_via_auth_server(token)
+        return self._verify_via_auth_server(token, start_time)
 
-    def _verify_via_auth_server(self, token: str) -> dict[str, Any]:
+    def _verify_via_auth_server(
+        self, token: str, overall_start_time: float
+    ) -> dict[str, Any]:
         """Verify token by calling Supabase Auth server.
 
         This is the recommended fallback for HS256 tokens per Supabase docs.
+
+        Args:
+            token: JWT token to verify
+            overall_start_time: Start time of overall verification (for total duration)
+
+        Returns:
+            Decoded token payload containing user information
         """
         try:
+            server_start = time.time()
+
             headers = {"Authorization": f"Bearer {token}"}
             if self.supabase_anon_key:
                 headers["apikey"] = self.supabase_anon_key
@@ -112,10 +138,17 @@ class SupabaseAuth:
                     timeout=10.0,
                 )
 
+            server_duration_ms = (time.time() - server_start) * 1000
+            total_duration_ms = (time.time() - overall_start_time) * 1000
+
             if response.status_code == 200:
                 user_data = response.json()
                 # Return payload-like structure from user data
-                log.debug("token_verified_via_auth_server")
+                log.info(
+                    "token_verified_via_auth_server",
+                    server_duration_ms=round(server_duration_ms, 2),
+                    total_duration_ms=round(total_duration_ms, 2),
+                )
                 return {
                     "sub": user_data.get("id"),
                     "email": user_data.get("email"),
@@ -123,12 +156,23 @@ class SupabaseAuth:
                     "aud": "authenticated",
                 }
             else:
+                log.warning(
+                    "auth_server_verification_failed",
+                    status_code=response.status_code,
+                    server_duration_ms=round(server_duration_ms, 2),
+                    total_duration_ms=round(total_duration_ms, 2),
+                )
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Token verification failed",
                 )
         except httpx.RequestError as e:
-            log.error("auth_server_request_failed", error=str(e))
+            request_duration_ms = (time.time() - overall_start_time) * 1000
+            log.error(
+                "auth_server_request_failed",
+                error=str(e),
+                duration_ms=round(request_duration_ms, 2),
+            )
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail=f"Authentication error: {str(e)}",

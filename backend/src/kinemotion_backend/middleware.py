@@ -57,22 +57,35 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         if auth_header and auth_header.startswith("Bearer ") and supabase_auth:
             token = auth_header.replace("Bearer ", "")
             try:
+                auth_start = time.time()
                 user_id = supabase_auth.get_user_id(token)
                 user_email = supabase_auth.get_user_email(token)
+                auth_duration_ms = (time.time() - auth_start) * 1000
 
                 # Bind user info to logging context
                 structlog.contextvars.bind_contextvars(
                     user_id=user_id,
                     user_email=user_email,
+                    auth_duration_ms=round(auth_duration_ms, 2),
                 )
 
                 # Store in request state for use in endpoints
                 request.state.user_id = user_id
                 request.state.user_email = user_email
 
-                logger.debug("user_authenticated", user_id=user_id, email=user_email)
+                logger.info(
+                    "user_authenticated",
+                    user_id=user_id,
+                    email=user_email,
+                    auth_duration_ms=round(auth_duration_ms, 2),
+                )
             except Exception as e:
-                logger.warning("auth_token_invalid", error=str(e))
+                auth_duration_ms = (time.time() - auth_start) * 1000
+                logger.warning(
+                    "auth_token_invalid",
+                    error=str(e),
+                    auth_duration_ms=round(auth_duration_ms, 2),
+                )
                 # Continue without user context - endpoints handle auth
 
         start_time = time.time()
