@@ -1,6 +1,6 @@
 """Landmark smoothing utilities to reduce jitter in pose tracking."""
 
-from typing import TypeAlias
+from collections.abc import Callable
 
 import numpy as np
 from scipy.signal import savgol_filter
@@ -10,11 +10,10 @@ from .filtering import (
     reject_outliers,
 )
 from .timing import NULL_TIMER, Timer
+from .types import FloatArray, LandmarkCoord, LandmarkSequence
 
-# Type aliases for landmark data structures
-LandmarkCoord: TypeAlias = tuple[float, float, float]  # (x, y, visibility)
-LandmarkFrame: TypeAlias = dict[str, LandmarkCoord] | None
-LandmarkSequence: TypeAlias = list[LandmarkFrame]
+# Type alias for smoothing function callback
+SmootherFn = Callable[[list[float], list[float], list[int]], tuple[FloatArray, FloatArray]]
 
 
 def _extract_landmark_coordinates(
@@ -31,9 +30,9 @@ def _extract_landmark_coordinates(
     Returns:
         Tuple of (x_coords, y_coords, valid_frames)
     """
-    x_coords = []
-    y_coords = []
-    valid_frames = []
+    x_coords: list[float] = []
+    y_coords: list[float] = []
+    valid_frames: list[int] = []
 
     for i, frame_landmarks in enumerate(landmark_sequence):
         if frame_landmarks is not None and landmark_name in frame_landmarks:
@@ -86,8 +85,8 @@ def _store_smoothed_landmarks(
     smoothed_sequence: LandmarkSequence,
     landmark_sequence: LandmarkSequence,
     landmark_name: str,
-    x_smooth: np.ndarray,
-    y_smooth: np.ndarray,
+    x_smooth: FloatArray,
+    y_smooth: FloatArray,
     valid_frames: list[int],
 ) -> None:
     """
@@ -103,7 +102,10 @@ def _store_smoothed_landmarks(
     """
     for idx, frame_idx in enumerate(valid_frames):
         if frame_idx >= len(smoothed_sequence):
-            smoothed_sequence.extend([{}] * (frame_idx - len(smoothed_sequence) + 1))
+            empty_frames: list[dict[str, LandmarkCoord]] = [{}] * (
+                frame_idx - len(smoothed_sequence) + 1
+            )
+            smoothed_sequence.extend(empty_frames)
 
         # Ensure smoothed_sequence[frame_idx] is a dict, not None
         if smoothed_sequence[frame_idx] is None:
@@ -130,7 +132,7 @@ def _smooth_landmarks_core(  # NOSONAR(S1172) - polyorder used via closure
     landmark_sequence: LandmarkSequence,
     window_length: int,
     polyorder: int,
-    smoother_fn,  # type: ignore[no-untyped-def]
+    smoother_fn: SmootherFn,
 ) -> LandmarkSequence:
     """
     Core smoothing logic shared by both standard and advanced smoothing.
@@ -150,7 +152,7 @@ def _smooth_landmarks_core(  # NOSONAR(S1172) - polyorder used via closure
     if landmark_names is None:
         return landmark_sequence
 
-    smoothed_sequence: list[dict[str, tuple[float, float, float]] | None] = []
+    smoothed_sequence: LandmarkSequence = []
 
     for landmark_name in landmark_names:
         x_coords, y_coords, valid_frames = _extract_landmark_coordinates(
@@ -202,9 +204,11 @@ def smooth_landmarks(
     if window_length % 2 == 0:
         window_length += 1
 
-    def savgol_smoother(x_coords, y_coords, _valid_frames):  # type: ignore[no-untyped-def]
-        x_smooth = savgol_filter(x_coords, window_length, polyorder)
-        y_smooth = savgol_filter(y_coords, window_length, polyorder)
+    def savgol_smoother(
+        x_coords: list[float], y_coords: list[float], _valid_frames: list[int]
+    ) -> tuple[FloatArray, FloatArray]:
+        x_smooth: FloatArray = savgol_filter(x_coords, window_length, polyorder)
+        y_smooth: FloatArray = savgol_filter(y_coords, window_length, polyorder)
         return x_smooth, y_smooth
 
     return _smooth_landmarks_core(landmark_sequence, window_length, polyorder, savgol_smoother)
@@ -376,9 +380,11 @@ def smooth_landmarks_advanced(
     if window_length % 2 == 0:
         window_length += 1
 
-    def advanced_smoother(x_coords, y_coords, _valid_frames):  # type: ignore[no-untyped-def]
-        x_array = np.array(x_coords)
-        y_array = np.array(y_coords)
+    def advanced_smoother(
+        x_coords: list[float], y_coords: list[float], _valid_frames: list[int]
+    ) -> tuple[FloatArray, FloatArray]:
+        x_array: FloatArray = np.array(x_coords)
+        y_array: FloatArray = np.array(y_coords)
 
         # Step 1: Outlier rejection
         if use_outlier_rejection:
@@ -414,8 +420,8 @@ def smooth_landmarks_advanced(
         else:
             # Standard Savitzky-Golay
             with timer.measure("smoothing_savgol"):
-                x_smooth = savgol_filter(x_array, window_length, polyorder)
-                y_smooth = savgol_filter(y_array, window_length, polyorder)
+                x_smooth: FloatArray = savgol_filter(x_array, window_length, polyorder)  # type: ignore[reportUnknownVariableType]
+                y_smooth: FloatArray = savgol_filter(y_array, window_length, polyorder)  # type: ignore[reportUnknownVariableType]
 
         return x_smooth, y_smooth
 

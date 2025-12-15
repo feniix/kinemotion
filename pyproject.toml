@@ -26,6 +26,7 @@ dependencies = [
     "mediapipe>=0.10.9",
     "numpy>=1.26.0",
     "scipy>=1.11.0",
+    "typing-extensions>=4.15.0",
 ]
 
 [project.urls]
@@ -58,6 +59,7 @@ dev = [
     "mkdocs>=1.5.0",
     "mkdocs-material>=9.5.0",
     "mkdocstrings[python]>=0.24.0",
+    "scipy-stubs>=1.15.3.0",
 ]
 
 
@@ -140,34 +142,31 @@ exclude = ["tests", "examples"]
 pythonVersion = "3.10"
 typeCheckingMode = "strict"
 
-# Equivalent to mypy's ignore_missing_imports for libraries without stubs
+# Library-specific exceptions only (unavoidable third-party library limitations)
+
+# Missing type stubs for third-party libraries (MediaPipe, OpenCV)
+# Note: scipy-stubs is installed as dev dependency for proper SciPy typing
 reportMissingImports = "none"
 reportMissingTypeStubs = false
 reportMissingModuleSource = "none"
 
-# Disable some overly strict rules from strict mode
-reportUnknownMemberType = "none"
-reportUnknownArgumentType = "none"
-reportUnknownVariableType = "none"
-reportUnknownParameterType = "none"
-
-# Numpy/OpenCV related relaxations (missing type arguments for ndarray)
-reportMissingTypeArgument = "none"
-reportAttributeAccessIssue = "none"
-
-# Click decorator issues (untyped decorators from click library)
+# Click decorator typing issues (untyped decorators from click library)
 reportUntypedFunctionDecorator = "none"
-reportFunctionMemberAccess = "none"
 
-# Relax these to match mypy behavior (can be tightened later)
-reportOptionalMemberAccess = "warning"
-reportOptionalOperand = "warning"
-reportPossiblyUnboundVariable = "warning"
-reportCallIssue = "warning"
-reportArgumentType = "warning"
-reportUnnecessaryComparison = "warning"
+# NumPy ndarray type arguments (ndarray[Any, dtype[...]] syntax too verbose)
+reportMissingTypeArgument = "none"
 
-# Additional warnings for code quality
+# Transitional: Genuine strict mode with incremental fixes
+# scipy-stubs + typing-extensions installed for proper typing support
+# Type infrastructure in place (core/types.py with FloatArray, BoolArray, MetricsDict)
+# Modules fully typed (0 errors): cmj/analysis.py, core/filtering.py, core/smoothing.py
+# Enable these incrementally as modules are fixed
+reportUnknownVariableType = "none"
+reportUnknownArgumentType = "none"
+reportUnknownParameterType = "none"
+reportUnknownMemberType = "none"
+
+# Code quality warnings
 reportUnusedImport = "warning"
 reportUnusedClass = "warning"
 reportUnusedFunction = "warning"

@@ -25,7 +25,7 @@ class PoseTracker:
             timer: Optional Timer for measuring operations
         """
         self.timer = timer or NULL_TIMER
-        self.mp_pose = mp.solutions.pose
+        self.mp_pose = mp.solutions.pose  # type: ignore[attr-defined]
         self.pose = self.mp_pose.Pose(
             static_image_mode=False,  # Use tracking mode for better performance
             min_detection_confidence=min_detection_confidence,

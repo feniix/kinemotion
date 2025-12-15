@@ -9,6 +9,7 @@ of metric issues.
 
 from dataclasses import dataclass
 
+from kinemotion.core.types import MetricsDict
 from kinemotion.core.validation import (
     MetricsValidator,
     ValidationResult,
@@ -57,7 +58,7 @@ class DropJumpValidationResult(ValidationResult):
 class DropJumpMetricsValidator(MetricsValidator):
     """Comprehensive drop jump metrics validator."""
 
-    def validate(self, metrics: dict) -> DropJumpValidationResult:
+    def validate(self, metrics: MetricsDict) -> DropJumpValidationResult:
         """Validate drop jump metrics comprehensively.
 
         Args:

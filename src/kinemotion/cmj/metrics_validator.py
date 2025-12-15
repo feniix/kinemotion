@@ -16,6 +16,7 @@ from kinemotion.cmj.validation_bounds import (
     TripleExtensionBounds,
     estimate_athlete_profile,
 )
+from kinemotion.core.types import MetricsDict
 from kinemotion.core.validation import (
     AthleteProfile,
     MetricBounds,
@@ -80,7 +81,7 @@ class CMJMetricsValidator(MetricsValidator):
         """
         return data.get(key_with_suffix) or data.get(key_without_suffix)
 
-    def validate(self, metrics: dict) -> CMJValidationResult:
+    def validate(self, metrics: MetricsDict) -> CMJValidationResult:
         """Validate CMJ metrics comprehensively.
 
         Args:
@@ -128,7 +129,7 @@ class CMJMetricsValidator(MetricsValidator):
         return result
 
     def _check_flight_time(
-        self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
+        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate flight time."""
         flight_time_raw = self._get_metric_value(metrics, "flight_time_ms", "flight_time")
@@ -176,7 +177,7 @@ class CMJMetricsValidator(MetricsValidator):
             )
 
     def _check_jump_height(
-        self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
+        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate jump height."""
         jump_height = self._get_metric_value(metrics, "jump_height_m", "jump_height")
@@ -217,7 +218,7 @@ class CMJMetricsValidator(MetricsValidator):
             )
 
     def _check_countermovement_depth(
-        self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
+        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate countermovement depth."""
         depth = self._get_metric_value(metrics, "countermovement_depth_m", "countermovement_depth")
@@ -258,7 +259,7 @@ class CMJMetricsValidator(MetricsValidator):
             )
 
     def _check_concentric_duration(
-        self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
+        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate concentric duration (contact time)."""
         duration_raw = self._get_metric_value(
@@ -308,7 +309,7 @@ class CMJMetricsValidator(MetricsValidator):
             )
 
     def _check_eccentric_duration(
-        self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
+        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate eccentric duration."""
         duration_raw = self._get_metric_value(
@@ -349,7 +350,7 @@ class CMJMetricsValidator(MetricsValidator):
             )
 
     def _check_peak_velocities(
-        self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
+        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate peak eccentric and concentric velocities."""
         # Eccentric
@@ -419,7 +420,7 @@ class CMJMetricsValidator(MetricsValidator):
                 )
 
     def _check_flight_time_height_consistency(
-        self, metrics: dict, result: CMJValidationResult
+        self, metrics: MetricsDict, result: CMJValidationResult
     ) -> None:
         """Verify jump height is consistent with flight time."""
         flight_time_ms = metrics.get("flight_time_ms")
@@ -455,7 +456,7 @@ class CMJMetricsValidator(MetricsValidator):
             )
 
     def _check_velocity_height_consistency(
-        self, metrics: dict, result: CMJValidationResult
+        self, metrics: MetricsDict, result: CMJValidationResult
     ) -> None:
         """Verify peak velocity is consistent with jump height."""
         velocity = metrics.get("peak_concentric_velocity_m_s")
@@ -491,7 +492,7 @@ class CMJMetricsValidator(MetricsValidator):
             )
 
     def _check_rsi_validity(
-        self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
+        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate Reactive Strength Index."""
         flight_time_raw = self._get_metric_value(metrics, "flight_time_ms", "flight_time")
@@ -555,7 +556,7 @@ class CMJMetricsValidator(MetricsValidator):
                     bounds=(expected_min, expected_max),
                 )
 
-    def _check_depth_height_ratio(self, metrics: dict, result: CMJValidationResult) -> None:
+    def _check_depth_height_ratio(self, metrics: MetricsDict, result: CMJValidationResult) -> None:
         """Check countermovement depth to jump height ratio."""
         depth = metrics.get("countermovement_depth_m")
         jump_height = metrics.get("jump_height_m")
@@ -595,7 +596,9 @@ class CMJMetricsValidator(MetricsValidator):
                 value=ratio,
             )
 
-    def _check_contact_depth_ratio(self, metrics: dict, result: CMJValidationResult) -> None:
+    def _check_contact_depth_ratio(
+        self, metrics: MetricsDict, result: CMJValidationResult
+    ) -> None:
         """Check contact time to countermovement depth ratio."""
         contact_ms = metrics.get("concentric_duration_ms")
         depth = metrics.get("countermovement_depth_m")
@@ -636,7 +639,7 @@ class CMJMetricsValidator(MetricsValidator):
             )
 
     def _check_triple_extension(
-        self, metrics: dict, result: CMJValidationResult, profile: AthleteProfile
+        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate triple extension angles."""
         angles = metrics.get("triple_extension")

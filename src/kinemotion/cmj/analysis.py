@@ -8,11 +8,12 @@ from scipy.signal import savgol_filter
 from ..core.experimental import unused
 from ..core.smoothing import compute_acceleration_from_derivative
 from ..core.timing import NULL_TIMER, Timer
+from ..core.types import FloatArray
 
 
 def compute_signed_velocity(
-    positions: np.ndarray, window_length: int = 5, polyorder: int = 2
-) -> np.ndarray:
+    positions: FloatArray, window_length: int = 5, polyorder: int = 2
+) -> FloatArray:
     """
     Compute SIGNED velocity for CMJ phase detection.
 
@@ -59,8 +60,8 @@ class CMJPhase(Enum):
     since="0.34.0",
 )
 def find_standing_phase(
-    positions: np.ndarray,
-    velocities: np.ndarray,
+    positions: FloatArray,
+    velocities: FloatArray,
     fps: float,
     min_standing_duration: float = 0.5,
     velocity_threshold: float = 0.01,
@@ -112,7 +113,7 @@ def find_standing_phase(
     since="0.34.0",
 )
 def find_countermovement_start(
-    velocities: np.ndarray,
+    velocities: FloatArray,
     countermovement_threshold: float = 0.015,
     min_eccentric_frames: int = 3,
     standing_start: int | None = None,
@@ -152,8 +153,8 @@ def find_countermovement_start(
 
 
 def find_lowest_point(
-    positions: np.ndarray,
-    velocities: np.ndarray,
+    positions: FloatArray,
+    velocities: FloatArray,
     min_search_frame: int = 80,
 ) -> int:
     """
@@ -195,8 +196,8 @@ def find_lowest_point(
 
 
 def find_cmj_takeoff_from_velocity_peak(
-    positions: np.ndarray,
-    velocities: np.ndarray,
+    positions: FloatArray,
+    velocities: FloatArray,
     lowest_point_frame: int,
     fps: float,
 ) -> float:
@@ -232,9 +233,9 @@ def find_cmj_takeoff_from_velocity_peak(
 
 
 def find_cmj_landing_from_position_peak(
-    positions: np.ndarray,
-    velocities: np.ndarray,
-    accelerations: np.ndarray,
+    positions: FloatArray,
+    velocities: FloatArray,
+    accelerations: FloatArray,
     takeoff_frame: int,
     fps: float,
 ) -> float:
@@ -290,8 +291,8 @@ def find_cmj_landing_from_position_peak(
     since="0.34.0",
 )
 def find_interpolated_takeoff_landing(
-    positions: np.ndarray,
-    velocities: np.ndarray,
+    positions: FloatArray,
+    velocities: FloatArray,
     lowest_point_frame: int,
     window_length: int = 5,
     polyorder: int = 2,
@@ -334,7 +335,7 @@ def find_interpolated_takeoff_landing(
     return (takeoff_frame, landing_frame)
 
 
-def find_takeoff_frame(velocities: np.ndarray, peak_height_frame: int, fps: float) -> float:
+def find_takeoff_frame(velocities: FloatArray, peak_height_frame: int, fps: float) -> float:
     """Find takeoff frame as peak upward velocity before peak height.
 
     Robust detection: When velocities are nearly identical (flat), detects
@@ -364,7 +365,7 @@ def find_takeoff_frame(velocities: np.ndarray, peak_height_frame: int, fps: floa
 
 
 def find_lowest_frame(
-    velocities: np.ndarray, positions: np.ndarray, takeoff_frame: float, fps: float
+    velocities: FloatArray, positions: FloatArray, takeoff_frame: float, fps: float
 ) -> float:
     """Find lowest point frame before takeoff."""
     lowest_search_start = max(0, int(takeoff_frame) - int(fps * 0.4))
@@ -385,8 +386,8 @@ def find_lowest_frame(
 
 
 def find_landing_frame(
-    accelerations: np.ndarray,
-    velocities: np.ndarray,
+    accelerations: FloatArray,
+    velocities: FloatArray,
     peak_height_frame: int,
     fps: float,
 ) -> float:
@@ -455,8 +456,8 @@ def compute_average_hip_position(
     """
     hip_keys = ["left_hip", "right_hip"]
 
-    x_positions = []
-    y_positions = []
+    x_positions: list[float] = []
+    y_positions: list[float] = []
 
     for key in hip_keys:
         if key in landmarks:
@@ -472,10 +473,10 @@ def compute_average_hip_position(
 
 
 def find_standing_end(
-    velocities: np.ndarray,
+    velocities: FloatArray,
     lowest_point: float,
-    _positions: np.ndarray | None = None,
-    accelerations: np.ndarray | None = None,
+    _positions: FloatArray | None = None,
+    accelerations: FloatArray | None = None,
 ) -> float | None:
     """
     Find end of standing phase before lowest point.
@@ -535,11 +536,11 @@ def find_standing_end(
 
 
 def detect_cmj_phases(
-    positions: np.ndarray,
+    positions: FloatArray,
     fps: float,
     window_length: int = 5,
     polyorder: int = 2,
-    landing_positions: np.ndarray | None = None,
+    landing_positions: FloatArray | None = None,
     timer: Timer | None = None,
 ) -> tuple[float | None, float, float, float] | None:
     """

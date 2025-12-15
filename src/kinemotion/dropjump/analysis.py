@@ -11,6 +11,7 @@ from ..core.smoothing import (
     interpolate_threshold_crossing,
 )
 from ..core.timing import NULL_TIMER, Timer
+from ..core.types import BoolArray, FloatArray
 
 
 class ContactState(Enum):
@@ -27,7 +28,7 @@ class ContactState(Enum):
     since="0.34.0",
 )
 def calculate_adaptive_threshold(
-    positions: np.ndarray,
+    positions: FloatArray,
     fps: float,
     baseline_duration: float = 3.0,
     multiplier: float = 1.5,
@@ -110,7 +111,7 @@ def calculate_adaptive_threshold(
 
 
 def _find_stable_baseline(
-    positions: np.ndarray,
+    positions: FloatArray,
     min_stable_frames: int,
     stability_threshold: float = 0.01,
     debug: bool = False,
@@ -149,7 +150,7 @@ def _find_stable_baseline(
 
 
 def _find_drop_from_baseline(
-    positions: np.ndarray,
+    positions: FloatArray,
     baseline_start: int,
     baseline_position: float,
     stable_window: int,
@@ -188,7 +189,7 @@ def _find_drop_from_baseline(
 
 
 def detect_drop_start(
-    positions: np.ndarray,
+    positions: FloatArray,
     fps: float,
     min_stationary_duration: float = 1.0,
     position_change_threshold: float = 0.02,
@@ -254,10 +255,10 @@ def detect_drop_start(
 
 
 def _filter_stationary_with_visibility(
-    is_stationary: np.ndarray,
-    visibilities: np.ndarray | None,
+    is_stationary: BoolArray,
+    visibilities: FloatArray | None,
     visibility_threshold: float,
-) -> np.ndarray:
+) -> BoolArray:
     """Apply visibility filter to stationary flags.
 
     Args:
@@ -275,7 +276,7 @@ def _filter_stationary_with_visibility(
 
 
 def _find_contact_frames(
-    is_stationary: np.ndarray,
+    is_stationary: BoolArray,
     min_contact_frames: int,
 ) -> set[int]:
     """Find frames with sustained contact using minimum duration filter.
@@ -308,7 +309,7 @@ def _find_contact_frames(
 def _assign_contact_states(
     n_frames: int,
     contact_frames: set[int],
-    visibilities: np.ndarray | None,
+    visibilities: FloatArray | None,
     visibility_threshold: float,
 ) -> list[ContactState]:
     """Assign contact states based on contact frames and visibility.
@@ -334,11 +335,11 @@ def _assign_contact_states(
 
 
 def detect_ground_contact(
-    foot_positions: np.ndarray,
+    foot_positions: FloatArray,
     velocity_threshold: float = 0.02,
     min_contact_frames: int = 3,
     visibility_threshold: float = 0.5,
-    visibilities: np.ndarray | None = None,
+    visibilities: FloatArray | None = None,
     window_length: int = 5,
     polyorder: int = 2,
     timer: Timer | None = None,
@@ -426,7 +427,7 @@ def find_contact_phases(
 def _interpolate_phase_start(
     start_idx: int,
     state: ContactState,
-    velocities: np.ndarray,
+    velocities: FloatArray,
     velocity_threshold: float,
 ) -> float:
     """Interpolate start boundary of a phase with sub-frame precision.
@@ -454,7 +455,7 @@ def _interpolate_phase_start(
 def _interpolate_phase_end(
     end_idx: int,
     state: ContactState,
-    velocities: np.ndarray,
+    velocities: FloatArray,
     velocity_threshold: float,
     max_idx: int,
 ) -> float:
@@ -481,7 +482,7 @@ def _interpolate_phase_end(
 
 
 def find_interpolated_phase_transitions(
-    foot_positions: np.ndarray,
+    foot_positions: FloatArray,
     contact_states: list[ContactState],
     velocity_threshold: float,
     smoothing_window: int = 5,
@@ -523,7 +524,7 @@ def find_interpolated_phase_transitions(
 
 
 def refine_transition_with_curvature(
-    foot_positions: np.ndarray,
+    foot_positions: FloatArray,
     estimated_frame: float,
     transition_type: str,
     search_window: int = 3,
@@ -598,7 +599,7 @@ def refine_transition_with_curvature(
 
 
 def find_interpolated_phase_transitions_with_curvature(
-    foot_positions: np.ndarray,
+    foot_positions: FloatArray,
     contact_states: list[ContactState],
     velocity_threshold: float,
     smoothing_window: int = 5,
@@ -684,8 +685,8 @@ def find_interpolated_phase_transitions_with_curvature(
 
 
 def find_landing_from_acceleration(
-    positions: np.ndarray,
-    accelerations: np.ndarray,
+    positions: FloatArray,
+    accelerations: FloatArray,
     takeoff_frame: int,
     fps: float,
     search_duration: float = 0.7,

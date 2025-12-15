@@ -15,6 +15,7 @@ References:
 - Bogdanis (2012): Plyometric training effects
 """
 
+from kinemotion.core.types import MetricsDict
 from kinemotion.core.validation import AthleteProfile, MetricBounds
 
 
@@ -299,7 +300,9 @@ ATHLETE_PROFILES = {
 }
 
 
-def estimate_athlete_profile(metrics_dict: dict, gender: str | None = None) -> AthleteProfile:
+def estimate_athlete_profile(
+    metrics_dict: MetricsDict, gender: str | None = None
+) -> AthleteProfile:
     """Estimate athlete profile from metrics.
 
     Uses jump height as primary classifier:

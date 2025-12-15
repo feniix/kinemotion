@@ -5,10 +5,10 @@ import shutil
 import subprocess
 import time
 from pathlib import Path
-from typing import Self
 
 import cv2
 import numpy as np
+from typing_extensions import Self
 
 from .timing import NULL_TIMER, Timer
 
@@ -48,7 +48,7 @@ def create_video_writer(
 
     for codec in codecs_to_try:
         try:
-            fourcc = cv2.VideoWriter_fourcc(*codec)
+            fourcc = cv2.VideoWriter_fourcc(*codec)  # type: ignore[attr-defined]
             writer = cv2.VideoWriter(output_path, fourcc, fps, (display_width, display_height))
             if writer.isOpened():
                 used_codec = codec

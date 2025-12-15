@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, TypedDict
 
 import numpy as np
-from numpy.typing import NDArray
 
 from ..core.formatting import format_float_metric
+from ..core.types import FloatArray
 
 if TYPE_CHECKING:
     from ..core.cmj_metrics_validator import ValidationResult
@@ -136,7 +136,7 @@ class CMJMetrics:
 
 
 def _calculate_scale_factor(
-    positions: NDArray[np.float64],
+    positions: FloatArray,
     takeoff_frame: float,
     landing_frame: float,
     jump_height: float,
@@ -169,7 +169,7 @@ def _calculate_scale_factor(
 
 
 def _calculate_countermovement_depth(
-    positions: NDArray[np.float64],
+    positions: FloatArray,
     standing_start_frame: float | None,
     lowest_point_frame: float,
     scale_factor: float,
@@ -222,7 +222,7 @@ def _calculate_phase_durations(
 
 
 def _calculate_peak_velocities(
-    velocities: NDArray[np.float64],
+    velocities: FloatArray,
     standing_start_frame: float | None,
     lowest_point_frame: float,
     takeoff_frame: float,
@@ -261,7 +261,7 @@ def _calculate_peak_velocities(
 
 
 def _calculate_transition_time(
-    velocities: NDArray[np.float64],
+    velocities: FloatArray,
     lowest_point_frame: float,
     fps: float,
 ) -> float | None:
@@ -291,8 +291,8 @@ def _calculate_transition_time(
 
 
 def calculate_cmj_metrics(
-    positions: NDArray[np.float64],
-    velocities: NDArray[np.float64],
+    positions: FloatArray,
+    velocities: FloatArray,
     standing_start_frame: float | None,
     lowest_point_frame: float,
     takeoff_frame: float,
