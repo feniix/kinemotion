@@ -17,11 +17,14 @@ class DatabaseClient:
         self.supabase_url = os.getenv("SUPABASE_URL", "")
 
         # Prefer modern keys, fall back to legacy for compatibility
+        # Check which key source is being used for debugging
+        supabase_publishable_key = os.getenv("SUPABASE_PUBLISHABLE_KEY")
+        supabase_secret_key = os.getenv("SUPABASE_SECRET_KEY")
+        supabase_anon_key = os.getenv("SUPABASE_ANON_KEY")
+        supabase_key = os.getenv("SUPABASE_KEY")
+
         self.supabase_key = (
-            os.getenv("SUPABASE_PUBLISHABLE_KEY")
-            or os.getenv("SUPABASE_SECRET_KEY")
-            or os.getenv("SUPABASE_ANON_KEY")
-            or os.getenv("SUPABASE_KEY")
+            supabase_publishable_key or supabase_secret_key or supabase_anon_key or supabase_key
         )
 
         if not self.supabase_url:
@@ -34,8 +37,23 @@ class DatabaseClient:
                 "SUPABASE_ANON_KEY, or SUPABASE_KEY"
             )
 
+        # Log which key source is being used (without exposing the actual key)
+        key_source = "unknown"
+        if supabase_publishable_key:
+            key_source = "SUPABASE_PUBLISHABLE_KEY"
+        elif supabase_secret_key:
+            key_source = "SUPABASE_SECRET_KEY"
+        elif supabase_anon_key:
+            key_source = "SUPABASE_ANON_KEY"
+        elif supabase_key:
+            key_source = "SUPABASE_KEY"
+
         self.client: Client = create_client(self.supabase_url, self.supabase_key)
-        logger.info("database_client_initialized", supabase_url=self.supabase_url)
+        logger.info(
+            "database_client_initialized",
+            supabase_url=self.supabase_url,
+            key_source=key_source,
+        )
 
     async def create_analysis_session(
         self,

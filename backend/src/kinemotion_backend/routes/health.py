@@ -35,9 +35,16 @@ async def health_check() -> dict[str, str | bool]:
         from kinemotion_backend.database import get_database_client
 
         db_client = get_database_client()
-        # Test database with a simple query
-        db_client.client.table("analysis_sessions").select("id").limit(1).execute()
+        # Try to access analysis_sessions table with select limit to test connectivity
+        # This will return data if accessible, or raise if table doesn't exist or RLS blocks it
+        response = db_client.client.table("analysis_sessions").select("id").limit(1).execute()
+        # If we get here, the database connection worked
+        # Note: response.data could be empty if table is empty, but that's still success
         database_connected = True
+        logger.info(
+            "database_health_check_succeeded",
+            rows_returned=len(response.data or []),
+        )
     except Exception as db_error:
         logger.warning(
             "database_health_check_failed",
