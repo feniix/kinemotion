@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.59.0 (2025-12-15)
+
+### Feat
+
+- add comprehensive frontend i18n support with 3 languages
+
 ## kinemotion-v0.58.0 (2025-12-14)
 
 ### Feat
