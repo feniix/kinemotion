@@ -19,9 +19,7 @@ try:
     supabase_auth = SupabaseAuth()
     logger.info("supabase_auth_initialized")
 except ValueError:
-    logger.warning(
-        "supabase_auth_not_configured", message="Supabase credentials not provided"
-    )
+    logger.warning("supabase_auth_not_configured", message="Supabase credentials not provided")
 
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware):
@@ -62,11 +60,10 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
                 user_email = supabase_auth.get_user_email(token)
                 auth_duration_ms = (time.time() - auth_start) * 1000
 
-                # Bind user info to logging context
+                # Bind user info to logging context (auth_duration_ms only in auth event)
                 structlog.contextvars.bind_contextvars(
                     user_id=user_id,
                     user_email=user_email,
-                    auth_duration_ms=round(auth_duration_ms, 2),
                 )
 
                 # Store in request state for use in endpoints
@@ -75,8 +72,6 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 
                 logger.info(
                     "user_authenticated",
-                    user_id=user_id,
-                    email=user_email,
                     auth_duration_ms=round(auth_duration_ms, 2),
                 )
             except Exception as e:
