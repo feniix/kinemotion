@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import FeedbackForm from './FeedbackForm'
 import FeatureRequestButton from './FeatureRequestButton'
 import { useDatabaseStatus } from '../hooks/useDatabaseStatus'
+import { useLanguage } from '../hooks/useLanguage'
 import { EXTERNAL_LINKS } from '../config/links'
 import './FeedbackForm.css'
 
@@ -77,6 +78,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
   const [localOriginalUrl, setLocalOriginalUrl] = useState<string | null>(null)
   const [showFeedbackForm, setShowFeedbackForm] = useState(false)
   const { status: dbStatus, loading: dbLoading } = useDatabaseStatus()
+  const { t } = useLanguage()
 
   useEffect(() => {
     if (!videoFile) {
@@ -217,9 +219,9 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
 
   const renderScoreboard = () => {
     if (isDropJump) {
-      const rsi = getMetric(['reactive_strength_index'], false, 'RSI')
-      const height = getMetric(['jump_height_m', 'jump_height'], true, 'Height')
-      const gct = getMetric(['ground_contact_time_ms', 'ground_contact_time'], false, 'Contact Time')
+      const rsi = getMetric(['reactive_strength_index'], false, t('results.metrics.rsi'))
+      const height = getMetric(['jump_height_m', 'jump_height'], true, t('results.metrics.height'))
+      const gct = getMetric(['ground_contact_time_ms', 'ground_contact_time'], false, t('results.metrics.contactTime'))
 
       return (
         <div className="kpi-grid">
@@ -230,9 +232,9 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
       )
     } else {
       // CMJ
-      const height = getMetric(['jump_height_m', 'jump_height'], true, 'Jump Height')
-      const velocity = getMetric(['peak_concentric_velocity_m_s', 'takeoff_velocity_mps'], false, 'Peak Velocity')
-      const power = getMetric(['peak_power_w', 'peak_power'], false, 'Peak Power')
+      const height = getMetric(['jump_height_m', 'jump_height'], true, t('results.metrics.jumpHeight'))
+      const velocity = getMetric(['peak_concentric_velocity_m_s', 'takeoff_velocity_mps'], false, t('results.metrics.peakVelocity'))
+      const power = getMetric(['peak_power_w', 'peak_power'], false, t('results.metrics.peakPower'))
 
       return (
         <div className="kpi-grid">
@@ -247,32 +249,32 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
   const renderTimeline = () => {
     // Phase 1: Preparation / Loading (Eccentric)
     const loadingMetrics = [
-      getMetric(['countermovement_depth_m', 'countermovement_depth'], true, 'Depth'),
-      getMetric(['eccentric_duration_ms', 'eccentric_duration'], false, 'Duration'),
-      getMetric(['peak_eccentric_velocity_m_s'], false, 'Peak Vel'),
+      getMetric(['countermovement_depth_m', 'countermovement_depth'], true, t('results.metrics.depth')),
+      getMetric(['eccentric_duration_ms', 'eccentric_duration'], false, t('results.metrics.duration')),
+      getMetric(['peak_eccentric_velocity_m_s'], false, t('results.metrics.peakVel')),
     ]
 
     // Phase 2: Explosion / Propulsion (Concentric)
     const explosionMetrics = [
-      getMetric(['peak_concentric_velocity_m_s', 'takeoff_velocity_mps'], false, 'Peak Vel'),
-      getMetric(['concentric_duration_ms', 'concentric_duration'], false, 'Duration'),
+      getMetric(['peak_concentric_velocity_m_s', 'takeoff_velocity_mps'], false, t('results.metrics.peakVel')),
+      getMetric(['concentric_duration_ms', 'concentric_duration'], false, t('results.metrics.duration')),
       getMetric(['peak_force_n'], false, 'Peak Force'),
     ]
 
     // Phase 3: Outcome (Flight & Landing)
     const outcomeMetrics = [
-      getMetric(['flight_time_ms', 'flight_time'], false, 'Air Time'),
-      getMetric(['jump_height_m', 'jump_height'], true, 'Height'),
-      getMetric(['landing_force_normalized'], false, 'Landing Impact'),
+      getMetric(['flight_time_ms', 'flight_time'], false, t('results.metrics.airTime')),
+      getMetric(['jump_height_m', 'jump_height'], true, t('results.metrics.height')),
+      getMetric(['landing_force_normalized'], false, t('results.metrics.landingImpact')),
     ]
 
     return (
       <div className="jump-timeline">
-        <PhaseCard key="loading-phase" title="Loading (Eccentric)" metrics={loadingMetrics} />
+        <PhaseCard key="loading-phase" title={t('results.phases.loading')} metrics={loadingMetrics} />
         <div className="arrow">→</div>
-        <PhaseCard key="explosion-phase" title="Explosion (Concentric)" metrics={explosionMetrics} />
+        <PhaseCard key="explosion-phase" title={t('results.phases.explosion')} metrics={explosionMetrics} />
         <div className="arrow">→</div>
-        <PhaseCard key="outcome-phase" title="Outcome (Flight)" metrics={outcomeMetrics} />
+        <PhaseCard key="outcome-phase" title={t('results.phases.outcome')} metrics={outcomeMetrics} />
       </div>
     )
   }
@@ -313,13 +315,13 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
   return (
     <div className="results-container animate-fade-in">
       <div className="results-header">
-        <h2>Analysis Results</h2>
+        <h2>{t('results.heading')}</h2>
         <div className="results-meta">
           {metrics.processing_time_s && (
-            <span className="meta-tag">Processed in {metrics.processing_time_s.toFixed(1)}s</span>
+            <span className="meta-tag">{t('results.processedTime', { time: metrics.processing_time_s.toFixed(1) })}</span>
           )}
           {metricsData['tracking_method'] && (
-             <span className="meta-tag">Method: {String(metricsData['tracking_method'])}</span>
+             <span className="meta-tag">{t('results.method', { type: String(metricsData['tracking_method']) })}</span>
           )}
         </div>
       </div>
@@ -330,10 +332,10 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
             <span className="status-icon">
               {validationStatus === 'PASS' ? '✓' : validationStatus === 'PASS_WITH_WARNINGS' ? 'ℹ' : '⚠️'}
             </span>
-            <strong>Quality Check: {validationStatus.replace(/_/g, ' ')}</strong>
+            <strong>{t('results.validationStatus', { status: validationStatus.replace(/_/g, ' ') })}</strong>
           </div>
           {hasErrors && (
-             <p>Issues detected that may affect accuracy.</p>
+             <p>{t('results.issuesDetected')}</p>
           )}
           {validationIssues.length > 0 && (
             <ul className="validation-list">
@@ -349,13 +351,13 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
 
       {/* 1. The Scoreboard (Hero Metrics) */}
       <div className="metrics-dashboard">
-        <h3 className="section-title">Key Performance Indicators</h3>
+        <h3 className="section-title">{t('results.kpiSection')}</h3>
         {renderScoreboard()}
       </div>
 
       {/* 2. The Phase Timeline */}
       <div className="metrics-dashboard">
-        <h3 className="section-title">Jump Phase Analysis</h3>
+        <h3 className="section-title">{t('results.phaseSection')}</h3>
         {renderTimeline()}
       </div>
 
@@ -397,7 +399,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
               rel="noopener noreferrer"
               style={{ color: 'var(--primary-color)', fontWeight: 500, marginRight: showDebug ? '1rem' : undefined }}
             >
-              Download Original Video
+              {t('results.downloadOriginal')}
             </a>
           )}
 
@@ -410,7 +412,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
               rel="noopener noreferrer"
               style={{ color: 'var(--primary-color)', fontWeight: 500 }}
             >
-              Download Analysis Video
+              {t('results.downloadAnalysis')}
             </a>
           )}
         </div>
@@ -418,7 +420,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
 
       {/* 4. Detailed Breakdown */}
       <div className="metrics-dashboard">
-        <h3 className="section-title">Additional Metrics</h3>
+        <h3 className="section-title">{t('results.detailsSection')}</h3>
         <div className="details-grid">
           {renderDetails()}
         </div>
@@ -433,7 +435,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Download Full JSON Report
+            {t('results.downloadFullReport')}
           </a>
         </div>
       )}
@@ -447,7 +449,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
         margin: '1rem 0'
       }}>
         <div style={{ color: '#475569', fontWeight: '500', marginBottom: '1rem' }}>
-          Share Your Feedback
+          {t('results.feedback.heading')}
         </div>
 
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -470,7 +472,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
               onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#059669'}
               onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#10b981'}
             >
-              📝 Add Coach Feedback
+              {t('results.feedback.coachFeedback')}
             </button>
           ) : (
             <span style={{
@@ -478,7 +480,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
               fontSize: '0.875rem',
               fontStyle: 'italic'
             }}>
-              Coach feedback currently unavailable
+              {t('results.feedback.feedbackUnavailable')}
             </span>
           )}
 
@@ -515,12 +517,12 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
             }}
             title="Report an issue or request a feature on GitHub"
           >
-            🐛 Report Issue
+            {t('results.feedback.reportIssue')}
           </a>
         </div>
 
         <div style={{ marginTop: '0.75rem', color: '#64748b', fontSize: '0.75rem' }}>
-          Help us improve Kinemotion by sharing your experience and suggestions
+          {t('results.feedback.helpText')}
         </div>
       </div>
 
@@ -534,10 +536,10 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
           margin: '1rem 0'
         }}>
           <div style={{ color: '#dc2626', fontWeight: '500', marginBottom: '0.5rem' }}>
-            Database Connection Unavailable
+            {t('results.database.unavailable')}
           </div>
           <div style={{ color: '#7f1d1d', fontSize: '0.875rem' }}>
-            {dbStatus?.message || 'Coach feedback and data storage features are currently unavailable.'}
+            {dbStatus?.message || t('results.database.defaultMessage')}
           </div>
         </div>
       )}

@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import RecentUploads from './RecentUploads'
+import { useLanguage } from '../hooks/useLanguage'
 import { RecentUpload } from '../hooks/useRecentUploads'
 
 interface UploadFormProps {
@@ -32,19 +33,20 @@ function UploadForm({
   const [validationError, setValidationError] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null); // Create a ref for the file input
+  const { t } = useLanguage()
 
   const validateFile = (selectedFile: File): boolean => {
     // Validate file size
     if (selectedFile.size > MAX_FILE_SIZE) {
       setValidationError(
-        `File size must be less than 500MB. Selected file is ${(selectedFile.size / 1024 / 1024).toFixed(1)}MB`
+        t('uploadForm.errors.fileTooLarge', { size: (selectedFile.size / 1024 / 1024).toFixed(1) })
       )
       return false
     }
 
     // Validate file type
     if (!selectedFile.type.startsWith('video/')) {
-      setValidationError('Please select a valid video file')
+      setValidationError(t('uploadForm.errors.invalidFileType'))
       return false
     }
 
@@ -110,16 +112,16 @@ function UploadForm({
           <button
             className={`type-btn ${jumpType === 'cmj' ? 'active' : ''}`}
             onClick={() => onJumpTypeChange('cmj')}
-            title="Counter Movement Jump"
+            title={t('uploadForm.cmjTitle')}
           >
-            CMJ
+            {t('uploadForm.cmjLabel')}
           </button>
           <button
             className={`type-btn ${jumpType === 'dropjump' ? 'active' : ''}`}
             onClick={() => onJumpTypeChange('dropjump')}
-            title="Drop Jump"
+            title={t('uploadForm.dropJumpTitle')}
           >
-            Drop Jump
+            {t('uploadForm.dropJumpLabel')}
           </button>
         </div>
 
@@ -129,7 +131,7 @@ function UploadForm({
             checked={enableDebug}
             onChange={(e) => onEnableDebugChange(e.target.checked)}
           />
-          <span className="toggle-label">Generate Overlay</span>
+          <span className="toggle-label">{t('uploadForm.debugToggle')}</span>
         </label>
       </div>
 
@@ -154,20 +156,20 @@ function UploadForm({
           {!file ? (
             <div className="empty-state">
               <div className="upload-icon">⏏</div>
-              <p>Drag analysis video here</p>
-              <span className="sub-text">or click to browse (max 500MB)</span>
+              <p>{t('uploadForm.uploadPrompt')}</p>
+              <span className="sub-text">{t('uploadForm.uploadSubtext')}</span>
             </div>
           ) : (
             <div className="file-ready-state">
               <div className="file-preview-icon">🎬</div>
               <div className="file-details">
-                <span className="filename">{file.name}</span>
-                <span className="filesize">{(file.size / 1024 / 1024).toFixed(1)} MB</span>
+                <span className="filename">{t('uploadForm.fileName', { name: file.name })}</span>
+                <span className="filesize">{t('uploadForm.fileSize', { size: (file.size / 1024 / 1024).toFixed(1) })}</span>
               </div>
               <button className="change-file-btn" onClick={() => {
                 onFileChange(null);
                 if (fileInputRef.current) fileInputRef.current.value = ''; // Reset file input using ref
-              }}>Change</button>
+              }}>{t('uploadForm.changeFile')}</button>
             </div>
           )}
         </div>
@@ -185,9 +187,9 @@ function UploadForm({
           disabled={!file || loading}
         >
           {loading ? (
-            <span className="loading-pulse">Analyzing...</span>
+            <span className="loading-pulse">{t('uploadForm.analyzing')}</span>
           ) : (
-            <>Run Analysis <span className="arrow">→</span></>
+            <>{t('uploadForm.analyzeButton')} <span className="arrow">→</span></>
           )}
         </button>
       </div>

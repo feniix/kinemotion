@@ -1,29 +1,33 @@
+import { useLanguage } from '../hooks/useLanguage'
+
 interface ErrorDisplayProps {
   error: string
   onRetry?: () => void
 }
 
 function ErrorDisplay({ error, onRetry }: ErrorDisplayProps) {
+  const { t } = useLanguage()
+
   // Map technical errors to user-friendly messages
   const getUserFriendlyMessage = (errorMsg: string): string => {
     if (errorMsg.includes('Failed to fetch') || errorMsg.includes('NetworkError')) {
-      return 'Unable to connect to the analysis server. Please check your internet connection and try again.'
+      return t('errors.networkError')
     }
 
     if (errorMsg.includes('500') || errorMsg.includes('Internal Server Error')) {
-      return 'Server error occurred during analysis. Please try again or contact support if the issue persists.'
+      return t('errors.serverError')
     }
 
     if (errorMsg.includes('413') || errorMsg.includes('too large')) {
-      return 'Video file is too large. Please use a video smaller than 500MB.'
+      return t('errors.fileTooLarge')
     }
 
     if (errorMsg.includes('400') || errorMsg.includes('Bad Request')) {
-      return 'Invalid video file or request. Please ensure you selected a valid video file.'
+      return t('errors.invalidRequest')
     }
 
     if (errorMsg.includes('timeout')) {
-      return 'Analysis took too long. Please try with a shorter video or try again later.'
+      return t('errors.timeout')
     }
 
     // Return the original error if it's already user-friendly
@@ -33,22 +37,22 @@ function ErrorDisplay({ error, onRetry }: ErrorDisplayProps) {
   return (
     <div className="error-display" role="alert" aria-live="assertive">
       <div className="error-icon">⚠️</div>
-      <h3>Analysis Failed</h3>
+      <h3>{t('errors.analysisFailedTitle')}</h3>
       <p className="error-message">{getUserFriendlyMessage(error)}</p>
 
       <div className="error-actions">
         {onRetry && (
           <button onClick={onRetry} className="retry-button">
-            Try Again
+            {t('errors.retryButton')}
           </button>
         )}
       </div>
 
       <p className="error-help">
-        If this problem persists, please contact support with the following information:
+        {t('errors.contactSupport')}
       </p>
       <details className="error-details">
-        <summary>Technical Details</summary>
+        <summary>{t('errors.technicalDetails')}</summary>
         <pre>{error}</pre>
       </details>
     </div>

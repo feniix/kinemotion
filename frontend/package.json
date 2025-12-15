@@ -14,8 +14,10 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.86.0",
+    "i18next": "^23.7.6",
     "react": "^19.2.1",
-    "react-dom": "^19.2.1"
+    "react-dom": "^19.2.1",
+    "react-i18next": "^13.5.0"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",

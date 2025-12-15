@@ -4,16 +4,19 @@ import ErrorDisplay from './components/ErrorDisplay'
 import LoadingSpinner from './components/LoadingSpinner'
 import ResultsSkeleton from './components/ResultsSkeleton'
 import Auth from './components/Auth'
+import LanguageSwitcher from './components/LanguageSwitcher'
 import { useRecentUploads } from './hooks/useRecentUploads'
 import { useAnalysis } from './hooks/useAnalysis'
 import { useAuth } from './hooks/useAuth'
 import { useBackendVersion } from './hooks/useBackendVersion'
+import { useLanguage } from './hooks/useLanguage'
 
 function App() {
   const { user, loading: authLoading, signOut } = useAuth()
   const { file, jumpType, loading, uploadProgress, metrics, error, enableDebug, setFile, setJumpType, setEnableDebug, analyze, retry } = useAnalysis()
   const { recentUploads, addRecentUpload, clearRecentUploads } = useRecentUploads()
   const { backendVersion, kinemotionVersion } = useBackendVersion()
+  const { t } = useLanguage()
 
   const handleAnalyze = async () => {
     await analyze()
@@ -53,13 +56,14 @@ function App() {
       <header className="header">
         <div className="header-content">
           <div>
-            <h1>Kinemotion</h1>
-            <p>Video-based kinematic analysis for athletic performance</p>
+            <h1>{t('common.appName')}</h1>
+            <p>{t('common.tagline')}</p>
           </div>
           <div className="user-info">
+            <LanguageSwitcher />
             <span className="user-email">{user.email}</span>
             <button onClick={handleSignOut} className="sign-out-button">
-              Sign Out
+              {t('header.signOut')}
             </button>
           </div>
         </div>
@@ -87,9 +91,9 @@ function App() {
 
       <footer className="footer">
         <p>
-          Kinemotion &copy; {new Date().getFullYear()} |
+          {t('footer.copyright', { year: new Date().getFullYear() })} |
           <a href="https://github.com/feniix/kinemotion" target="_blank" rel="noopener noreferrer">
-            GitHub
+            {t('footer.github')}
           </a>
           {' | '}
           <span style={{ fontSize: '0.85em', opacity: 0.8 }}>

@@ -136,7 +136,7 @@ describe('UploadForm', () => {
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     currentProps = createProps({ file: file }); // Update props with the file
     rerender(<UploadForm {...currentProps} />); // Re-render with selected file
-    expect(screen.getByText('test.mp4')).toBeInTheDocument();
+    expect(screen.getByText(/test\.mp4/)).toBeInTheDocument();
   });
 
   it('shows error for invalid file type via input', async () => {
@@ -185,7 +185,7 @@ describe('UploadForm', () => {
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     currentProps = createProps({ file: file }); // Update props with the dropped file
     rerender(<UploadForm {...currentProps} />); // Re-render with the dropped file
-    expect(screen.getByText('dragged.mp4')).toBeInTheDocument();
+    expect(screen.getByText(/dragged\.mp4/)).toBeInTheDocument();
   });
 
   it('shows error for invalid file type on drop', async () => {
