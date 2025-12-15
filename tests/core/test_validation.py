@@ -438,9 +438,7 @@ def test_validation_result_to_dict_implementation() -> None:
                     }
                     for issue in self.issues
                 ],
-                "athlete_profile": (
-                    self.athlete_profile.value if self.athlete_profile else None
-                ),
+                "athlete_profile": (self.athlete_profile.value if self.athlete_profile else None),
             }
 
     # Create instance and test serialization
@@ -519,13 +517,9 @@ def test_metrics_validator_concrete_implementation() -> None:
             if "jump_height" in metrics:
                 height = metrics["jump_height"]
                 if height < 0:
-                    result.add_error(
-                        "jump_height", "Height cannot be negative", value=height
-                    )
+                    result.add_error("jump_height", "Height cannot be negative", value=height)
                 elif height > 2.0:
-                    result.add_error(
-                        "jump_height", "Height exceeds maximum", value=height
-                    )
+                    result.add_error("jump_height", "Height exceeds maximum", value=height)
                 elif height > 1.5:
                     result.add_warning("jump_height", "Unusually high", value=height)
 

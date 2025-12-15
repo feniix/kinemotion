@@ -123,9 +123,7 @@ def _classify_combined_score(combined_score: float) -> AthleteProfile:
     return AthleteProfile.ELITE
 
 
-def estimate_athlete_profile(
-    metrics: dict, gender: str | None = None
-) -> AthleteProfile:
+def estimate_athlete_profile(metrics: dict, gender: str | None = None) -> AthleteProfile:
     """Estimate athlete profile from drop jump metrics.
 
     Uses jump_height and contact_time to classify athlete level.

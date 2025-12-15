@@ -176,13 +176,9 @@ def _find_drop_from_baseline(
             if debug:
                 print(f"[detect_drop_start] Drop detected at frame {drop_frame}")
                 print(
-                    f"  position_change: {position_change:.4f} > "
-                    f"{position_change_threshold:.4f}"
+                    f"  position_change: {position_change:.4f} > {position_change_threshold:.4f}"
                 )
-                print(
-                    f"  avg_position: {avg_position:.4f} vs baseline: "
-                    f"{baseline_position:.4f}"
-                )
+                print(f"  avg_position: {avg_position:.4f} vs baseline: {baseline_position:.4f}")
 
             return drop_frame
 
@@ -233,8 +229,7 @@ def detect_drop_start(
     if len(positions) < min_stable_frames + 30:
         if debug:
             print(
-                f"[detect_drop_start] Video too short: {len(positions)} < "
-                f"{min_stable_frames + 30}"
+                f"[detect_drop_start] Video too short: {len(positions)} < {min_stable_frames + 30}"
             )
         return 0
 
@@ -393,9 +388,7 @@ def detect_ground_contact(
         contact_frames = _find_contact_frames(is_stationary, min_contact_frames)
 
     # Assign states
-    return _assign_contact_states(
-        n_frames, contact_frames, visibilities, visibility_threshold
-    )
+    return _assign_contact_states(n_frames, contact_frames, visibilities, visibility_threshold)
 
 
 def find_contact_phases(
@@ -448,12 +441,8 @@ def _interpolate_phase_start(
     vel_at = velocities[start_idx]
 
     # Check threshold crossing based on state
-    is_landing = (
-        state == ContactState.ON_GROUND and vel_before > velocity_threshold > vel_at
-    )
-    is_takeoff = (
-        state == ContactState.IN_AIR and vel_before < velocity_threshold < vel_at
-    )
+    is_landing = state == ContactState.ON_GROUND and vel_before > velocity_threshold > vel_at
+    is_takeoff = state == ContactState.IN_AIR and vel_before < velocity_threshold < vel_at
 
     if is_landing or is_takeoff:
         offset = interpolate_threshold_crossing(vel_before, vel_at, velocity_threshold)
@@ -481,12 +470,8 @@ def _interpolate_phase_end(
     vel_after = velocities[end_idx + 1]
 
     # Check threshold crossing based on state
-    is_takeoff = (
-        state == ContactState.ON_GROUND and vel_at < velocity_threshold < vel_after
-    )
-    is_landing = (
-        state == ContactState.IN_AIR and vel_at > velocity_threshold > vel_after
-    )
+    is_takeoff = state == ContactState.ON_GROUND and vel_at < velocity_threshold < vel_after
+    is_landing = state == ContactState.IN_AIR and vel_at > velocity_threshold > vel_after
 
     if is_takeoff or is_landing:
         offset = interpolate_threshold_crossing(vel_at, vel_after, velocity_threshold)
@@ -528,9 +513,7 @@ def find_interpolated_phase_transitions(
     interpolated_phases: list[tuple[float, float, ContactState]] = []
 
     for start_idx, end_idx, state in phases:
-        start_frac = _interpolate_phase_start(
-            start_idx, state, velocities, velocity_threshold
-        )
+        start_frac = _interpolate_phase_start(start_idx, state, velocities, velocity_threshold)
         end_frac = _interpolate_phase_end(
             end_idx, state, velocities, velocity_threshold, len(foot_positions)
         )

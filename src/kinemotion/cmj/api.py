@@ -91,9 +91,7 @@ def _generate_debug_video(
             timer=timer,
         ) as renderer:
             for frame, idx in zip(frames, frame_indices, strict=True):
-                annotated = renderer.render_frame(
-                    frame, smoothed_landmarks[idx], idx, metrics
-                )
+                annotated = renderer.render_frame(frame, smoothed_landmarks[idx], idx, metrics)
                 renderer.write_frame(annotated)
 
     if verbose:
@@ -142,9 +140,7 @@ def _print_quality_warnings(quality_result: QualityAssessment, verbose: bool) ->
         print()
 
 
-def _print_validation_results(
-    validation_result: ValidationResult, verbose: bool
-) -> None:
+def _print_validation_results(validation_result: ValidationResult, verbose: bool) -> None:
     """Print validation issues if present."""
     if verbose and validation_result.issues:
         print("\n⚠️  Validation Results:")
@@ -327,13 +323,9 @@ def process_cmj_video(
                 )
 
                 if verbose:
-                    print_verbose_parameters(
-                        video, characteristics, quality_preset, params
-                    )
+                    print_verbose_parameters(video, characteristics, quality_preset, params)
 
-            smoothed_landmarks = apply_smoothing(
-                landmarks_sequence, params, verbose, timer
-            )
+            smoothed_landmarks = apply_smoothing(landmarks_sequence, params, verbose, timer)
 
             if verbose:
                 print("Extracting vertical positions (Hip and Foot)...")
@@ -341,9 +333,7 @@ def process_cmj_video(
                 vertical_positions, visibilities = extract_vertical_positions(
                     smoothed_landmarks, target="hip"
                 )
-                foot_positions, _ = extract_vertical_positions(
-                    smoothed_landmarks, target="foot"
-                )
+                foot_positions, _ = extract_vertical_positions(smoothed_landmarks, target="foot")
 
             if verbose:
                 print("Detecting CMJ phases...")

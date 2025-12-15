@@ -207,14 +207,10 @@ def smooth_landmarks(
         y_smooth = savgol_filter(y_coords, window_length, polyorder)
         return x_smooth, y_smooth
 
-    return _smooth_landmarks_core(
-        landmark_sequence, window_length, polyorder, savgol_smoother
-    )
+    return _smooth_landmarks_core(landmark_sequence, window_length, polyorder, savgol_smoother)
 
 
-def compute_velocity(
-    positions: np.ndarray, fps: float, smooth_window: int = 3
-) -> np.ndarray:
+def compute_velocity(positions: np.ndarray, fps: float, smooth_window: int = 3) -> np.ndarray:
     """
     Compute velocity from position data.
 
@@ -423,9 +419,7 @@ def smooth_landmarks_advanced(
 
         return x_smooth, y_smooth
 
-    return _smooth_landmarks_core(
-        landmark_sequence, window_length, polyorder, advanced_smoother
-    )
+    return _smooth_landmarks_core(landmark_sequence, window_length, polyorder, advanced_smoother)
 
 
 def interpolate_threshold_crossing(

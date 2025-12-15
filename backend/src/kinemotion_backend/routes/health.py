@@ -19,9 +19,7 @@ async def health_check() -> dict[str, str | bool]:
     """
     # Check R2 configuration
     r2_configured = bool(
-        os.getenv("R2_ENDPOINT")
-        and os.getenv("R2_ACCESS_KEY")
-        and os.getenv("R2_SECRET_KEY")
+        os.getenv("R2_ENDPOINT") and os.getenv("R2_ACCESS_KEY") and os.getenv("R2_SECRET_KEY")
     )
 
     return {

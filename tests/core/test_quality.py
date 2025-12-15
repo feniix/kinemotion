@@ -295,19 +295,13 @@ class TestQualityScoring:
         outlier_mask = np.zeros(100, dtype=bool)
 
         # High visibility
-        quality_high = assess_jump_quality(
-            np.full(100, 0.95), positions, outlier_mask, fps=60.0
-        )
+        quality_high = assess_jump_quality(np.full(100, 0.95), positions, outlier_mask, fps=60.0)
 
         # Medium visibility
-        quality_medium = assess_jump_quality(
-            np.full(100, 0.75), positions, outlier_mask, fps=60.0
-        )
+        quality_medium = assess_jump_quality(np.full(100, 0.75), positions, outlier_mask, fps=60.0)
 
         # Low visibility
-        quality_low = assess_jump_quality(
-            np.full(100, 0.55), positions, outlier_mask, fps=60.0
-        )
+        quality_low = assess_jump_quality(np.full(100, 0.55), positions, outlier_mask, fps=60.0)
 
         assert quality_high.quality_score > quality_medium.quality_score
         assert quality_medium.quality_score > quality_low.quality_score
@@ -325,16 +319,12 @@ class TestQualityScoring:
         # 5% outliers
         outliers_5pct = np.zeros(100, dtype=bool)
         outliers_5pct[::20] = True
-        quality_5pct = assess_jump_quality(
-            visibilities, positions, outliers_5pct, fps=60.0
-        )
+        quality_5pct = assess_jump_quality(visibilities, positions, outliers_5pct, fps=60.0)
 
         # 20% outliers
         outliers_20pct = np.zeros(100, dtype=bool)
         outliers_20pct[::5] = True
-        quality_20pct = assess_jump_quality(
-            visibilities, positions, outliers_20pct, fps=60.0
-        )
+        quality_20pct = assess_jump_quality(visibilities, positions, outliers_20pct, fps=60.0)
 
         assert quality_none.quality_score > quality_5pct.quality_score
         assert quality_5pct.quality_score > quality_20pct.quality_score
@@ -344,9 +334,7 @@ class TestQualityScoring:
         visibilities = np.full(100, 0.9)
         positions = np.array([0.5] * 100)
 
-        quality = assess_jump_quality(
-            visibilities, positions, outlier_mask=None, fps=60.0
-        )
+        quality = assess_jump_quality(visibilities, positions, outlier_mask=None, fps=60.0)
 
         assert quality.quality_indicators.outliers_detected == 0
         assert quality.quality_indicators.outlier_percentage == 0.0

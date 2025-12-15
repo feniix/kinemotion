@@ -14,9 +14,7 @@ class ValidationIssue(BaseModel):
 class ValidationResults(BaseModel):
     """Validation results from analysis."""
 
-    status: str = Field(
-        ..., description="Status: PASS, FAIL, WARNING, or PASS_WITH_WARNINGS"
-    )
+    status: str = Field(..., description="Status: PASS, FAIL, WARNING, or PASS_WITH_WARNINGS")
     issues: list[ValidationIssue] = Field(
         default_factory=list, description="List of validation issues"
     )
@@ -26,9 +24,7 @@ class MetricsData(BaseModel):
     """Analysis metrics with optional metadata and validation."""
 
     data: dict[str, Any] | None = Field(None, description="Actual metric values")
-    metadata: dict[str, Any] | None = Field(
-        None, description="Metric metadata and descriptions"
-    )
+    metadata: dict[str, Any] | None = Field(None, description="Metric metadata and descriptions")
     validation: ValidationResults | None = Field(
         None, description="Validation results for metrics"
     )

@@ -24,9 +24,7 @@ class StorageService:
         """
         return self.client.upload_file(local_path, remote_key)
 
-    async def upload_analysis_results(
-        self, results: dict[str, Any], remote_key: str
-    ) -> str:
+    async def upload_analysis_results(self, results: dict[str, Any], remote_key: str) -> str:
         """Upload analysis results as JSON to R2 storage.
 
         Args:
@@ -41,9 +39,7 @@ class StorageService:
         results_json = json.dumps(results, indent=2).encode("utf-8")
         return self.client.put_object(remote_key, results_json)
 
-    async def generate_unique_key(
-        self, filename: str, user_id: str | None = None
-    ) -> str:
+    async def generate_unique_key(self, filename: str, user_id: str | None = None) -> str:
         """Generate unique storage key for uploaded file.
 
         Args:

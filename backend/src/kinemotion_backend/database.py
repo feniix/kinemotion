@@ -70,9 +70,7 @@ class DatabaseClient:
                 "upload_id": upload_id,
             }
 
-            response = (
-                self.client.table("analysis_sessions").insert(session_data).execute()
-            )
+            response = self.client.table("analysis_sessions").insert(session_data).execute()
 
             if response.data:
                 session_data = response.data[0]
@@ -140,9 +138,7 @@ class DatabaseClient:
             )
             raise
 
-    async def get_analysis_session(
-        self, session_id: str, user_id: str
-    ) -> dict[str, Any] | None:
+    async def get_analysis_session(self, session_id: str, user_id: str) -> dict[str, Any] | None:
         """Get a specific analysis session.
 
         Args:
@@ -160,9 +156,7 @@ class DatabaseClient:
                 self.client.table("analysis_sessions")
                 .select("*")
                 .eq("id", session_id)
-                .eq(
-                    "user_id", user_id
-                )  # Ensure user can only access their own sessions
+                .eq("user_id", user_id)  # Ensure user can only access their own sessions
                 .single()
                 .execute()
             )
@@ -217,9 +211,7 @@ class DatabaseClient:
                 "tags": tags or [],
             }
 
-            response = (
-                self.client.table("coach_feedback").insert(feedback_data).execute()
-            )
+            response = self.client.table("coach_feedback").insert(feedback_data).execute()
 
             if response.data:
                 feedback_data = response.data[0]
@@ -246,9 +238,7 @@ class DatabaseClient:
             )
             raise
 
-    async def get_session_feedback(
-        self, analysis_session_id: str
-    ) -> list[dict[str, Any]]:
+    async def get_session_feedback(self, analysis_session_id: str) -> list[dict[str, Any]]:
         """Get all feedback for an analysis session.
 
         Args:

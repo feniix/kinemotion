@@ -110,9 +110,7 @@ class AnalysisService:
                 temp_debug = tempfile.NamedTemporaryFile(suffix=".mp4", delete=False)
                 temp_debug_video_path = temp_debug.name
                 temp_debug.close()
-                logger.info(
-                    "debug_video_path_created", debug_video_path=temp_debug_video_path
-                )
+                logger.info("debug_video_path_created", debug_video_path=temp_debug_video_path)
 
             # Process video with detailed timing
             logger.info("video_processing_started")

@@ -14,15 +14,11 @@ class AnalysisSessionCreate(BaseModel):
     quality_preset: str = Field(
         ..., description="Analysis quality: 'fast', 'balanced', or 'accurate'"
     )
-    original_video_url: str | None = Field(
-        None, description="R2 URL for original video"
-    )
+    original_video_url: str | None = Field(None, description="R2 URL for original video")
     debug_video_url: str | None = Field(None, description="R2 URL for debug video")
     results_json_url: str | None = Field(None, description="R2 URL for results JSON")
     analysis_data: dict[str, Any] = Field(..., description="Analysis results as JSON")
-    processing_time_s: float | None = Field(
-        None, description="Processing time in seconds"
-    )
+    processing_time_s: float | None = Field(None, description="Processing time in seconds")
     upload_id: str | None = Field(None, description="Upload ID from analysis system")
 
     @field_validator("jump_type")
@@ -65,9 +61,7 @@ class CoachFeedbackCreate(BaseModel):
     analysis_session_id: UUID = Field(..., description="ID of the analysis session")
     notes: str | None = Field(None, description="Coach notes about the analysis")
     rating: int | None = Field(None, ge=1, le=5, description="Rating from 1-5")
-    tags: list[str] = Field(
-        default_factory=list, description="Tags for categorizing feedback"
-    )
+    tags: list[str] = Field(default_factory=list, description="Tags for categorizing feedback")
 
     @field_validator("rating")
     @classmethod

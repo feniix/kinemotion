@@ -118,9 +118,7 @@ class R2StorageClient:
         self.public_base_url = (os.getenv("R2_PUBLIC_BASE_URL") or "").rstrip("/")
         # Fallback: presigned URL expiration seconds (default 7 days, S3 max)
         try:
-            self.presign_expiration_s = int(
-                os.getenv("R2_PRESIGN_EXPIRATION_S") or "604800"
-            )
+            self.presign_expiration_s = int(os.getenv("R2_PRESIGN_EXPIRATION_S") or "604800")
         except ValueError:
             self.presign_expiration_s = 604800
 
@@ -171,9 +169,7 @@ class R2StorageClient:
         normalized_key = key.lstrip("/")
         if self.public_base_url:
             return f"{self.public_base_url}/{normalized_key}"
-        return self.generate_presigned_url(
-            normalized_key, expiration=self.presign_expiration_s
-        )
+        return self.generate_presigned_url(normalized_key, expiration=self.presign_expiration_s)
 
     def upload_file(self, local_path: str, remote_key: str) -> str:
         """Upload file to R2 storage.
@@ -386,8 +382,7 @@ def _validate_video_file(file: UploadFile) -> None:
     file_ext = Path(file.filename).suffix.lower()
     if file_ext not in valid_extensions:
         raise ValueError(
-            f"Invalid video format: {file_ext}. "
-            f"Supported formats: {', '.join(valid_extensions)}"
+            f"Invalid video format: {file_ext}. Supported formats: {', '.join(valid_extensions)}"
         )
 
     # Check file size (max 500MB for practical limits)
@@ -650,9 +645,7 @@ async def analyze_video(
             upload_start = time.time()
             r2_video_key = f"videos/{jump_type}/{upload_id}{upload_suffix}"
             try:
-                original_video_url = r2_client.upload_file(
-                    temp_video_path, r2_video_key
-                )
+                original_video_url = r2_client.upload_file(temp_video_path, r2_video_key)
                 upload_duration = time.time() - upload_start
                 logger.info(
                     "timing_r2_input_video_upload",
@@ -700,8 +693,7 @@ async def analyze_video(
             timing_breakdown = metrics["metadata"]["processing"]["timing_breakdown_ms"]
             # Normalize keys: remove special chars, spaces → underscores, lowercase
             normalized_timings = {
-                re.sub(r"[^\w\s]", "", stage).lower().replace(" ", "_")
-                + "_ms": duration
+                re.sub(r"[^\w\s]", "", stage).lower().replace(" ", "_") + "_ms": duration
                 for stage, duration in timing_breakdown.items()
             }
             # Log each timing stage as a separate event for granular monitoring
@@ -728,9 +720,7 @@ async def analyze_video(
             try:
                 results_upload_start = time.time()
                 results_json = json.dumps(metrics, indent=2)
-                results_url = r2_client.put_object(
-                    r2_results_key, results_json.encode()
-                )
+                results_url = r2_client.put_object(r2_results_key, results_json.encode())
                 results_upload_duration = time.time() - results_upload_start
                 logger.info(
                     "timing_r2_results_upload",
@@ -740,9 +730,7 @@ async def analyze_video(
                 )
             except OSError as e:
                 # Log error but don't fail - results still available in response
-                logger.warning(
-                    "r2_results_upload_failed", error=str(e), key=r2_results_key
-                )
+                logger.warning("r2_results_upload_failed", error=str(e), key=r2_results_key)
 
             # Upload Debug Video if it was created
             if (
@@ -892,9 +880,7 @@ async def analyze_video(
                 Path(temp_video_path).unlink()
                 logger.debug("temp_file_cleaned", path=temp_video_path)
             except OSError as e:
-                logger.warning(
-                    "temp_file_cleanup_failed", path=temp_video_path, error=str(e)
-                )
+                logger.warning("temp_file_cleanup_failed", path=temp_video_path, error=str(e))
 
         # Clean up temporary debug video file
         if temp_debug_video_path and Path(temp_debug_video_path).exists():

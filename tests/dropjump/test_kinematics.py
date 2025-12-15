@@ -18,10 +18,7 @@ def test_calculate_metrics_basic():
 
     # Simple vertical positions (y increases downward)
     positions = np.array(
-        [0.8] * 10
-        + list(np.linspace(0.8, 0.4, 10))
-        + list(np.linspace(0.4, 0.8, 10))
-        + [0.8] * 5
+        [0.8] * 10 + list(np.linspace(0.8, 0.4, 10)) + list(np.linspace(0.4, 0.8, 10)) + [0.8] * 5
     )
 
     fps = 30.0
@@ -124,6 +121,4 @@ def test_calculate_drop_jump_metrics_scaled() -> None:
     )
 
     assert metrics.jump_height_trajectory_m is not None
-    assert metrics.jump_height_trajectory_m == pytest.approx(
-        expected_height_m, abs=0.02
-    )
+    assert metrics.jump_height_trajectory_m == pytest.approx(expected_height_m, abs=0.02)

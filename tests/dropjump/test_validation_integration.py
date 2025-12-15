@@ -130,9 +130,7 @@ def test_dropjump_rsi_calculation() -> None:
     # Assert: RSI calculated correctly
     expected_rsi = 0.80 / 0.20  # Should be 4.0
     assert validation_result.rsi is not None
-    assert (
-        abs(validation_result.rsi - expected_rsi) < 0.01
-    )  # Allow small rounding error
+    assert abs(validation_result.rsi - expected_rsi) < 0.01  # Allow small rounding error
 
 
 def test_dropjump_validation_athlete_profile_estimation() -> None:
@@ -181,9 +179,7 @@ def test_dropjump_dual_height_validation_consistency() -> None:
     assert result.height_kinematic_trajectory_consistency is not None
     assert result.height_kinematic_trajectory_consistency < 10.0
     # Should not raise warning for <10% difference
-    consistency_issues = [
-        issue for issue in result.issues if issue.metric == "height_consistency"
-    ]
+    consistency_issues = [issue for issue in result.issues if issue.metric == "height_consistency"]
     assert len(consistency_issues) == 0
 
 
@@ -206,8 +202,6 @@ def test_dropjump_dual_height_validation_poor_quality() -> None:
     # Should detect large inconsistency and warn
     assert result.height_kinematic_trajectory_consistency is not None
     assert result.height_kinematic_trajectory_consistency > 10.0
-    consistency_issues = [
-        issue for issue in result.issues if issue.metric == "height_consistency"
-    ]
+    consistency_issues = [issue for issue in result.issues if issue.metric == "height_consistency"]
     assert len(consistency_issues) > 0
     assert consistency_issues[0].severity.value == "WARNING"

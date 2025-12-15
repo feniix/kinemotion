@@ -162,9 +162,7 @@ class TestDropJumpCLIErrors:
         self, cli_runner: CliRunner, minimal_video: Path
     ) -> None:
         """Test invalid quality preset is rejected."""
-        result = cli_runner.invoke(
-            dropjump_analyze, [str(minimal_video), "--quality", "invalid"]
-        )
+        result = cli_runner.invoke(dropjump_analyze, [str(minimal_video), "--quality", "invalid"])
 
         # ✅ STABLE: Should fail with non-zero exit
         assert result.exit_code != 0
@@ -239,18 +237,14 @@ class TestDropJumpCLIOptions:
         self, cli_runner: CliRunner, minimal_video: Path, quality: str
     ) -> None:
         """Test all quality presets are recognized."""
-        result = cli_runner.invoke(
-            dropjump_analyze, [str(minimal_video), "--quality", quality]
-        )
+        result = cli_runner.invoke(dropjump_analyze, [str(minimal_video), "--quality", quality])
 
         # ✅ STABLE: Quality should be accepted (no parsing error)
         # Don't check if processing succeeded, just if option was valid
         # Exit code may vary but shouldn't have "Invalid quality" error
         assert "Invalid quality" not in result.output
 
-    def test_expert_parameters_accepted(
-        self, cli_runner: CliRunner, minimal_video: Path
-    ) -> None:
+    def test_expert_parameters_accepted(self, cli_runner: CliRunner, minimal_video: Path) -> None:
         """Test expert parameter overrides are accepted."""
         result = cli_runner.invoke(
             dropjump_analyze,
@@ -274,13 +268,9 @@ class TestDropJumpCLIOptions:
 class TestDropJumpCLIBasicExecution:
     """Test basic command execution."""
 
-    def test_command_runs_without_crash(
-        self, cli_runner: CliRunner, minimal_video: Path
-    ) -> None:
+    def test_command_runs_without_crash(self, cli_runner: CliRunner, minimal_video: Path) -> None:
         """Test command executes without crashing."""
-        result = cli_runner.invoke(
-            dropjump_analyze, [str(minimal_video), "--quality", "fast"]
-        )
+        result = cli_runner.invoke(dropjump_analyze, [str(minimal_video), "--quality", "fast"])
 
         # ✅ STABLE: Should complete (success or graceful failure, not crash)
         # Synthetic video may cause analysis to fail, but shouldn't crash
@@ -324,9 +314,7 @@ class TestDropJumpCLIBatchMode:
     """Test batch processing features."""
 
     @skip_in_ci
-    def test_batch_mode_with_multiple_videos(
-        self, cli_runner: CliRunner, tmp_path: Path
-    ) -> None:
+    def test_batch_mode_with_multiple_videos(self, cli_runner: CliRunner, tmp_path: Path) -> None:
         """Test batch mode processes multiple videos."""
         # Create 2 test videos
         video1 = tmp_path / "video1.mp4"
@@ -468,9 +456,7 @@ class TestDropJumpCLIBatchMode:
                 assert len(rows) >= 1  # At least something processed
 
     @skip_in_ci
-    def test_workers_option_accepted(
-        self, cli_runner: CliRunner, minimal_video: Path
-    ) -> None:
+    def test_workers_option_accepted(self, cli_runner: CliRunner, minimal_video: Path) -> None:
         """Test --workers option is accepted."""
         result = cli_runner.invoke(
             dropjump_analyze,

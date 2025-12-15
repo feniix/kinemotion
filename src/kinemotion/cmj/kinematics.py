@@ -98,29 +98,17 @@ class CMJMetrics:
         data: CMJDataDict = {
             "jump_height_m": format_float_metric(self.jump_height, 1, 3),  # type: ignore[typeddict-item]
             "flight_time_ms": format_float_metric(self.flight_time, 1000, 2),  # type: ignore[typeddict-item]
-            "countermovement_depth_m": format_float_metric(
-                self.countermovement_depth, 1, 3
-            ),  # type: ignore[typeddict-item]
-            "eccentric_duration_ms": format_float_metric(
-                self.eccentric_duration, 1000, 2
-            ),  # type: ignore[typeddict-item]
-            "concentric_duration_ms": format_float_metric(
-                self.concentric_duration, 1000, 2
-            ),  # type: ignore[typeddict-item]
-            "total_movement_time_ms": format_float_metric(
-                self.total_movement_time, 1000, 2
-            ),  # type: ignore[typeddict-item]
-            "peak_eccentric_velocity_m_s": format_float_metric(
-                self.peak_eccentric_velocity, 1, 4
-            ),  # type: ignore[typeddict-item]
+            "countermovement_depth_m": format_float_metric(self.countermovement_depth, 1, 3),  # type: ignore[typeddict-item]
+            "eccentric_duration_ms": format_float_metric(self.eccentric_duration, 1000, 2),  # type: ignore[typeddict-item]
+            "concentric_duration_ms": format_float_metric(self.concentric_duration, 1000, 2),  # type: ignore[typeddict-item]
+            "total_movement_time_ms": format_float_metric(self.total_movement_time, 1000, 2),  # type: ignore[typeddict-item]
+            "peak_eccentric_velocity_m_s": format_float_metric(self.peak_eccentric_velocity, 1, 4),  # type: ignore[typeddict-item]
             "peak_concentric_velocity_m_s": format_float_metric(
                 self.peak_concentric_velocity, 1, 4
             ),  # type: ignore[typeddict-item]
             "transition_time_ms": format_float_metric(self.transition_time, 1000, 2),
             "standing_start_frame": (
-                float(self.standing_start_frame)
-                if self.standing_start_frame is not None
-                else None
+                float(self.standing_start_frame) if self.standing_start_frame is not None else None
             ),
             "lowest_point_frame": float(self.lowest_point_frame),
             "takeoff_frame": float(self.takeoff_frame),
@@ -198,9 +186,7 @@ def _calculate_countermovement_depth(
         Countermovement depth in meters
     """
     standing_position = (
-        positions[int(standing_start_frame)]
-        if standing_start_frame is not None
-        else positions[0]
+        positions[int(standing_start_frame)] if standing_start_frame is not None else positions[0]
     )
     lowest_position = positions[int(lowest_point_frame)]
     depth_normalized = abs(standing_position - lowest_position)
@@ -269,9 +255,7 @@ def _calculate_peak_velocities(
 
     peak_concentric_velocity = 0.0
     if len(concentric_velocities) > 0:
-        peak_concentric_velocity = (
-            abs(float(np.min(concentric_velocities))) * velocity_scale
-        )
+        peak_concentric_velocity = abs(float(np.min(concentric_velocities))) * velocity_scale
 
     return peak_eccentric_velocity, peak_concentric_velocity
 
@@ -337,17 +321,13 @@ def calculate_cmj_metrics(
     jump_height = (g * flight_time**2) / 8
 
     # Calculate scaling factor and derived metrics
-    scale_factor = _calculate_scale_factor(
-        positions, takeoff_frame, landing_frame, jump_height
-    )
+    scale_factor = _calculate_scale_factor(positions, takeoff_frame, landing_frame, jump_height)
     countermovement_depth = _calculate_countermovement_depth(
         positions, standing_start_frame, lowest_point_frame, scale_factor
     )
 
-    eccentric_duration, concentric_duration, total_movement_time = (
-        _calculate_phase_durations(
-            standing_start_frame, lowest_point_frame, takeoff_frame, fps
-        )
+    eccentric_duration, concentric_duration, total_movement_time = _calculate_phase_durations(
+        standing_start_frame, lowest_point_frame, takeoff_frame, fps
     )
 
     velocity_scale = scale_factor * fps

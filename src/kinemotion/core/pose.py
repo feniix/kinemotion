@@ -33,9 +33,7 @@ class PoseTracker:
             model_complexity=1,
         )
 
-    def process_frame(
-        self, frame: np.ndarray
-    ) -> dict[str, tuple[float, float, float]] | None:
+    def process_frame(self, frame: np.ndarray) -> dict[str, tuple[float, float, float]] | None:
         """
         Process a single frame and extract pose landmarks.
 
@@ -241,9 +239,7 @@ def compute_center_of_mass(
             0.05,
             visibility_threshold,
         )
-        _add_foot_segment(
-            segments, weights, visibilities, landmarks, side, visibility_threshold
-        )
+        _add_foot_segment(segments, weights, visibilities, landmarks, side, visibility_threshold)
 
     # Fallback if no segments found
     if not segments:
@@ -257,12 +253,8 @@ def compute_center_of_mass(
     total_weight = sum(weights)
     normalized_weights = [w / total_weight for w in weights]
 
-    com_x = float(
-        sum(p[0] * w for p, w in zip(segments, normalized_weights, strict=True))
-    )
-    com_y = float(
-        sum(p[1] * w for p, w in zip(segments, normalized_weights, strict=True))
-    )
+    com_x = float(sum(p[0] * w for p, w in zip(segments, normalized_weights, strict=True)))
+    com_y = float(sum(p[1] * w for p, w in zip(segments, normalized_weights, strict=True)))
     com_visibility = float(np.mean(visibilities)) if visibilities else 0.0
 
     return (com_x, com_y, com_visibility)

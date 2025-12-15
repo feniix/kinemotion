@@ -154,9 +154,7 @@ def test_r2_upload_file_success() -> None:
         with patch("kinemotion_backend.models.storage.boto3.client") as mock_boto3:
             mock_s3 = MagicMock()
             mock_boto3.return_value = mock_s3
-            mock_s3.generate_presigned_url.return_value = (
-                "https://r2.example.com/presigned-url"
-            )
+            mock_s3.generate_presigned_url.return_value = "https://r2.example.com/presigned-url"
 
             client = R2StorageClient()
             url = client.upload_file("/tmp/test.mp4", "videos/test.mp4")
@@ -252,9 +250,7 @@ def test_get_object_url_with_custom_expiration() -> None:
         with patch("kinemotion_backend.models.storage.boto3.client") as mock_boto3:
             mock_s3 = MagicMock()
             mock_boto3.return_value = mock_s3
-            mock_s3.generate_presigned_url.return_value = (
-                "https://r2.example.com/presigned"
-            )
+            mock_s3.generate_presigned_url.return_value = "https://r2.example.com/presigned"
 
             client = R2StorageClient()
             url = client.get_object_url("videos/test.mp4")
@@ -416,9 +412,7 @@ def test_r2_put_object_success() -> None:
         with patch("kinemotion_backend.models.storage.boto3.client") as mock_boto3:
             mock_s3 = MagicMock()
             mock_boto3.return_value = mock_s3
-            mock_s3.generate_presigned_url.return_value = (
-                "https://r2.example.com/presigned-url"
-            )
+            mock_s3.generate_presigned_url.return_value = "https://r2.example.com/presigned-url"
 
             client = R2StorageClient()
             url = client.put_object("results/test.json", b'{"status": "ok"}')

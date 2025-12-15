@@ -161,9 +161,7 @@ def test_cmj_velocity_calculations() -> None:
     # Compute velocities using derivative method (matches implementation)
     from kinemotion.core.smoothing import compute_velocity_from_derivative
 
-    velocities = compute_velocity_from_derivative(
-        positions, window_length=5, polyorder=2
-    )
+    velocities = compute_velocity_from_derivative(positions, window_length=5, polyorder=2)
 
     metrics = calculate_cmj_metrics(
         positions,

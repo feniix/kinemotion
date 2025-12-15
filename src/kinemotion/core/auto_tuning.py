@@ -168,9 +168,7 @@ def auto_tune_parameters(
     elif quality_preset == QualityPreset.ACCURATE:
         # Accurate: Maximize accuracy, accept slower processing
         velocity_threshold = base_velocity_threshold * 0.5  # More sensitive
-        min_contact_frames = (
-            base_min_contact_frames  # Don't increase (would miss brief)
-        )
+        min_contact_frames = base_min_contact_frames  # Don't increase (would miss brief)
         smoothing_window = min(11, base_smoothing_window + 2 + smoothing_adjustment)
         bilateral_filter = True  # Always use for best accuracy
         detection_confidence = 0.6
@@ -298,9 +296,7 @@ def analyze_video_sample(
         if not frame_landmarks:
             continue
 
-        frame_vis, frame_y_positions = _collect_foot_visibility_and_positions(
-            frame_landmarks
-        )
+        frame_vis, frame_y_positions = _collect_foot_visibility_and_positions(frame_landmarks)
 
         if frame_vis:
             visibilities.append(float(np.mean(frame_vis)))

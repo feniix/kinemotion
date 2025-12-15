@@ -21,9 +21,7 @@ class R2StorageClient:
         self.public_base_url = (os.getenv("R2_PUBLIC_BASE_URL") or "").rstrip("/")
         # Fallback: presigned URL expiration seconds (default 7 days, S3 max)
         try:
-            self.presign_expiration_s = int(
-                os.getenv("R2_PRESIGN_EXPIRATION_S") or "604800"
-            )
+            self.presign_expiration_s = int(os.getenv("R2_PRESIGN_EXPIRATION_S") or "604800")
         except ValueError:
             self.presign_expiration_s = 604800
 
@@ -74,9 +72,7 @@ class R2StorageClient:
         normalized_key = key.lstrip("/")
         if self.public_base_url:
             return f"{self.public_base_url}/{normalized_key}"
-        return self.generate_presigned_url(
-            normalized_key, expiration=self.presign_expiration_s
-        )
+        return self.generate_presigned_url(normalized_key, expiration=self.presign_expiration_s)
 
     def upload_file(self, local_path: str, remote_key: str) -> str:
         """Upload file to R2 storage.

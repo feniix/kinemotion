@@ -299,9 +299,7 @@ def _tune_and_smooth(
         Tuple of (smoothed_landmarks, params, characteristics)
     """
     with timer.measure("parameter_auto_tuning"):
-        characteristics = analyze_video_sample(
-            landmarks_sequence, video_fps, frame_count
-        )
+        characteristics = analyze_video_sample(landmarks_sequence, video_fps, frame_count)
         params = auto_tune_parameters(characteristics, quality_preset)
 
         # Apply overrides if provided
@@ -337,9 +335,7 @@ def _extract_positions_and_detect_contact(
     if verbose:
         print("Extracting foot positions...")
     with timer.measure("vertical_position_extraction"):
-        vertical_positions, visibilities = extract_vertical_positions(
-            smoothed_landmarks
-        )
+        vertical_positions, visibilities = extract_vertical_positions(smoothed_landmarks)
 
     if verbose:
         print("Detecting ground contact...")
@@ -557,9 +553,7 @@ def process_dropjump_video(
                 print_verbose_parameters(video, characteristics, quality_preset, params)
 
             vertical_positions, visibilities, contact_states = (
-                _extract_positions_and_detect_contact(
-                    smoothed_landmarks, params, timer, verbose
-                )
+                _extract_positions_and_detect_contact(smoothed_landmarks, params, timer, verbose)
             )
 
             metrics, quality_result = _calculate_metrics_and_assess_quality(
@@ -623,9 +617,7 @@ def process_dropjump_videos_bulk(
     """
 
     def error_factory(video_path: str, error_msg: str) -> DropJumpVideoResult:
-        return DropJumpVideoResult(
-            video_path=video_path, success=False, error=error_msg
-        )
+        return DropJumpVideoResult(video_path=video_path, success=False, error=error_msg)
 
     return process_videos_bulk_generic(
         configs,

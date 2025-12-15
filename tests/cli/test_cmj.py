@@ -123,9 +123,7 @@ class TestCMJCLIErrors:
         self, cli_runner: CliRunner, minimal_video: Path
     ) -> None:
         """Test invalid quality preset is rejected."""
-        result = cli_runner.invoke(
-            cmj_analyze, [str(minimal_video), "--quality", "invalid"]
-        )
+        result = cli_runner.invoke(cmj_analyze, [str(minimal_video), "--quality", "invalid"])
 
         # ✅ STABLE: Should fail with non-zero exit
         assert result.exit_code != 0
@@ -199,17 +197,13 @@ class TestCMJCLIOptions:
         self, cli_runner: CliRunner, minimal_video: Path, quality: str
     ) -> None:
         """Test all quality presets are recognized."""
-        result = cli_runner.invoke(
-            cmj_analyze, [str(minimal_video), "--quality", quality]
-        )
+        result = cli_runner.invoke(cmj_analyze, [str(minimal_video), "--quality", quality])
 
         # ✅ STABLE: Quality should be accepted (no parsing error)
         # Don't check if processing succeeded, just if option was valid
         assert "Invalid quality" not in result.output
 
-    def test_expert_parameters_accepted(
-        self, cli_runner: CliRunner, minimal_video: Path
-    ) -> None:
+    def test_expert_parameters_accepted(self, cli_runner: CliRunner, minimal_video: Path) -> None:
         """Test expert parameter overrides are accepted."""
         result = cli_runner.invoke(
             cmj_analyze,
@@ -232,13 +226,9 @@ class TestCMJCLIOptions:
 class TestCMJCLIBasicExecution:
     """Test basic command execution."""
 
-    def test_command_runs_without_crash(
-        self, cli_runner: CliRunner, minimal_video: Path
-    ) -> None:
+    def test_command_runs_without_crash(self, cli_runner: CliRunner, minimal_video: Path) -> None:
         """Test command executes without crashing."""
-        result = cli_runner.invoke(
-            cmj_analyze, [str(minimal_video), "--quality", "fast"]
-        )
+        result = cli_runner.invoke(cmj_analyze, [str(minimal_video), "--quality", "fast"])
 
         # ✅ STABLE: Should complete (success or graceful failure, not crash)
         # Synthetic video may cause analysis to fail, but shouldn't crash
@@ -283,9 +273,7 @@ class TestCMJCLIBatchMode:
     """Test batch processing features."""
 
     @skip_in_ci
-    def test_batch_mode_with_multiple_videos(
-        self, cli_runner: CliRunner, tmp_path: Path
-    ) -> None:
+    def test_batch_mode_with_multiple_videos(self, cli_runner: CliRunner, tmp_path: Path) -> None:
         """Test batch mode processes multiple videos."""
         # Create 2 test videos
         video1 = tmp_path / "video1.mp4"
@@ -428,9 +416,7 @@ class TestCMJCLIBatchMode:
                 assert len(rows) >= 1  # At least something processed
 
     @skip_in_ci
-    def test_workers_option_accepted(
-        self, cli_runner: CliRunner, minimal_video: Path
-    ) -> None:
+    def test_workers_option_accepted(self, cli_runner: CliRunner, minimal_video: Path) -> None:
         """Test --workers option is accepted."""
         result = cli_runner.invoke(
             cmj_analyze,
@@ -466,9 +452,7 @@ class TestCMJCLICollectVideoFiles:
 
         # Test with glob pattern
         pattern = str(tmp_path / "*.mp4")
-        result = cli_runner.invoke(
-            cmj_analyze, [pattern, "--batch", "--quality", "fast"]
-        )
+        result = cli_runner.invoke(cmj_analyze, [pattern, "--batch", "--quality", "fast"])
 
         # Should recognize and process both files
         assert result.exception is None or result.exit_code != 0
@@ -486,9 +470,7 @@ class TestCMJCLICollectVideoFiles:
         self, cli_runner: CliRunner, minimal_video: Path
     ) -> None:
         """Test collecting video files with direct file path."""
-        result = cli_runner.invoke(
-            cmj_analyze, [str(minimal_video), "--quality", "fast"]
-        )
+        result = cli_runner.invoke(cmj_analyze, [str(minimal_video), "--quality", "fast"])
 
         # Direct path should work
         assert result.exception is None or result.exit_code != 0
@@ -505,9 +487,7 @@ class TestCMJCLIExceptionHandling:
         invalid_video = tmp_path / "invalid.mp4"
         invalid_video.write_text("this is not a video")
 
-        result = cli_runner.invoke(
-            cmj_analyze, [str(invalid_video), "--quality", "fast"]
-        )
+        result = cli_runner.invoke(cmj_analyze, [str(invalid_video), "--quality", "fast"])
 
         # Should fail with non-zero exit code
         assert result.exit_code != 0
@@ -529,9 +509,7 @@ class TestCMJCLIExceptionHandling:
         assert result.exit_code != 0
 
     @skip_in_ci
-    def test_batch_video_processing_exception(
-        self, cli_runner: CliRunner, tmp_path: Path
-    ) -> None:
+    def test_batch_video_processing_exception(self, cli_runner: CliRunner, tmp_path: Path) -> None:
         """Test exception handling in batch mode continues processing."""
         # Create one valid and one invalid video
         valid_video = tmp_path / "valid.mp4"
@@ -558,9 +536,7 @@ class TestCMJCLIExceptionHandling:
         assert result.exception is None or result.exit_code != 0
 
     @skip_in_ci
-    def test_batch_with_all_invalid_videos(
-        self, cli_runner: CliRunner, tmp_path: Path
-    ) -> None:
+    def test_batch_with_all_invalid_videos(self, cli_runner: CliRunner, tmp_path: Path) -> None:
         """Test batch mode when all videos are invalid."""
         invalid1 = tmp_path / "invalid1.mp4"
         invalid2 = tmp_path / "invalid2.mp4"
@@ -605,13 +581,9 @@ class TestCMJCLIOutputResults:
                 data = json.load(f)
                 assert isinstance(data, dict)
 
-    def test_output_results_to_stdout(
-        self, cli_runner: CliRunner, minimal_video: Path
-    ) -> None:
+    def test_output_results_to_stdout(self, cli_runner: CliRunner, minimal_video: Path) -> None:
         """Test JSON output to stdout when no file specified."""
-        result = cli_runner.invoke(
-            cmj_analyze, [str(minimal_video), "--quality", "fast"]
-        )
+        result = cli_runner.invoke(cmj_analyze, [str(minimal_video), "--quality", "fast"])
 
         # If successful, stdout should contain JSON
         if result.exit_code == 0:
@@ -622,9 +594,7 @@ class TestCMJCLIOutputResults:
         self, cli_runner: CliRunner, minimal_video: Path
     ) -> None:
         """Test output results contain expected metric fields."""
-        result = cli_runner.invoke(
-            cmj_analyze, [str(minimal_video), "--quality", "fast"]
-        )
+        result = cli_runner.invoke(cmj_analyze, [str(minimal_video), "--quality", "fast"])
 
         # If successful, check for expected metric output
         if result.exit_code == 0:
@@ -647,9 +617,7 @@ class TestCMJCLIQualityPresets:
         self, cli_runner: CliRunner, minimal_video: Path
     ) -> None:
         """Test quality presets are case-insensitive."""
-        result = cli_runner.invoke(
-            cmj_analyze, [str(minimal_video), "--quality", "FAST"]
-        )
+        result = cli_runner.invoke(cmj_analyze, [str(minimal_video), "--quality", "FAST"])
 
         # Should accept uppercase and convert to lowercase
         assert "Invalid quality" not in result.output
@@ -658,9 +626,7 @@ class TestCMJCLIQualityPresets:
         self, cli_runner: CliRunner, minimal_video: Path
     ) -> None:
         """Test invalid quality preset is rejected."""
-        result = cli_runner.invoke(
-            cmj_analyze, [str(minimal_video), "--quality", "supersonic"]
-        )
+        result = cli_runner.invoke(cmj_analyze, [str(minimal_video), "--quality", "supersonic"])
 
         # Should fail with invalid choice error
         assert result.exit_code != 0
@@ -670,9 +636,7 @@ class TestCMJCLIQualityPresets:
 class TestCMJCLIExpertParameters:
     """Test expert parameter validation and usage."""
 
-    def test_all_expert_parameters(
-        self, cli_runner: CliRunner, minimal_video: Path
-    ) -> None:
+    def test_all_expert_parameters(self, cli_runner: CliRunner, minimal_video: Path) -> None:
         """Test all expert parameters are accepted and passed through."""
         result = cli_runner.invoke(
             cmj_analyze,
@@ -800,9 +764,7 @@ class TestCMJCLIDirectFilePath:
         self, cli_runner: CliRunner, minimal_video: Path
     ) -> None:
         """Test direct file path (not glob) is collected properly."""
-        result = cli_runner.invoke(
-            cmj_analyze, [str(minimal_video), "--quality", "fast"]
-        )
+        result = cli_runner.invoke(cmj_analyze, [str(minimal_video), "--quality", "fast"])
 
         # Direct path should be processed
         assert result.exception is None or result.exit_code != 0
@@ -911,16 +873,12 @@ class TestCMJCLIBatchExceptionContinuation:
 class TestCMJCLISingleProcessingException:
     """Test single processing exception paths."""
 
-    def test_single_processing_invalid_video(
-        self, cli_runner: CliRunner, tmp_path: Path
-    ) -> None:
+    def test_single_processing_invalid_video(self, cli_runner: CliRunner, tmp_path: Path) -> None:
         """Test single processing handles invalid video gracefully."""
         invalid_video = tmp_path / "invalid.mp4"
         invalid_video.write_text("not a video")
 
-        result = cli_runner.invoke(
-            cmj_analyze, [str(invalid_video), "--quality", "fast"]
-        )
+        result = cli_runner.invoke(cmj_analyze, [str(invalid_video), "--quality", "fast"])
 
         # Should fail gracefully
         assert result.exit_code != 0
@@ -947,9 +905,7 @@ class TestCMJCLISingleProcessingException:
         with patch("kinemotion.cmj.cli.process_cmj_video") as mock_api:
             mock_api.side_effect = RuntimeError("API error")
 
-            result = cli_runner.invoke(
-                cmj_analyze, [str(minimal_video), "--quality", "fast"]
-            )
+            result = cli_runner.invoke(cmj_analyze, [str(minimal_video), "--quality", "fast"])
 
             # Should fail with exit code 1
             assert result.exit_code == 1
@@ -1017,9 +973,7 @@ class TestCMJCLIPathExpansion:
         self, cli_runner: CliRunner, minimal_video: Path
     ) -> None:
         """Test that existing direct paths are collected (not glob expanded)."""
-        result = cli_runner.invoke(
-            cmj_analyze, [str(minimal_video), "--quality", "fast"]
-        )
+        result = cli_runner.invoke(cmj_analyze, [str(minimal_video), "--quality", "fast"])
 
         # Direct path should be processed
         assert result.exception is None or result.exit_code != 0
@@ -1033,9 +987,7 @@ class TestCMJCLIPathExpansion:
         # Nonexistent single file should fail (no glob match and file not found)
         assert result.exit_code != 0
 
-    def test_direct_file_path_exists_branch(
-        self, cli_runner: CliRunner, tmp_path: Path
-    ) -> None:
+    def test_direct_file_path_exists_branch(self, cli_runner: CliRunner, tmp_path: Path) -> None:
         """Test direct file path that exists but doesn't glob expand."""
         # Create a video with a filename that won't glob-expand
         video = tmp_path / "test_video.mp4"

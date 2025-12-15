@@ -45,9 +45,7 @@ def test_find_standing_phase() -> None:
         ]
     )
 
-    velocities = compute_velocity_from_derivative(
-        positions, window_length=5, polyorder=2
-    )
+    velocities = compute_velocity_from_derivative(positions, window_length=5, polyorder=2)
 
     standing_end = find_standing_phase(
         positions, velocities, fps, min_standing_duration=0.5, velocity_threshold=0.005
@@ -70,9 +68,7 @@ def test_find_countermovement_start() -> None:
         ]
     )
 
-    velocities = compute_velocity_from_derivative(
-        positions, window_length=5, polyorder=2
-    )
+    velocities = compute_velocity_from_derivative(positions, window_length=5, polyorder=2)
 
     eccentric_start = find_countermovement_start(
         velocities,
@@ -254,9 +250,7 @@ def test_find_cmj_takeoff_from_velocity_peak_normal() -> None:
     lowest_point_frame = 0
     fps = 30.0
 
-    result = find_cmj_takeoff_from_velocity_peak(
-        positions, velocities, lowest_point_frame, fps
-    )
+    result = find_cmj_takeoff_from_velocity_peak(positions, velocities, lowest_point_frame, fps)
 
     # Should find the peak around frame 11
     assert isinstance(result, float)
@@ -270,9 +264,7 @@ def test_find_cmj_takeoff_from_velocity_peak_search_window_too_short() -> None:
     lowest_point_frame = 10  # Beyond array length
     fps = 30.0
 
-    result = find_cmj_takeoff_from_velocity_peak(
-        positions, velocities, lowest_point_frame, fps
-    )
+    result = find_cmj_takeoff_from_velocity_peak(positions, velocities, lowest_point_frame, fps)
 
     # Should return lowest_point_frame + 1 when search window too short
     assert result == float(lowest_point_frame + 1)
@@ -286,9 +278,7 @@ def test_find_cmj_takeoff_from_velocity_peak_at_start() -> None:
     lowest_point_frame = 0
     fps = 30.0
 
-    result = find_cmj_takeoff_from_velocity_peak(
-        positions, velocities, lowest_point_frame, fps
-    )
+    result = find_cmj_takeoff_from_velocity_peak(positions, velocities, lowest_point_frame, fps)
 
     # Should find peak at or near frame 0
     assert isinstance(result, float)
@@ -302,9 +292,7 @@ def test_find_cmj_takeoff_from_velocity_peak_constant_velocity() -> None:
     lowest_point_frame = 5
     fps = 30.0
 
-    result = find_cmj_takeoff_from_velocity_peak(
-        positions, velocities, lowest_point_frame, fps
-    )
+    result = find_cmj_takeoff_from_velocity_peak(positions, velocities, lowest_point_frame, fps)
 
     # Should find first frame (argmin of constant array returns 0)
     assert isinstance(result, float)
@@ -517,13 +505,9 @@ def test_phase_progression_ordering_valid_cmj() -> None:
 
     # Core validation: phases must be in strict temporal order
     if standing is not None:
-        assert standing < lowest, (
-            f"Standing ({standing}) must end before lowest point ({lowest})"
-        )
+        assert standing < lowest, f"Standing ({standing}) must end before lowest point ({lowest})"
 
-    assert lowest < takeoff, (
-        f"Lowest point ({lowest}) must be before takeoff ({takeoff})"
-    )
+    assert lowest < takeoff, f"Lowest point ({lowest}) must be before takeoff ({takeoff})"
     assert takeoff < landing, f"Takeoff ({takeoff}) must be before landing ({landing})"
 
 
@@ -680,9 +664,7 @@ def test_find_lowest_frame_velocity_zero_crossing() -> None:
         [
             np.ones(30) * 1.0,  # Standing
             np.linspace(1.0, 1.5, 40),  # Down phase (eccentric)
-            np.linspace(
-                1.5, 0.6, 30
-            ),  # Up phase (concentric), crossing around frame 70
+            np.linspace(1.5, 0.6, 30),  # Up phase (concentric), crossing around frame 70
             np.linspace(0.6, -0.1, 20),  # Flight
         ]
     )
@@ -761,13 +743,9 @@ def test_find_standing_end_low_velocity_detection() -> None:
     lowest_point = 70.0  # Lowest point will be at frame 70
     velocities = np.concatenate(
         [
-            np.random.uniform(
-                -0.002, 0.002, 30
-            ),  # Standing: very low noise (frames 0-30)
+            np.random.uniform(-0.002, 0.002, 30),  # Standing: very low noise (frames 0-30)
             np.ones(20) * 0.001,  # Still standing (frames 30-50)
-            np.linspace(
-                0.001, 0.08, 20
-            ),  # Transition to downward motion (frames 50-70)
+            np.linspace(0.001, 0.08, 20),  # Transition to downward motion (frames 50-70)
             np.ones(50) * 0.08,  # Strong downward motion
         ]
     )
@@ -899,9 +877,7 @@ def test_deep_squat_cmj_recreational_athlete() -> None:
     # Verify phase sequence
     if standing is not None:
         assert standing < lowest, "Standing must end before lowest point"
-        assert 0 <= standing <= 15, (
-            f"Standing end {standing} should be early (0-15 frames)"
-        )
+        assert 0 <= standing <= 15, f"Standing end {standing} should be early (0-15 frames)"
 
     assert lowest < takeoff, "Lowest point must be before takeoff"
     assert takeoff < landing, "Takeoff must be before landing"
@@ -912,8 +888,7 @@ def test_deep_squat_cmj_recreational_athlete() -> None:
         eccentric_frames = lowest - standing
         eccentric_time = eccentric_frames / fps
         assert 0.4 <= eccentric_time <= 0.7, (
-            f"Recreational eccentric {eccentric_time}s not realistic "
-            f"(expected 0.4-0.7s)"
+            f"Recreational eccentric {eccentric_time}s not realistic (expected 0.4-0.7s)"
         )
 
     # Contact time (lowest to takeoff): 0.4-0.65s for recreational
@@ -1006,9 +981,7 @@ def test_explosive_cmj_elite_athlete() -> None:
 
     # Verify that elite contact time is significantly shorter than recreational
     # This is a key differentiator: elite athletes have better power/weight ratio
-    assert contact_time < 0.50, (
-        "Elite contact time should be notably shorter than recreational"
-    )
+    assert contact_time < 0.50, "Elite contact time should be notably shorter than recreational"
 
 
 def test_failed_jump_incomplete_countermovement() -> None:
@@ -1066,8 +1039,7 @@ def test_failed_jump_incomplete_countermovement() -> None:
 
         # For incomplete jump, both should be very low
         assert contact_time < 0.40 or flight_time < 0.35, (
-            f"Incomplete jump detected as normal: contact={contact_time}s, "
-            f"flight={flight_time}s"
+            f"Incomplete jump detected as normal: contact={contact_time}s, flight={flight_time}s"
         )
     # If result is None, that's also acceptable - detection is uncertain
 
@@ -1426,9 +1398,7 @@ def test_cmj_joint_compensation_detection() -> None:
 
     # Should detect compensation (multiple joints at boundaries)
     compensation_issues = [
-        issue
-        for issue in result_compensatory.issues
-        if issue.metric == "joint_compensation"
+        issue for issue in result_compensatory.issues if issue.metric == "joint_compensation"
     ]
     # May detect compensation if profile thresholds are met
     if len(compensation_issues) > 0:

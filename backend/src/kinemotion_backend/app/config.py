@@ -31,9 +31,7 @@ class Settings:
     R2_SECRET_KEY: str = os.getenv("R2_SECRET_KEY", "")
     R2_BUCKET_NAME: str = os.getenv("R2_BUCKET_NAME", "kinemotion")
     R2_PUBLIC_BASE_URL: str = os.getenv("R2_PUBLIC_BASE_URL", "").rstrip("/")
-    R2_PRESIGN_EXPIRATION_S: int = int(
-        os.getenv("R2_PRESIGN_EXPIRATION_S", "604800")
-    )  # 7 days
+    R2_PRESIGN_EXPIRATION_S: int = int(os.getenv("R2_PRESIGN_EXPIRATION_S", "604800"))  # 7 days
 
     # Security settings
     TESTING: bool = os.getenv("TESTING", "").lower() == "true"

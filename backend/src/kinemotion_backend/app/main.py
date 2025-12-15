@@ -114,18 +114,14 @@ def _add_exception_handlers(app: FastAPI) -> None:
     from fastapi import HTTPException, Request
     from fastapi.responses import JSONResponse
 
-    async def http_exception_handler(
-        request: Request, exc: HTTPException
-    ) -> JSONResponse:
+    async def http_exception_handler(request: Request, exc: HTTPException) -> JSONResponse:
         """Handle HTTP exceptions."""
         return JSONResponse(
             status_code=exc.status_code,
             content={"message": exc.detail},
         )
 
-    async def general_exception_handler(
-        request: Request, exc: Exception
-    ) -> JSONResponse:
+    async def general_exception_handler(request: Request, exc: Exception) -> JSONResponse:
         """Handle general exceptions."""
         logger.error(f"Unhandled exception: {exc}", exc_info=True)
         return JSONResponse(

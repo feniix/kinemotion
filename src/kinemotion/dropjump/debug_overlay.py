@@ -150,9 +150,7 @@ class DebugOverlayRenderer(BaseDebugOverlayRenderer):
                     self._draw_foot_visualization(annotated, landmarks, contact_state)
 
             # Draw contact state
-            state_color = (
-                (0, 255, 0) if contact_state == ContactState.ON_GROUND else (0, 0, 255)
-            )
+            state_color = (0, 255, 0) if contact_state == ContactState.ON_GROUND else (0, 0, 255)
             cv2.putText(
                 annotated,
                 f"State: {contact_state.value}",

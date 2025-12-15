@@ -118,9 +118,7 @@ async def get_user_analysis_sessions(
             )
 
         db_client = get_database_client()
-        sessions = await db_client.get_user_analysis_sessions(
-            user_id=user_id, limit=limit
-        )
+        sessions = await db_client.get_user_analysis_sessions(user_id=user_id, limit=limit)
 
         logger.info(
             "user_analysis_sessions_api_retrieved",
@@ -164,9 +162,7 @@ async def get_analysis_session(
     """
     try:
         db_client = get_database_client()
-        session = await db_client.get_analysis_session(
-            session_id=session_id, user_id=user_id
-        )
+        session = await db_client.get_analysis_session(session_id=session_id, user_id=user_id)
 
         if not session:
             raise HTTPException(
@@ -185,9 +181,7 @@ async def get_analysis_session(
         )
 
         session_with_feedback = AnalysisSessionWithFeedback(**session)
-        session_with_feedback.feedback = [
-            CoachFeedbackResponse(**fb) for fb in feedback
-        ]
+        session_with_feedback.feedback = [CoachFeedbackResponse(**fb) for fb in feedback]
 
         return session_with_feedback
 

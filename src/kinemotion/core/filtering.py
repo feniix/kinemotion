@@ -147,9 +147,7 @@ def remove_outliers(
 
                 # Interpolate
                 t = (idx - idx_before) / (idx_after - idx_before)
-                positions_clean[idx] = (
-                    positions[idx_before] * (1 - t) + positions[idx_after] * t
-                )
+                positions_clean[idx] = positions[idx_before] * (1 - t) + positions[idx_after] * t
             elif len(valid_before) > 0:
                 # Use last valid value
                 positions_clean[idx] = positions[valid_before[-1]]
@@ -219,9 +217,7 @@ def reject_outliers(
 
     # Remove/replace outliers
     if interpolate:
-        cleaned_positions = remove_outliers(
-            positions, outlier_mask, method="interpolate"
-        )
+        cleaned_positions = remove_outliers(positions, outlier_mask, method="interpolate")
     else:
         cleaned_positions = positions.copy()
 

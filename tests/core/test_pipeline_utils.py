@@ -168,9 +168,7 @@ def test_process_all_frames_resizing() -> None:
     tracker.process_frame.return_value = {}
 
     # max_debug_dim=500 -> should resize to 500x500
-    debug_frames, _, _ = process_all_frames(
-        video, tracker, verbose=False, max_debug_dim=500
-    )
+    debug_frames, _, _ = process_all_frames(video, tracker, verbose=False, max_debug_dim=500)
 
     assert debug_frames[0].shape == (500, 500, 3)
 
@@ -181,9 +179,7 @@ def test_apply_smoothing_options() -> None:
     params.outlier_rejection = True
     params.bilateral_filter = True
 
-    with patch(
-        "kinemotion.core.pipeline_utils.smooth_landmarks_advanced"
-    ) as mock_smooth:
+    with patch("kinemotion.core.pipeline_utils.smooth_landmarks_advanced") as mock_smooth:
         apply_smoothing(landmarks, params, verbose=True)
         mock_smooth.assert_called_once()
 

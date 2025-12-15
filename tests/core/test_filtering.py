@@ -20,9 +20,7 @@ def test_detect_outliers_ransac_finds_glitches() -> None:
     positions = np.array([0.5 + 0.0005 * i for i in range(30)])  # Slow linear change
     positions[15] = 0.7  # Large glitch in the middle (0.2 deviation)
 
-    outliers = detect_outliers_ransac(
-        positions, window_size=15, threshold=0.03, min_inliers=0.7
-    )
+    outliers = detect_outliers_ransac(positions, window_size=15, threshold=0.03, min_inliers=0.7)
 
     # Should detect at least some outliers (the algorithm is conservative)
     # The glitch should create detectable deviation
@@ -39,9 +37,7 @@ def test_detect_outliers_ransac_handles_clean_data() -> None:
     positions = np.array([0.5 + 0.001 * i**2 for i in range(30)])
     positions += rng.normal(0, 0.001, 30)  # Small noise
 
-    outliers = detect_outliers_ransac(
-        positions, window_size=15, threshold=0.02, min_inliers=0.7
-    )
+    outliers = detect_outliers_ransac(positions, window_size=15, threshold=0.02, min_inliers=0.7)
 
     # Should not detect outliers in clean data
     assert np.sum(outliers) <= 2, "Clean data should have minimal outliers"
@@ -171,12 +167,8 @@ def test_adaptive_smooth_window_varies_with_velocity() -> None:
     )
 
     # Stationary phases should have larger windows
-    assert np.mean(windows[:20]) > np.mean(windows[20:40]), (
-        "Slow motion should use larger windows"
-    )
-    assert np.mean(windows[40:]) > np.mean(windows[20:40]), (
-        "Slow motion should use larger windows"
-    )
+    assert np.mean(windows[:20]) > np.mean(windows[20:40]), "Slow motion should use larger windows"
+    assert np.mean(windows[40:]) > np.mean(windows[20:40]), "Slow motion should use larger windows"
 
     # All windows should be odd
     assert np.all(windows % 2 == 1), "All windows should be odd"
@@ -187,9 +179,7 @@ def test_adaptive_smooth_window_bounds() -> None:
     # Very fast motion
     positions = np.linspace(0, 1, 50)
 
-    windows = adaptive_smooth_window(
-        positions, base_window=5, min_window=3, max_window=11
-    )
+    windows = adaptive_smooth_window(positions, base_window=5, min_window=3, max_window=11)
 
     # All windows should be within bounds
     assert np.all(windows >= 3), "Windows should respect minimum"
@@ -213,9 +203,7 @@ def test_bilateral_temporal_filter_preserves_edges() -> None:
     post_transition = filtered[transition_idx + 2]
     transition_magnitude = abs(pre_transition - post_transition)
 
-    assert transition_magnitude > 0.2, (
-        "Bilateral filter should preserve sharp transitions"
-    )
+    assert transition_magnitude > 0.2, "Bilateral filter should preserve sharp transitions"
 
 
 def test_bilateral_temporal_filter_smooths_noise() -> None:

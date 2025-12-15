@@ -32,9 +32,7 @@ def get_video_hash_seed(video_path: str) -> int:
     return int(hash_value[:8], 16)
 
 
-def set_deterministic_mode(
-    seed: int | None = None, video_path: str | None = None
-) -> None:
+def set_deterministic_mode(seed: int | None = None, video_path: str | None = None) -> None:
     """Set random seeds for reproducible analysis.
 
     Sets seeds for:

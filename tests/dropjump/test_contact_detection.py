@@ -143,9 +143,7 @@ def test_extract_foot_positions_and_visibilities():
         },
     ]
 
-    positions, visibilities = extract_foot_positions_and_visibilities(
-        smoothed_landmarks
-    )
+    positions, visibilities = extract_foot_positions_and_visibilities(smoothed_landmarks)
 
     assert len(positions) == 4
     assert len(visibilities) == 4
@@ -214,9 +212,7 @@ def test_detect_drop_start_too_short_video():
     positions = np.ones(20) * 0.3  # Only 20 frames
     fps = 30.0
 
-    drop_frame = detect_drop_start(
-        positions, fps, min_stationary_duration=1.0, debug=True
-    )
+    drop_frame = detect_drop_start(positions, fps, min_stationary_duration=1.0, debug=True)
 
     # Should return 0 for too-short video
     assert drop_frame == 0

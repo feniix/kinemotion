@@ -75,15 +75,11 @@ class TestExtractLandmarkCoordinates:
             {"left_ankle": (0.52, 0.62, 0.9)},  # Missing right_ankle
         ]
 
-        left_x, _, left_frames = _extract_landmark_coordinates(
-            landmark_sequence, "left_ankle"
-        )
+        left_x, _, left_frames = _extract_landmark_coordinates(landmark_sequence, "left_ankle")
         assert left_x == [0.5, 0.52]
         assert left_frames == [0, 2]
 
-        right_x, _, right_frames = _extract_landmark_coordinates(
-            landmark_sequence, "right_ankle"
-        )
+        right_x, _, right_frames = _extract_landmark_coordinates(landmark_sequence, "right_ankle")
         assert right_x == [0.55, 0.56]
         assert right_frames == [0, 1]
 
@@ -306,9 +302,7 @@ class TestSmoothLandmarks:
         landmark_sequence = []
 
         for _i in range(n_frames):
-            landmark_sequence.append(
-                {"left_ankle": (0.5, 0.5 + rng.normal(0, 0.01), 0.9)}
-            )
+            landmark_sequence.append({"left_ankle": (0.5, 0.5 + rng.normal(0, 0.01), 0.9)})
 
         # Pass even window_length
         smoothed = smooth_landmarks(landmark_sequence, window_length=6, polyorder=2)
@@ -321,9 +315,7 @@ class TestComputeVelocity:
 
     def test_compute_velocity_basic(self) -> None:
         """Test basic velocity computation."""
-        positions = np.array(
-            [[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0], [4.0, 0.0]]
-        )
+        positions = np.array([[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0], [4.0, 0.0]])
         fps = 30.0
 
         velocity = compute_velocity(positions, fps)
@@ -367,9 +359,7 @@ class TestComputeVelocity:
 
     def test_compute_velocity_even_smooth_window(self) -> None:
         """Test that even smooth_window is adjusted to odd."""
-        positions = np.array(
-            [[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0], [4.0, 0.0]]
-        )
+        positions = np.array([[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0], [4.0, 0.0]])
         fps = 30.0
 
         # Pass even smooth_window
@@ -385,9 +375,7 @@ class TestComputeVelocityFromDerivative:
         """Test basic velocity computation from derivative."""
         positions = np.array([0.0, 0.1, 0.2, 0.3, 0.4, 0.5])
 
-        velocity = compute_velocity_from_derivative(
-            positions, window_length=5, polyorder=2
-        )
+        velocity = compute_velocity_from_derivative(positions, window_length=5, polyorder=2)
 
         assert len(velocity) == len(positions)
         assert np.all(velocity >= 0)  # Absolute value
@@ -397,9 +385,7 @@ class TestComputeVelocityFromDerivative:
         positions = np.array([0.0, 0.1, 0.2])
 
         # window_length=5 > 3, so uses fallback
-        velocity = compute_velocity_from_derivative(
-            positions, window_length=5, polyorder=2
-        )
+        velocity = compute_velocity_from_derivative(positions, window_length=5, polyorder=2)
 
         assert len(velocity) == len(positions)
 
@@ -407,9 +393,7 @@ class TestComputeVelocityFromDerivative:
         """Test that even window_length is adjusted to odd."""
         positions = np.linspace(0, 2, 30)
 
-        velocity = compute_velocity_from_derivative(
-            positions, window_length=6, polyorder=2
-        )
+        velocity = compute_velocity_from_derivative(positions, window_length=6, polyorder=2)
 
         assert len(velocity) == len(positions)
 
@@ -421,9 +405,7 @@ class TestComputeVelocityFromDerivative:
         a = 2.0  # acceleration
         positions = 0.5 * a * t**2
 
-        velocity = compute_velocity_from_derivative(
-            positions, window_length=9, polyorder=3
-        )
+        velocity = compute_velocity_from_derivative(positions, window_length=9, polyorder=3)
 
         assert len(velocity) == len(positions)
         assert np.all(velocity >= 0)
@@ -511,9 +493,7 @@ class TestSmoothLandmarksAdvanced:
         landmark_sequence = []
 
         for _i in range(n_frames):
-            landmark_sequence.append(
-                {"left_ankle": (0.5, 0.5 + rng.normal(0, 0.01), 0.9)}
-            )
+            landmark_sequence.append({"left_ankle": (0.5, 0.5 + rng.normal(0, 0.01), 0.9)})
 
         smoothed = smooth_landmarks_advanced(
             landmark_sequence,
@@ -532,9 +512,7 @@ class TestSmoothLandmarksAdvanced:
         landmark_sequence = []
 
         for _i in range(n_frames):
-            landmark_sequence.append(
-                {"left_ankle": (0.5, 0.5 + rng.normal(0, 0.01), 0.9)}
-            )
+            landmark_sequence.append({"left_ankle": (0.5, 0.5 + rng.normal(0, 0.01), 0.9)})
 
         smoothed = smooth_landmarks_advanced(
             landmark_sequence,
@@ -554,9 +532,7 @@ class TestSmoothLandmarksAdvanced:
         landmark_sequence = []
 
         for _i in range(n_frames):
-            landmark_sequence.append(
-                {"left_ankle": (0.5, 0.5 + rng.normal(0, 0.01), 0.9)}
-            )
+            landmark_sequence.append({"left_ankle": (0.5, 0.5 + rng.normal(0, 0.01), 0.9)})
 
         smoothed = smooth_landmarks_advanced(
             landmark_sequence,
@@ -578,9 +554,7 @@ class TestSmoothLandmarksAdvanced:
             {"left_ankle": (0.51, 0.61, 0.9)},
         ]
 
-        smoothed = smooth_landmarks_advanced(
-            landmark_sequence, window_length=5, polyorder=2
-        )
+        smoothed = smooth_landmarks_advanced(landmark_sequence, window_length=5, polyorder=2)
 
         assert smoothed == landmark_sequence
 
@@ -591,13 +565,9 @@ class TestSmoothLandmarksAdvanced:
         landmark_sequence = []
 
         for _i in range(n_frames):
-            landmark_sequence.append(
-                {"left_ankle": (0.5, 0.5 + rng.normal(0, 0.01), 0.9)}
-            )
+            landmark_sequence.append({"left_ankle": (0.5, 0.5 + rng.normal(0, 0.01), 0.9)})
 
-        smoothed = smooth_landmarks_advanced(
-            landmark_sequence, window_length=6, polyorder=2
-        )
+        smoothed = smooth_landmarks_advanced(landmark_sequence, window_length=6, polyorder=2)
 
         assert len(smoothed) == n_frames
 
@@ -608,9 +578,7 @@ class TestSmoothLandmarksAdvanced:
         landmark_sequence = []
 
         for _i in range(n_frames):
-            landmark_sequence.append(
-                {"left_ankle": (0.5, 0.5 + rng.normal(0, 0.01), 0.9)}
-            )
+            landmark_sequence.append({"left_ankle": (0.5, 0.5 + rng.normal(0, 0.01), 0.9)})
 
         smoothed = smooth_landmarks_advanced(
             landmark_sequence,
@@ -697,9 +665,7 @@ class TestUncoveredBranches:
         ]
 
         window_length = 5
-        smoothed = smooth_landmarks(
-            landmark_sequence, window_length=window_length, polyorder=2
-        )
+        smoothed = smooth_landmarks(landmark_sequence, window_length=window_length, polyorder=2)
 
         # left_ankle should be smoothed (6 frames >= 5)
         assert len(smoothed) == 6
@@ -868,12 +834,8 @@ def test_velocity_from_derivative_polyorder() -> None:
     positions += rng.normal(0, 0.005, len(positions))  # Add noise
 
     # Compute velocity with different polynomial orders
-    velocity_2 = compute_velocity_from_derivative(
-        positions, window_length=5, polyorder=2
-    )
-    velocity_3 = compute_velocity_from_derivative(
-        positions, window_length=7, polyorder=3
-    )
+    velocity_2 = compute_velocity_from_derivative(positions, window_length=5, polyorder=2)
+    velocity_3 = compute_velocity_from_derivative(positions, window_length=7, polyorder=3)
 
     # Both should produce reasonable velocities
     assert len(velocity_2) == len(positions)
@@ -885,9 +847,7 @@ def test_velocity_from_derivative_polyorder() -> None:
 
     # Results should differ slightly due to different polynomial fits
     difference = np.mean(np.abs(velocity_2 - velocity_3))
-    assert difference > 0.0001, (
-        "Different polyorders should produce different velocities"
-    )
+    assert difference > 0.0001, "Different polyorders should produce different velocities"
 
 
 def test_acceleration_from_derivative_polyorder() -> None:
@@ -899,12 +859,8 @@ def test_acceleration_from_derivative_polyorder() -> None:
     positions += rng.normal(0, 0.003, len(positions))  # Add noise
 
     # Compute acceleration with different polynomial orders
-    accel_2 = compute_acceleration_from_derivative(
-        positions, window_length=5, polyorder=2
-    )
-    accel_3 = compute_acceleration_from_derivative(
-        positions, window_length=7, polyorder=3
-    )
+    accel_2 = compute_acceleration_from_derivative(positions, window_length=5, polyorder=2)
+    accel_3 = compute_acceleration_from_derivative(positions, window_length=7, polyorder=3)
 
     # Both should produce acceleration arrays
     assert len(accel_2) == len(positions)
@@ -930,15 +886,11 @@ def test_polyorder_validation() -> None:
     positions = rng.random(50)
 
     # polyorder=2 with window=5 should work (2 < 5)
-    velocity_valid = compute_velocity_from_derivative(
-        positions, window_length=5, polyorder=2
-    )
+    velocity_valid = compute_velocity_from_derivative(positions, window_length=5, polyorder=2)
     assert len(velocity_valid) == len(positions)
 
     # polyorder=4 with window=7 should work (4 < 7)
-    velocity_valid2 = compute_velocity_from_derivative(
-        positions, window_length=7, polyorder=4
-    )
+    velocity_valid2 = compute_velocity_from_derivative(positions, window_length=7, polyorder=4)
     assert len(velocity_valid2) == len(positions)
 
 
@@ -949,12 +901,8 @@ def test_polyorder_higher_captures_more_complexity() -> None:
     positions = 0.5 + 0.1 * np.sin(t)
 
     # Compute velocity (should approximate cosine)
-    velocity_2 = compute_velocity_from_derivative(
-        positions, window_length=9, polyorder=2
-    )
-    velocity_4 = compute_velocity_from_derivative(
-        positions, window_length=9, polyorder=4
-    )
+    velocity_2 = compute_velocity_from_derivative(positions, window_length=9, polyorder=2)
+    velocity_4 = compute_velocity_from_derivative(positions, window_length=9, polyorder=4)
 
     # Expected velocity from derivative of sine: 0.1 * cos(t)
     expected_velocity = np.abs(0.1 * np.cos(t))

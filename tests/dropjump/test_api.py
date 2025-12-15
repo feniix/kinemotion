@@ -408,9 +408,7 @@ def test_apply_expert_overrides_partial() -> None:
     assert result.visibility_threshold == 0.5  # Unchanged
 
 
-def test_process_video_verbose_mode(
-    sample_video_path: str, capsys: pytest.CaptureFixture
-) -> None:
+def test_process_video_verbose_mode(sample_video_path: str, capsys: pytest.CaptureFixture) -> None:
     """Test that verbose mode prints parameter information."""
     process_dropjump_video(video_path=sample_video_path, quality="fast", verbose=True)
 

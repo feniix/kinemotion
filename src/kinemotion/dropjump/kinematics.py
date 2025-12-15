@@ -87,17 +87,11 @@ class DropJumpMetrics:
             Dictionary containing formatted metric values.
         """
         return {
-            "ground_contact_time_ms": format_float_metric(
-                self.ground_contact_time, 1000, 2
-            ),
+            "ground_contact_time_ms": format_float_metric(self.ground_contact_time, 1000, 2),
             "flight_time_ms": format_float_metric(self.flight_time, 1000, 2),
             "jump_height_m": format_float_metric(self.jump_height, 1, 3),
-            "jump_height_kinematic_m": format_float_metric(
-                self.jump_height_kinematic, 1, 3
-            ),
-            "jump_height_trajectory_m": format_float_metric(
-                self.jump_height_trajectory_m, 1, 3
-            ),
+            "jump_height_kinematic_m": format_float_metric(self.jump_height_kinematic, 1, 3),
+            "jump_height_trajectory_m": format_float_metric(self.jump_height_trajectory_m, 1, 3),
             "jump_height_trajectory_normalized": format_float_metric(
                 self.jump_height_trajectory, 1, 4
             ),
@@ -109,15 +103,11 @@ class DropJumpMetrics:
             "contact_start_frame_precise": format_float_metric(
                 self.contact_start_frame_precise, 1, 3
             ),
-            "contact_end_frame_precise": format_float_metric(
-                self.contact_end_frame_precise, 1, 3
-            ),
+            "contact_end_frame_precise": format_float_metric(self.contact_end_frame_precise, 1, 3),
             "flight_start_frame_precise": format_float_metric(
                 self.flight_start_frame_precise, 1, 3
             ),
-            "flight_end_frame_precise": format_float_metric(
-                self.flight_end_frame_precise, 1, 3
-            ),
+            "flight_end_frame_precise": format_float_metric(self.flight_end_frame_precise, 1, 3),
         }
 
     def _build_metadata_dict(self) -> dict:
@@ -183,9 +173,7 @@ def _filter_phases_after_drop(
     phases: list[tuple[int, int, ContactState]],
     interpolated_phases: list[tuple[float, float, ContactState]],
     drop_start_frame: int,
-) -> tuple[
-    list[tuple[int, int, ContactState]], list[tuple[float, float, ContactState]]
-]:
+) -> tuple[list[tuple[int, int, ContactState]], list[tuple[float, float, ContactState]]]:
     """Filter phases to only include those after drop start.
 
     Args:
@@ -203,9 +191,7 @@ def _filter_phases_after_drop(
         (start, end, state) for start, end, state in phases if end >= drop_start_frame
     ]
     filtered_interpolated = [
-        (start, end, state)
-        for start, end, state in interpolated_phases
-        if end >= drop_start_frame
+        (start, end, state) for start, end, state in interpolated_phases if end >= drop_start_frame
     ]
     return filtered_phases, filtered_interpolated
 
@@ -268,9 +254,7 @@ def _identify_main_contact_phase(
 
         # Find ground phase after first air phase
         ground_after_air = [
-            (start, end, idx)
-            for start, end, idx in ground_phases
-            if idx > first_air_idx
+            (start, end, idx) for start, end, idx in ground_phases if idx > first_air_idx
         ]
 
         if ground_after_air and first_ground_idx < first_air_idx:
@@ -467,9 +451,7 @@ def calculate_drop_jump_metrics(
         )
 
     # Store drop start frame in metrics
-    metrics.drop_start_frame = (
-        drop_start_frame_value if drop_start_frame_value > 0 else None
-    )
+    metrics.drop_start_frame = drop_start_frame_value if drop_start_frame_value > 0 else None
 
     # Find contact phases
     with timer.measure("dj_find_phases"):

@@ -110,9 +110,7 @@ class SupabaseAuth:
         # Fallback: Verify via Supabase Auth server (works for all projects)
         return self._verify_via_auth_server(token, start_time)
 
-    def _verify_via_auth_server(
-        self, token: str, overall_start_time: float
-    ) -> dict[str, Any]:
+    def _verify_via_auth_server(self, token: str, overall_start_time: float) -> dict[str, Any]:
         """Verify token by calling Supabase Auth server.
 
         This is the recommended fallback for HS256 tokens per Supabase docs.

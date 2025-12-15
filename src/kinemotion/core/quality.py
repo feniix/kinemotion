@@ -59,12 +59,8 @@ class QualityAssessment:
                 "tracking_stable": self.quality_indicators.tracking_stable,
                 "phase_detection_clear": self.quality_indicators.phase_detection_clear,
                 "outliers_detected": self.quality_indicators.outliers_detected,
-                "outlier_percentage": round(
-                    self.quality_indicators.outlier_percentage, 1
-                ),
-                "position_variance": round(
-                    self.quality_indicators.position_variance, 6
-                ),
+                "outlier_percentage": round(self.quality_indicators.outlier_percentage, 1),
+                "position_variance": round(self.quality_indicators.position_variance, 6),
                 "fps": round(self.quality_indicators.fps, 1),
             },
             "warnings": self.warnings,

@@ -45,9 +45,7 @@ class DropJumpValidationResult(ValidationResult):
                 }
                 for issue in self.issues
             ],
-            "athlete_profile": (
-                self.athlete_profile.value if self.athlete_profile else None
-            ),
+            "athlete_profile": (self.athlete_profile.value if self.athlete_profile else None),
             "rsi": self.rsi,
             "contact_flight_ratio": self.contact_flight_ratio,
             "height_kinematic_trajectory_consistency_percent": (
@@ -130,14 +128,11 @@ class DropJumpMetricsValidator(MetricsValidator):
             profile_name = result.athlete_profile.value
             result.add_warning(
                 "contact_time",
-                f"Contact time {contact_time_s:.3f}s unusual for "
-                f"{profile_name} athlete",
+                f"Contact time {contact_time_s:.3f}s unusual for {profile_name} athlete",
                 value=contact_time_s,
             )
 
-    def _check_flight_time(
-        self, flight_time_ms: float, result: DropJumpValidationResult
-    ) -> None:
+    def _check_flight_time(self, flight_time_ms: float, result: DropJumpValidationResult) -> None:
         """Validate flight time."""
         flight_time_s = flight_time_ms / 1000.0
         bounds = DropJumpBounds.FLIGHT_TIME
@@ -149,9 +144,7 @@ class DropJumpMetricsValidator(MetricsValidator):
                 value=flight_time_s,
                 bounds=(bounds.absolute_min, bounds.absolute_max),
             )
-        elif result.athlete_profile and not bounds.contains(
-            flight_time_s, result.athlete_profile
-        ):
+        elif result.athlete_profile and not bounds.contains(flight_time_s, result.athlete_profile):
             profile_name = result.athlete_profile.value
             result.add_warning(
                 "flight_time",
@@ -159,9 +152,7 @@ class DropJumpMetricsValidator(MetricsValidator):
                 value=flight_time_s,
             )
 
-    def _check_jump_height(
-        self, jump_height_m: float, result: DropJumpValidationResult
-    ) -> None:
+    def _check_jump_height(self, jump_height_m: float, result: DropJumpValidationResult) -> None:
         """Validate jump height."""
         bounds = DropJumpBounds.JUMP_HEIGHT
 
@@ -172,9 +163,7 @@ class DropJumpMetricsValidator(MetricsValidator):
                 value=jump_height_m,
                 bounds=(bounds.absolute_min, bounds.absolute_max),
             )
-        elif result.athlete_profile and not bounds.contains(
-            jump_height_m, result.athlete_profile
-        ):
+        elif result.athlete_profile and not bounds.contains(jump_height_m, result.athlete_profile):
             profile_name = result.athlete_profile.value
             result.add_warning(
                 "jump_height",
@@ -206,9 +195,7 @@ class DropJumpMetricsValidator(MetricsValidator):
                     value=rsi,
                     bounds=(bounds.absolute_min, bounds.absolute_max),
                 )
-            elif result.athlete_profile and not bounds.contains(
-                rsi, result.athlete_profile
-            ):
+            elif result.athlete_profile and not bounds.contains(rsi, result.athlete_profile):
                 result.add_warning(
                     "rsi",
                     f"RSI {rsi:.2f} unusual for {result.athlete_profile.value} athlete",

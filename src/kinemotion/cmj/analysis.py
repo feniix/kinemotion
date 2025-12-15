@@ -216,9 +216,7 @@ def find_cmj_takeoff_from_velocity_peak(
         Takeoff frame with fractional precision.
     """
     concentric_start = int(lowest_point_frame)
-    search_duration = int(
-        fps * 0.3
-    )  # Search next 0.3 seconds (concentric to takeoff is brief)
+    search_duration = int(fps * 0.3)  # Search next 0.3 seconds (concentric to takeoff is brief)
     search_end = min(len(velocities), concentric_start + search_duration)
 
     if search_end <= concentric_start:
@@ -227,9 +225,7 @@ def find_cmj_takeoff_from_velocity_peak(
     # Find peak upward velocity (most NEGATIVE velocity)
     # In normalized coords: negative velocity = y decreasing = jumping up
     concentric_velocities = velocities[concentric_start:search_end]
-    takeoff_idx = int(
-        np.argmin(concentric_velocities)
-    )  # Most negative = fastest upward = takeoff
+    takeoff_idx = int(np.argmin(concentric_velocities))  # Most negative = fastest upward = takeoff
     takeoff_frame = concentric_start + takeoff_idx
 
     return float(takeoff_frame)
@@ -338,9 +334,7 @@ def find_interpolated_takeoff_landing(
     return (takeoff_frame, landing_frame)
 
 
-def find_takeoff_frame(
-    velocities: np.ndarray, peak_height_frame: int, fps: float
-) -> float:
+def find_takeoff_frame(velocities: np.ndarray, peak_height_frame: int, fps: float) -> float:
     """Find takeoff frame as peak upward velocity before peak height.
 
     Robust detection: When velocities are nearly identical (flat), detects
@@ -621,8 +615,6 @@ def detect_cmj_phases(
             )
 
     with timer.measure("cmj_find_standing_end"):
-        standing_end = find_standing_end(
-            velocities, lowest_point, positions, accelerations
-        )
+        standing_end = find_standing_end(velocities, lowest_point, positions, accelerations)
 
     return (standing_end, lowest_point, takeoff_frame, landing_frame)

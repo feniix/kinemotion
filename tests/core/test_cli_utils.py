@@ -79,9 +79,7 @@ def test_common_output_options() -> None:
         click.echo(f"out: {output}, json: {json_output}")
 
     runner = CliRunner()
-    result = runner.invoke(
-        cli, ["--output", "debug.mp4", "--json-output", "metrics.json"]
-    )
+    result = runner.invoke(cli, ["--output", "debug.mp4", "--json-output", "metrics.json"])
 
     assert result.exit_code == 0
     assert "out: debug.mp4" in result.output

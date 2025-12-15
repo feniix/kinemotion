@@ -382,16 +382,10 @@ def _compute_batch_statistics(results: list[DropJumpVideoResult]) -> None:
     if successful:
         # Calculate average metrics
         with_gct = [
-            r
-            for r in successful
-            if r.metrics and r.metrics.ground_contact_time is not None
+            r for r in successful if r.metrics and r.metrics.ground_contact_time is not None
         ]
-        with_flight = [
-            r for r in successful if r.metrics and r.metrics.flight_time is not None
-        ]
-        with_jump = [
-            r for r in successful if r.metrics and r.metrics.jump_height is not None
-        ]
+        with_flight = [r for r in successful if r.metrics and r.metrics.flight_time is not None]
+        with_jump = [r for r in successful if r.metrics and r.metrics.jump_height is not None]
 
         if with_gct:
             avg_gct = sum(
@@ -528,9 +522,7 @@ def _process_batch(
     expert_params: AnalysisParameters,
 ) -> None:
     """Process multiple videos in batch mode using parallel processing."""
-    click.echo(
-        f"\nBatch processing {len(video_files)} videos with {workers} workers", err=True
-    )
+    click.echo(f"\nBatch processing {len(video_files)} videos with {workers} workers", err=True)
     click.echo("=" * 70, err=True)
 
     # Setup output directories
@@ -550,8 +542,7 @@ def _process_batch(
         status = "✓" if result.success else "✗"
         video_name = Path(result.video_path).name
         click.echo(
-            f"[{completed}/{len(configs)}] {status} {video_name} "
-            f"({result.processing_time:.1f}s)",
+            f"[{completed}/{len(configs)}] {status} {video_name} ({result.processing_time:.1f}s)",
             err=True,
         )
         if not result.success:

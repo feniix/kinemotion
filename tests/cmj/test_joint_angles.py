@@ -195,9 +195,7 @@ class TestAthleteProfileEdgeCases:
         # Hip angle should be similar regardless of height
         assert angle > 160, f"Expected straight hip for short athlete: {angle}"
 
-    def test_short_athlete_triple_extension(
-        self, short_athlete_landmarks: dict
-    ) -> None:
+    def test_short_athlete_triple_extension(self, short_athlete_landmarks: dict) -> None:
         """Test triple extension for short athlete."""
         result = calculate_triple_extension(short_athlete_landmarks, side="right")
         assert result is not None
@@ -206,9 +204,7 @@ class TestAthleteProfileEdgeCases:
         assert result["knee_angle"] is not None
         assert result["hip_angle"] is not None
 
-    def test_explosive_athlete_takeoff_posture(
-        self, explosive_athlete_landmarks: dict
-    ) -> None:
+    def test_explosive_athlete_takeoff_posture(self, explosive_athlete_landmarks: dict) -> None:
         """Test triple extension at takeoff for explosive athlete.
 
         Regression test: Ensure explosive athletes show full triple extension
@@ -245,9 +241,7 @@ class TestAthleteProfileEdgeCases:
         # Deep squat should show hip flexion (reduced angle)
         assert 50 <= angle <= 170, f"Expected valid hip angle in squat, got: {angle}"
 
-    def test_squat_position_trunk_forward_lean(
-        self, squat_position_landmarks: dict
-    ) -> None:
+    def test_squat_position_trunk_forward_lean(self, squat_position_landmarks: dict) -> None:
         """Test trunk tilt shows forward lean during squat.
 
         Regression test: Ensure trunk tilt calculation captures forward lean
@@ -258,9 +252,7 @@ class TestAthleteProfileEdgeCases:
         # Squat position has major forward lean (positive angle)
         assert tilt > 15, f"Expected significant forward lean in squat, got: {tilt}"
 
-    def test_standing_position_all_angles(
-        self, standing_position_landmarks: dict
-    ) -> None:
+    def test_standing_position_all_angles(self, standing_position_landmarks: dict) -> None:
         """Test all angles in standing position (neutral posture).
 
         Regression test: Baseline test for neutral posture angles.
@@ -288,9 +280,7 @@ class TestBiomechanicalAccuracy:
         This ensures the algorithm doesn't introduce height bias.
         """
         tall_standing = calculate_triple_extension(tall_athlete_landmarks, side="right")
-        short_standing = calculate_triple_extension(
-            short_athlete_landmarks, side="right"
-        )
+        short_standing = calculate_triple_extension(short_athlete_landmarks, side="right")
 
         assert tall_standing is not None
         assert short_standing is not None
@@ -328,9 +318,7 @@ class TestBiomechanicalAccuracy:
         if squat_hip is not None and takeoff_hip is not None:
             # Squat should show forward lean (lower hip angle typically)
             # Takeoff should be more extended
-            assert 0 <= squat_hip <= 180 and 0 <= takeoff_hip <= 180, (
-                "Hip angles should be valid"
-            )
+            assert 0 <= squat_hip <= 180 and 0 <= takeoff_hip <= 180, "Hip angles should be valid"
 
     def test_dorsiflexion_vs_plantarflexion(self) -> None:
         """Test ankle angle distinction between dorsiflexion and plantarflexion.
@@ -377,8 +365,7 @@ class TestBiomechanicalAccuracy:
         # Due to different reference frame (left vs right), tilts should have
         # opposite signs but similar magnitude
         assert abs(abs(right_tilt) - abs(left_tilt)) < 0.1, (
-            f"Trunk tilt magnitudes should be similar: "
-            f"right={right_tilt}, left={left_tilt}"
+            f"Trunk tilt magnitudes should be similar: right={right_tilt}, left={left_tilt}"
         )
 
 
@@ -510,9 +497,7 @@ class TestRegressionScenarios:
 
         tilt = calculate_trunk_tilt(propulsive_phase, side="right")
         assert tilt is not None
-        assert tilt > 5, (
-            f"Forward lean should be positive during propulsion, got {tilt}"
-        )
+        assert tilt > 5, f"Forward lean should be positive during propulsion, got {tilt}"
 
     def test_upright_posture_near_zero_tilt(self) -> None:
         """Regression test: Upright posture should have near-zero trunk tilt."""
@@ -570,9 +555,7 @@ class TestAnkleAnglePrimaryLandmarkFix:
         }
 
         angle = calculate_ankle_angle(landmarks, side="right")
-        assert angle is not None, (
-            "Should fall back to heel when foot_index visibility low"
-        )
+        assert angle is not None, "Should fall back to heel when foot_index visibility low"
         assert 0 <= angle <= 180
 
     def test_ankle_angle_returns_none_when_no_foot_landmark(self) -> None:
@@ -601,9 +584,7 @@ class TestAnkleAnglePrimaryLandmarkFix:
         }
 
         angle = calculate_ankle_angle(landmarks, side="right")
-        assert angle is None, (
-            "Should return None when all foot landmarks below threshold"
-        )
+        assert angle is None, "Should return None when all foot landmarks below threshold"
 
     def test_plantarflexion_progression_dorsi_to_plantar(self) -> None:
         """Test ankle angle progression from dorsiflexion to plantarflexion.
@@ -879,9 +860,7 @@ class TestPhaseProgression:
         # Concentric knee should be larger (more extension)
         assert concentric_knee > eccentric_knee
 
-    def test_triple_extension_all_joints_calculable(
-        self, takeoff_phase_landmarks: dict
-    ) -> None:
+    def test_triple_extension_all_joints_calculable(self, takeoff_phase_landmarks: dict) -> None:
         """Test that all three joints can be calculated at takeoff.
 
         Triple extension requires all three joints to be measurable.
@@ -916,9 +895,7 @@ class TestPhaseProgression:
         assert takeoff_knee is not None
 
         # Knee should progressively extend
-        assert concentric_knee > eccentric_knee, (
-            "Knee should extend in concentric phase"
-        )
+        assert concentric_knee > eccentric_knee, "Knee should extend in concentric phase"
         assert takeoff_knee > concentric_knee, "Knee should extend further at takeoff"
 
 
@@ -988,21 +965,15 @@ class TestJointAngleConsistency:
 
     def test_ankle_angle_deterministic(self, tall_athlete_landmarks: dict) -> None:
         """Test ankle angle calculation is deterministic."""
-        angles = [
-            calculate_ankle_angle(tall_athlete_landmarks, side="right")
-            for _ in range(5)
-        ]
+        angles = [calculate_ankle_angle(tall_athlete_landmarks, side="right") for _ in range(5)]
 
         # All angles should be identical
         assert all(a == angles[0] for a in angles)
 
-    def test_triple_extension_deterministic(
-        self, squat_position_landmarks: dict
-    ) -> None:
+    def test_triple_extension_deterministic(self, squat_position_landmarks: dict) -> None:
         """Test triple extension calculation is deterministic."""
         results = [
-            calculate_triple_extension(squat_position_landmarks, side="right")
-            for _ in range(5)
+            calculate_triple_extension(squat_position_landmarks, side="right") for _ in range(5)
         ]
 
         # All results should be identical

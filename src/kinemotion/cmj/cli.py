@@ -49,12 +49,8 @@ def _process_batch_videos(
     for video in video_files:
         try:
             click.echo(f"\nProcessing: {video}", err=True)
-            out_path, json_path = generate_batch_output_paths(
-                video, output_dir, json_output_dir
-            )
-            _process_single(
-                video, out_path, json_path, quality_preset, verbose, expert_params
-            )
+            out_path, json_path = generate_batch_output_paths(video, output_dir, json_output_dir)
+            _process_single(video, out_path, json_path, quality_preset, verbose, expert_params)
         except Exception as e:
             click.echo(f"Error processing {video}: {e}", err=True)
             continue
@@ -311,30 +307,18 @@ def _output_results(metrics: CMJMetrics, json_output: str | None) -> None:
     click.echo("=" * 60, err=True)
     click.echo(f"Jump height: {metrics.jump_height:.3f} m", err=True)
     click.echo(f"Flight time: {metrics.flight_time * 1000:.1f} ms", err=True)
+    click.echo(f"Countermovement depth: {metrics.countermovement_depth:.3f} m", err=True)
+    click.echo(f"Eccentric duration: {metrics.eccentric_duration * 1000:.1f} ms", err=True)
+    click.echo(f"Concentric duration: {metrics.concentric_duration * 1000:.1f} ms", err=True)
+    click.echo(f"Total movement time: {metrics.total_movement_time * 1000:.1f} ms", err=True)
     click.echo(
-        f"Countermovement depth: {metrics.countermovement_depth:.3f} m", err=True
-    )
-    click.echo(
-        f"Eccentric duration: {metrics.eccentric_duration * 1000:.1f} ms", err=True
-    )
-    click.echo(
-        f"Concentric duration: {metrics.concentric_duration * 1000:.1f} ms", err=True
-    )
-    click.echo(
-        f"Total movement time: {metrics.total_movement_time * 1000:.1f} ms", err=True
-    )
-    click.echo(
-        f"Peak eccentric velocity: {abs(metrics.peak_eccentric_velocity):.3f} "
-        "m/s (downward)",
+        f"Peak eccentric velocity: {abs(metrics.peak_eccentric_velocity):.3f} m/s (downward)",
         err=True,
     )
     click.echo(
-        f"Peak concentric velocity: {metrics.peak_concentric_velocity:.3f} "
-        "m/s (upward)",
+        f"Peak concentric velocity: {metrics.peak_concentric_velocity:.3f} m/s (upward)",
         err=True,
     )
     if metrics.transition_time is not None:
-        click.echo(
-            f"Transition time: {metrics.transition_time * 1000:.1f} ms", err=True
-        )
+        click.echo(f"Transition time: {metrics.transition_time * 1000:.1f} ms", err=True)
     click.echo("=" * 60, err=True)

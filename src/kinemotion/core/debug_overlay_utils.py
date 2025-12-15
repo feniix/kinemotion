@@ -49,16 +49,11 @@ def create_video_writer(
     for codec in codecs_to_try:
         try:
             fourcc = cv2.VideoWriter_fourcc(*codec)
-            writer = cv2.VideoWriter(
-                output_path, fourcc, fps, (display_width, display_height)
-            )
+            writer = cv2.VideoWriter(output_path, fourcc, fps, (display_width, display_height))
             if writer.isOpened():
                 used_codec = codec
                 if codec == "mp4v":
-                    print(
-                        f"Warning: Fallback to {codec} codec. "
-                        "Video may not play in browsers."
-                    )
+                    print(f"Warning: Fallback to {codec} codec. Video may not play in browsers.")
                 break
         except Exception:
             continue
@@ -174,9 +169,7 @@ class BaseDebugOverlayRenderer:
                 )
 
         with self.timer.measure("debug_video_write"):
-            write_overlay_frame(
-                self.writer, frame, self.display_width, self.display_height
-            )
+            write_overlay_frame(self.writer, frame, self.display_width, self.display_height)
 
     def close(self) -> None:
         """Release video writer and re-encode if possible."""
@@ -187,9 +180,7 @@ class BaseDebugOverlayRenderer:
             temp_path = None
             try:
                 temp_path = str(
-                    Path(self.output_path).with_suffix(
-                        ".temp" + Path(self.output_path).suffix
-                    )
+                    Path(self.output_path).with_suffix(".temp" + Path(self.output_path).suffix)
                 )
 
                 # Convert to H.264 with yuv420p pixel format for browser compatibility

@@ -305,9 +305,7 @@ def test_process_cmj_videos_bulk_progress_callback(sample_video_path: str) -> No
     def progress_callback(result: CMJVideoResult) -> None:
         callback_results.append(result)
 
-    results = process_cmj_videos_bulk(
-        configs, max_workers=2, progress_callback=progress_callback
-    )
+    results = process_cmj_videos_bulk(configs, max_workers=2, progress_callback=progress_callback)
 
     # Callback should be called for each video
     assert len(callback_results) == 2

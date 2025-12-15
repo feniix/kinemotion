@@ -97,8 +97,7 @@ def mock_kinemotion_analysis(
             "kinemotion_backend.services.storage_service.StorageService.upload_video"
         )
         upload_results_patch = (
-            "kinemotion_backend.services.storage_service."
-            "StorageService.upload_analysis_results"
+            "kinemotion_backend.services.storage_service.StorageService.upload_analysis_results"
         )
         with (
             patch(cmj_patch) as mock_cmj,

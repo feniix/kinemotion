@@ -21,8 +21,7 @@ def validate_video_file(file: UploadFile) -> None:
     file_ext = Path(file.filename).suffix.lower()
     if file_ext not in valid_extensions:
         raise ValueError(
-            f"Invalid video format: {file_ext}. "
-            f"Supported formats: {', '.join(valid_extensions)}"
+            f"Invalid video format: {file_ext}. Supported formats: {', '.join(valid_extensions)}"
         )
 
     # Check file size if available (UploadFile.size is often None in test client)

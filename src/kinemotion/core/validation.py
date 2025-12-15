@@ -160,12 +160,8 @@ class ValidationResult:
 
     def finalize_status(self) -> None:
         """Determine final pass/fail status based on issues."""
-        has_errors = any(
-            issue.severity == ValidationSeverity.ERROR for issue in self.issues
-        )
-        has_warnings = any(
-            issue.severity == ValidationSeverity.WARNING for issue in self.issues
-        )
+        has_errors = any(issue.severity == ValidationSeverity.ERROR for issue in self.issues)
+        has_warnings = any(issue.severity == ValidationSeverity.WARNING for issue in self.issues)
 
         if has_errors:
             self.status = "FAIL"

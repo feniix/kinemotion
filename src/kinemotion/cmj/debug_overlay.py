@@ -142,9 +142,7 @@ class CMJDebugOverlayRenderer(BaseDebugOverlayRenderer):
 
             # Draw ALL visible segments (not just one side)
             for start_key, end_key, color, thickness in segments:
-                self._draw_segment(
-                    frame, landmarks, start_key, end_key, color, thickness
-                )
+                self._draw_segment(frame, landmarks, start_key, end_key, color, thickness)
 
             # Draw joints as circles for this side
             self._draw_joints(frame, landmarks, side_prefix)
@@ -323,9 +321,7 @@ class CMJDebugOverlayRenderer(BaseDebugOverlayRenderer):
         phase_text = f"Phase: {phase.upper()}"
         text_size = cv2.getTextSize(phase_text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0]
         cv2.rectangle(frame, (5, 5), (text_size[0] + 15, 45), phase_color, -1)
-        cv2.putText(
-            frame, phase_text, (10, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2
-        )
+        cv2.putText(frame, phase_text, (10, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
 
     def _draw_key_frame_markers(
         self, frame: np.ndarray, frame_idx: int, metrics: CMJMetrics
@@ -334,9 +330,7 @@ class CMJDebugOverlayRenderer(BaseDebugOverlayRenderer):
         y_offset = 120
         markers = []
 
-        if metrics.standing_start_frame and frame_idx == int(
-            metrics.standing_start_frame
-        ):
+        if metrics.standing_start_frame and frame_idx == int(metrics.standing_start_frame):
             markers.append("COUNTERMOVEMENT START")
 
         if frame_idx == int(metrics.lowest_point_frame):

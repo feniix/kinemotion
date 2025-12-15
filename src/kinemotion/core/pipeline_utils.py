@@ -35,8 +35,7 @@ def parse_quality_preset(quality: str) -> QualityPreset:
         return QualityPreset(quality.lower())
     except ValueError as e:
         raise ValueError(
-            f"Invalid quality preset: {quality}. "
-            "Must be 'fast', 'balanced', or 'accurate'"
+            f"Invalid quality preset: {quality}. Must be 'fast', 'balanced', or 'accurate'"
         ) from e
 
 
@@ -408,9 +407,7 @@ def process_videos_bulk_generic(
     results: list[TResult] = []
 
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
-        future_to_config = {
-            executor.submit(processor_func, config): config for config in configs
-        }
+        future_to_config = {executor.submit(processor_func, config): config for config in configs}
 
         for future in as_completed(future_to_config):
             config = future_to_config[future]

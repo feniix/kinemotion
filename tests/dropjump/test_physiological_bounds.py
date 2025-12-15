@@ -87,8 +87,7 @@ class TestContactTimeBounds:
     def test_contact_time_elite_faster_than_recreational(self) -> None:
         """Elite athletes typically have shorter contact time than recreational."""
         elite_mid = (
-            DropJumpBounds.CONTACT_TIME.elite_min
-            + DropJumpBounds.CONTACT_TIME.elite_max
+            DropJumpBounds.CONTACT_TIME.elite_min + DropJumpBounds.CONTACT_TIME.elite_max
         ) / 2
         recreational_mid = (
             DropJumpBounds.CONTACT_TIME.recreational_min
@@ -212,17 +211,11 @@ class TestRecreationalAthleteProfile:
             }
         }
 
-        validator = DropJumpMetricsValidator(
-            assumed_profile=AthleteProfile.RECREATIONAL
-        )
+        validator = DropJumpMetricsValidator(assumed_profile=AthleteProfile.RECREATIONAL)
         result = validator.validate(metrics)
 
         # Should have info/warning issues but not errors
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) == 0
 
     def test_recreational_rsi_in_expected_range(self) -> None:
@@ -249,11 +242,7 @@ class TestEliteAthleteProfile:
         validator = DropJumpMetricsValidator(assumed_profile=AthleteProfile.ELITE)
         result = validator.validate(metrics)
 
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) == 0
 
     def test_elite_rsi_in_expected_range(self) -> None:
@@ -286,11 +275,7 @@ class TestEdgeCases:
         validator = DropJumpMetricsValidator()
         result = validator.validate(metrics)
         # Should have warnings but not errors
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) == 0
 
     def test_high_performance_drop_jump(self) -> None:
@@ -305,11 +290,7 @@ class TestEdgeCases:
 
         validator = DropJumpMetricsValidator()
         result = validator.validate(metrics)
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) == 0
 
     def test_error_detected_contact_time_too_short(self) -> None:
@@ -348,8 +329,7 @@ class TestEdgeCases:
         rsi_errors = [
             issue
             for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-            and "rsi" in issue.metric.lower()
+            if issue.severity == ValidationSeverity.ERROR and "rsi" in issue.metric.lower()
         ]
         assert len(rsi_errors) > 0
 
@@ -369,11 +349,7 @@ class TestValidationSeverityLevels:
 
         validator = DropJumpMetricsValidator()
         result = validator.validate(metrics)
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) > 0
 
     def test_warning_severity_for_unusual_but_possible(self) -> None:
@@ -390,9 +366,7 @@ class TestValidationSeverityLevels:
         result = validator.validate(metrics)
         # Should have warnings about unusual patterns
         warnings = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.WARNING
+            issue for issue in result.issues if issue.severity == ValidationSeverity.WARNING
         ]
         # May have warnings about extreme values
         assert len(warnings) >= 0
@@ -447,11 +421,7 @@ class TestUntrainedAthleteProfile:
         validator = DropJumpMetricsValidator(assumed_profile=AthleteProfile.UNTRAINED)
         result = validator.validate(metrics)
 
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) == 0
 
 
@@ -471,11 +441,7 @@ class TestElderlyAthleteProfile:
         validator = DropJumpMetricsValidator(assumed_profile=AthleteProfile.ELDERLY)
         result = validator.validate(metrics)
 
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) == 0
 
 
@@ -495,11 +461,7 @@ class TestTrainedAthleteProfile:
         validator = DropJumpMetricsValidator(assumed_profile=AthleteProfile.TRAINED)
         result = validator.validate(metrics)
 
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) == 0
 
     def test_trained_rsi_in_expected_range(self) -> None:

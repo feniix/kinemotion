@@ -175,8 +175,7 @@ class TestContactTimeBounds:
     def test_contact_time_elite_faster_than_recreational(self) -> None:
         """Elite athletes typically have shorter contact time than recreational."""
         elite_mid = (
-            CMJBounds.CONCENTRIC_DURATION.elite_min
-            + CMJBounds.CONCENTRIC_DURATION.elite_max
+            CMJBounds.CONCENTRIC_DURATION.elite_min + CMJBounds.CONCENTRIC_DURATION.elite_max
         ) / 2
         recreational_mid = (
             CMJBounds.CONCENTRIC_DURATION.recreational_min
@@ -265,9 +264,7 @@ class TestTripleExtensionBounds:
 
     def test_hip_angle_out_of_bounds_fails(self) -> None:
         """Hip angle <120° indicates wrong phase."""
-        assert not TripleExtensionBounds.hip_angle_valid(
-            100, AthleteProfile.RECREATIONAL
-        )
+        assert not TripleExtensionBounds.hip_angle_valid(100, AthleteProfile.RECREATIONAL)
 
     def test_knee_angle_full_extension_valid(self) -> None:
         """Knee angle near 180° should be valid."""
@@ -281,9 +278,7 @@ class TestTripleExtensionBounds:
 
     def test_ankle_angle_dorsiflexion_invalid(self) -> None:
         """Ankle angle <90° indicates dorsiflexion, wrong phase."""
-        assert not TripleExtensionBounds.ankle_angle_valid(
-            80, AthleteProfile.RECREATIONAL
-        )
+        assert not TripleExtensionBounds.ankle_angle_valid(80, AthleteProfile.RECREATIONAL)
 
 
 class TestMetricsConsistency:
@@ -339,11 +334,7 @@ class TestRecreationalAthleteProfile:
         result = validator.validate(metrics)
 
         # Should have info/warning issues but not errors
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) == 0
 
     def test_recreational_rsi_in_expected_range(self) -> None:
@@ -372,16 +363,10 @@ class TestEliteAthleteProfile:
             "peak_concentric_velocity": 3.9,
         }
 
-        validator = CMJMetricsValidator(
-            assumed_profile=cast(AthleteProfile, profile["profile"])
-        )
+        validator = CMJMetricsValidator(assumed_profile=cast(AthleteProfile, profile["profile"]))
         result = validator.validate(metrics)
 
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) == 0
 
     def test_elite_rsi_in_expected_range(self) -> None:
@@ -417,11 +402,7 @@ class TestEdgeCases:
         validator = CMJMetricsValidator()
         result = validator.validate(metrics)
         # Should have warnings but not errors
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) == 0
 
     def test_very_deep_squat(self) -> None:
@@ -438,11 +419,7 @@ class TestEdgeCases:
 
         validator = CMJMetricsValidator()
         result = validator.validate(metrics)
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) == 0
 
     def test_error_detected_contact_time_too_short(self) -> None:
@@ -462,8 +439,7 @@ class TestEdgeCases:
         errors = [
             issue
             for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-            and "concentric_duration" in issue.metric
+            if issue.severity == ValidationSeverity.ERROR and "concentric_duration" in issue.metric
         ]
         assert len(errors) > 0
 
@@ -507,11 +483,7 @@ class TestValidationSeverityLevels:
 
         validator = CMJMetricsValidator()
         result = validator.validate(metrics)
-        errors = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.ERROR
-        ]
+        errors = [issue for issue in result.issues if issue.severity == ValidationSeverity.ERROR]
         assert len(errors) > 0
 
     def test_warning_severity_for_unusual_but_possible(self) -> None:
@@ -530,9 +502,7 @@ class TestValidationSeverityLevels:
         result = validator.validate(metrics)
         # Should have warnings about unusual patterns
         warnings = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.WARNING
+            issue for issue in result.issues if issue.severity == ValidationSeverity.WARNING
         ]
         assert len(warnings) > 0
 
@@ -550,9 +520,5 @@ class TestValidationSeverityLevels:
 
         validator = CMJMetricsValidator()
         result = validator.validate(metrics)
-        infos = [
-            issue
-            for issue in result.issues
-            if issue.severity == ValidationSeverity.INFO
-        ]
+        infos = [issue for issue in result.issues if issue.severity == ValidationSeverity.INFO]
         assert len(infos) > 0

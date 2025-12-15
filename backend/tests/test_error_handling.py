@@ -162,15 +162,11 @@ def test_multiple_errors_sequential(
     files_valid = {"file": ("test.mp4", BytesIO(sample_video_bytes), "video/mp4")}
 
     # First request with invalid file
-    response1 = client.post(
-        "/api/analyze", files=files_invalid, data={"jump_type": "cmj"}
-    )
+    response1 = client.post("/api/analyze", files=files_invalid, data={"jump_type": "cmj"})
     assert response1.status_code == 422
 
     # Second request with valid file
-    response2 = client.post(
-        "/api/analyze", files=files_valid, data={"jump_type": "cmj"}
-    )
+    response2 = client.post("/api/analyze", files=files_valid, data={"jump_type": "cmj"})
     assert response2.status_code == 200
 
 
@@ -220,9 +216,7 @@ def test_keyboard_interrupt_returns_500(
         cmj_patch = "kinemotion_backend.services.video_processor.process_cmj_video"
         with patch(cmj_patch) as mock_cmj:
             mock_cmj.side_effect = KeyboardInterrupt()
-            response = client.post(
-                "/api/analyze", files=files, data={"jump_type": "cmj"}
-            )
+            response = client.post("/api/analyze", files=files, data={"jump_type": "cmj"})
 
         assert response.status_code == 500
     except KeyboardInterrupt:
