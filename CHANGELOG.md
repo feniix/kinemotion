@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.62.0 (2025-12-15)
+
+### Feat
+
+- implement complete backend authentication with modern Supabase key support
+
+### Fix
+
+- use useAuth hook to get session token for feedback submission
+- use backend API URL for feedback submission
+- use environment variable for backend API URL in database status check
+
 ## kinemotion-v0.61.0 (2025-12-15)
 
 ### Feat
