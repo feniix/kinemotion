@@ -41,7 +41,7 @@ def setup_test_environment() -> None:
     os.environ["SUPABASE_ANON_KEY"] = "test-anon-key"
     # Test password for /analyze endpoint authentication bypass
     os.environ["TEST_PASSWORD"] = "test-password-12345"
-    os.environ["TEST_USER_ID"] = "test-user-00000000-0000-0000-0000-000000000000"
+    os.environ["TEST_EMAIL"] = "test@example.com"
 
     yield
 
@@ -55,7 +55,7 @@ def setup_test_environment() -> None:
         "SUPABASE_URL",
         "SUPABASE_ANON_KEY",
         "TEST_PASSWORD",
-        "TEST_USER_ID",
+        "TEST_EMAIL",
     ]
     for key in env_vars:
         os.environ.pop(key, None)

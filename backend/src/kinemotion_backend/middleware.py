@@ -50,28 +50,26 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             client_ip=request.client.host if request.client else "unknown",
         )
 
-        # Extract and validate user ID from Authorization header
+        # Extract and validate user email from Authorization header
         auth_header = request.headers.get("authorization")
         if auth_header and auth_header.startswith("Bearer ") and supabase_auth:
             token = auth_header.replace("Bearer ", "")
             auth_start = time.time()
             try:
-                user_id = supabase_auth.get_user_id(token)
                 user_email = supabase_auth.get_user_email(token)
                 auth_duration_ms = (time.time() - auth_start) * 1000
 
-                # Bind user info to logging context (auth_duration_ms only in auth event)
+                # Bind user email to logging context
                 structlog.contextvars.bind_contextvars(
-                    user_id=user_id,
-                    user_email=user_email,
+                    email=user_email,
                 )
 
                 # Store in request state for use in endpoints
-                request.state.user_id = user_id
-                request.state.user_email = user_email
+                request.state.email = user_email
 
                 logger.info(
                     "user_authenticated",
+                    email=user_email,
                     auth_duration_ms=round(auth_duration_ms, 2),
                 )
             except Exception as e:

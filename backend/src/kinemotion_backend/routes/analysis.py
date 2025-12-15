@@ -41,27 +41,27 @@ else:
     limiter = RateLimiter()  # type: ignore[operator]
 
 
-async def get_user_id_for_analysis(
+async def get_user_email_for_analysis(
     request: Request,
     x_test_password: str | None = Header(None),  # noqa: B008
 ) -> str:
-    """Extract user ID from JWT token or use test backdoor.
+    """Extract user email from JWT token or use test backdoor.
 
     Args:
         request: HTTP request (to access Authorization header)
         x_test_password: Optional test password for debugging
 
     Returns:
-        User ID (from token or test backdoor)
+        User email (from token or test backdoor)
 
     Raises:
         HTTPException: If authentication fails and test password not provided
     """
     # Allow bypass with test password (for curl testing, debugging)
     if is_test_password_valid(x_test_password):
-        test_user_id = os.getenv("TEST_USER_ID", "test-user-00000000-0000-0000-0000-000000000000")
-        logger.info("analysis_test_password_used", user_id=test_user_id)
-        return test_user_id
+        test_email = os.getenv("TEST_EMAIL", "test@example.com")
+        logger.info("analysis_test_password_used", email=test_email)
+        return test_email
 
     # Otherwise require valid JWT token from Authorization header
     auth_header = request.headers.get("authorization")
@@ -74,12 +74,12 @@ async def get_user_id_for_analysis(
     token = auth_header.replace("Bearer ", "")
     try:
         auth = SupabaseAuth()
-        user_id = auth.get_user_id(token)
-        return user_id
+        email = auth.get_user_email(token)
+        return email
     except HTTPException:
         raise
     except Exception as e:
-        logger.error("user_id_extraction_failed", error=str(e))
+        logger.error("user_email_extraction_failed", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials",
@@ -96,7 +96,7 @@ async def analyze_video(
     debug: str = Form("false"),  # noqa: B008
     referer: str | None = Header(None),  # noqa: B008
     x_test_password: str | None = Header(None),  # noqa: B008
-    user_id: str = Depends(get_user_id_for_analysis),  # noqa: B008
+    email: str = Depends(get_user_email_for_analysis),  # noqa: B008
 ) -> JSONResponse:
     """Analyze video and return jump metrics.
 
@@ -112,7 +112,7 @@ async def analyze_video(
         jump_type: Type of jump ("drop_jump" or "cmj")
         quality: Analysis quality preset ("fast", "balanced", or "accurate")
         debug: Debug overlay flag ("true" or "false", default "false")
-        user_id: Authenticated user ID (extracted from JWT or test password)
+        email: Authenticated user email (extracted from JWT or test password)
 
     Returns:
         JSON response with metrics or error details
@@ -138,7 +138,7 @@ async def analyze_video(
             jump_type=jump_type,
             quality=quality,
             debug=enable_debug,
-            user_id=user_id,
+            email=email,
         )
 
         # Perform analysis using service layer
@@ -147,7 +147,7 @@ async def analyze_video(
             jump_type=jump_type,
             quality=quality,
             debug=enable_debug,
-            user_id=user_id,
+            user_id=email,
         )
 
         # Log analysis completion
