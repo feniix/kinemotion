@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.60.0 (2025-12-15)
+
+### Feat
+
+- add authentication performance logging to backend
+- add comprehensive i18n support to 5 frontend components
+
 ## kinemotion-v0.59.1 (2025-12-15)
 
 ### Fix
