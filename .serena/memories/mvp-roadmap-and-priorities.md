@@ -52,6 +52,12 @@
 ### Phase 2: Market-Driven Development (Week 4+)
 **Goal**: Build features customers actually want
 
+**Completed in Phase 1**
+- ✅ Frontend i18n (English, Spanish, French) - 86+ translation keys, 5 components with tests
+
+**Deferred to Phase 2**
+- ⏳ Backend i18n - error messages, response messages (English-only acceptable for MVP; coach feedback will inform priority)
+
 **Candidates** (based on coach feedback, currently blocked by MVP completion)
 - Real-Time Analysis (if coaches want live feedback)
 - Running Gait Analysis (if runners/coaches ask for it)

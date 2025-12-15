@@ -181,6 +181,9 @@ When creating documentation:
 - Add cross-references to related docs
 - Keep CLAUDE.md synchronized with changes
 - Use consistent terminology across docs
+- **All documentation files MUST go in `docs/` directory or basic-memory**
+- **Never create ad-hoc markdown files outside `docs/` structure**
+- Coordinate with other agents: route documentation creation requests to this agent
 
 ## Documentation Checklist
 

@@ -166,6 +166,9 @@ When tuning parameters:
 - Document trade-offs explicitly
 - Provide test dataset details (n, conditions)
 - Report statistical significance when comparing methods
+- **For parameter tuning documentation**: Coordinate with Technical Writer for `docs/reference/` or `docs/technical/`
+- **For validation study findings**: Save to basic-memory for team reference
+- **Never create ad-hoc markdown files outside `docs/` structure**
 
 ## Common Parameter Ranges
 

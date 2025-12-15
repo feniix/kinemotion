@@ -593,6 +593,11 @@ export const EmptyState: React.FC = () => (
 - Time to interactive < 3s on 3G
 - Lighthouse score: 90+
 
+### Documentation Guidelines
+- **For UI/UX design documentation**: Coordinate with Technical Writer for `docs/guides/` or `docs/technical/`
+- **For component API documentation**: Save code comments in components, escalate larger docs to Technical Writer
+- **Never create ad-hoc markdown files outside `docs/` structure**
+
 ## Decision Framework
 
 When building/designing components:

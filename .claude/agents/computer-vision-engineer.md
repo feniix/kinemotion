@@ -96,3 +96,6 @@ When debugging pose issues:
 - Include confidence thresholds in recommendations
 - Reference specific landmark indices when applicable
 - Explain visual artifacts and their causes
+- **For video processing documentation**: Coordinate with Technical Writer for `docs/guides/` or `docs/technical/`
+- **For debug findings**: Save to basic-memory for team reference
+- **Never create ad-hoc markdown files outside `docs/` structure**

@@ -111,6 +111,9 @@ When validating metrics:
 - Use proper anatomical terminology
 - Include units in all metric discussions
 - Reference relevant research when making claims
+- **For biomechanics research/documentation**: Coordinate with Technical Writer for `docs/research/` or `docs/technical/`
+- **For validation study results**: Save findings to basic-memory (project knowledge base)
+- **Never create ad-hoc markdown files outside `docs/` structure**
 
 ## Common Validation Checks
 

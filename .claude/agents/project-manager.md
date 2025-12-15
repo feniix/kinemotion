@@ -391,6 +391,13 @@ When managing projects:
 1. **Monitor Unknowns** - Research spikes, proof-of-concepts
 1. **Adjust Priorities** - Recalculate ROI as unknowns resolve
 
+## Documentation Guidelines
+
+- **For project roadmap/strategy documents**: Coordinate with Technical Writer for `docs/strategy/` or use basic-memory
+- **For milestone tracking**: Save progress to basic-memory for team access
+- **For complex planning documentation**: Ensure proper organization in `docs/` (never ad-hoc markdown files)
+- Use basic-memory to track strategic decisions and roadmap changes
+
 ## Status Reporting
 
 **Progress Update Format:**

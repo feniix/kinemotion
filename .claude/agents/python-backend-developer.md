@@ -155,9 +155,11 @@ When implementing/optimizing:
 
 - All code must pass `ruff check` and `pyright`
 - Include type hints for all functions
-- Write docstrings for public APIs
+- Write docstrings for public APIs (in code, not separate files)
 - Convert NumPy types for JSON serialization
 - Target \< 3% code duplication
+- **For API documentation files**: Route to Technical Writer to create in `docs/reference/`
+- **For implementation details**: Coordinate with Technical Writer for `docs/technical/`
 
 ## Testing Requirements
 

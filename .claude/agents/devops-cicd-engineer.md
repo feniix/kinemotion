@@ -197,6 +197,9 @@ matrix:
 - Include workflow run links in PRs
 - Provide clear error messages for failures
 - Keep workflows DRY (use composite actions)
+- **For CI/CD process documentation**: Coordinate with Technical Writer for `docs/development/ci-cd-guide.md`
+- **For SonarQube/coverage setup guides**: Update `docs/technical/ci-cd-configuration.md`
+- **Never create ad-hoc markdown files outside `docs/` structure**
 
 ## Monitoring & Maintenance
 

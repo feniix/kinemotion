@@ -253,6 +253,12 @@ uv run pytest --cov-report=html    # HTML coverage report
 - [ ] Runs quickly (\<1s unit tests)
 - [ ] Doesn't depend on test order
 
+## Documentation Guidelines
+
+- **For test documentation/guides**: Coordinate with Technical Writer for `docs/development/testing.md`
+- **For test patterns/findings**: Save to basic-memory for team reference
+- **Never create ad-hoc markdown files outside `docs/` structure**
+
 ## Common Test Patterns
 
 **Parameterized Tests:**
