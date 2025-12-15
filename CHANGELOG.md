@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.63.0 (2025-12-15)
+
+### Feat
+
+- use email as unique identifier for users and storage organization
+
+### Fix
+
+- enhance database debugging with detailed connection logging
+- revert httpx client configuration that broke Supabase compatibility
+
 ## kinemotion-v0.62.0 (2025-12-15)
 
 ### Feat
