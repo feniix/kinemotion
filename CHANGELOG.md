@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.64.0 (2025-12-15)
+
+### Feat
+
+- **backend**: add structlog type annotations and remove unnecessary casts
+- **types**: add MediaPipe Pose type stubs for improved IDE support
+- enable genuine pyright strict mode with comprehensive type infrastructure
+
+### Fix
+
+- update user_id field types from UUID to str for email-based identifiers
+- update database schema to use email as user identifier
+- update analysis API endpoints to use email as user identifier
+
 ## kinemotion-v0.63.0 (2025-12-15)
 
 ### Feat
