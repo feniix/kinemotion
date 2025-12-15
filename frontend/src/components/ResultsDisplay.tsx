@@ -4,6 +4,7 @@ import FeedbackForm from './FeedbackForm'
 import FeatureRequestButton from './FeatureRequestButton'
 import { useDatabaseStatus } from '../hooks/useDatabaseStatus'
 import { useLanguage } from '../hooks/useLanguage'
+import { useAuth } from '../hooks/useAuth'
 import { EXTERNAL_LINKS } from '../config/links'
 import './FeedbackForm.css'
 
@@ -142,11 +143,10 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
     return <MetricCard key={key} {...rest} {...props} />
   }
 
+  const { session } = useAuth()
+
   const handleFeedbackSubmit = async (feedback: { notes: string; rating: number | null; tags: string[] }) => {
     try {
-      // Get the current user's JWT token from Supabase auth
-      const authResult = await window.supabase?.auth.getSession?.()
-      const session = authResult?.data?.session
       const token = session?.access_token
 
       if (!token) {
