@@ -59,6 +59,7 @@ coverage.xml
 !pyproject.toml
 !vercel.json
 !frontend/package.json
+!frontend/src/i18n/locales/**/*.json
 
 # Documentation build output
 site/

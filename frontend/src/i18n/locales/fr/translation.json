@@ -1,0 +1,186 @@
+{
+  "common": {
+    "appName": "Kinemotion",
+    "tagline": "Analyse cinématique vidéo pour la performance athlétique",
+    "close": "Fermer",
+    "cancel": "Annuler",
+    "retry": "Réessayer",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès"
+  },
+  "header": {
+    "signOut": "Déconnexion"
+  },
+  "footer": {
+    "copyright": "Kinemotion © {{year}}",
+    "github": "GitHub"
+  },
+  "uploadForm": {
+    "jumpTypeLabel": "Type de Saut",
+    "cmjLabel": "CMJ",
+    "cmjTitle": "Saut avec Contremouvement",
+    "dropJumpLabel": "Saut de Chute",
+    "dropJumpTitle": "Saut de Chute",
+    "debugToggle": "Générer une Superposition",
+    "uploadPrompt": "Glissez la vidéo d'analyse ici",
+    "uploadSubtext": "ou cliquez pour parcourir (max 500MB)",
+    "fileName": "Nom du fichier: {{name}}",
+    "fileSize": "Taille du fichier: {{size}} MB",
+    "changeFile": "Modifier",
+    "analyzeButton": "Lancer l'Analyse",
+    "analyzing": "Analyse en cours...",
+    "errors": {
+      "fileTooLarge": "La taille du fichier doit être inférieure à 500MB. Le fichier sélectionné est {{size}}MB",
+      "invalidFileType": "Veuillez sélectionner un fichier vidéo valide"
+    }
+  },
+  "results": {
+    "heading": "Résultats de l'Analyse",
+    "processedTime": "Traité en {{time}}s",
+    "method": "Méthode: {{type}}",
+    "validationStatus": "Contrôle de Qualité: {{status}}",
+    "issuesDetected": "Des problèmes ont été détectés qui peuvent affecter la précision.",
+    "kpiSection": "Indicateurs Clés de Performance",
+    "phaseSection": "Analyse des Phases du Saut",
+    "detailsSection": "Métriques Supplémentaires",
+    "downloadFullReport": "Télécharger le Rapport JSON Complet",
+    "originalVideoLabel": "Vidéo Originale",
+    "analysisVideoLabel": "Superposition d'Analyse",
+    "downloadOriginal": "Télécharger la Vidéo Originale",
+    "downloadAnalysis": "Télécharger la Vidéo d'Analyse",
+    "feedback": {
+      "heading": "Partagez vos Commentaires",
+      "coachFeedback": "📝 Ajouter les Commentaires de l'Entraîneur",
+      "feedbackUnavailable": "Les commentaires de l'entraîneur ne sont pas disponibles",
+      "featureRequest": "📋 Demander une Fonction",
+      "reportIssue": "🐛 Signaler un Problème",
+      "helpText": "Aidez-nous à améliorer Kinemotion en partageant votre expérience et vos suggestions"
+    },
+    "database": {
+      "unavailable": "Connexion à la Base de Données Non Disponible",
+      "defaultMessage": "Les fonctionnalités de commentaires d'entraîneur et de stockage de données ne sont actuellement pas disponibles."
+    },
+    "metrics": {
+      "rsi": "RSI",
+      "height": "Hauteur",
+      "jumpHeight": "Hauteur du Saut",
+      "contactTime": "Temps de Contact",
+      "peakVelocity": "Vitesse de Crête",
+      "peakPower": "Puissance de Crête",
+      "depth": "Profondeur",
+      "duration": "Durée",
+      "peakVel": "Vitesse Pic",
+      "airTime": "Temps en l'Air",
+      "landingImpact": "Impact d'Atterrissage"
+    },
+    "phases": {
+      "loading": "Charge (Excentrique)",
+      "explosion": "Explosion (Concentrique)",
+      "outcome": "Résultat (Vol)"
+    }
+  },
+  "errors": {
+    "networkError": "Impossible de se connecter au serveur d'analyse. Veuillez vérifier votre connexion Internet et réessayer.",
+    "serverError": "Une erreur serveur s'est produite lors de l'analyse. Veuillez réessayer ou contacter le support si le problème persiste.",
+    "fileTooLarge": "Le fichier vidéo est trop volumineux. Veuillez utiliser une vidéo inférieure à 500MB.",
+    "invalidRequest": "Fichier vidéo ou requête invalide. Veuillez vous assurer que vous avez sélectionné un fichier vidéo valide.",
+    "timeout": "L'analyse a pris trop de temps. Veuillez essayer avec une vidéo plus courte ou réessayer plus tard.",
+    "analysisFailedTitle": "Analyse Échouée",
+    "retryButton": "Réessayer",
+    "contactSupport": "Si ce problème persiste, veuillez contacter le support avec les informations suivantes:",
+    "technicalDetails": "Détails Techniques"
+  },
+  "metrics": {
+    "jumpHeightM": {
+      "label": "Hauteur du Saut (m)",
+      "description": "Hauteur maximale atteinte pendant le saut"
+    },
+    "jumpHeightCm": {
+      "label": "Hauteur du Saut (cm)",
+      "description": "Hauteur maximale atteinte pendant le saut"
+    },
+    "flightTimeMs": {
+      "label": "Temps de Vol (ms)",
+      "description": "Temps passé en l'air pendant le saut"
+    },
+    "flightTimeS": {
+      "label": "Temps de Vol (s)",
+      "description": "Temps passé en l'air pendant le saut"
+    },
+    "groundContactTimeMs": {
+      "label": "Temps de Contact au Sol",
+      "description": "Temps les pieds en contact avec le sol"
+    },
+    "reactiveStrengthIndex": {
+      "label": "RSI",
+      "description": "Hauteur du saut divisée par le temps de contact au sol"
+    },
+    "takeoffVelocityMps": {
+      "label": "Vitesse d'Envol",
+      "description": "Vitesse verticale au moment du décollage"
+    },
+    "countermovementDepthM": {
+      "label": "Profondeur du Contremouvement (m)",
+      "description": "Profondeur de la flexion pendant le contremouvement"
+    },
+    "countermovementDepthCm": {
+      "label": "Profondeur du Contremouvement (cm)",
+      "description": "Profondeur de la flexion pendant le contremouvement"
+    },
+    "landingForceNormalized": {
+      "label": "Force d'Atterrissage",
+      "description": "Force d'atterrissage relative au poids corporel"
+    },
+    "eccentricDurationMs": {
+      "label": "Durée Excentrique",
+      "description": "Durée de la phase descendante (excentrique)"
+    },
+    "concentricDurationMs": {
+      "label": "Durée Concentrique",
+      "description": "Durée de la phase ascendante (concentrique)"
+    },
+    "peakPowerW": {
+      "label": "Puissance de Crête",
+      "description": "Sortie de puissance maximale pendant le saut"
+    },
+    "peakEccentricVelocityMs": {
+      "label": "Vitesse Excentrique de Crête",
+      "description": "Vitesse maximale pendant la phase descendante"
+    },
+    "peakConcentricVelocityMs": {
+      "label": "Vitesse Concentrique de Crête",
+      "description": "Vitesse maximale pendant la phase ascendante"
+    },
+    "transitionTimeMs": {
+      "label": "Temps de Transition",
+      "description": "Temps entre la fin de la phase excentrique et le début de la phase concentrique"
+    },
+    "standingStartFrame": {
+      "label": "Image de Position Debout",
+      "description": "Numéro d'image en position debout"
+    },
+    "lowestPointFrame": {
+      "label": "Image du Point le Plus Bas",
+      "description": "Numéro d'image au point le plus bas de la flexion"
+    },
+    "takeoffFrame": {
+      "label": "Image du Décollage",
+      "description": "Numéro d'image au décollage"
+    },
+    "landingFrame": {
+      "label": "Image d'Atterrissage",
+      "description": "Numéro d'image à l'atterrissage"
+    },
+    "trackingMethod": {
+      "label": "Méthode de Suivi",
+      "description": "Méthode utilisée pour le suivi du mouvement"
+    }
+  },
+  "languageSwitcher": {
+    "label": "Langue",
+    "english": "English",
+    "spanish": "Español",
+    "french": "Français"
+  }
+}
