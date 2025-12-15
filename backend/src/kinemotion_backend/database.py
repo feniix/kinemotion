@@ -70,7 +70,7 @@ class DatabaseClient:
         """Create a new analysis session record.
 
         Args:
-            user_id: UUID of the user who performed the analysis
+            user_id: Email of the user who performed the analysis
             jump_type: Type of jump ('cmj' or 'drop_jump')
             quality_preset: Analysis quality preset
             analysis_data: JSON analysis results
@@ -132,7 +132,7 @@ class DatabaseClient:
         """Get analysis sessions for a specific user.
 
         Args:
-            user_id: UUID of the user
+            user_id: Email of the user
             limit: Maximum number of sessions to return
 
         Returns:
@@ -172,7 +172,7 @@ class DatabaseClient:
 
         Args:
             session_id: UUID of the analysis session
-            user_id: UUID of the user (for authorization)
+            user_id: Email of the user (for authorization)
 
         Returns:
             Analysis session data or None if not found
@@ -220,7 +220,7 @@ class DatabaseClient:
 
         Args:
             analysis_session_id: UUID of the analysis session
-            coach_user_id: UUID of the coach providing feedback
+            coach_user_id: Email of the coach providing feedback
             notes: Coach notes
             rating: Rating from 1-5
             tags: List of tags

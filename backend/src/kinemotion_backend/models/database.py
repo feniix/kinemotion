@@ -42,7 +42,7 @@ class AnalysisSessionResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
-    user_id: UUID
+    user_id: str
     jump_type: str
     quality_preset: str
     original_video_url: str | None
@@ -78,7 +78,7 @@ class CoachFeedbackResponse(BaseModel):
 
     id: UUID
     analysis_session_id: UUID
-    coach_user_id: UUID
+    coach_user_id: str
     notes: str | None
     rating: int | None
     tags: list[str]
