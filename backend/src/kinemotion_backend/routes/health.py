@@ -39,7 +39,12 @@ async def health_check() -> dict[str, str | bool]:
         db_client.client.table("analysis_sessions").select("id").limit(1).execute()
         database_connected = True
     except Exception as db_error:
-        logger.warning("database_health_check_failed", error=str(db_error))
+        logger.warning(
+            "database_health_check_failed",
+            error=str(db_error),
+            error_type=type(db_error).__name__,
+            exc_info=True,
+        )
 
     return {
         "status": "healthy",

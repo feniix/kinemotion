@@ -3,7 +3,6 @@
 import os
 from typing import Any
 
-import httpx
 import structlog
 from supabase import Client, create_client
 
@@ -35,11 +34,7 @@ class DatabaseClient:
                 "SUPABASE_ANON_KEY, or SUPABASE_KEY"
             )
 
-        # Configure http client with timeout and verify settings to avoid deprecation warnings
-        http_client = httpx.Client(timeout=10.0, verify=True)
-        self.client: Client = create_client(
-            self.supabase_url, self.supabase_key, http_client=http_client
-        )
+        self.client: Client = create_client(self.supabase_url, self.supabase_key)
         logger.info("database_client_initialized", supabase_url=self.supabase_url)
 
     async def create_analysis_session(
