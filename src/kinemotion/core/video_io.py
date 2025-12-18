@@ -203,6 +203,17 @@ class VideoProcessor:
         """Release video capture."""
         self.cap.release()
 
+    def __iter__(self) -> "VideoProcessor":
+        """Make the processor iterable."""
+        return self
+
+    def __next__(self) -> np.ndarray:
+        """Get the next frame during iteration."""
+        frame = self.read_frame()
+        if frame is None:
+            raise StopIteration
+        return frame
+
     def __enter__(self) -> "VideoProcessor":
         return self
 
