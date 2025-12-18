@@ -55,6 +55,21 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
+## Current Validation Efforts (AthletePose3D)
+
+We are currently in **Phase 1** of a multi-stage validation study using the **AthletePose3D (AP3D)** dataset, which contains high-speed athletic movements captured by research-grade multi-camera systems.
+
+### 🧪 Methodology Highlights
+
+To transition from 2D pixel-based analysis to research-grade 3D kinematics, we are implementing:
+
+1. **Coordinate Normalization:** Using Procrustes Analysis (Kabsch Algorithm) to align MediaPipe detections with physical world coordinates (mm).
+1. **3D Joint Angles:** Reconstructing anatomical angles (Hip, Knee, Ankle) in 3D space to correct for camera perspective and foreshortening.
+
+For detailed technical analysis of why these steps matter for monocular video and how they are implemented, see the [AthletePose3D Methodology Guide](validation/athletepose3d-methodology.md).
+
+______________________________________________________________________
+
 ## What Kinemotion CAN Claim
 
 ### Technical Implementation ✅

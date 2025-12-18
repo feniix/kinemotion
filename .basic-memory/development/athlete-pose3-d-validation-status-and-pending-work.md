@@ -28,3 +28,7 @@ The validation scripts for AthletePose3D (AP3D) have been remade after being los
 - **Status:** Non-blocking for MVP.
 - **Priority:** High for scientific credibility (post-Week 3).
 - **Goal:** Prove MediaPipe's "accurate" preset achieves <100mm MPJPE on athletic movements.
+
+## 📚 Documentation
+- **Methodology Guide:** `docs/validation/athletepose3d-methodology.md` (Explains the "Why" and "How" of 3D validation).
+- **Validation Status:** `docs/validation-status.md` (Updated to reflect active AP3D research phase).
