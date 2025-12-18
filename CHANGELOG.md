@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.65.0 (2025-12-18)
+
+### Feat
+
+- **ap3d**: add AthletePose3D validation scripts and setup guide
+
 ## kinemotion-v0.64.0 (2025-12-15)
 
 ### Feat
