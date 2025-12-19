@@ -119,7 +119,7 @@ This shows all available endpoints with interactive testing.
 
 ## Next Steps
 
-- **Local testing works?** → Deploy to Fly.io + Vercel
+- **Local testing works?** → Deploy to Cloud Run + Vercel (automatic via GitHub Actions)
 - **Issues?** → See [`local-testing.md`](guides/local-testing.md) for detailed troubleshooting
 - **Ready to deploy?** → Follow [`setup-issue-12.md`](guides/setup-issue-12.md)
 

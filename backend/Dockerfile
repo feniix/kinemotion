@@ -12,12 +12,13 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app/src
 
 # Install system dependencies required for MediaPipe and OpenCV
-# ffmpeg: Video processing
+# ffmpeg: Video processing (includes libx264 for H.264 encoding)
 # libsm6, libxext6, libxrender-dev: OpenCV/MediaPipe GUI support
 # libgomp1: OpenMP for NumPy optimization
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
+    libx264-dev \
     libsm6 \
     libxext6 \
     libxrender-dev \

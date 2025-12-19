@@ -1,6 +1,6 @@
 # Issue #12: Local Testing Guide
 
-This guide shows how to test the complete MVP stack locally before deploying to Fly.io and Vercel.
+This guide shows how to test the complete MVP stack locally before deploying to Google Cloud Run and Vercel.
 
 ## Prerequisites
 
@@ -582,4 +582,4 @@ If local testing fails:
 ______________________________________________________________________
 
 **Status:** Ready for local testing
-**Next:** Deploy to Fly.io + Vercel after confirming local testing works
+**Next:** Deploy to Cloud Run + Vercel after confirming local testing works (automatic via GitHub Actions)

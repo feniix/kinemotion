@@ -12,7 +12,7 @@ This document provides a complete setup guide for the Kinemotion Web UI MVP (Iss
           ▼                           ▼
     ┌─────────────┐         ┌──────────────────┐
     │  Frontend   │         │     Backend      │
-    │  (Vercel)   │         │    (Fly.io)      │
+    │  (Vercel)   │         │  (Cloud Run)     │
     │             │         │                  │
     │ React+Vite  │◄────────┤ FastAPI + uv     │
     │ Yarn        │ API     │ Real metrics     │
@@ -83,30 +83,23 @@ yarn dev
 
 ## Deployment
 
-### Backend: Deploy to Fly.io
+### Backend: Deploy to Google Cloud Run
+
+Backend deploys automatically via GitHub Actions when you push to main.
 
 ```bash
+# Manual deployment (if needed)
+# Ensure you have gcloud CLI installed and authenticated
+
 cd backend
 
-# Install Fly CLI if needed
-# https://fly.io/docs/hands-on/install-flyctl/
-
-# Launch app (first time only)
-flyctl launch --image-label kinemotion-backend
-
-# Optional: Set R2 storage credentials
-flyctl secrets set R2_ENDPOINT=https://YOUR_ACCOUNT_ID.r2.cloudflarestorage.com
-flyctl secrets set R2_ACCESS_KEY=YOUR_KEY
-flyctl secrets set R2_SECRET_KEY=YOUR_SECRET
-flyctl secrets set R2_BUCKET_NAME=kinemotion
-
-# Deploy
-flyctl deploy --remote-only
+# Build and push to Google Cloud Run
+# This is handled by .github/workflows/deploy-backend.yml automatically
 
 # View logs
-flyctl logs
+gcloud run services logs tail kinemotion-backend --project=kinemotion-backend
 
-# Your backend is now live at https://kinemotion-api.fly.dev
+# Your backend is live at https://kinemotion-backend-1008251132682.us-central1.run.app
 ```
 
 ### Frontend: Deploy to Vercel
@@ -118,12 +111,12 @@ cd frontend
 # 1. Visit https://vercel.com/new
 # 2. Select this repository
 # 3. Set Root Directory: frontend
-# 4. Add environment variable: VITE_API_URL=https://kinemotion-api.fly.dev
+# 4. Add environment variable: VITE_API_URL=https://kinemotion-backend-1008251132682.us-central1.run.app
 # 5. Deploy
 
 # Option 2: Deploy via Vercel CLI
 vercel --cwd=frontend
-# Set: VITE_API_URL=https://kinemotion-api.fly.dev
+# Set: VITE_API_URL=https://kinemotion-backend-1008251132682.us-central1.run.app
 
 # Your frontend is now live at https://kinemotion-mvp.vercel.app
 ```
@@ -137,14 +130,12 @@ kinemotion/
 │   │   ├── __init__.py
 │   │   └── app.py                    ← Main FastAPI application
 │   ├── pyproject.toml                ← Dependencies (uv)
-│   ├── Dockerfile                    ← Container for Fly.io
-│   ├── fly.toml                      ← Fly.io configuration
+│   ├── Dockerfile                    ← Container for Cloud Run
 │   ├── .env.example                  ← Environment template
 │   ├── .dockerignore
 │   ├── README.md                     ← Backend docs
 │   ├── SETUP.md                      ← Backend deployment guide
 │   ├── IMPLEMENTATION_SUMMARY.md     ← Technical details
-│   ├── FLY_DEPLOYMENT.md             ← Fly.io guide
 │   └── uv.lock                       ← Locked dependencies
 │
 ├── frontend/                         ← React frontend (can move to separate repo later)
@@ -178,7 +169,7 @@ kinemotion/
 
 ## API Endpoints
 
-### Backend: `http://localhost:8000` (dev) or `https://kinemotion-api.fly.dev` (prod)
+### Backend: `http://localhost:8000` (dev) or `https://kinemotion-backend-1008251132682.us-central1.run.app` (prod)
 
 #### Health Check
 
@@ -237,7 +228,17 @@ R2_BUCKET_NAME=kinemotion
 
 # API Configuration
 LOG_LEVEL=info
-CORS_ORIGINS=http://localhost:3000,http://localhost:5173,https://kinemotion-mvp.vercel.app
+CORS_ORIGINS=http://localhost:3000,http://localhost:5173,https://kinemotion.vercel.app
+
+# R2 Storage (optional - leave empty for development)
+R2_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
+R2_ACCESS_KEY=your_access_key
+R2_SECRET_KEY=your_secret_key
+R2_BUCKET_NAME=kinemotion
+
+# Supabase Database (configured in Google Cloud Secret Manager for production)
+SUPABASE_URL=https://smutfsalcbnfveqijttb.supabase.co
+SUPABASE_ANON_KEY=your_key_here
 ```
 
 ### Frontend (`frontend/.env`)
@@ -247,7 +248,7 @@ CORS_ORIGINS=http://localhost:3000,http://localhost:5173,https://kinemotion-mvp.
 VITE_API_URL=http://localhost:8000
 
 # Production
-# VITE_API_URL=https://kinemotion-api.fly.dev
+# VITE_API_URL=https://kinemotion-backend-1008251132682.us-central1.run.app
 ```
 
 ## Cloudflare R2 Setup (Optional)
@@ -280,14 +281,12 @@ R2 is optional for MVP - videos can be stored temporarily without it. To enable:
 # Format: https://YOUR_ACCOUNT_ID.r2.cloudflarestorage.com
 ```
 
-### 4. Set Fly.io secrets
+### 4. Set secrets in Google Cloud Secret Manager
 
 ```bash
-cd backend
-flyctl secrets set R2_ENDPOINT=https://YOUR_ACCOUNT_ID.r2.cloudflarestorage.com
-flyctl secrets set R2_ACCESS_KEY=YOUR_ACCESS_KEY
-flyctl secrets set R2_SECRET_KEY=YOUR_SECRET_KEY
-flyctl secrets set R2_BUCKET_NAME=kinemotion
+# R2 credentials are stored in Google Cloud Secret Manager
+# and accessed by Cloud Run service account
+# See backend deployment documentation for details
 ```
 
 ## Key Design Decisions
@@ -304,12 +303,14 @@ flyctl secrets set R2_BUCKET_NAME=kinemotion
 - **Benefit:** Works without R2, scales up gracefully
 - **Implementation:** Backend gracefully handles missing R2 credentials
 
-### 3. Fly.io + Vercel
+### 3. Google Cloud Run + Vercel + Supabase
 
-- **Backend:** Fly.io free tier (3GB RAM, adequate for video processing)
+- **Backend:** Google Cloud Run (video processing, auto-scales)
 - **Frontend:** Vercel free tier (industry standard for React)
-- **Storage:** Cloudflare R2 free tier (10GB/month, covers MVP volume)
-- **Total Cost:** $0 for realistic MVP testing
+- **Database:** Supabase (PostgreSQL database)
+- **Authentication:** Supabase Auth (OAuth, email/password)
+- **Storage:** Cloudflare R2 (video and results file storage)
+- **Total Cost:** Minimal for MVP testing
 
 ### 4. Separate Backend/Frontend Directories
 
@@ -360,22 +361,19 @@ ls -lh your_video.mp4
 file your_video.mp4
 
 # Check backend logs
-flyctl logs  # For production
+gcloud run services logs tail kinemotion-backend --project=kinemotion-backend
 # or check terminal for local development
 ```
 
 ### R2 upload fails (if R2 configured)
 
 ```bash
-# Verify credentials are set correctly
-flyctl secrets list
+# Check R2 credentials in Google Cloud Secret Manager
+gcloud secrets versions access latest --secret=R2_ACCESS_KEY --project=kinemotion-backend
+gcloud secrets versions access latest --secret=R2_SECRET_KEY --project=kinemotion-backend
 
-# Test R2 connection
-flyctl ssh console
-# Then in console:
-import boto3
-s3 = boto3.client('s3', endpoint_url=os.getenv('R2_ENDPOINT'), ...)
-s3.head_bucket(Bucket=os.getenv('R2_BUCKET_NAME'))
+# Verify endpoint and bucket name are correct
+# Test R2 connection from Cloud Run logs
 ```
 
 ## Testing Checklist
@@ -390,10 +388,11 @@ s3.head_bucket(Bucket=os.getenv('R2_BUCKET_NAME'))
 - [ ] Results display correctly
 - [ ] Error messages are user-friendly
 - [ ] Mobile responsive on phone
-- [ ] Backend deploys to Fly.io
+- [ ] Backend deploys to Cloud Run (automatic via GitHub Actions)
 - [ ] Frontend deploys to Vercel
 - [ ] Production URLs work
 - [ ] R2 download links work (if R2 configured)
+- [ ] Supabase integration works
 
 ## Next Steps
 
@@ -424,7 +423,6 @@ s3.head_bucket(Bucket=os.getenv('R2_BUCKET_NAME'))
   - `backend/README.md` - Backend overview
   - `backend/docs/setup.md` - Setup and deployment
   - `backend/docs/implementation-summary.md` - Technical details
-  - `backend/docs/fly-deployment.md` - Fly.io specific guide
   - `backend/docs/tests.md` - Test documentation
 
 - **Frontend:**
@@ -441,10 +439,10 @@ s3.head_bucket(Bucket=os.getenv('R2_BUCKET_NAME'))
 For issues:
 
 1. Check troubleshooting section above
-1. Review backend logs: `flyctl logs`
+1. Review backend logs: `gcloud run services logs tail kinemotion-backend --project=kinemotion-backend`
 1. Check frontend console (browser DevTools)
 1. Review README files in backend/ and frontend/
-1. Check GitHub issues #10, #11 for status
+1. Check GitHub issues for known problems
 
 ## Architecture Diagram
 
@@ -454,8 +452,8 @@ Coach (Phone/Desktop)
          ▼
 ┌─────────────────────────┐
 │   Frontend (Vercel)     │
-│  http://kinemotion-     │
-│  mvp.vercel.app         │
+│  https://kinemotion.    │
+│  vercel.app             │
 │                         │
 │ React + Vite + Yarn     │
 │ - Upload form           │
@@ -466,30 +464,32 @@ Coach (Phone/Desktop)
              │ (multipart: video + jump_type)
              ▼
 ┌─────────────────────────┐
-│  Backend (Fly.io)       │
+│  Backend (Cloud Run)    │
 │  https://kinemotion-    │
-│  api.fly.dev            │
+│  backend...run.app      │
 │                         │
 │ FastAPI + Python 3.12   │
 │ - Upload handler        │
 │ - Real metrics (CMJ/DJ) │
 │ - R2 integration        │
+│ - Supabase client       │
 │ - Error handling        │
 └────────────┬────────────┘
-             │ Upload/download
-             │ Results JSON
-             ▼
-    ┌──────────────────┐
-    │ Cloudflare R2    │
-    │ (Optional)       │
-    │                  │
-    │ - Videos (temp)  │
-    │ - Results (JSON) │
-    │ - Debug videos   │
-    └──────────────────┘
              │
-             ▼ Download links
-         (Frontend)
+    ┌────────┴────────┐
+    │                 │
+    ▼                 ▼
+┌─────────────┐   ┌──────────────────┐
+│  Supabase   │   │ Cloudflare R2    │
+│             │   │                  │
+│ - Auth      │   │ - Videos (temp)  │
+│ - Database  │   │ - Results (JSON) │
+│ - Sessions  │   │ - Debug videos   │
+│ - Metadata  │   └──────────────────┘
+└─────────────┘            │
+                           ▼
+                      (Frontend)
+                   Download links
 ```
 
 ______________________________________________________________________
