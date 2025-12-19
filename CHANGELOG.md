@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.66.0 (2025-12-19)
+
+### Feat
+
+- **ap3d**: add validation infrastructure, methodology documentation, and data tracking setup
+
+### Fix
+
+- **logging**: make structured logging compatible with standard logging
+- suppress Pyright reportCallIssue warnings in debug_overlay_utils
+- remove VP9 codec for iOS compatibility and add structured logging
+
 ## kinemotion-v0.65.0 (2025-12-18)
 
 ### Feat
