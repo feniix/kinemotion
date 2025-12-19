@@ -156,6 +156,11 @@ reportUntypedFunctionDecorator = "none"
 # NumPy ndarray type arguments (ndarray[Any, dtype[...]] syntax too verbose)
 reportMissingTypeArgument = "none"
 
+# Structlog compatibility - dynamic kwargs for structured logging
+# Structlog uses **kwargs which basedpyright can't validate
+reportCallIssue = "warning"
+reportArgumentType = "warning"
+
 # Transitional: Genuine strict mode with incremental fixes
 # scipy-stubs + typing-extensions installed for proper typing support
 # Type infrastructure in place (core/types.py with FloatArray, BoolArray, MetricsDict)

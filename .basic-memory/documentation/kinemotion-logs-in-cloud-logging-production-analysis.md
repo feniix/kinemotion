@@ -1,0 +1,12 @@
+---
+title: Kinemotion Logs in Cloud Logging - Production Analysis
+type: note
+permalink: documentation/kinemotion-logs-in-cloud-logging-production-analysis
+tags:
+- logging
+- production
+- cloud-logging
+- debug-video
+---
+
+[{"text": "## PRODUCTION: Kinemotion Library Logs in Cloud Logging - YES or NO?\n\n### ✅ YES - But WITH A CRITICAL CAVEAT\n\n**Current State:**\n- Backend logs: ✅ YES (structlog configured for JSON in production)\n- Kinemotion library logs: ❓ MAYBE (depends on JSON_LOGS env var)\n\n### The Problem\n\n**Code Structure:**\n```python\n# backend/src/kinemotion_backend/app.py\nsetup_logging(\n    json_logs=os.getenv(\"JSON_LOGS\", \"false\").lower() == \"true\",\n    log_level=os.getenv(\"LOG_LEVEL\", \"INFO\"),\n)\n```\n\nThe `setup_logging()` function configures **only structlog** (backend logs).\n\nThe kinemotion library uses standard `logging.getLogger(__name__)` which is also configured in `logging.basicConfig()`, BUT:\n\n```python\n# logging_config.py line 76\nlogging.basicConfig(\n    format=\"%(message)s\",\n    stream=sys.stdout,  # ✅ Outputs to stdout\n    level=getattr(logging, log_level.upper()),\n)\n```\n\n### ✅ The Good News\n\n1. **Both go to stdout**: Backend logs AND kinemotion logs both output to `sys.stdout`\n2. **Cloud Run captures stdout**: Google Cloud Run automatically captures all stdout → Cloud Logging\n3. **You WILL see the logs**: Kinemotion library logs WILL appear in Cloud Logging\n\n### ⚠️ The Caveat\n\n**Format Difference:**\n- Backend logs: ✅ Structured JSON (searchable, filterable)\n- Kinemotion logs: ❌ Plain text (harder to search/filter)\n\n### ✅ Quick Fix\n\nTo get kinemotion logs as proper JSON in Cloud Logging, need to integrate it with structlog. Currently only backend uses structlog.\n\n### Current Logs in Cloud Logging\n\n**What you'll see:**\n```json\n// Backend logs (JSON)\n{\"event\": \"r2_debug_video_upload\", \"duration_ms\": 3456, \"url\": \"...\", \"app\": \"kinemotion-backend\"}\n\n// Kinemotion logs (Plain text - less ideal)\n\"debug_video_codec_selected: codec=h264, dimensions=1920x1080, fps=60.0\"\n```\n\n### Recommendation\n\n**If logs appearing as plain text in Cloud Logging is acceptable:**\n- No action needed, logs are already going to Cloud Logging\n- Use `gcloud run logs read kinemotion-backend` to view\n\n**If you want fully structured JSON logging:**\n- Wrap kinemotion calls with structured logging\n- Or configure Python's logging module to output JSON\n- Would require additional integration work", "type": "text"}]
