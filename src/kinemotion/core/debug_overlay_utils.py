@@ -68,11 +68,11 @@ def create_video_writer(
     needs_resize = (display_width != width) or (display_height != height)
 
     # Try browser-compatible codecs first
-    # avc1/h264: H.264 (Most compatible, including iOS)
+    # avc1: H.264 (Most compatible, including iOS)
     # mp4v: MPEG-4 (Poor browser support, will trigger ffmpeg re-encoding for H.264)
     # ⚠️  CRITICAL: VP9 (vp09) is EXCLUDED - not supported on iOS/iPhone/iPad browsers!
     #     Adding VP9 will break debug video playback on all iOS devices.
-    codecs_to_try = ["avc1", "h264", "mp4v"]
+    codecs_to_try = ["avc1", "mp4v"]
 
     writer = None
     used_codec = "mp4v"  # Default fallback

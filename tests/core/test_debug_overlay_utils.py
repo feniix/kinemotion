@@ -76,7 +76,7 @@ class TestCodecSelection:
                 )
 
                 assert codec != "vp09", "VP9 codec used! This breaks iOS."
-                assert codec in ["avc1", "h264", "mp4v"], f"Unexpected codec: {codec}"
+                assert codec in ["avc1", "mp4v"], f"Unexpected codec: {codec}"
 
 
 class TestVideoWriterCreation:
@@ -199,6 +199,6 @@ class TestRegressionIOS:
                     fps=30.0,
                 )
 
-                # Should use H.264 (avc1/h264) not VP9
-                assert codec in ["avc1", "h264"]
+                # Should use H.264 (avc1) not VP9
+                assert codec == "avc1", f"Expected avc1, got {codec}"
                 assert codec != "vp09", "VP9 breaks iPhone playback!"
