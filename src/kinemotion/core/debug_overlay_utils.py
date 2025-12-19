@@ -358,7 +358,7 @@ class BaseDebugOverlayRenderer:
                 final_codec="libx264",
                 pixel_format="yuv420p",
             )
-        except (subprocess.CalledProcessError, Exception) as e:
+        except Exception as e:
             self._handle_reencode_error(e, temp_path)
 
     def _handle_reencode_error(self, e: Exception, temp_path: str) -> None:
