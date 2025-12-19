@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.66.1 (2025-12-19)
+
+### Fix
+
+- **warnings**: remove redundant 'h264' codec, use standard 'avc1' only
+
 ## kinemotion-v0.66.0 (2025-12-19)
 
 ### Feat
