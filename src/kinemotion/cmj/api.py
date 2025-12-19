@@ -214,6 +214,169 @@ def _create_result_metadata(
     )
 
 
+def _run_pose_tracking(
+    video: VideoProcessor,
+    quality_preset: QualityPreset,
+    detection_confidence: float | None,
+    tracking_confidence: float | None,
+    pose_tracker: PoseTracker | None,
+    verbose: bool,
+    timer: Timer,
+) -> tuple[list[NDArray[np.uint8]], list, list[int]]:
+    """Initialize tracker and process all frames."""
+    if verbose:
+        print(
+            f"Video: {video.width}x{video.height} @ {video.fps:.2f} fps, "
+            f"{video.frame_count} frames"
+        )
+
+    det_conf, track_conf = determine_confidence_levels(
+        quality_preset, detection_confidence, tracking_confidence
+    )
+
+    if verbose:
+        print("Processing all frames with MediaPipe pose tracking...")
+
+    tracker = pose_tracker or PoseTracker(
+        min_detection_confidence=det_conf,
+        min_tracking_confidence=track_conf,
+        timer=timer,
+    )
+    should_close_tracker = pose_tracker is None
+
+    return process_all_frames(video, tracker, verbose, timer, close_tracker=should_close_tracker)
+
+
+def _get_tuned_parameters(
+    video: VideoProcessor,
+    landmarks_sequence: list,
+    quality_preset: QualityPreset,
+    overrides: AnalysisOverrides | None,
+    verbose: bool,
+    timer: Timer,
+) -> AnalysisParameters:
+    """Analyze sample and tune parameters with expert overrides."""
+    with timer.measure("parameter_auto_tuning"):
+        characteristics = analyze_video_sample(landmarks_sequence, video.fps, video.frame_count)
+        params = auto_tune_parameters(characteristics, quality_preset)
+        params = apply_expert_overrides(
+            params,
+            overrides.smoothing_window if overrides else None,
+            overrides.velocity_threshold if overrides else None,
+            overrides.min_contact_frames if overrides else None,
+            overrides.visibility_threshold if overrides else None,
+        )
+
+        if verbose:
+            print_verbose_parameters(video, characteristics, quality_preset, params)
+
+    return params
+
+
+def _run_kinematic_analysis(
+    video: VideoProcessor,
+    smoothed_landmarks: list,
+    params: AnalysisParameters,
+    verbose: bool,
+    timer: Timer,
+) -> tuple[CMJMetrics, NDArray[np.float64], NDArray[np.float64]]:
+    """Extract positions, detect phases, and calculate metrics."""
+    if verbose:
+        print("Extracting vertical positions (Hip and Foot)...")
+    with timer.measure("vertical_position_extraction"):
+        vertical_positions, visibilities = extract_vertical_positions(
+            smoothed_landmarks, target="hip"
+        )
+        foot_positions, _ = extract_vertical_positions(smoothed_landmarks, target="foot")
+
+    if verbose:
+        print("Detecting CMJ phases...")
+    with timer.measure("phase_detection"):
+        phases = detect_cmj_phases(
+            vertical_positions,
+            video.fps,
+            window_length=params.smoothing_window,
+            polyorder=params.polyorder,
+            landing_positions=foot_positions,
+            timer=timer,
+        )
+
+    if phases is None:
+        raise ValueError("Could not detect CMJ phases in video")
+
+    standing_end, lowest_point, takeoff_frame, landing_frame = phases
+
+    if verbose:
+        print("Calculating metrics...")
+    with timer.measure("metrics_calculation"):
+        velocities = compute_signed_velocity(
+            vertical_positions,
+            window_length=params.smoothing_window,
+            polyorder=params.polyorder,
+        )
+        metrics = calculate_cmj_metrics(
+            vertical_positions,
+            velocities,
+            standing_end,
+            lowest_point,
+            takeoff_frame,
+            landing_frame,
+            video.fps,
+            tracking_method="hip_hybrid",
+        )
+
+    return metrics, vertical_positions, visibilities
+
+
+def _finalize_analysis_results(
+    metrics: CMJMetrics,
+    video: VideoProcessor,
+    video_path: str,
+    vertical_positions: NDArray[np.float64],
+    visibilities: NDArray[np.float64],
+    params: AnalysisParameters,
+    quality_preset: QualityPreset,
+    start_time: float,
+    timer: Timer,
+    verbose: bool,
+) -> None:
+    """Assess quality, validate metrics, and attach metadata."""
+    if verbose:
+        print("Assessing tracking quality...")
+    with timer.measure("quality_assessment"):
+        _, outlier_mask = reject_outliers(
+            vertical_positions,
+            use_ransac=True,
+            use_median=True,
+            interpolate=False,
+        )
+        quality_result = assess_jump_quality(
+            visibilities=visibilities,
+            positions=vertical_positions,
+            outlier_mask=outlier_mask,
+            fps=video.fps,
+            phases_detected=True,
+            phase_count=4,
+        )
+
+    _print_quality_warnings(quality_result, verbose)
+
+    with timer.measure("metrics_validation"):
+        validator = CMJMetricsValidator()
+        validation_result = validator.validate(metrics.to_dict())  # type: ignore[arg-type]
+        metrics.validation_result = validation_result
+
+    algorithm_config = _create_algorithm_config(params)
+    video_info = _create_video_info(video_path, video)
+    processing_info = _create_processing_info(start_time, quality_preset, timer)
+    result_metadata = _create_result_metadata(
+        quality_result, video_info, processing_info, algorithm_config
+    )
+    metrics.result_metadata = result_metadata
+
+    _print_validation_results(validation_result, verbose)
+
+
 @dataclass
 class CMJVideoConfig:
     """Configuration for processing a single CMJ video."""
@@ -285,112 +448,29 @@ def process_cmj_video(
 
     with timer.measure("video_initialization"):
         with VideoProcessor(video_path, timer=timer) as video:
-            if verbose:
-                print(
-                    f"Video: {video.width}x{video.height} @ {video.fps:.2f} fps, "
-                    f"{video.frame_count} frames"
-                )
-
-            det_conf, track_conf = determine_confidence_levels(
-                quality_preset, detection_confidence, tracking_confidence
+            # 1. Pose Tracking
+            frames, landmarks_sequence, frame_indices = _run_pose_tracking(
+                video,
+                quality_preset,
+                detection_confidence,
+                tracking_confidence,
+                pose_tracker,
+                verbose,
+                timer,
             )
 
-            if verbose:
-                print("Processing all frames with MediaPipe pose tracking...")
-
-            tracker = pose_tracker or PoseTracker(
-                min_detection_confidence=det_conf,
-                min_tracking_confidence=track_conf,
-                timer=timer,
+            # 2. Parameters & Smoothing
+            params = _get_tuned_parameters(
+                video, landmarks_sequence, quality_preset, overrides, verbose, timer
             )
-            should_close_tracker = pose_tracker is None
-
-            frames, landmarks_sequence, frame_indices = process_all_frames(
-                video, tracker, verbose, timer, close_tracker=should_close_tracker
-            )
-
-            with timer.measure("parameter_auto_tuning"):
-                characteristics = analyze_video_sample(
-                    landmarks_sequence, video.fps, video.frame_count
-                )
-                params = auto_tune_parameters(characteristics, quality_preset)
-                params = apply_expert_overrides(
-                    params,
-                    overrides.smoothing_window if overrides else None,
-                    overrides.velocity_threshold if overrides else None,
-                    overrides.min_contact_frames if overrides else None,
-                    overrides.visibility_threshold if overrides else None,
-                )
-
-                if verbose:
-                    print_verbose_parameters(video, characteristics, quality_preset, params)
-
             smoothed_landmarks = apply_smoothing(landmarks_sequence, params, verbose, timer)
 
-            if verbose:
-                print("Extracting vertical positions (Hip and Foot)...")
-            with timer.measure("vertical_position_extraction"):
-                vertical_positions, visibilities = extract_vertical_positions(
-                    smoothed_landmarks, target="hip"
-                )
-                foot_positions, _ = extract_vertical_positions(smoothed_landmarks, target="foot")
+            # 3. Kinematic Analysis
+            metrics, vertical_positions, visibilities = _run_kinematic_analysis(
+                video, smoothed_landmarks, params, verbose, timer
+            )
 
-            if verbose:
-                print("Detecting CMJ phases...")
-            with timer.measure("phase_detection"):
-                phases = detect_cmj_phases(
-                    vertical_positions,
-                    video.fps,
-                    window_length=params.smoothing_window,
-                    polyorder=params.polyorder,
-                    landing_positions=foot_positions,
-                    timer=timer,
-                )
-
-            if phases is None:
-                raise ValueError("Could not detect CMJ phases in video")
-
-            standing_end, lowest_point, takeoff_frame, landing_frame = phases
-
-            if verbose:
-                print("Calculating metrics...")
-            with timer.measure("metrics_calculation"):
-                velocities = compute_signed_velocity(
-                    vertical_positions,
-                    window_length=params.smoothing_window,
-                    polyorder=params.polyorder,
-                )
-                metrics = calculate_cmj_metrics(
-                    vertical_positions,
-                    velocities,
-                    standing_end,
-                    lowest_point,
-                    takeoff_frame,
-                    landing_frame,
-                    video.fps,
-                    tracking_method="hip_hybrid",
-                )
-
-            if verbose:
-                print("Assessing tracking quality...")
-            with timer.measure("quality_assessment"):
-                _, outlier_mask = reject_outliers(
-                    vertical_positions,
-                    use_ransac=True,
-                    use_median=True,
-                    interpolate=False,
-                )
-                quality_result = assess_jump_quality(
-                    visibilities=visibilities,
-                    positions=vertical_positions,
-                    outlier_mask=outlier_mask,
-                    fps=video.fps,
-                    phases_detected=True,
-                    phase_count=4,
-                )
-
-            _print_quality_warnings(quality_result, verbose)
-
+            # 4. Debug Video Generation (Optional)
             if output_video:
                 _generate_debug_video(
                     output_video,
@@ -403,23 +483,22 @@ def process_cmj_video(
                     verbose,
                 )
 
-            with timer.measure("metrics_validation"):
-                validator = CMJMetricsValidator()
-                validation_result = validator.validate(metrics.to_dict())  # type: ignore[arg-type]
-                metrics.validation_result = validation_result
-
-            algorithm_config = _create_algorithm_config(params)
-            video_info = _create_video_info(video_path, video)
-            processing_info = _create_processing_info(start_time, quality_preset, timer)
-            result_metadata = _create_result_metadata(
-                quality_result, video_info, processing_info, algorithm_config
+            # 5. Finalization (Quality, Metadata, Validation)
+            _finalize_analysis_results(
+                metrics,
+                video,
+                video_path,
+                vertical_positions,
+                visibilities,
+                params,
+                quality_preset,
+                start_time,
+                timer,
+                verbose,
             )
-            metrics.result_metadata = result_metadata
 
             if json_output:
                 _save_metrics_to_json(metrics, json_output, timer, verbose)
-
-            _print_validation_results(validation_result, verbose)
 
             if verbose:
                 _print_timing_summary(start_time, timer, metrics)

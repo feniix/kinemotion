@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import time
 from pathlib import Path
+from typing import Any
 
 import cv2
 import numpy as np
@@ -73,53 +74,67 @@ def create_video_writer(
     # ⚠️  CRITICAL: VP9 (vp09) is EXCLUDED - not supported on iOS/iPhone/iPad browsers!
     #     Adding VP9 will break debug video playback on all iOS devices.
     codecs_to_try = ["avc1", "mp4v"]
-
-    writer = None
-    used_codec = "mp4v"  # Default fallback
-    codec_attempt_log = []
+    codec_attempt_log: list[dict[str, Any]] = []
 
     for codec in codecs_to_try:
-        try:
-            fourcc = cv2.VideoWriter_fourcc(*codec)  # type: ignore[attr-defined]
-            writer = cv2.VideoWriter(output_path, fourcc, fps, (display_width, display_height))
-            if writer.isOpened():
-                used_codec = codec
-                codec_attempt_log.append({"codec": codec, "status": "success"})
-                _log(
-                    "info",
-                    "debug_video_codec_selected",
-                    codec=codec,
-                    width=display_width,
-                    height=display_height,
-                    fps=fps,
+        writer = _try_open_video_writer(
+            output_path, codec, fps, display_width, display_height, codec_attempt_log
+        )
+        if writer:
+            return writer, needs_resize, codec
+
+    _log(
+        "error",
+        "debug_video_writer_creation_failed",
+        output_path=output_path,
+        dimensions=f"{display_width}x{display_height}",
+        fps=fps,
+        codec_attempts=codec_attempt_log,
+    )
+    raise ValueError(
+        f"Failed to create video writer for {output_path} with dimensions "
+        f"{display_width}x{display_height}"
+    )
+
+
+def _try_open_video_writer(
+    output_path: str,
+    codec: str,
+    fps: float,
+    width: int,
+    height: int,
+    attempt_log: list[dict[str, Any]],
+) -> cv2.VideoWriter | None:
+    """Attempt to open a video writer with a specific codec."""
+    try:
+        fourcc = cv2.VideoWriter_fourcc(*codec)  # type: ignore[attr-defined]
+        writer = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+        if writer.isOpened():
+            attempt_log.append({"codec": codec, "status": "success"})
+            _log(
+                "info",
+                "debug_video_codec_selected",
+                codec=codec,
+                width=width,
+                height=height,
+                fps=fps,
+            )
+            if codec == "mp4v":
+                msg = (
+                    "Using fallback MPEG-4 codec; will re-encode with ffmpeg for "
+                    "browser compatibility"
                 )
-                if codec == "mp4v":
-                    msg = (
-                        "Using fallback MPEG-4 codec; will re-encode with ffmpeg for "
-                        "browser compatibility"
-                    )
-                    _log("warning", "debug_video_fallback_codec", codec="mp4v", warning=msg)
-                break
-        except Exception as e:
-            codec_attempt_log.append({"codec": codec, "status": "failed", "error": str(e)})
-            _log("info", "debug_video_codec_attempt_failed", codec=codec, error=str(e))
-            continue
+                _log("warning", "debug_video_fallback_codec", codec="mp4v", warning=msg)
+            return writer
 
-    if writer is None or not writer.isOpened():
-        _log(
-            "error",
-            "debug_video_writer_creation_failed",
-            output_path=output_path,
-            dimensions=f"{display_width}x{display_height}",
-            fps=fps,
-            codec_attempts=codec_attempt_log,
+        attempt_log.append(
+            {"codec": codec, "status": "failed", "error": "isOpened() returned False"}
         )
-        raise ValueError(
-            f"Failed to create video writer for {output_path} with dimensions "
-            f"{display_width}x{display_height}"
-        )
+    except Exception as e:
+        attempt_log.append({"codec": codec, "status": "failed", "error": str(e)})
+        _log("info", "debug_video_codec_attempt_failed", codec=codec, error=str(e))
 
-    return writer, needs_resize, used_codec
+    return None
 
 
 def write_overlay_frame(
@@ -262,92 +277,17 @@ class BaseDebugOverlayRenderer:
             codec=self.used_codec,
         )
 
-        # Post-process with ffmpeg ONLY if we fell back to the incompatible mp4v codec
-        if self.used_codec == "mp4v" and shutil.which("ffmpeg"):
-            temp_path = None
-            try:
-                temp_path = str(
-                    Path(self.output_path).with_suffix(".temp" + Path(self.output_path).suffix)
-                )
+        if self.used_codec != "mp4v":
+            _log(
+                "info",
+                "debug_video_ready_for_playback",
+                codec=self.used_codec,
+                path=self.output_path,
+            )
+            return
 
-                # Convert to H.264 with yuv420p pixel format for browser compatibility
-                # -y: Overwrite output file
-                # -vcodec libx264: Use H.264 codec
-                # -pix_fmt yuv420p: Required for wide browser support (Chrome,
-                #                   Safari, Firefox, iOS)
-                # -preset fast: Reasonable speed/compression tradeoff
-                # -crf 23: Standard quality
-                # -an: Remove audio (debug video has no audio)
-                cmd = [
-                    "ffmpeg",
-                    "-y",
-                    "-i",
-                    self.output_path,
-                    "-vcodec",
-                    "libx264",
-                    "-pix_fmt",
-                    "yuv420p",
-                    "-preset",
-                    "fast",
-                    "-crf",
-                    "23",
-                    "-an",
-                    temp_path,
-                ]
-
-                _log(
-                    "info",
-                    "debug_video_ffmpeg_reencoding_start",
-                    input_file=self.output_path,
-                    output_file=temp_path,
-                    output_codec="libx264",
-                    pixel_format="yuv420p",
-                    reason="iOS_compatibility",
-                )
-
-                # Suppress output unless error
-                reencode_start = time.time()
-                subprocess.run(
-                    cmd,
-                    check=True,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.PIPE,
-                )
-                self.reencode_duration_s = time.time() - reencode_start
-
-                _log(
-                    "info",
-                    "debug_video_ffmpeg_reencoding_complete",
-                    duration_ms=round(self.reencode_duration_s * 1000, 1),
-                )
-
-                # Overwrite original file
-                os.replace(temp_path, self.output_path)
-                _log(
-                    "info",
-                    "debug_video_reencoded_file_replaced",
-                    output_path=self.output_path,
-                    final_codec="libx264",
-                    pixel_format="yuv420p",
-                )
-
-            except subprocess.CalledProcessError as e:
-                stderr_msg = e.stderr.decode("utf-8", errors="ignore") if e.stderr else "N/A"
-                _log(
-                    "warning",
-                    "debug_video_ffmpeg_reencoding_failed",
-                    error=str(e),
-                    stderr=stderr_msg,
-                )
-                if temp_path and os.path.exists(temp_path):
-                    os.remove(temp_path)
-                    _log("info", "debug_video_temp_file_cleaned_up", temp_file=temp_path)
-            except Exception as e:
-                _log("warning", "debug_video_post_processing_error", error=str(e))
-                if temp_path and os.path.exists(temp_path):
-                    os.remove(temp_path)
-                    _log("info", "debug_video_temp_file_cleaned_up", temp_file=temp_path)
-        elif self.used_codec == "mp4v" and not shutil.which("ffmpeg"):
+        ffmpeg_path = shutil.which("ffmpeg")
+        if not ffmpeg_path:
             _log(
                 "warning",
                 "debug_video_ffmpeg_not_available",
@@ -355,13 +295,88 @@ class BaseDebugOverlayRenderer:
                 output_path=self.output_path,
                 warning="Video may not play in all browsers",
             )
-        else:
+            return
+
+        self._reencode_to_h264()
+
+    def _reencode_to_h264(self) -> None:
+        """Re-encode video to H.264 for browser compatibility using ffmpeg."""
+        temp_path = str(
+            Path(self.output_path).with_suffix(".temp" + Path(self.output_path).suffix)
+        )
+
+        # Convert to H.264 with yuv420p pixel format for browser compatibility
+        # -y: Overwrite output file
+        # -vcodec libx264: Use H.264 codec
+        # -pix_fmt yuv420p: Required for wide browser support (Chrome, Safari, Firefox, iOS)
+        # -preset fast: Reasonable speed/compression tradeoff
+        # -crf 23: Standard quality
+        # -an: Remove audio (debug video has no audio)
+        cmd = [
+            "ffmpeg",
+            "-y",
+            "-i",
+            self.output_path,
+            "-vcodec",
+            "libx264",
+            "-pix_fmt",
+            "yuv420p",
+            "-preset",
+            "fast",
+            "-crf",
+            "23",
+            "-an",
+            temp_path,
+        ]
+
+        _log(
+            "info",
+            "debug_video_ffmpeg_reencoding_start",
+            input_file=self.output_path,
+            output_file=temp_path,
+            output_codec="libx264",
+            pixel_format="yuv420p",
+            reason="iOS_compatibility",
+        )
+
+        try:
+            reencode_start = time.time()
+            subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+            self.reencode_duration_s = time.time() - reencode_start
+
             _log(
                 "info",
-                "debug_video_ready_for_playback",
-                codec=self.used_codec,
-                path=self.output_path,
+                "debug_video_ffmpeg_reencoding_complete",
+                duration_ms=round(self.reencode_duration_s * 1000, 1),
             )
+
+            os.replace(temp_path, self.output_path)
+            _log(
+                "info",
+                "debug_video_reencoded_file_replaced",
+                output_path=self.output_path,
+                final_codec="libx264",
+                pixel_format="yuv420p",
+            )
+        except (subprocess.CalledProcessError, Exception) as e:
+            self._handle_reencode_error(e, temp_path)
+
+    def _handle_reencode_error(self, e: Exception, temp_path: str) -> None:
+        """Handle errors during ffmpeg re-encoding."""
+        if isinstance(e, subprocess.CalledProcessError):
+            stderr_msg = e.stderr.decode("utf-8", errors="ignore") if e.stderr else "N/A"
+            _log(
+                "warning",
+                "debug_video_ffmpeg_reencoding_failed",
+                error=str(e),
+                stderr=stderr_msg,
+            )
+        else:
+            _log("warning", "debug_video_post_processing_error", error=str(e))
+
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+            _log("info", "debug_video_temp_file_cleaned_up", temp_file=temp_path)
 
     def __enter__(self) -> Self:
         return self
