@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.66.3 (2025-12-19)
+
+### Fix
+
+- remove duplicate 'message' parameter in _log call
+
 ## kinemotion-v0.66.2 (2025-12-19)
 
 ### Fix
