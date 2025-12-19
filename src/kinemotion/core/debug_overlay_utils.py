@@ -98,7 +98,7 @@ def create_video_writer(
                         "Using fallback MPEG-4 codec; will re-encode with ffmpeg for "
                         "browser compatibility"
                     )
-                    _log("warning", "debug_video_fallback_codec", codec="mp4v", message=msg)
+                    _log("warning", "debug_video_fallback_codec", codec="mp4v", warning=msg)
                 break
         except Exception as e:
             codec_attempt_log.append({"codec": codec, "status": "failed", "error": str(e)})
