@@ -1,5 +1,6 @@
 """Shared debug overlay utilities for video rendering."""
 
+# pyright: reportCallIssue=false
 import os
 import shutil
 import subprocess
@@ -34,6 +35,10 @@ def create_video_writer(
     """
     Create a video writer with fallback codec support.
 
+    ⚠️  CRITICAL: DO NOT add "vp09" (VP9) to the codec list!
+    VP9 is not supported on iOS browsers (iPhone/iPad) and causes playback failures.
+    Regression test: tests/core/test_debug_overlay_utils.py::test_vp09_codec_never_in_codec_list
+
     Args:
         output_path: Path for output video
         width: Encoded frame width (from source video)
@@ -50,7 +55,8 @@ def create_video_writer(
     # Try browser-compatible codecs first
     # avc1/h264: H.264 (Most compatible, including iOS)
     # mp4v: MPEG-4 (Poor browser support, will trigger ffmpeg re-encoding for H.264)
-    # NOTE: VP9 (vp09) is excluded because it's not supported on iOS/iPhone
+    # ⚠️  CRITICAL: VP9 (vp09) is EXCLUDED - not supported on iOS/iPhone/iPad browsers!
+    #     Adding VP9 will break debug video playback on all iOS devices.
     codecs_to_try = ["avc1", "h264", "mp4v"]
 
     writer = None
