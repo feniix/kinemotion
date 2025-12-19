@@ -18,10 +18,25 @@ try:
     import structlog
 
     logger = structlog.get_logger(__name__)
+    _using_structlog = True
 except ImportError:
     import logging
 
     logger = logging.getLogger(__name__)
+    _using_structlog = False
+
+
+def _log(level: str, message: str, **kwargs: object) -> None:
+    """Log message with kwargs support for both structlog and standard logging."""
+    if _using_structlog:
+        getattr(logger, level)(message, **kwargs)
+    else:
+        # For standard logging, format kwargs as part of the message
+        if kwargs:
+            kwargs_str = " ".join(f"{k}={v}" for k, v in kwargs.items())
+            getattr(logger, level)(f"{message} {kwargs_str}")
+        else:
+            getattr(logger, level)(message)
 
 
 def create_video_writer(
@@ -70,7 +85,8 @@ def create_video_writer(
             if writer.isOpened():
                 used_codec = codec
                 codec_attempt_log.append({"codec": codec, "status": "success"})
-                logger.info(  # type: ignore[call-arg]
+                _log(
+                    "info",
                     "debug_video_codec_selected",
                     codec=codec,
                     width=display_width,
@@ -82,19 +98,16 @@ def create_video_writer(
                         "Using fallback MPEG-4 codec; will re-encode with ffmpeg for "
                         "browser compatibility"
                     )
-                    logger.warning(  # type: ignore[call-arg]
-                        "debug_video_fallback_codec", codec="mp4v", message=msg
-                    )
+                    _log("warning", "debug_video_fallback_codec", codec="mp4v", message=msg)
                 break
         except Exception as e:
             codec_attempt_log.append({"codec": codec, "status": "failed", "error": str(e)})
-            logger.info(  # type: ignore[call-arg]
-                "debug_video_codec_attempt_failed", codec=codec, error=str(e)
-            )
+            _log("info", "debug_video_codec_attempt_failed", codec=codec, error=str(e))
             continue
 
     if writer is None or not writer.isOpened():
-        logger.error(  # type: ignore[call-arg]
+        _log(
+            "error",
             "debug_video_writer_creation_failed",
             output_path=output_path,
             dimensions=f"{display_width}x{display_height}",
@@ -172,7 +185,8 @@ class BaseDebugOverlayRenderer:
             # Ensure dimensions are even for codec compatibility
             self.display_width = int(display_width * scale) // 2 * 2
             self.display_height = int(display_height * scale) // 2 * 2
-            logger.info(  # type: ignore[call-arg]
+            _log(
+                "info",
                 "debug_video_resolution_optimized",
                 original_width=display_width,
                 original_height=display_height,
@@ -183,13 +197,15 @@ class BaseDebugOverlayRenderer:
         else:
             self.display_width = display_width
             self.display_height = display_height
-            logger.info(  # type: ignore[call-arg]
+            _log(
+                "info",
                 "debug_video_resolution_native",
                 width=self.display_width,
                 height=self.display_height,
             )
 
-        logger.info(  # type: ignore[call-arg]
+        _log(
+            "info",
             "debug_overlay_renderer_initialized",
             output_path=output_path,
             source_width=width,
@@ -239,8 +255,11 @@ class BaseDebugOverlayRenderer:
     def close(self) -> None:
         """Release video writer and re-encode if possible."""
         self.writer.release()
-        logger.info(  # type: ignore[call-arg]
-            "debug_video_writer_released", output_path=self.output_path, codec=self.used_codec
+        _log(
+            "info",
+            "debug_video_writer_released",
+            output_path=self.output_path,
+            codec=self.used_codec,
         )
 
         # Post-process with ffmpeg ONLY if we fell back to the incompatible mp4v codec
@@ -276,7 +295,8 @@ class BaseDebugOverlayRenderer:
                     temp_path,
                 ]
 
-                logger.info(  # type: ignore[call-arg]
+                _log(
+                    "info",
                     "debug_video_ffmpeg_reencoding_start",
                     input_file=self.output_path,
                     output_file=temp_path,
@@ -295,14 +315,16 @@ class BaseDebugOverlayRenderer:
                 )
                 self.reencode_duration_s = time.time() - reencode_start
 
-                logger.info(  # type: ignore[call-arg]
+                _log(
+                    "info",
                     "debug_video_ffmpeg_reencoding_complete",
                     duration_ms=round(self.reencode_duration_s * 1000, 1),
                 )
 
                 # Overwrite original file
                 os.replace(temp_path, self.output_path)
-                logger.info(  # type: ignore[call-arg]
+                _log(
+                    "info",
                     "debug_video_reencoded_file_replaced",
                     output_path=self.output_path,
                     final_codec="libx264",
@@ -311,33 +333,34 @@ class BaseDebugOverlayRenderer:
 
             except subprocess.CalledProcessError as e:
                 stderr_msg = e.stderr.decode("utf-8", errors="ignore") if e.stderr else "N/A"
-                logger.warning(  # type: ignore[call-arg]
-                    "debug_video_ffmpeg_reencoding_failed", error=str(e), stderr=stderr_msg
+                _log(
+                    "warning",
+                    "debug_video_ffmpeg_reencoding_failed",
+                    error=str(e),
+                    stderr=stderr_msg,
                 )
                 if temp_path and os.path.exists(temp_path):
                     os.remove(temp_path)
-                    logger.info(  # type: ignore[call-arg]
-                        "debug_video_temp_file_cleaned_up", temp_file=temp_path
-                    )
+                    _log("info", "debug_video_temp_file_cleaned_up", temp_file=temp_path)
             except Exception as e:
-                logger.warning(  # type: ignore[call-arg]
-                    "debug_video_post_processing_error", error=str(e)
-                )
+                _log("warning", "debug_video_post_processing_error", error=str(e))
                 if temp_path and os.path.exists(temp_path):
                     os.remove(temp_path)
-                    logger.info(  # type: ignore[call-arg]
-                        "debug_video_temp_file_cleaned_up", temp_file=temp_path
-                    )
+                    _log("info", "debug_video_temp_file_cleaned_up", temp_file=temp_path)
         elif self.used_codec == "mp4v" and not shutil.which("ffmpeg"):
-            logger.warning(  # type: ignore[call-arg]
+            _log(
+                "warning",
                 "debug_video_ffmpeg_not_available",
                 codec=self.used_codec,
                 output_path=self.output_path,
                 warning="Video may not play in all browsers",
             )
         else:
-            logger.info(  # type: ignore[call-arg]
-                "debug_video_ready_for_playback", codec=self.used_codec, path=self.output_path
+            _log(
+                "info",
+                "debug_video_ready_for_playback",
+                codec=self.used_codec,
+                path=self.output_path,
             )
 
     def __enter__(self) -> Self:
