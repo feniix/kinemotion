@@ -183,7 +183,8 @@ name = "cz_conventional_commits"
 version = "0.53.0"
 version_provider = "pep621"
 version_files = [
-    "pyproject.toml:project.version"
+    "pyproject.toml:project.version",
+    "sonar-project.properties:sonar\\.projectVersion=(?P<version>.*)"
 ]
 tag_format = "kinemotion-v$version"
 legacy_tag_formats = ["v$version"]
