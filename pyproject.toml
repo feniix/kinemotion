@@ -180,7 +180,7 @@ reportDuplicateImport = "warning"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.53.0"
+version = "0.66.6"
 version_provider = "pep621"
 version_files = [
     "pyproject.toml:project.version",
