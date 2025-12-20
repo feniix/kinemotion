@@ -79,6 +79,7 @@ Thumbs.db
 
 .claude/settings.local.json*
 !.claude/settings.local.json
+!.gemini/**
 !.cursor/mcp.json
 !.envrc
 !.mcp.json

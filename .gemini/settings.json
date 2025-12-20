@@ -1,0 +1,106 @@
+{
+  "mcpServers": {
+    "exa": {
+      "command": "direnv",
+      "args": [
+        "exec",
+        "/Users/feniix/src/personal/cursor/kinemotion",
+        "bunx",
+        "-y",
+        "exa-mcp-server"
+      ]
+    },
+    "ref": {
+      "command": "direnv",
+      "args": [
+        "exec",
+        "/Users/feniix/src/personal/cursor/kinemotion",
+        "bunx",
+        "-y",
+        "ref-tools-mcp@latest"
+      ]
+    },
+    "sonarqube": {
+      "command": "direnv",
+      "args": [
+        "exec",
+        "/Users/feniix/src/personal/cursor/kinemotion",
+        "java",
+        "-jar",
+        "/Users/feniix/src/personal/cursor/kinemotion/libs/sonarqube-mcp-server-1.4.0.1666.jar"
+      ],
+      "env": {
+        "STORAGE_PATH": "/tmp/sonarqube"
+      }
+    },
+    "basic-memory": {
+      "command": "uvx",
+      "args": [
+        "basic-memory",
+        "mcp",
+        "--project=kinemotion"
+      ],
+      "env": {
+        "BASIC_MEMORY_KEBAB_FILENAMES": "true"
+      }
+    },
+    "sequential-thinking": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/arben-adm/mcp-sequential-thinking",
+        "--with",
+        "portalocker",
+        "mcp-sequential-thinking"
+      ]
+    },
+    "serena": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide-assistant",
+        "--project",
+        "/Users/feniix/src/personal/cursor/kinemotion"
+      ]
+    },
+    "code-reasoning": {
+      "command": "bunx",
+      "args": [
+        "-y",
+        "@mettamatt/code-reasoning"
+      ]
+    }
+  },
+  "general": {
+    "previewFeatures": true,
+    "debugKeystrokeLogging": false,
+    "sessionRetention": {
+      "enabled": true
+    },
+    "enablePromptCompletion": true
+  },
+  "output": {
+    "format": "json"
+  },
+  "ui": {
+    "footer": {
+      "hideContextPercentage": false
+    },
+    "showMemoryUsage": true,
+    "showCitations": true,
+    "showModelInfoInChat": true
+  },
+  "tools": {
+    "shell": {
+      "showColor": true
+    },
+    "useRipgrep": true
+  },
+  "ide": {
+    "enabled": true
+  }
+}
