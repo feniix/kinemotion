@@ -1,5 +1,6 @@
 "Shared pipeline utilities for kinematic analysis."
 
+import multiprocessing as mp
 from collections.abc import Callable
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import TypeVar
@@ -406,7 +407,9 @@ def process_videos_bulk_generic(
     """
     results: list[TResult] = []
 
-    with ProcessPoolExecutor(max_workers=max_workers) as executor:
+    # Use 'spawn' context to avoid fork() issues in multi-threaded pytest environment
+    mp_context = mp.get_context("spawn")
+    with ProcessPoolExecutor(max_workers=max_workers, mp_context=mp_context) as executor:
         future_to_config = {executor.submit(processor_func, config): config for config in configs}
 
         for future in as_completed(future_to_config):
