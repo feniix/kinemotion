@@ -4,17 +4,34 @@
       "command": "direnv",
       "args": [
         "exec",
-        "/Users/feniix/src/personal/cursor/kinemotion",
-        "bunx", "-y", "exa-mcp-server"
+        "${workspaceFolder}",
+        "bunx",
+        "-y",
+        "exa-mcp-server"
       ]
     },
     "ref": {
       "command": "direnv",
       "args": [
         "exec",
-        "/Users/feniix/src/personal/cursor/kinemotion",
-        "bunx", "-y", "ref-tools-mcp@latest"
+        "${workspaceFolder}",
+        "bunx",
+        "-y",
+        "ref-tools-mcp@latest"
       ]
+    },
+    "sonarqube": {
+      "command": "direnv",
+      "args": [
+        "exec",
+        "${workspaceFolder}",
+        "java",
+        "-jar",
+        "${workspaceFolder}/libs/sonarqube-mcp-server-1.4.0.1666.jar"
+      ],
+      "env": {
+        "STORAGE_PATH": "/tmp/sonarqube"
+      }
     },
     "basic-memory": {
       "command": "uvx",
@@ -47,7 +64,7 @@
         "--context",
         "ide-assistant",
         "--project",
-        "/Users/feniix/src/personal/cursor/kinemotion"
+        "${workspaceFolder}"
       ]
     },
     "code-reasoning": {
@@ -56,19 +73,6 @@
         "-y",
         "@mettamatt/code-reasoning"
       ]
-    },
-    "sonarqube": {
-      "command": "direnv",
-      "args": [
-        "exec",
-        "/Users/feniix/src/personal/cursor/kinemotion",
-        "java",
-        "-jar",
-        "/tmp/sonarqube-mcp-server-1.4.0.1666.jar"
-      ],
-      "env": {
-        "STORAGE_PATH": "/tmp/sonarqube"
-      }
     }
   }
 }

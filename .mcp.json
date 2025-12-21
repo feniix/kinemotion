@@ -4,17 +4,34 @@
       "command": "direnv",
       "args": [
         "exec",
-        "/Users/feniix/src/personal/cursor/kinemotion",
-        "bunx", "-y", "exa-mcp-server"
+        "${PROJECT_ROOT}",
+        "bunx",
+        "-y",
+        "exa-mcp-server"
       ]
     },
     "ref": {
       "command": "direnv",
       "args": [
         "exec",
-        "/Users/feniix/src/personal/cursor/kinemotion",
-        "bunx", "-y", "ref-tools-mcp@latest"
+        "${PROJECT_ROOT}",
+        "bunx",
+        "-y",
+        "ref-tools-mcp@latest"
       ]
+    },
+    "sonarqube": {
+      "command": "direnv",
+      "args": [
+        "exec",
+        "${PROJECT_ROOT}",
+        "java",
+        "-jar",
+        "${PROJECT_ROOT}/libs/sonarqube-mcp-server-1.4.0.1666.jar"
+      ],
+      "env": {
+        "STORAGE_PATH": "/tmp/sonarqube"
+      }
     },
     "basic-memory": {
       "command": "uvx",
@@ -27,19 +44,6 @@
         "BASIC_MEMORY_KEBAB_FILENAMES": "true"
       }
     },
-    "sonarqube": {
-      "command": "direnv",
-      "args": [
-        "exec",
-        "/Users/feniix/src/personal/cursor/kinemotion",
-        "java",
-        "-jar",
-        "/tmp/sonarqube-mcp-server-1.4.0.1666.jar"
-      ],
-      "env": {
-        "STORAGE_PATH": "/tmp/sonarqube"
-      }
-    },
     "sequential-thinking": {
       "command": "uvx",
       "args": [
@@ -48,20 +52,6 @@
         "--with",
         "portalocker",
         "mcp-sequential-thinking"
-      ]
-    },
-    "code-reasoning": {
-      "command": "bunx",
-      "args": [
-        "-y",
-        "@mettamatt/code-reasoning"
-      ]
-    },
-    "pdf-mcp": {
-      "command": "bunx",
-      "args": [
-        "-y",
-        "@sylphx/pdf-reader-mcp"
       ]
     },
     "serena": {
@@ -74,7 +64,14 @@
         "--context",
         "ide-assistant",
         "--project",
-        "/Users/feniix/src/personal/cursor/kinemotion"
+        "${PROJECT_ROOT}"
+      ]
+    },
+    "code-reasoning": {
+      "command": "bunx",
+      "args": [
+        "-y",
+        "@mettamatt/code-reasoning"
       ]
     }
   }

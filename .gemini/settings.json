@@ -4,7 +4,7 @@
       "command": "direnv",
       "args": [
         "exec",
-        "/Users/feniix/src/personal/cursor/kinemotion",
+        "${HOME}/src/personal/cursor/kinemotion",
         "bunx",
         "-y",
         "exa-mcp-server"
@@ -14,7 +14,7 @@
       "command": "direnv",
       "args": [
         "exec",
-        "/Users/feniix/src/personal/cursor/kinemotion",
+        "${HOME}/src/personal/cursor/kinemotion",
         "bunx",
         "-y",
         "ref-tools-mcp@latest"
@@ -24,10 +24,10 @@
       "command": "direnv",
       "args": [
         "exec",
-        "/Users/feniix/src/personal/cursor/kinemotion",
+        "${HOME}/src/personal/cursor/kinemotion",
         "java",
         "-jar",
-        "/Users/feniix/src/personal/cursor/kinemotion/libs/sonarqube-mcp-server-1.4.0.1666.jar"
+        "${HOME}/src/personal/cursor/kinemotion/libs/sonarqube-mcp-server-1.4.0.1666.jar"
       ],
       "env": {
         "STORAGE_PATH": "/tmp/sonarqube"
@@ -64,7 +64,7 @@
         "--context",
         "ide-assistant",
         "--project",
-        "/Users/feniix/src/personal/cursor/kinemotion"
+        "${HOME}/src/personal/cursor/kinemotion"
       ]
     },
     "code-reasoning": {
