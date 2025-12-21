@@ -1,9 +1,9 @@
 {
-  "includeCoAuthoredBy": false,
   "attribution": {
     "commit": "",
     "pr": ""
   },
+  "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
       "Bash(cat:*)",
@@ -75,5 +75,14 @@
       "mcp__web-search__freebird_search"
     ]
   },
-  "enableAllProjectMcpServers": true
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "exa",
+    "ref",
+    "sonarqube",
+    "basic-memory",
+    "sequential-thinking",
+    "serena",
+    "code-reasoning"
+  ]
 }
