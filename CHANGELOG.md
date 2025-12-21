@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.66.8 (2025-12-21)
+
+### Fix
+
+- use spawn context for ProcessPoolExecutor to avoid fork() issues
+
 ## kinemotion-v0.66.7 (2025-12-20)
 
 ### Fix
