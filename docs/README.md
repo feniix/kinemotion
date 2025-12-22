@@ -25,6 +25,15 @@ Welcome to the kinemotion documentation. This directory contains guides, technic
 ### 🔬 Research & Validation
 
 - **[⚠️ Validation Status](validation-status.md)** - **READ FIRST** - Current validation status, limitations, and appropriate use cases
+- **[Pose Estimator Comparison 2025](research/pose-estimator-comparison-2025.md)** - Comparison of MediaPipe, RTMPose, OpenPose, DWPose for multi-sport analysis
+  - RTMLib recommendation for Apple Silicon
+  - Sprint, weightlifting, wall ball analysis
+  - Accuracy benchmarks and migration path
+- **[RTMPose vs RTMLib vs MediaPipe](research/rtmpose-rtmlib-mediapipe-comparison.md)** - **NEW** - Detailed technical comparison
+  - Architecture deep-dive (SimCC vs heatmap)
+  - COCO AP benchmarks and speed tests
+  - Code examples and migration guide
+  - Platform support matrix
 - **[Sports Biomechanics Pose Estimation](research/sports-biomechanics-pose-estimation.md)** - Comprehensive research analysis on pose detection systems for sports biomechanics
   - Pose2Sim validation (3-4° accuracy)
   - Stereo MediaPipe validation (30.1mm RMSE)
@@ -37,6 +46,11 @@ Welcome to the kinemotion documentation. This directory contains guides, technic
 - **[Framerate](technical/framerate.md)** - Frame rate considerations for analysis
 - **[IMU Metadata](technical/imu-metadata.md)** - Video metadata preservation
 - **[Real-Time Analysis](technical/real-time-analysis.md)** - Future real-time processing capabilities
+- **[Real-Time Pose Estimation](technical/real-time-pose-estimation.md)** - **NEW** - Comprehensive real-time guide
+  - RTMO one-stage vs RTMPose two-stage
+  - Browser (MediaPipe) vs Server (RTMLib) architectures
+  - WebSocket streaming implementation
+  - Latency optimization strategies
 
 ### 👨‍💻 Development
 
@@ -111,4 +125,4 @@ Ensure cross-references use relative paths and follow conventional commits forma
 
 ______________________________________________________________________
 
-**Last Updated:** November 7, 2025
+**Last Updated:** December 21, 2025

@@ -1,45 +1,103 @@
 # Pose Estimation Systems - Quick Reference
 
-**Last Updated:** November 2025 (Sources through July 2025)
+**Last Updated:** December 2025 (Sources through December 2025)
 
 ## TL;DR - Best Choice by Use Case
 
-| Use Case           | Recommended System    | Accuracy     | Setup Effort | Cost     |
-| ------------------ | --------------------- | ------------ | ------------ | -------- |
-| **Research Lab**   | Pose2Sim              | ★★★★★ (3-4°) | Medium       | Free     |
-| **Field Testing**  | OpenCap               | ★★★★☆        | Low          | Free     |
-| **Clinical/Rehab** | Stereo MediaPipe      | ★★★☆☆        | Low          | Free     |
-| **Elite Sports**   | Pose2Sim + Sport Data | ★★★★★        | Medium-High  | Free-$$$ |
-| **Commercial**     | Theia3D               | ★★★★☆        | Low          | $$$      |
+| Use Case                              | Recommended System    | Accuracy     | Setup Effort | Cost     |
+| ------------------------------------- | --------------------- | ------------ | ------------ | -------- |
+| **Multi-Sport (Jumps/Sprints/Lifts)** | **RTMLib (RTMPose)**  | ★★★★★ (5.6°) | **Very Low** | Free     |
+| **Research Lab**                      | Pose2Sim              | ★★★★★ (3-4°) | Medium       | Free     |
+| **Field Testing**                     | OpenCap               | ★★★★☆        | Low          | Free     |
+| **Clinical/Rehab**                    | Stereo MediaPipe      | ★★★☆☆        | Low          | Free     |
+| **Elite Sports**                      | Pose2Sim + Sport Data | ★★★★★        | Medium-High  | Free-$$$ |
+| **Browser/Mobile**                    | MediaPipe             | ★★★☆☆        | Very Low     | Free     |
+| **Apple Silicon Dev**                 | **RTMLib**            | ★★★★★        | **Very Low** | Free     |
+| **Commercial**                        | Theia3D               | ★★★★☆        | Low          | $$$      |
+
+> **New (Dec 2025):** RTMLib provides RTMPose accuracy without MMPose dependencies. Native Apple Silicon support, trivial installation (`pip install rtmlib`).
 
 ______________________________________________________________________
 
 ## System Comparison Table
 
-| System                | Joint Angle Error | Position RMSE | Validation | Cameras   | Open Source |
-| --------------------- | ----------------- | ------------- | ---------- | --------- | ----------- |
-| **Pose2Sim**          | 3-4°              | 30-40mm       | Qualisys ✓ | 4-8       | Yes         |
-| **OpenCap**           | TBD               | TBD           | Emerging   | 2+ phones | Yes         |
-| **Stereo MediaPipe**  | ~5-7°             | 30mm          | Qualisys ✓ | 2         | Yes         |
-| **Theia3D**           | 2.6-13.2°         | -             | Published  | Multi     | No          |
-| **Current MediaPipe** | ~10-15°           | 56mm          | Limited    | 1         | Yes         |
-| **Marker-Based**      | \<2°              | 1-15mm        | Gold Std   | 8+        | No          |
+| System               | Joint Angle Error | Position RMSE | Validation     | Cameras   | Open Source | Apple Silicon |
+| -------------------- | ----------------- | ------------- | -------------- | --------- | ----------- | ------------- |
+| **RTMLib (RTMPose)** | **5.6°**          | ~30mm         | Running/Jump ✓ | 1+        | Yes         | **Native ✓**  |
+| **Pose2Sim**         | 3-4°              | 30-40mm       | Qualisys ✓     | 4-8       | Yes         | Problematic   |
+| **OpenCap**          | TBD               | TBD           | Emerging       | 2+ phones | Yes         | Yes           |
+| **Stereo MediaPipe** | ~5-7°             | 30mm          | Qualisys ✓     | 2         | Yes         | Yes           |
+| **Theia3D**          | 2.6-13.2°         | -             | Published      | Multi     | No          | N/A           |
+| **MediaPipe (mono)** | ~6-10°            | 56mm          | Limited        | 1         | Yes         | Yes           |
+| **OpenPose**         | ~5-8°             | -             | Academic       | 1+        | Yes         | **No (CUDA)** |
+| **Marker-Based**     | \<2°              | 1-15mm        | Gold Std       | 8+        | No          | N/A           |
+
+> **Note:** RTMLib wraps RTMPose models for deployment without MMPose/MMCV dependencies.
 
 ______________________________________________________________________
 
 ## Quick Decision Tree
 
 ```text
-Need sports biomechanics accuracy?
-├─ Yes
-│  ├─ Have budget/time for multi-camera setup?
-│  │  ├─ Yes → Use Pose2Sim
-│  │  └─ No → Use OpenCap (smartphones)
-│  └─ Just need exercise assessment?
-│     └─ Use Stereo MediaPipe OR OpenCap
-└─ No (general pose detection)
-   └─ Stay with current MediaPipe/OpenPose
+What's your primary constraint?
+├─ Apple Silicon / No GPU
+│  └─ Use RTMLib (pip install rtmlib)
+├─ Browser deployment needed
+│  └─ Use MediaPipe (TensorFlow.js)
+├─ Multi-sport analysis (jumps/sprints/lifts/wallball)
+│  └─ Use RTMLib (best accuracy + easy setup)
+├─ Research-grade accuracy required
+│  ├─ Have multi-camera setup?
+│  │  └─ Yes → Use Pose2Sim (3-4° accuracy)
+│  └─ Smartphone-only?
+│     └─ Use OpenCap
+└─ Quick prototype / exercise assessment
+   └─ Use MediaPipe (simplest)
 ```
+
+______________________________________________________________________
+
+## RTMLib Quick Setup (Recommended for Multi-Sport)
+
+```bash
+# Install (works on Apple Silicon, Linux, Windows)
+pip install rtmlib
+```
+
+```python
+from rtmlib import Body
+
+# Initialize (downloads models automatically)
+pose_tracker = Body(
+    mode='balanced',      # 'lightweight', 'balanced', 'performance'
+    backend='onnxruntime',
+    device='cpu'          # or 'cuda', 'mps'
+)
+
+# Process frame
+keypoints, scores = pose_tracker(frame)
+# keypoints: (num_people, 17, 2) - COCO format
+# scores: (num_people, 17)
+```
+
+**Models Available:**
+
+| Model           | Keypoints | Use Case                |
+| --------------- | --------- | ----------------------- |
+| `Body`          | 17        | Jumps, sprints, general |
+| `Body` (26-kpt) | 26        | Body + feet detail      |
+| `Wholebody`     | 133       | Body + hands + face     |
+| `RTMO`          | 17        | One-stage (faster)      |
+
+**Performance Modes:**
+
+| Mode          | Speed     | Accuracy | Best For          |
+| ------------- | --------- | -------- | ----------------- |
+| `lightweight` | 25-40 FPS | Good     | Real-time preview |
+| `balanced`    | 15-25 FPS | Better   | Production        |
+| `performance` | 8-15 FPS  | Best     | Detailed analysis |
+
+**Repository:** <https://github.com/Tau-J/rtmlib>
 
 ______________________________________________________________________
 
@@ -225,20 +283,32 @@ ______________________________________________________________________
 
 ## FAQ
 
+**Q: What's the best choice for multi-sport analysis (jumps, sprints, lifts)?**
+A: **RTMLib (RTMPose)**. Best accuracy (5.6° RMSE for running), works on Apple Silicon, trivial setup.
+
 **Q: Can I use OpenPose/MediaPipe alone for biomechanics?**
-A: No. They provide 2D/noisy 3D keypoints but lack biomechanical constraints and multi-view accuracy \[1\]. Use Pose2Sim or OpenCap.
+A: For field/training use, RTMLib or MediaPipe are sufficient. For research-grade accuracy, use Pose2Sim or OpenCap with multi-camera setup.
+
+**Q: Does RTMPose work on Mac M1/M2/M3?**
+A: Yes! Use RTMLib (`pip install rtmlib`), which runs via ONNX Runtime without CUDA dependencies. Tested and confirmed working.
+
+**Q: Why RTMLib instead of full MMPose?**
+A: MMPose has MMCV dependency issues on Apple Silicon (CUDA compilation errors). RTMLib provides the same models without those dependencies.
 
 **Q: How many cameras do I need?**
-A: Minimum 2 (stereo), recommended 4-8 (full 3D).
+A: Single camera works for field use (5-10° accuracy). For research (3-4° accuracy), use 4-8 cameras with Pose2Sim.
 
-**Q: Will DWpose or newer models help?**
-A: Not significantly. The bottleneck is multi-view triangulation and biomechanical modeling, not the 2D detector.
+**Q: Will DWPose or newer models help?**
+A: For single-camera use, RTMPose/DWPose are ~10-15% more accurate than MediaPipe. The bigger gains come from multi-view setups.
 
-**Q: What about IMUs (Xsens)?**
-A: Comparable accuracy (2-5° errors) but requires wearable sensors \[1\]. Video-based is more natural.
+**Q: MediaPipe vs RTMPose for sprint analysis?**
+A: RTMPose (5.62° RMSE) beats MediaPipe (6.33° RMSE) and is more robust to motion blur in fast movements.
+
+**Q: What about browser deployment?**
+A: Use MediaPipe (TensorFlow.js) for browser. RTMLib is Python/server-side only.
 
 **Q: Can I process in real-time?**
-A: Most systems are batch processing. Real-time requires optimization and GPU acceleration.
+A: Yes. RTMLib `lightweight` mode: 25-40 FPS. MediaPipe: 30+ FPS. Both work on CPU.
 
 **Q: How do I validate my setup?**
 A: Compare against marker-based system (Vicon/Qualisys). Calculate CMC, RMSE, ROM errors, Bland-Altman plots \[1,2\].
@@ -247,11 +317,21 @@ ______________________________________________________________________
 
 ## Contact & Updates
 
-This is a living document based on research as of November 2025 (sources through July 2025). The field is rapidly advancing.
+This is a living document based on research as of December 2025. The field is rapidly advancing.
 
 For kinemotion project-specific questions, see:
 
-- Main documentation: `SPORTS_BIOMECHANICS_POSE_ESTIMATION.md`
-- Project: <https://github.com/feniix/kinemotion> (or your repo)
+- Detailed comparison: [`docs/research/pose-estimator-comparison-2025.md`](../research/pose-estimator-comparison-2025.md)
+- Sports biomechanics research: [`docs/research/sports-biomechanics-pose-estimation.md`](../research/sports-biomechanics-pose-estimation.md)
+- Project: <https://github.com/feniix/kinemotion>
 
 **Check for updates:** Research landscape changes quickly. New validations and systems emerge regularly.
+
+______________________________________________________________________
+
+## Additional Resources
+
+- **RTMLib:** <https://github.com/Tau-J/rtmlib>
+- **RTMPose Paper:** <https://arxiv.org/abs/2303.07399>
+- **Running Biomechanics Comparison:** arXiv:2505.04713
+- **AthletePose3D:** <https://arxiv.org/abs/2503.07499>

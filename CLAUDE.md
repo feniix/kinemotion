@@ -2,12 +2,16 @@
 
 ## Repository Purpose
 
-Kinemotion: Video-based kinematic analysis for athletic performance using MediaPipe pose tracking.
+Kinemotion: Video-based kinematic analysis for athletic performance using pose estimation.
 
-**Supported Jump Types:**
+**Current Pose Estimator:** MediaPipe (validated for jumps)
+**Recommended for Multi-Sport Expansion:** RTMLib/RTMPose (see [Pose Estimator Comparison](docs/research/pose-estimator-comparison-2025.md))
+
+**Supported Analysis Types:**
 
 - **Drop Jump**: Ground contact time, flight time, reactive strength index
 - **Counter Movement Jump (CMJ)**: Jump height, flight time, countermovement depth, triple extension
+- **Planned:** Sprint analysis, weightlifting form, wall ball (see multi-sport comparison)
 
 ## Current Roadmap (MVP-First Approach)
 
@@ -295,10 +299,10 @@ metrics = process_cmj_video("video.mp4", quality="balanced")
 Documentation follows the [Diátaxis framework](https://diataxis.fr/):
 
 - **guides/** - How-to tutorials
-- **reference/** - Technical specs
+- **reference/** - Technical specs (including [Pose Systems Quick Reference](docs/reference/pose-systems.md))
 - **technical/** - Implementation details
 - **development/** - Testing, typing, contribution guides
-- **research/** - Background theory
+- **research/** - Validation studies and background theory (including [Pose Estimator Comparison 2025](docs/research/pose-estimator-comparison-2025.md))
 
 See [docs/README.md](docs/README.md) for complete navigation.
 

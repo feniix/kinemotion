@@ -72,7 +72,15 @@
       "mcp__sonarqube__search_sonar_issues_in_projects",
       "mcp__sonarqube__show_rule",
       "mcp__web-search__freebird_fetch",
-      "mcp__web-search__freebird_search"
+      "mcp__web-search__freebird_search",
+      "WebFetch(domain:sjsp.aearedo.es)",
+      "WebFetch(domain:pmc.ncbi.nlm.nih.gov)",
+      "WebFetch(domain:www.mdpi.com)",
+      "WebFetch(domain:arxiv.org)",
+      "WebFetch(domain:saiwa.ai)",
+      "WebFetch(domain:blog.roboflow.com)",
+      "WebFetch(domain:mmpose.readthedocs.io)",
+      "Bash(uv run python:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
