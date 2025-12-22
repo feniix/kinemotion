@@ -1,7 +1,7 @@
 ---
 title: Production Deployment Guide - Vercel + Google Cloud Run
 type: note
-permalink: deployment/production-deployment-guide-vercel-google-cloud-run-1
+permalink: deployment/production-deployment-guide-vercel-google-cloud-run
 tags:
 - deployment
 - vercel

@@ -1,7 +1,7 @@
 ---
 title: Project State Summary - December 2025
 type: note
-permalink: project-management/project-state-summary-december-2025-1
+permalink: project-management/project-state-summary-december-2025
 tags:
 - project-status
 - architecture
@@ -77,41 +77,6 @@ Kinemotion is transitioning from CLI-only (v0.34.0) to integrated platform with 
 │ - MediaPipe pose    │
 └─────────────────────┘
 ```
-
-## Recent Changes (Last 10 Commits)
-
-1. **2fdfaad** - ci: implement least-privilege service account separation for Cloud Run deployment
-   - Created runtime service account for Cloud Run
-   - Per-secret access only (SUPABASE_URL, SUPABASE_ANON_KEY)
-   - Separated CI/CD account from runtime account
-
-2. **56c8cb8** - ci: fix docker build
-   - Resolved Docker build issues
-
-3. **126839f** - chore: add missing Supabase client and fix TypeScript errors
-   - Fixed TypeScript errors in backend
-
-4. **a818d6c** - docs: fix basic-memory documentation format issues
-   - Documentation formatting
-
-5. **1260aff** - docs: add Google OAuth setup guide and script review documentation
-   - Added Google OAuth setup guide
-   - Reviewed setup scripts
-
-6. **15241ec** - chore(release): 0.34.0 [skip ci]
-   - CLI version release
-
-7. **d37e097** - docs: update basic-memory with Supabase authentication documentation
-   - Supabase docs
-
-8. **2a38391** - feat: add Supabase authentication to frontend
-   - ✨ Frontend auth integration
-
-9. **9021b54** - chore: sync backend/uv.lock with workspace lock and update Docker build
-   - Dependency sync
-
-10. **474ffd1** - chore: add Supabase setup scripts and update deployment script
-    - Supabase infrastructure scripts
 
 ## Known Working Features
 
