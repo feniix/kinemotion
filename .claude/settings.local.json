@@ -81,7 +81,8 @@
       "WebFetch(domain:blog.roboflow.com)",
       "WebFetch(domain:mmpose.readthedocs.io)",
       "Bash(uv run python:*)",
-      "WebSearch"
+      "WebSearch",
+      "Skill(aichat:session-search)"
     ]
   },
   "enableAllProjectMcpServers": true,

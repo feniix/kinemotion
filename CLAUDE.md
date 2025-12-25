@@ -533,3 +533,15 @@ build_context("memory://strategy/*")  # Get current roadmap
 build_context("memory://project-management/*")  # Get subagent routing
 # This helps route work to appropriate specialized agents
 ```
+
+## Skills & Slash Commands
+
+### tmux-cli - Interactive CLI Control
+
+`tmux-cli` is a bash command that enables Claude Code to control CLI applications running in separate tmux panes - launch programs, send input, capture output, and manage interactive sessions. Run `tmux-cli --help` for detailed usage instructions.
+
+**Use cases:**
+- Interact with scripts that wait for user input
+- Launch another Claude Code instance for parallel analysis, review, or debugging
+- Run Python scripts with the Pdb debugger to step through execution
+- Launch web apps and test them with browser automation MCP tools (Playwright, Chrome DevTools)

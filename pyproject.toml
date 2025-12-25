@@ -28,6 +28,7 @@ dependencies = [
     "scipy>=1.11.0",
     "typing-extensions>=4.15.0",
     "platformdirs>=4.0.0",
+    "rtmlib>=0.0.13",
 ]
 
 [project.urls]
