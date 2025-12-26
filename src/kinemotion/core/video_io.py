@@ -35,6 +35,8 @@ class VideoProcessor:
 
         self.fps = self.cap.get(cv2.CAP_PROP_FPS)
         self.frame_count = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        self._frame_index: int = 0
+        self._current_timestamp_ms: int = 0  # Timestamp for the current frame
 
         # Read first frame to get actual dimensions
         # This is critical for preserving aspect ratio, especially with mobile videos
@@ -73,6 +75,25 @@ class VideoProcessor:
                 self.display_height,
                 self.display_width,
             )
+
+    @property
+    def current_timestamp_ms(self) -> int:
+        """Get the current frame timestamp in milliseconds.
+
+        Returns:
+            Timestamp in milliseconds for the frame most recently read.
+            For the first frame, this returns 0 ms.
+        """
+        return self._current_timestamp_ms
+
+    @property
+    def frame_index(self) -> int:
+        """Get the current frame index.
+
+        Returns:
+            Current frame number (0-based) - the frame most recently read
+        """
+        return self._frame_index
 
     def _parse_sample_aspect_ratio(self, sar_str: str) -> None:
         """
@@ -178,12 +199,20 @@ class VideoProcessor:
 
         OpenCV ignores rotation metadata, so we manually apply rotation
         based on the display matrix metadata extracted from the video.
+
+        Returns:
+            Frame as numpy array or None if no more frames
         """
         with self.timer.measure("frame_read"):
             ret, frame = self.cap.read()
 
         if not ret:
             return None
+
+        # Calculate timestamp for this frame BEFORE incrementing index
+        # This ensures frame 0 has timestamp 0ms, frame 1 has timestamp 16ms, etc.
+        if self.fps > 0:
+            self._current_timestamp_ms = int(self._frame_index * 1000 / self.fps)
 
         # Apply rotation if video has rotation metadata
         with self.timer.measure("frame_rotation"):
@@ -197,6 +226,7 @@ class VideoProcessor:
                 # 180 degrees rotation
                 frame = cv2.rotate(frame, cv2.ROTATE_180)
 
+        self._frame_index += 1
         return frame
 
     def close(self) -> None:

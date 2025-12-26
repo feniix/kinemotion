@@ -8,7 +8,9 @@ from .filtering import (
     reject_outliers,
     remove_outliers,
 )
+from .model_downloader import get_model_cache_dir, get_model_path
 from .pose import PoseTracker, compute_center_of_mass
+from .pose_landmarks import KINEMOTION_LANDMARKS, LANDMARK_INDICES
 from .quality import (
     QualityAssessment,
     QualityIndicators,
@@ -34,6 +36,10 @@ __all__ = [
     # Pose tracking
     "PoseTracker",
     "compute_center_of_mass",
+    "LANDMARK_INDICES",
+    "KINEMOTION_LANDMARKS",
+    "get_model_path",
+    "get_model_cache_dir",
     # Smoothing
     "smooth_landmarks",
     "smooth_landmarks_advanced",

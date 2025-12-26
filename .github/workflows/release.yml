@@ -32,6 +32,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          lfs: true  # Fetch LFS files (pose_landmarker_lite.task model)
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -109,6 +110,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: kinemotion-v${{ needs.release.outputs.version }}
+          lfs: true  # Fetch LFS files (pose_landmarker_lite.task model)
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

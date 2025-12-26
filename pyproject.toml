@@ -23,10 +23,11 @@ classifiers = [
 dependencies = [
     "click>=8.1.7",
     "opencv-python>=4.9.0",
-    "mediapipe>=0.10.9",
+    "mediapipe>=0.10.30",  # Tasks API available (Solution API removed in 0.10.31+)
     "numpy>=1.26.0",
     "scipy>=1.11.0",
     "typing-extensions>=4.15.0",
+    "platformdirs>=4.0.0",
 ]
 
 [project.urls]
@@ -44,6 +45,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/kinemotion"]
+artifacts = ["src/kinemotion/models/*.task"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "src/kinemotion/py.typed" = "kinemotion/py.typed"
@@ -114,6 +116,7 @@ extend-exclude = [
     "examples/**",
     "scripts/**",
     "presentation/**",
+    "TRASH/**",
 ]
 
 [tool.ruff.format]
@@ -137,7 +140,7 @@ ignore = []
 
 [tool.pyright]
 include = ["src"]
-exclude = ["tests", "examples"]
+exclude = ["tests", "examples", "TRASH"]
 
 pythonVersion = "3.10"
 typeCheckingMode = "strict"

@@ -461,3 +461,70 @@ def test_video_rotation_180_degrees():
 
     finally:
         Path(test_video).unlink()
+
+
+def test_frame_timestamps():
+    """Test that frame timestamps are correctly calculated for MediaPipe Tasks API."""
+    test_video = create_test_video(640, 480, fps=59.94, num_frames=10)
+
+    try:
+        video = VideoProcessor(test_video)
+
+        # First frame should have timestamp 0ms
+        frame = video.read_frame()
+        assert frame is not None
+        assert video.current_timestamp_ms == 0, "First frame timestamp should be 0ms"
+
+        # Second frame should have timestamp ~16ms (at 59.94 fps)
+        frame = video.read_frame()
+        assert frame is not None
+        expected_ms = int(1 * 1000 / 59.94)
+        assert video.current_timestamp_ms == expected_ms, (
+            f"Second frame timestamp should be {expected_ms}ms"
+        )
+
+        # Third frame should have timestamp ~33ms
+        frame = video.read_frame()
+        assert frame is not None
+        expected_ms = int(2 * 1000 / 59.94)
+        assert video.current_timestamp_ms == expected_ms, (
+            f"Third frame timestamp should be {expected_ms}ms"
+        )
+
+        # Verify frame_index matches
+        assert video.frame_index == 3, "frame_index should equal number of frames read"
+
+        video.close()
+
+    finally:
+        Path(test_video).unlink()
+
+
+def test_frame_timestamps_at_different_fps():
+    """Test timestamps at different frame rates."""
+    for fps in [24.0, 30.0, 60.0, 59.94]:
+        test_video = create_test_video(640, 480, fps=fps, num_frames=5)
+
+        try:
+            video = VideoProcessor(test_video)
+
+            # First frame should always be 0ms
+            frame = video.read_frame()
+            assert frame is not None
+            assert video.current_timestamp_ms == 0, (
+                f"First frame timestamp should be 0ms at {fps} fps"
+            )
+
+            # Second frame should be correct for the fps
+            frame = video.read_frame()
+            assert frame is not None
+            expected_ms = int(1 * 1000 / fps)
+            assert video.current_timestamp_ms == expected_ms, (
+                f"Second frame timestamp should be {expected_ms}ms ",
+                f"at {fps} fps, got {video.current_timestamp_ms}",
+            )
+
+            video.close()
+
+        finally:
+            Path(test_video).unlink()

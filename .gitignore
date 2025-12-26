@@ -93,3 +93,7 @@ data/**
 !data/**/
 !data/**/README.md
 !data/**/.gitkeep
+
+# TRASH (anywhere)
+**/TRASH/
+**/trash/

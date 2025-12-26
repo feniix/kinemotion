@@ -159,7 +159,7 @@ def _process_frames_loop(
         if frame is None:
             break
 
-        landmarks = tracker.process_frame(frame)
+        landmarks = tracker.process_frame(frame, video.current_timestamp_ms)
         landmarks_sequence.append(landmarks)
 
         if frame_idx % step == 0:

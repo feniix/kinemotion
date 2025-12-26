@@ -80,7 +80,8 @@
       "WebFetch(domain:saiwa.ai)",
       "WebFetch(domain:blog.roboflow.com)",
       "WebFetch(domain:mmpose.readthedocs.io)",
-      "Bash(uv run python:*)"
+      "Bash(uv run python:*)",
+      "WebSearch"
     ]
   },
   "enableAllProjectMcpServers": true,

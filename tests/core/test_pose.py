@@ -15,7 +15,7 @@ def test_pose_tracker_initialization() -> None:
     tracker = PoseTracker()
 
     assert tracker.mp_pose is not None
-    assert tracker.pose is not None
+    assert tracker.landmarker is not None
 
     tracker.close()
 
@@ -28,7 +28,7 @@ def test_pose_tracker_initialization_with_custom_confidence() -> None:
     )
 
     assert tracker.mp_pose is not None
-    assert tracker.pose is not None
+    assert tracker.landmarker is not None
 
     tracker.close()
 

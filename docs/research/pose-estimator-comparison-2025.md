@@ -29,8 +29,16 @@ ______________________________________________________________________
 - **Architecture:** Top-down (detect person, then keypoints)
 - **Keypoints:** 33 landmarks
 - **Speed:** 30+ FPS on CPU
+- **API:** Tasks API (PoseLandmarker) - **Solution API removed in 0.10.31**
+- **Model:** `lite` model (matches Solution API's `model_complexity=1` behavior)
 - **Strengths:** Easy setup, browser deployment, mobile-native
 - **Weaknesses:** Motion blur sensitivity, occlusion handling, single-person optimized
+
+**Important Migration Note (December 2025):**
+
+- MediaPipe Tasks API is now used (Solution API removed in v0.10.31)
+- The `lite` model produces results matching the previous Solution API validation
+- `full` and `heavy` models produce significantly different metrics (17% error in jump height)
 
 ### 1.2 OpenPose
 
