@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.67.0 (2025-12-26)
+
+### Feat
+
+- **pose**: migrate from MediaPipe Solution API to Tasks API
+
 ## kinemotion-v0.66.8 (2025-12-21)
 
 ### Fix
