@@ -29,6 +29,8 @@ dependencies = [
     "typing-extensions>=4.15.0",
     "platformdirs>=4.0.0",
     "rtmlib>=0.0.13",
+    "tqdm>=4.67.1",
+    "onnxruntime>=1.23.2",
 ]
 
 [project.urls]

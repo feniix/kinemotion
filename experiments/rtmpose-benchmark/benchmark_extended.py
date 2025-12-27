@@ -97,11 +97,11 @@ def main():
 
     results = {}
 
-    # Baseline: MediaPipe
+    # Baseline: MediaPipe (use image mode to avoid timestamp issues)
     print("--- Baseline ---")
     results["MediaPipe"] = benchmark_config(
         "MediaPipe",
-        lambda: PoseTracker(),
+        lambda: PoseTracker(strategy="image"),
     )
 
     # Baseline: RTMPose-S lightweight (standard 192x256)

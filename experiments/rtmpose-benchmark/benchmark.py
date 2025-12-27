@@ -206,11 +206,11 @@ def run_comparative_benchmark(
         video_name = Path(video_path).name
         print(f"--- {video_name} ---")
 
-        # Benchmark MediaPipe
+        # Benchmark MediaPipe (use image mode to avoid timestamp issues)
         print("  MediaPipe...", end="", flush=True)
         result_mp = benchmark_tracker(
             "MediaPipe",
-            lambda timer: PoseTracker(timer=timer),
+            lambda timer: PoseTracker(timer=timer, strategy="image"),
             video_path,
             mode="default",
         )

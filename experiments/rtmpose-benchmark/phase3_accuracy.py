@@ -297,11 +297,11 @@ def compare_accuracy(video_path: str) -> AccuracyResult:
 
     print(f"  Processing {video_name}...")
 
-    # Extract MediaPipe metrics
+    # Extract MediaPipe metrics (use image mode to avoid timestamp issues)
     result_mp = extract_drop_jump_metrics(
         video_path,
         "MediaPipe",
-        lambda timer: PoseTracker(timer=timer),
+        lambda timer: PoseTracker(timer=timer, strategy="image"),
     )
 
     # Extract RTMPose metrics
