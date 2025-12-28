@@ -3,16 +3,16 @@
 import numpy as np
 import pytest
 
-from kinemotion.core.pose import PoseTracker, compute_center_of_mass
+from kinemotion.core.pose import MediaPipePoseTracker, compute_center_of_mass
 
 pytestmark = [pytest.mark.unit, pytest.mark.core]
 
 # ===== PoseTracker Tests =====
 
 
-def test_pose_tracker_initialization() -> None:
+def test_mediapipe_pose_tracker_initialization() -> None:
     """Test PoseTracker initialization with default parameters."""
-    tracker = PoseTracker()
+    tracker = MediaPipePoseTracker()
 
     assert tracker.mp_pose is not None
     assert tracker.landmarker is not None
@@ -20,9 +20,9 @@ def test_pose_tracker_initialization() -> None:
     tracker.close()
 
 
-def test_pose_tracker_initialization_with_custom_confidence() -> None:
+def test_mediapipe_pose_tracker_initialization_with_custom_confidence() -> None:
     """Test PoseTracker initialization with custom confidence thresholds."""
-    tracker = PoseTracker(
+    tracker = MediaPipePoseTracker(
         min_detection_confidence=0.7,
         min_tracking_confidence=0.6,
     )
@@ -33,9 +33,9 @@ def test_pose_tracker_initialization_with_custom_confidence() -> None:
     tracker.close()
 
 
-def test_pose_tracker_process_frame_with_no_pose() -> None:
+def test_mediapipe_pose_tracker_process_frame_with_no_pose() -> None:
     """Test PoseTracker.process_frame() returns None when no pose detected."""
-    tracker = PoseTracker()
+    tracker = MediaPipePoseTracker()
 
     # Create empty black frame (no person)
     frame = np.zeros((480, 640, 3), dtype=np.uint8)
@@ -48,9 +48,9 @@ def test_pose_tracker_process_frame_with_no_pose() -> None:
     tracker.close()
 
 
-def test_pose_tracker_process_frame_returns_expected_landmarks() -> None:
+def test_mediapipe_pose_tracker_process_frame_returns_expected_landmarks() -> None:
     """Test PoseTracker.process_frame() returns expected landmark names."""
-    tracker = PoseTracker()
+    tracker = MediaPipePoseTracker()
 
     # Create a synthetic frame with simple pattern
     # (MediaPipe might not detect a pose, but we test the interface)
@@ -91,9 +91,9 @@ def test_pose_tracker_process_frame_returns_expected_landmarks() -> None:
     tracker.close()
 
 
-def test_pose_tracker_close() -> None:
+def test_mediapipe_pose_tracker_close() -> None:
     """Test PoseTracker.close() releases resources."""
-    tracker = PoseTracker()
+    tracker = MediaPipePoseTracker()
 
     # Close should not raise an exception
     tracker.close()
@@ -263,3 +263,48 @@ def test_com_lateral_asymmetry() -> None:
     # CoM should be shifted left (x < 0.5)
     assert com_x < 0.45, f"CoM x={com_x} should be shifted left"
     assert 0.35 <= com_x <= 0.45, f"CoM x={com_x} should be in left region"
+
+
+# ===== PoseTrackerFactory Parameter Filtering Tests =====
+
+
+def test_factory_filters_mediapipe_params_for_rtmpose_cpu() -> None:
+    """Test that MediaPipe parameters are filtered when creating RTMPose CPU tracker."""
+    from importlib.util import find_spec
+
+    from kinemotion.core.pose import PoseTrackerFactory
+
+    # Skip if ONNX Runtime not available
+    if find_spec("onnxruntime") is None:
+        pytest.skip("ONNX Runtime not installed")
+
+    # This should not raise an error - MediaPipe params should be filtered out
+    tracker = PoseTrackerFactory.create(
+        backend="rtmpose-cpu",
+        min_detection_confidence=0.7,  # MediaPipe param, should be ignored
+        min_tracking_confidence=0.6,  # MediaPipe param, should be ignored
+    )
+
+    assert tracker is not None
+    tracker.close()
+
+
+def test_factory_filters_mediapipe_params_for_rtmpose_wrapper() -> None:
+    """Test that MediaPipe parameters are filtered when creating RTMPose wrapper."""
+    from importlib.util import find_spec
+
+    from kinemotion.core.pose import PoseTrackerFactory
+
+    # Skip if rtmlib not available
+    if find_spec("rtmlib") is None:
+        pytest.skip("rtmlib not installed")
+
+    # This should not raise an error - MediaPipe params should be filtered out
+    tracker = PoseTrackerFactory.create(
+        backend="rtmpose-cpu",  # Will use RTMPoseWrapper if rtmlib is available
+        min_detection_confidence=0.7,  # MediaPipe param, should be ignored
+        min_tracking_confidence=0.6,  # MediaPipe param, should be ignored
+    )
+
+    assert tracker is not None
+    tracker.close()

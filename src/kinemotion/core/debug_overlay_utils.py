@@ -340,9 +340,9 @@ class BaseDebugOverlayRenderer:
         )
 
         try:
-            reencode_start = time.time()
+            reencode_start = time.perf_counter()
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
-            self.reencode_duration_s = time.time() - reencode_start
+            self.reencode_duration_s = time.perf_counter() - reencode_start
 
             _log(
                 "info",

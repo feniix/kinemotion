@@ -27,6 +27,7 @@ class AnalysisParameters:
     visibility_threshold: float | None = None
     detection_confidence: float | None = None
     tracking_confidence: float | None = None
+    pose_backend: str | None = None
 
 
 def _process_batch_videos(
@@ -76,6 +77,23 @@ def _process_batch_videos(
     "-v",
     is_flag=True,
     help="Show auto-selected parameters and analysis details",
+)
+@click.option(
+    "--pose-backend",
+    type=click.Choice(
+        ["auto", "mediapipe", "rtmpose-cpu", "rtmpose-cuda", "rtmpose-coreml"],
+        case_sensitive=False,
+    ),
+    default="auto",
+    help=(
+        "Pose tracking backend: "
+        "auto (detect best), "
+        "mediapipe (baseline), "
+        "rtmpose-cpu (optimized CPU), "
+        "rtmpose-cuda (NVIDIA GPU), "
+        "rtmpose-coreml (Apple Silicon)"
+    ),
+    show_default=True,
 )
 # Batch processing options
 @click.option(
@@ -155,6 +173,7 @@ def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters
     json_output: str | None,
     quality: str,
     verbose: bool,
+    pose_backend: str,
     batch: bool,
     workers: int,
     output_dir: str | None,
@@ -218,6 +237,7 @@ def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters
         visibility_threshold=visibility_threshold,
         detection_confidence=detection_confidence,
         tracking_confidence=tracking_confidence,
+        pose_backend=pose_backend,
     )
 
     if use_batch:
@@ -273,6 +293,7 @@ def _process_single(
             overrides=overrides,
             detection_confidence=expert_params.detection_confidence,
             tracking_confidence=expert_params.tracking_confidence,
+            pose_backend=expert_params.pose_backend,
             verbose=verbose,
         )
 

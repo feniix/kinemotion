@@ -11,7 +11,7 @@ import numpy as np
 from ..cmj.analysis import compute_average_hip_position
 from ..dropjump.analysis import compute_average_foot_position
 from .auto_tuning import AnalysisParameters, QualityPreset, VideoCharacteristics
-from .pose import PoseTracker
+from .pose import MediaPipePoseTracker
 from .smoothing import smooth_landmarks, smooth_landmarks_advanced
 from .timing import NULL_TIMER, Timer
 from .video_io import VideoProcessor
@@ -142,7 +142,7 @@ def print_verbose_parameters(
 
 def _process_frames_loop(
     video: VideoProcessor,
-    tracker: PoseTracker,
+    tracker: MediaPipePoseTracker,
     step: int,
     should_resize: bool,
     debug_w: int,
@@ -180,7 +180,7 @@ def _process_frames_loop(
 
 def process_all_frames(
     video: VideoProcessor,
-    tracker: PoseTracker,
+    tracker: MediaPipePoseTracker,
     verbose: bool,
     timer: Timer | None = None,
     close_tracker: bool = True,

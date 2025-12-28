@@ -40,7 +40,7 @@ from ..core.pipeline_utils import (
     process_all_frames,
     process_videos_bulk_generic,
 )
-from ..core.pose import PoseTracker
+from ..core.pose import MediaPipePoseTracker
 from ..core.quality import QualityAssessment, assess_jump_quality
 from ..core.timing import NULL_TIMER, PerformanceTimer, Timer
 from ..core.video_io import VideoProcessor
@@ -90,6 +90,7 @@ class DropJumpVideoConfig:
     overrides: AnalysisOverrides | None = None
     detection_confidence: float | None = None
     tracking_confidence: float | None = None
+    pose_backend: str | None = None
 
 
 def _assess_dropjump_quality(
@@ -217,7 +218,7 @@ def _print_dropjump_summary(
     timer: Timer,
 ) -> None:
     """Print verbose timing summary."""
-    total_time = time.time() - start_time
+    total_time = time.perf_counter() - start_time
     stage_times = convert_timer_to_stage_names(timer.get_metrics())
 
     print("\n=== Timing Summary ===")
@@ -235,9 +236,11 @@ def _setup_pose_tracker(
     quality_preset: QualityPreset,
     detection_confidence: float | None,
     tracking_confidence: float | None,
-    pose_tracker: "PoseTracker | None",
+    pose_tracker: "MediaPipePoseTracker | None",
+    pose_backend: str | None,
     timer: Timer,
-) -> tuple["PoseTracker", bool]:
+    verbose: bool = False,
+) -> tuple["MediaPipePoseTracker", bool]:
     """Set up pose tracker and determine if it should be closed."""
     detection_conf, tracking_conf = determine_confidence_levels(
         quality_preset, detection_confidence, tracking_confidence
@@ -247,11 +250,29 @@ def _setup_pose_tracker(
     should_close_tracker = False
 
     if tracker is None:
-        tracker = PoseTracker(
-            min_detection_confidence=detection_conf,
-            min_tracking_confidence=tracking_conf,
-            timer=timer,
-        )
+        if pose_backend is not None:
+            import time
+
+            from ..core import get_tracker_info
+            from ..core.pose import PoseTrackerFactory
+
+            init_start = time.perf_counter()
+            tracker = PoseTrackerFactory.create(
+                backend=pose_backend,
+                timer=timer,
+            )
+            init_time = time.perf_counter() - init_start
+
+            if verbose:
+                print(f"Using pose backend: {pose_backend}")
+                print(f"  → {get_tracker_info(tracker)}")
+                print(f"  → Initialized in {init_time * 1000:.1f} ms")
+        else:
+            tracker = MediaPipePoseTracker(
+                min_detection_confidence=detection_conf,
+                min_tracking_confidence=tracking_conf,
+                timer=timer,
+            )
         should_close_tracker = True
 
     return tracker, should_close_tracker
@@ -259,7 +280,7 @@ def _setup_pose_tracker(
 
 def _process_frames_and_landmarks(
     video: "VideoProcessor",
-    tracker: "PoseTracker",
+    tracker: "MediaPipePoseTracker",
     should_close_tracker: bool,
     verbose: bool,
     timer: Timer,
@@ -487,7 +508,8 @@ def process_dropjump_video(
     tracking_confidence: float | None = None,
     verbose: bool = False,
     timer: Timer | None = None,
-    pose_tracker: "PoseTracker | None" = None,
+    pose_tracker: "MediaPipePoseTracker | None" = None,
+    pose_backend: str | None = None,
 ) -> DropJumpMetrics:
     """
     Process a single drop jump video and return metrics.
@@ -521,7 +543,7 @@ def process_dropjump_video(
 
     set_deterministic_mode(seed=42)
 
-    start_time = time.time()
+    start_time = time.perf_counter()
     timer = timer or PerformanceTimer()
     quality_preset = parse_quality_preset(quality)
 
@@ -532,7 +554,9 @@ def process_dropjump_video(
                 detection_confidence,
                 tracking_confidence,
                 pose_tracker,
+                pose_backend,
                 timer,
+                verbose,
             )
 
             frames, landmarks_sequence, frame_indices = _process_frames_and_landmarks(
@@ -584,7 +608,7 @@ def process_dropjump_video(
 
             _validate_metrics_and_print_results(metrics, timer, verbose)
 
-            processing_time = time.time() - start_time
+            processing_time = time.perf_counter() - start_time
             result_metadata = _build_dropjump_metadata(
                 video_path,
                 video,
@@ -630,7 +654,7 @@ def process_dropjump_videos_bulk(
 
 def _process_dropjump_video_wrapper(config: DropJumpVideoConfig) -> DropJumpVideoResult:
     """Wrapper function for parallel processing."""
-    start_time = time.time()
+    start_time = time.perf_counter()
 
     try:
         metrics = process_dropjump_video(
@@ -645,7 +669,7 @@ def _process_dropjump_video_wrapper(config: DropJumpVideoConfig) -> DropJumpVide
             verbose=False,
         )
 
-        processing_time = time.time() - start_time
+        processing_time = time.perf_counter() - start_time
 
         return DropJumpVideoResult(
             video_path=config.video_path,
@@ -655,7 +679,7 @@ def _process_dropjump_video_wrapper(config: DropJumpVideoConfig) -> DropJumpVide
         )
 
     except Exception as e:
-        processing_time = time.time() - start_time
+        processing_time = time.perf_counter() - start_time
 
         return DropJumpVideoResult(
             video_path=config.video_path,

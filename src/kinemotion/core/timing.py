@@ -21,7 +21,8 @@ Example:
     metrics = timer.get_metrics()
 
     # Zero-overhead timing (disabled)
-    tracker = PoseTracker(timer=NULL_TIMER)
+    from kinemotion.core import PoseTrackerFactory
+    tracker = PoseTrackerFactory.create(timer=NULL_TIMER)
     # No timing overhead, but maintains API compatibility
 """
 
@@ -102,7 +103,8 @@ class NullTimer:
 
     Example:
         # Use global singleton for zero allocation overhead
-        tracker = PoseTracker(timer=NULL_TIMER)
+        from kinemotion.core import PoseTrackerFactory
+        tracker = PoseTrackerFactory.create(timer=NULL_TIMER)
 
         # No overhead - measure() call optimizes to nothing
         with tracker.timer.measure("operation"):

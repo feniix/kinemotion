@@ -37,7 +37,7 @@ from ..core.pipeline_utils import (
     process_all_frames,
     process_videos_bulk_generic,
 )
-from ..core.pose import PoseTracker
+from ..core.pose import MediaPipePoseTracker
 from ..core.quality import QualityAssessment, assess_jump_quality
 from ..core.timing import PerformanceTimer, Timer
 from ..core.validation import ValidationResult
@@ -114,7 +114,7 @@ def _save_metrics_to_json(
 
 def _print_timing_summary(start_time: float, timer: Timer, metrics: CMJMetrics) -> None:
     """Print verbose timing summary and metrics."""
-    total_time = time.time() - start_time
+    total_time = time.perf_counter() - start_time
     stage_times = convert_timer_to_stage_names(timer.get_metrics())
 
     print("\n=== Timing Summary ===")
@@ -187,7 +187,7 @@ def _create_processing_info(
     start_time: float, quality_preset: QualityPreset, timer: Timer
 ) -> ProcessingInfo:
     """Create processing information metadata."""
-    processing_time = time.time() - start_time
+    processing_time = time.perf_counter() - start_time
     stage_times = convert_timer_to_stage_names(timer.get_metrics())
 
     return ProcessingInfo(
@@ -219,7 +219,8 @@ def _run_pose_tracking(
     quality_preset: QualityPreset,
     detection_confidence: float | None,
     tracking_confidence: float | None,
-    pose_tracker: PoseTracker | None,
+    pose_tracker: "MediaPipePoseTracker | None",
+    pose_backend: str | None,
     verbose: bool,
     timer: Timer,
 ) -> tuple[list[NDArray[np.uint8]], list, list[int]]:
@@ -234,15 +235,38 @@ def _run_pose_tracking(
         quality_preset, detection_confidence, tracking_confidence
     )
 
-    if verbose:
-        print("Processing all frames with MediaPipe pose tracking...")
+    if pose_tracker is None:
+        if pose_backend is not None:
+            import time
 
-    tracker = pose_tracker or PoseTracker(
-        min_detection_confidence=det_conf,
-        min_tracking_confidence=track_conf,
-        timer=timer,
-    )
-    should_close_tracker = pose_tracker is None
+            from ..core import get_tracker_info
+            from ..core.pose import PoseTrackerFactory
+
+            init_start = time.perf_counter()
+            tracker = PoseTrackerFactory.create(
+                backend=pose_backend,
+                min_detection_confidence=det_conf,
+                min_tracking_confidence=track_conf,
+                timer=timer,
+            )
+            init_time = time.perf_counter() - init_start
+
+            if verbose:
+                print(f"Using pose backend: {pose_backend}")
+                print(f"  → {get_tracker_info(tracker)}")
+                print(f"  → Initialized in {init_time * 1000:.1f} ms")
+        else:
+            if verbose:
+                print("Processing all frames with MediaPipe pose tracking...")
+            tracker = MediaPipePoseTracker(
+                min_detection_confidence=det_conf,
+                min_tracking_confidence=track_conf,
+                timer=timer,
+            )
+        should_close_tracker = True
+    else:
+        tracker = pose_tracker
+        should_close_tracker = False
 
     return process_all_frames(video, tracker, verbose, timer, close_tracker=should_close_tracker)
 
@@ -388,6 +412,7 @@ class CMJVideoConfig:
     overrides: AnalysisOverrides | None = None
     detection_confidence: float | None = None
     tracking_confidence: float | None = None
+    pose_backend: str | None = None
 
 
 @dataclass
@@ -409,9 +434,10 @@ def process_cmj_video(
     overrides: AnalysisOverrides | None = None,
     detection_confidence: float | None = None,
     tracking_confidence: float | None = None,
+    pose_backend: str | None = None,
     verbose: bool = False,
     timer: Timer | None = None,
-    pose_tracker: PoseTracker | None = None,
+    pose_tracker: MediaPipePoseTracker | None = None,
 ) -> CMJMetrics:
     """
     Process a single CMJ video and return metrics.
@@ -442,7 +468,7 @@ def process_cmj_video(
     if not Path(video_path).exists():
         raise FileNotFoundError(f"Video file not found: {video_path}")
 
-    start_time = time.time()
+    start_time = time.perf_counter()
     timer = timer or PerformanceTimer()
     quality_preset = parse_quality_preset(quality)
 
@@ -455,6 +481,7 @@ def process_cmj_video(
                 detection_confidence,
                 tracking_confidence,
                 pose_tracker,
+                pose_backend,
                 verbose,
                 timer,
             )
@@ -529,7 +556,7 @@ def process_cmj_videos_bulk(
 
 def _process_cmj_video_wrapper(config: CMJVideoConfig) -> CMJVideoResult:
     """Wrapper function for parallel CMJ processing."""
-    start_time = time.time()
+    start_time = time.perf_counter()
 
     try:
         metrics = process_cmj_video(
@@ -540,10 +567,11 @@ def _process_cmj_video_wrapper(config: CMJVideoConfig) -> CMJVideoResult:
             overrides=config.overrides,
             detection_confidence=config.detection_confidence,
             tracking_confidence=config.tracking_confidence,
+            pose_backend=config.pose_backend,
             verbose=False,
         )
 
-        processing_time = time.time() - start_time
+        processing_time = time.perf_counter() - start_time
 
         return CMJVideoResult(
             video_path=config.video_path,
@@ -553,7 +581,7 @@ def _process_cmj_video_wrapper(config: CMJVideoConfig) -> CMJVideoResult:
         )
 
     except Exception as e:
-        processing_time = time.time() - start_time
+        processing_time = time.perf_counter() - start_time
 
         return CMJVideoResult(
             video_path=config.video_path,

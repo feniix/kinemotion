@@ -52,7 +52,7 @@ _STRATEGY_CONFIGS: dict[str, dict[str, float | str]] = {
 }
 
 
-class PoseTracker:
+class MediaPipePoseTracker:
     """Tracks human pose landmarks in video frames using MediaPipe Tasks API.
 
     Args:
@@ -156,6 +156,467 @@ class PoseTracker:
         Resources are released when the object is garbage collected.
         """
         pass
+
+
+class PoseTrackerFactory:
+    """Factory for creating pose trackers with automatic backend selection.
+
+    Supports multiple backends with auto-detection:
+    - RTMPose CUDA: NVIDIA GPU acceleration (fastest, 133 FPS)
+    - RTMPose CoreML: Apple Silicon acceleration (42 FPS)
+    - RTMPose CPU: Optimized CPU implementation (40-68 FPS)
+    - MediaPipe: Fallback baseline (48 FPS)
+
+    Usage:
+        # Auto-detect best backend
+        tracker = PoseTrackerFactory.create()
+
+        # Force specific backend
+        tracker = PoseTrackerFactory.create(backend='rtmpose-cuda')
+
+        # Check available backends
+        available = PoseTrackerFactory.get_available_backends()
+    """
+
+    # Backend class mappings
+    _BACKENDS: dict[str, type] = {}
+
+    @classmethod
+    def create(
+        cls,
+        backend: str = "auto",
+        mode: str = "lightweight",
+        **kwargs: object,
+    ):
+        """Create a pose tracker with the specified backend.
+
+        Args:
+            backend: Backend selection:
+                - 'auto': Auto-detect best available backend
+                - 'mediapipe': MediaPipe Tasks API (baseline)
+                - 'rtmpose-cpu': RTMPose optimized CPU
+                - 'rtmpose-cuda': RTMPose with CUDA (NVIDIA GPU)
+                - 'rtmpose-coreml': RTMPose with CoreML (Apple Silicon)
+            mode: RTMPose performance mode ('lightweight', 'balanced', 'performance')
+                Only used for RTMPose backends
+            **kwargs: Additional arguments passed to tracker constructor
+
+        Returns:
+            Configured pose tracker instance
+
+        Raises:
+            ValueError: If backend is not available or recognized
+        """
+        # Auto-detect backend
+        if backend == "auto":
+            backend = cls._detect_best_backend()
+            backend = cls._check_backend_available(backend)
+
+        # Check environment variable override
+        import os
+
+        env_backend = os.environ.get("POSE_TRACKER_BACKEND")
+        if env_backend:
+            backend = cls._normalize_backend_name(env_backend)
+
+        # Verify backend is available
+        backend = cls._check_backend_available(backend)
+
+        # Get tracker class
+        tracker_class = cls._get_tracker_class(backend)
+
+        # Create tracker with appropriate arguments
+        return cls._create_tracker(tracker_class, backend, mode, kwargs)
+
+    @classmethod
+    def _detect_best_backend(cls) -> str:
+        """Detect the best available backend.
+
+        Priority order:
+        1. CUDA (NVIDIA GPU) - fastest
+        2. CoreML (Apple Silicon) - good performance
+        3. RTMPose CPU - optimized CPU
+        4. MediaPipe - baseline fallback
+
+        Returns:
+            Backend name string
+        """
+        # Check for CUDA (NVIDIA GPU)
+        try:
+            import torch
+
+            if torch.cuda.is_available():
+                return "rtmpose-cuda"
+        except ImportError:
+            pass
+
+        # Check for CoreML (Apple Silicon)
+        import sys
+
+        if sys.platform == "darwin":
+            return "rtmpose-coreml"
+
+        # Check for RTMPose CPU
+        try:
+            from kinemotion.core.rtmpose_cpu import (
+                OptimizedCPUTracker as _RTMPoseCPU,  # type: ignore
+            )
+
+            _ = _RTMPoseCPU  # Mark as intentionally used for availability check
+
+            return "rtmpose-cpu"
+        except ImportError:
+            pass
+
+        # Fallback to MediaPipe
+        return "mediapipe"
+
+    @classmethod
+    def _check_backend_available(cls, backend: str) -> str:
+        """Check if a backend is available and return a fallback if not.
+
+        Args:
+            backend: Requested backend name
+
+        Returns:
+            Available backend name (may be different from requested)
+
+        Raises:
+            ValueError: If no backend is available
+        """
+        normalized = cls._normalize_backend_name(backend)
+
+        # Check if specific backend can be imported
+        if normalized == "rtmpose-cuda":
+            try:
+                import torch  # noqa: F401
+
+                if not torch.cuda.is_available():
+                    # CUDA not available, fall back to CPU
+                    return cls._check_backend_available("rtmpose-cpu")
+                # CUDA is available, use rtmpose-cuda
+                return normalized
+            except ImportError:
+                return cls._check_backend_available("rtmpose-cpu")
+
+        if normalized == "rtmpose-coreml":
+            import sys
+
+            if sys.platform != "darwin":
+                # Not macOS, fall back to CPU
+                return cls._check_backend_available("rtmpose-cpu")
+
+        if normalized == "rtmpose-cpu":
+            try:
+                from kinemotion.core.rtmpose_cpu import (
+                    OptimizedCPUTracker as _RTMPoseCPU,
+                )  # type: ignore
+
+                _ = _RTMPoseCPU  # Mark as intentionally used for availability check
+
+                return normalized
+            except ImportError:
+                # RTMPose not available, fall back to MediaPipe
+                return "mediapipe"
+
+        if normalized == "mediapipe":
+            try:
+                import mediapipe as _mp  # noqa: F401
+
+                _ = _mp  # Mark as intentionally used for availability check
+                return normalized
+            except ImportError as err:
+                raise ValueError(
+                    "No pose tracking backend available. Please install mediapipe or rtmlib."
+                ) from err
+
+        raise ValueError(f"Unknown backend: {backend}")
+
+    @classmethod
+    def _normalize_backend_name(cls, backend: str) -> str:
+        """Normalize backend name to canonical form.
+
+        Args:
+            backend: User-provided backend name
+
+        Returns:
+            Canonical backend name
+        """
+        # Normalize various aliases to canonical names
+        aliases = {
+            "mp": "mediapipe",
+            "mediapipe": "mediapipe",
+            "rtmpose": "rtmpose-cpu",
+            "rtmpose-cpu": "rtmpose-cpu",
+            "rtmpose_cpu": "rtmpose-cpu",
+            "cpu": "rtmpose-cpu",
+            "cuda": "rtmpose-cuda",
+            "rtmpose-cuda": "rtmpose-cuda",
+            "rtmpose_cuda": "rtmpose-cuda",
+            "gpu": "rtmpose-cuda",
+            "mps": "rtmpose-coreml",
+            "coreml": "rtmpose-coreml",
+            "rtmpose-coreml": "rtmpose-coreml",
+            "rtmpose_coreml": "rtmpose-coreml",
+        }
+        return aliases.get(backend.lower(), backend)
+
+    @classmethod
+    def _get_tracker_class(cls, backend: str):
+        """Get the tracker class for a backend.
+
+        Args:
+            backend: Canonical backend name
+
+        Returns:
+            Tracker class
+
+        Raises:
+            ValueError: If backend is not recognized
+        """
+        if backend == "mediapipe":
+            return MediaPipePoseTracker
+
+        if backend == "rtmpose-cpu":
+            try:
+                from kinemotion.core.rtmpose_cpu import OptimizedCPUTracker
+
+                return OptimizedCPUTracker
+            except ImportError as e:
+                raise ValueError(f"RTMPose CPU backend requested but not available: {e}") from e
+
+        if backend in ("rtmpose-cuda", "rtmpose-coreml"):
+            try:
+                from kinemotion.core.rtmpose_wrapper import RTMPoseWrapper
+
+                return RTMPoseWrapper
+            except ImportError as e:
+                raise ValueError(
+                    f"RTMPose wrapper backend requested but not available: {e}"
+                ) from e
+
+        raise ValueError(f"Unknown backend: {backend}")
+
+    @classmethod
+    def _create_tracker(
+        cls,
+        tracker_class: type,
+        backend: str,
+        mode: str,
+        kwargs: dict[str, object],
+    ):
+        """Create a tracker instance with appropriate arguments.
+
+        Args:
+            tracker_class: Tracker class to instantiate
+            backend: Backend name (for parameter mapping)
+            mode: RTMPose mode (only used for RTMPose backends)
+            kwargs: Additional arguments from user
+
+        Returns:
+            Tracker instance
+        """
+        # MediaPipe-specific arguments
+        if backend == "mediapipe":
+            # Remove RTMPose-specific arguments
+            rttmpose_keys = {"mode", "backend", "device", "pose_input_size"}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k not in rttmpose_keys}
+            return tracker_class(**filtered_kwargs)
+
+        # OptimizedCPUTracker (CPU-only, doesn't accept device parameter)
+        if backend == "rtmpose-cpu":
+            # Remove RTMPoseWrapper-specific and MediaPipe-specific arguments
+            unsupported_keys = {
+                "backend",
+                "device",
+                "min_detection_confidence",
+                "min_tracking_confidence",
+            }
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k not in unsupported_keys}
+            filtered_kwargs.setdefault("mode", mode)
+            return tracker_class(**filtered_kwargs)
+
+        # RTMPoseWrapper (CUDA/CoreML, requires device parameter)
+        # Remove MediaPipe-specific arguments
+        mediapipe_keys = {"min_detection_confidence", "min_tracking_confidence"}
+        filtered_kwargs = {k: v for k, v in kwargs.items() if k not in mediapipe_keys}
+
+        device = backend.split("-")[-1]  # Extract 'cuda', 'cpu', 'coreml'
+        if device == "coreml":
+            device = "mps"  # RTMLib uses 'mps' for Apple Silicon
+
+        filtered_kwargs.setdefault("device", device)
+        filtered_kwargs.setdefault("mode", mode)
+
+        return tracker_class(**filtered_kwargs)
+
+    @classmethod
+    def get_available_backends(cls) -> list[str]:
+        """Get list of available backends on current system.
+
+        Returns:
+            List of available backend names
+        """
+        available = []
+
+        # Always have MediaPipe as fallback
+        try:
+            import mediapipe as _mp  # noqa: F401
+
+            _ = _mp  # Mark as intentionally used for availability check
+            available.append("mediapipe")
+        except ImportError:
+            pass
+
+        # Check RTMPose CPU
+        try:
+            from kinemotion.core.rtmpose_cpu import (
+                OptimizedCPUTracker as _RTMPoseCPU,
+            )  # type: ignore
+
+            _ = _RTMPoseCPU  # Mark as intentionally used for availability check
+
+            available.append("rtmpose-cpu")
+        except ImportError:
+            pass
+
+        # Check CUDA
+        try:
+            import torch
+
+            if torch.cuda.is_available():
+                from kinemotion.core.rtmpose_wrapper import (
+                    RTMPoseWrapper as _RTMPoseWrapper,
+                )  # type: ignore
+
+                _ = _RTMPoseWrapper  # Mark as intentionally used for availability check
+
+                available.append("rtmpose-cuda")
+        except ImportError:
+            pass
+
+        # Check CoreML (Apple Silicon)
+        import sys
+
+        if sys.platform == "darwin":
+            try:
+                from kinemotion.core.rtmpose_wrapper import (
+                    RTMPoseWrapper as _RTMPoseWrapperMPS,
+                )  # type: ignore
+
+                _ = _RTMPoseWrapperMPS  # Mark as intentionally used for availability check
+
+                available.append("rtmpose-coreml")
+            except ImportError:
+                pass
+
+        return available
+
+    @classmethod
+    def get_backend_info(cls, backend: str) -> dict[str, str]:
+        """Get information about a backend.
+
+        Args:
+            backend: Backend name
+
+        Returns:
+            Dictionary with backend information
+        """
+        info = {
+            "mediapipe": {
+                "name": "MediaPipe",
+                "description": "Baseline pose tracking using MediaPipe Tasks API",
+                "performance": "~48 FPS",
+                "accuracy": "Baseline (reference)",
+                "requirements": "mediapipe package",
+            },
+            "rtmpose-cpu": {
+                "name": "RTMPose CPU",
+                "description": "Optimized CPU implementation with ONNX Runtime",
+                "performance": "~40-68 FPS (134% of MediaPipe)",
+                "accuracy": "9-12px mean difference (1-5% metric accuracy)",
+                "requirements": "rtmlib package",
+            },
+            "rtmpose-cuda": {
+                "name": "RTMPose CUDA",
+                "description": "NVIDIA GPU acceleration with CUDA",
+                "performance": "~133 FPS (271% of MediaPipe)",
+                "accuracy": "9-12px mean difference (1-5% metric accuracy)",
+                "requirements": "rtmlib + CUDA-capable GPU",
+            },
+            "rtmpose-coreml": {
+                "name": "RTMPose CoreML",
+                "description": "Apple Silicon acceleration with CoreML",
+                "performance": "~42 FPS (94% of MediaPipe)",
+                "accuracy": "9-12px mean difference (1-5% metric accuracy)",
+                "requirements": "rtmlib + Apple Silicon",
+            },
+        }
+
+        normalized = cls._normalize_backend_name(backend)
+        return info.get(normalized, {})
+
+
+def get_tracker_info(tracker: object) -> str:
+    """Get detailed information about a pose tracker instance.
+
+    Args:
+        tracker: Pose tracker instance
+
+    Returns:
+        Formatted string with tracker details
+    """
+    tracker_class = type(tracker).__name__
+    module = type(tracker).__module__
+
+    info = f"{tracker_class} (from {module})"
+
+    # Add backend-specific details
+    if tracker_class == "MediaPipePoseTracker":
+        info += " [MediaPipe Tasks API]"
+    elif tracker_class == "OptimizedCPUTracker":
+        # Check if ONNX Runtime has CUDA
+        try:
+            import onnxruntime as ort
+
+            providers = ort.get_available_providers()
+            if "CUDAExecutionProvider" in providers:
+                # Check what providers the session is actually using
+                det_session = getattr(tracker, "det_session", None)
+                if det_session is not None:
+                    active_providers = det_session.get_providers()
+                    if "CUDAExecutionProvider" in active_providers:
+                        info += " [ONNX Runtime: CUDA]"
+                    else:
+                        info += " [ONNX Runtime: CPU]"
+                else:
+                    info += " [ONNX Runtime]"
+            else:
+                info += " [ONNX Runtime: CPU]"
+        except ImportError:
+            info += " [ONNX Runtime]"
+    elif tracker_class == "RTMPoseWrapper":
+        device = getattr(tracker, "device", None)
+        if device:
+            if device == "cuda":
+                try:
+                    import torch
+
+                    if torch.cuda.is_available():
+                        device_name = torch.cuda.get_device_name(0)
+                        info += f" [PyTorch CUDA: {device_name}]"
+                    else:
+                        info += " [PyTorch: CPU fallback]"
+                except ImportError:
+                    info += " [PyTorch CUDA]"
+            elif device == "mps":
+                info += " [PyTorch: Apple Silicon GPU]"
+            else:
+                info += f" [PyTorch: {device}]"
+        else:
+            info += " [PyTorch]"
+
+    return info
 
 
 def _extract_landmarks_from_results(
