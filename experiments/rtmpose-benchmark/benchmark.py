@@ -25,17 +25,20 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from rtmpose_tracker import RTMPoseTracker
 
+# Project root for relative paths
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+
 # Test videos provided for benchmarking
 TEST_VIDEOS = {
     "cmj": [
-        "/Users/feniix/src/personal/cursor/kinemotion/samples/test-videos/cmj-45-IMG_6733.mp4",
-        "/Users/feniix/src/personal/cursor/kinemotion/samples/test-videos/cmj-45-IMG_6734.mp4",
-        "/Users/feniix/src/personal/cursor/kinemotion/samples/test-videos/cmj-45-IMG_6735.mp4",
+        str(PROJECT_ROOT / "samples/test-videos/cmj-45-IMG_6733.mp4"),
+        str(PROJECT_ROOT / "samples/test-videos/cmj-45-IMG_6734.mp4"),
+        str(PROJECT_ROOT / "samples/test-videos/cmj-45-IMG_6735.mp4"),
     ],
     "dj": [
-        "/Users/feniix/src/personal/cursor/kinemotion/samples/test-videos/dj-45-IMG_6739.mp4",
-        "/Users/feniix/src/personal/cursor/kinemotion/samples/test-videos/dj-45-IMG_6740.mp4",
-        "/Users/feniix/src/personal/cursor/kinemotion/samples/test-videos/dj-45-IMG_6741.mp4",
+        str(PROJECT_ROOT / "samples/test-videos/dj-45-IMG_6739.mp4"),
+        str(PROJECT_ROOT / "samples/test-videos/dj-45-IMG_6740.mp4"),
+        str(PROJECT_ROOT / "samples/test-videos/dj-45-IMG_6741.mp4"),
     ],
 }
 
@@ -189,9 +192,9 @@ def run_comparative_benchmark(
     results: dict[str, list[BenchmarkResult]] = {
         "MediaPipe": [],
         "RTMPose-Lightweight-CPU": [],
-        "RTMPose-Lightweight-CoreML": [],
         "RTMPose-Balanced-CPU": [],
-        "RTMPose-Balanced-CoreML": [],
+        "RTMPose-Lightweight-CUDA": [],
+        "RTMPose-Balanced-CUDA": [],
     }
 
     all_videos = []
@@ -228,17 +231,6 @@ def run_comparative_benchmark(
         results["RTMPose-Lightweight-CPU"].append(result_rt_light_cpu)
         print(f" {result_rt_light_cpu.fps:.1f} FPS")
 
-        # Benchmark RTMPose Lightweight CoreML
-        print("  RTMPose-Lightweight (CoreML)...", end="", flush=True)
-        result_rt_light_coreml = benchmark_tracker(
-            "RTMPose-Lightweight-CoreML",
-            lambda timer: RTMPoseTracker(mode="lightweight", device="mps", timer=timer),
-            video_path,
-            mode="lightweight",
-        )
-        results["RTMPose-Lightweight-CoreML"].append(result_rt_light_coreml)
-        print(f" {result_rt_light_coreml.fps:.1f} FPS")
-
         # Benchmark RTMPose Balanced CPU
         print("  RTMPose-Balanced (CPU)...", end="", flush=True)
         result_rt_balanced_cpu = benchmark_tracker(
@@ -250,16 +242,27 @@ def run_comparative_benchmark(
         results["RTMPose-Balanced-CPU"].append(result_rt_balanced_cpu)
         print(f" {result_rt_balanced_cpu.fps:.1f} FPS")
 
-        # Benchmark RTMPose Balanced CoreML
-        print("  RTMPose-Balanced (CoreML)...", end="", flush=True)
-        result_rt_balanced_coreml = benchmark_tracker(
-            "RTMPose-Balanced-CoreML",
-            lambda timer: RTMPoseTracker(mode="balanced", device="mps", timer=timer),
+        # Benchmark RTMPose Lightweight CUDA
+        print("  RTMPose-Lightweight (CUDA)...", end="", flush=True)
+        result_rt_light_cuda = benchmark_tracker(
+            "RTMPose-Lightweight-CUDA",
+            lambda timer: RTMPoseTracker(mode="lightweight", device="cuda", timer=timer),
+            video_path,
+            mode="lightweight",
+        )
+        results["RTMPose-Lightweight-CUDA"].append(result_rt_light_cuda)
+        print(f" {result_rt_light_cuda.fps:.1f} FPS")
+
+        # Benchmark RTMPose Balanced CUDA
+        print("  RTMPose-Balanced (CUDA)...", end="", flush=True)
+        result_rt_balanced_cuda = benchmark_tracker(
+            "RTMPose-Balanced-CUDA",
+            lambda timer: RTMPoseTracker(mode="balanced", device="cuda", timer=timer),
             video_path,
             mode="balanced",
         )
-        results["RTMPose-Balanced-CoreML"].append(result_rt_balanced_coreml)
-        print(f" {result_rt_balanced_coreml.fps:.1f} FPS")
+        results["RTMPose-Balanced-CUDA"].append(result_rt_balanced_cuda)
+        print(f" {result_rt_balanced_cuda.fps:.1f} FPS")
         print()
 
     # Output results

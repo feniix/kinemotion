@@ -24,8 +24,11 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from rtmpose_tracker import RTMPoseTracker
 
+# Project root for relative paths
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+
 # Single video for quick testing
-VIDEO_PATH = "/Users/feniix/src/personal/cursor/kinemotion/samples/test-videos/dj-45-IMG_6739.mp4"
+VIDEO_PATH = str(PROJECT_ROOT / "samples/test-videos/dj-45-IMG_6739.mp4")
 
 
 def benchmark_config(

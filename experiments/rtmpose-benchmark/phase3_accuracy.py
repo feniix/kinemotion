@@ -2,7 +2,7 @@
 """Phase 3: Accuracy Assessment - MediaPipe vs RTMPose comparison.
 
 Compares flight time measurements and landmark stability between
-MediaPipe and RTMPose-CoreML on the same drop jump videos.
+MediaPipe and RTMPose-CUDA on the same drop jump videos.
 
 Assessment Dimensions:
 1. Metric Consistency: Agreement on flight time, jump height
@@ -31,11 +31,14 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from rtmpose_tracker import RTMPoseTracker
 
+# Project root for relative paths
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+
 # Test videos
 TEST_VIDEOS = [
-    "/Users/feniix/src/personal/cursor/kinemotion/samples/test-videos/dj-45-IMG_6739.mp4",
-    "/Users/feniix/src/personal/cursor/kinemotion/samples/test-videos/dj-45-IMG_6740.mp4",
-    "/Users/feniix/src/personal/cursor/kinemotion/samples/test-videos/dj-45-IMG_6741.mp4",
+    str(PROJECT_ROOT / "samples/test-videos/dj-45-IMG_6739.mp4"),
+    str(PROJECT_ROOT / "samples/test-videos/dj-45-IMG_6740.mp4"),
+    str(PROJECT_ROOT / "samples/test-videos/dj-45-IMG_6741.mp4"),
 ]
 
 
@@ -307,8 +310,8 @@ def compare_accuracy(video_path: str) -> AccuracyResult:
     # Extract RTMPose metrics
     result_rt = extract_drop_jump_metrics(
         video_path,
-        "RTMPose-CoreML",
-        lambda timer: RTMPoseTracker(mode="lightweight", device="mps", timer=timer),
+        "RTMPose-CUDA",
+        lambda timer: RTMPoseTracker(mode="lightweight", device="cuda", timer=timer),
     )
 
     # Flight time comparison

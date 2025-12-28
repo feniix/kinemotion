@@ -68,19 +68,32 @@ class CoreMLRTMPoseTracker:
 
     def _init_models(self) -> None:
         """Initialize ONNX Runtime models with CoreML EP."""
-        cache_dir = Path.home() / ".cache" / "rtmlib" / "hub" / "checkpoints"
+        from importlib.resources import files
+
+        # Use bundled models from package
+        models_dir = files("kinemotion") / "models"
 
         # Model paths for RTMPose lightweight (RTMPose-s with Halpe-26)
-        det_model_path = cache_dir / "yolox_tiny_8xb8-300e_humanart-6f3252f9.onnx"
+        det_model_path = models_dir / "yolox_tiny_8xb8-300e_humanart-6f3252f9.onnx"
         pose_model_path = (
-            cache_dir
+            models_dir
             / "rtmpose-s_simcc-body7_pt-body7-halpe26_700e-256x192-7f134165_20230605.onnx"
         )
 
+        # Convert to Path objects if needed
+        det_model_path = Path(det_model_path)
+        pose_model_path = Path(pose_model_path)
+
         if not det_model_path.exists():
-            raise FileNotFoundError(f"Detector model not found: {det_model_path}")
+            raise FileNotFoundError(
+                f"Detector model not found: {det_model_path}\n"
+                f"Please ensure RTMPose models are installed in {models_dir}"
+            )
         if not pose_model_path.exists():
-            raise FileNotFoundError(f"Pose model not found: {pose_model_path}")
+            raise FileNotFoundError(
+                f"Pose model not found: {pose_model_path}\n"
+                f"Please ensure RTMPose models are installed in {models_dir}"
+            )
 
         # Configure execution providers
         if self.backend == "coreml":
