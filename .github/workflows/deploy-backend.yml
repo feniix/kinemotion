@@ -39,8 +39,7 @@ jobs:
           fi
 
       - uses: actions/checkout@v6
-        with:
-          lfs: true  # Fetch LFS files (pose_landmarker_lite.task model)
+        # No LFS needed for backend tests
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -79,8 +78,8 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v6
-        with:
-          lfs: true  # Fetch LFS files (pose_landmarker_lite.task model)
+        # No LFS needed - models are in src/ and copied by Dockerfile
+        # LFS checkout would download 53MB of models unnecessarily
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -105,7 +104,7 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }},${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:latest
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:buildcache,mode=max
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:buildcache,mode=min
 
   deploy:
     name: Deploy to Google Cloud Run
@@ -119,8 +118,7 @@ jobs:
       url: https://kinemotion-backend-1008251132682.us-central1.run.app
     steps:
       - uses: actions/checkout@v6
-        with:
-          lfs: true  # Fetch LFS files (pose_landmarker_lite.task model)
+        # No LFS needed for deployment either
 
       - name: Authenticate to Google Cloud
         id: auth
