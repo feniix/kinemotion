@@ -83,7 +83,7 @@ jobs:
 
       - name: Build distribution packages
         if: steps.get_version.outputs.released == 'true'
-        run: uv build
+        run: uv build --wheel
 
       - name: Publish to PyPI
         if: steps.get_version.outputs.released == 'true'
