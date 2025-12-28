@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.68.0 (2025-12-28)
+
+### Feat
+
+- **pose**: add RTMPose backend with multi-platform support (CPU/CUDA/CoreML)
+- **experiments**: complete RTMLib/RTMPose evaluation Phase 1-3
+
+### Fix
+
+- **experiments**: compatibility with MediaPipe Tasks API
+
 ## kinemotion-v0.67.0 (2025-12-26)
 
 ### Feat
