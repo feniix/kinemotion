@@ -54,10 +54,10 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         auth_header = request.headers.get("authorization")
         if auth_header and auth_header.startswith("Bearer ") and supabase_auth:
             token = auth_header.replace("Bearer ", "")
-            auth_start = time.time()
+            auth_start = time.perf_counter()
             try:
                 user_email = supabase_auth.get_user_email(token)
-                auth_duration_ms = (time.time() - auth_start) * 1000
+                auth_duration_ms = (time.perf_counter() - auth_start) * 1000
 
                 # Bind user email to logging context
                 structlog.contextvars.bind_contextvars(
@@ -73,7 +73,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
                     auth_duration_ms=round(auth_duration_ms, 2),
                 )
             except Exception as e:
-                auth_duration_ms = (time.time() - auth_start) * 1000
+                auth_duration_ms = (time.perf_counter() - auth_start) * 1000
                 logger.warning(
                     "auth_token_invalid",
                     error=str(e),
@@ -81,7 +81,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
                 )
                 # Continue without user context - endpoints handle auth
 
-        start_time = time.time()
+        start_time = time.perf_counter()
 
         # Log incoming request
         logger.info(
@@ -95,7 +95,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             response = await call_next(request)
 
             # Calculate duration
-            duration_ms = (time.time() - start_time) * 1000
+            duration_ms = (time.perf_counter() - start_time) * 1000
 
             # Log successful response
             logger.info(
@@ -111,7 +111,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 
         except Exception as e:
             # Calculate duration
-            duration_ms = (time.time() - start_time) * 1000
+            duration_ms = (time.perf_counter() - start_time) * 1000
 
             # Log error
             logger.error(

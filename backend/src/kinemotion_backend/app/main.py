@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from kinemotion.core.pose import PoseTracker
+from kinemotion.core.pose import PoseTrackerFactory
 
 from ..analysis_api import router as database_analysis_router
 from ..logging_config import get_logger, setup_logging
@@ -20,27 +20,56 @@ setup_logging(
 logger = get_logger(__name__)
 
 # Global pose trackers for different quality presets
-global_pose_trackers: dict[str, PoseTracker] = {}
+# Type is object because different backends have different tracker types
+global_pose_trackers: dict[str, object] = {}
+# Store the detected backend for health checks
+detected_backend: str = "unknown"
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Manage application lifecycle and global resources."""
+    global detected_backend
+
+    logger.info("detecting_best_pose_backend")
+    # Auto-detect best available backend (CUDA → RTMPose CPU → MediaPipe)
+    # CoreML is skipped on Linux (backend runs on Intel/Cloud Run)
+    detected_backend = PoseTrackerFactory._detect_best_backend()  # type: ignore[attr-defined]
+    logger.info(f"detected_backend_{detected_backend}")
+
     logger.info("initializing_pose_trackers")
     try:
-        # Initialize trackers for each quality preset
-        # Fast: lower confidence for speed
-        global_pose_trackers["fast"] = PoseTracker(
-            min_detection_confidence=0.3, min_tracking_confidence=0.3
-        )
-        # Balanced: standard confidence
-        global_pose_trackers["balanced"] = PoseTracker(
-            min_detection_confidence=0.5, min_tracking_confidence=0.5
-        )
-        # Accurate: high confidence
-        global_pose_trackers["accurate"] = PoseTracker(
-            min_detection_confidence=0.6, min_tracking_confidence=0.6
-        )
+        if detected_backend == "mediapipe":
+            # MediaPipe uses confidence thresholds for quality presets
+            global_pose_trackers["fast"] = PoseTrackerFactory.create(
+                backend="mediapipe",
+                min_detection_confidence=0.3,
+                min_tracking_confidence=0.3,
+            )
+            global_pose_trackers["balanced"] = PoseTrackerFactory.create(
+                backend="mediapipe",
+                min_detection_confidence=0.5,
+                min_tracking_confidence=0.5,
+            )
+            global_pose_trackers["accurate"] = PoseTrackerFactory.create(
+                backend="mediapipe",
+                min_detection_confidence=0.6,
+                min_tracking_confidence=0.6,
+            )
+        else:
+            # RTMPose (CUDA or CPU) uses mode parameter for quality presets
+            global_pose_trackers["fast"] = PoseTrackerFactory.create(
+                backend=detected_backend,
+                mode="lightweight",
+            )
+            global_pose_trackers["balanced"] = PoseTrackerFactory.create(
+                backend=detected_backend,
+                mode="lightweight",  # Default mode
+            )
+            global_pose_trackers["accurate"] = PoseTrackerFactory.create(
+                backend=detected_backend,
+                mode="balanced",  # Higher accuracy mode
+            )
         logger.info("pose_trackers_initialized")
 
         yield

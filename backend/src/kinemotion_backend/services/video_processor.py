@@ -1,7 +1,6 @@
 from typing import Any, cast
 
 from kinemotion import process_cmj_video, process_dropjump_video
-from kinemotion.core.pose import PoseTracker
 from kinemotion.core.timing import Timer
 
 
@@ -15,7 +14,7 @@ class VideoProcessorService:
         quality: str = "balanced",
         output_video: str | None = None,
         timer: Timer | None = None,
-        pose_tracker: PoseTracker | None = None,
+        pose_tracker: object | None = None,
     ) -> dict[str, Any]:
         """Process video and return metrics.
 
@@ -25,7 +24,7 @@ class VideoProcessorService:
             quality: Analysis quality preset
             output_video: Optional path for debug video output
             timer: Optional Timer for measuring operations
-            pose_tracker: Optional shared PoseTracker instance
+            pose_tracker: Optional shared tracker instance (type varies by backend)
 
         Returns:
             Dictionary with metrics
@@ -39,7 +38,7 @@ class VideoProcessorService:
                 quality=quality,
                 output_video=output_video,
                 timer=timer,
-                pose_tracker=pose_tracker,
+                pose_tracker=pose_tracker,  # type: ignore[arg-type]
             )
         else:  # cmj
             metrics = process_cmj_video(
@@ -47,7 +46,7 @@ class VideoProcessorService:
                 quality=quality,
                 output_video=output_video,
                 timer=timer,
-                pose_tracker=pose_tracker,
+                pose_tracker=pose_tracker,  # type: ignore[arg-type]
             )
 
         return cast(dict[str, Any], metrics.to_dict())

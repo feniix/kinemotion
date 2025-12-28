@@ -120,7 +120,7 @@ async def analyze_video(
     Raises:
         HTTPException: If authentication or processing fails
     """
-    start_time = time.time()
+    start_time = time.perf_counter()
 
     # Validate referer (prevent direct API access)
     validate_referer(referer, x_test_password)
@@ -151,7 +151,7 @@ async def analyze_video(
         )
 
         # Log analysis completion
-        analysis_duration = time.time() - start_time
+        analysis_duration = time.perf_counter() - start_time
         logger.info(
             "analyzing_video_completed",
             duration_ms=round(analysis_duration * 1000, 1),
@@ -162,7 +162,7 @@ async def analyze_video(
         return JSONResponse(content=result.to_dict())
 
     except ValueError as e:
-        elapsed = time.time() - start_time
+        elapsed = time.perf_counter() - start_time
         logger.warning(
             "analyze_endpoint_validation_error",
             upload_id=request.headers.get("x-upload-id", "unknown"),
@@ -188,7 +188,7 @@ async def analyze_video(
         )
 
     except Exception as e:
-        elapsed = time.time() - start_time
+        elapsed = time.perf_counter() - start_time
         logger.error(
             "analyze_endpoint_error",
             upload_id=request.headers.get("x-upload-id", "unknown"),

@@ -45,24 +45,24 @@ class AnalysisService:
         """
         from kinemotion.core.timing import PerformanceTimer
 
-        start_time = time.time()
+        start_time = time.perf_counter()
         temp_path: str | None = None
         temp_debug_video_path: str | None = None
 
         # Validate inputs (let ValueError propagate to route handler)
         logger.info("validating_video_file")
-        validation_start = time.time()
+        validation_start = time.perf_counter()
         validate_video_file(file)
-        validation_duration_ms = (time.time() - validation_start) * 1000
+        validation_duration_ms = (time.perf_counter() - validation_start) * 1000
         logger.info(
             "validating_video_file_completed",
             duration_ms=round(validation_duration_ms, 1),
         )
 
         logger.info("validating_jump_type", jump_type=jump_type)
-        jump_type_start = time.time()
+        jump_type_start = time.perf_counter()
         normalized_jump_type = validate_jump_type(jump_type)
-        jump_type_duration_ms = (time.time() - jump_type_start) * 1000
+        jump_type_duration_ms = (time.perf_counter() - jump_type_start) * 1000
         logger.info(
             "validating_jump_type_completed",
             normalized_jump_type=normalized_jump_type,
@@ -72,11 +72,11 @@ class AnalysisService:
         try:
             # Generate unique storage key
             logger.info("generating_storage_key", filename=file.filename)
-            key_start = time.time()
+            key_start = time.perf_counter()
             storage_key = await self.storage_service.generate_unique_key(
                 file.filename or "video.mp4", user_id
             )
-            key_duration_ms = (time.time() - key_start) * 1000
+            key_duration_ms = (time.perf_counter() - key_start) * 1000
             logger.info(
                 "generating_storage_key_completed",
                 storage_key=storage_key,
@@ -85,7 +85,7 @@ class AnalysisService:
 
             # Save uploaded file to temporary location
             logger.info("saving_uploaded_file", temp_path=temp_path)
-            save_start = time.time()
+            save_start = time.perf_counter()
             temp_path = self.storage_service.get_temp_file_path(Path(storage_key).name)
             assert temp_path is not None
 
@@ -95,7 +95,7 @@ class AnalysisService:
                 if len(content) > 500 * 1024 * 1024:
                     raise ValueError("File size exceeds maximum of 500MB")
                 temp_file.write(content)
-            save_duration_ms = (time.time() - save_start) * 1000
+            save_duration_ms = (time.perf_counter() - save_start) * 1000
             file_size_mb = len(content) / (1024 * 1024)
             logger.info(
                 "saving_uploaded_file_completed",
@@ -149,11 +149,11 @@ class AnalysisService:
 
             # Upload analysis results with timing
             logger.info("uploading_analysis_results", storage_key=storage_key)
-            results_start = time.time()
+            results_start = time.perf_counter()
             results_url = await self.storage_service.upload_analysis_results(
                 metrics, f"results/{storage_key}.json"
             )
-            results_duration_ms = (time.time() - results_start) * 1000
+            results_duration_ms = (time.perf_counter() - results_start) * 1000
             logger.info(
                 "r2_results_upload",
                 duration_ms=round(results_duration_ms, 1),
@@ -166,11 +166,11 @@ class AnalysisService:
             if temp_debug_video_path and Path(temp_debug_video_path).exists():
                 if Path(temp_debug_video_path).stat().st_size > 0:
                     logger.info("uploading_debug_video", storage_key=storage_key)
-                    debug_start = time.time()
+                    debug_start = time.perf_counter()
                     debug_video_url = await self.storage_service.upload_video(
                         temp_debug_video_path, f"debug_videos/{storage_key}_debug.mp4"
                     )
-                    debug_duration_ms = (time.time() - debug_start) * 1000
+                    debug_duration_ms = (time.perf_counter() - debug_start) * 1000
                     logger.info(
                         "r2_debug_video_upload",
                         duration_ms=round(debug_duration_ms, 1),
@@ -181,13 +181,13 @@ class AnalysisService:
                     logger.info("debug_video_empty_skipping_upload")
 
             # Calculate processing time
-            processing_time = time.time() - start_time
+            processing_time = time.perf_counter() - start_time
 
             # Count metrics from the data field
             metrics_count = len(metrics.get("data", {}))
 
             # Log response serialization timing
-            serialization_start = time.time()
+            serialization_start = time.perf_counter()
             response_data = AnalysisResponse(
                 status_code=200,
                 message="Analysis completed successfully",
@@ -198,7 +198,7 @@ class AnalysisService:
                 error=None,
                 processing_time_s=processing_time,
             )
-            serialization_duration_ms = (time.time() - serialization_start) * 1000
+            serialization_duration_ms = (time.perf_counter() - serialization_start) * 1000
             logger.info(
                 "response_serialization",
                 duration_ms=round(serialization_duration_ms, 1),
@@ -206,11 +206,11 @@ class AnalysisService:
 
             # Clean up temporary files with timing
             logger.info("cleaning_up_temporary_files")
-            cleanup_start = time.time()
+            cleanup_start = time.perf_counter()
             Path(temp_path).unlink(missing_ok=True)
             if temp_debug_video_path and Path(temp_debug_video_path).exists():
                 Path(temp_debug_video_path).unlink(missing_ok=True)
-            cleanup_duration_ms = (time.time() - cleanup_start) * 1000
+            cleanup_duration_ms = (time.perf_counter() - cleanup_start) * 1000
             logger.info(
                 "temp_file_cleanup",
                 duration_ms=round(cleanup_duration_ms, 1),
@@ -230,7 +230,7 @@ class AnalysisService:
             logger.error(
                 "video_analysis_validation_error",
                 error=str(e),
-                processing_time_s=round(time.time() - start_time, 2),
+                processing_time_s=round(time.perf_counter() - start_time, 2),
             )
             if temp_path is not None:
                 Path(temp_path).unlink(missing_ok=True)
@@ -240,7 +240,7 @@ class AnalysisService:
 
         except Exception as e:
             # Clean up on other errors
-            processing_time = time.time() - start_time
+            processing_time = time.perf_counter() - start_time
             logger.error(
                 "video_analysis_failed",
                 error=str(e),

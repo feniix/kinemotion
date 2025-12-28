@@ -69,12 +69,12 @@ class SupabaseAuth:
         Raises:
             HTTPException: If token is invalid or expired
         """
-        start_time = time.time()
+        start_time = time.perf_counter()
 
         # Try JWKS verification first (RS256)
         if self.jwks_client:
             try:
-                jwks_start = time.time()
+                jwks_start = time.perf_counter()
                 signing_key = self.jwks_client.get_signing_key_from_jwt(token)
                 payload = jwt.decode(
                     token,
@@ -83,8 +83,8 @@ class SupabaseAuth:
                     audience="authenticated",
                     options={"verify_aud": True},
                 )
-                jwks_duration_ms = (time.time() - jwks_start) * 1000
-                total_duration_ms = (time.time() - start_time) * 1000
+                jwks_duration_ms = (time.perf_counter() - jwks_start) * 1000
+                total_duration_ms = (time.perf_counter() - start_time) * 1000
 
                 log.info(
                     "token_verified_via_jwks",
@@ -126,7 +126,7 @@ class SupabaseAuth:
             Decoded token payload containing user information
         """
         try:
-            server_start = time.time()
+            server_start = time.perf_counter()
 
             headers = {"Authorization": f"Bearer {token}"}
             if self.supabase_anon_key:
@@ -139,8 +139,8 @@ class SupabaseAuth:
                     timeout=10.0,
                 )
 
-            server_duration_ms = (time.time() - server_start) * 1000
-            total_duration_ms = (time.time() - overall_start_time) * 1000
+            server_duration_ms = (time.perf_counter() - server_start) * 1000
+            total_duration_ms = (time.perf_counter() - overall_start_time) * 1000
 
             if response.status_code == 200:
                 user_data = response.json()
@@ -168,7 +168,7 @@ class SupabaseAuth:
                     detail="Token verification failed",
                 )
         except httpx.RequestError as e:
-            request_duration_ms = (time.time() - overall_start_time) * 1000
+            request_duration_ms = (time.perf_counter() - overall_start_time) * 1000
             log.error(
                 "auth_server_request_failed",
                 error=str(e),

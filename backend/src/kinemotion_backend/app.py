@@ -26,7 +26,7 @@ from fastapi import (
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from kinemotion.api import process_cmj_video, process_dropjump_video
-from kinemotion.core.pose import PoseTracker
+from kinemotion.core.pose import PoseTrackerFactory
 from kinemotion.core.timing import (
     PerformanceTimer,
     Timer,
@@ -240,27 +240,56 @@ class R2StorageClient:
 
 # ========== Global State & Lifespan ==========
 
-global_pose_trackers: dict[str, PoseTracker] = {}
+# Type is object because different backends have different tracker types
+global_pose_trackers: dict[str, object] = {}
+# Store the detected backend for health checks
+detected_backend: str = "unknown"
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Manage application lifecycle and global resources."""
+    global detected_backend
+
+    logger.info("detecting_best_pose_backend")
+    # Auto-detect best available backend (CUDA → RTMPose CPU → MediaPipe)
+    # CoreML is skipped on Linux (backend runs on Intel/Cloud Run)
+    detected_backend = PoseTrackerFactory._detect_best_backend()  # type: ignore[attr-defined]
+    logger.info(f"detected_backend_{detected_backend}")
+
     logger.info("initializing_pose_trackers")
     try:
-        # Initialize trackers for each quality preset
-        # Fast: lower confidence for speed
-        global_pose_trackers["fast"] = PoseTracker(
-            min_detection_confidence=0.3, min_tracking_confidence=0.3
-        )
-        # Balanced: standard confidence
-        global_pose_trackers["balanced"] = PoseTracker(
-            min_detection_confidence=0.5, min_tracking_confidence=0.5
-        )
-        # Accurate: high confidence
-        global_pose_trackers["accurate"] = PoseTracker(
-            min_detection_confidence=0.6, min_tracking_confidence=0.6
-        )
+        if detected_backend == "mediapipe":
+            # MediaPipe uses confidence thresholds for quality presets
+            global_pose_trackers["fast"] = PoseTrackerFactory.create(
+                backend="mediapipe",
+                min_detection_confidence=0.3,
+                min_tracking_confidence=0.3,
+            )
+            global_pose_trackers["balanced"] = PoseTrackerFactory.create(
+                backend="mediapipe",
+                min_detection_confidence=0.5,
+                min_tracking_confidence=0.5,
+            )
+            global_pose_trackers["accurate"] = PoseTrackerFactory.create(
+                backend="mediapipe",
+                min_detection_confidence=0.6,
+                min_tracking_confidence=0.6,
+            )
+        else:
+            # RTMPose (CUDA or CPU) uses mode parameter for quality presets
+            global_pose_trackers["fast"] = PoseTrackerFactory.create(
+                backend=detected_backend,
+                mode="lightweight",
+            )
+            global_pose_trackers["balanced"] = PoseTrackerFactory.create(
+                backend=detected_backend,
+                mode="lightweight",  # Default mode
+            )
+            global_pose_trackers["accurate"] = PoseTrackerFactory.create(
+                backend=detected_backend,
+                mode="balanced",  # Higher accuracy mode
+            )
         logger.info("pose_trackers_initialized")
 
         yield
@@ -467,7 +496,7 @@ async def _process_video_async(
     quality: str = "balanced",
     output_video: str | None = None,
     timer: Timer | None = None,
-    pose_tracker: "PoseTracker | None" = None,
+    pose_tracker: object | None = None,
 ) -> dict[str, Any]:
     """Process video and return metrics.
 
@@ -477,7 +506,7 @@ async def _process_video_async(
         quality: Analysis quality preset
         output_video: Optional path for debug video output
         timer: Optional Timer for measuring operations
-        pose_tracker: Optional shared PoseTracker instance
+        pose_tracker: Optional shared tracker instance (type varies by backend)
 
     Returns:
         Dictionary with metrics
@@ -491,7 +520,7 @@ async def _process_video_async(
             quality=quality,
             output_video=output_video,
             timer=timer,
-            pose_tracker=pose_tracker,
+            pose_tracker=pose_tracker,  # type: ignore[arg-type]
         )
     else:  # cmj
         metrics = process_cmj_video(
@@ -499,7 +528,7 @@ async def _process_video_async(
             quality=quality,
             output_video=output_video,
             timer=timer,
-            pose_tracker=pose_tracker,
+            pose_tracker=pose_tracker,  # type: ignore[arg-type]
         )
 
     return cast(dict[str, Any], metrics.to_dict())
@@ -541,6 +570,7 @@ async def health_check() -> dict[str, Any]:
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "r2_configured": r2_client is not None,
         "trackers_initialized": len(global_pose_trackers) > 0,
+        "pose_backend": detected_backend,
         "database_connected": database_connected,
     }
 
@@ -578,7 +608,7 @@ async def analyze_video(
     import time
     import uuid
 
-    start_time = time.time()
+    start_time = time.perf_counter()
     temp_video_path = None
     temp_debug_video_path = None
     r2_video_key = None
@@ -604,9 +634,9 @@ async def analyze_video(
         await file.seek(0)
 
         # Validate video file
-        validation_start = time.time()
+        validation_start = time.perf_counter()
         _validate_video_file(file)
-        validation_duration = time.time() - validation_start
+        validation_duration = time.perf_counter() - validation_start
         logger.info(
             "timing_video_validation",
             duration_ms=round(validation_duration * 1000),
@@ -617,7 +647,7 @@ async def analyze_video(
         with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temp_file:
             temp_video_path = temp_file.name
             # Write uploaded file to temp location
-            save_start = time.time()
+            save_start = time.perf_counter()
             content = await file.read()
 
             # Validate file size after reading
@@ -626,7 +656,7 @@ async def analyze_video(
                 raise ValueError("File size exceeds maximum of 500MB")
 
             temp_file.write(content)
-            save_duration = time.time() - save_start
+            save_duration = time.perf_counter() - save_start
         logger.info("timing_video_file_save", duration_ms=round(save_duration * 1000))
 
         # Convert debug string to boolean
@@ -641,11 +671,11 @@ async def analyze_video(
         # Upload to R2 if client available
         original_video_url = None
         if r2_client:
-            upload_start = time.time()
+            upload_start = time.perf_counter()
             r2_video_key = f"videos/{jump_type}/{upload_id}{upload_suffix}"
             try:
                 original_video_url = r2_client.upload_file(temp_video_path, r2_video_key)
-                upload_duration = time.time() - upload_start
+                upload_duration = time.perf_counter() - upload_start
                 logger.info(
                     "timing_r2_input_video_upload",
                     key=r2_video_key,
@@ -660,7 +690,7 @@ async def analyze_video(
                 ) from e
 
         # Process video with real kinemotion analysis
-        analysis_start = time.time()
+        analysis_start = time.perf_counter()
 
         # Initialize timer
         timer = PerformanceTimer()
@@ -681,7 +711,7 @@ async def analyze_video(
             timer=timer,
             pose_tracker=pose_tracker,
         )  # type: ignore[arg-type]
-        analysis_duration = time.time() - analysis_start
+        analysis_duration = time.perf_counter() - analysis_start
 
         # Log detailed timing breakdown if available in metadata
         if (
@@ -717,10 +747,10 @@ async def analyze_video(
             # Upload Metrics JSON
             r2_results_key = f"results/{jump_type}/{upload_id}_results.json"
             try:
-                results_upload_start = time.time()
+                results_upload_start = time.perf_counter()
                 results_json = json.dumps(metrics, indent=2)
                 results_url = r2_client.put_object(r2_results_key, results_json.encode())
-                results_upload_duration = time.time() - results_upload_start
+                results_upload_duration = time.perf_counter() - results_upload_start
                 logger.info(
                     "timing_r2_results_upload",
                     key=r2_results_key,
@@ -739,11 +769,11 @@ async def analyze_video(
             ):
                 r2_debug_video_key = f"debug_videos/{jump_type}/{upload_id}_debug.mp4"
                 try:
-                    debug_upload_start = time.time()
+                    debug_upload_start = time.perf_counter()
                     debug_video_url = r2_client.upload_file(
                         temp_debug_video_path, r2_debug_video_key
                     )
-                    debug_upload_duration = time.time() - debug_upload_start
+                    debug_upload_duration = time.perf_counter() - debug_upload_start
                     logger.info(
                         "timing_r2_debug_video_upload",
                         key=r2_debug_video_key,
@@ -756,7 +786,7 @@ async def analyze_video(
                         error=str(e),
                         key=r2_debug_video_key,
                     )
-        processing_time = time.time() - start_time
+        processing_time = time.perf_counter() - start_time
 
         # Optionally store analysis session in database if user is authenticated
         user_id = None
@@ -816,9 +846,9 @@ async def analyze_video(
         )
 
         # Serialize response to JSON
-        serialization_start = time.time()
+        serialization_start = time.perf_counter()
         response_dict = response.to_dict()
-        serialization_duration = time.time() - serialization_start
+        serialization_duration = time.perf_counter() - serialization_start
         logger.info(
             "timing_response_serialization",
             duration_ms=round(serialization_duration * 1000),
@@ -830,7 +860,7 @@ async def analyze_video(
         )
 
     except ValueError as e:
-        processing_time = time.time() - start_time
+        processing_time = time.perf_counter() - start_time
         error_message = str(e)
         logger.warning(
             "validation_error",
@@ -849,7 +879,7 @@ async def analyze_video(
         )
 
     except Exception as e:
-        processing_time = time.time() - start_time
+        processing_time = time.perf_counter() - start_time
         error_detail = f"{type(e).__name__}: {str(e)}"
         logger.error(
             "video_analysis_failed",
@@ -871,7 +901,7 @@ async def analyze_video(
 
     finally:
         # Clean up temporary files
-        cleanup_start = time.time()
+        cleanup_start = time.perf_counter()
 
         # Clean up temporary video file
         if temp_video_path and Path(temp_video_path).exists():
@@ -893,7 +923,7 @@ async def analyze_video(
                     error=str(e),
                 )
 
-        cleanup_duration = time.time() - cleanup_start
+        cleanup_duration = time.perf_counter() - cleanup_start
         if cleanup_duration > 0:
             logger.info(
                 "timing_temp_file_cleanup",
@@ -933,7 +963,7 @@ async def analyze_local_video(
     """
     import time
 
-    start_time = time.time()
+    start_time = time.perf_counter()
 
     try:
         # Validate inputs
@@ -960,7 +990,7 @@ async def analyze_local_video(
             video_path, jump_type, quality, timer=timer, pose_tracker=pose_tracker
         )  # type: ignore[arg-type]
 
-        processing_time = time.time() - start_time
+        processing_time = time.perf_counter() - start_time
 
         response = AnalysisResponse(
             status_code=200,
@@ -975,7 +1005,7 @@ async def analyze_local_video(
         )
 
     except ValueError as e:
-        processing_time = time.time() - start_time
+        processing_time = time.perf_counter() - start_time
         response = AnalysisResponse(
             status_code=422,
             message="Validation error",
@@ -988,7 +1018,7 @@ async def analyze_local_video(
         )
 
     except Exception as e:
-        processing_time = time.time() - start_time
+        processing_time = time.perf_counter() - start_time
         error_detail = f"{type(e).__name__}: {str(e)}"
         logger.error(
             "local_video_analysis_failed",
@@ -1039,7 +1069,7 @@ async def extract_landmarks_determinism(video: UploadFile = File(...)) -> JSONRe
     """Extract raw MediaPipe landmarks for cross-platform comparison."""
     import platform
 
-    from kinemotion.core.pose import PoseTracker
+    from kinemotion.core.pose import PoseTrackerFactory
     from kinemotion.core.video_io import VideoProcessor
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".MOV") as tmp:
@@ -1048,7 +1078,7 @@ async def extract_landmarks_determinism(video: UploadFile = File(...)) -> JSONRe
         tmp_path = tmp.name
 
     try:
-        tracker = PoseTracker()
+        tracker = PoseTrackerFactory.create(backend="mediapipe")
         video_proc = VideoProcessor(tmp_path)
 
         all_landmarks = []
