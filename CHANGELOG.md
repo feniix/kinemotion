@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.69.0 (2025-12-28)
+
+### Feat
+
+- **backend**: add auto-detection for pose tracking backend + use perf_counter
+
+### Fix
+
+- **ci**: build wheel-only to avoid 100MB PyPI limit
+
 ## kinemotion-v0.68.0 (2025-12-28)
 
 ### Feat
