@@ -21,22 +21,6 @@ This document outlines the implementation plan for adding **HYROX Wall Ball no-r
 
 ______________________________________________________________________
 
-## Table of Contents
-
-1. [Core Objective: Rep Counting & Validation Pipeline](#1-core-objective-rep-counting--validation-pipeline)
-1. [Wall Ball Exercise Standards](#2-wall-ball-exercise-standards)
-1. [Technical Feasibility Analysis](#3-technical-feasibility-analysis)
-1. [Camera Setup - 45-Degree Angle Advantage](#4-camera-setup---45-degree-angle-advantage)
-1. [Proposed Architecture](#5-proposed-architecture)
-1. [Implementation Phases](#6-implementation-phases)
-1. [Technical Challenges & Mitigation](#7-technical-challenges--mitigation)
-1. [Testing Strategy](#8-testing-strategy)
-1. [Research References](#9-research-references)
-1. [Future Enhancements](#10-future-enhancements)
-1. [Conclusion](#11-conclusion)
-
-______________________________________________________________________
-
 ## 1. Core Objective: Rep Counting & Validation Pipeline
 
 ### 1.1 The Problem

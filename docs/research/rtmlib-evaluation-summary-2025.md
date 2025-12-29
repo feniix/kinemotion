@@ -364,7 +364,7 @@ ______________________________________________________________________
 - MediaPipe: jump_height 0.349m, flight_time 533.6ms
 - RTMPose CUDA: jump_height 0.492m, flight_time 633.6ms
 
-See: [pose-tracking-performance-investigation-2025.md](./pose-tracking-performance-investigation-2025.md)
+See: [pose-estimator-comparison-2025.md](./pose-estimator-comparison-2025.md) for detailed performance analysis.
 
 ______________________________________________________________________
 

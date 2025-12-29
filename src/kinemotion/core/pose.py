@@ -187,7 +187,7 @@ class PoseTrackerFactory:
         backend: str = "auto",
         mode: str = "lightweight",
         **kwargs: object,
-    ):
+    ) -> object:
         """Create a pose tracker with the specified backend.
 
         Args:
@@ -404,7 +404,7 @@ class PoseTrackerFactory:
         backend: str,
         mode: str,
         kwargs: dict[str, object],
-    ):
+    ) -> object:
         """Create a tracker instance with appropriate arguments.
 
         Args:

@@ -63,7 +63,7 @@ ______________________________________________________________________
 
 ## 📊 Current MediaPipe Performance Baseline
 
-From performance analysis (`research/performance-improvement-analysis-30s-18s.md`):
+From performance analysis (see [pose-estimator-comparison-2025.md](./pose-estimator-comparison-2025.md)):
 
 ```
 Total pose tracking: 7097ms (93% of total processing)
@@ -691,5 +691,5 @@ ______________________________________________________________________
 - [RTMLib GitHub](https://github.com/Tau-J/rtmlib)
 - [RTMPose Paper](https://arxiv.org/abs/2303.07399)
 - [Halpe26 Keypoint Format](https://github.com/open-mmlab/mmpose/blob/main/configs/_base_/datasets/halpe26.py)
-- [kinemotion Performance Analysis](../research/performance-improvement-analysis-30s-18s.md)
-- [kinemotion Camera Perspective Study](../research/camera-perspective-validation-study.md)
+- [Pose Estimator Comparison 2025](./pose-estimator-comparison-2025.md)
+- [Camera Setup Guide](../guides/camera-setup.md)

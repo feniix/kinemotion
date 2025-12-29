@@ -4,7 +4,12 @@ Lower-level utilities for advanced usage and custom analysis pipelines.
 
 ## Pose Detection
 
-::: kinemotion.core.pose.PoseTracker
+::: kinemotion.core.pose.PoseTrackerFactory
+options:
+show_root_heading: true
+show_source: false
+
+::: kinemotion.core.pose.MediaPipePoseTracker
 options:
 show_root_heading: true
 show_source: false
@@ -53,14 +58,14 @@ show_source: false
 ## Usage Example
 
 ```python
-from kinemotion.core.pose import PoseTracker
+from kinemotion.core.pose import PoseTrackerFactory
 from kinemotion.core.smoothing import smooth_landmarks
 from kinemotion.core.video_io import VideoProcessor
 
-# Initialize pose tracker
-tracker = PoseTracker(
-    min_detection_confidence=0.5,
-    min_tracking_confidence=0.5
+# Initialize pose tracker (auto-detects best available backend)
+tracker = PoseTrackerFactory.create(
+    backend="auto",  # or "mediapipe", "rtmpose-cpu", etc.
+    mode="lightweight"
 )
 
 # Process video
