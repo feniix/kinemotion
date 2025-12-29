@@ -78,8 +78,10 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v6
-        # No LFS needed - models are in src/ and copied by Dockerfile
-        # LFS checkout would download 53MB of models unnecessarily
+        with:
+          lfs: true
+        # LFS required for ONNX models used by RTMPose (53MB)
+        # Models are copied into Docker image via COPY src/ ./src/
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

@@ -39,11 +39,9 @@ COPY src/ ./src/
 COPY backend/pyproject.toml backend/README.md ./backend/
 COPY backend/src/ ./backend/src/
 
-# Sync workspace from root (installs kinemotion)
+# Sync all workspace members (kinemotion + backend)
+# Run from root to preserve workspace context for kinemotion dependency
 RUN uv sync --frozen --no-dev && rm -rf /root/.cache/uv
-
-# Sync backend dependencies (uvicorn, fastapi, etc)
-RUN cd backend && uv sync --frozen --no-dev && rm -rf /root/.cache/uv
 
 # Add venv to PATH for static execution
 ENV PATH="/app/.venv/bin:$PATH" \

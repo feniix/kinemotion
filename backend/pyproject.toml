@@ -154,3 +154,7 @@ reportUnusedClass = "warning"
 reportUnusedFunction = "warning"
 reportUnusedVariable = "warning"
 reportDuplicateImport = "warning"
+
+[tool.uv.sources]
+# Use workspace member for local development and Docker builds
+kinemotion = { workspace = true }
