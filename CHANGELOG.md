@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.69.1 (2025-12-29)
+
+### Fix
+
+- **docs**: fix mkdocs generation
+- **docker**: remove uv cache to reduce image size from 16.7GB to 8.8GB
+- **ci**: remove LFS checkout from backend deployment to fix disk space
+
 ## kinemotion-v0.69.0 (2025-12-28)
 
 ### Feat
