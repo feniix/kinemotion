@@ -39,13 +39,19 @@ COPY src/ ./src/
 COPY backend/pyproject.toml backend/README.md ./backend/
 COPY backend/src/ ./backend/src/
 
-# Sync all workspace members (kinemotion + backend)
-# Run from root to preserve workspace context for kinemotion dependency
+# Set VIRTUAL_ENV so both syncs use the same venv
+ENV VIRTUAL_ENV="/app/.venv"
+
+# Sync workspace from root (installs kinemotion)
 RUN uv sync --frozen --no-dev && rm -rf /root/.cache/uv
 
+# Sync backend package (installs uvicorn and backend dependencies)
+# Uses workspace context from root to resolve kinemotion dependency
+# Reuses existing venv from /app/.venv
+RUN cd backend && uv sync --frozen --no-dev && rm -rf /root/.cache/uv
+
 # Add venv to PATH for static execution
-ENV PATH="/app/.venv/bin:$PATH" \
-    VIRTUAL_ENV="/app/.venv"
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Expose port (Cloud Run expects $PORT environment variable, defaults to 8080)
 EXPOSE 8080
