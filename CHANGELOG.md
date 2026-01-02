@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.69.2 (2026-01-02)
+
+### Fix
+
+- **backend**: use shared venv for dual workspace sync
+- **backend**: resolve workspace dependency and enable LFS for models
+
 ## kinemotion-v0.69.1 (2025-12-29)
 
 ### Fix
