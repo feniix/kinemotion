@@ -1,5 +1,5 @@
 {
-  "buildCommand": "yarn build",
-  "installCommand": "yarn install",
+  "buildCommand": "bun run build",
+  "installCommand": "bun install",
   "outputDirectory": "dist"
 }
