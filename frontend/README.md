@@ -18,20 +18,19 @@ React frontend for Kinemotion video-based kinematic analysis.
 - React 18
 - TypeScript 5
 - Vite 5
-- Yarn package manager
+- Bun package manager
 
 ## Setup
 
 ### Prerequisites
 
-- Node.js 18+ (LTS recommended)
-- Yarn 1.22+
+- Bun 1.3+
 
 ### Installation
 
 ```bash
 # Install dependencies
-yarn install
+bun install
 
 # Copy environment variables
 cp .env.example .env.local
@@ -45,16 +44,16 @@ cp .env.example .env.local
 
 ```bash
 # Start development server (http://localhost:5173)
-yarn dev
+bun run dev
 
 # Type check
-yarn type-check
+bun run type-check
 
 # Build for production
-yarn build
+bun run build
 
 # Preview production build
-yarn preview
+bun run preview
 ```
 
 ## Environment Variables
@@ -109,7 +108,7 @@ The frontend communicates with the Kinemotion backend API:
 
 ```bash
 # Install Vercel CLI
-yarn global add vercel
+bun global add vercel
 
 # Deploy to preview
 vercel
@@ -185,9 +184,9 @@ frontend/
 
 ### Build errors
 
-- Clear node_modules: `rm -rf node_modules && yarn install`
+- Clear node_modules: `rm -rf node_modules && bun install`
 - Clear Vite cache: `rm -rf node_modules/.vite`
-- Update dependencies: `yarn upgrade`
+- Update dependencies: `bun update`
 
 ## Contributing
 

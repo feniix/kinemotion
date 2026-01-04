@@ -34,6 +34,12 @@ lerna-debug.log*
 
 # Testing
 coverage/
+playwright-report/
+test-results/
+
+# E2E Tests - Auth sessions (DO NOT COMMIT)
+e2e/.auth/
+e2e/test-results/
 
 # Temporary files
 *.tmp

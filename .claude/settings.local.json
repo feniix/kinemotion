@@ -82,7 +82,10 @@
       "WebFetch(domain:mmpose.readthedocs.io)",
       "Bash(uv run python:*)",
       "WebSearch",
-      "Skill(aichat:session-search)"
+      "Skill(aichat:session-search)",
+      "Skill(CORE)",
+      "Bash(npx playwright test:*)",
+      "Bash(yarn test:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
