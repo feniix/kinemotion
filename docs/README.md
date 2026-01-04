@@ -6,6 +6,12 @@ Welcome to the kinemotion documentation. This directory contains guides, technic
 
 ### 🚀 Getting Started
 
+**COACHES START HERE:**
+
+- **[Coach Quick Start Guide](guides/coach-quick-start.md)** - Analyze jumps in 3 easy steps
+
+**DETAILED SETUP:**
+
 - **[Camera Setup Guide](guides/camera-setup.md)** - How to position your camera for optimal analysis
   - Single iPhone at 45° (standard setup)
   - Dual iPhone stereo (advanced setup)
@@ -85,6 +91,7 @@ This documentation follows a structured organization:
 
 Start here:
 
+1. **[Coach Quick Start Guide](guides/coach-quick-start.md)** - **START HERE** - Analyze jumps in 3 easy steps
 1. [Camera Setup Guide](guides/camera-setup.md) - Critical first step
 1. [CMJ Guide](guides/cmj-guide.md) - Understanding CMJ analysis
 1. [Parameters Reference](reference/parameters.md) - Adjusting analysis settings
