@@ -45,6 +45,11 @@ Issues = "https://github.com/feniix/kinemotion/issues"
 [project.scripts]
 kinemotion = "kinemotion.cli:cli"
 
+[project.optional-dependencies]
+plotting = [
+    "matplotlib>=3.10.8",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
