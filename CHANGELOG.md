@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.70.1 (2026-01-05)
+
+### Fix
+
+- **core**: add platform-specific onnxruntime and backend auto-detect
+
 ## kinemotion-v0.70.0 (2026-01-04)
 
 ### Feat
