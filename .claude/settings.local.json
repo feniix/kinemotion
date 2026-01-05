@@ -85,7 +85,8 @@
       "Skill(aichat:session-search)",
       "Skill(CORE)",
       "Bash(npx playwright test:*)",
-      "Bash(yarn test:*)"
+      "Bash(yarn test:*)",
+      "WebFetch(domain:journals.plos.org)"
     ]
   },
   "enableAllProjectMcpServers": true,

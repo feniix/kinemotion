@@ -249,9 +249,248 @@ All changes have been reverted. Codebase is in original state:
 - `src/kinemotion/cmj/analysis.py` - Reverted to baseline algorithm
 - `scripts/validate_ankle_angle.py` - Created for ankle signal investigation (can be kept)
 
+______________________________________________________________________
+
+## Force Plate Landing Detection Research
+
+**Date:** 2025-01-05
+**Context:** Understanding how force plates define landing vs. video-based detection
+
+### Force Plate Landing Definition
+
+**Standard Practice:** Landing is defined as when vertical ground reaction force (VGRF) exceeds a small threshold - typically **10-50 Newtons**.
+
+From Tirosh & Sparrow (2003):
+
+> "Any force threshold within 0 to 50 N could be used to predict heel-contact time."
+
+**What 10-50 N Means:**
+
+| Threshold | Context                              |
+| --------- | ------------------------------------ |
+| 10 N      | Weight of 1 kg - feather-light touch |
+| 50 N      | Weight of 5 kg - minimal contact     |
+| 700 N     | A 70 kg athlete's full body weight   |
+
+10-50 N is essentially **initial touch**, not full impact.
+
+### Force Plate vs. Video Algorithm Comparison
+
+| Method                      | Landing Definition                           | Timing          |
+| --------------------------- | -------------------------------------------- | --------------- |
+| **Force Plate**             | First moment VGRF exceeds ~10-50 N           | Initial contact |
+| **Current Video Algorithm** | Maximum deceleration spike after peak height | Full impact     |
+
+**The Gap:**
+
+At 30 FPS (33ms/frame), there could be 1-3 frames difference between:
+
+- Frame 1: Toes barely touch (force plate threshold)
+- Frame 2-3: Foot rolls, impact builds
+- Frame 4: Maximum deceleration (current algorithm)
+
+**At 60 FPS (16.7ms/frame):** 2-6 frames between initial contact and impact detection.
+
+### Current Algorithm Behavior
+
+From `src/kinemotion/cmj/analysis.py:388-442`:
+
+```python
+def find_landing_frame():
+    """
+    1. Find peak downward velocity (max positive velocity) after peak height
+    2. Search for maximum deceleration (min acceleration) AFTER peak velocity
+    3. This filters out mid-air tracking noise
+    4. Returns frame of impact (maximum deceleration spike)
+    """
+```
+
+**Key Points:**
+
+- Detects **full impact** (deceleration spike), not initial contact
+- Deliberately searches after peak velocity to avoid false positives from tracking noise
+- Biomechanically meaningful (moment of force application)
+- Marks end of flight time (used for jump height calculation)
+
+### Can Video Detect True Initial Contact?
+
+**The Challenge:**
+
+At 10-50 N threshold, the athlete is still essentially in freefall:
+
+- The foot has barely grazed the ground
+- Visually indistinguishable from the frame just before contact
+- By the time deceleration is visible in pose data, we're already past true initial contact
+
+**Why Current Detection is Later:**
+
+```
+Frame N-2: Foot clearly in air, falling at ~9.8 m/s²
+Frame N-1: Foot still falling, looks like air (force plate would detect 10N here)
+Frame N:   First frame where pose might show something changed?
+Frame N+1: Deceleration begins to be visible
+Frame N+2: Impact (what current algorithm detects)
+```
+
+**Frame Rate Reality:**
+
+At 60 FPS (16.7ms per frame), the entire transition from "just touched" to "full impact" might span **1-2 frames total**. True initial contact (10N) is not visually distinguishable from the preceding frame.
+
+### Potential Approaches
+
+#### 1. Foot Angle Detection
+
+**Theory:** Ankle dorsiflexion occurs at landing before hip deceleration, potentially providing earlier landing detection.
+
+**Status:** ❌ **NOT VIABLE** (tested above - "Ankle Angle Detection Investigation")
+
+- Range of -12 to +3 frames offset
+- Too variable for practical use
+- Individual landing mechanics differ (flat-footed vs forefoot)
+
+#### 2. Frame Subtraction
+
+**Theory:** If initial contact is consistently N frames before deceleration, subtract N frames.
+
+**Challenges:**
+
+- Offset must be consistent across athletes and jump heights
+- Requires validation data to determine correct offset
+- May not generalize
+
+#### 3. Accept Current Detection
+
+**Rationale:**
+
+- Current detection is biomechanically meaningful (impact phase)
+- Error of ±1 frame at 60 FPS = ±17ms (acceptable for most use cases)
+- Force plate "initial contact" (10N) may not be practically relevant for video-based analysis
+
+### Force Plate Research References
+
+1. **Tirosh & Sparrow (2003)** - "Identifying Heel Contact and Toe-Off Using Forceplate Thresholds"
+
+   - Tested thresholds: 10, 20, 30, 40, 50 N
+   - Found: "any force threshold within 0 to 50 N could be used to predict heel-contact time"
+   - For takeoff: "10 N or less should be used"
+
+1. **Rojano Ortega et al. (2010)** - "Analysis of the Vertical Ground Reaction Forces and Temporal Factors in the Landing Phase"
+
+   - Two peak forces (F1 and F2) in landing force-time curve
+   - F1: Impact of metatarsal heads (forefoot)
+   - F2: Impact of calcaneus (heel)
+   - Second peak (F2) usually related to injury risk
+
+### Practical Considerations
+
+**Question:** What metric are you trying to validate against?
+
+| Use Case                 | Preferred Detection                                    |
+| ------------------------ | ------------------------------------------------------ |
+| Flight time calculation  | Initial contact (force plate style)                    |
+| Landing mechanics/forces | Impact phase (current algorithm)                       |
+| Injury risk assessment   | Both (contact timing + impact magnitude)               |
+| Performance comparison   | Relative consistency matters more than absolute timing |
+
+**Recommendation:**
+
+If you need to match force plate data for validation:
+
+- Use current algorithm and apply **constant offset** based on calibration
+- Accept that video-based initial contact will lag force plates by ~10-30ms
+- Focus on **flight time consistency** rather than matching exact frame numbers
+
+For higher precision:
+
+- Use 120-240fps video (validated apps like MyJump use these rates)
+- Force plate integration for ground truth validation
+- Multiple camera angles for 3D reconstruction
+
+______________________________________________________________________
+
+## Force-Plate-Equivalent Landing Detection
+
+**Date:** 2025-01-05
+**Goal:** Find a video-based method that detects landing at "initial contact" (like force plates at 10-50N) rather than "impact" (maximum deceleration).
+
+### Methods Tested
+
+| Method                   | Description                   | Average Offset vs Current  |
+| ------------------------ | ----------------------------- | -------------------------- |
+| Current (foot accel)     | Maximum deceleration spike    | Baseline                   |
+| Foot velocity threshold  | Velocity drops to 15% of max  | +2.67 frames (LATER)       |
+| Foot-hip divergence      | Foot-hip distance rate change | -0.33 frames               |
+| Foot decel spike         | Foot acceleration minimum     | 0.00 frames                |
+| **Velocity deriv onset** | First 30% of max deceleration | **-1.67 frames (EARLIER)** |
+| Position minimum         | Foot stops descending         | +7.3 frames (buggy)        |
+| Velocity zero-crossing   | Foot velocity reaches zero    | +7.7 frames (buggy)        |
+
+### Best Method: Velocity Derivative Onset
+
+**Algorithm:** Detect when foot deceleration first exceeds 30% of the maximum deceleration rate.
+
+```python
+def find_landing_frame_velocity_derivative(velocities, peak_height_frame, fps):
+    # Compute velocity derivative (= acceleration)
+    vel_derivative = savgol_filter(velocities, 5, 2, deriv=1)
+
+    # Find minimum derivative (max deceleration)
+    min_deriv = min(vel_derivative[search_window])
+
+    # Find onset: first frame exceeding 30% threshold
+    threshold = min_deriv * 0.3
+    landing_frame = first_frame_where(vel_derivative < threshold)
+```
+
+### Visual Verification
+
+Extracted frames from `cmj-45-IMG_6733.MOV`:
+
+| Frame | Detection              | Visual Observation                                        |
+| ----- | ---------------------- | --------------------------------------------------------- |
+| 140   | **Vel deriv onset**    | Initial contact - feet just touching, motion blur present |
+| 141   | -                      | Impact absorption in progress                             |
+| 142   | Ground truth / Current | Impact completed - feet fully planted                     |
+
+**Conclusion:** The velocity derivative onset method detects landing **1-2 frames earlier** (17-33ms at 60fps), which is closer to force plate behavior (initial contact at 10-50N).
+
+### Results Across All Videos
+
+| Video | Ground Truth | Current | Vel Deriv Onset | Delta     |
+| ----- | ------------ | ------- | --------------- | --------- |
+| 6733  | 142          | 142     | 140             | -2 frames |
+| 6734  | 144          | 144     | 143             | -1 frame  |
+| 6735  | 130          | 130     | 128             | -2 frames |
+
+**Average: -1.67 frames (28ms earlier)**
+
+### Why This Works
+
+1. **Physics:** Deceleration begins the instant foot touches ground (can't decelerate in air)
+1. **Kinematic chain:** Foot contact → foot deceleration → hip deceleration (delay)
+1. **Force plate equivalent:** 10-50N threshold is "first measurable force" = deceleration onset
+
+### Implications
+
+If using velocity derivative onset for landing:
+
+- **Flight time increases** by ~1-2 frames (~30ms)
+- **Jump height increases** by ~0.5-1cm (using flight time formula)
+- **More accurate** for force plate validation studies
+
+### Implementation Status
+
+- **Validation script:** `scripts/validate_foot_velocity_landing.py`
+- **Frame extraction:** `scripts/extract_landing_frames.py`
+- **Integration:** Not yet integrated into main codebase
+
+______________________________________________________________________
+
 ## References
 
 - Savitzky-Golay phase lag: https://stackoverflow.com/questions/55572128
 - Parabolic peak interpolation: https://ccrma.stanford.edu/~jos/parshar/Peak_Detection_Steps_3.html
 - CUSUM change detection: Various signal processing references
 - Zero-phase filtering: scipy.signal.filtfilt documentation
+- **Tirosh & Sparrow (2003)**: "Identifying Heel Contact and Toe-Off Using Forceplate Thresholds" - Journal of Applied Biomechanics 19(2):178-184
+- **Rojano Ortega et al. (2010)**: "Analysis of the Vertical Ground Reaction Forces and Temporal Factors in the Landing Phase of a Countermovement Jump" - J Sports Sci Med 9(2):282-287

@@ -11,6 +11,19 @@ from ..core.timing import NULL_TIMER, Timer
 from ..core.types import FloatArray
 
 
+class LandingMethod(str, Enum):
+    """Landing detection method for CMJ analysis.
+
+    - IMPACT: Detects maximum deceleration spike (current default).
+      Matches human visual annotations of "feet on ground".
+    - CONTACT: Detects deceleration onset (force-plate equivalent).
+      Detects initial contact ~1-2 frames earlier (17-33ms at 60fps).
+    """
+
+    IMPACT = "impact"
+    CONTACT = "contact"
+
+
 def compute_signed_velocity(
     positions: FloatArray, window_length: int = 5, polyorder: int = 2
 ) -> FloatArray:
@@ -385,20 +398,16 @@ def find_lowest_frame(
         return float(int(takeoff_frame) - int(fps * 0.2))
 
 
-def find_landing_frame(
+def _find_landing_impact(
     accelerations: FloatArray,
     velocities: FloatArray,
     peak_height_frame: int,
     fps: float,
 ) -> float:
-    """Find landing frame after peak height.
+    """Find landing frame using maximum deceleration (impact method).
 
-    Robust detection strategy:
-    1. Find peak downward velocity (maximum positive velocity) after peak height.
-       This corresponds to the moment just before or at initial ground contact.
-    2. Look for maximum deceleration (impact) *after* the peak velocity.
-       This filters out mid-air tracking noise/flutter that can cause false
-       deceleration spikes while the athlete is still accelerating downward.
+    This is the original algorithm that detects the maximum deceleration spike,
+    which corresponds to peak impact force. Matches human visual annotations.
 
     Args:
         accelerations: Vertical acceleration array (deriv=2)
@@ -413,26 +422,21 @@ def find_landing_frame(
     search_end = min(len(accelerations), peak_height_frame + int(fps * 1.0))
 
     # 1. Find peak downward velocity (max positive value)
-    # Search from peak height to end of window
     vel_search_window = velocities[peak_height_frame:search_end]
 
     if len(vel_search_window) == 0:
         return float(peak_height_frame + int(fps * 0.3))
 
-    # Index relative to peak_height_frame
     peak_vel_rel_idx = int(np.argmax(vel_search_window))
     peak_vel_frame = peak_height_frame + peak_vel_rel_idx
 
     # 2. Search for impact (min acceleration) starting from peak velocity
-    # We allow a small buffer (e.g., 1-2 frames) before peak velocity just in case
-    # peak velocity coincides with impact start due to smoothing
     landing_search_start = max(peak_height_frame, peak_vel_frame - 2)
     landing_search_end = search_end
 
     landing_accelerations = accelerations[landing_search_start:landing_search_end]
 
     if len(landing_accelerations) == 0:
-        # Fallback if window is empty
         return float(peak_height_frame + int(fps * 0.3))
 
     # Find minimum acceleration (maximum deceleration spike)
@@ -440,6 +444,101 @@ def find_landing_frame(
     landing_frame = landing_search_start + landing_rel_idx
 
     return float(landing_frame)
+
+
+def _find_landing_contact(
+    velocities: FloatArray,
+    peak_height_frame: int,
+    fps: float,
+    onset_threshold: float = 0.3,
+) -> float:
+    """Find landing frame using deceleration onset (contact method).
+
+    Force-plate equivalent detection: finds when foot deceleration first exceeds
+    a threshold of the maximum deceleration rate. This detects initial contact
+    ~1-2 frames earlier (17-33ms at 60fps) than the impact method.
+
+    Based on research:
+    - FootNet (2021): 5ms RMSE using foot velocity for contact detection
+    - Force plates define landing at 10-50N (initial touch)
+
+    Args:
+        velocities: Vertical velocity array (deriv=1)
+        peak_height_frame: Frame index of peak jump height
+        fps: Video frame rate
+        onset_threshold: Fraction of max deceleration to define onset (default 0.3)
+
+    Returns:
+        Frame index of initial contact.
+    """
+    # Search window
+    search_start = peak_height_frame
+    search_end = min(len(velocities), peak_height_frame + int(fps * 1.0))
+
+    if search_end <= search_start:
+        return float(peak_height_frame + int(fps * 0.3))
+
+    # Compute velocity derivative (acceleration) from velocity signal
+    window_length = 5
+    search_velocities = velocities[search_start:search_end]
+
+    if len(search_velocities) < window_length:
+        # Fallback to impact method for short signals
+        vel_derivative = np.diff(search_velocities, prepend=search_velocities[0])
+    else:
+        vel_derivative = savgol_filter(
+            search_velocities, window_length, 2, deriv=1, delta=1.0, mode="interp"
+        )
+
+    # Find where velocity is decreasing most rapidly (most negative derivative)
+    min_deriv_idx = int(np.argmin(vel_derivative))
+    min_deriv = vel_derivative[min_deriv_idx]
+
+    # Find onset: first frame where deceleration exceeds threshold
+    threshold = min_deriv * onset_threshold
+    below_threshold = np.where(vel_derivative[: min_deriv_idx + 1] < threshold)[0]
+
+    if len(below_threshold) > 0:
+        # First frame where deceleration exceeds threshold
+        landing_frame = search_start + below_threshold[0]
+    else:
+        # Fallback to minimum derivative point
+        landing_frame = search_start + min_deriv_idx
+
+    return float(landing_frame)
+
+
+def find_landing_frame(
+    accelerations: FloatArray,
+    velocities: FloatArray,
+    peak_height_frame: int,
+    fps: float,
+    method: LandingMethod | str = LandingMethod.IMPACT,
+) -> float:
+    """Find landing frame after peak height.
+
+    Supports two detection methods:
+    - IMPACT (default): Maximum deceleration spike. Matches human annotations.
+    - CONTACT: Deceleration onset. Force-plate equivalent, ~1-2 frames earlier.
+
+    Args:
+        accelerations: Vertical acceleration array (deriv=2)
+        velocities: Vertical velocity array (deriv=1)
+        peak_height_frame: Frame index of peak jump height
+        fps: Video frame rate
+        method: Landing detection method (IMPACT or CONTACT)
+
+    Returns:
+        Frame index of landing.
+    """
+    # Normalize method to enum
+    if not isinstance(method, LandingMethod):
+        method = LandingMethod(method.lower())
+
+    if method == LandingMethod.CONTACT:
+        return _find_landing_contact(velocities, peak_height_frame, fps)
+    else:
+        return _find_landing_impact(accelerations, velocities, peak_height_frame, fps)
 
 
 def compute_average_hip_position(
@@ -541,6 +640,7 @@ def detect_cmj_phases(
     window_length: int = 5,
     polyorder: int = 2,
     landing_positions: FloatArray | None = None,
+    landing_method: LandingMethod | str = LandingMethod.IMPACT,
     timer: Timer | None = None,
 ) -> tuple[float | None, float, float, float] | None:
     """
@@ -559,6 +659,9 @@ def detect_cmj_phases(
         polyorder: Polynomial order for Savitzky-Golay filter
         landing_positions: Optional array of positions for landing detection
             (e.g., Feet). If None, uses `positions` (Hips) for landing too.
+        landing_method: Landing detection method:
+            - IMPACT (default): Maximum deceleration spike. Matches human annotations.
+            - CONTACT: Deceleration onset. Force-plate equivalent, ~1-2 frames earlier.
         timer: Optional Timer for measuring operations
 
     Returns:
@@ -605,6 +708,7 @@ def detect_cmj_phases(
                 landing_velocities,
                 peak_height_frame,
                 fps,
+                method=landing_method,
             )
         else:
             # Use primary signal (Hips)
@@ -613,6 +717,7 @@ def detect_cmj_phases(
                 velocities,
                 peak_height_frame,
                 fps,
+                method=landing_method,
             )
 
     with timer.measure("cmj_find_standing_end"):
