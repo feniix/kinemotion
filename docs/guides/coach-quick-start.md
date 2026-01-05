@@ -30,7 +30,7 @@ The quality of your analysis depends on your video. Follow these guidelines:
 
 **Why 45°?** This angle lets the AI see both legs clearly. A pure side view (90°) causes the legs to overlap, making tracking unreliable.
 
-![Camera angle diagram: 45° oblique view](camera-angle-guide.html)
+See [Camera Setup Guide](camera-setup.md) for detailed visual guide.
 
 ### Framing ✅
 
