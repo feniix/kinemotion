@@ -306,6 +306,16 @@ class PoseTrackerFactory:
                 # Not macOS, fall back to CPU
                 return cls._check_backend_available("rtmpose-cpu")
 
+            # On macOS, verify CoreML wrapper is available
+            try:
+                from kinemotion.core.rtmpose_wrapper import RTMPoseWrapper
+
+                _ = RTMPoseWrapper  # Mark as intentionally used
+                return normalized
+            except ImportError:
+                # CoreML wrapper not available, fall back to CPU
+                return cls._check_backend_available("rtmpose-cpu")
+
         if normalized == "rtmpose-cpu":
             try:
                 from kinemotion.core.rtmpose_cpu import (
