@@ -29,5 +29,6 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
     css: false, // Disable CSS processing for tests
+    exclude: ['node_modules', 'e2e'], // Exclude E2E tests from vitest
   },
 })

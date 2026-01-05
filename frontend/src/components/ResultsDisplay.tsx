@@ -81,6 +81,9 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
   const { status: dbStatus, loading: dbLoading } = useDatabaseStatus()
   const { t } = useLanguage()
 
+  // Feature flag: show feedback form only when enabled via environment variable
+  const showFeedbackFeature = import.meta.env.VITE_SHOW_FEEDBACK === 'true'
+
   useEffect(() => {
     if (!videoFile) {
       setLocalOriginalUrl(null)
@@ -459,8 +462,8 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
         </div>
 
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          {/* Database-dependent feedback */}
-          {dbStatus?.database_connected ? (
+          {/* Database-dependent feedback - feature flagged */}
+          {showFeedbackFeature && dbStatus?.database_connected ? (
             <button
               onClick={() => setShowFeedbackForm(true)}
               className="feedback-button"
@@ -480,7 +483,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
             >
               {t('results.feedback.coachFeedback')}
             </button>
-          ) : (
+          ) : showFeedbackFeature && (
             <span style={{
               color: '#6b7280',
               fontSize: '0.875rem',
@@ -550,8 +553,8 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
         </div>
       )}
 
-      {/* Feedback Form Modal */}
-      {showFeedbackForm && (
+      {/* Feedback Form Modal - feature flagged */}
+      {showFeedbackFeature && showFeedbackForm && (
         <FeedbackForm
           analysisResponse={metrics}
           onSubmit={handleFeedbackSubmit}
