@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from kinemotion.cmj.analysis import (
+    LandingMethod,
     compute_signed_velocity,
     detect_cmj_phases,
     find_cmj_landing_from_position_peak,
@@ -868,7 +869,11 @@ def test_deep_squat_cmj_recreational_athlete() -> None:
     )
 
     # Act: Detect CMJ phases
-    result = detect_cmj_phases(positions, fps, window_length=5, polyorder=2)
+    # Note: Use IMPACT method for synthetic linear data which doesn't have
+    # the realistic deceleration patterns that CONTACT method expects
+    result = detect_cmj_phases(
+        positions, fps, window_length=5, polyorder=2, landing_method=LandingMethod.IMPACT
+    )
 
     # Assert: Verify recreational athlete characteristics
     assert result is not None, "Recreational CMJ should be successfully detected"

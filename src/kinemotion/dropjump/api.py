@@ -90,7 +90,6 @@ class DropJumpVideoConfig:
     overrides: AnalysisOverrides | None = None
     detection_confidence: float | None = None
     tracking_confidence: float | None = None
-    pose_backend: str | None = None
 
 
 def _assess_dropjump_quality(
@@ -237,7 +236,6 @@ def _setup_pose_tracker(
     detection_confidence: float | None,
     tracking_confidence: float | None,
     pose_tracker: "MediaPipePoseTracker | None",
-    pose_backend: str | None,
     timer: Timer,
     verbose: bool = False,
 ) -> tuple["MediaPipePoseTracker", bool]:
@@ -250,29 +248,13 @@ def _setup_pose_tracker(
     should_close_tracker = False
 
     if tracker is None:
-        if pose_backend is not None:
-            import time
-
-            from ..core import get_tracker_info
-            from ..core.pose import PoseTrackerFactory
-
-            init_start = time.perf_counter()
-            tracker = PoseTrackerFactory.create(
-                backend=pose_backend,
-                timer=timer,
-            )
-            init_time = time.perf_counter() - init_start
-
-            if verbose:
-                print(f"Using pose backend: {pose_backend}")
-                print(f"  → {get_tracker_info(tracker)}")
-                print(f"  → Initialized in {init_time * 1000:.1f} ms")
-        else:
-            tracker = MediaPipePoseTracker(
-                min_detection_confidence=detection_conf,
-                min_tracking_confidence=tracking_conf,
-                timer=timer,
-            )
+        if verbose:
+            print("Processing all frames with MediaPipe pose tracking...")
+        tracker = MediaPipePoseTracker(
+            min_detection_confidence=detection_conf,
+            min_tracking_confidence=tracking_conf,
+            timer=timer,
+        )
         should_close_tracker = True
 
     return tracker, should_close_tracker
@@ -509,7 +491,6 @@ def process_dropjump_video(
     verbose: bool = False,
     timer: Timer | None = None,
     pose_tracker: "MediaPipePoseTracker | None" = None,
-    pose_backend: str | None = None,
 ) -> DropJumpMetrics:
     """
     Process a single drop jump video and return metrics.
@@ -554,7 +535,6 @@ def process_dropjump_video(
                 detection_confidence,
                 tracking_confidence,
                 pose_tracker,
-                pose_backend,
                 timer,
                 verbose,
             )

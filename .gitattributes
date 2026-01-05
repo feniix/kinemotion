@@ -41,5 +41,3 @@ docs/research/thirdparty/pdfs/injury-prevention/2018_Bramah_Pathological-Gait-Ru
 docs/research/thirdparty/pdfs/running-biomechanics/2016_Balsalobre-Fernandez_iPhone-Running-Mechanics.pdf filter=lfs diff=lfs merge=lfs -text
 libs/*.jar filter=lfs diff=lfs merge=lfs -text
 src/kinemotion/models/pose_landmarker_lite.task filter=lfs diff=lfs merge=lfs -text
-src/kinemotion/models/rtmpose-s_simcc-body7_pt-body7-halpe26_700e-256x192-7f134165_20230605.onnx filter=lfs diff=lfs merge=lfs -text
-src/kinemotion/models/yolox_tiny_8xb8-300e_humanart-6f3252f9.onnx filter=lfs diff=lfs merge=lfs -text

@@ -220,7 +220,6 @@ def _run_pose_tracking(
     detection_confidence: float | None,
     tracking_confidence: float | None,
     pose_tracker: "MediaPipePoseTracker | None",
-    pose_backend: str | None,
     verbose: bool,
     timer: Timer,
 ) -> tuple[list[NDArray[np.uint8]], list, list[int]]:
@@ -236,33 +235,13 @@ def _run_pose_tracking(
     )
 
     if pose_tracker is None:
-        if pose_backend is not None:
-            import time
-
-            from ..core import get_tracker_info
-            from ..core.pose import PoseTrackerFactory
-
-            init_start = time.perf_counter()
-            tracker = PoseTrackerFactory.create(
-                backend=pose_backend,
-                min_detection_confidence=det_conf,
-                min_tracking_confidence=track_conf,
-                timer=timer,
-            )
-            init_time = time.perf_counter() - init_start
-
-            if verbose:
-                print(f"Using pose backend: {pose_backend}")
-                print(f"  → {get_tracker_info(tracker)}")
-                print(f"  → Initialized in {init_time * 1000:.1f} ms")
-        else:
-            if verbose:
-                print("Processing all frames with MediaPipe pose tracking...")
-            tracker = MediaPipePoseTracker(
-                min_detection_confidence=det_conf,
-                min_tracking_confidence=track_conf,
-                timer=timer,
-            )
+        if verbose:
+            print("Processing all frames with MediaPipe pose tracking...")
+        tracker = MediaPipePoseTracker(
+            min_detection_confidence=det_conf,
+            min_tracking_confidence=track_conf,
+            timer=timer,
+        )
         should_close_tracker = True
     else:
         tracker = pose_tracker
@@ -412,7 +391,6 @@ class CMJVideoConfig:
     overrides: AnalysisOverrides | None = None
     detection_confidence: float | None = None
     tracking_confidence: float | None = None
-    pose_backend: str | None = None
 
 
 @dataclass
@@ -434,7 +412,6 @@ def process_cmj_video(
     overrides: AnalysisOverrides | None = None,
     detection_confidence: float | None = None,
     tracking_confidence: float | None = None,
-    pose_backend: str | None = None,
     verbose: bool = False,
     timer: Timer | None = None,
     pose_tracker: MediaPipePoseTracker | None = None,
@@ -481,7 +458,6 @@ def process_cmj_video(
                 detection_confidence,
                 tracking_confidence,
                 pose_tracker,
-                pose_backend,
                 verbose,
                 timer,
             )
@@ -567,7 +543,6 @@ def _process_cmj_video_wrapper(config: CMJVideoConfig) -> CMJVideoResult:
             overrides=config.overrides,
             detection_confidence=config.detection_confidence,
             tracking_confidence=config.tracking_confidence,
-            pose_backend=config.pose_backend,
             verbose=False,
         )
 

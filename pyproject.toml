@@ -28,12 +28,7 @@ dependencies = [
     "scipy>=1.11.0",
     "typing-extensions>=4.15.0",
     "platformdirs>=4.0.0",
-    "rtmlib>=0.0.13",
     "tqdm>=4.67.1",
-    # Platform-specific ONNX Runtime: GPU on Linux x86_64 (CUDA), CPU elsewhere
-    "onnxruntime-gpu>=1.23.2; sys_platform == 'linux' and platform_machine == 'x86_64'",
-    "onnxruntime>=1.23.2; sys_platform != 'linux' or platform_machine != 'x86_64'",
-    "torch>=2.0.0",  # Required for RTMPoseWrapper (CUDA/CoreML backends)
 ]
 
 [project.urls]

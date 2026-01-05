@@ -251,45 +251,22 @@ async def lifespan(app: FastAPI):
     """Manage application lifecycle and global resources."""
     global detected_backend
 
-    logger.info("detecting_best_pose_backend")
-    # Auto-detect best available backend (CUDA → RTMPose CPU → MediaPipe)
-    # CoreML is skipped on Linux (backend runs on Intel/Cloud Run)
-    detected_backend = PoseTrackerFactory._detect_best_backend()  # type: ignore[attr-defined]
-    logger.info(f"detected_backend_{detected_backend}")
-
     logger.info("initializing_pose_trackers")
+    detected_backend = "mediapipe"
     try:
-        if detected_backend == "mediapipe":
-            # MediaPipe uses confidence thresholds for quality presets
-            global_pose_trackers["fast"] = PoseTrackerFactory.create(
-                backend="mediapipe",
-                min_detection_confidence=0.3,
-                min_tracking_confidence=0.3,
-            )
-            global_pose_trackers["balanced"] = PoseTrackerFactory.create(
-                backend="mediapipe",
-                min_detection_confidence=0.5,
-                min_tracking_confidence=0.5,
-            )
-            global_pose_trackers["accurate"] = PoseTrackerFactory.create(
-                backend="mediapipe",
-                min_detection_confidence=0.6,
-                min_tracking_confidence=0.6,
-            )
-        else:
-            # RTMPose (CUDA or CPU) uses mode parameter for quality presets
-            global_pose_trackers["fast"] = PoseTrackerFactory.create(
-                backend=detected_backend,
-                mode="lightweight",
-            )
-            global_pose_trackers["balanced"] = PoseTrackerFactory.create(
-                backend=detected_backend,
-                mode="lightweight",  # Default mode
-            )
-            global_pose_trackers["accurate"] = PoseTrackerFactory.create(
-                backend=detected_backend,
-                mode="balanced",  # Higher accuracy mode
-            )
+        # MediaPipe uses confidence thresholds for quality presets
+        global_pose_trackers["fast"] = PoseTrackerFactory.create(
+            min_detection_confidence=0.3,
+            min_tracking_confidence=0.3,
+        )
+        global_pose_trackers["balanced"] = PoseTrackerFactory.create(
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5,
+        )
+        global_pose_trackers["accurate"] = PoseTrackerFactory.create(
+            min_detection_confidence=0.6,
+            min_tracking_confidence=0.6,
+        )
         logger.info("pose_trackers_initialized")
 
         yield

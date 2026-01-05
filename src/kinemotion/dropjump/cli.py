@@ -31,7 +31,6 @@ class AnalysisParameters:
     visibility_threshold: float | None = None
     detection_confidence: float | None = None
     tracking_confidence: float | None = None
-    pose_backend: str | None = None
 
 
 @click.command(name="dropjump-analyze")
@@ -65,23 +64,6 @@ class AnalysisParameters:
     "-v",
     is_flag=True,
     help="Show auto-selected parameters and analysis details",
-)
-@click.option(
-    "--pose-backend",
-    type=click.Choice(
-        ["auto", "mediapipe", "rtmpose-cpu", "rtmpose-cuda", "rtmpose-coreml"],
-        case_sensitive=False,
-    ),
-    default="auto",
-    help=(
-        "Pose tracking backend: "
-        "auto (detect best), "
-        "mediapipe (baseline), "
-        "rtmpose-cpu (optimized CPU), "
-        "rtmpose-cuda (NVIDIA GPU), "
-        "rtmpose-coreml (Apple Silicon)"
-    ),
-    show_default=True,
 )
 # Batch processing options
 @click.option(
@@ -161,7 +143,6 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual
     json_output: str | None,
     quality: str,
     verbose: bool,
-    pose_backend: str,
     batch: bool,
     workers: int,
     output_dir: str | None,
@@ -231,7 +212,6 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual
             json_output_dir,
             csv_summary,
             expert_params,
-            pose_backend,
         )
     else:
         # Single video mode (original behavior)
@@ -242,7 +222,6 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual
             quality,
             verbose,
             expert_params,
-            pose_backend,
         )
 
 
@@ -253,7 +232,6 @@ def _process_single(
     quality: str,
     verbose: bool,
     expert_params: AnalysisParameters,
-    pose_backend: str,
 ) -> None:
     """Process a single video by calling the API."""
     click.echo(f"Analyzing video: {video_path}", err=True)
@@ -288,7 +266,6 @@ def _process_single(
             overrides=overrides,
             detection_confidence=expert_params.detection_confidence,
             tracking_confidence=expert_params.tracking_confidence,
-            pose_backend=pose_backend,
             verbose=verbose,
         )
 
@@ -332,7 +309,6 @@ def _create_video_configs(
     output_dir: str | None,
     json_output_dir: str | None,
     expert_params: AnalysisParameters,
-    pose_backend: str,
 ) -> list[DropJumpVideoConfig]:
     """Build configuration objects for each video.
 
@@ -380,7 +356,6 @@ def _create_video_configs(
             overrides=overrides,
             detection_confidence=expert_params.detection_confidence,
             tracking_confidence=expert_params.tracking_confidence,
-            pose_backend=expert_params.pose_backend,
         )
         configs.append(config)
 
@@ -545,7 +520,6 @@ def _process_batch(
     json_output_dir: str | None,
     csv_summary: str | None,
     expert_params: AnalysisParameters,
-    pose_backend: str,
 ) -> None:
     """Process multiple videos in batch mode using parallel processing."""
     click.echo(f"\nBatch processing {len(video_files)} videos with {workers} workers", err=True)
@@ -556,7 +530,7 @@ def _process_batch(
 
     # Create video configurations
     configs = _create_video_configs(
-        video_files, quality, output_dir, json_output_dir, expert_params, pose_backend
+        video_files, quality, output_dir, json_output_dir, expert_params
     )
 
     # Progress callback

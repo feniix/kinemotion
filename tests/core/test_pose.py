@@ -265,46 +265,26 @@ def test_com_lateral_asymmetry() -> None:
     assert 0.35 <= com_x <= 0.45, f"CoM x={com_x} should be in left region"
 
 
-# ===== PoseTrackerFactory Parameter Filtering Tests =====
+# ===== PoseTrackerFactory Tests =====
 
 
-def test_factory_filters_mediapipe_params_for_rtmpose_cpu() -> None:
-    """Test that MediaPipe parameters are filtered when creating RTMPose CPU tracker."""
-    from importlib.util import find_spec
+def test_factory_creates_mediapipe_tracker() -> None:
+    """Test that PoseTrackerFactory creates MediaPipe tracker."""
+    from kinemotion.core.pose import MediaPipePoseTracker, PoseTrackerFactory
 
-    from kinemotion.core.pose import PoseTrackerFactory
-
-    # Skip if ONNX Runtime not available
-    if find_spec("onnxruntime") is None:
-        pytest.skip("ONNX Runtime not installed")
-
-    # This should not raise an error - MediaPipe params should be filtered out
     tracker = PoseTrackerFactory.create(
-        backend="rtmpose-cpu",
-        min_detection_confidence=0.7,  # MediaPipe param, should be ignored
-        min_tracking_confidence=0.6,  # MediaPipe param, should be ignored
+        min_detection_confidence=0.7,
+        min_tracking_confidence=0.6,
     )
 
     assert tracker is not None
+    assert isinstance(tracker, MediaPipePoseTracker)
     tracker.close()
 
 
-def test_factory_filters_mediapipe_params_for_rtmpose_wrapper() -> None:
-    """Test that MediaPipe parameters are filtered when creating RTMPose wrapper."""
-    from importlib.util import find_spec
-
+def test_factory_rejects_unknown_backend() -> None:
+    """Test that PoseTrackerFactory rejects unknown backends."""
     from kinemotion.core.pose import PoseTrackerFactory
 
-    # Skip if rtmlib not available
-    if find_spec("rtmlib") is None:
-        pytest.skip("rtmlib not installed")
-
-    # This should not raise an error - MediaPipe params should be filtered out
-    tracker = PoseTrackerFactory.create(
-        backend="rtmpose-cpu",  # Will use RTMPoseWrapper if rtmlib is available
-        min_detection_confidence=0.7,  # MediaPipe param, should be ignored
-        min_tracking_confidence=0.6,  # MediaPipe param, should be ignored
-    )
-
-    assert tracker is not None
-    tracker.close()
+    with pytest.raises(ValueError, match="Unknown backend"):
+        PoseTrackerFactory.create(backend="unknown-backend")
