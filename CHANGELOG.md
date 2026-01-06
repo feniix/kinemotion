@@ -7,14 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
-## kinemotion-v1.0.0 (2026-01-06)
-
-### BREAKING CHANGE
-
-- Remove LandingMethod enum and landing_method parameter
-- The --pose-backend CLI option has been removed.
-All pose tracking now uses MediaPipe. RTMPose calibration study
-concluded that MediaPipe provides validated accuracy for CMJ analysis.
+## kinemotion-v0.70.3 (2026-01-06)
 
 ### Feat
 
@@ -54,11 +47,12 @@ concluded that MediaPipe provides validated accuracy for CMJ analysis.
 ### Fix
 
 - **backend**: bump backend dependencies
+- **cmj**: remove misleading duration validation warnings (see #16)
 
 ### Refactor
 
-- **cmj**: simplify landing detection, remove broken CONTACT method
-- remove RTMPose backend, use MediaPipe exclusively
+- **cmj**: simplify landing detection
+- simplify pose backend to MediaPipe only
 
 ## kinemotion-v0.70.2 (2026-01-04)
 
