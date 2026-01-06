@@ -10,7 +10,6 @@ from .api import (
     process_dropjump_video,
     process_dropjump_videos_bulk,
 )
-from .cmj.analysis import LandingMethod
 from .cmj.kinematics import CMJMetrics
 from .dropjump.kinematics import DropJumpMetrics
 
@@ -36,6 +35,5 @@ __all__ = [
     "CMJVideoConfig",
     "CMJVideoResult",
     "CMJMetrics",
-    "LandingMethod",
     "__version__",
 ]
