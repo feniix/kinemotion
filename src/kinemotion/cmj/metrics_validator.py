@@ -292,20 +292,13 @@ class CMJMetricsValidator(MetricsValidator):
                     value=duration,
                     bounds=(bounds.absolute_min, bounds.absolute_max),
                 )
-        elif bounds.contains(duration, profile):
+        else:
+            # NOTE: Downgraded from WARNING to INFO - standing end detection has
+            # ~117ms offset causing misleading warnings. See issue #16.
             result.add_info(
                 "concentric_duration",
-                f"Concentric duration {duration:.3f}s within expected range for {profile.value}",
+                f"Concentric duration {duration:.3f}s",
                 value=duration,
-            )
-        else:
-            expected_min, expected_max = self._get_profile_range(profile, bounds)
-            result.add_warning(
-                "concentric_duration",
-                f"Concentric duration {duration:.3f}s outside typical range "
-                f"[{expected_min:.3f}-{expected_max:.3f}]s for {profile.value}",
-                value=duration,
-                bounds=(expected_min, expected_max),
             )
 
     def _check_eccentric_duration(
@@ -333,20 +326,13 @@ class CMJMetricsValidator(MetricsValidator):
                 value=duration,
                 bounds=(bounds.absolute_min, bounds.absolute_max),
             )
-        elif bounds.contains(duration, profile):
+        else:
+            # NOTE: Downgraded from WARNING to INFO - standing end detection has
+            # ~117ms offset causing misleading warnings. See issue #16.
             result.add_info(
                 "eccentric_duration",
-                f"Eccentric duration {duration:.3f}s within expected range for {profile.value}",
+                f"Eccentric duration {duration:.3f}s",
                 value=duration,
-            )
-        else:
-            expected_min, expected_max = self._get_profile_range(profile, bounds)
-            result.add_warning(
-                "eccentric_duration",
-                f"Eccentric duration {duration:.3f}s outside typical range "
-                f"[{expected_min:.3f}-{expected_max:.3f}]s for {profile.value}",
-                value=duration,
-                bounds=(expected_min, expected_max),
             )
 
     def _check_peak_velocities(
