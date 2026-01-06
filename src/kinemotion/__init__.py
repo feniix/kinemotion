@@ -1,4 +1,7 @@
-"""Kinemotion: Video-based kinematic analysis for athletic performance."""
+"""Kinemotion: Video-based kinematic analysis for athletic performance.
+
+Supports Counter Movement Jump (CMJ) and Drop Jump analysis using MediaPipe pose estimation.
+"""
 
 from .api import (
     CMJVideoConfig,
