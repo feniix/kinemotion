@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v2.0.0 (2026-01-06)
+
 ## kinemotion-v0.70.3 (2026-01-06)
 
 ### Feat
