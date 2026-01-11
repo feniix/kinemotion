@@ -29,6 +29,19 @@ LandmarkSequence: TypeAlias = list[LandmarkFrame]
 # - Wrapper structures: e.g. {"data": {...actual metrics...}}
 MetricsDict: TypeAlias = dict[str, Any]
 
+# MediaPipe foot landmark names used for position and visibility tracking
+FOOT_KEYS: tuple[str, ...] = (
+    "left_ankle",
+    "right_ankle",
+    "left_heel",
+    "right_heel",
+    "left_foot_index",
+    "right_foot_index",
+)
+
+# MediaPipe hip landmark names used for position tracking
+HIP_KEYS: tuple[str, ...] = ("left_hip", "right_hip")
+
 __all__ = [
     "FloatArray",
     "Float64Array",
@@ -39,4 +52,6 @@ __all__ = [
     "LandmarkFrame",
     "LandmarkSequence",
     "MetricsDict",
+    "FOOT_KEYS",
+    "HIP_KEYS",
 ]

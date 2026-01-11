@@ -262,13 +262,15 @@ def _get_tuned_parameters(
     with timer.measure("parameter_auto_tuning"):
         characteristics = analyze_video_sample(landmarks_sequence, video.fps, video.frame_count)
         params = auto_tune_parameters(characteristics, quality_preset)
-        params = apply_expert_overrides(
-            params,
-            overrides.smoothing_window if overrides else None,
-            overrides.velocity_threshold if overrides else None,
-            overrides.min_contact_frames if overrides else None,
-            overrides.visibility_threshold if overrides else None,
-        )
+
+        if overrides:
+            params = apply_expert_overrides(
+                params,
+                overrides.smoothing_window,
+                overrides.velocity_threshold,
+                overrides.min_contact_frames,
+                overrides.visibility_threshold,
+            )
 
         if verbose:
             print_verbose_parameters(video, characteristics, quality_preset, params)

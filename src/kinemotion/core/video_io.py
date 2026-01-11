@@ -18,6 +18,17 @@ class VideoProcessor:
     No dimensions are hardcoded - all dimensions are extracted from actual frame data.
     """
 
+    # Mapping of rotation angles to OpenCV rotation operations
+    # Keys are normalized angles (equivalent angles grouped)
+    _ROTATION_OPS: dict[int, int] = {
+        -90: cv2.ROTATE_90_CLOCKWISE,
+        270: cv2.ROTATE_90_CLOCKWISE,
+        90: cv2.ROTATE_90_COUNTERCLOCKWISE,
+        -270: cv2.ROTATE_90_COUNTERCLOCKWISE,
+        180: cv2.ROTATE_180,
+        -180: cv2.ROTATE_180,
+    }
+
     def __init__(self, video_path: str, timer: Timer | None = None) -> None:
         """
         Initialize video processor.
@@ -216,15 +227,9 @@ class VideoProcessor:
 
         # Apply rotation if video has rotation metadata
         with self.timer.measure("frame_rotation"):
-            if self.rotation == -90 or self.rotation == 270:
-                # -90 degrees = rotate 90 degrees clockwise
-                frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
-            elif self.rotation == 90 or self.rotation == -270:
-                # 90 degrees = rotate 90 degrees counter-clockwise
-                frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
-            elif self.rotation == 180 or self.rotation == -180:
-                # 180 degrees rotation
-                frame = cv2.rotate(frame, cv2.ROTATE_180)
+            rotation_op = self._ROTATION_OPS.get(self.rotation)
+            if rotation_op is not None:
+                frame = cv2.rotate(frame, rotation_op)
 
         self._frame_index += 1
         return frame

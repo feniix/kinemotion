@@ -802,7 +802,7 @@ wheels = [
 
 [[package]]
 name = "kinemotion"
-version = "0.70.3"
+version = "0.71.0"
 source = { editable = "." }
 dependencies = [
     { name = "click" },

@@ -78,19 +78,18 @@ class MetricBounds:
 
     def contains(self, value: float, profile: AthleteProfile) -> bool:
         """Check if value is within bounds for athlete profile."""
-        if profile == AthleteProfile.ELDERLY:
+        # ELDERLY and UNTRAINED use same bounds (practical to recreational)
+        if profile in (AthleteProfile.ELDERLY, AthleteProfile.UNTRAINED):
             return self.practical_min <= value <= self.recreational_max
-        elif profile == AthleteProfile.UNTRAINED:
-            return self.practical_min <= value <= self.recreational_max
-        elif profile == AthleteProfile.RECREATIONAL:
+        if profile == AthleteProfile.RECREATIONAL:
             return self.recreational_min <= value <= self.recreational_max
-        elif profile == AthleteProfile.TRAINED:
+        if profile == AthleteProfile.ELITE:
+            return self.elite_min <= value <= self.elite_max
+        if profile == AthleteProfile.TRAINED:
             # Trained athletes: midpoint between recreational and elite
             trained_min = (self.recreational_min + self.elite_min) / 2
             trained_max = (self.recreational_max + self.elite_max) / 2
             return trained_min <= value <= trained_max
-        elif profile == AthleteProfile.ELITE:
-            return self.elite_min <= value <= self.elite_max
         return False
 
     def is_physically_possible(self, value: float) -> bool:

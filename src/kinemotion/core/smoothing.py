@@ -181,6 +181,18 @@ def _smooth_landmarks_core(  # NOSONAR(S1172) - polyorder used via closure
     return smoothed_sequence
 
 
+def _ensure_odd_window_length(window_length: int) -> int:
+    """Ensure window_length is odd (required for Savitzky-Golay filter).
+
+    Args:
+        window_length: Desired window length
+
+    Returns:
+        Odd window length (increments by 1 if even)
+    """
+    return window_length + 1 if window_length % 2 == 0 else window_length
+
+
 def smooth_landmarks(
     landmark_sequence: LandmarkSequence,
     window_length: int = 5,
@@ -200,9 +212,7 @@ def smooth_landmarks(
     if len(landmark_sequence) < window_length:
         return landmark_sequence
 
-    # Ensure window_length is odd
-    if window_length % 2 == 0:
-        window_length += 1
+    window_length = _ensure_odd_window_length(window_length)
 
     def savgol_smoother(
         x_coords: list[float], y_coords: list[float], _valid_frames: list[int]
@@ -231,12 +241,58 @@ def compute_velocity(positions: np.ndarray, fps: float, smooth_window: int = 3) 
 
     # Smooth velocity if we have enough data
     if len(velocity) >= smooth_window and smooth_window > 1:
-        if smooth_window % 2 == 0:
-            smooth_window += 1
+        smooth_window = _ensure_odd_window_length(smooth_window)
         for dim in range(velocity.shape[1]):
             velocity[:, dim] = savgol_filter(velocity[:, dim], smooth_window, 1)
 
     return velocity
+
+
+def _compute_derivative(
+    positions: np.ndarray,
+    deriv_order: int,
+    window_length: int = 5,
+    polyorder: int = 2,
+) -> np.ndarray:
+    """
+    Compute nth derivative using Savitzky-Golay filter.
+
+    This unified function handles both velocity (first derivative) and
+    acceleration (second derivative) computation with a single implementation.
+
+    Args:
+        positions: 1D array of position values (e.g., foot y-positions)
+        deriv_order: Order of derivative (1 for velocity, 2 for acceleration)
+        window_length: Window size for smoothing (must be odd, >= polyorder + 2)
+        polyorder: Polynomial order for Savitzky-Golay filter (typically 2 or 3)
+
+    Returns:
+        Array of derivative values
+    """
+    if len(positions) < window_length:
+        # Fallback to simple differences for short sequences
+        if deriv_order == 1:
+            return np.abs(np.diff(positions, prepend=positions[0]))
+        # Second derivative fallback
+        velocity = np.diff(positions, prepend=positions[0])
+        return np.diff(velocity, prepend=velocity[0])
+
+    window_length = _ensure_odd_window_length(window_length)
+
+    # Compute derivative using Savitzky-Golay filter
+    # delta=1.0: frame spacing
+    # mode='interp': interpolate at boundaries
+    result = savgol_filter(
+        positions,
+        window_length,
+        polyorder,
+        deriv=deriv_order,
+        delta=1.0,
+        mode="interp",
+    )
+
+    # Return absolute values for velocity (first derivative)
+    return np.abs(result) if deriv_order == 1 else result
 
 
 def compute_velocity_from_derivative(
@@ -263,29 +319,9 @@ def compute_velocity_from_derivative(
     Returns:
         Array of absolute velocity values (magnitude of derivative)
     """
-    if len(positions) < window_length:
-        # Fallback to simple differences for short sequences
-        return np.abs(np.diff(positions, prepend=positions[0]))
-
-    # Ensure window_length is odd
-    if window_length % 2 == 0:
-        window_length += 1
-
-    # Compute derivative using Savitzky-Golay filter
-    # deriv=1: compute first derivative
-    # delta=1.0: frame spacing (velocity per frame)
-    # mode='interp': interpolate at boundaries
-    velocity = savgol_filter(
-        positions,
-        window_length,
-        polyorder,
-        deriv=1,  # First derivative
-        delta=1.0,  # Frame spacing
-        mode="interp",
+    return _compute_derivative(
+        positions, deriv_order=1, window_length=window_length, polyorder=polyorder
     )
-
-    # Return absolute velocity (magnitude only)
-    return np.abs(velocity)
 
 
 def compute_acceleration_from_derivative(
@@ -314,29 +350,9 @@ def compute_acceleration_from_derivative(
     Returns:
         Array of acceleration values (second derivative of position)
     """
-    if len(positions) < window_length:
-        # Fallback to simple second differences for short sequences
-        velocity = np.diff(positions, prepend=positions[0])
-        return np.diff(velocity, prepend=velocity[0])
-
-    # Ensure window_length is odd
-    if window_length % 2 == 0:
-        window_length += 1
-
-    # Compute second derivative using Savitzky-Golay filter
-    # deriv=2: compute second derivative (acceleration/curvature)
-    # delta=1.0: frame spacing
-    # mode='interp': interpolate at boundaries
-    acceleration = savgol_filter(
-        positions,
-        window_length,
-        polyorder,
-        deriv=2,  # Second derivative
-        delta=1.0,  # Frame spacing
-        mode="interp",
+    return _compute_derivative(
+        positions, deriv_order=2, window_length=window_length, polyorder=polyorder
     )
-
-    return acceleration
 
 
 def smooth_landmarks_advanced(
@@ -376,9 +392,7 @@ def smooth_landmarks_advanced(
     if len(landmark_sequence) < window_length:
         return landmark_sequence
 
-    # Ensure window_length is odd
-    if window_length % 2 == 0:
-        window_length += 1
+    window_length = _ensure_odd_window_length(window_length)
 
     def advanced_smoother(
         x_coords: list[float], y_coords: list[float], _valid_frames: list[int]

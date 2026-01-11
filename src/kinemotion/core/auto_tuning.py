@@ -5,6 +5,28 @@ from enum import Enum
 
 import numpy as np
 
+from .types import FOOT_KEYS
+
+
+@dataclass
+class _PresetConfig:
+    """Configuration modifiers for quality presets."""
+
+    velocity_multiplier: float  # Multiplier for velocity threshold
+    contact_frames_multiplier: float  # Multiplier for min contact frames
+    smoothing_offset: int  # Offset to smoothing window (added to base)
+    force_bilateral: bool | None  # None means use quality-based, True=force on, False=force off
+    detection_confidence: float
+    tracking_confidence: float
+
+
+@dataclass
+class _QualityAdjustment:
+    """Smoothing adjustments based on tracking quality."""
+
+    smoothing_add: int  # Frames to add to smoothing window
+    enable_bilateral: bool  # Whether to enable bilateral filtering
+
 
 class QualityPreset(str, Enum):
     """Quality presets for analysis."""
@@ -12,6 +34,46 @@ class QualityPreset(str, Enum):
     FAST = "fast"  # Quick analysis, lower precision
     BALANCED = "balanced"  # Default: good balance of speed and accuracy
     ACCURATE = "accurate"  # Research-grade analysis, slower
+
+
+# Quality preset configurations
+# FAST: Speed over accuracy
+# BALANCED: Default (uses quality-based settings)
+# ACCURATE: Maximum accuracy
+_PRESET_CONFIGS: dict[QualityPreset, _PresetConfig] = {
+    QualityPreset.FAST: _PresetConfig(
+        velocity_multiplier=1.5,
+        contact_frames_multiplier=0.67,
+        smoothing_offset=-2,
+        force_bilateral=False,
+        detection_confidence=0.3,
+        tracking_confidence=0.3,
+    ),
+    QualityPreset.BALANCED: _PresetConfig(
+        velocity_multiplier=1.0,
+        contact_frames_multiplier=1.0,
+        smoothing_offset=0,
+        force_bilateral=None,
+        detection_confidence=0.5,
+        tracking_confidence=0.5,
+    ),
+    QualityPreset.ACCURATE: _PresetConfig(
+        velocity_multiplier=0.5,
+        contact_frames_multiplier=1.0,
+        smoothing_offset=2,
+        force_bilateral=True,
+        detection_confidence=0.6,
+        tracking_confidence=0.6,
+    ),
+}
+
+
+# Quality-based adjustments
+_QUALITY_ADJUSTMENTS: dict[str, _QualityAdjustment] = {
+    "low": _QualityAdjustment(smoothing_add=2, enable_bilateral=True),
+    "medium": _QualityAdjustment(smoothing_add=1, enable_bilateral=True),
+    "high": _QualityAdjustment(smoothing_add=0, enable_bilateral=False),
+}
 
 
 @dataclass
@@ -101,106 +163,45 @@ def auto_tune_parameters(
     fps = characteristics.fps
     quality = characteristics.tracking_quality
 
-    # =================================================================
-    # STEP 1: FPS-based baseline parameters
-    # These scale automatically with frame rate to maintain consistent
-    # temporal resolution and sensitivity
-    # =================================================================
+    # Get preset configuration
+    preset = _PRESET_CONFIGS[quality_preset]
 
-    # Velocity threshold: Scale inversely with fps
-    # Empirically validated with 45° oblique videos at 60fps:
-    # - Standing (stationary): ~0.001 mean, 0.0011 max
-    # - Flight/drop (moving): ~0.005-0.009
-    # Target threshold: 0.002 at 60fps for clear separation
-    # Formula: threshold = 0.004 * (30 / fps)
+    # Get quality-based adjustments
+    quality_adj = _QUALITY_ADJUSTMENTS[quality]
+
+    # Compute FPS-based baseline parameters
     base_velocity_threshold = 0.004 * (30.0 / fps)
-
-    # Min contact frames: Scale with fps to maintain same time duration
-    # Goal: ~100ms minimum contact (3 frames @ 30fps, 6 frames @ 60fps)
-    # Formula: frames = round(3 * (fps / 30))
     base_min_contact_frames = max(2, round(3.0 * (fps / 30.0)))
 
     # Smoothing window: Decrease with higher fps for better temporal resolution
-    # Lower fps (30fps): 5-frame window = 167ms
-    # Higher fps (60fps): 3-frame window = 50ms (same temporal resolution)
     if fps <= 30:
         base_smoothing_window = 5
-    elif fps <= 60:
-        base_smoothing_window = 3
     else:
-        base_smoothing_window = 3  # Even at 120fps, 3 is minimum for Savitzky-Golay
+        base_smoothing_window = 3  # 60fps+ use 3-frame window
 
-    # =================================================================
-    # STEP 2: Quality-based adjustments
-    # Adapt smoothing and filtering based on tracking quality
-    # =================================================================
+    # Apply preset modifiers and quality adjustments
+    velocity_threshold = base_velocity_threshold * preset.velocity_multiplier
+    min_contact_frames = max(2, int(base_min_contact_frames * preset.contact_frames_multiplier))
 
-    smoothing_adjustment = 0
-    enable_bilateral = False
-
-    if quality == "low":
-        # Poor tracking quality: aggressive smoothing and filtering
-        smoothing_adjustment = +2
-        enable_bilateral = True
-    elif quality == "medium":
-        # Moderate quality: slight smoothing increase
-        smoothing_adjustment = +1
-        enable_bilateral = True
-    else:  # high quality
-        # Good tracking: preserve detail, minimal smoothing
-        smoothing_adjustment = 0
-        enable_bilateral = False
-
-    # =================================================================
-    # STEP 3: Apply quality preset modifiers
-    # User can choose speed vs accuracy tradeoff
-    # =================================================================
-
-    if quality_preset == QualityPreset.FAST:
-        # Fast: Trade accuracy for speed
-        velocity_threshold = base_velocity_threshold * 1.5  # Less sensitive
-        min_contact_frames = max(2, int(base_min_contact_frames * 0.67))
-        smoothing_window = max(3, base_smoothing_window - 2 + smoothing_adjustment)
-        bilateral_filter = False  # Skip expensive filtering
-        detection_confidence = 0.3
-        tracking_confidence = 0.3
-
-    elif quality_preset == QualityPreset.ACCURATE:
-        # Accurate: Maximize accuracy, accept slower processing
-        velocity_threshold = base_velocity_threshold * 0.5  # More sensitive
-        min_contact_frames = base_min_contact_frames  # Don't increase (would miss brief)
-        smoothing_window = min(11, base_smoothing_window + 2 + smoothing_adjustment)
-        bilateral_filter = True  # Always use for best accuracy
-        detection_confidence = 0.6
-        tracking_confidence = 0.6
-
-    else:  # QualityPreset.BALANCED (default)
-        # Balanced: Good accuracy, reasonable speed
-        velocity_threshold = base_velocity_threshold
-        min_contact_frames = base_min_contact_frames
-        smoothing_window = max(3, base_smoothing_window + smoothing_adjustment)
-        bilateral_filter = enable_bilateral
-        detection_confidence = 0.5
-        tracking_confidence = 0.5
+    # Smoothing window = base + preset offset + quality adjustment
+    smoothing_window = base_smoothing_window + preset.smoothing_offset + quality_adj.smoothing_add
+    smoothing_window = max(3, min(11, smoothing_window))
 
     # Ensure smoothing window is odd (required for Savitzky-Golay)
     if smoothing_window % 2 == 0:
         smoothing_window += 1
 
-    # =================================================================
-    # STEP 4: Set fixed optimal values
-    # These are always the same regardless of video characteristics
-    # =================================================================
+    # Bilateral filtering: preset can override, otherwise use quality-based
+    if preset.force_bilateral is not None:
+        bilateral_filter = preset.force_bilateral
+    else:
+        bilateral_filter = quality_adj.enable_bilateral
 
-    # Polyorder: Always 2 (quadratic) - optimal for jump physics (parabolic motion)
-    polyorder = 2
-
-    # Visibility threshold: Standard MediaPipe threshold
-    visibility_threshold = 0.5
-
-    # Always enable proven accuracy features
-    outlier_rejection = True  # Removes tracking glitches (minimal cost)
-    use_curvature = True  # Trajectory curvature analysis (minimal cost)
+    # Fixed optimal values
+    polyorder = 2  # Quadratic - optimal for parabolic motion
+    visibility_threshold = 0.5  # Standard MediaPipe threshold
+    outlier_rejection = True  # Removes tracking glitches
+    use_curvature = True  # Trajectory curvature analysis
 
     return AnalysisParameters(
         smoothing_window=smoothing_window,
@@ -208,8 +209,8 @@ def auto_tune_parameters(
         velocity_threshold=velocity_threshold,
         min_contact_frames=min_contact_frames,
         visibility_threshold=visibility_threshold,
-        detection_confidence=detection_confidence,
-        tracking_confidence=tracking_confidence,
+        detection_confidence=preset.detection_confidence,
+        tracking_confidence=preset.tracking_confidence,
         outlier_rejection=outlier_rejection,
         bilateral_filter=bilateral_filter,
         use_curvature=use_curvature,
@@ -228,19 +229,10 @@ def _collect_foot_visibility_and_positions(
     Returns:
         Tuple of (visibility_scores, y_positions)
     """
-    foot_keys = [
-        "left_ankle",
-        "right_ankle",
-        "left_heel",
-        "right_heel",
-        "left_foot_index",
-        "right_foot_index",
-    ]
-
     frame_vis = []
     frame_y_positions = []
 
-    for key in foot_keys:
+    for key in FOOT_KEYS:
         if key in frame_landmarks:
             _, y, vis = frame_landmarks[key]  # x not needed for analysis
             frame_vis.append(vis)

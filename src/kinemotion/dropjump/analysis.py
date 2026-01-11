@@ -11,7 +11,7 @@ from ..core.smoothing import (
     interpolate_threshold_crossing,
 )
 from ..core.timing import NULL_TIMER, Timer
-from ..core.types import BoolArray, FloatArray
+from ..core.types import FOOT_KEYS, BoolArray, FloatArray
 
 
 class ContactState(Enum):
@@ -424,6 +424,57 @@ def find_contact_phases(
     return phases
 
 
+def _interpolate_phase_boundary(
+    boundary_idx: int,
+    state: ContactState,
+    velocities: FloatArray,
+    velocity_threshold: float,
+    is_start: bool,
+) -> float:
+    """Interpolate phase boundary with sub-frame precision.
+
+    Args:
+        boundary_idx: Index of the boundary frame
+        state: Contact state of the phase
+        velocities: Velocity array
+        velocity_threshold: Threshold value for crossing detection
+        is_start: True for phase start, False for phase end
+
+    Returns:
+        Fractional frame index, or float(boundary_idx) if no interpolation.
+    """
+    n_velocities = len(velocities)
+
+    if is_start:
+        # For start boundary, look at velocity before and at the boundary
+        if boundary_idx <= 0 or boundary_idx >= n_velocities:
+            return float(boundary_idx)
+        vel_before = velocities[boundary_idx - 1]
+        vel_at = velocities[boundary_idx]
+        # Check threshold crossing based on state
+        is_crossing = (
+            state == ContactState.ON_GROUND and vel_before > velocity_threshold > vel_at
+        ) or (state == ContactState.IN_AIR and vel_before < velocity_threshold < vel_at)
+        if is_crossing:
+            offset = interpolate_threshold_crossing(vel_before, vel_at, velocity_threshold)
+            return (boundary_idx - 1) + offset
+        return float(boundary_idx)
+
+    # For end boundary, look at velocity at and after the boundary
+    if boundary_idx + 1 >= n_velocities:
+        return float(boundary_idx)
+    vel_at = velocities[boundary_idx]
+    vel_after = velocities[boundary_idx + 1]
+    # Check threshold crossing based on state
+    is_crossing = (
+        state == ContactState.ON_GROUND and vel_at < velocity_threshold < vel_after
+    ) or (state == ContactState.IN_AIR and vel_at > velocity_threshold > vel_after)
+    if is_crossing:
+        offset = interpolate_threshold_crossing(vel_at, vel_after, velocity_threshold)
+        return boundary_idx + offset
+    return float(boundary_idx)
+
+
 def _interpolate_phase_start(
     start_idx: int,
     state: ContactState,
@@ -435,21 +486,9 @@ def _interpolate_phase_start(
     Returns:
         Fractional start frame, or float(start_idx) if no interpolation.
     """
-    if start_idx <= 0 or start_idx >= len(velocities):
-        return float(start_idx)
-
-    vel_before = velocities[start_idx - 1]
-    vel_at = velocities[start_idx]
-
-    # Check threshold crossing based on state
-    is_landing = state == ContactState.ON_GROUND and vel_before > velocity_threshold > vel_at
-    is_takeoff = state == ContactState.IN_AIR and vel_before < velocity_threshold < vel_at
-
-    if is_landing or is_takeoff:
-        offset = interpolate_threshold_crossing(vel_before, vel_at, velocity_threshold)
-        return (start_idx - 1) + offset
-
-    return float(start_idx)
+    return _interpolate_phase_boundary(
+        start_idx, state, velocities, velocity_threshold, is_start=True
+    )
 
 
 def _interpolate_phase_end(
@@ -464,21 +503,10 @@ def _interpolate_phase_end(
     Returns:
         Fractional end frame, or float(end_idx) if no interpolation.
     """
-    if end_idx >= max_idx - 1 or end_idx + 1 >= len(velocities):
-        return float(end_idx)
-
-    vel_at = velocities[end_idx]
-    vel_after = velocities[end_idx + 1]
-
-    # Check threshold crossing based on state
-    is_takeoff = state == ContactState.ON_GROUND and vel_at < velocity_threshold < vel_after
-    is_landing = state == ContactState.IN_AIR and vel_at > velocity_threshold > vel_after
-
-    if is_takeoff or is_landing:
-        offset = interpolate_threshold_crossing(vel_at, vel_after, velocity_threshold)
-        return end_idx + offset
-
-    return float(end_idx)
+    # Note: max_idx parameter is kept for backward compatibility but not used
+    return _interpolate_phase_boundary(
+        end_idx, state, velocities, velocity_threshold, is_start=False
+    )
 
 
 def find_interpolated_phase_transitions(
@@ -747,19 +775,10 @@ def compute_average_foot_position(
     Returns:
         (x, y) average foot position in normalized coordinates
     """
-    foot_keys = [
-        "left_ankle",
-        "right_ankle",
-        "left_heel",
-        "right_heel",
-        "left_foot_index",
-        "right_foot_index",
-    ]
-
     x_positions = []
     y_positions = []
 
-    for key in foot_keys:
+    for key in FOOT_KEYS:
         if key in landmarks:
             x, y, visibility = landmarks[key]
             if visibility > 0.5:  # Only use visible landmarks
@@ -783,8 +802,13 @@ def _calculate_average_visibility(
     Returns:
         Average visibility of foot landmarks (0.0 if none visible)
     """
-    foot_keys = ["left_ankle", "right_ankle", "left_heel", "right_heel"]
-    foot_vis = [frame_landmarks[key][2] for key in foot_keys if key in frame_landmarks]
+    # Only use ankles and heels for visibility (foot_index can be noisy)
+    visibility_keys = ("left_ankle", "right_ankle", "left_heel", "right_heel")
+    foot_vis = [
+        frame_landmarks[key][2]
+        for key in FOOT_KEYS
+        if key in frame_landmarks and key in visibility_keys
+    ]
     return float(np.mean(foot_vis)) if foot_vis else 0.0
 
 

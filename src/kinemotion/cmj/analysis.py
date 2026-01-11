@@ -8,7 +8,7 @@ from scipy.signal import savgol_filter
 from ..core.experimental import unused
 from ..core.smoothing import compute_acceleration_from_derivative
 from ..core.timing import NULL_TIMER, Timer
-from ..core.types import FloatArray
+from ..core.types import HIP_KEYS, FloatArray
 
 
 def compute_signed_velocity(
@@ -503,12 +503,10 @@ def compute_average_hip_position(
     Returns:
         (x, y) average hip position in normalized coordinates
     """
-    hip_keys = ["left_hip", "right_hip"]
-
     x_positions: list[float] = []
     y_positions: list[float] = []
 
-    for key in hip_keys:
+    for key in HIP_KEYS:
         if key in landmarks:
             x, y, visibility = landmarks[key]
             if visibility > 0.5:  # Only use visible landmarks

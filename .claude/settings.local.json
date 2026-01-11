@@ -86,7 +86,8 @@
       "Skill(CORE)",
       "Bash(npx playwright test:*)",
       "Bash(yarn test:*)",
-      "WebFetch(domain:journals.plos.org)"
+      "WebFetch(domain:journals.plos.org)",
+      "mcp__serena__think_about_whether_you_are_done"
     ]
   },
   "enableAllProjectMcpServers": true,

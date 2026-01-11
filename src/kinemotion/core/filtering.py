@@ -6,6 +6,18 @@ from scipy.signal import medfilt
 from .experimental import unused
 
 
+def _ensure_odd_window_length(window_length: int) -> int:
+    """Ensure window_length is odd (required for Savitzky-Golay filter).
+
+    Args:
+        window_length: Desired window length
+
+    Returns:
+        Odd window length (increments by 1 if even)
+    """
+    return window_length + 1 if window_length % 2 == 0 else window_length
+
+
 def detect_outliers_ransac(
     positions: np.ndarray,
     window_size: int = 15,
@@ -34,10 +46,7 @@ def detect_outliers_ransac(
     if n < window_size:
         return is_outlier
 
-    # Ensure window size is odd
-    if window_size % 2 == 0:
-        window_size += 1
-
+    window_size = _ensure_odd_window_length(window_size)
     half_window = window_size // 2
 
     for i in range(n):
@@ -93,9 +102,7 @@ def detect_outliers_median(
     if len(positions) < window_size:
         return np.zeros(len(positions), dtype=bool)
 
-    # Ensure window size is odd
-    if window_size % 2 == 0:
-        window_size += 1
+    window_size = _ensure_odd_window_length(window_size)
 
     # Apply median filter
     median_filtered = medfilt(positions, kernel_size=window_size)
@@ -315,10 +322,7 @@ def bilateral_temporal_filter(
     n = len(positions)
     filtered = np.zeros(n)
 
-    # Ensure window size is odd
-    if window_size % 2 == 0:
-        window_size += 1
-
+    window_size = _ensure_odd_window_length(window_size)
     half_window = window_size // 2
 
     for i in range(n):

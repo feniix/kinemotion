@@ -5,6 +5,7 @@ import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import click
 
@@ -18,6 +19,9 @@ from .api import (
     process_dropjump_video,
     process_dropjump_videos_bulk,
 )
+
+if TYPE_CHECKING:
+    from .api import AnalysisOverrides
 
 
 @dataclass
@@ -225,6 +229,34 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual
         )
 
 
+def _create_overrides_if_needed(params: AnalysisParameters) -> "AnalysisOverrides | None":
+    """Create AnalysisOverrides if any override parameters are set.
+
+    Args:
+        params: Expert parameters from CLI
+
+    Returns:
+        AnalysisOverrides if any relevant parameters are non-None, else None
+    """
+    from .api import AnalysisOverrides
+
+    if any(
+        [
+            params.smoothing_window is not None,
+            params.velocity_threshold is not None,
+            params.min_contact_frames is not None,
+            params.visibility_threshold is not None,
+        ]
+    ):
+        return AnalysisOverrides(
+            smoothing_window=params.smoothing_window,
+            velocity_threshold=params.velocity_threshold,
+            min_contact_frames=params.min_contact_frames,
+            visibility_threshold=params.visibility_threshold,
+        )
+    return None
+
+
 def _process_single(
     video_path: str,
     output: str | None,
@@ -237,24 +269,7 @@ def _process_single(
     click.echo(f"Analyzing video: {video_path}", err=True)
 
     try:
-        # Create AnalysisOverrides if any expert parameters are set
-        from .api import AnalysisOverrides
-
-        overrides = None
-        if any(
-            [
-                expert_params.smoothing_window is not None,
-                expert_params.velocity_threshold is not None,
-                expert_params.min_contact_frames is not None,
-                expert_params.visibility_threshold is not None,
-            ]
-        ):
-            overrides = AnalysisOverrides(
-                smoothing_window=expert_params.smoothing_window,
-                velocity_threshold=expert_params.velocity_threshold,
-                min_contact_frames=expert_params.min_contact_frames,
-                visibility_threshold=expert_params.visibility_threshold,
-            )
+        overrides = _create_overrides_if_needed(expert_params)
 
         # Call the API function (handles all processing logic)
         metrics = process_dropjump_video(
@@ -328,24 +343,7 @@ def _create_video_configs(
             video_file, output_dir, json_output_dir
         )
 
-        # Create AnalysisOverrides if any expert parameters are set
-        from .api import AnalysisOverrides
-
-        overrides = None
-        if any(
-            [
-                expert_params.smoothing_window is not None,
-                expert_params.velocity_threshold is not None,
-                expert_params.min_contact_frames is not None,
-                expert_params.visibility_threshold is not None,
-            ]
-        ):
-            overrides = AnalysisOverrides(
-                smoothing_window=expert_params.smoothing_window,
-                velocity_threshold=expert_params.velocity_threshold,
-                min_contact_frames=expert_params.min_contact_frames,
-                visibility_threshold=expert_params.visibility_threshold,
-            )
+        overrides = _create_overrides_if_needed(expert_params)
 
         config = DropJumpVideoConfig(
             video_path=video_file,
@@ -380,35 +378,33 @@ def _compute_batch_statistics(results: list[DropJumpVideoResult]) -> None:
     click.echo(f"Failed: {len(failed)}", err=True)
 
     if successful:
-        # Calculate average metrics
-        with_gct = [
-            r for r in successful if r.metrics and r.metrics.ground_contact_time is not None
+        # Calculate average metrics from results with non-None values
+        gct_values = [
+            r.metrics.ground_contact_time * 1000
+            for r in successful
+            if r.metrics and r.metrics.ground_contact_time is not None
         ]
-        with_flight = [r for r in successful if r.metrics and r.metrics.flight_time is not None]
-        with_jump = [r for r in successful if r.metrics and r.metrics.jump_height is not None]
+        flight_values = [
+            r.metrics.flight_time * 1000
+            for r in successful
+            if r.metrics and r.metrics.flight_time is not None
+        ]
+        jump_values = [
+            r.metrics.jump_height
+            for r in successful
+            if r.metrics and r.metrics.jump_height is not None
+        ]
 
-        if with_gct:
-            avg_gct = sum(
-                r.metrics.ground_contact_time * 1000
-                for r in with_gct
-                if r.metrics and r.metrics.ground_contact_time is not None
-            ) / len(with_gct)
+        if gct_values:
+            avg_gct = sum(gct_values) / len(gct_values)
             click.echo(f"\nAverage ground contact time: {avg_gct:.1f} ms", err=True)
 
-        if with_flight:
-            avg_flight = sum(
-                r.metrics.flight_time * 1000
-                for r in with_flight
-                if r.metrics and r.metrics.flight_time is not None
-            ) / len(with_flight)
+        if flight_values:
+            avg_flight = sum(flight_values) / len(flight_values)
             click.echo(f"Average flight time: {avg_flight:.1f} ms", err=True)
 
-        if with_jump:
-            avg_jump = sum(
-                r.metrics.jump_height
-                for r in with_jump
-                if r.metrics and r.metrics.jump_height is not None
-            ) / len(with_jump)
+        if jump_values:
+            avg_jump = sum(jump_values) / len(jump_values)
             click.echo(
                 f"Average jump height: {avg_jump:.3f} m ({avg_jump * 100:.1f} cm)",
                 err=True,
@@ -453,38 +449,27 @@ def _create_csv_row_from_result(result: DropJumpVideoResult) -> list[str]:
     processing_time = f"{result.processing_time:.2f}"
 
     if result.success and result.metrics:
-        return [
-            video_name,
+        metrics_data = [
             _format_time_metric(result.metrics.ground_contact_time),
             _format_time_metric(result.metrics.flight_time),
             _format_distance_metric(result.metrics.jump_height),
-            processing_time,
-            "Success",
         ]
-    else:
-        return [
-            video_name,
-            "N/A",
-            "N/A",
-            "N/A",
-            processing_time,
-            f"Failed: {result.error}",
-        ]
+        return [video_name, *metrics_data, processing_time, "Success"]
+
+    return [video_name, "N/A", "N/A", "N/A", processing_time, f"Failed: {result.error}"]
 
 
 def _write_csv_summary(
     csv_summary: str | None,
     results: list[DropJumpVideoResult],
-    successful: list[DropJumpVideoResult],
 ) -> None:
     """Write CSV summary of batch processing results.
 
     Args:
         csv_summary: Path to CSV output file
         results: All processing results
-        successful: Successful processing results
     """
-    if not csv_summary or not successful:
+    if not csv_summary:
         return
 
     click.echo(f"\nExporting CSV summary to: {csv_summary}", err=True)
@@ -558,7 +543,6 @@ def _process_batch(
     _compute_batch_statistics(results)
 
     # Export CSV summary if requested
-    successful = [r for r in results if r.success]
-    _write_csv_summary(csv_summary, results, successful)
+    _write_csv_summary(csv_summary, results)
 
     click.echo("\nBatch processing complete!", err=True)

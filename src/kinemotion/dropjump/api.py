@@ -305,7 +305,6 @@ def _tune_and_smooth(
         characteristics = analyze_video_sample(landmarks_sequence, video_fps, frame_count)
         params = auto_tune_parameters(characteristics, quality_preset)
 
-        # Apply overrides if provided
         if overrides:
             params = apply_expert_overrides(
                 params,
@@ -313,14 +312,6 @@ def _tune_and_smooth(
                 overrides.velocity_threshold,
                 overrides.min_contact_frames,
                 overrides.visibility_threshold,
-            )
-        else:
-            params = apply_expert_overrides(
-                params,
-                None,
-                None,
-                None,
-                None,
             )
 
     smoothed_landmarks = apply_smoothing(landmarks_sequence, params, verbose, timer)
@@ -440,11 +431,8 @@ def _generate_debug_video(
     timer = timer or NULL_TIMER
     debug_h, debug_w = frames[0].shape[:2]
 
-    if video_fps > 30:
-        debug_fps = video_fps / (video_fps / 30.0)
-    else:
-        debug_fps = video_fps
-
+    # Calculate debug FPS: cap at 30 for high-fps videos, use step if frame-sparse
+    debug_fps = min(video_fps, 30.0)
     if len(frames) < len(smoothed_landmarks):
         step = max(1, int(video_fps / 30.0))
         debug_fps = video_fps / step

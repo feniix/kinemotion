@@ -5,6 +5,54 @@ import math
 import numpy as np
 
 
+def _get_side_prefix(side: str) -> str:
+    """Get the landmark key prefix for a given side.
+
+    Args:
+        side: Which side ("left" or "right")
+
+    Returns:
+        The prefix string for landmark keys
+    """
+    return "left_" if side == "left" else "right_"
+
+
+def _is_landmark_visible(
+    landmarks: dict[str, tuple[float, float, float]],
+    key: str,
+    threshold: float = 0.3,
+) -> bool:
+    """Check if a landmark meets the minimum visibility threshold.
+
+    Args:
+        landmarks: Pose landmarks dictionary
+        key: Landmark key to check
+        threshold: Minimum visibility threshold (default: 0.3)
+
+    Returns:
+        True if landmark exists and meets visibility threshold
+    """
+    return key in landmarks and landmarks[key][2] >= threshold
+
+
+def _get_landmark_xy(
+    landmarks: dict[str, tuple[float, float, float]],
+    key: str,
+) -> tuple[float, float] | None:
+    """Extract x, y coordinates from a landmark.
+
+    Args:
+        landmarks: Pose landmarks dictionary
+        key: Landmark key to extract
+
+    Returns:
+        Tuple of (x, y) coordinates, or None if key not found
+    """
+    if key not in landmarks:
+        return None
+    return (landmarks[key][0], landmarks[key][1])
+
+
 def calculate_angle_3_points(
     point1: tuple[float, float],
     point2: tuple[float, float],
@@ -88,7 +136,7 @@ def calculate_ankle_angle(
     Returns:
         Ankle angle in degrees, or None if landmarks not available
     """
-    prefix = "left_" if side == "left" else "right_"
+    prefix = _get_side_prefix(side)
 
     foot_index_key = f"{prefix}foot_index"
     heel_key = f"{prefix}heel"
@@ -96,23 +144,28 @@ def calculate_ankle_angle(
     knee_key = f"{prefix}knee"
 
     # Check ankle and knee visibility (required)
-    if ankle_key not in landmarks or landmarks[ankle_key][2] < 0.3:
+    if not _is_landmark_visible(landmarks, ankle_key):
         return None
-    if knee_key not in landmarks or landmarks[knee_key][2] < 0.3:
+    if not _is_landmark_visible(landmarks, knee_key):
         return None
 
-    ankle = (landmarks[ankle_key][0], landmarks[ankle_key][1])
-    knee = (landmarks[knee_key][0], landmarks[knee_key][1])
+    ankle = _get_landmark_xy(landmarks, ankle_key)
+    knee = _get_landmark_xy(landmarks, knee_key)
+
+    if ankle is None or knee is None:
+        return None
 
     # Try foot_index first (primary: toe tip for plantarflexion accuracy)
-    if foot_index_key in landmarks and landmarks[foot_index_key][2] > 0.5:
-        foot_point = (landmarks[foot_index_key][0], landmarks[foot_index_key][1])
-        return calculate_angle_3_points(foot_point, ankle, knee)
+    if _is_landmark_visible(landmarks, foot_index_key, threshold=0.5):
+        foot_point = _get_landmark_xy(landmarks, foot_index_key)
+        if foot_point is not None:
+            return calculate_angle_3_points(foot_point, ankle, knee)
 
     # Fallback to heel if foot_index visibility is insufficient
-    if heel_key in landmarks and landmarks[heel_key][2] > 0.3:
-        foot_point = (landmarks[heel_key][0], landmarks[heel_key][1])
-        return calculate_angle_3_points(foot_point, ankle, knee)
+    if _is_landmark_visible(landmarks, heel_key):
+        foot_point = _get_landmark_xy(landmarks, heel_key)
+        if foot_point is not None:
+            return calculate_angle_3_points(foot_point, ankle, knee)
 
     # No valid foot landmark available
     return None
@@ -136,29 +189,32 @@ def calculate_knee_angle(
     Returns:
         Knee angle in degrees, or None if landmarks not available
     """
-    prefix = "left_" if side == "left" else "right_"
+    prefix = _get_side_prefix(side)
 
     ankle_key = f"{prefix}ankle"
     knee_key = f"{prefix}knee"
     hip_key = f"{prefix}hip"
 
     # Check visibility
-    if ankle_key not in landmarks or landmarks[ankle_key][2] < 0.3:
+    if not _is_landmark_visible(landmarks, ankle_key):
         # Fallback: use foot_index if ankle not visible
         foot_key = f"{prefix}foot_index"
-        if foot_key in landmarks and landmarks[foot_key][2] > 0.3:
+        if _is_landmark_visible(landmarks, foot_key):
             ankle_key = foot_key
         else:
             return None
 
-    if knee_key not in landmarks or landmarks[knee_key][2] < 0.3:
+    if not _is_landmark_visible(landmarks, knee_key):
         return None
-    if hip_key not in landmarks or landmarks[hip_key][2] < 0.3:
+    if not _is_landmark_visible(landmarks, hip_key):
         return None
 
-    ankle = (landmarks[ankle_key][0], landmarks[ankle_key][1])
-    knee = (landmarks[knee_key][0], landmarks[knee_key][1])
-    hip = (landmarks[hip_key][0], landmarks[hip_key][1])
+    ankle = _get_landmark_xy(landmarks, ankle_key)
+    knee = _get_landmark_xy(landmarks, knee_key)
+    hip = _get_landmark_xy(landmarks, hip_key)
+
+    if ankle is None or knee is None or hip is None:
+        return None
 
     return calculate_angle_3_points(ankle, knee, hip)
 
@@ -181,23 +237,26 @@ def calculate_hip_angle(
     Returns:
         Hip angle in degrees, or None if landmarks not available
     """
-    prefix = "left_" if side == "left" else "right_"
+    prefix = _get_side_prefix(side)
 
     knee_key = f"{prefix}knee"
     hip_key = f"{prefix}hip"
     shoulder_key = f"{prefix}shoulder"
 
     # Check visibility
-    if knee_key not in landmarks or landmarks[knee_key][2] < 0.3:
+    if not _is_landmark_visible(landmarks, knee_key):
         return None
-    if hip_key not in landmarks or landmarks[hip_key][2] < 0.3:
+    if not _is_landmark_visible(landmarks, hip_key):
         return None
-    if shoulder_key not in landmarks or landmarks[shoulder_key][2] < 0.3:
+    if not _is_landmark_visible(landmarks, shoulder_key):
         return None
 
-    knee = (landmarks[knee_key][0], landmarks[knee_key][1])
-    hip = (landmarks[hip_key][0], landmarks[hip_key][1])
-    shoulder = (landmarks[shoulder_key][0], landmarks[shoulder_key][1])
+    knee = _get_landmark_xy(landmarks, knee_key)
+    hip = _get_landmark_xy(landmarks, hip_key)
+    shoulder = _get_landmark_xy(landmarks, shoulder_key)
+
+    if knee is None or hip is None or shoulder is None:
+        return None
 
     return calculate_angle_3_points(knee, hip, shoulder)
 
@@ -220,19 +279,25 @@ def calculate_trunk_tilt(
     Returns:
         Trunk tilt angle in degrees, or None if landmarks not available
     """
-    prefix = "left_" if side == "left" else "right_"
+    prefix = _get_side_prefix(side)
 
     hip_key = f"{prefix}hip"
     shoulder_key = f"{prefix}shoulder"
 
     # Check visibility
-    if hip_key not in landmarks or landmarks[hip_key][2] < 0.3:
+    if not _is_landmark_visible(landmarks, hip_key):
         return None
-    if shoulder_key not in landmarks or landmarks[shoulder_key][2] < 0.3:
+    if not _is_landmark_visible(landmarks, shoulder_key):
         return None
 
-    hip = np.array([landmarks[hip_key][0], landmarks[hip_key][1]])
-    shoulder = np.array([landmarks[shoulder_key][0], landmarks[shoulder_key][1]])
+    hip_xy = _get_landmark_xy(landmarks, hip_key)
+    shoulder_xy = _get_landmark_xy(landmarks, shoulder_key)
+
+    if hip_xy is None or shoulder_xy is None:
+        return None
+
+    hip = np.array([hip_xy[0], hip_xy[1]])
+    shoulder = np.array([shoulder_xy[0], shoulder_xy[1]])
 
     # Vector from hip to shoulder
     trunk_vector = shoulder - hip

@@ -88,43 +88,28 @@ class DebugOverlayRenderer(BaseDebugOverlayRenderer):
         metrics: DropJumpMetrics,
     ) -> None:
         """Draw phase labels (ground contact, flight, peak) on frame."""
+        # Phase configurations: (start_frame, end_frame, label, color)
+        # For range-based phases (ground contact, flight)
+        range_phase_configs = [
+            (metrics.contact_start_frame, metrics.contact_end_frame, "GROUND CONTACT", GREEN),
+            (metrics.flight_start_frame, metrics.flight_end_frame, "FLIGHT PHASE", RED),
+        ]
+
         y_offset = PHASE_LABEL_START_Y
+        for start_frame, end_frame, label, color in range_phase_configs:
+            if start_frame and end_frame and start_frame <= frame_idx <= end_frame:
+                cv2.putText(
+                    frame,
+                    label,
+                    (10, y_offset),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.7,
+                    color,
+                    2,
+                )
+                y_offset += PHASE_LABEL_LINE_HEIGHT
 
-        # Ground contact phase
-        if (
-            metrics.contact_start_frame
-            and metrics.contact_end_frame
-            and metrics.contact_start_frame <= frame_idx <= metrics.contact_end_frame
-        ):
-            cv2.putText(
-                frame,
-                "GROUND CONTACT",
-                (10, y_offset),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.7,
-                GREEN,
-                2,
-            )
-            y_offset += PHASE_LABEL_LINE_HEIGHT
-
-        # Flight phase
-        if (
-            metrics.flight_start_frame
-            and metrics.flight_end_frame
-            and metrics.flight_start_frame <= frame_idx <= metrics.flight_end_frame
-        ):
-            cv2.putText(
-                frame,
-                "FLIGHT PHASE",
-                (10, y_offset),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.7,
-                RED,
-                2,
-            )
-            y_offset += PHASE_LABEL_LINE_HEIGHT
-
-        # Peak height
+        # Single-frame indicator (peak height)
         if metrics.peak_height_frame == frame_idx:
             cv2.putText(
                 frame,

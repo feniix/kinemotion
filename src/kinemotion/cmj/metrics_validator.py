@@ -81,6 +81,23 @@ class CMJMetricsValidator(MetricsValidator):
         """
         return data.get(key_with_suffix) or data.get(key_without_suffix)
 
+    @staticmethod
+    def _convert_raw_duration_to_seconds(value_raw: float) -> float:
+        """Convert raw duration value to seconds.
+
+        Handles legacy values that may be in seconds (<10) vs milliseconds (>10).
+        This heuristic works because no CMJ duration metric is between 10ms and 10s.
+
+        Args:
+            value_raw: Raw duration value (may be seconds or milliseconds)
+
+        Returns:
+            Duration in seconds
+        """
+        if value_raw < 10:  # Likely in seconds
+            return value_raw
+        return value_raw / 1000.0
+
     def validate(self, metrics: MetricsDict) -> CMJValidationResult:
         """Validate CMJ metrics comprehensively.
 
@@ -136,12 +153,7 @@ class CMJMetricsValidator(MetricsValidator):
         if flight_time_raw is None:
             return
 
-        # If value is in seconds (legacy), use as-is; if in ms, convert
-        if flight_time_raw < 10:  # Likely in seconds
-            flight_time = flight_time_raw
-        else:  # In milliseconds
-            flight_time = flight_time_raw / 1000.0
-
+        flight_time = self._convert_raw_duration_to_seconds(flight_time_raw)
         bounds = CMJBounds.FLIGHT_TIME
 
         if not bounds.is_physically_possible(flight_time):
@@ -268,13 +280,7 @@ class CMJMetricsValidator(MetricsValidator):
         if duration_raw is None:
             return
 
-        # If value is in seconds (legacy), convert to ms first
-        # Values >10 are assumed to be in ms, <10 assumed to be in seconds
-        if duration_raw < 10:  # Likely in seconds
-            duration = duration_raw
-        else:  # In milliseconds
-            duration = duration_raw / 1000.0
-
+        duration = self._convert_raw_duration_to_seconds(duration_raw)
         bounds = CMJBounds.CONCENTRIC_DURATION
 
         if not bounds.is_physically_possible(duration):
@@ -311,12 +317,7 @@ class CMJMetricsValidator(MetricsValidator):
         if duration_raw is None:
             return
 
-        # If value is in seconds (legacy), use as-is; if in ms, convert
-        if duration_raw < 10:  # Likely in seconds
-            duration = duration_raw
-        else:  # In milliseconds
-            duration = duration_raw / 1000.0
-
+        duration = self._convert_raw_duration_to_seconds(duration_raw)
         bounds = CMJBounds.ECCENTRIC_DURATION
 
         if not bounds.is_physically_possible(duration):
@@ -493,16 +494,8 @@ class CMJMetricsValidator(MetricsValidator):
         ):
             return
 
-        # Convert to seconds if needed
-        if flight_time_raw < 10:  # Likely in seconds
-            flight_time = flight_time_raw
-        else:  # In milliseconds
-            flight_time = flight_time_raw / 1000.0
-
-        if concentric_duration_raw < 10:  # Likely in seconds
-            concentric_duration = concentric_duration_raw
-        else:  # In milliseconds
-            concentric_duration = concentric_duration_raw / 1000.0
+        flight_time = self._convert_raw_duration_to_seconds(flight_time_raw)
+        concentric_duration = self._convert_raw_duration_to_seconds(concentric_duration_raw)
 
         rsi = flight_time / concentric_duration
         result.rsi = rsi

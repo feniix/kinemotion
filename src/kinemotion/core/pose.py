@@ -373,6 +373,37 @@ def compute_center_of_mass(
     return (com_x, com_y, com_visibility)
 
 
+def _compute_mean_landmark_position(
+    landmark_keys: list[str],
+    landmarks: dict[str, tuple[float, float, float]],
+    vis_threshold: float,
+) -> tuple[float, float, float] | None:
+    """Compute mean position and visibility from multiple landmarks.
+
+    Args:
+        landmark_keys: List of landmark key names to average
+        landmarks: Dictionary of landmark positions
+        vis_threshold: Minimum visibility threshold
+
+    Returns:
+        (x, y, visibility) tuple if any landmarks are visible, else None
+    """
+    positions = [
+        (x, y, vis)
+        for key in landmark_keys
+        if key in landmarks
+        for x, y, vis in [landmarks[key]]
+        if vis > vis_threshold
+    ]
+    if not positions:
+        return None
+
+    x = float(np.mean([p[0] for p in positions]))
+    y = float(np.mean([p[1] for p in positions]))
+    vis = float(np.mean([p[2] for p in positions]))
+    return (x, y, vis)
+
+
 def _add_head_segment(
     segments: list,
     weights: list,
@@ -398,20 +429,17 @@ def _add_trunk_segment(
 ) -> None:
     """Add trunk segment (50% body mass) if visible."""
     trunk_keys = ["left_shoulder", "right_shoulder", "left_hip", "right_hip"]
-    trunk_pos = [
-        (x, y, vis)
-        for key in trunk_keys
-        if key in landmarks
-        for x, y, vis in [landmarks[key]]
-        if vis > vis_threshold
-    ]
-    if len(trunk_pos) >= 2:
-        trunk_x = float(np.mean([p[0] for p in trunk_pos]))
-        trunk_y = float(np.mean([p[1] for p in trunk_pos]))
-        trunk_vis = float(np.mean([p[2] for p in trunk_pos]))
-        segments.append((trunk_x, trunk_y))
-        weights.append(0.50)
-        visibilities.append(trunk_vis)
+    trunk_pos = _compute_mean_landmark_position(trunk_keys, landmarks, vis_threshold)
+
+    if trunk_pos is not None:
+        # Require at least 2 visible landmarks for valid trunk
+        visible_count = sum(
+            1 for key in trunk_keys if key in landmarks and landmarks[key][2] > vis_threshold
+        )
+        if visible_count >= 2:
+            segments.append((trunk_pos[0], trunk_pos[1]))
+            weights.append(0.50)
+            visibilities.append(trunk_pos[2])
 
 
 def _add_limb_segment(
@@ -451,17 +479,9 @@ def _add_foot_segment(
 ) -> None:
     """Add foot segment (1.5% body mass per foot) if visible."""
     foot_keys = [f"{side}_ankle", f"{side}_heel", f"{side}_foot_index"]
-    foot_pos = [
-        (x, y, vis)
-        for key in foot_keys
-        if key in landmarks
-        for x, y, vis in [landmarks[key]]
-        if vis > vis_threshold
-    ]
-    if foot_pos:
-        foot_x = float(np.mean([p[0] for p in foot_pos]))
-        foot_y = float(np.mean([p[1] for p in foot_pos]))
-        foot_vis = float(np.mean([p[2] for p in foot_pos]))
-        segments.append((foot_x, foot_y))
+    foot_pos = _compute_mean_landmark_position(foot_keys, landmarks, vis_threshold)
+
+    if foot_pos is not None:
+        segments.append((foot_pos[0], foot_pos[1]))
         weights.append(0.015)
-        visibilities.append(foot_vis)
+        visibilities.append(foot_pos[2])
