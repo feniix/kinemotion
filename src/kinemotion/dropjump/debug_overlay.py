@@ -33,10 +33,6 @@ class DebugOverlayRenderer(BaseDebugOverlayRenderer):
         """Get color based on ground contact state."""
         return GREEN if contact_state == ContactState.ON_GROUND else RED
 
-    def _normalize_to_pixels(self, x: float, y: float) -> tuple[int, int]:
-        """Convert normalized coordinates to pixel coordinates."""
-        return int(x * self.width), int(y * self.height)
-
     def _draw_com_visualization(
         self,
         frame: np.ndarray,

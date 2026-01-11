@@ -1,6 +1,6 @@
-"""Decorators for marking experimental and unused features.
+"""Decorator for marking unused features.
 
-These decorators help identify code that is implemented but not yet
+This decorator helps identify code that is implemented but not yet
 integrated into the main pipeline, making it easier to track features
 for future enhancement or cleanup.
 """
@@ -13,61 +13,14 @@ from typing import TypeVar
 F = TypeVar("F", bound=Callable)
 
 
-def experimental(
-    reason: str, *, issue: int | None = None, since: str | None = None
-) -> Callable[[F], F]:
-    """Mark a feature as experimental/not fully integrated.
-
-    Experimental features are working implementations that haven't been
-    fully integrated into the main pipeline. They emit warnings when called
-    to alert developers they're using untested/unstable APIs.
-
-    Args:
-        reason: Why this is experimental (e.g., "API unstable", "needs validation")
-        issue: Optional GitHub issue number for tracking integration
-        since: Optional version when this became experimental
-
-    Example:
-        >>> @experimental("API may change", issue=123, since="0.34.0")
-        ... def new_feature():
-        ...     pass
-
-    Returns:
-        Decorated function that warns on use
-    """
-
-    def decorator(func: F) -> F:
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):  # type: ignore
-            msg = f"{func.__name__} is experimental: {reason}"
-            if issue:
-                msg += f" (GitHub issue #{issue})"
-            if since:
-                msg += f" [since v{since}]"
-            warnings.warn(msg, FutureWarning, stacklevel=2)
-            return func(*args, **kwargs)
-
-        # Add metadata for documentation/tooling
-        wrapper.__experimental__ = True  # type: ignore[attr-defined]
-        wrapper.__experimental_reason__ = reason  # type: ignore[attr-defined]
-        if issue:
-            wrapper.__experimental_issue__ = issue  # type: ignore[attr-defined]
-        if since:
-            wrapper.__experimental_since__ = since  # type: ignore[attr-defined]
-
-        return wrapper  # type: ignore[return-value]
-
-    return decorator
-
-
 def unused(
     reason: str, *, remove_in: str | None = None, since: str | None = None
 ) -> Callable[[F], F]:
     """Mark a feature as implemented but not integrated into pipeline.
 
     Unused features are fully working implementations that aren't called
-    by the main analysis pipeline. Unlike @experimental, these don't emit
-    warnings when called (they work fine), but are marked for tracking.
+    by the main analysis pipeline. These don't emit warnings when called
+    (they work fine), but are marked for tracking.
 
     Use this for:
     - Features awaiting CLI integration
@@ -99,5 +52,56 @@ def unused(
             func.__unused_since__ = since  # type: ignore[attr-defined]
 
         return func
+
+    return decorator
+
+
+def experimental(
+    reason: str, *, issue: int | None = None, since: str | None = None
+) -> Callable[[F], F]:
+    """Mark a feature as experimental/not fully integrated.
+
+    Experimental features are working implementations that may change
+    or be removed. They emit a warning when called to alert users.
+
+    Use this for:
+    - Features under active development
+    - APIs that may change
+    - Functionality that needs more testing
+
+    Args:
+        reason: Why this is experimental (e.g., "API may change")
+        issue: Optional GitHub issue number tracking this feature
+        since: Optional version when this became experimental
+
+    Example:
+        >>> @experimental("API may change", issue=42, since="0.35.0")
+        ... def new_analysis_method():
+        ...     pass
+
+    Returns:
+        Wrapped function that emits ExperimentalWarning when called
+    """
+
+    def decorator(func: F) -> F:
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):  # type: ignore[no-untyped-def]
+            issue_ref = f" (see issue #{issue})" if issue else ""
+            version_ref = f" since {since}" if since else ""
+            warnings.warn(
+                f"{func.__name__} is experimental{version_ref}: {reason}{issue_ref}",
+                category=FutureWarning,
+                stacklevel=2,
+            )
+            return func(*args, **kwargs)
+
+        wrapper.__experimental__ = True  # type: ignore[attr-defined]
+        wrapper.__experimental_reason__ = reason  # type: ignore[attr-defined]
+        if issue:
+            wrapper.__experimental_issue__ = issue  # type: ignore[attr-defined]
+        if since:
+            wrapper.__experimental_since__ = since  # type: ignore[attr-defined]
+
+        return wrapper  # type: ignore[return-value]
 
     return decorator

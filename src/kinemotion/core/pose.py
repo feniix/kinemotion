@@ -198,55 +198,6 @@ class PoseTrackerFactory:
 
         return MediaPipePoseTracker(**filtered_kwargs)
 
-    @classmethod
-    def get_available_backends(cls) -> list[str]:
-        """Get list of available backends.
-
-        Returns:
-            List containing 'mediapipe'
-        """
-        return ["mediapipe"]
-
-    @classmethod
-    def get_backend_info(cls, backend: str) -> dict[str, str]:
-        """Get information about a backend.
-
-        Args:
-            backend: Backend name
-
-        Returns:
-            Dictionary with backend information
-        """
-        if backend.lower() in ("mediapipe", "mp"):
-            return {
-                "name": "MediaPipe",
-                "description": "Pose tracking using MediaPipe Tasks API",
-                "performance": "~48 FPS",
-                "accuracy": "Reference (validated for jumps)",
-                "requirements": "mediapipe package",
-            }
-        return {}
-
-
-def get_tracker_info(tracker: object) -> str:
-    """Get detailed information about a pose tracker instance.
-
-    Args:
-        tracker: Pose tracker instance
-
-    Returns:
-        Formatted string with tracker details
-    """
-    tracker_class = type(tracker).__name__
-    module = type(tracker).__module__
-
-    info = f"{tracker_class} (from {module})"
-
-    if tracker_class == "MediaPipePoseTracker":
-        info += " [MediaPipe Tasks API]"
-
-    return info
-
 
 def _extract_landmarks_from_results(
     pose_landmarks: mp.tasks.vision.components.containers.NormalizedLandmark,  # type: ignore[valid-type]
@@ -271,28 +222,6 @@ def _extract_landmarks_from_results(
             landmarks[name] = (lm.x, lm.y, visibility)
 
     return landmarks
-
-
-# Legacy compatibility aliases for Solution API enum values
-class _LegacyPoseLandmark:
-    """Compatibility shim for Solution API enum values."""
-
-    LEFT_ANKLE = 27
-    RIGHT_ANKLE = 28
-    LEFT_HEEL = 29
-    RIGHT_HEEL = 30
-    LEFT_FOOT_INDEX = 31
-    RIGHT_FOOT_INDEX = 32
-    LEFT_HIP = 23
-    RIGHT_HIP = 24
-    LEFT_SHOULDER = 11
-    RIGHT_SHOULDER = 12
-    NOSE = 0
-    LEFT_KNEE = 25
-    RIGHT_KNEE = 26
-
-
-PoseLandmark = _LegacyPoseLandmark
 
 
 def compute_center_of_mass(

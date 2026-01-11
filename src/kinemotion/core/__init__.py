@@ -13,7 +13,6 @@ from .pose import (
     MediaPipePoseTracker,
     PoseTrackerFactory,
     compute_center_of_mass,
-    get_tracker_info,
 )
 from .pose_landmarks import KINEMOTION_LANDMARKS, LANDMARK_INDICES
 from .quality import (
@@ -42,7 +41,6 @@ __all__ = [
     "MediaPipePoseTracker",
     "PoseTrackerFactory",
     "compute_center_of_mass",
-    "get_tracker_info",
     "LANDMARK_INDICES",
     "KINEMOTION_LANDMARKS",
     "get_model_path",

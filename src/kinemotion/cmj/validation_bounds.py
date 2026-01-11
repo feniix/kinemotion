@@ -170,17 +170,6 @@ class TripleExtensionBounds:
             return 125 <= angle <= 155
         return True
 
-    # TRUNK TILT (forward lean from vertical, degrees)
-    @staticmethod
-    def trunk_tilt_valid(angle: float | None, profile: AthleteProfile) -> bool:
-        """Check if trunk tilt is valid for profile."""
-        if angle is None:
-            return True
-        if angle < -15 or angle > 60:
-            return False  # Outside reasonable range
-        # Most athletes show 10-30° forward lean during takeoff
-        return -10 <= angle <= 45
-
 
 class RSIBounds:
     """Reactive Strength Index bounds."""
@@ -214,12 +203,6 @@ class RSIBounds:
     def is_valid(rsi: float) -> bool:
         """Check if RSI is within physiological bounds."""
         return RSIBounds.MIN_VALID <= rsi <= RSIBounds.MAX_VALID
-
-    @staticmethod
-    def in_range_for_profile(rsi: float, profile: AthleteProfile) -> bool:
-        """Check if RSI is in expected range for profile."""
-        min_rsi, max_rsi = RSIBounds.get_rsi_range(profile)
-        return min_rsi <= rsi <= max_rsi
 
 
 class MetricConsistency:
@@ -301,7 +284,7 @@ ATHLETE_PROFILES = {
 
 
 def estimate_athlete_profile(
-    metrics_dict: MetricsDict, gender: str | None = None
+    metrics_dict: MetricsDict, _gender: str | None = None
 ) -> AthleteProfile:
     """Estimate athlete profile from metrics.
 

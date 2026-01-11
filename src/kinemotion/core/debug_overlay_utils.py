@@ -240,6 +240,18 @@ class BaseDebugOverlayRenderer:
             output_path, width, height, self.display_width, self.display_height, fps
         )
 
+    def _normalize_to_pixels(self, x: float, y: float) -> tuple[int, int]:
+        """Convert normalized coordinates (0-1) to pixel coordinates.
+
+        Args:
+            x: Normalized x coordinate (0-1)
+            y: Normalized y coordinate (0-1)
+
+        Returns:
+            Tuple of (pixel_x, pixel_y)
+        """
+        return int(x * self.width), int(y * self.height)
+
     def write_frame(self, frame: np.ndarray) -> None:
         """
         Write frame to output video.

@@ -496,14 +496,13 @@ def _interpolate_phase_end(
     state: ContactState,
     velocities: FloatArray,
     velocity_threshold: float,
-    max_idx: int,
+    _max_idx: int,
 ) -> float:
     """Interpolate end boundary of a phase with sub-frame precision.
 
     Returns:
         Fractional end frame, or float(end_idx) if no interpolation.
     """
-    # Note: max_idx parameter is kept for backward compatibility but not used
     return _interpolate_phase_boundary(
         end_idx, state, velocities, velocity_threshold, is_start=False
     )

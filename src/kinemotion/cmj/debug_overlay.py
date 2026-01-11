@@ -34,56 +34,46 @@ from ..core.overlay_constants import (
     Landmark,
     LandmarkDict,
 )
+from .analysis import CMJPhase
 from .joint_angles import calculate_triple_extension
 from .kinematics import CMJMetrics
-
-
-class CMJPhaseState:
-    """States for CMJ phases."""
-
-    STANDING = "standing"
-    ECCENTRIC = "eccentric"
-    TRANSITION = "transition"
-    CONCENTRIC = "concentric"
-    FLIGHT = "flight"
-    LANDING = "landing"
 
 
 class CMJDebugOverlayRenderer(BaseDebugOverlayRenderer):
     """Renders debug information on CMJ video frames."""
 
     # Phase colors (BGR format)
-    PHASE_COLORS: dict[str, Color] = {
-        CMJPhaseState.STANDING: (255, 200, 100),  # Light blue
-        CMJPhaseState.ECCENTRIC: (0, 165, 255),  # Orange
-        CMJPhaseState.TRANSITION: (255, 0, 255),  # Magenta/Purple
-        CMJPhaseState.CONCENTRIC: (0, 255, 0),  # Green
-        CMJPhaseState.FLIGHT: (0, 0, 255),  # Red
-        CMJPhaseState.LANDING: (255, 255, 255),  # White
+    PHASE_COLORS: dict[CMJPhase, Color] = {
+        CMJPhase.STANDING: (255, 200, 100),  # Light blue
+        CMJPhase.ECCENTRIC: (0, 165, 255),  # Orange
+        CMJPhase.TRANSITION: (255, 0, 255),  # Magenta/Purple
+        CMJPhase.CONCENTRIC: (0, 255, 0),  # Green
+        CMJPhase.FLIGHT: (0, 0, 255),  # Red
+        CMJPhase.LANDING: (255, 255, 255),  # White
     }
     DEFAULT_PHASE_COLOR: Color = GRAY
 
-    def _determine_phase(self, frame_idx: int, metrics: CMJMetrics) -> str:
+    def _determine_phase(self, frame_idx: int, metrics: CMJMetrics) -> CMJPhase:
         """Determine which phase the current frame is in."""
         if metrics.standing_start_frame and frame_idx < metrics.standing_start_frame:
-            return CMJPhaseState.STANDING
+            return CMJPhase.STANDING
 
         if frame_idx < metrics.lowest_point_frame:
-            return CMJPhaseState.ECCENTRIC
+            return CMJPhase.ECCENTRIC
 
         # Brief transition at lowest point (within 2 frames)
         if abs(frame_idx - metrics.lowest_point_frame) < 2:
-            return CMJPhaseState.TRANSITION
+            return CMJPhase.TRANSITION
 
         if frame_idx < metrics.takeoff_frame:
-            return CMJPhaseState.CONCENTRIC
+            return CMJPhase.CONCENTRIC
 
         if frame_idx < metrics.landing_frame:
-            return CMJPhaseState.FLIGHT
+            return CMJPhase.FLIGHT
 
-        return CMJPhaseState.LANDING
+        return CMJPhase.LANDING
 
-    def _get_phase_color(self, phase: str) -> Color:
+    def _get_phase_color(self, phase: CMJPhase) -> Color:
         """Get color for each phase."""
         return self.PHASE_COLORS.get(phase, self.DEFAULT_PHASE_COLOR)
 
@@ -104,7 +94,7 @@ class CMJDebugOverlayRenderer(BaseDebugOverlayRenderer):
 
     def _landmark_to_pixel(self, landmark: Landmark) -> tuple[int, int]:
         """Convert normalized landmark coordinates to pixel coordinates."""
-        return int(landmark[0] * self.width), int(landmark[1] * self.height)
+        return self._normalize_to_pixels(landmark[0], landmark[1])
 
     def _is_visible(self, landmark: Landmark, threshold: float = VISIBILITY_THRESHOLD) -> bool:
         """Check if a landmark has sufficient visibility."""
@@ -331,12 +321,14 @@ class CMJDebugOverlayRenderer(BaseDebugOverlayRenderer):
             cv2.circle(frame, (avg_x, avg_y), 12, phase_color, -1)
             cv2.circle(frame, (avg_x, avg_y), 14, WHITE, 2)
 
-    def _draw_phase_banner(self, frame: np.ndarray, phase: str | None, phase_color: Color) -> None:
+    def _draw_phase_banner(
+        self, frame: np.ndarray, phase: CMJPhase | None, phase_color: Color
+    ) -> None:
         """Draw phase indicator banner."""
-        if not phase:
+        if phase is None:
             return
 
-        phase_text = f"Phase: {phase.upper()}"
+        phase_text = f"Phase: {phase.value.upper()}"
         text_size = cv2.getTextSize(phase_text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0]
         cv2.rectangle(frame, (5, 5), (text_size[0] + 15, 45), phase_color, -1)
         cv2.putText(frame, phase_text, (10, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, BLACK, 2)
@@ -409,7 +401,7 @@ class CMJDebugOverlayRenderer(BaseDebugOverlayRenderer):
         annotated = frame.copy()
 
         # Determine current phase and color
-        phase: str | None = None
+        phase: CMJPhase | None = None
         phase_color: Color = WHITE
         if metrics:
             phase = self._determine_phase(frame_idx, metrics)
