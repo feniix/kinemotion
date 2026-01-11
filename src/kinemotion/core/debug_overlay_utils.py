@@ -6,12 +6,19 @@ import shutil
 import subprocess
 import time
 from pathlib import Path
-from typing import Any
 
 import cv2
 import numpy as np
 from typing_extensions import Self
 
+from .overlay_constants import (
+    CODECS_TO_TRY,
+    FFMPEG_CRF,
+    FFMPEG_PIX_FMT,
+    FFMPEG_PRESET,
+    MAX_VIDEO_DIMENSION,
+    CodecAttemptLog,
+)
 from .timing import NULL_TIMER, Timer
 
 # Setup logging with structlog support for backend, fallback to standard logging for CLI
@@ -71,12 +78,10 @@ def create_video_writer(
     # Try browser-compatible codecs first
     # avc1: H.264 (Most compatible, including iOS)
     # mp4v: MPEG-4 (Poor browser support, will trigger ffmpeg re-encoding for H.264)
-    # ⚠️  CRITICAL: VP9 (vp09) is EXCLUDED - not supported on iOS/iPhone/iPad browsers!
-    #     Adding VP9 will break debug video playback on all iOS devices.
-    codecs_to_try = ["avc1", "mp4v"]
-    codec_attempt_log: list[dict[str, Any]] = []
+    # See overlay_constants.py for codec list and critical VP9 exclusion notes
+    codec_attempt_log: CodecAttemptLog = []
 
-    for codec in codecs_to_try:
+    for codec in CODECS_TO_TRY:
         writer = _try_open_video_writer(
             output_path, codec, fps, display_width, display_height, codec_attempt_log
         )
@@ -103,7 +108,7 @@ def _try_open_video_writer(
     fps: float,
     width: int,
     height: int,
-    attempt_log: list[dict[str, Any]],
+    attempt_log: CodecAttemptLog,
 ) -> cv2.VideoWriter | None:
     """Attempt to open a video writer with a specific codec."""
     try:
@@ -194,9 +199,8 @@ class BaseDebugOverlayRenderer:
         # Optimize debug video resolution: Cap max dimension to 720p
         # Reduces software encoding time on single-core Cloud Run instances.
         # while keeping sufficient quality for visual debugging.
-        max_dimension = 720
-        if max(display_width, display_height) > max_dimension:
-            scale = max_dimension / max(display_width, display_height)
+        if max(display_width, display_height) > MAX_VIDEO_DIMENSION:
+            scale = MAX_VIDEO_DIMENSION / max(display_width, display_height)
             # Ensure dimensions are even for codec compatibility
             self.display_width = int(display_width * scale) // 2 * 2
             self.display_height = int(display_height * scale) // 2 * 2
@@ -320,11 +324,11 @@ class BaseDebugOverlayRenderer:
             "-vcodec",
             "libx264",
             "-pix_fmt",
-            "yuv420p",
+            FFMPEG_PIX_FMT,
             "-preset",
-            "fast",
+            FFMPEG_PRESET,
             "-crf",
-            "23",
+            FFMPEG_CRF,
             "-an",
             temp_path,
         ]
@@ -335,7 +339,7 @@ class BaseDebugOverlayRenderer:
             input_file=self.output_path,
             output_file=temp_path,
             output_codec="libx264",
-            pixel_format="yuv420p",
+            pixel_format=FFMPEG_PIX_FMT,
             reason="iOS_compatibility",
         )
 
@@ -356,7 +360,7 @@ class BaseDebugOverlayRenderer:
                 "debug_video_reencoded_file_replaced",
                 output_path=self.output_path,
                 final_codec="libx264",
-                pixel_format="yuv420p",
+                pixel_format=FFMPEG_PIX_FMT,
             )
         except Exception as e:
             self._handle_reencode_error(e, temp_path)

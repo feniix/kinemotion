@@ -35,24 +35,13 @@ class TestCodecSelection:
         This test prevents the iPhone 16 Pro playback bug from returning.
         VP9 is not supported by iOS browsers (they all use WebKit).
         """
-        # Read the actual source code to check codec list
-        import inspect
-        import re
+        # Check the CODECS_TO_TRY constant directly
+        from kinemotion.core.overlay_constants import CODECS_TO_TRY
 
-        from kinemotion.core import debug_overlay_utils
-
-        source = inspect.getsource(debug_overlay_utils.create_video_writer)
-
-        # Extract the actual codec list (not comments)
-        # Look for: codecs_to_try = ["...", "...", ...]
-        codec_list_match = re.search(r"codecs_to_try\s*=\s*\[(.*?)\]", source, re.DOTALL)
-        assert codec_list_match, "Could not find codecs_to_try list in source"
-
-        codec_list_str = codec_list_match.group(1).lower()
-
-        # Check that vp09 is NOT in the actual codec list
-        assert "vp09" not in codec_list_str and "vp9" not in codec_list_str, (
-            "VP9 codec detected in codec list! This breaks iOS compatibility. "
+        # Check that vp09 is NOT in the codec list
+        codec_list_lower = [c.lower() for c in CODECS_TO_TRY]
+        assert "vp09" not in codec_list_lower and "vp9" not in codec_list_lower, (
+            "VP9 codec detected in CODECS_TO_TRY! This breaks iOS compatibility. "
             "VP9 is not supported on iPhone/iPad browsers. "
             "Only use: avc1, h264, mp4v (with FFmpeg re-encoding)"
         )
