@@ -9,7 +9,7 @@ from .analysis import (
     find_interpolated_phase_transitions_with_curvature,
     refine_transition_with_curvature,
 )
-from .debug_overlay import DebugOverlayRenderer
+from .debug_overlay import DropJumpDebugOverlayRenderer
 from .kinematics import DropJumpMetrics, calculate_drop_jump_metrics
 
 __all__ = [
@@ -25,5 +25,5 @@ __all__ = [
     "DropJumpMetrics",
     "calculate_drop_jump_metrics",
     # Debug overlay
-    "DebugOverlayRenderer",
+    "DropJumpDebugOverlayRenderer",
 ]

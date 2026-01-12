@@ -18,20 +18,14 @@ from ..core.overlay_constants import (
     HIP_COLOR,
     JOINT_ANGLES_BOX_HEIGHT,
     JOINT_ANGLES_BOX_X_OFFSET,
-    JOINT_CIRCLE_RADIUS,
-    JOINT_OUTLINE_RADIUS,
     KNEE_COLOR,
     METRICS_BOX_WIDTH,
-    NOSE_CIRCLE_RADIUS,
-    NOSE_OUTLINE_RADIUS,
     ORANGE,
     RED,
     TRUNK_COLOR,
-    VISIBILITY_THRESHOLD,
     VISIBILITY_THRESHOLD_HIGH,
     WHITE,
     Color,
-    Landmark,
     LandmarkDict,
 )
 from .analysis import CMJPhase
@@ -76,102 +70,6 @@ class CMJDebugOverlayRenderer(BaseDebugOverlayRenderer):
     def _get_phase_color(self, phase: CMJPhase) -> Color:
         """Get color for each phase."""
         return self.PHASE_COLORS.get(phase, self.DEFAULT_PHASE_COLOR)
-
-    def _get_skeleton_segments(self, side_prefix: str) -> list[tuple[str, str, Color, int]]:
-        """Get skeleton segments for one side of the body.
-
-        Returns list of (start_key, end_key, color, thickness) tuples.
-        """
-        p = side_prefix  # Shorter alias for readability
-        return [
-            (f"{p}heel", f"{p}ankle", ANKLE_COLOR, 3),  # Foot
-            (f"{p}heel", f"{p}foot_index", ANKLE_COLOR, 2),  # Alt foot
-            (f"{p}ankle", f"{p}knee", KNEE_COLOR, 4),  # Shin
-            (f"{p}knee", f"{p}hip", HIP_COLOR, 4),  # Femur
-            (f"{p}hip", f"{p}shoulder", TRUNK_COLOR, 4),  # Trunk
-            (f"{p}shoulder", "nose", (150, 150, 255), 2),  # Neck
-        ]
-
-    def _landmark_to_pixel(self, landmark: Landmark) -> tuple[int, int]:
-        """Convert normalized landmark coordinates to pixel coordinates."""
-        return self._normalize_to_pixels(landmark[0], landmark[1])
-
-    def _is_visible(self, landmark: Landmark, threshold: float = VISIBILITY_THRESHOLD) -> bool:
-        """Check if a landmark has sufficient visibility."""
-        return landmark[2] > threshold
-
-    def _draw_segment(
-        self,
-        frame: np.ndarray,
-        landmarks: LandmarkDict,
-        start_key: str,
-        end_key: str,
-        color: Color,
-        thickness: int,
-    ) -> None:
-        """Draw a single skeleton segment if both endpoints are visible."""
-        if start_key not in landmarks or end_key not in landmarks:
-            return
-
-        start_landmark = landmarks[start_key]
-        end_landmark = landmarks[end_key]
-
-        if not (self._is_visible(start_landmark) and self._is_visible(end_landmark)):
-            return
-
-        start_pt = self._landmark_to_pixel(start_landmark)
-        end_pt = self._landmark_to_pixel(end_landmark)
-        cv2.line(frame, start_pt, end_pt, color, thickness)
-
-    def _draw_joints(
-        self,
-        frame: np.ndarray,
-        landmarks: LandmarkDict,
-        side_prefix: str,
-    ) -> None:
-        """Draw joint circles for one side of the body."""
-        p = side_prefix
-        joint_keys = [
-            f"{p}heel",
-            f"{p}foot_index",
-            f"{p}ankle",
-            f"{p}knee",
-            f"{p}hip",
-            f"{p}shoulder",
-        ]
-
-        for key in joint_keys:
-            if key not in landmarks:
-                continue
-            landmark = landmarks[key]
-            if not self._is_visible(landmark):
-                continue
-
-            point = self._landmark_to_pixel(landmark)
-            cv2.circle(frame, point, JOINT_CIRCLE_RADIUS, WHITE, -1)
-            cv2.circle(frame, point, JOINT_OUTLINE_RADIUS, BLACK, 2)
-
-    def _draw_skeleton(self, frame: np.ndarray, landmarks: LandmarkDict) -> None:
-        """Draw skeleton segments showing body landmarks.
-
-        Draws whatever landmarks are visible. In side-view videos, ankle/knee
-        may have low visibility, so we draw available segments.
-
-        Args:
-            frame: Frame to draw on (modified in place)
-            landmarks: Pose landmarks
-        """
-        # Draw segments and joints for both sides
-        for side_prefix in ["right_", "left_"]:
-            for start_key, end_key, color, thickness in self._get_skeleton_segments(side_prefix):
-                self._draw_segment(frame, landmarks, start_key, end_key, color, thickness)
-            self._draw_joints(frame, landmarks, side_prefix)
-
-        # Draw nose (head position) if visible
-        if "nose" in landmarks and self._is_visible(landmarks["nose"]):
-            point = self._landmark_to_pixel(landmarks["nose"])
-            cv2.circle(frame, point, NOSE_CIRCLE_RADIUS, CYAN, -1)
-            cv2.circle(frame, point, NOSE_OUTLINE_RADIUS, BLACK, 2)
 
     def _get_triple_extension_angles(
         self, landmarks: LandmarkDict

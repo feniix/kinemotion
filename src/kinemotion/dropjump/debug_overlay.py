@@ -5,6 +5,7 @@ import numpy as np
 
 from ..core.debug_overlay_utils import BaseDebugOverlayRenderer
 from ..core.overlay_constants import (
+    BLACK,
     COM_CIRCLE_RADIUS,
     COM_OUTLINE_RADIUS,
     CYAN,
@@ -13,6 +14,7 @@ from ..core.overlay_constants import (
     FOOT_VISIBILITY_THRESHOLD,
     GREEN,
     HIP_MARKER_RADIUS,
+    METRICS_BOX_WIDTH,
     ORANGE,
     PHASE_LABEL_LINE_HEIGHT,
     PHASE_LABEL_START_Y,
@@ -26,7 +28,7 @@ from .analysis import ContactState, compute_average_foot_position
 from .kinematics import DropJumpMetrics
 
 
-class DebugOverlayRenderer(BaseDebugOverlayRenderer):
+class DropJumpDebugOverlayRenderer(BaseDebugOverlayRenderer):
     """Renders debug information on video frames."""
 
     def _get_contact_state_color(self, contact_state: ContactState) -> Color:
@@ -117,6 +119,62 @@ class DebugOverlayRenderer(BaseDebugOverlayRenderer):
                 2,
             )
 
+    def _draw_info_box(
+        self,
+        frame: np.ndarray,
+        top_left: tuple[int, int],
+        bottom_right: tuple[int, int],
+        border_color: Color,
+    ) -> None:
+        """Draw a filled box with border for displaying information."""
+        cv2.rectangle(frame, top_left, bottom_right, BLACK, -1)
+        cv2.rectangle(frame, top_left, bottom_right, border_color, 2)
+
+    def _draw_metrics_summary(
+        self, frame: np.ndarray, frame_idx: int, metrics: DropJumpMetrics
+    ) -> None:
+        """Draw metrics summary in bottom right after flight phase ends."""
+        if metrics.flight_end_frame is None or frame_idx < metrics.flight_end_frame:
+            return
+
+        # Build metrics text list
+        metrics_text: list[str] = []
+
+        if metrics.ground_contact_time is not None:
+            metrics_text.append(f"Contact Time: {metrics.ground_contact_time * 1000:.0f}ms")
+
+        if metrics.flight_time is not None:
+            metrics_text.append(f"Flight Time: {metrics.flight_time * 1000:.0f}ms")
+
+        if metrics.jump_height is not None:
+            metrics_text.append(f"Jump Height: {metrics.jump_height:.3f}m")
+
+        # Calculate RSI (Reactive Strength Index)
+        if (
+            metrics.jump_height is not None
+            and metrics.ground_contact_time is not None
+            and metrics.ground_contact_time > 0
+        ):
+            rsi = metrics.jump_height / metrics.ground_contact_time
+            metrics_text.append(f"RSI: {rsi:.2f}")
+
+        if not metrics_text:
+            return
+
+        # Calculate box dimensions
+        box_height = len(metrics_text) * 30 + 20
+        top_left = (self.width - METRICS_BOX_WIDTH, self.height - box_height - 10)
+        bottom_right = (self.width - 10, self.height - 10)
+
+        self._draw_info_box(frame, top_left, bottom_right, GREEN)
+
+        # Draw metrics text
+        text_x = self.width - METRICS_BOX_WIDTH + 10
+        text_y = self.height - box_height + 10
+        for text in metrics_text:
+            cv2.putText(frame, text, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, WHITE, 1)
+            text_y += 30
+
     def render_frame(
         self,
         frame: np.ndarray,
@@ -144,8 +202,9 @@ class DebugOverlayRenderer(BaseDebugOverlayRenderer):
             annotated = frame.copy()
 
         with self.timer.measure("debug_video_draw"):
-            # Draw landmarks
+            # Draw skeleton and landmarks
             if landmarks:
+                self._draw_skeleton(annotated, landmarks)
                 if use_com:
                     self._draw_com_visualization(annotated, landmarks, contact_state)
                 else:
@@ -174,8 +233,9 @@ class DebugOverlayRenderer(BaseDebugOverlayRenderer):
                 2,
             )
 
-            # Draw phase labels
+            # Draw phase labels and metrics summary
             if metrics:
                 self._draw_phase_labels(annotated, frame_idx, metrics)
+                self._draw_metrics_summary(annotated, frame_idx, metrics)
 
         return annotated

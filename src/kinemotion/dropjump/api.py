@@ -48,7 +48,7 @@ from .analysis import (
     detect_ground_contact,
     find_contact_phases,
 )
-from .debug_overlay import DebugOverlayRenderer
+from .debug_overlay import DropJumpDebugOverlayRenderer
 from .kinematics import DropJumpMetrics, calculate_drop_jump_metrics
 from .metrics_validator import DropJumpMetricsValidator
 
@@ -437,7 +437,7 @@ def _generate_debug_video(
         step = max(1, int(video_fps / 30.0))
         debug_fps = video_fps / step
 
-    def _render_frames(renderer: DebugOverlayRenderer) -> None:
+    def _render_frames(renderer: DropJumpDebugOverlayRenderer) -> None:
         for frame, idx in zip(frames, frame_indices, strict=True):
             annotated = renderer.render_frame(
                 frame,
@@ -449,7 +449,7 @@ def _generate_debug_video(
             )
             renderer.write_frame(annotated)
 
-    renderer_context = DebugOverlayRenderer(
+    renderer_context = DropJumpDebugOverlayRenderer(
         output_video,
         debug_w,
         debug_h,
