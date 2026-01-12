@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.71.1 (2026-01-12)
+
+### Refactor
+
+- extract skeleton rendering to base class and add metrics summary
+- remove dead code and simplify debug overlays
+- comprehensive code simplification across all modules
+- centralize overlay constants and simplify debug renderers
+
 ## kinemotion-v0.71.0 (2026-01-06)
 
 ### Feat
