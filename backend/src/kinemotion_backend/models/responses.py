@@ -35,19 +35,14 @@ class AnalysisResponse(BaseModel):
 
     status_code: int = Field(..., description="HTTP status code")
     message: str = Field(..., description="Response message")
-    metrics: MetricsData | None = Field(None, description="Analysis metrics")
-    results_url: str | None = Field(None, description="URL to analysis results")
-    debug_video_url: str | None = Field(None, description="URL to debug video")
-    original_video_url: str | None = Field(None, description="URL to original video")
-    error: str | None = Field(None, description="Error message if analysis failed")
-    processing_time_s: float = Field(0.0, description="Processing time in seconds")
+    metrics: MetricsData | None = Field(default=None, description="Analysis metrics")
+    results_url: str | None = Field(default=None, description="URL to analysis results")
+    debug_video_url: str | None = Field(default=None, description="URL to debug video")
+    original_video_url: str | None = Field(default=None, description="URL to original video")
+    error: str | None = Field(default=None, description="Error message if analysis failed")
+    processing_time_s: float = Field(default=0.0, description="Processing time in seconds")
 
-    model_config = {
-        "json_encoders": {
-            # Add any custom encoders if needed
-        },
-        "populate_by_name": True,
-    }
+    model_config = {"populate_by_name": True}
 
     def to_dict(self) -> dict[str, Any]:
         """Convert response to JSON-serializable dictionary."""

@@ -170,22 +170,13 @@ async def analyze_video(
             processing_time_s=round(elapsed, 2),
         )
 
-        # Return validation error
         error_result = AnalysisResponse(
             status_code=422,
             message=str(e),
             error="validation_error",
-            metrics=None,
-            results_url=None,
-            debug_video_url=None,
-            original_video_url=None,
             processing_time_s=elapsed,
         )
-
-        return JSONResponse(
-            status_code=422,
-            content=error_result.to_dict(),
-        )
+        return JSONResponse(status_code=422, content=error_result.to_dict())
 
     except Exception as e:
         elapsed = time.perf_counter() - start_time
@@ -198,19 +189,10 @@ async def analyze_video(
             exc_info=True,
         )
 
-        # Return generic server error
         error_result = AnalysisResponse(
             status_code=500,
             message="Internal server error during analysis",
             error=str(e),
-            metrics=None,
-            results_url=None,
-            debug_video_url=None,
-            original_video_url=None,
             processing_time_s=elapsed,
         )
-
-        return JSONResponse(
-            status_code=500,
-            content=error_result.to_dict(),
-        )
+        return JSONResponse(status_code=500, content=error_result.to_dict())

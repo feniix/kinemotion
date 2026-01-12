@@ -60,7 +60,9 @@ def is_test_password_valid(x_test_password: str | None = None) -> bool:
     Returns:
         True if test password is configured and matches
     """
-    test_password = os.getenv("TEST_PASSWORD")
+    # Read directly from environment for test compatibility
+    # (tests set env vars after module import)
+    test_password = os.getenv("TEST_PASSWORD", "")
     return bool(test_password and x_test_password == test_password)
 
 
@@ -74,27 +76,15 @@ def validate_referer(referer: str | None, x_test_password: str | None = None) ->
     Raises:
         HTTPException: If referer is missing or not from allowed origins
     """
-    # Skip validation in test mode
+    from ..app.config import settings
+
+    # Skip validation in test mode (read directly for test compatibility)
     if os.getenv("TESTING", "").lower() == "true":
         return
 
     # Allow bypass with test password (for curl testing, debugging)
     if is_test_password_valid(x_test_password):
-        return  # Bypass referer check
-
-    allowed_referers = [
-        "https://kinemotion.vercel.app",
-        "http://localhost:5173",
-        "http://localhost:8888",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:8888",
-    ]
-
-    # Allow additional referers from env var
-    referer_env = os.getenv("ALLOWED_REFERERS", "").strip()
-    if referer_env:
-        additional = [r.strip() for r in referer_env.split(",")]
-        allowed_referers.extend(additional)
+        return
 
     if not referer:
         raise HTTPException(
@@ -103,7 +93,7 @@ def validate_referer(referer: str | None, x_test_password: str | None = None) ->
         )
 
     # Check if referer starts with any allowed origin
-    referer_valid = any(referer.startswith(origin) for origin in allowed_referers)
+    referer_valid = any(referer.startswith(origin) for origin in settings.ALLOWED_REFERERS)
 
     if not referer_valid:
         raise HTTPException(

@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from kinemotion.core.pose import PoseTrackerFactory
+from kinemotion.core.pose import MediaPipePoseTracker, PoseTrackerFactory
 
 from ..analysis_api import router as database_analysis_router
 from ..logging_config import get_logger, setup_logging
@@ -20,14 +20,13 @@ setup_logging(
 logger = get_logger(__name__)
 
 # Global pose trackers for different quality presets
-# Type is object because different backends have different tracker types
-global_pose_trackers: dict[str, object] = {}
+global_pose_trackers: dict[str, MediaPipePoseTracker] = {}
 # Store the detected backend for health checks
 detected_backend: str = "unknown"
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     """Manage application lifecycle and global resources."""
     global detected_backend
 
@@ -88,27 +87,11 @@ def create_application() -> FastAPI:
 
 def _add_cors_middleware(app: FastAPI) -> None:
     """Add CORS middleware to application."""
-    cors_origins = [
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://localhost:8080",
-        "http://localhost:8888",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:8080",
-        "http://127.0.0.1:8888",
-    ]
-
-    # Add production origins from environment variable if configured
-    cors_origins_env = os.getenv("CORS_ORIGINS", "").strip()
-    if cors_origins_env:
-        # Split by comma and strip whitespace from each origin
-        prod_origins = [origin.strip() for origin in cors_origins_env.split(",")]
-        cors_origins.extend(prod_origins)
+    from .config import settings
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=cors_origins,
+        allow_origins=settings.CORS_ORIGINS,
         allow_credentials=True,
         allow_methods=["GET", "POST", "PUT", "DELETE"],
         allow_headers=["*"],
@@ -120,14 +103,14 @@ def _add_exception_handlers(app: FastAPI) -> None:
     from fastapi import HTTPException, Request
     from fastapi.responses import JSONResponse
 
-    async def http_exception_handler(request: Request, exc: HTTPException) -> JSONResponse:
+    async def http_exception_handler(_request: Request, exc: HTTPException) -> JSONResponse:
         """Handle HTTP exceptions."""
         return JSONResponse(
             status_code=exc.status_code,
             content={"message": exc.detail},
         )
 
-    async def general_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    async def general_exception_handler(_request: Request, exc: Exception) -> JSONResponse:
         """Handle general exceptions."""
         logger.error(f"Unhandled exception: {exc}", exc_info=True)
         return JSONResponse(

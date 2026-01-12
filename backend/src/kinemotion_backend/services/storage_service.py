@@ -1,4 +1,7 @@
+import json
 import tempfile
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -34,8 +37,6 @@ class StorageService:
         Returns:
             Public URL of uploaded results
         """
-        import json
-
         results_json = json.dumps(results, indent=2).encode("utf-8")
         return self.client.put_object(remote_key, results_json)
 
@@ -49,17 +50,11 @@ class StorageService:
         Returns:
             Unique storage key
         """
-        import uuid
-        from datetime import datetime, timezone
-
         timestamp = datetime.now(timezone.utc).strftime("%Y/%m/%d")
         file_id = str(uuid.uuid4())
         extension = Path(filename).suffix
-
-        if user_id:
-            return f"uploads/{user_id}/{timestamp}/{file_id}{extension}"
-        else:
-            return f"uploads/anonymous/{timestamp}/{file_id}{extension}"
+        user_path = user_id if user_id else "anonymous"
+        return f"uploads/{user_path}/{timestamp}/{file_id}{extension}"
 
     def get_temp_file_path(self, filename: str) -> str:
         """Get temporary file path for processing.

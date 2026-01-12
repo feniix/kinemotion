@@ -1,13 +1,16 @@
-from typing import Any
+from collections.abc import Callable
+from typing import TypeVar
+
+F = TypeVar("F", bound=Callable[..., object])
 
 
 class NoOpLimiter:
-    """No-op limiter for testing."""
+    """No-op rate limiter for testing and environments without fastapi_limiter."""
 
-    def limit(self, limit_string: str) -> Any:  # type: ignore[no-untyped-def]
-        """Decorator that does nothing."""
+    def limit(self, _limit_string: str) -> Callable[[F], F]:
+        """Return a decorator that passes through the function unchanged."""
 
-        def decorator(func: Any) -> Any:  # type: ignore[no-untyped-def]
+        def decorator(func: F) -> F:
             return func
 
         return decorator

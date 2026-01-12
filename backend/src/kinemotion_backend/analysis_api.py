@@ -1,12 +1,13 @@
 """API endpoints for analysis sessions and coach feedback."""
 
 from typing import Any
+from uuid import UUID
 
 import structlog
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from kinemotion_backend.auth import SupabaseAuth
+from kinemotion_backend.app.dependencies import get_auth
 from kinemotion_backend.database import get_database_client
 from kinemotion_backend.models import (
     AnalysisSessionCreate,
@@ -20,15 +21,6 @@ from kinemotion_backend.models import (
 logger: structlog.stdlib.BoundLogger = structlog.get_logger()
 router = APIRouter(prefix="/api/analysis", tags=["Analysis"])
 security = HTTPBearer()
-auth: SupabaseAuth | None = None
-
-
-def get_auth() -> SupabaseAuth:
-    """Get SupabaseAuth instance (lazy initialization)."""
-    global auth
-    if auth is None:
-        auth = SupabaseAuth()
-    return auth
 
 
 async def get_current_user_email(
@@ -268,7 +260,7 @@ async def create_coach_feedback(
             )
 
         # Override the session_id from the URL to ensure consistency
-        feedback_data.analysis_session_id = session_id
+        feedback_data.analysis_session_id = UUID(session_id)
 
         feedback_record = await db_client.create_coach_feedback(
             analysis_session_id=session_id,
