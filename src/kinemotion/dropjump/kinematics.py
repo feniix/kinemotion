@@ -234,6 +234,16 @@ def _identify_main_contact_phase(
 ) -> tuple[int, int, bool]:
     """Identify the main contact phase and determine if it's a drop jump.
 
+    Drop jump detection strategy:
+    1. With position-based filtering, box period is classified as IN_AIR
+    2. Pattern: IN_AIR(box+drop) → ON_GROUND(contact) → IN_AIR(flight) → ON_GROUND(land)
+    3. The FIRST ground phase is the contact phase (before the flight)
+    4. The LAST ground phase is the landing (after the flight)
+
+    The key differentiator from regular jump:
+    - Drop jump: starts with IN_AIR, has 2+ ground phases with air between them
+    - Regular jump: starts with ON_GROUND, may have multiple phases
+
     Args:
         phases: All phase tuples
         ground_phases: Ground phases with indices
@@ -247,34 +257,43 @@ def _identify_main_contact_phase(
     contact_start, contact_end = ground_phases[0][0], ground_phases[0][1]
     is_drop_jump = False
 
-    # Detect if this is a drop jump or regular jump
+    # Check if this looks like a drop jump pattern:
+    # Pattern: starts with IN_AIR → ON_GROUND → IN_AIR → ON_GROUND
     if air_phases_indexed and len(ground_phases) >= 2:
+        _, _, first_air_idx = air_phases_indexed[0]
         first_ground_start, first_ground_end, first_ground_idx = ground_phases[0]
-        first_air_idx = air_phases_indexed[0][2]
 
-        # Find ground phase after first air phase
-        ground_after_air = [
-            (start, end, idx) for start, end, idx in ground_phases if idx > first_air_idx
-        ]
-
-        if ground_after_air and first_ground_idx < first_air_idx:
-            # Check if first ground is at higher elevation (lower y) than
-            # ground after air using robust temporal averaging
-            first_ground_y = _compute_robust_phase_position(
-                foot_y_positions, first_ground_start, first_ground_end
-            )
-            second_ground_start, second_ground_end, _ = ground_after_air[0]
-            second_ground_y = _compute_robust_phase_position(
-                foot_y_positions, second_ground_start, second_ground_end
-            )
-
-            # If first ground is significantly higher (>7% of frame), it's a drop jump
-            # Increased from 0.05 to 0.07 with 11-frame temporal averaging
-            # for reproducibility (balances detection sensitivity with noise robustness)
-            # Note: MediaPipe has inherent non-determinism (Google issue #3945)
-            if second_ground_y - first_ground_y > 0.07:
+        # Drop jump pattern: first phase is IN_AIR (athlete on box/dropping)
+        # followed by ground contact, then flight, then landing
+        if first_air_idx == 0 and first_ground_idx == 1:
+            # First phase is air (box + drop), second phase is ground (contact)
+            # Check if there's a flight phase after contact
+            air_after_contact = [
+                (s, e, i) for s, e, i in air_phases_indexed if i > first_ground_idx
+            ]
+            if air_after_contact:
+                # This is a drop jump: first ground = contact, last ground = landing
                 is_drop_jump = True
-                contact_start, contact_end = second_ground_start, second_ground_end
+                contact_start, contact_end = first_ground_start, first_ground_end
+
+        # Legacy detection: first ground is on elevated box (lower y)
+        # This handles cases where box level IS detected as ground
+        if not is_drop_jump and first_ground_idx < first_air_idx:
+            ground_after_air = [
+                (start, end, idx) for start, end, idx in ground_phases if idx > first_air_idx
+            ]
+            if ground_after_air:
+                first_ground_y = _compute_robust_phase_position(
+                    foot_y_positions, first_ground_start, first_ground_end
+                )
+                second_ground_start, second_ground_end, _ = ground_after_air[0]
+                second_ground_y = _compute_robust_phase_position(
+                    foot_y_positions, second_ground_start, second_ground_end
+                )
+                # If first ground is significantly higher (>7% of frame), it's a drop jump
+                if second_ground_y - first_ground_y > 0.07:
+                    is_drop_jump = True
+                    contact_start, contact_end = second_ground_start, second_ground_end
 
     if not is_drop_jump:
         # Regular jump: use longest ground contact phase
@@ -317,6 +336,30 @@ def _find_precise_phase_timing(
     return contact_start_frac, contact_end_frac
 
 
+def _find_landing_from_phases(
+    phases: list[tuple[int, int, ContactState]],
+    flight_start: int,
+) -> int | None:
+    """Find landing frame from phase detection.
+
+    Looks for the first ON_GROUND phase that starts after the flight_start frame.
+    This represents the first ground contact after the reactive jump.
+
+    Args:
+        phases: List of (start, end, state) phase tuples
+        flight_start: Frame where flight begins (takeoff)
+
+    Returns:
+        Landing frame (start of landing phase), or None if not found
+    """
+    for start, _, state in phases:
+        if state == ContactState.ON_GROUND and start > flight_start:
+            # Found the landing phase - return its start frame
+            return start
+
+    return None
+
+
 def _analyze_flight_phase(
     metrics: DropJumpMetrics,
     phases: list[tuple[int, int, ContactState]],
@@ -345,22 +388,20 @@ def _analyze_flight_phase(
     # Find takeoff frame (end of ground contact)
     flight_start = contact_end
 
-    # Compute accelerations for landing detection
-    accelerations = compute_acceleration_from_derivative(
-        foot_y_positions, window_length=smoothing_window, polyorder=polyorder
-    )
+    # Use phase detection for landing (more accurate than position-based)
+    # Find the next ON_GROUND phase after the flight phase
+    flight_end = _find_landing_from_phases(phases, flight_start)
 
-    # Use acceleration-based landing detection (like CMJ)
-    # This finds the actual ground impact, not just when velocity drops
-    flight_end = find_landing_from_acceleration(
-        foot_y_positions, accelerations, flight_start, fps, search_duration=0.7
-    )
+    # If phase detection fails, fall back to position-based detection
+    if flight_end is None:
+        accelerations = compute_acceleration_from_derivative(
+            foot_y_positions, window_length=smoothing_window, polyorder=polyorder
+        )
+        flight_end = find_landing_from_acceleration(
+            foot_y_positions, accelerations, flight_start, fps
+        )
 
-    # Store integer frame indices
-    metrics.flight_start_frame = flight_start
-    metrics.flight_end_frame = flight_end
-
-    # Find precise sub-frame timing for takeoff
+    # Find precise sub-frame timing for takeoff and landing
     flight_start_frac = float(flight_start)
     flight_end_frac = float(flight_end)
 
@@ -372,6 +413,20 @@ def _analyze_flight_phase(
             # Use end of ground contact as precise takeoff
             flight_start_frac = end_frac
             break
+
+    # Find interpolated landing (start of landing ON_GROUND phase)
+    for start_frac, _, state in interpolated_phases:
+        if state == ContactState.ON_GROUND and int(start_frac) >= flight_end - 2:
+            flight_end_frac = start_frac
+            break
+
+    # Refine landing frame using floor of interpolated value
+    # This compensates for velocity-based detection being ~1-2 frames late
+    refined_flight_end = int(np.floor(flight_end_frac))
+
+    # Store integer frame indices (refined using interpolated values)
+    metrics.flight_start_frame = flight_start
+    metrics.flight_end_frame = refined_flight_end
 
     # Calculate flight time
     flight_frames_precise = flight_end_frac - flight_start_frac
@@ -497,14 +552,21 @@ def calculate_drop_jump_metrics(
             phases, ground_phases, air_phases_indexed, foot_y_positions
         )
 
-    # Store integer frame indices
-    metrics.contact_start_frame = contact_start
-    metrics.contact_end_frame = contact_end
-
-    # Find precise timing for contact phase
+    # Find precise timing for contact phase (uses curvature refinement)
     contact_start_frac, contact_end_frac = _find_precise_phase_timing(
         contact_start, contact_end, interpolated_phases
     )
+
+    # Refine contact_start using floor of interpolated value
+    # This compensates for velocity-based detection being ~1-2 frames late
+    # because velocity settles AFTER initial impact. Using floor() biases
+    # toward earlier detection, matching the moment of first ground contact.
+    refined_contact_start = int(np.floor(contact_start_frac))
+
+    # Store integer frame indices (refined start, raw end)
+    # Contact end (takeoff) uses raw value as velocity-based detection is accurate
+    metrics.contact_start_frame = refined_contact_start
+    metrics.contact_end_frame = contact_end
 
     # Calculate ground contact time
     contact_frames_precise = contact_end_frac - contact_start_frac

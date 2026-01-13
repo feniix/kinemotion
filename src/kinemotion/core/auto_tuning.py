@@ -170,7 +170,10 @@ def auto_tune_parameters(
     quality_adj = _QUALITY_ADJUSTMENTS[quality]
 
     # Compute FPS-based baseline parameters
-    base_velocity_threshold = 0.004 * (30.0 / fps)
+    # Base velocity threshold: 0.012 at 30fps, scaled inversely by fps
+    # Must exceed typical MediaPipe landmark jitter (0.5-2% per frame)
+    # Previous value of 0.004 was below noise floor, causing false IN_AIR detections
+    base_velocity_threshold = 0.012 * (30.0 / fps)
     base_min_contact_frames = max(2, round(3.0 * (fps / 30.0)))
 
     # Smoothing window: Decrease with higher fps for better temporal resolution

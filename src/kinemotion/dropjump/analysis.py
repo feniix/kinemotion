@@ -334,6 +334,48 @@ def _assign_contact_states(
     return states
 
 
+def _compute_near_ground_mask(
+    foot_positions: FloatArray,
+    height_tolerance: float = 0.35,
+) -> BoolArray:
+    """Compute mask for frames where feet are near ground level.
+
+    Uses position-based filtering to identify frames near ground baseline.
+    In normalized coordinates: y=1 is bottom (ground), y=0 is top.
+
+    The ground baseline is established as the 90th percentile of positions,
+    which represents the typical ground level while handling outliers.
+
+    The tolerance is set at 35% of the position range by default, which is
+    generous enough to capture the full reactive contact phase (where athletes
+    maintain an athletic stance) while still filtering out the jump apex
+    (where y is much lower than ground level).
+
+    Args:
+        foot_positions: Array of foot y-positions (normalized, 0-1)
+        height_tolerance: Fraction of position range allowed above ground (default 35%)
+
+    Returns:
+        Boolean array where True indicates frame is near ground level
+    """
+    # Ground baseline: 90th percentile (where feet are typically on ground)
+    # Using 90th instead of 95th to be less sensitive to final landing positions
+    ground_baseline = float(np.percentile(foot_positions, 90))
+
+    # Compute position range for tolerance calculation
+    position_range = float(np.max(foot_positions) - np.min(foot_positions))
+
+    # Minimum absolute tolerance to handle small movements
+    min_tolerance = 0.03  # 3% of normalized range
+
+    # Height tolerance: percentage of position range or minimum
+    tolerance = max(position_range * height_tolerance, min_tolerance)
+
+    # Frames are near ground if y >= ground_baseline - tolerance
+    # (Remember: higher y = closer to ground in normalized coords)
+    return foot_positions >= (ground_baseline - tolerance)
+
+
 def detect_ground_contact(
     foot_positions: FloatArray,
     velocity_threshold: float = 0.02,
@@ -343,13 +385,14 @@ def detect_ground_contact(
     window_length: int = 5,
     polyorder: int = 2,
     timer: Timer | None = None,
+    height_tolerance: float = 0.35,
 ) -> list[ContactState]:
     """
-    Detect when feet are in contact with ground based on vertical motion.
+    Detect when feet are in contact with ground based on vertical motion AND position.
 
-    Uses derivative-based velocity calculation via Savitzky-Goyal filter for smooth,
-    accurate velocity estimates. This is consistent with the velocity calculation used
-    throughout the pipeline for sub-frame interpolation and curvature analysis.
+    Uses derivative-based velocity calculation via Savitzky-Golay filter for smooth,
+    accurate velocity estimates. Additionally uses position-based filtering to prevent
+    false ON_GROUND classification at jump apex where velocity approaches zero.
 
     Args:
         foot_positions: Array of foot y-positions (normalized, 0-1, where 1 is bottom)
@@ -360,6 +403,7 @@ def detect_ground_contact(
         window_length: Window size for velocity derivative calculation (must be odd)
         polyorder: Polynomial order for Savitzky-Golay filter (default: 2)
         timer: Optional Timer for measuring operations
+        height_tolerance: Fraction of position range to allow above ground baseline (default 35%)
 
     Returns:
         List of ContactState for each frame
@@ -378,6 +422,14 @@ def detect_ground_contact(
 
     # Detect stationary frames based on velocity threshold
     is_stationary = np.abs(velocities) < velocity_threshold
+
+    # Position-based filtering to prevent false ON_GROUND at jump apex
+    # In normalized coords: y=1 is bottom (ground), y=0 is top
+    # Ground baseline is the 95th percentile (handles outliers)
+    is_near_ground = _compute_near_ground_mask(foot_positions, height_tolerance)
+
+    # Both conditions must be true: low velocity AND near ground
+    is_stationary = is_stationary & is_near_ground
 
     # Apply visibility filter
     is_stationary = _filter_stationary_with_visibility(
@@ -716,25 +768,28 @@ def find_landing_from_acceleration(
     accelerations: FloatArray,
     takeoff_frame: int,
     fps: float,
-    search_duration: float = 0.7,
+    search_duration: float = 1.5,
 ) -> int:
     """
-    Find landing frame by detecting impact acceleration after takeoff.
+    Find landing frame using position-based detection with acceleration refinement.
 
-    Detects the moment of initial ground contact, characterized by a sharp
-    deceleration (positive acceleration spike) as downward velocity is arrested.
+    Primary method: Find when feet return to near-takeoff level after peak.
+    Secondary: Refine with acceleration spike if present.
+
+    For drop jumps, landing is defined as the first ground contact after the
+    reactive jump, when feet return to approximately the same level as takeoff.
 
     Args:
-        positions: Array of vertical positions (normalized 0-1)
+        positions: Array of vertical positions (normalized 0-1, where higher = closer to ground)
         accelerations: Array of accelerations (second derivative)
         takeoff_frame: Frame at takeoff (end of ground contact)
         fps: Video frame rate
-        search_duration: Duration in seconds to search for landing (default: 0.7s)
+        search_duration: Duration in seconds to search for landing (default: 1.5s)
 
     Returns:
         Landing frame index (integer)
     """
-    # Find peak height (minimum y value = highest point)
+    # Extended search window to capture full flight
     search_start = takeoff_frame
     search_end = min(len(positions), takeoff_frame + int(fps * search_duration))
 
@@ -742,52 +797,91 @@ def find_landing_from_acceleration(
         return min(len(positions) - 1, takeoff_frame + int(fps * 0.3))
 
     flight_positions = positions[search_start:search_end]
+
+    # Find peak height (minimum y value = highest point)
     peak_idx = int(np.argmin(flight_positions))
     peak_frame = search_start + peak_idx
 
-    # After peak, look for landing (impact with ground)
-    # Landing is detected by maximum positive acceleration (deceleration on impact)
-    landing_search_start = peak_frame + 2
-    landing_search_end = min(len(accelerations), landing_search_start + int(fps * 0.6))
+    # Get takeoff position as reference for landing detection
+    takeoff_position = positions[takeoff_frame]
 
-    if landing_search_end <= landing_search_start:
-        return min(len(positions) - 1, peak_frame + int(fps * 0.2))
+    # Position-based landing: find first frame after peak where position
+    # returns to within 5% of takeoff level (or 95% of the way back)
+    landing_threshold = takeoff_position - 0.05 * (takeoff_position - positions[peak_frame])
 
-    # Find impact: maximum negative acceleration after peak (deceleration on impact)
-    # The impact creates a large upward force (negative acceleration in Y-down)
-    landing_accelerations = accelerations[landing_search_start:landing_search_end]
-    impact_idx = int(np.argmin(landing_accelerations))
-    landing_frame = landing_search_start + impact_idx
+    # Search for landing after peak
+    landing_frame = None
+    for i in range(peak_frame + 2, min(len(positions), search_end)):
+        if positions[i] >= landing_threshold:
+            landing_frame = i
+            break
+
+    # If position-based detection fails, use end of search window
+    if landing_frame is None:
+        landing_frame = min(len(positions) - 1, search_end - 1)
+
+    # Refine with acceleration if there's a clear impact spike
+    # Look for significant acceleration in a small window around the position-based landing
+    refine_start = max(peak_frame + 2, landing_frame - int(fps * 0.1))
+    refine_end = min(len(accelerations), landing_frame + int(fps * 0.1))
+
+    if refine_end > refine_start:
+        window_accelerations = accelerations[refine_start:refine_end]
+        # Check if there's a significant acceleration spike (> 3x median)
+        median_acc = float(np.median(np.abs(window_accelerations)))
+        max_acc_idx = int(np.argmax(np.abs(window_accelerations)))
+        max_acc = float(np.abs(window_accelerations[max_acc_idx]))
+
+        if median_acc > 0 and max_acc > 3 * median_acc:
+            # Use acceleration-refined landing frame
+            landing_frame = refine_start + max_acc_idx
 
     return landing_frame
 
 
 def compute_average_foot_position(
     landmarks: dict[str, tuple[float, float, float]],
+    visibility_threshold: float = 0.5,
 ) -> tuple[float, float]:
     """
     Compute average foot position from ankle and foot landmarks.
 
+    Uses tiered visibility approach to avoid returning center (0.5, 0.5)
+    which can cause false phase transitions in contact detection.
+
     Args:
         landmarks: Dictionary of landmark positions
+        visibility_threshold: Minimum visibility to include landmark (default: 0.5)
 
     Returns:
         (x, y) average foot position in normalized coordinates
     """
-    x_positions = []
-    y_positions = []
-
+    # Collect all foot landmarks with their visibility
+    foot_data: list[tuple[float, float, float]] = []
     for key in FOOT_KEYS:
         if key in landmarks:
             x, y, visibility = landmarks[key]
-            if visibility > 0.5:  # Only use visible landmarks
-                x_positions.append(x)
-                y_positions.append(y)
+            foot_data.append((x, y, visibility))
 
-    if not x_positions:
-        return (0.5, 0.5)  # Default to center if no visible feet
+    if not foot_data:
+        # No foot landmarks at all - return center as last resort
+        return (0.5, 0.5)
 
-    return (float(np.mean(x_positions)), float(np.mean(y_positions)))
+    # Tier 1: Use landmarks above visibility threshold
+    high_vis = [(x, y) for x, y, v in foot_data if v > visibility_threshold]
+    if high_vis:
+        xs, ys = zip(*high_vis, strict=False)
+        return (float(np.mean(xs)), float(np.mean(ys)))
+
+    # Tier 2: Use landmarks with any reasonable visibility (> 0.1)
+    low_vis = [(x, y) for x, y, v in foot_data if v > 0.1]
+    if low_vis:
+        xs, ys = zip(*low_vis, strict=False)
+        return (float(np.mean(xs)), float(np.mean(ys)))
+
+    # Tier 3: Use highest visibility landmark regardless of threshold
+    best = max(foot_data, key=lambda t: t[2])
+    return (best[0], best[1])
 
 
 def _calculate_average_visibility(

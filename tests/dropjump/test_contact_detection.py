@@ -106,15 +106,41 @@ def test_compute_average_foot_position_partial_visibility():
 
 
 def test_compute_average_foot_position_no_visible_feet():
-    """Test fallback when no visible foot landmarks."""
+    """Test tiered fallback when no high-visibility foot landmarks."""
+    # Tier 2 test: visibility > 0.1 but < 0.5
     landmarks = {
-        "left_ankle": (0.3, 0.8, 0.1),  # All low visibility
-        "right_ankle": (0.7, 0.8, 0.2),
+        "left_ankle": (0.3, 0.8, 0.1),  # At threshold, excluded from Tier 2
+        "right_ankle": (0.7, 0.8, 0.2),  # Included in Tier 2 (0.2 > 0.1)
     }
 
     x, y = compute_average_foot_position(landmarks)
 
-    # Should return default center position
+    # Should use Tier 2 (visibility > 0.1) - only right_ankle qualifies
+    assert x == 0.7
+    assert y == 0.8
+
+
+def test_compute_average_foot_position_all_very_low_visibility():
+    """Test Tier 3 fallback when all landmarks have very low visibility."""
+    landmarks = {
+        "left_ankle": (0.3, 0.8, 0.05),  # Very low visibility
+        "right_ankle": (0.7, 0.8, 0.08),  # Slightly higher but still < 0.1
+    }
+
+    x, y = compute_average_foot_position(landmarks)
+
+    # Should use Tier 3 (highest visibility landmark) - right_ankle
+    assert x == 0.7
+    assert y == 0.8
+
+
+def test_compute_average_foot_position_empty_landmarks():
+    """Test fallback when no foot landmarks present at all."""
+    landmarks = {}  # Empty dictionary
+
+    x, y = compute_average_foot_position(landmarks)
+
+    # Should return center as last resort
     assert x == 0.5
     assert y == 0.5
 
