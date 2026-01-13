@@ -78,7 +78,7 @@ pre-commit run --all-files                  # Run all quality checks
 
 ## Maintainability Patterns
 
-- Extract Method: Break down functions with complexity >15
+- Extract Method: Break down functions with complexity >12
 - Parameter Object: Bundle related parameters into dataclasses
 - Early Return: Reduce nesting by handling edge cases first
 - Helper Functions: Single Responsibility Principle
