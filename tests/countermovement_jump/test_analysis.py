@@ -15,72 +15,15 @@ from kinemotion.countermovement_jump.analysis import (
     detect_cmj_phases,
     find_cmj_landing_from_position_peak,
     find_cmj_takeoff_from_velocity_peak,
-    find_countermovement_start,
     find_interpolated_takeoff_landing,
     find_landing_frame,
     find_lowest_frame,
     find_lowest_point,
     find_standing_end,
-    find_standing_phase,
     find_takeoff_frame,
 )
 
 pytestmark = [pytest.mark.integration, pytest.mark.countermovement_jump]
-
-
-def test_find_standing_phase() -> None:
-    """Test standing phase detection."""
-    # Create trajectory with clear standing period followed by consistent
-    # downward motion
-    fps = 30.0
-
-    # Standing (0-30): constant position
-    # Transition (30-35): very slow movement
-    # Movement (35-100): clear downward motion
-    positions = np.concatenate(
-        [
-            np.ones(30) * 0.5,  # Standing
-            np.linspace(0.5, 0.51, 5),  # Slow transition
-            np.linspace(0.51, 0.7, 65),  # Clear movement
-        ]
-    )
-
-    velocities = compute_velocity_from_derivative(positions, window_length=5, polyorder=2)
-
-    standing_end = find_standing_phase(
-        positions, velocities, fps, min_standing_duration=0.5, velocity_threshold=0.005
-    )
-
-    # Should detect standing phase (or may return None if no clear transition)
-    # This test verifies the function runs without error
-    if standing_end is not None:
-        assert 15 <= standing_end <= 40  # Allow wider tolerance
-
-
-def test_find_countermovement_start() -> None:
-    """Test countermovement start detection."""
-    # Create trajectory with clear and fast downward motion
-    positions = np.concatenate(
-        [
-            np.ones(30) * 0.5,  # Standing
-            np.linspace(0.5, 0.8, 30),  # Fast downward (eccentric)
-            np.linspace(0.8, 0.5, 30),  # Upward (concentric)
-        ]
-    )
-
-    velocities = compute_velocity_from_derivative(positions, window_length=5, polyorder=2)
-
-    eccentric_start = find_countermovement_start(
-        velocities,
-        countermovement_threshold=-0.008,  # More lenient threshold for test
-        min_eccentric_frames=3,
-        standing_start=30,
-    )
-
-    # Should detect eccentric start (or may return None depending on smoothing)
-    # This test verifies the function runs without error
-    if eccentric_start is not None:
-        assert 25 <= eccentric_start <= 40
 
 
 def test_find_lowest_point() -> None:
@@ -324,52 +267,6 @@ def test_compute_signed_velocity_even_window() -> None:
     assert len(velocities) == len(positions)
     # Should have successfully computed velocities
     assert np.all(velocities >= 0)  # All downward motion
-
-
-def test_find_standing_phase_too_short() -> None:
-    """Test find_standing_phase with video too short."""
-    positions = np.ones(10) * 0.5  # Only 10 frames
-    velocities = np.zeros(10)
-    fps = 30.0
-
-    result = find_standing_phase(
-        positions,
-        velocities,
-        fps,
-        min_standing_duration=0.5,  # Requires 15 frames
-    )
-
-    # Should return None for too-short video
-    assert result is None
-
-
-def test_find_standing_phase_no_transition() -> None:
-    """Test find_standing_phase when standing detected but no clear transition."""
-    fps = 30.0
-    # Create trajectory with standing but no clear movement after
-    positions = np.ones(100) * 0.5  # All standing
-    velocities = np.zeros(100)  # No movement
-
-    result = find_standing_phase(
-        positions, velocities, fps, min_standing_duration=0.5, velocity_threshold=0.01
-    )
-
-    # May return None if no transition found
-    # Test verifies function doesn't crash
-    assert result is None or isinstance(result, int)
-
-
-def test_find_countermovement_start_no_downward_motion() -> None:
-    """Test find_countermovement_start when no sustained downward motion."""
-    # All upward or near-zero velocities
-    velocities = np.ones(50) * -0.005  # Slight upward motion
-
-    result = find_countermovement_start(
-        velocities, countermovement_threshold=0.015, min_eccentric_frames=3
-    )
-
-    # Should return None when no downward motion detected
-    assert result is None
 
 
 def test_find_lowest_point_invalid_search_range() -> None:

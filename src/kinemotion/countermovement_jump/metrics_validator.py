@@ -269,7 +269,7 @@ class CMJMetricsValidator(MetricsValidator):
             )
 
     def _check_concentric_duration(
-        self, metrics: MetricsDict, result: CMJValidationResult
+        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate concentric duration (contact time)."""
         duration_raw = self._get_metric_value(
@@ -305,7 +305,9 @@ class CMJMetricsValidator(MetricsValidator):
                 value=duration,
             )
 
-    def _check_eccentric_duration(self, metrics: MetricsDict, result: CMJValidationResult) -> None:
+    def _check_eccentric_duration(
+        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
+    ) -> None:
         """Validate eccentric duration."""
         duration_raw = self._get_metric_value(
             metrics, "eccentric_duration_ms", "eccentric_duration"

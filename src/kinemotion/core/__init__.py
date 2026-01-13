@@ -34,9 +34,20 @@ from .timing import (
     PerformanceTimer,
     Timer,
 )
+from .video_analysis_base import (
+    AnalysisOverrides,
+    JumpAnalysisPipeline,
+    VideoAnalysisConfig,
+    VideoAnalysisResult,
+)
 from .video_io import VideoProcessor
 
 __all__ = [
+    # Video Analysis Base
+    "AnalysisOverrides",
+    "JumpAnalysisPipeline",
+    "VideoAnalysisConfig",
+    "VideoAnalysisResult",
     # Pose tracking
     "MediaPipePoseTracker",
     "PoseTrackerFactory",

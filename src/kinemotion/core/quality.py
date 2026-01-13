@@ -86,13 +86,11 @@ def calculate_position_stability(
     if len(positions) < window_size:
         return float(np.var(positions))
 
-    # Calculate rolling variance
-    rolling_vars = []
-    for i in range(len(positions) - window_size + 1):
-        window = positions[i : i + window_size]
-        rolling_vars.append(np.var(window))
+    # Vectorized rolling variance using sliding window view
+    from numpy.lib.stride_tricks import sliding_window_view
 
-    return float(np.mean(rolling_vars))
+    windows = sliding_window_view(positions, window_size)
+    return float(np.mean(np.var(windows, axis=1)))
 
 
 def assess_tracking_quality(
