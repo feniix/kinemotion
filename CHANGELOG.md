@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.72.0 (2026-01-13)
+
+### Feat
+
+- **refactor**: rename dropjump module to dj for consistency
+- **skills**: add Claude Code skills for kinemotion domain expertise
+
+### Fix
+
+- **dropjump**: improve phase detection accuracy to ±1 frame
+
+### Refactor
+
+- simplify backend code and consolidate modules
+
 ## kinemotion-v0.71.1 (2026-01-12)
 
 ### Refactor
