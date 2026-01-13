@@ -137,6 +137,73 @@ def analyze_tracking_quality(avg_visibility: float) -> str:
         return "high"
 
 
+def _compute_fps_baseline_parameters(fps: float) -> tuple[float, int, int]:
+    """Compute FPS-based baseline parameters.
+
+    Args:
+        fps: Video frame rate
+
+    Returns:
+        Tuple of (base_velocity_threshold, base_min_contact_frames, base_smoothing_window)
+    """
+    # Base velocity threshold: 0.012 at 30fps, scaled inversely by fps
+    # Must exceed typical MediaPipe landmark jitter (0.5-2% per frame)
+    # Previous value of 0.004 was below noise floor, causing false IN_AIR detections
+    base_velocity_threshold = 0.012 * (30.0 / fps)
+    base_min_contact_frames = max(2, round(3.0 * (fps / 30.0)))
+
+    # Smoothing window: Decrease with higher fps for better temporal resolution
+    base_smoothing_window = 3 if fps > 30 else 5
+
+    return base_velocity_threshold, base_min_contact_frames, base_smoothing_window
+
+
+def _compute_smoothing_window(
+    fps: float,
+    preset: _PresetConfig,
+    quality_adj: _QualityAdjustment,
+) -> int:
+    """Compute smoothing window from FPS, preset, and quality adjustments.
+
+    Args:
+        fps: Video frame rate
+        preset: Quality preset configuration
+        quality_adj: Quality-based adjustments
+
+    Returns:
+        Odd smoothing window size (required for Savitzky-Golay filter)
+    """
+    _, _, base_smoothing_window = _compute_fps_baseline_parameters(fps)
+
+    # Smoothing window = base + preset offset + quality adjustment
+    smoothing_window = base_smoothing_window + preset.smoothing_offset + quality_adj.smoothing_add
+    smoothing_window = max(3, min(11, smoothing_window))
+
+    # Ensure smoothing window is odd (required for Savitzky-Golay)
+    if smoothing_window % 2 == 0:
+        smoothing_window += 1
+
+    return smoothing_window
+
+
+def _resolve_bilateral_filter(
+    preset: _PresetConfig,
+    quality_adj: _QualityAdjustment,
+) -> bool:
+    """Resolve whether to enable bilateral filtering.
+
+    Args:
+        preset: Quality preset configuration
+        quality_adj: Quality-based adjustments
+
+    Returns:
+        True if bilateral filtering should be enabled
+    """
+    if preset.force_bilateral is not None:
+        return preset.force_bilateral
+    return quality_adj.enable_bilateral
+
+
 def auto_tune_parameters(
     characteristics: VideoCharacteristics,
     quality_preset: QualityPreset = QualityPreset.BALANCED,
@@ -163,42 +230,22 @@ def auto_tune_parameters(
     fps = characteristics.fps
     quality = characteristics.tracking_quality
 
-    # Get preset configuration
+    # Get preset configuration and quality-based adjustments
     preset = _PRESET_CONFIGS[quality_preset]
-
-    # Get quality-based adjustments
     quality_adj = _QUALITY_ADJUSTMENTS[quality]
 
     # Compute FPS-based baseline parameters
-    # Base velocity threshold: 0.012 at 30fps, scaled inversely by fps
-    # Must exceed typical MediaPipe landmark jitter (0.5-2% per frame)
-    # Previous value of 0.004 was below noise floor, causing false IN_AIR detections
-    base_velocity_threshold = 0.012 * (30.0 / fps)
-    base_min_contact_frames = max(2, round(3.0 * (fps / 30.0)))
+    base_velocity_threshold, base_min_contact_frames, _ = _compute_fps_baseline_parameters(fps)
 
-    # Smoothing window: Decrease with higher fps for better temporal resolution
-    if fps <= 30:
-        base_smoothing_window = 5
-    else:
-        base_smoothing_window = 3  # 60fps+ use 3-frame window
-
-    # Apply preset modifiers and quality adjustments
+    # Apply preset modifiers
     velocity_threshold = base_velocity_threshold * preset.velocity_multiplier
     min_contact_frames = max(2, int(base_min_contact_frames * preset.contact_frames_multiplier))
 
-    # Smoothing window = base + preset offset + quality adjustment
-    smoothing_window = base_smoothing_window + preset.smoothing_offset + quality_adj.smoothing_add
-    smoothing_window = max(3, min(11, smoothing_window))
+    # Compute smoothing window with preset and quality adjustments
+    smoothing_window = _compute_smoothing_window(fps, preset, quality_adj)
 
-    # Ensure smoothing window is odd (required for Savitzky-Golay)
-    if smoothing_window % 2 == 0:
-        smoothing_window += 1
-
-    # Bilateral filtering: preset can override, otherwise use quality-based
-    if preset.force_bilateral is not None:
-        bilateral_filter = preset.force_bilateral
-    else:
-        bilateral_filter = quality_adj.enable_bilateral
+    # Resolve bilateral filtering setting
+    bilateral_filter = _resolve_bilateral_filter(preset, quality_adj)
 
     # Fixed optimal values
     polyorder = 2  # Quadratic - optimal for parabolic motion

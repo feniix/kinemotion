@@ -50,9 +50,27 @@ class VideoProcessor:
         self._current_timestamp_ms: int = 0  # Timestamp for the current frame
 
         # Read first frame to get actual dimensions
-        # This is critical for preserving aspect ratio, especially with mobile videos
-        # that have rotation metadata. OpenCV properties (CAP_PROP_FRAME_WIDTH/HEIGHT)
-        # may return incorrect dimensions, so we read the actual frame data.
+        self._extract_dimensions_from_frame()
+
+        # Initialize metadata placeholders
+        self.rotation = 0  # Will be set by _extract_video_metadata()
+        self.codec: str | None = None  # Will be set by _extract_video_metadata()
+
+        # Initialize display dimensions (may be adjusted by SAR metadata)
+        self.display_width = self.width
+        self.display_height = self.height
+        self._extract_video_metadata()
+
+        # Apply rotation to dimensions if needed
+        self._apply_rotation_to_dimensions()
+
+    def _extract_dimensions_from_frame(self) -> None:
+        """Extract video dimensions by reading the first frame.
+
+        This is critical for preserving aspect ratio, especially with mobile videos
+        that have rotation metadata. OpenCV properties (CAP_PROP_FRAME_WIDTH/HEIGHT)
+        may return incorrect dimensions, so we read the actual frame data.
+        """
         ret, first_frame = self.cap.read()
         if ret:
             # frame.shape is (height, width, channels) - extract actual dimensions
@@ -63,22 +81,13 @@ class VideoProcessor:
             self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-        # Extract rotation metadata from video (iPhones store rotation in
-        # side_data_list). OpenCV ignores rotation metadata, so we need to
-        # extract and apply it manually
-        self.rotation = 0  # Will be set by _extract_video_metadata()
+    def _apply_rotation_to_dimensions(self) -> None:
+        """Swap width/height for 90/-90 degree rotations.
 
-        # Extract codec information from video metadata
-        self.codec: str | None = None  # Will be set by _extract_video_metadata()
-
-        # Calculate display dimensions considering SAR (Sample Aspect Ratio)
-        # Mobile videos often have non-square pixels encoded in SAR metadata
-        # OpenCV doesn't directly expose SAR, but we need to handle display correctly
-        self.display_width = self.width
-        self.display_height = self.height
-        self._extract_video_metadata()
-
-        # Apply rotation to dimensions if needed
+        Extract rotation metadata from video (iPhones store rotation in
+        side_data_list). OpenCV ignores rotation metadata, so we need to
+        extract and apply it manually.
+        """
         if self.rotation in [90, -90, 270]:
             # Swap dimensions for 90/-90 degree rotations
             self.width, self.height = self.height, self.width

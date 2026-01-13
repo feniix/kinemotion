@@ -677,6 +677,48 @@ def refine_transition_with_curvature(
     return refined_frame
 
 
+def _refine_phase_boundaries(
+    foot_positions: FloatArray,
+    start_frac: float,
+    end_frac: float,
+    start_type: str,
+    end_type: str,
+    smoothing_window: int,
+    polyorder: int,
+) -> tuple[float, float]:
+    """Refine phase boundary frames using curvature analysis.
+
+    Args:
+        foot_positions: Array of foot y-positions (normalized, 0-1)
+        start_frac: Start frame (fractional)
+        end_frac: End frame (fractional)
+        start_type: Transition type for start ("landing" or "takeoff")
+        end_type: Transition type for end ("landing" or "takeoff")
+        smoothing_window: Window size for acceleration computation
+        polyorder: Polynomial order for Savitzky-Golay filter
+
+    Returns:
+        Tuple of (refined_start, refined_end) fractional frame indices
+    """
+    refined_start = refine_transition_with_curvature(
+        foot_positions,
+        start_frac,
+        start_type,
+        search_window=3,
+        smoothing_window=smoothing_window,
+        polyorder=polyorder,
+    )
+    refined_end = refine_transition_with_curvature(
+        foot_positions,
+        end_frac,
+        end_type,
+        search_window=3,
+        smoothing_window=smoothing_window,
+        polyorder=polyorder,
+    )
+    return refined_start, refined_end
+
+
 def find_interpolated_phase_transitions_with_curvature(
     foot_positions: FloatArray,
     contact_states: list[ContactState],
@@ -716,47 +758,30 @@ def find_interpolated_phase_transitions_with_curvature(
     refined_phases: list[tuple[float, float, ContactState]] = []
 
     for start_frac, end_frac, state in interpolated_phases:
-        refined_start = start_frac
-        refined_end = end_frac
-
         if state == ContactState.ON_GROUND:
-            # Refine landing (start of ground contact)
-            refined_start = refine_transition_with_curvature(
+            # ON_GROUND: landing at start, takeoff at end
+            refined_start, refined_end = _refine_phase_boundaries(
                 foot_positions,
                 start_frac,
-                "landing",
-                search_window=3,
-                smoothing_window=smoothing_window,
-                polyorder=polyorder,
-            )
-            # Refine takeoff (end of ground contact)
-            refined_end = refine_transition_with_curvature(
-                foot_positions,
                 end_frac,
+                "landing",
                 "takeoff",
-                search_window=3,
-                smoothing_window=smoothing_window,
-                polyorder=polyorder,
+                smoothing_window,
+                polyorder,
             )
-
         elif state == ContactState.IN_AIR:
-            # For flight phases, takeoff is at start, landing is at end
-            refined_start = refine_transition_with_curvature(
+            # IN_AIR: takeoff at start, landing at end
+            refined_start, refined_end = _refine_phase_boundaries(
                 foot_positions,
                 start_frac,
-                "takeoff",
-                search_window=3,
-                smoothing_window=smoothing_window,
-                polyorder=polyorder,
-            )
-            refined_end = refine_transition_with_curvature(
-                foot_positions,
                 end_frac,
+                "takeoff",
                 "landing",
-                search_window=3,
-                smoothing_window=smoothing_window,
-                polyorder=polyorder,
+                smoothing_window,
+                polyorder,
             )
+        else:
+            refined_start, refined_end = start_frac, end_frac
 
         refined_phases.append((refined_start, refined_end, state))
 
