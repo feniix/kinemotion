@@ -57,6 +57,7 @@ __all__ = [
     "DropJumpVideoConfig",
     "DropJumpVideoResult",
     "process_dropjump_video",
+    "process_dropjump_video_from_config",
     "process_dropjump_videos_bulk",
 ]
 
@@ -98,6 +99,25 @@ class DropJumpVideoConfig:
     overrides: AnalysisOverrides | None = None
     detection_confidence: float | None = None
     tracking_confidence: float | None = None
+    verbose: bool = False
+    timer: Timer | None = None
+    pose_tracker: "MediaPipePoseTracker | None" = None
+
+    def to_kwargs(self) -> dict:
+        """Convert config to kwargs dict for process_dropjump_video."""
+        return {
+            "video_path": self.video_path,
+            "quality": self.quality,
+            "output_video": self.output_video,
+            "json_output": self.json_output,
+            "drop_start_frame": self.drop_start_frame,
+            "overrides": self.overrides,
+            "detection_confidence": self.detection_confidence,
+            "tracking_confidence": self.tracking_confidence,
+            "verbose": self.verbose,
+            "timer": self.timer,
+            "pose_tracker": self.pose_tracker,
+        }
 
 
 def _assess_dropjump_quality(
@@ -607,6 +627,23 @@ def process_dropjump_video(
             return metrics
 
 
+def process_dropjump_video_from_config(
+    config: DropJumpVideoConfig,
+) -> DropJumpMetrics:
+    """Process a drop jump video using a configuration object.
+
+    This is a convenience wrapper around process_dropjump_video that
+    accepts a DropJumpVideoConfig instead of individual parameters.
+
+    Args:
+        config: Configuration object containing all analysis parameters
+
+    Returns:
+        DropJumpMetrics object containing analysis results
+    """
+    return process_dropjump_video(**config.to_kwargs())
+
+
 def process_dropjump_videos_bulk(
     configs: list[DropJumpVideoConfig],
     max_workers: int = 4,
@@ -633,18 +670,8 @@ def _process_dropjump_video_wrapper(config: DropJumpVideoConfig) -> DropJumpVide
     start_time = time.perf_counter()
 
     try:
-        metrics = process_dropjump_video(
-            video_path=config.video_path,
-            quality=config.quality,
-            output_video=config.output_video,
-            json_output=config.json_output,
-            drop_start_frame=config.drop_start_frame,
-            overrides=config.overrides,
-            detection_confidence=config.detection_confidence,
-            tracking_confidence=config.tracking_confidence,
-            verbose=False,
-        )
-
+        # Use convenience wrapper to avoid parameter unpacking
+        metrics = process_dropjump_video_from_config(config)
         processing_time = time.perf_counter() - start_time
 
         return DropJumpVideoResult(

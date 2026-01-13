@@ -393,6 +393,24 @@ class CMJVideoConfig:
     overrides: AnalysisOverrides | None = None
     detection_confidence: float | None = None
     tracking_confidence: float | None = None
+    verbose: bool = False
+    timer: Timer | None = None
+    pose_tracker: "MediaPipePoseTracker | None" = None
+
+    def to_kwargs(self) -> dict:
+        """Convert config to kwargs dict for process_cmj_video."""
+        return {
+            "video_path": self.video_path,
+            "quality": self.quality,
+            "output_video": self.output_video,
+            "json_output": self.json_output,
+            "overrides": self.overrides,
+            "detection_confidence": self.detection_confidence,
+            "tracking_confidence": self.tracking_confidence,
+            "verbose": self.verbose,
+            "timer": self.timer,
+            "pose_tracker": self.pose_tracker,
+        }
 
 
 @dataclass
@@ -511,6 +529,23 @@ def process_cmj_video(
             return metrics
 
 
+def process_cmj_video_from_config(
+    config: CMJVideoConfig,
+) -> CMJMetrics:
+    """Process a CMJ video using a configuration object.
+
+    This is a convenience wrapper around process_cmj_video that
+    accepts a CMJVideoConfig instead of individual parameters.
+
+    Args:
+        config: Configuration object containing all analysis parameters
+
+    Returns:
+        CMJMetrics object containing analysis results
+    """
+    return process_cmj_video(**config.to_kwargs())
+
+
 def process_cmj_videos_bulk(
     configs: list[CMJVideoConfig],
     max_workers: int = 4,
@@ -537,17 +572,8 @@ def _process_cmj_video_wrapper(config: CMJVideoConfig) -> CMJVideoResult:
     start_time = time.perf_counter()
 
     try:
-        metrics = process_cmj_video(
-            video_path=config.video_path,
-            quality=config.quality,
-            output_video=config.output_video,
-            json_output=config.json_output,
-            overrides=config.overrides,
-            detection_confidence=config.detection_confidence,
-            tracking_confidence=config.tracking_confidence,
-            verbose=False,
-        )
-
+        # Use convenience wrapper to avoid parameter unpacking
+        metrics = process_cmj_video_from_config(config)
         processing_time = time.perf_counter() - start_time
 
         return CMJVideoResult(
