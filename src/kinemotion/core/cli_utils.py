@@ -24,6 +24,80 @@ def common_output_options(func: Callable) -> Callable:  # type: ignore[type-arg]
     return func
 
 
+def quality_option(func: Callable) -> Callable:  # type: ignore[type-arg]
+    """Add quality preset option to CLI command."""
+    return click.option(
+        "--quality",
+        type=click.Choice(["fast", "balanced", "accurate"], case_sensitive=False),
+        default="balanced",
+        help=(
+            "Analysis quality preset: "
+            "fast (quick, less precise), "
+            "balanced (default, good for most cases), "
+            "accurate (research-grade, slower)"
+        ),
+        show_default=True,
+    )(func)
+
+
+def verbose_option(func: Callable) -> Callable:  # type: ignore[type-arg]
+    """Add verbose flag to CLI command."""
+    return click.option(
+        "--verbose",
+        "-v",
+        is_flag=True,
+        help="Show auto-selected parameters and analysis details",
+    )(func)
+
+
+def batch_processing_options(func: Callable) -> Callable:  # type: ignore[type-arg]
+    """Add batch processing options to CLI command."""
+    func = click.option(
+        "--batch",
+        is_flag=True,
+        help="Enable batch processing mode for multiple videos",
+    )(func)
+    func = click.option(
+        "--workers",
+        type=int,
+        default=4,
+        help="Number of parallel workers for batch processing (default: 4)",
+        show_default=True,
+    )(func)
+    func = click.option(
+        "--output-dir",
+        type=click.Path(),
+        help="Directory for debug video outputs (batch mode only)",
+    )(func)
+    func = click.option(
+        "--json-output-dir",
+        type=click.Path(),
+        help="Directory for JSON metrics outputs (batch mode only)",
+    )(func)
+    func = click.option(
+        "--csv-summary",
+        type=click.Path(),
+        help="Path for CSV summary export (batch mode only)",
+    )(func)
+    return func
+
+
+def common_analysis_options(func: Callable) -> Callable:  # type: ignore[type-arg]
+    """Add all common analysis options (output, quality, verbose, batch).
+
+    Combines:
+    - common_output_options (--output, --json-output)
+    - quality_option (--quality)
+    - verbose_option (--verbose)
+    - batch_processing_options (--batch, --workers, --output-dir, etc.)
+    """
+    func = common_output_options(func)
+    func = quality_option(func)
+    func = verbose_option(func)
+    func = batch_processing_options(func)
+    return func
+
+
 def collect_video_files(video_path: tuple[str, ...]) -> list[str]:
     """Expand glob patterns and collect all video files."""
     video_files: list[str] = []

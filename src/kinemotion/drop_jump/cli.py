@@ -10,8 +10,12 @@ from typing import TYPE_CHECKING
 import click
 
 from ..core.cli_utils import (
+    batch_processing_options,
     collect_video_files,
+    common_output_options,
     generate_batch_output_paths,
+    quality_option,
+    verbose_option,
 )
 from .api import (
     DropJumpVideoConfig,
@@ -39,64 +43,10 @@ class AnalysisParameters:
 
 @click.command(name="dropjump-analyze")
 @click.argument("video_path", nargs=-1, type=click.Path(exists=False), required=True)
-@click.option(
-    "--output",
-    "-o",
-    type=click.Path(),
-    help="Path for debug video output (optional)",
-)
-@click.option(
-    "--json-output",
-    "-j",
-    type=click.Path(),
-    help="Path for JSON metrics output (default: stdout)",
-)
-@click.option(
-    "--quality",
-    type=click.Choice(["fast", "balanced", "accurate"], case_sensitive=False),
-    default="balanced",
-    help=(
-        "Analysis quality preset: "
-        "fast (quick, less precise), "
-        "balanced (default, good for most cases), "
-        "accurate (research-grade, slower)"
-    ),
-    show_default=True,
-)
-@click.option(
-    "--verbose",
-    "-v",
-    is_flag=True,
-    help="Show auto-selected parameters and analysis details",
-)
-# Batch processing options
-@click.option(
-    "--batch",
-    is_flag=True,
-    help="Enable batch processing mode for multiple videos",
-)
-@click.option(
-    "--workers",
-    type=int,
-    default=4,
-    help="Number of parallel workers for batch processing (default: 4)",
-    show_default=True,
-)
-@click.option(
-    "--output-dir",
-    type=click.Path(),
-    help="Directory for debug video outputs (batch mode only)",
-)
-@click.option(
-    "--json-output-dir",
-    type=click.Path(),
-    help="Directory for JSON metrics outputs (batch mode only)",
-)
-@click.option(
-    "--csv-summary",
-    type=click.Path(),
-    help="Path for CSV summary export (batch mode only)",
-)
+@common_output_options
+@quality_option
+@verbose_option
+@batch_processing_options
 # Expert parameters (hidden in help, but always available for advanced users)
 @click.option(
     "--drop-start-frame",

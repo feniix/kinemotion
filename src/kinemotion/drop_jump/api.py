@@ -8,7 +8,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    import numpy as np
     from numpy.typing import NDArray
+
+    from .analysis import ContactState
 
 from ..core.auto_tuning import (
     AnalysisParameters,
@@ -121,11 +124,11 @@ class DropJumpVideoConfig:
 
 
 def _assess_dropjump_quality(
-    vertical_positions: "NDArray",
-    visibilities: "NDArray",
-    contact_states: list,
+    vertical_positions: "NDArray[np.float64]",
+    visibilities: "NDArray[np.float64]",
+    contact_states: list["ContactState"],
     fps: float,
-) -> tuple:
+) -> tuple[QualityAssessment, "NDArray[np.bool_]", bool, int]:
     """Assess tracking quality and detect phases.
 
     Returns:

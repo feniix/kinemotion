@@ -114,63 +114,37 @@ class DropJumpMetricsValidator(MetricsValidator):
     ) -> None:
         """Validate contact time."""
         contact_time_s = contact_time_ms / 1000.0
-        bounds = DropJumpBounds.CONTACT_TIME
-
-        if not bounds.is_physically_possible(contact_time_s):
-            result.add_error(
-                "contact_time",
-                f"Contact time {contact_time_s:.3f}s physically impossible",
-                value=contact_time_s,
-                bounds=(bounds.absolute_min, bounds.absolute_max),
-            )
-        elif result.athlete_profile and not bounds.contains(
-            contact_time_s, result.athlete_profile
-        ):
-            profile_name = result.athlete_profile.value
-            result.add_warning(
-                "contact_time",
-                f"Contact time {contact_time_s:.3f}s unusual for {profile_name} athlete",
-                value=contact_time_s,
-            )
+        self._validate_metric_with_bounds(
+            name="contact_time",
+            value=contact_time_s,
+            bounds=DropJumpBounds.CONTACT_TIME,
+            profile=result.athlete_profile,
+            result=result,
+            format_str="{value:.3f}s",
+        )
 
     def _check_flight_time(self, flight_time_ms: float, result: DropJumpValidationResult) -> None:
         """Validate flight time."""
         flight_time_s = flight_time_ms / 1000.0
-        bounds = DropJumpBounds.FLIGHT_TIME
-
-        if not bounds.is_physically_possible(flight_time_s):
-            result.add_error(
-                "flight_time",
-                f"Flight time {flight_time_s:.3f}s physically impossible",
-                value=flight_time_s,
-                bounds=(bounds.absolute_min, bounds.absolute_max),
-            )
-        elif result.athlete_profile and not bounds.contains(flight_time_s, result.athlete_profile):
-            profile_name = result.athlete_profile.value
-            result.add_warning(
-                "flight_time",
-                f"Flight time {flight_time_s:.3f}s unusual for {profile_name} athlete",
-                value=flight_time_s,
-            )
+        self._validate_metric_with_bounds(
+            name="flight_time",
+            value=flight_time_s,
+            bounds=DropJumpBounds.FLIGHT_TIME,
+            profile=result.athlete_profile,
+            result=result,
+            format_str="{value:.3f}s",
+        )
 
     def _check_jump_height(self, jump_height_m: float, result: DropJumpValidationResult) -> None:
         """Validate jump height."""
-        bounds = DropJumpBounds.JUMP_HEIGHT
-
-        if not bounds.is_physically_possible(jump_height_m):
-            result.add_error(
-                "jump_height",
-                f"Jump height {jump_height_m:.3f}m physically impossible",
-                value=jump_height_m,
-                bounds=(bounds.absolute_min, bounds.absolute_max),
-            )
-        elif result.athlete_profile and not bounds.contains(jump_height_m, result.athlete_profile):
-            profile_name = result.athlete_profile.value
-            result.add_warning(
-                "jump_height",
-                f"Jump height {jump_height_m:.3f}m unusual for {profile_name} athlete",
-                value=jump_height_m,
-            )
+        self._validate_metric_with_bounds(
+            name="jump_height",
+            value=jump_height_m,
+            bounds=DropJumpBounds.JUMP_HEIGHT,
+            profile=result.athlete_profile,
+            result=result,
+            format_str="{value:.3f}m",
+        )
 
     def _check_rsi(
         self,

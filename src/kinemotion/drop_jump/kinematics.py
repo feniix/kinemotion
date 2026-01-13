@@ -226,8 +226,90 @@ def _compute_robust_phase_position(
     return float(np.median(window_positions))
 
 
+def _detect_drop_jump_air_first_pattern(
+    air_phases_indexed: list[tuple[int, int, int]],
+    ground_phases: list[tuple[int, int, int]],
+) -> tuple[int, int] | None:
+    """Detect drop jump using air-first pattern (box + drop classified as IN_AIR).
+
+    Pattern: IN_AIR(box+drop) → ON_GROUND(contact) → IN_AIR(flight) → ON_GROUND(land)
+
+    Args:
+        air_phases_indexed: Air phases with indices
+        ground_phases: Ground phases with indices
+
+    Returns:
+        (contact_start, contact_end) if drop jump detected, None otherwise
+    """
+    if not air_phases_indexed or len(ground_phases) < 2:
+        return None
+
+    _, _, first_air_idx = air_phases_indexed[0]
+    first_ground_start, first_ground_end, first_ground_idx = ground_phases[0]
+
+    # Drop jump: first phase is IN_AIR (index 0), second phase is ground (index 1)
+    if first_air_idx != 0 or first_ground_idx != 1:
+        return None
+
+    # Check for flight phase after contact
+    air_after_contact = [i for _, _, i in air_phases_indexed if i > first_ground_idx]
+    if not air_after_contact:
+        return None
+
+    return first_ground_start, first_ground_end
+
+
+def _detect_drop_jump_height_pattern(
+    air_phases_indexed: list[tuple[int, int, int]],
+    ground_phases: list[tuple[int, int, int]],
+    foot_y_positions: NDArray[np.float64],
+) -> tuple[int, int] | None:
+    """Detect drop jump using height comparison (box detected as ground).
+
+    Legacy detection: first ground is on elevated box (lower y value).
+
+    Args:
+        air_phases_indexed: Air phases with indices
+        ground_phases: Ground phases with indices
+        foot_y_positions: Vertical position array
+
+    Returns:
+        (contact_start, contact_end) if drop jump detected, None otherwise
+    """
+    if not air_phases_indexed or len(ground_phases) < 2:
+        return None
+
+    _, _, first_air_idx = air_phases_indexed[0]
+    first_ground_start, first_ground_end, first_ground_idx = ground_phases[0]
+
+    # This pattern: first ground is before first air (athlete on box)
+    if first_ground_idx >= first_air_idx:
+        return None
+
+    ground_after_air = [
+        (start, end, idx) for start, end, idx in ground_phases if idx > first_air_idx
+    ]
+    if not ground_after_air:
+        return None
+
+    first_ground_y = _compute_robust_phase_position(
+        foot_y_positions, first_ground_start, first_ground_end
+    )
+    second_ground_start, second_ground_end, _ = ground_after_air[0]
+    second_ground_y = _compute_robust_phase_position(
+        foot_y_positions, second_ground_start, second_ground_end
+    )
+
+    # If second ground is significantly lower (>7% of frame), it's a drop jump
+    height_diff = second_ground_y - first_ground_y
+    if height_diff <= 0.07:
+        return None
+
+    return second_ground_start, second_ground_end
+
+
 def _identify_main_contact_phase(
-    phases: list[tuple[int, int, ContactState]],
+    phases: list[tuple[int, int, ContactState]],  # noqa: ARG001  # Used in caller for context
     ground_phases: list[tuple[int, int, int]],
     air_phases_indexed: list[tuple[int, int, int]],
     foot_y_positions: NDArray[np.float64],
@@ -253,55 +335,21 @@ def _identify_main_contact_phase(
     Returns:
         Tuple of (contact_start, contact_end, is_drop_jump)
     """
-    # Initialize with first ground phase as fallback
-    contact_start, contact_end = ground_phases[0][0], ground_phases[0][1]
-    is_drop_jump = False
+    # Try air-first detection pattern (most common for clean videos)
+    result = _detect_drop_jump_air_first_pattern(air_phases_indexed, ground_phases)
+    if result is not None:
+        return result[0], result[1], True
 
-    # Check if this looks like a drop jump pattern:
-    # Pattern: starts with IN_AIR → ON_GROUND → IN_AIR → ON_GROUND
-    if air_phases_indexed and len(ground_phases) >= 2:
-        _, _, first_air_idx = air_phases_indexed[0]
-        first_ground_start, first_ground_end, first_ground_idx = ground_phases[0]
+    # Try height-based detection (fallback for box-as-ground videos)
+    result = _detect_drop_jump_height_pattern(air_phases_indexed, ground_phases, foot_y_positions)
+    if result is not None:
+        return result[0], result[1], True
 
-        # Drop jump pattern: first phase is IN_AIR (athlete on box/dropping)
-        # followed by ground contact, then flight, then landing
-        if first_air_idx == 0 and first_ground_idx == 1:
-            # First phase is air (box + drop), second phase is ground (contact)
-            # Check if there's a flight phase after contact
-            air_after_contact = [
-                (s, e, i) for s, e, i in air_phases_indexed if i > first_ground_idx
-            ]
-            if air_after_contact:
-                # This is a drop jump: first ground = contact, last ground = landing
-                is_drop_jump = True
-                contact_start, contact_end = first_ground_start, first_ground_end
-
-        # Legacy detection: first ground is on elevated box (lower y)
-        # This handles cases where box level IS detected as ground
-        if not is_drop_jump and first_ground_idx < first_air_idx:
-            ground_after_air = [
-                (start, end, idx) for start, end, idx in ground_phases if idx > first_air_idx
-            ]
-            if ground_after_air:
-                first_ground_y = _compute_robust_phase_position(
-                    foot_y_positions, first_ground_start, first_ground_end
-                )
-                second_ground_start, second_ground_end, _ = ground_after_air[0]
-                second_ground_y = _compute_robust_phase_position(
-                    foot_y_positions, second_ground_start, second_ground_end
-                )
-                # If first ground is significantly higher (>7% of frame), it's a drop jump
-                if second_ground_y - first_ground_y > 0.07:
-                    is_drop_jump = True
-                    contact_start, contact_end = second_ground_start, second_ground_end
-
-    if not is_drop_jump:
-        # Regular jump: use longest ground contact phase
-        contact_start, contact_end = max(
-            [(s, e) for s, e, _ in ground_phases], key=lambda p: p[1] - p[0]
-        )
-
-    return contact_start, contact_end, is_drop_jump
+    # Regular jump: use longest ground contact phase
+    contact_start, contact_end = max(
+        [(s, e) for s, e, _ in ground_phases], key=lambda p: p[1] - p[0]
+    )
+    return contact_start, contact_end, False
 
 
 def _find_precise_phase_timing(

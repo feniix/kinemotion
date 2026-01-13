@@ -198,3 +198,73 @@ class MetricsValidator(ABC):
             ValidationResult with all issues and status
         """
         pass
+
+    def _validate_metric_with_bounds(
+        self,
+        name: str,
+        value: float,
+        bounds: MetricBounds,
+        profile: AthleteProfile | None,
+        result: ValidationResult,
+        error_suffix: str = "physically impossible",
+        format_str: str = "{value}",
+    ) -> None:
+        """Generic validation for metrics with physical and profile bounds.
+
+        Args:
+            name: Metric name for messages
+            value: Metric value
+            bounds: Bounds definition
+            profile: Athlete profile for expected ranges (can be None)
+            result: Validation result to add issues to
+            error_suffix: Description for out-of-bounds errors
+            format_str: Format string for value display
+        """
+        formatted_value = format_str.format(value=value)
+        display_name = name.replace("_", " ").title()
+
+        if not bounds.is_physically_possible(value):
+            result.add_error(
+                name,
+                f"{display_name} {formatted_value} {error_suffix}",
+                value=value,
+                bounds=(bounds.absolute_min, bounds.absolute_max),
+            )
+        elif profile is not None and bounds.contains(value, profile):
+            result.add_info(
+                name,
+                f"{display_name} {formatted_value} within expected range for {profile.value}",
+                value=value,
+            )
+        elif profile is not None:
+            expected_min, expected_max = self._get_profile_range(profile, bounds)
+            result.add_warning(
+                name,
+                f"{display_name} {formatted_value} outside typical range "
+                f"[{expected_min:.3f}-{expected_max:.3f}] for {profile.value}",
+                value=value,
+                bounds=(expected_min, expected_max),
+            )
+
+    @staticmethod
+    def _get_profile_range(profile: AthleteProfile, bounds: MetricBounds) -> tuple[float, float]:
+        """Get min/max bounds for specific profile.
+
+        Args:
+            profile: Athlete profile
+            bounds: Metric bounds definition
+
+        Returns:
+            Tuple of (min, max) bounds for the profile
+        """
+        profile_ranges = {
+            AthleteProfile.ELDERLY: (bounds.practical_min, bounds.recreational_max),
+            AthleteProfile.UNTRAINED: (bounds.practical_min, bounds.recreational_max),
+            AthleteProfile.RECREATIONAL: (bounds.recreational_min, bounds.recreational_max),
+            AthleteProfile.TRAINED: (
+                (bounds.recreational_min + bounds.elite_min) / 2,
+                (bounds.recreational_max + bounds.elite_max) / 2,
+            ),
+            AthleteProfile.ELITE: (bounds.elite_min, bounds.elite_max),
+        }
+        return profile_ranges.get(profile, (bounds.absolute_min, bounds.absolute_max))

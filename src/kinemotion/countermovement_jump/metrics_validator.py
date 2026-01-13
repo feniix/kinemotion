@@ -219,55 +219,6 @@ class CMJMetricsValidator(MetricsValidator):
             format_str="{value:.3f}m",
         )
 
-    def _validate_metric_with_bounds(
-        self,
-        name: str,
-        value: float,
-        bounds: MetricBounds,
-        profile: AthleteProfile,
-        result: CMJValidationResult,
-        error_suffix: str,
-        format_str: str = "{value}",
-    ) -> None:
-        """Generic validation for metrics with physical and profile bounds.
-
-        Args:
-            name: Metric name for messages
-            value: Metric value
-            bounds: Bounds definition
-            profile: Athlete profile for expected ranges
-            result: Validation result to add issues to
-            error_suffix: Description for out-of-bounds errors
-            format_str: Format string for value display
-        """
-        if not bounds.is_physically_possible(value):
-            formatted_value = format_str.format(value=value)
-            result.add_error(
-                name,
-                f"{name.replace('_', ' ').title()} {formatted_value} {error_suffix}",
-                value=value,
-                bounds=(bounds.absolute_min, bounds.absolute_max),
-            )
-        elif bounds.contains(value, profile):
-            formatted_value = format_str.format(value=value)
-            result.add_info(
-                name,
-                f"{name.replace('_', ' ').title()} {formatted_value} "
-                f"within expected range for {profile.value}",
-                value=value,
-            )
-        else:
-            expected_min, expected_max = self._get_profile_range(profile, bounds)
-            formatted_value = format_str.format(value=value)
-            result.add_warning(
-                name,
-                f"{name.replace('_', ' ').title()} {formatted_value} "
-                f"outside typical range [{expected_min:.3f}-{expected_max:.3f}] "
-                f"for {profile.value}",
-                value=value,
-                bounds=(expected_min, expected_max),
-            )
-
     def _check_concentric_duration(
         self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
@@ -707,18 +658,3 @@ class CMJMetricsValidator(MetricsValidator):
                 f"May indicate compensatory movement pattern.",
                 value=float(joints_at_boundary),
             )
-
-    @staticmethod
-    def _get_profile_range(profile: AthleteProfile, bounds: MetricBounds) -> tuple[float, float]:
-        """Get min/max bounds for specific profile."""
-        profile_ranges = {
-            AthleteProfile.ELDERLY: (bounds.practical_min, bounds.recreational_max),
-            AthleteProfile.UNTRAINED: (bounds.practical_min, bounds.recreational_max),
-            AthleteProfile.RECREATIONAL: (bounds.recreational_min, bounds.recreational_max),
-            AthleteProfile.TRAINED: (
-                (bounds.recreational_min + bounds.elite_min) / 2,
-                (bounds.recreational_max + bounds.elite_max) / 2,
-            ),
-            AthleteProfile.ELITE: (bounds.elite_min, bounds.elite_max),
-        }
-        return profile_ranges.get(profile, (bounds.absolute_min, bounds.absolute_max))
