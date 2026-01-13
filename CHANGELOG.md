@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.74.0 (2026-01-13)
+
+### Feat
+
+- **chore**: release new version
+
+### Refactor
+
+- **core,dj**: extract helper functions to reduce complexity
+- improve maintainability with shared patterns and reduced nesting
+- **api**: add config-based API with parameter objects
+- code quality improvements - vectorize, cleanup, add base classes
+- **cmj**: simplify metrics validator with helper extraction
+
 ## kinemotion-v0.73.0 (2026-01-13)
 
 ### Feat
