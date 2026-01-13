@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.73.0 (2026-01-13)
+
+### Feat
+
+- **refactor**: rename cmj/dj modules to full names for consistency
+
 ## kinemotion-v0.72.1 (2026-01-13)
 
 ### Fix
