@@ -155,38 +155,21 @@ class CMJMetricsValidator(MetricsValidator):
 
         flight_time = self._convert_raw_duration_to_seconds(flight_time_raw)
         bounds = CMJBounds.FLIGHT_TIME
+        error_label = (
+            "below frame rate resolution limit"
+            if flight_time < bounds.absolute_min
+            else "exceeds elite human capability"
+        )
 
-        if not bounds.is_physically_possible(flight_time):
-            if flight_time < bounds.absolute_min:
-                result.add_error(
-                    "flight_time",
-                    f"Flight time {flight_time:.3f}s below frame rate resolution limit",
-                    value=flight_time,
-                    bounds=(bounds.absolute_min, bounds.absolute_max),
-                )
-            else:
-                result.add_error(
-                    "flight_time",
-                    f"Flight time {flight_time:.3f}s exceeds elite human capability",
-                    value=flight_time,
-                    bounds=(bounds.absolute_min, bounds.absolute_max),
-                )
-        elif bounds.contains(flight_time, profile):
-            result.add_info(
-                "flight_time",
-                f"Flight time {flight_time:.3f}s within expected range for {profile.value}",
-                value=flight_time,
-            )
-        else:
-            # Outside expected range but physically possible
-            expected_min, expected_max = self._get_profile_range(profile, bounds)
-            result.add_warning(
-                "flight_time",
-                f"Flight time {flight_time:.3f}s outside typical range "
-                f"[{expected_min:.3f}-{expected_max:.3f}]s for {profile.value}",
-                value=flight_time,
-                bounds=(expected_min, expected_max),
-            )
+        self._validate_metric_with_bounds(
+            "flight_time",
+            flight_time,
+            bounds,
+            profile,
+            result,
+            error_suffix=error_label,
+            format_str="{value:.3f}s",
+        )
 
     def _check_jump_height(
         self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
@@ -197,37 +180,21 @@ class CMJMetricsValidator(MetricsValidator):
             return
 
         bounds = CMJBounds.JUMP_HEIGHT
+        error_label = (
+            "essentially no jump (noise)"
+            if jump_height < bounds.absolute_min
+            else "exceeds human capability"
+        )
 
-        if not bounds.is_physically_possible(jump_height):
-            if jump_height < bounds.absolute_min:
-                result.add_error(
-                    "jump_height",
-                    f"Jump height {jump_height:.3f}m essentially no jump (noise)",
-                    value=jump_height,
-                    bounds=(bounds.absolute_min, bounds.absolute_max),
-                )
-            else:
-                result.add_error(
-                    "jump_height",
-                    f"Jump height {jump_height:.3f}m exceeds human capability",
-                    value=jump_height,
-                    bounds=(bounds.absolute_min, bounds.absolute_max),
-                )
-        elif bounds.contains(jump_height, profile):
-            result.add_info(
-                "jump_height",
-                f"Jump height {jump_height:.3f}m within expected range for {profile.value}",
-                value=jump_height,
-            )
-        else:
-            expected_min, expected_max = self._get_profile_range(profile, bounds)
-            result.add_warning(
-                "jump_height",
-                f"Jump height {jump_height:.3f}m outside typical range "
-                f"[{expected_min:.3f}-{expected_max:.3f}]m for {profile.value}",
-                value=jump_height,
-                bounds=(expected_min, expected_max),
-            )
+        self._validate_metric_with_bounds(
+            "jump_height",
+            jump_height,
+            bounds,
+            profile,
+            result,
+            error_suffix=error_label,
+            format_str="{value:.3f}m",
+        )
 
     def _check_countermovement_depth(
         self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
@@ -238,40 +205,71 @@ class CMJMetricsValidator(MetricsValidator):
             return
 
         bounds = CMJBounds.COUNTERMOVEMENT_DEPTH
+        error_label = (
+            "essentially no squat" if depth < bounds.absolute_min else "exceeds physical limit"
+        )
 
-        if not bounds.is_physically_possible(depth):
-            if depth < bounds.absolute_min:
-                result.add_error(
-                    "countermovement_depth",
-                    f"Countermovement depth {depth:.3f}m essentially no squat",
-                    value=depth,
-                    bounds=(bounds.absolute_min, bounds.absolute_max),
-                )
-            else:
-                result.add_error(
-                    "countermovement_depth",
-                    f"Countermovement depth {depth:.3f}m exceeds physical limit",
-                    value=depth,
-                    bounds=(bounds.absolute_min, bounds.absolute_max),
-                )
-        elif bounds.contains(depth, profile):
+        self._validate_metric_with_bounds(
+            "countermovement_depth",
+            depth,
+            bounds,
+            profile,
+            result,
+            error_suffix=error_label,
+            format_str="{value:.3f}m",
+        )
+
+    def _validate_metric_with_bounds(
+        self,
+        name: str,
+        value: float,
+        bounds: MetricBounds,
+        profile: AthleteProfile,
+        result: CMJValidationResult,
+        error_suffix: str,
+        format_str: str = "{value}",
+    ) -> None:
+        """Generic validation for metrics with physical and profile bounds.
+
+        Args:
+            name: Metric name for messages
+            value: Metric value
+            bounds: Bounds definition
+            profile: Athlete profile for expected ranges
+            result: Validation result to add issues to
+            error_suffix: Description for out-of-bounds errors
+            format_str: Format string for value display
+        """
+        if not bounds.is_physically_possible(value):
+            formatted_value = format_str.format(value=value)
+            result.add_error(
+                name,
+                f"{name.replace('_', ' ').title()} {formatted_value} {error_suffix}",
+                value=value,
+                bounds=(bounds.absolute_min, bounds.absolute_max),
+            )
+        elif bounds.contains(value, profile):
+            formatted_value = format_str.format(value=value)
             result.add_info(
-                "countermovement_depth",
-                f"Countermovement depth {depth:.3f}m within expected range for {profile.value}",
-                value=depth,
+                name,
+                f"{name.replace('_', ' ').title()} {formatted_value} "
+                f"within expected range for {profile.value}",
+                value=value,
             )
         else:
             expected_min, expected_max = self._get_profile_range(profile, bounds)
+            formatted_value = format_str.format(value=value)
             result.add_warning(
-                "countermovement_depth",
-                f"Countermovement depth {depth:.3f}m outside typical range "
-                f"[{expected_min:.3f}-{expected_max:.3f}]m for {profile.value}",
-                value=depth,
+                name,
+                f"{name.replace('_', ' ').title()} {formatted_value} "
+                f"outside typical range [{expected_min:.3f}-{expected_max:.3f}] "
+                f"for {profile.value}",
+                value=value,
                 bounds=(expected_min, expected_max),
             )
 
     def _check_concentric_duration(
-        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
+        self, metrics: MetricsDict, result: CMJValidationResult
     ) -> None:
         """Validate concentric duration (contact time)."""
         duration_raw = self._get_metric_value(
@@ -307,9 +305,7 @@ class CMJMetricsValidator(MetricsValidator):
                 value=duration,
             )
 
-    def _check_eccentric_duration(
-        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
-    ) -> None:
+    def _check_eccentric_duration(self, metrics: MetricsDict, result: CMJValidationResult) -> None:
         """Validate eccentric duration."""
         duration_raw = self._get_metric_value(
             metrics, "eccentric_duration_ms", "eccentric_duration"
@@ -340,71 +336,74 @@ class CMJMetricsValidator(MetricsValidator):
         self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
     ) -> None:
         """Validate peak eccentric and concentric velocities."""
-        # Eccentric
-        ecc_vel = self._get_metric_value(
-            metrics, "peak_eccentric_velocity_m_s", "peak_eccentric_velocity"
-        )
-        if ecc_vel is not None:
-            bounds = CMJBounds.PEAK_ECCENTRIC_VELOCITY
-            if not bounds.is_physically_possible(ecc_vel):
-                result.add_error(
-                    "peak_eccentric_velocity",
-                    f"Peak eccentric velocity {ecc_vel:.2f} m/s outside limits",
-                    value=ecc_vel,
-                    bounds=(bounds.absolute_min, bounds.absolute_max),
-                )
-            elif bounds.contains(ecc_vel, profile):
-                result.add_info(
-                    "peak_eccentric_velocity",
-                    f"Peak eccentric velocity {ecc_vel:.2f} m/s within range for {profile.value}",
-                    value=ecc_vel,
-                )
-            else:
-                expected_min, expected_max = self._get_profile_range(profile, bounds)
-                result.add_warning(
-                    "peak_eccentric_velocity",
-                    f"Peak eccentric velocity {ecc_vel:.2f} m/s outside typical range "
-                    f"[{expected_min:.2f}-{expected_max:.2f}] for {profile.value}",
-                    value=ecc_vel,
-                    bounds=(expected_min, expected_max),
-                )
+        velocity_checks = [
+            (
+                "peak_eccentric_velocity",
+                "peak_eccentric_velocity_m_s",
+                CMJBounds.PEAK_ECCENTRIC_VELOCITY,
+                "",
+            ),
+            (
+                "peak_concentric_velocity",
+                "peak_concentric_velocity_m_s",
+                CMJBounds.PEAK_CONCENTRIC_VELOCITY,
+                "insufficient to leave ground",
+            ),
+        ]
 
-        # Concentric
-        con_vel = self._get_metric_value(
-            metrics, "peak_concentric_velocity_m_s", "peak_concentric_velocity"
-        )
-        if con_vel is not None:
-            bounds = CMJBounds.PEAK_CONCENTRIC_VELOCITY
-            if not bounds.is_physically_possible(con_vel):
-                if con_vel < bounds.absolute_min:
-                    result.add_error(
-                        "peak_concentric_velocity",
-                        f"Peak concentric velocity {con_vel:.2f} m/s insufficient to leave ground",
-                        value=con_vel,
-                        bounds=(bounds.absolute_min, bounds.absolute_max),
-                    )
-                else:
-                    result.add_error(
-                        "peak_concentric_velocity",
-                        f"Peak concentric velocity {con_vel:.2f} m/s exceeds elite capability",
-                        value=con_vel,
-                        bounds=(bounds.absolute_min, bounds.absolute_max),
-                    )
-            elif bounds.contains(con_vel, profile):
-                result.add_info(
-                    "peak_concentric_velocity",
-                    f"Peak concentric velocity {con_vel:.2f} m/s within range for {profile.value}",
-                    value=con_vel,
+        for metric_name, key_name, bounds, error_suffix in velocity_checks:
+            velocity = self._get_metric_value(metrics, key_name, metric_name)
+            if velocity is None:
+                continue
+
+            self._validate_velocity_metric(
+                metric_name, velocity, bounds, profile, result, error_suffix
+            )
+
+    def _validate_velocity_metric(
+        self,
+        name: str,
+        velocity: float,
+        bounds: MetricBounds,
+        profile: AthleteProfile,
+        result: CMJValidationResult,
+        error_suffix: str,
+    ) -> None:
+        """Validate a velocity metric against bounds."""
+        if not bounds.is_physically_possible(velocity):
+            if velocity < bounds.absolute_min and error_suffix:
+                error_msg = (
+                    f"Peak {name.replace('peak_', '')} velocity {velocity:.2f} m/s {error_suffix}"
                 )
             else:
-                expected_min, expected_max = self._get_profile_range(profile, bounds)
-                result.add_warning(
-                    "peak_concentric_velocity",
-                    f"Peak concentric velocity {con_vel:.2f} m/s outside typical range "
-                    f"[{expected_min:.2f}-{expected_max:.2f}] for {profile.value}",
-                    value=con_vel,
-                    bounds=(expected_min, expected_max),
+                error_msg = (
+                    f"Peak {name.replace('peak_', '')} velocity {velocity:.2f} m/s outside limits"
                 )
+            result.add_error(
+                name,
+                error_msg,
+                value=velocity,
+                bounds=(bounds.absolute_min, bounds.absolute_max),
+            )
+        elif bounds.contains(velocity, profile):
+            velocity_type = name.replace("peak_", "").replace("_", " ")
+            result.add_info(
+                name,
+                f"Peak {velocity_type} velocity {velocity:.2f} m/s "
+                f"within range for {profile.value}",
+                value=velocity,
+            )
+        else:
+            expected_min, expected_max = self._get_profile_range(profile, bounds)
+            velocity_type = name.replace("peak_", "").replace("_", " ")
+            result.add_warning(
+                name,
+                f"Peak {velocity_type} velocity {velocity:.2f} m/s "
+                f"outside typical range [{expected_min:.2f}-{expected_max:.2f}] "
+                f"for {profile.value}",
+                value=velocity,
+                bounds=(expected_min, expected_max),
+            )
 
     def _check_flight_time_height_consistency(
         self, metrics: MetricsDict, result: CMJValidationResult
@@ -625,49 +624,28 @@ class CMJMetricsValidator(MetricsValidator):
         if angles is None:
             return
 
-        hip = angles.get("hip_angle")
-        if hip is not None:
-            if not TripleExtensionBounds.hip_angle_valid(hip, profile):
-                result.add_warning(
-                    "hip_angle",
-                    f"Hip angle {hip:.1f}° outside expected range for {profile.value}",
-                    value=hip,
-                )
-            else:
-                result.add_info(
-                    "hip_angle",
-                    f"Hip angle {hip:.1f}° within expected range for {profile.value}",
-                    value=hip,
-                )
+        joint_definitions = [
+            ("hip_angle", TripleExtensionBounds.hip_angle_valid, "Hip"),
+            ("knee_angle", TripleExtensionBounds.knee_angle_valid, "Knee"),
+            ("ankle_angle", TripleExtensionBounds.ankle_angle_valid, "Ankle"),
+        ]
 
-        knee = angles.get("knee_angle")
-        if knee is not None:
-            if not TripleExtensionBounds.knee_angle_valid(knee, profile):
-                result.add_warning(
-                    "knee_angle",
-                    f"Knee angle {knee:.1f}° outside expected range for {profile.value}",
-                    value=knee,
-                )
-            else:
-                result.add_info(
-                    "knee_angle",
-                    f"Knee angle {knee:.1f}° within expected range for {profile.value}",
-                    value=knee,
-                )
+        for metric_name, validator, joint_name in joint_definitions:
+            angle = angles.get(metric_name)
+            if angle is None:
+                continue
 
-        ankle = angles.get("ankle_angle")
-        if ankle is not None:
-            if not TripleExtensionBounds.ankle_angle_valid(ankle, profile):
+            if not validator(angle, profile):
                 result.add_warning(
-                    "ankle_angle",
-                    f"Ankle angle {ankle:.1f}° outside expected range for {profile.value}",
-                    value=ankle,
+                    metric_name,
+                    f"{joint_name} angle {angle:.1f}° outside expected range for {profile.value}",
+                    value=angle,
                 )
             else:
                 result.add_info(
-                    "ankle_angle",
-                    f"Ankle angle {ankle:.1f}° within expected range for {profile.value}",
-                    value=ankle,
+                    metric_name,
+                    f"{joint_name} angle {angle:.1f}° within expected range for {profile.value}",
+                    value=angle,
                 )
 
         # Detect joint compensation patterns
@@ -691,32 +669,32 @@ class CMJMetricsValidator(MetricsValidator):
         if hip is None or knee is None or ankle is None:
             return  # Need all three to detect patterns
 
-        # Get profile-specific bounds
-        if profile == AthleteProfile.ELDERLY:
-            hip_min, hip_max = 150, 175
-            knee_min, knee_max = 155, 175
-            ankle_min, ankle_max = 100, 125
-        elif profile in (AthleteProfile.UNTRAINED, AthleteProfile.RECREATIONAL):
-            hip_min, hip_max = 160, 180
-            knee_min, knee_max = 165, 182
-            ankle_min, ankle_max = 110, 140
-        elif profile in (AthleteProfile.TRAINED, AthleteProfile.ELITE):
-            hip_min, hip_max = 170, 185
-            knee_min, knee_max = 173, 190
-            ankle_min, ankle_max = 125, 155
-        else:
+        # Profile-specific bounds lookup
+        profile_bounds = {
+            AthleteProfile.ELDERLY: (150, 175, 155, 175, 100, 125),
+            AthleteProfile.UNTRAINED: (160, 180, 165, 182, 110, 140),
+            AthleteProfile.RECREATIONAL: (160, 180, 165, 182, 110, 140),
+            AthleteProfile.TRAINED: (170, 185, 173, 190, 125, 155),
+            AthleteProfile.ELITE: (170, 185, 173, 190, 125, 155),
+        }
+
+        bounds_tuple = profile_bounds.get(profile)
+        if not bounds_tuple:
             return
 
-        # Count how many joints are near their boundaries
-        joints_at_boundary = 0
-        boundary_threshold = 3.0  # degrees from limit
+        hip_min, hip_max, knee_min, knee_max, ankle_min, ankle_max = bounds_tuple
 
-        if hip <= hip_min + boundary_threshold or hip >= hip_max - boundary_threshold:
-            joints_at_boundary += 1
-        if knee <= knee_min + boundary_threshold or knee >= knee_max - boundary_threshold:
-            joints_at_boundary += 1
-        if ankle <= ankle_min + boundary_threshold or ankle >= ankle_max - boundary_threshold:
-            joints_at_boundary += 1
+        # Count joints at boundaries
+        boundary_threshold = 3.0  # degrees from limit
+        joints_at_boundary = sum(
+            1
+            for val, min_val, max_val in [
+                (hip, hip_min, hip_max),
+                (knee, knee_min, knee_max),
+                (ankle, ankle_min, ankle_max),
+            ]
+            if val <= min_val + boundary_threshold or val >= max_val - boundary_threshold
+        )
 
         # If 2+ joints at boundaries, likely compensation pattern
         if joints_at_boundary >= 2:
@@ -731,16 +709,14 @@ class CMJMetricsValidator(MetricsValidator):
     @staticmethod
     def _get_profile_range(profile: AthleteProfile, bounds: MetricBounds) -> tuple[float, float]:
         """Get min/max bounds for specific profile."""
-        if profile == AthleteProfile.ELDERLY:
-            return (bounds.practical_min, bounds.recreational_max)
-        elif profile == AthleteProfile.UNTRAINED:
-            return (bounds.practical_min, bounds.recreational_max)
-        elif profile == AthleteProfile.RECREATIONAL:
-            return (bounds.recreational_min, bounds.recreational_max)
-        elif profile == AthleteProfile.TRAINED:
-            trained_min = (bounds.recreational_min + bounds.elite_min) / 2
-            trained_max = (bounds.recreational_max + bounds.elite_max) / 2
-            return (trained_min, trained_max)
-        elif profile == AthleteProfile.ELITE:
-            return (bounds.elite_min, bounds.elite_max)
-        return (bounds.absolute_min, bounds.absolute_max)
+        profile_ranges = {
+            AthleteProfile.ELDERLY: (bounds.practical_min, bounds.recreational_max),
+            AthleteProfile.UNTRAINED: (bounds.practical_min, bounds.recreational_max),
+            AthleteProfile.RECREATIONAL: (bounds.recreational_min, bounds.recreational_max),
+            AthleteProfile.TRAINED: (
+                (bounds.recreational_min + bounds.elite_min) / 2,
+                (bounds.recreational_max + bounds.elite_max) / 2,
+            ),
+            AthleteProfile.ELITE: (bounds.elite_min, bounds.elite_max),
+        }
+        return profile_ranges.get(profile, (bounds.absolute_min, bounds.absolute_max))
