@@ -48,7 +48,7 @@ show_source: false
 
 ## Metrics
 
-::: kinemotion.cmj.kinematics.CMJMetrics
+::: kinemotion.countermovement_jump.kinematics.CMJMetrics
 options:
 show_root_heading: true
 show_source: false

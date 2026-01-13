@@ -109,7 +109,7 @@ def add_info(
 
 ### Step 1.3: Update CMJ Validator (2-3 hours)
 
-**File**: `/Users/feniix/src/personal/cursor/kinemotion/src/kinemotion/cmj/metrics_validator.py`
+**File**: `/Users/feniix/src/personal/cursor/kinemotion/src/kinemotion/countermovement_jump/metrics_validator.py`
 
 Update all 16 validation methods. Template for each:
 
@@ -207,7 +207,7 @@ Apply the same pattern to all 6 validation methods:
 
 ### Step 1.5: Update Serialization (30 min)
 
-**File**: `/Users/feniix/src/personal/cursor/kinemotion/src/kinemotion/cmj/metrics_validator.py`
+**File**: `/Users/feniix/src/personal/cursor/kinemotion/src/kinemotion/countermovement_jump/metrics_validator.py`
 
 Update `CMJValidationResult.to_dict()`:
 
@@ -245,11 +245,11 @@ Repeat for `DropJumpValidationResult.to_dict()` in dropjump module.
 
 ### Step 1.6: Add Backend Tests (1-2 hours)
 
-**Create/update**: `tests/cmj/test_metrics_validator_i18n.py`
+**Create/update**: `tests/countermovement_jump/test_metrics_validator_i18n.py`
 
 ```python
 import pytest
-from kinemotion.cmj.metrics_validator import CMJMetricsValidator, CMJValidationResult
+from kinemotion.countermovement_jump.metrics_validator import CMJMetricsValidator, CMJValidationResult
 from kinemotion.core.validation import AthleteProfile
 
 class TestI18nSupport:
@@ -588,7 +588,7 @@ Test full flow: upload video → validate → translate → display
 ```python
 # tests/e2e/test_cmj_with_i18n.py
 import json
-from kinemotion.cmj.api import process_cmj_video
+from kinemotion.countermovement_jump.api import process_cmj_video
 
 def test_cmj_validation_includes_message_keys():
     """Verify CMJ analysis response includes i18n fields."""

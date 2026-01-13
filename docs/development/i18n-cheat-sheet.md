@@ -223,9 +223,9 @@ context: dict[str, Any] | None = None
 
 ```
 src/kinemotion/core/validation.py               (1 file, +5 lines)
-src/kinemotion/cmj/metrics_validator.py         (1 file, +code for 16 methods)
+src/kinemotion/countermovement_jump/metrics_validator.py         (1 file, +code for 16 methods)
 src/kinemotion/dropjump/metrics_validator.py    (1 file, +code for 6 methods)
-tests/cmj/test_metrics_validator_i18n.py        (NEW)
+tests/countermovement_jump/test_metrics_validator_i18n.py        (NEW)
 tests/dropjump/test_metrics_validator_i18n.py   (NEW)
 ```
 

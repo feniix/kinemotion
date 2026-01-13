@@ -213,7 +213,7 @@ src/kinemotion/core/validation.py
 ├─ Update add_warning() signature
 └─ Update add_info() signature
 
-src/kinemotion/cmj/metrics_validator.py
+src/kinemotion/countermovement_jump/metrics_validator.py
 ├─ Update all 16 _check_* methods
 └─ Update CMJValidationResult.to_dict()
 
@@ -221,7 +221,7 @@ src/kinemotion/dropjump/metrics_validator.py
 ├─ Update all 6 _check_* methods
 └─ Update DropJumpValidationResult.to_dict()
 
-tests/cmj/test_metrics_validator_i18n.py (NEW)
+tests/countermovement_jump/test_metrics_validator_i18n.py (NEW)
 └─ Test message_key assignment and context
 
 tests/dropjump/test_metrics_validator_i18n.py (NEW)

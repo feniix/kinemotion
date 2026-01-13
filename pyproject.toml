@@ -86,8 +86,8 @@ markers = [
     "slow: Tests that take >1 second to run",
     "requires_video: Tests that require video file fixtures",
     "core: Tests for core/ module",
-    "cmj: Tests for CMJ analysis",
-    "dropjump: Tests for drop jump analysis",
+    "countermovement_jump: Tests for counter movement jump analysis",
+    "drop_jump: Tests for drop jump analysis",
     "cli: Tests for CLI interface",
     "validation: Tests for validation logic",
 ]
@@ -169,7 +169,7 @@ reportArgumentType = "warning"
 # Transitional: Genuine strict mode with incremental fixes
 # scipy-stubs + typing-extensions installed for proper typing support
 # Type infrastructure in place (core/types.py with FloatArray, BoolArray, MetricsDict)
-# Modules fully typed (0 errors): cmj/analysis.py, core/filtering.py, core/smoothing.py
+# Modules fully typed (0 errors): countermovement_jump/analysis.py, core/filtering.py, core/smoothing.py
 # Enable these incrementally as modules are fixed
 reportUnknownVariableType = "none"
 reportUnknownArgumentType = "none"

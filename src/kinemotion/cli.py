@@ -2,8 +2,8 @@
 
 import click
 
-from .cmj.cli import cmj_analyze
-from .dj.cli import dropjump_analyze
+from .countermovement_jump.cli import cmj_analyze
+from .drop_jump.cli import dropjump_analyze
 
 
 @click.group()

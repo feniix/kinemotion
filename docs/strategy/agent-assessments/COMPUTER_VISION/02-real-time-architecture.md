@@ -185,7 +185,7 @@ MediaPipe Pose supports multiple people in frame. From official docs:
 Current implementation (per-person pipeline):
 
 ```python
-# src/kinemotion/cmj/analysis.py - assumes one person, one timeline
+# src/kinemotion/countermovement_jump/analysis.py - assumes one person, one timeline
 def analyze_cmj(video_path):
     poses = []  # List[Pose], each frame has ONE pose
     for frame in video:

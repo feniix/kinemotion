@@ -17,7 +17,7 @@ from kinemotion.core.pipeline_utils import (
     apply_expert_overrides,
     determine_confidence_levels,
 )
-from kinemotion.dj.kinematics import DropJumpMetrics
+from kinemotion.drop_jump.kinematics import DropJumpMetrics
 
 # Skip multiprocessing tests in CI
 # MediaPipe doesn't work well with ProcessPoolExecutor in headless environments
@@ -135,7 +135,7 @@ def test_process_video_quality_presets(sample_video_path: str) -> None:
 
 def test_process_video_with_expert_overrides(sample_video_path: str) -> None:
     """Test that expert parameter overrides work."""
-    from kinemotion.dj.api import AnalysisOverrides
+    from kinemotion.drop_jump.api import AnalysisOverrides
 
     overrides = AnalysisOverrides(
         smoothing_window=7,
@@ -292,7 +292,7 @@ def test_process_videos_bulk_progress_callback(sample_video_path: str) -> None:
 @skip_in_ci
 def test_process_videos_bulk_different_parameters(sample_video_path: str) -> None:
     """Test bulk processing with different parameter combinations."""
-    from kinemotion.dj.api import AnalysisOverrides
+    from kinemotion.drop_jump.api import AnalysisOverrides
 
     with tempfile.TemporaryDirectory() as tmpdir:
         configs = [

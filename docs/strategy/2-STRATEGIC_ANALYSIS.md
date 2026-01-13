@@ -262,7 +262,7 @@ ______________________________________________________________________
 
 **Description:** Update ankle angle calculation to use foot_index (toes) instead of heel for plantarflexion measurement.
 
-**File:** `src/kinemotion/cmj/joint_angles.py::calculate_ankle_angle()`
+**File:** `src/kinemotion/countermovement_jump/joint_angles.py::calculate_ankle_angle()`
 
 **Complexity:** Low (2-3 days)
 **Impact:** HIGH - Improves accuracy, establishes credibility

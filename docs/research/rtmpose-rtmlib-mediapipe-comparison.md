@@ -788,7 +788,7 @@ KINEMOTION_TO_HALPE26 = {
 
 ### 15.5 Joint Angle Calculation Compatibility
 
-Kinemotion's joint angle calculations (from `src/kinemotion/cmj/joint_angles.py`):
+Kinemotion's joint angle calculations (from `src/kinemotion/countermovement_jump/joint_angles.py`):
 
 | Calculation     | Required Landmarks                           | RTMPose 26 Support |
 | --------------- | -------------------------------------------- | ------------------ |

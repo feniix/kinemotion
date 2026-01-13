@@ -3,8 +3,8 @@
 import numpy as np
 import pytest
 
-from kinemotion.dj.analysis import ContactState
-from kinemotion.dj.kinematics import calculate_drop_jump_metrics
+from kinemotion.drop_jump.analysis import ContactState
+from kinemotion.drop_jump.kinematics import calculate_drop_jump_metrics
 
 
 def test_calculate_metrics_basic():

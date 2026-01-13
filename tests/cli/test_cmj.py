@@ -17,13 +17,13 @@ import numpy as np
 import pytest
 from click.testing import CliRunner
 
-from kinemotion.cmj.cli import cmj_analyze
-from kinemotion.cmj.kinematics import CMJMetrics
+from kinemotion.countermovement_jump.cli import cmj_analyze
+from kinemotion.countermovement_jump.kinematics import CMJMetrics
 
 pytestmark = [
     pytest.mark.integration,
     pytest.mark.cli,
-    pytest.mark.cmj,
+    pytest.mark.countermovement_jump,
     pytest.mark.requires_video,
 ]
 
@@ -63,7 +63,7 @@ def mock_cmj_metrics() -> CMJMetrics:
 @pytest.fixture
 def mock_cmj_api(mock_cmj_metrics: CMJMetrics):
     """Mock process_cmj_video to avoid real analysis."""
-    with patch("kinemotion.cmj.cli.process_cmj_video") as mock:
+    with patch("kinemotion.countermovement_jump.cli.process_cmj_video") as mock:
 
         def side_effect(
             video_path,
@@ -902,7 +902,7 @@ class TestCMJCLISingleProcessingException:
         self, cli_runner: CliRunner, minimal_video: Path
     ) -> None:
         """Test single processing when API raises exception."""
-        with patch("kinemotion.cmj.cli.process_cmj_video") as mock_api:
+        with patch("kinemotion.countermovement_jump.cli.process_cmj_video") as mock_api:
             mock_api.side_effect = RuntimeError("API error")
 
             result = cli_runner.invoke(cmj_analyze, [str(minimal_video), "--quality", "fast"])
@@ -914,7 +914,7 @@ class TestCMJCLISingleProcessingException:
         self, cli_runner: CliRunner, minimal_video: Path
     ) -> None:
         """Test single processing API exception with verbose flag."""
-        with patch("kinemotion.cmj.cli.process_cmj_video") as mock_api:
+        with patch("kinemotion.countermovement_jump.cli.process_cmj_video") as mock_api:
             mock_api.side_effect = RuntimeError("API error")
 
             result = cli_runner.invoke(
@@ -934,7 +934,7 @@ class TestCMJCLIBatchException:
         self, cli_runner: CliRunner, minimal_video: Path
     ) -> None:
         """Test batch processing when API raises exception."""
-        with patch("kinemotion.cmj.cli.process_cmj_video") as mock_api:
+        with patch("kinemotion.countermovement_jump.cli.process_cmj_video") as mock_api:
             mock_api.side_effect = RuntimeError("API error")
 
             result = cli_runner.invoke(

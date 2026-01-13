@@ -2,7 +2,7 @@
 
 from click.testing import CliRunner
 
-from kinemotion.cmj.cli import cmj_analyze
+from kinemotion.countermovement_jump.cli import cmj_analyze
 
 
 def test_cmj_analyze_help() -> None:

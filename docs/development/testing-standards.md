@@ -11,11 +11,11 @@ ______________________________________________________________________
 
 **Rule**: Test files MUST mirror source module structure.
 
-| Source Module                           | Test File                           | Status     |
-| --------------------------------------- | ----------------------------------- | ---------- |
-| `src/kinemotion/core/pose.py`           | `tests/core/test_pose.py`           | ✅ Correct |
-| `src/kinemotion/cmj/analysis.py`        | `tests/cmj/test_analysis.py`        | ✅ Correct |
-| `src/kinemotion/dropjump/kinematics.py` | `tests/dropjump/test_kinematics.py` | ✅ Correct |
+| Source Module                                     | Test File                                     | Status     |
+| ------------------------------------------------- | --------------------------------------------- | ---------- |
+| `src/kinemotion/core/pose.py`                     | `tests/core/test_pose.py`                     | ✅ Correct |
+| `src/kinemotion/countermovement_jump/analysis.py` | `tests/countermovement_jump/test_analysis.py` | ✅ Correct |
+| `src/kinemotion/dropjump/kinematics.py`           | `tests/dropjump/test_kinematics.py`           | ✅ Correct |
 
 **Bad Examples**:
 
@@ -191,7 +191,7 @@ def test_velocity_calculation() -> None:
     pass
 
 @pytest.mark.integration
-@pytest.mark.cmj
+@pytest.mark.countermovement_jump
 def test_cmj_full_pipeline() -> None:
     """Multiple components working together."""
     pass
@@ -206,17 +206,17 @@ def test_cli_video_processing() -> None:
 
 ### Marker Definitions
 
-| Marker           | Purpose                               | Speed  | Example                    |
-| ---------------- | ------------------------------------- | ------ | -------------------------- |
-| `unit`           | Fast, isolated, no external deps      | \<1s   | `test_compute_velocity()`  |
-| `integration`    | Multiple components, may use fixtures | 1-10s  | `test_detect_cmj_phases()` |
-| `slow`           | Tests that take >1 second             | >1s    | Long video processing      |
-| `requires_video` | Needs video file fixtures             | Varies | CLI/API tests              |
-| `core`           | Tests for core/ module                | Varies | `tests/core/test_*.py`     |
-| `cmj`            | Tests for CMJ analysis                | Varies | `tests/cmj/test_*.py`      |
-| `dropjump`       | Tests for drop jump analysis          | Varies | `tests/dropjump/test_*.py` |
-| `cli`            | Tests for CLI interface               | Varies | `tests/cli/test_*.py`      |
-| `validation`     | Tests for validation logic            | \<1s   | `test_validation.py`       |
+| Marker           | Purpose                               | Speed  | Example                                |
+| ---------------- | ------------------------------------- | ------ | -------------------------------------- |
+| `unit`           | Fast, isolated, no external deps      | \<1s   | `test_compute_velocity()`              |
+| `integration`    | Multiple components, may use fixtures | 1-10s  | `test_detect_cmj_phases()`             |
+| `slow`           | Tests that take >1 second             | >1s    | Long video processing                  |
+| `requires_video` | Needs video file fixtures             | Varies | CLI/API tests                          |
+| `core`           | Tests for core/ module                | Varies | `tests/core/test_*.py`                 |
+| `cmj`            | Tests for CMJ analysis                | Varies | `tests/countermovement_jump/test_*.py` |
+| `dropjump`       | Tests for drop jump analysis          | Varies | `tests/dropjump/test_*.py`             |
+| `cli`            | Tests for CLI interface               | Varies | `tests/cli/test_*.py`                  |
+| `validation`     | Tests for validation logic            | \<1s   | `test_validation.py`                   |
 
 ### Running Tests by Marker
 
@@ -261,7 +261,7 @@ uv run pytest
 pytestmark = [pytest.mark.unit, pytest.mark.core, pytest.mark.validation]
 
 # CMJ integration test that uses video
-pytestmark = [pytest.mark.integration, pytest.mark.cmj, pytest.mark.requires_video]
+pytestmark = [pytest.mark.integration, pytest.mark.countermovement_jump, pytest.mark.requires_video]
 
 # Slow CLI integration test
 pytestmark = [pytest.mark.integration, pytest.mark.cli, pytest.mark.slow, pytest.mark.requires_video]

@@ -6,20 +6,20 @@ physiological bounds for different athlete profiles.
 
 from typing import cast
 
-from kinemotion.cmj.metrics_validator import (
+from kinemotion.core.validation import (
+    AthleteProfile,
+    ValidationSeverity,
+)
+from kinemotion.countermovement_jump.metrics_validator import (
     CMJMetricsValidator,
 )
-from kinemotion.cmj.validation_bounds import (
+from kinemotion.countermovement_jump.validation_bounds import (
     ATHLETE_PROFILES,
     CMJBounds,
     MetricConsistency,
     RSIBounds,
     TripleExtensionBounds,
     estimate_athlete_profile,
-)
-from kinemotion.core.validation import (
-    AthleteProfile,
-    ValidationSeverity,
 )
 
 

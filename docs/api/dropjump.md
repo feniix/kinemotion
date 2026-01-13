@@ -47,7 +47,7 @@ show_source: false
 
 ## Metrics
 
-::: kinemotion.dj.kinematics.DropJumpMetrics
+::: kinemotion.drop_jump.kinematics.DropJumpMetrics
 options:
 show_root_heading: true
 show_source: false

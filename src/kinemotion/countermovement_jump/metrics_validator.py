@@ -9,19 +9,19 @@ of metric issues.
 
 from dataclasses import dataclass
 
-from kinemotion.cmj.validation_bounds import (
-    CMJBounds,
-    MetricConsistency,
-    RSIBounds,
-    TripleExtensionBounds,
-    estimate_athlete_profile,
-)
 from kinemotion.core.types import MetricsDict
 from kinemotion.core.validation import (
     AthleteProfile,
     MetricBounds,
     MetricsValidator,
     ValidationResult,
+)
+from kinemotion.countermovement_jump.validation_bounds import (
+    CMJBounds,
+    MetricConsistency,
+    RSIBounds,
+    TripleExtensionBounds,
+    estimate_athlete_profile,
 )
 
 

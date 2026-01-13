@@ -361,7 +361,7 @@ import pytest
 import time
 import numpy as np
 from kinemotion.core.pose import estimate_pose_from_frame
-from kinemotion.cmj.kinematics import calculate_metrics
+from kinemotion.countermovement_jump.kinematics import calculate_metrics
 
 @pytest.mark.performance
 @pytest.mark.benchmark

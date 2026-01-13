@@ -442,7 +442,7 @@ async def process_video_streaming(
 
 - `src/kinemotion/api.py` (1150 → 450 lines, net -700)
 - `src/kinemotion/dropjump/kinematics.py` (wrap in DropJumpAnalyzer)
-- `src/kinemotion/cmj/kinematics.py` (wrap in CMJAnalyzer)
+- `src/kinemotion/countermovement_jump/kinematics.py` (wrap in CMJAnalyzer)
 
 ### Files Unchanged
 

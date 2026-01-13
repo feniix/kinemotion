@@ -117,7 +117,7 @@ Automatically flag low-confidence detections based on tracking quality indicator
 **Files to modify:**
 
 - `src/kinemotion/dropjump/analysis.py`
-- `src/kinemotion/cmj/analysis.py`
+- `src/kinemotion/countermovement_jump/analysis.py`
 - `src/kinemotion/api.py`
 - Add `src/kinemotion/core/quality.py` (new module)
 

@@ -160,7 +160,7 @@ def test_cmj_full_pipeline():
 **Missing Coverage**:
 
 - `tests/core/test_debug_overlay_utils.py` (0% coverage)
-- `tests/cmj/test_debug_overlay.py` (0% coverage)
+- `tests/countermovement_jump/test_debug_overlay.py` (0% coverage)
 - `tests/dropjump/test_debug_overlay.py` (minimal coverage)
 
 **Rationale**: Debug overlays are lower priority (acceptable 10-36% coverage per qa-test-engineer.md), but should have basic smoke tests.
@@ -337,7 +337,7 @@ uv run pyright
 
 # 4. Test organization correct
 # Verify test file locations match source structure
-ls -la tests/core/ tests/cmj/ tests/dropjump/ tests/cli/
+ls -la tests/core/ tests/countermovement_jump/ tests/dropjump/ tests/cli/
 ```
 
 ______________________________________________________________________

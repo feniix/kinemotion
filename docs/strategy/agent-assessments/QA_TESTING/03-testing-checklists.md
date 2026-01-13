@@ -20,7 +20,7 @@ ______________________________________________________________________
 
 ### Implementation Checklist (Biomechanics + Backend)
 
-**File: `src/kinemotion/cmj/joint_angles.py`**
+**File: `src/kinemotion/countermovement_jump/joint_angles.py`**
 
 - [ ] Update `calculate_ankle_angle()` function
 

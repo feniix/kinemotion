@@ -180,7 +180,7 @@ BACKEND (Python/FastAPI)
 │   │
 │   └── [other core modules]
 │
-├── src/kinemotion/cmj/
+├── src/kinemotion/countermovement_jump/
 │   ├── metrics_validator.py
 │   │   ├── CMJMetricsValidator
 │   │   │   ├─ validate(metrics) → CMJValidationResult

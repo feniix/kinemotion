@@ -14,12 +14,12 @@ from kinemotion.api import (
     process_cmj_video,
     process_cmj_videos_bulk,
 )
-from kinemotion.cmj.kinematics import CMJMetrics
 from kinemotion.core.auto_tuning import AnalysisParameters, QualityPreset
 from kinemotion.core.pipeline_utils import (
     apply_expert_overrides,
     determine_confidence_levels,
 )
+from kinemotion.countermovement_jump.kinematics import CMJMetrics
 
 # Skip multiprocessing tests in CI
 # MediaPipe doesn't work well with ProcessPoolExecutor in headless environments

@@ -553,7 +553,7 @@ ______________________________________________________________________
 **Implementation**:
 
 ```python
-from kinemotion.cmj.joint_angles import calculate_joint_angle
+from kinemotion.countermovement_jump.joint_angles import calculate_joint_angle
 
 def validate_squat_depth(
     hip: PoseLandmark,
@@ -1115,7 +1115,7 @@ from enum import Enum
 from typing import List, Tuple
 import numpy as np
 from kinemotion.core.pose import PoseLandmarks
-from kinemotion.cmj.joint_angles import calculate_joint_angle
+from kinemotion.countermovement_jump.joint_angles import calculate_joint_angle
 
 class WallBallPhase(Enum):
     """Wall ball rep phases"""
@@ -1183,7 +1183,7 @@ def analyze_wallball_video(
 ```python
 from typing import Optional, List
 import numpy as np
-from kinemotion.cmj.joint_angles import calculate_joint_angle
+from kinemotion.countermovement_jump.joint_angles import calculate_joint_angle
 
 def validate_squat_depth(
     hip_landmark,

@@ -19,8 +19,8 @@ import pytest
 from click.testing import CliRunner
 
 from kinemotion.api import DropJumpVideoResult
-from kinemotion.dj.cli import dropjump_analyze
-from kinemotion.dj.kinematics import DropJumpMetrics
+from kinemotion.drop_jump.cli import dropjump_analyze
+from kinemotion.drop_jump.kinematics import DropJumpMetrics
 
 # Skip batch/multiprocessing tests in CI
 # MediaPipe doesn't work with ProcessPoolExecutor in headless environments
@@ -56,8 +56,8 @@ def mock_dropjump_api(mock_dropjump_metrics: DropJumpMetrics):
     """Mock process_dropjump_video and bulk processing to avoid real analysis."""
     # Mock for single video processing
     with (
-        patch("kinemotion.dj.cli.process_dropjump_video") as mock_single,
-        patch("kinemotion.dj.cli.process_dropjump_videos_bulk") as mock_bulk,
+        patch("kinemotion.drop_jump.cli.process_dropjump_video") as mock_single,
+        patch("kinemotion.drop_jump.cli.process_dropjump_videos_bulk") as mock_bulk,
     ):
 
         def single_side_effect(

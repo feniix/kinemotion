@@ -12,7 +12,7 @@ import math
 
 import pytest
 
-from kinemotion.cmj.joint_angles import (
+from kinemotion.countermovement_jump.joint_angles import (
     calculate_angle_3_points,
     calculate_ankle_angle,
     calculate_hip_angle,

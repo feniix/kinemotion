@@ -177,7 +177,7 @@ def add_info(
 
 ### Step 2: Update CMJ Validator
 
-**File**: `src/kinemotion/cmj/metrics_validator.py`
+**File**: `src/kinemotion/countermovement_jump/metrics_validator.py`
 
 #### Example: Flight Time Validation
 
@@ -312,7 +312,7 @@ def _check_jump_height(
 
 ### Step 3: Update Serialization
 
-**File**: `src/kinemotion/cmj/metrics_validator.py` (and similar for drop jump)
+**File**: `src/kinemotion/countermovement_jump/metrics_validator.py` (and similar for drop jump)
 
 ```python
 class CMJValidationResult(ValidationResult):

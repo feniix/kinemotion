@@ -13,8 +13,8 @@ from .api import (
     process_dropjump_video,
     process_dropjump_videos_bulk,
 )
-from .cmj.kinematics import CMJMetrics
-from .dj.kinematics import DropJumpMetrics
+from .countermovement_jump.kinematics import CMJMetrics
+from .drop_jump.kinematics import DropJumpMetrics
 
 # Get version from package metadata (set in pyproject.toml)
 try:

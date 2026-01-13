@@ -18,7 +18,7 @@ def test_main_cli_imports() -> None:
 
 def test_dropjump_cli_imports() -> None:
     """Test that drop jump CLI module can be imported."""
-    from kinemotion.dj.cli import dropjump_analyze
+    from kinemotion.drop_jump.cli import dropjump_analyze
 
     # Verify the command exists and is a Click Command
     assert isinstance(dropjump_analyze, click.Command)
@@ -26,7 +26,7 @@ def test_dropjump_cli_imports() -> None:
 
 def test_cmj_cli_imports() -> None:
     """Test that CMJ CLI module can be imported."""
-    from kinemotion.cmj.cli import cmj_analyze
+    from kinemotion.countermovement_jump.cli import cmj_analyze
 
     # Verify the command exists and is a Click Command
     assert isinstance(cmj_analyze, click.Command)
@@ -46,8 +46,8 @@ def test_all_cli_commands_registered() -> None:
 
 def test_cli_help_messages() -> None:
     """Test that CLI commands have help messages."""
-    from kinemotion.cmj.cli import cmj_analyze
-    from kinemotion.dj.cli import dropjump_analyze
+    from kinemotion.countermovement_jump.cli import cmj_analyze
+    from kinemotion.drop_jump.cli import dropjump_analyze
 
     # Both commands should have help text as strings
     assert isinstance(dropjump_analyze.help, str)

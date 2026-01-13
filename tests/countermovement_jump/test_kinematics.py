@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from kinemotion.cmj.kinematics import CMJMetrics, calculate_cmj_metrics
+from kinemotion.countermovement_jump.kinematics import CMJMetrics, calculate_cmj_metrics
 
 
 def test_calculate_cmj_metrics_basic() -> None:

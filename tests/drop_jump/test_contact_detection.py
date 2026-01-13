@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from kinemotion.dj.analysis import (
+from kinemotion.drop_jump.analysis import (
     ContactState,
     calculate_adaptive_threshold,
     compute_average_foot_position,

@@ -246,7 +246,7 @@ ______________________________________________________________________
 
 All changes have been reverted. Codebase is in original state:
 
-- `src/kinemotion/cmj/analysis.py` - Reverted to baseline algorithm
+- `src/kinemotion/countermovement_jump/analysis.py` - Reverted to baseline algorithm
 - `scripts/validate_ankle_angle.py` - Created for ankle signal investigation (can be kept)
 
 ______________________________________________________________________
@@ -293,7 +293,7 @@ At 30 FPS (33ms/frame), there could be 1-3 frames difference between:
 
 ### Current Algorithm Behavior
 
-From `src/kinemotion/cmj/analysis.py:388-442`:
+From `src/kinemotion/countermovement_jump/analysis.py:388-442`:
 
 ```python
 def find_landing_frame():

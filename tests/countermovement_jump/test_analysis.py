@@ -5,7 +5,12 @@ from typing import cast
 import numpy as np
 import pytest
 
-from kinemotion.cmj.analysis import (
+from kinemotion.core.smoothing import (
+    compute_acceleration_from_derivative,
+    compute_velocity_from_derivative,
+    interpolate_threshold_crossing,
+)
+from kinemotion.countermovement_jump.analysis import (
     compute_signed_velocity,
     detect_cmj_phases,
     find_cmj_landing_from_position_peak,
@@ -19,13 +24,8 @@ from kinemotion.cmj.analysis import (
     find_standing_phase,
     find_takeoff_frame,
 )
-from kinemotion.core.smoothing import (
-    compute_acceleration_from_derivative,
-    compute_velocity_from_derivative,
-    interpolate_threshold_crossing,
-)
 
-pytestmark = [pytest.mark.integration, pytest.mark.cmj]
+pytestmark = [pytest.mark.integration, pytest.mark.countermovement_jump]
 
 
 def test_find_standing_phase() -> None:
@@ -93,7 +93,7 @@ def test_find_lowest_point() -> None:
         ]
     )
 
-    from kinemotion.cmj.analysis import compute_signed_velocity
+    from kinemotion.countermovement_jump.analysis import compute_signed_velocity
 
     velocities = compute_signed_velocity(positions, window_length=5, polyorder=2)
 
@@ -1216,7 +1216,7 @@ def test_cmj_metrics_validation_integration() -> None:
     Verifies Phase 3 integration: validation runs during analysis
     and results are available in metrics object.
     """
-    from kinemotion.cmj.kinematics import CMJMetrics
+    from kinemotion.countermovement_jump.kinematics import CMJMetrics
 
     # Create synthetic metrics
     metrics = CMJMetrics(
@@ -1238,7 +1238,7 @@ def test_cmj_metrics_validation_integration() -> None:
     )
 
     # Validate metrics
-    from kinemotion.cmj.metrics_validator import CMJMetricsValidator
+    from kinemotion.countermovement_jump.metrics_validator import CMJMetricsValidator
 
     validator = CMJMetricsValidator()
     validation_result = validator.validate(cast(dict, metrics.to_dict()))
@@ -1257,8 +1257,8 @@ def test_cmj_metrics_validation_in_json_output() -> None:
     Verifies that when metrics.to_dict() is called, validation
     results are included in the output.
     """
-    from kinemotion.cmj.kinematics import CMJMetrics
-    from kinemotion.cmj.metrics_validator import CMJMetricsValidator
+    from kinemotion.countermovement_jump.kinematics import CMJMetrics
+    from kinemotion.countermovement_jump.metrics_validator import CMJMetricsValidator
 
     # Create synthetic metrics
     metrics = CMJMetrics(
@@ -1301,7 +1301,7 @@ def test_cmj_validation_result_serialization() -> None:
     """
     import json
 
-    from kinemotion.cmj.metrics_validator import (
+    from kinemotion.countermovement_jump.metrics_validator import (
         CMJMetricsValidator,
     )
 
@@ -1349,7 +1349,7 @@ def test_cmj_joint_compensation_detection() -> None:
     When multiple joints are at their extension limits, suggests compensation
     rather than balanced movement quality.
     """
-    from kinemotion.cmj.metrics_validator import CMJMetricsValidator
+    from kinemotion.countermovement_jump.metrics_validator import CMJMetricsValidator
 
     # Create metrics with balanced triple extension
     balanced_metrics = {
