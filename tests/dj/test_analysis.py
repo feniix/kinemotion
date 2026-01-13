@@ -6,7 +6,7 @@ similar to test_cmj_analysis.py for CMJ.
 
 import numpy as np
 
-from kinemotion.dropjump.analysis import (
+from kinemotion.dj.analysis import (
     ContactState,
     calculate_adaptive_threshold,
     detect_drop_start,

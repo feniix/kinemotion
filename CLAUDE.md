@@ -97,7 +97,7 @@ src/kinemotion/
 ├── cmj/                    # CMJ: cli, analysis, kinematics, joint_angles, debug_overlay
 │   ├── metrics_validator.py    # CMJ validator (extends MetricsValidator)
 │   └── validation_bounds.py    # CMJ bounds (CMJBounds, RSIBounds, etc.)
-├── dropjump/               # Drop jump: cli, analysis, kinematics, debug_overlay
+├── dj/                     # Drop jump: cli, analysis, kinematics, debug_overlay
 │   ├── metrics_validator.py    # Drop jump validator (extends MetricsValidator)
 │   └── validation_bounds.py    # Drop jump bounds (DropJumpBounds)
 └── [other modules]
@@ -105,7 +105,7 @@ src/kinemotion/
 tests/                      # 620 tests (comprehensive coverage across all modules)
 ├── conftest.py             # Shared fixtures (cli_runner, minimal_video, sample_video_path)
 ├── core/                   # Core module tests (9 files)
-├── dropjump/               # Drop jump tests (6 files)
+├── dj/                     # Drop jump tests (6 files)
 ├── cmj/                    # CMJ tests (5 files)
 └── cli/                    # CLI tests (3 files)
 docs/                       # CMJ_GUIDE, TRIPLE_EXTENSION, REAL_TIME_ANALYSIS, etc.
@@ -113,7 +113,7 @@ docs/                       # CMJ_GUIDE, TRIPLE_EXTENSION, REAL_TIME_ANALYSIS, e
 
 **Design**: Each jump type is a sibling module with its own CLI command, metrics, validation, and visualization. Shared validation infrastructure (base classes) in `core/validation.py`.
 
-**Test Organization**: Tests mirror source structure with subdirectories for core/, dropjump/, cmj/, and cli/. Shared fixtures centralized in tests/conftest.py to eliminate duplication.
+**Test Organization**: Tests mirror source structure with subdirectories for core/, dj/, cmj/, and cli/. Shared fixtures centralized in tests/conftest.py to eliminate duplication.
 
 ### Full-Stack Architecture
 
@@ -131,7 +131,7 @@ The project has evolved into a complete platform with three main components:
 ├── src/kinemotion/       # CLI analysis engine - v0.34.0
 │   ├── cli.py           # Main CLI commands
 │   ├── api.py           # Python API (used by backend)
-│   └── [modules]        # Core, dropjump, cmj
+│   └── [modules]        # Core, dj, cmj
 └── tests/               # 620 comprehensive tests (80.86% coverage)
 ```
 
@@ -202,9 +202,9 @@ uv run pytest             # All tests (207 test functions)
 
 - Core algorithms: 89-100% ✅ (smoothing: 100%, filtering: 89%, analysis: 88-94%)
 - API/Integration: 66% ✅ (api.py - improved with helper extraction)
-- CLI modules: 90-91% ✅ (dropjump: 90.24%, cmj: 91.26%)
+- CLI modules: 90-91% ✅ (dj: 90.24%, cmj: 91.26%)
 - Validation: 80-100% ✅ (validators, bounds)
-- Kinematics: 92-93% ✅ (cmj: 92.25%, dropjump: 93.03%)
+- Kinematics: 92-93% ✅ (cmj: 92.25%, dj: 93.03%)
 - Visualization: 10-40% ✅ (debug overlays - appropriate)
 
 **Key metrics:**
@@ -216,7 +216,7 @@ uv run pytest             # All tests (207 test functions)
 
 **Test Organization:**
 
-- Mirrored source structure: tests/core/, tests/dropjump/, tests/cmj/, tests/cli/
+- Mirrored source structure: tests/core/, tests/dj/, tests/cmj/, tests/cli/
 - Centralized fixtures in tests/conftest.py
 - Zero fixture duplication across test files
 - Comprehensive edge case testing (81 new tests added)

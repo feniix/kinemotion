@@ -3,8 +3,8 @@
 import json
 from typing import cast
 
-from kinemotion.dropjump.kinematics import DropJumpMetrics
-from kinemotion.dropjump.metrics_validator import (
+from kinemotion.dj.kinematics import DropJumpMetrics
+from kinemotion.dj.metrics_validator import (
     DropJumpMetricsValidator,
 )
 

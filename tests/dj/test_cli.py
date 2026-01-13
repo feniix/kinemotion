@@ -2,7 +2,7 @@
 
 from click.testing import CliRunner
 
-from kinemotion.dropjump.cli import dropjump_analyze
+from kinemotion.dj.cli import dropjump_analyze
 
 
 def test_dropjump_analyze_help() -> None:

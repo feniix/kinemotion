@@ -27,7 +27,7 @@ from kinemotion.cmj.analysis import (
     find_landing_frame,
 )
 from kinemotion.core.pipeline_utils import extract_vertical_positions
-from kinemotion.core.pose import PoseTrackerFactory
+from kinemotion.core.pose import MediaPipePoseTracker
 from kinemotion.core.smoothing import (
     compute_acceleration_from_derivative,
     smooth_landmarks,
@@ -494,7 +494,7 @@ def analyze_video(video_path: str, ground_truth: dict | None = None) -> dict:
         print(f"FPS: {fps:.1f}")
 
         # Create pose tracker
-        tracker = PoseTrackerFactory.create()
+        tracker = MediaPipePoseTracker()
 
         # Extract landmarks (VideoProcessor is iterable)
         landmarks_sequence = []

@@ -14,7 +14,7 @@ from kinemotion.core.validation import (
     MetricsValidator,
     ValidationResult,
 )
-from kinemotion.dropjump.validation_bounds import (
+from kinemotion.dj.validation_bounds import (
     DropJumpBounds,
     estimate_athlete_profile,
 )

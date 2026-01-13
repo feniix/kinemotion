@@ -3,7 +3,7 @@
 import click
 
 from .cmj.cli import cmj_analyze
-from .dropjump.cli import dropjump_analyze
+from .dj.cli import dropjump_analyze
 
 
 @click.group()

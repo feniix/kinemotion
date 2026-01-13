@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 
 from ..cmj.analysis import compute_average_hip_position
-from ..dropjump.analysis import compute_average_foot_position
+from ..dj.analysis import compute_average_foot_position
 from .auto_tuning import AnalysisParameters, QualityPreset, VideoCharacteristics
 from .pose import MediaPipePoseTracker
 from .smoothing import smooth_landmarks, smooth_landmarks_advanced

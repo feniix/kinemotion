@@ -10,9 +10,9 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from kinemotion.core.pose import PoseTracker
+from kinemotion.core.pose import MediaPipePoseTracker
 from kinemotion.core.video_io import VideoProcessor
-from kinemotion.dropjump.analysis import (
+from kinemotion.dj.analysis import (
     detect_drop_start,
     extract_foot_positions_and_visibilities,
 )
@@ -37,7 +37,7 @@ for video_path in videos:
     print(f"Frame count: {frame_count}")
 
     # Get pose landmarks
-    pose_tracker = PoseTracker()
+    pose_tracker = MediaPipePoseTracker()
     landmarks_sequence = []
 
     for frame_idx in range(frame_count):

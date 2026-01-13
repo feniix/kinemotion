@@ -12,9 +12,9 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from kinemotion.cmj.analysis import compute_signed_velocity
-from kinemotion.core.pose import PoseTracker
+from kinemotion.core.pose import MediaPipePoseTracker
 from kinemotion.core.video_io import VideoProcessor
-from kinemotion.dropjump.analysis import extract_foot_positions_and_visibilities
+from kinemotion.dj.analysis import extract_foot_positions_and_visibilities
 
 # Test video with standing_end issue
 video_path = "samples/validation/cmj-45-IMG_6735.MOV"
@@ -32,7 +32,7 @@ fps = video_processor.fps
 frame_count = video_processor.frame_count
 
 # Get pose landmarks
-pose_tracker = PoseTracker()
+pose_tracker = MediaPipePoseTracker()
 landmarks_sequence = []
 
 for frame_idx in range(frame_count):

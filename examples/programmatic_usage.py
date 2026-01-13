@@ -2,14 +2,14 @@
 
 from typing import Any
 
-from kinemotion.core.pose import PoseTracker
+from kinemotion.core.pose import MediaPipePoseTracker
 from kinemotion.core.smoothing import smooth_landmarks
 from kinemotion.core.video_io import VideoProcessor
-from kinemotion.dropjump.analysis import (
+from kinemotion.dj.analysis import (
     detect_ground_contact,
     extract_foot_positions_and_visibilities,
 )
-from kinemotion.dropjump.kinematics import calculate_drop_jump_metrics
+from kinemotion.dj.kinematics import calculate_drop_jump_metrics
 
 
 def analyze_video(video_path: str) -> dict[str, Any]:
@@ -24,7 +24,7 @@ def analyze_video(video_path: str) -> dict[str, Any]:
     """
     # Initialize components
     video = VideoProcessor(video_path)
-    tracker = PoseTracker(
+    tracker = MediaPipePoseTracker(
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5,
     )

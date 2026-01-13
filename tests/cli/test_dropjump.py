@@ -10,6 +10,7 @@ These tests use maintainable patterns:
 import json
 import os
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 import cv2
@@ -18,8 +19,8 @@ import pytest
 from click.testing import CliRunner
 
 from kinemotion.api import DropJumpVideoResult
-from kinemotion.dropjump.cli import dropjump_analyze
-from kinemotion.dropjump.kinematics import DropJumpMetrics
+from kinemotion.dj.cli import dropjump_analyze
+from kinemotion.dj.kinematics import DropJumpMetrics
 
 # Skip batch/multiprocessing tests in CI
 # MediaPipe doesn't work with ProcessPoolExecutor in headless environments
@@ -55,16 +56,16 @@ def mock_dropjump_api(mock_dropjump_metrics: DropJumpMetrics):
     """Mock process_dropjump_video and bulk processing to avoid real analysis."""
     # Mock for single video processing
     with (
-        patch("kinemotion.dropjump.cli.process_dropjump_video") as mock_single,
-        patch("kinemotion.dropjump.cli.process_dropjump_videos_bulk") as mock_bulk,
+        patch("kinemotion.dj.cli.process_dropjump_video") as mock_single,
+        patch("kinemotion.dj.cli.process_dropjump_videos_bulk") as mock_bulk,
     ):
 
         def single_side_effect(
-            video_path,
-            output_video=None,
-            json_output=None,
-            **kwargs,
-        ):
+            video_path: str,
+            output_video: str | None = None,
+            json_output: str | None = None,
+            **kwargs,  # type: ignore
+        ) -> Any:
             # Create dummy output files if requested
             if output_video:
                 Path(output_video).parent.mkdir(parents=True, exist_ok=True)
@@ -90,7 +91,11 @@ def mock_dropjump_api(mock_dropjump_metrics: DropJumpMetrics):
 
         mock_single.side_effect = single_side_effect
 
-        def bulk_side_effect(configs, max_workers=None, progress_callback=None):
+        def bulk_side_effect(
+            configs: list[Any],
+            max_workers: int | None = None,
+            progress_callback: Any | None = None,
+        ) -> list[Any]:
             results = []
             for config in configs:
                 # Create dummy outputs for each config

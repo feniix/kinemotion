@@ -8,10 +8,10 @@ from kinemotion.core.validation import (
     AthleteProfile,
     ValidationSeverity,
 )
-from kinemotion.dropjump.metrics_validator import (
+from kinemotion.dj.metrics_validator import (
     DropJumpMetricsValidator,
 )
-from kinemotion.dropjump.validation_bounds import (
+from kinemotion.dj.validation_bounds import (
     DropJumpBounds,
     estimate_athlete_profile,
 )

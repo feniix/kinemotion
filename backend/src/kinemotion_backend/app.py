@@ -25,7 +25,10 @@ from fastapi import (
 )
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from kinemotion.api import process_cmj_video, process_dropjump_video
+from kinemotion.api import (  # process_dropjump_video still accessible via kinemotion.api
+    process_cmj_video,
+    process_dropjump_video,
+)
 from kinemotion.core.pose import PoseTrackerFactory
 from kinemotion.core.timing import (
     PerformanceTimer,

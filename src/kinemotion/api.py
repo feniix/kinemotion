@@ -2,7 +2,7 @@
 
 This module provides a unified interface for both drop jump and CMJ video analysis.
 The actual implementations have been moved to their respective submodules:
-- Drop jump: kinemotion.dropjump.api
+- Drop jump: kinemotion.dj.api
 - CMJ: kinemotion.cmj.api
 
 """
@@ -20,7 +20,7 @@ from .cmj.api import (
 from .cmj.kinematics import CMJMetrics
 
 # Drop jump API
-from .dropjump.api import (
+from .dj.api import (
     AnalysisOverrides,
     DropJumpVideoConfig,
     DropJumpVideoResult,

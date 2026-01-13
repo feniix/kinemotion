@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 
 from kinemotion.core.video_io import VideoProcessor
-from kinemotion.dropjump.debug_overlay import DropJumpDebugOverlayRenderer
+from kinemotion.dj.debug_overlay import DropJumpDebugOverlayRenderer
 
 
 @pytest.fixture

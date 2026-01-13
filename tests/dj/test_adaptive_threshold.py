@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from kinemotion.dropjump.analysis import calculate_adaptive_threshold
+from kinemotion.dj.analysis import calculate_adaptive_threshold
 
 
 def test_adaptive_threshold_basic() -> None:
