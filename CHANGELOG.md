@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.75.0 (2026-01-14)
+
+### Feat
+
+- **benchmarks**: add performance benchmark suite and code quality improvements
+
 ## kinemotion-v0.74.0 (2026-01-13)
 
 ### Feat
