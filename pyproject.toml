@@ -55,6 +55,7 @@ artifacts = ["src/kinemotion/models/*.task", "src/kinemotion/models/*.onnx"]
 dev = [
     "pytest>=7.4.3",
     "pytest-cov>=5.0.0",
+    "pytest-benchmark>=4.0.0",
     "ruff>=0.1.8",
     "pyright>=1.1.380",
     "pre-commit>=3.6.0",
@@ -69,7 +70,7 @@ dev = [
 
 [tool.pytest.ini_options]
 minversion = "9.0"
-testpaths = ["tests"]
+testpaths = ["tests", "benchmarks"]
 console_output_style = "times"
 strict = true
 addopts = [
@@ -85,12 +86,24 @@ markers = [
     "integration: Integration tests (multiple components, may use fixtures)",
     "slow: Tests that take >1 second to run",
     "requires_video: Tests that require video file fixtures",
+    "benchmark: Performance benchmarks (use --benchmark-only to run)",
     "core: Tests for core/ module",
     "countermovement_jump: Tests for counter movement jump analysis",
     "drop_jump: Tests for drop jump analysis",
     "cli: Tests for CLI interface",
     "validation: Tests for validation logic",
 ]
+
+[tool.pytest-benchmark]
+min_rounds = 5
+# Calibration is used to estimate the loop overhead
+timer = "perf_counter"
+# Disable garbage collection during benchmarks
+disable_gc = true
+# Sort output by time (not name)
+sort = "mean"
+# Only show the slowest benchmarks
+histogram = true
 
 [tool.coverage.run]
 source = ["src/kinemotion"]

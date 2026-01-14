@@ -94,26 +94,26 @@ src/kinemotion/
 ├── core/                   # Shared: pose, smoothing, filtering, auto_tuning, video_io
 │   ├── validation.py       # Base classes (ValidationResult, MetricsValidator, AthleteProfile)
 │   └── [other shared modules]
-├── cmj/                    # CMJ: cli, analysis, kinematics, joint_angles, debug_overlay
+├── countermovement_jump/   # CMJ: cli, analysis, kinematics, joint_angles, debug_overlay
 │   ├── metrics_validator.py    # CMJ validator (extends MetricsValidator)
 │   └── validation_bounds.py    # CMJ bounds (CMJBounds, RSIBounds, etc.)
-├── dj/                     # Drop jump: cli, analysis, kinematics, debug_overlay
+├── drop_jump/              # Drop jump: cli, analysis, kinematics, debug_overlay
 │   ├── metrics_validator.py    # Drop jump validator (extends MetricsValidator)
 │   └── validation_bounds.py    # Drop jump bounds (DropJumpBounds)
 └── [other modules]
 
 tests/                      # 620 tests (comprehensive coverage across all modules)
 ├── conftest.py             # Shared fixtures (cli_runner, minimal_video, sample_video_path)
-├── core/                   # Core module tests (9 files)
-├── dj/                     # Drop jump tests (6 files)
-├── cmj/                    # CMJ tests (5 files)
+├── core/                   # Core module tests (13 files)
+├── drop_jump/              # Drop jump tests (8 files)
+├── countermovement_jump/   # CMJ tests (6 files)
 └── cli/                    # CLI tests (3 files)
 docs/                       # CMJ_GUIDE, TRIPLE_EXTENSION, REAL_TIME_ANALYSIS, etc.
 ```
 
 **Design**: Each jump type is a sibling module with its own CLI command, metrics, validation, and visualization. Shared validation infrastructure (base classes) in `core/validation.py`.
 
-**Test Organization**: Tests mirror source structure with subdirectories for core/, dj/, cmj/, and cli/. Shared fixtures centralized in tests/conftest.py to eliminate duplication.
+**Test Organization**: Tests mirror source structure with subdirectories for core/, drop_jump/, countermovement_jump/, and cli/. Shared fixtures centralized in tests/conftest.py to eliminate duplication.
 
 ### Full-Stack Architecture
 
@@ -181,8 +181,32 @@ See [Implementation Details](docs/technical/implementation-details.md) for compl
 uv run ruff check --fix   # Auto-fix linting
 uv run ruff format        # Format code
 uv run pyright            # Type check (strict)
-uv run pytest             # All tests (207 test functions)
+uv run pytest             # All tests (627 test functions)
 ```
+
+### Performance Benchmarks
+
+```bash
+# Run all benchmarks (excludes regular tests)
+uv run pytest benchmarks/ --benchmark-only
+
+# Compare against previous run (detect regressions)
+uv run pytest benchmarks/ --benchmark-only --benchmark-compare
+
+# Save baseline for future comparison
+uv run pytest benchmarks/ --benchmark-only --benchmark-autosave
+
+# Run specific benchmark class
+uv run pytest benchmarks/test_filtering.py::TestBilateralTemporalFilter --benchmark-only
+```
+
+**Benchmark files:**
+- `benchmarks/test_filtering.py` - bilateral_temporal_filter, detect_outliers_ransac
+- `benchmarks/test_drop_jump.py` - _assign_contact_states, detect_ground_contact
+
+**Output format:** Shows min/max/mean/stddev/median execution times. With `--benchmark-compare`, shows % change from previous run (+/- for faster/slower).
+
+See [benchmarks/README.md](benchmarks/README.md) for details.
 
 ### Standards
 
@@ -216,7 +240,7 @@ uv run pytest             # All tests (207 test functions)
 
 **Test Organization:**
 
-- Mirrored source structure: tests/core/, tests/dj/, tests/cmj/, tests/cli/
+- Mirrored source structure: tests/core/, tests/drop_jump/, tests/countermovement_jump/, tests/cli/
 - Centralized fixtures in tests/conftest.py
 - Zero fixture duplication across test files
 - Comprehensive edge case testing (81 new tests added)
