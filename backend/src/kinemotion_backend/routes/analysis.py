@@ -103,13 +103,14 @@ async def analyze_video(
     This endpoint processes a video file using real kinemotion analysis:
     - Drop Jump: Analyzes ground contact and flight time
     - CMJ: Analyzes jump height, countermovement depth, and phases
+    - Squat Jump: Analyzes jump height from static squat position
 
     Requires authentication via JWT token in Authorization header, or TEST_PASSWORD
     header for testing/debugging.
 
     Args:
         file: Video file to analyze (multipart/form-data)
-        jump_type: Type of jump ("drop_jump" or "cmj")
+        jump_type: Type of jump ("drop_jump", "cmj", "sj", or "squat_jump")
         quality: Analysis quality preset ("fast", "balanced", or "accurate")
         debug: Debug overlay flag ("true" or "false", default "false")
         email: Authenticated user email (extracted from JWT or test password)

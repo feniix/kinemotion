@@ -43,7 +43,7 @@ def validate_jump_type(jump_type: str) -> str:
         ValueError: If jump type is invalid
     """
     normalized = jump_type.lower()
-    valid_types: set[str] = {"drop_jump", "cmj"}
+    valid_types: set[str] = {"drop_jump", "cmj", "sj", "squat_jump"}
     if normalized not in valid_types:
         raise ValueError(
             f"Invalid jump type: {jump_type}. Must be one of: {', '.join(valid_types)}"

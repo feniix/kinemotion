@@ -1,6 +1,6 @@
 from typing import Any, cast
 
-from kinemotion import process_cmj_video, process_dropjump_video
+from kinemotion import process_cmj_video, process_dropjump_video, process_sj_video
 from kinemotion.core.timing import Timer
 
 
@@ -40,7 +40,7 @@ class VideoProcessorService:
                 timer=timer,
                 pose_tracker=pose_tracker,  # type: ignore[arg-type]
             )
-        else:  # cmj
+        elif jump_type == "cmj":
             metrics = process_cmj_video(
                 video_path,
                 quality=quality,
@@ -48,5 +48,15 @@ class VideoProcessorService:
                 timer=timer,
                 pose_tracker=pose_tracker,  # type: ignore[arg-type]
             )
+        elif jump_type in ("sj", "squat_jump"):
+            metrics = process_sj_video(
+                video_path,
+                quality=quality,
+                output_video=output_video,
+                timer=timer,
+                pose_tracker=pose_tracker,  # type: ignore[arg-type]
+            )
+        else:
+            raise ValueError(f"Unsupported jump type: {jump_type}")
 
         return cast(dict[str, Any], metrics.to_dict())
