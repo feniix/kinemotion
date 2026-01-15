@@ -167,11 +167,10 @@ def sj_single_frame() -> FloatArray:
 
 
 @pytest.fixture
-def sj_video_config() -> dict[str, float]:
+def sj_video_config() -> dict[str, float | int]:
     """Create sample video configuration for testing."""
     return {
         "fps": 30.0,
-        "squat_hold_threshold": 0.02,
         "velocity_threshold": 0.1,
         "window_length": 5,
         "polyorder": 2,

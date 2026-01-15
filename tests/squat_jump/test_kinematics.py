@@ -4,9 +4,9 @@ import numpy as np
 import pytest
 
 from kinemotion.squat_jump.kinematics import (
-    calculate_mean_power,
-    calculate_peak_force,
-    calculate_peak_power,
+    _calculate_mean_power,
+    _calculate_peak_force,
+    _calculate_peak_power,
     calculate_sj_metrics,
 )
 
@@ -342,16 +342,13 @@ class TestPowerCalculations:
 
     def test_peak_power_requires_mass(self) -> None:
         """Test that peak power returns None without mass."""
-        positions = np.array([0.6, 0.5, 0.4, 0.3])
         # Realistic takeoff velocity in m/s (~2.5 m/s for 0.32m jump)
         velocities = np.array([0.0, -1.5, -2.5, -2.0])
 
-        result = calculate_peak_power(
-            positions=positions,
+        result = _calculate_peak_power(
             velocities=velocities,
             concentric_start=0,
             takeoff_frame=2,
-            fps=30.0,
             mass_kg=None,
         )
 
@@ -359,16 +356,13 @@ class TestPowerCalculations:
 
     def test_peak_power_calculates_value(self) -> None:
         """Test that peak power calculates a value with mass."""
-        positions = np.array([0.6, 0.5, 0.4, 0.3])
         # Realistic takeoff velocity in m/s (~2.5 m/s for 0.32m jump)
         velocities = np.array([0.0, -1.5, -2.5, -2.0])
 
-        result = calculate_peak_power(
-            positions=positions,
+        result = _calculate_peak_power(
             velocities=velocities,
             concentric_start=0,
             takeoff_frame=2,
-            fps=30.0,
             mass_kg=75.0,
         )
 
@@ -380,7 +374,7 @@ class TestPowerCalculations:
         positions = np.array([0.6, 0.5, 0.4, 0.3])
         velocities = np.array([0.0, -1.5, -2.5, -2.0])
 
-        result = calculate_mean_power(
+        result = _calculate_mean_power(
             positions=positions,
             velocities=velocities,
             concentric_start=0,
@@ -397,7 +391,7 @@ class TestPowerCalculations:
         # Realistic takeoff velocity in m/s
         velocities = np.array([0.0, -1.5, -2.5, -2.0])
 
-        result = calculate_mean_power(
+        result = _calculate_mean_power(
             positions=positions,
             velocities=velocities,
             concentric_start=0,
@@ -414,7 +408,7 @@ class TestPowerCalculations:
         positions = np.array([0.6, 0.5, 0.4, 0.3])
         velocities = np.array([0.0, -1.5, -2.5, -2.0])
 
-        result = calculate_peak_force(
+        result = _calculate_peak_force(
             positions=positions,
             velocities=velocities,
             concentric_start=0,
@@ -431,7 +425,7 @@ class TestPowerCalculations:
         # Realistic takeoff velocity in m/s
         velocities = np.array([0.0, -1.5, -2.5, -2.0])
 
-        result = calculate_peak_force(
+        result = _calculate_peak_force(
             positions=positions,
             velocities=velocities,
             concentric_start=0,
@@ -460,27 +454,24 @@ class TestSayersFormula:
     def test_sayers_increases_with_height(self) -> None:
         """Test that power increases with jump height."""
         # Low jump: ~1.5 m/s takeoff velocity (~0.11m height)
-        positions_low = np.array([0.6, 0.55, 0.5, 0.45])
         velocities_low = np.array([0.0, -0.8, -1.5, -1.2])
 
         # High jump: ~2.8 m/s takeoff velocity (~0.40m height)
-        positions_high = np.array([0.6, 0.5, 0.35, 0.25])
         velocities_high = np.array([0.0, -1.5, -2.8, -2.2])
 
-        power_low = calculate_peak_power(positions_low, velocities_low, 0, 2, 30.0, 70.0)
+        power_low = _calculate_peak_power(velocities_low, 0, 2, 70.0)
 
-        power_high = calculate_peak_power(positions_high, velocities_high, 0, 2, 30.0, 70.0)
+        power_high = _calculate_peak_power(velocities_high, 0, 2, 70.0)
 
         assert power_high > power_low
 
     def test_sayers_increases_with_mass(self) -> None:
         """Test that power increases with athlete mass."""
-        positions = np.array([0.6, 0.5, 0.4, 0.3])
         # Realistic takeoff velocity in m/s
         velocities = np.array([0.0, -1.5, -2.5, -2.0])
 
-        power_light = calculate_peak_power(positions, velocities, 0, 2, 30.0, 60.0)
+        power_light = _calculate_peak_power(velocities, 0, 2, 60.0)
 
-        power_heavy = calculate_peak_power(positions, velocities, 0, 2, 30.0, 90.0)
+        power_heavy = _calculate_peak_power(velocities, 0, 2, 90.0)
 
         assert power_heavy > power_light

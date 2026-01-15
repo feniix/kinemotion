@@ -35,7 +35,7 @@ class TestDetectSquatStart:
         result = detect_squat_start(
             positions=sj_invalid_no_hold,
             fps=sj_video_config["fps"],
-            velocity_threshold=sj_video_config["squat_hold_threshold"],
+            velocity_threshold=sj_video_config["velocity_threshold"],
         )
         # Should return a frame number (not None) as algorithm finds some stable period
         assert result is not None
@@ -51,7 +51,7 @@ class TestDetectSquatStart:
         result = detect_squat_start(
             positions=sj_invalid_short_hold,
             fps=sj_video_config["fps"],
-            velocity_threshold=sj_video_config["squat_hold_threshold"],
+            velocity_threshold=sj_video_config["velocity_threshold"],
         )
         # Should return a frame number (not None) as algorithm finds some stable period
         assert result is not None
@@ -64,7 +64,7 @@ class TestDetectSquatStart:
         result = detect_squat_start(
             positions=empty_positions,
             fps=sj_video_config["fps"],
-            velocity_threshold=sj_video_config["squat_hold_threshold"],
+            velocity_threshold=sj_video_config["velocity_threshold"],
         )
         # Should return None for empty arrays
         assert result is None
@@ -75,7 +75,7 @@ class TestDetectSquatStart:
         result = detect_squat_start(
             positions=single_frame,
             fps=sj_video_config["fps"],
-            velocity_threshold=sj_video_config["squat_hold_threshold"],
+            velocity_threshold=sj_video_config["velocity_threshold"],
         )
         # Should return None for single frame
         assert result is None
@@ -88,7 +88,7 @@ class TestDetectSquatStart:
         result = detect_squat_start(
             positions=noisy_positions,
             fps=sj_video_config["fps"],
-            velocity_threshold=sj_video_config["squat_hold_threshold"],
+            velocity_threshold=sj_video_config["velocity_threshold"],
         )
         # Should still detect squat hold despite noise
         assert result is not None
@@ -115,7 +115,6 @@ class TestDetectSJPhases:
         result = detect_sj_phases(
             positions=positions,
             fps=fps,
-            squat_hold_threshold=sj_video_config["squat_hold_threshold"],
             velocity_threshold=sj_video_config["velocity_threshold"],
         )
 
@@ -136,7 +135,6 @@ class TestDetectSJPhases:
         result = detect_sj_phases(
             positions=sj_invalid_no_hold,
             fps=sj_video_config["fps"],
-            squat_hold_threshold=sj_video_config["squat_hold_threshold"],
             velocity_threshold=sj_video_config["velocity_threshold"],
         )
         # May return None or valid detection depending on algorithm's ability to find patterns
@@ -149,7 +147,6 @@ class TestDetectSJPhases:
         result = detect_sj_phases(
             positions=empty_positions,
             fps=sj_video_config["fps"],
-            squat_hold_threshold=sj_video_config["squat_hold_threshold"],
             velocity_threshold=sj_video_config["velocity_threshold"],
         )
         # Should return None for empty arrays (insufficient data)
@@ -161,7 +158,6 @@ class TestDetectSJPhases:
         result = detect_sj_phases(
             positions=single_frame,
             fps=sj_video_config["fps"],
-            squat_hold_threshold=sj_video_config["squat_hold_threshold"],
             velocity_threshold=sj_video_config["velocity_threshold"],
         )
         # Should return None for single frame (insufficient data)
@@ -184,8 +180,7 @@ class TestDetectSJPhases:
         result1 = detect_sj_phases(
             positions=positions,
             fps=fps,
-            squat_hold_threshold=0.001,  # Very strict
-            velocity_threshold=sj_video_config["velocity_threshold"],
+            velocity_threshold=0.001,  # Very strict
         )
         # Algorithm may return None or valid detection depending on thresholds
         assert result1 is None or (isinstance(result1, tuple) and len(result1) == 4)
@@ -194,8 +189,7 @@ class TestDetectSJPhases:
         result2 = detect_sj_phases(
             positions=positions,
             fps=fps,
-            squat_hold_threshold=0.1,  # Very lenient
-            velocity_threshold=sj_video_config["velocity_threshold"],
+            velocity_threshold=0.5,  # Very lenient
         )
         # Algorithm may return None or valid detection depending on thresholds
         assert result2 is None or (isinstance(result2, tuple) and len(result2) == 4)
@@ -216,7 +210,6 @@ class TestDetectSJPhases:
         result1 = detect_sj_phases(
             positions=positions,
             fps=60.0,
-            squat_hold_threshold=sj_video_config["squat_hold_threshold"],
             velocity_threshold=sj_video_config["velocity_threshold"],
         )
         # Algorithm may return None or valid detection depending on frame rate
@@ -226,7 +219,6 @@ class TestDetectSJPhases:
         result2 = detect_sj_phases(
             positions=positions,
             fps=120.0,
-            squat_hold_threshold=sj_video_config["squat_hold_threshold"],
             velocity_threshold=sj_video_config["velocity_threshold"],
         )
         # Algorithm may return None or valid detection depending on frame rate
@@ -249,7 +241,6 @@ class TestDetectSJPhases:
         result1 = detect_sj_phases(
             positions=positions,
             fps=fps,
-            squat_hold_threshold=sj_video_config["squat_hold_threshold"],
             velocity_threshold=sj_video_config["velocity_threshold"],
             window_length=3,
             polyorder=2,
@@ -261,7 +252,6 @@ class TestDetectSJPhases:
         result2 = detect_sj_phases(
             positions=positions,
             fps=fps,
-            squat_hold_threshold=sj_video_config["squat_hold_threshold"],
             velocity_threshold=sj_video_config["velocity_threshold"],
             window_length=5,
             polyorder=1,

@@ -114,11 +114,11 @@ class SJMetricsValidator(MetricsValidator):
         # PRIMARY BOUNDS CHECKS
         self._check_flight_time(data, result, profile)
         self._check_jump_height(data, result, profile)
-        self._check_squat_hold_duration(data, result, profile)
-        self._check_concentric_duration(data, result, profile)
+        self._check_squat_hold_duration(data, result)
+        self._check_concentric_duration(data, result)
         self._check_peak_concentric_velocity(data, result, profile)
-        self._check_power_metrics(data, result, profile)
-        self._check_force_metrics(data, result, profile)
+        self._check_power_metrics(data, result)
+        self._check_force_metrics(data, result)
 
         # CROSS-VALIDATION CHECKS
         self._check_flight_time_height_consistency(data, result)
@@ -183,9 +183,7 @@ class SJMetricsValidator(MetricsValidator):
             format_str="{value:.3f}m",
         )
 
-    def _check_squat_hold_duration(
-        self, metrics: MetricsDict, result: SJValidationResult, profile: AthleteProfile
-    ) -> None:
+    def _check_squat_hold_duration(self, metrics: MetricsDict, result: SJValidationResult) -> None:
         """Validate squat hold duration."""
         duration_raw = self._get_metric_value(
             metrics, "squat_hold_duration_ms", "squat_hold_duration"
@@ -210,9 +208,7 @@ class SJMetricsValidator(MetricsValidator):
                 value=duration,
             )
 
-    def _check_concentric_duration(
-        self, metrics: MetricsDict, result: SJValidationResult, profile: AthleteProfile
-    ) -> None:
+    def _check_concentric_duration(self, metrics: MetricsDict, result: SJValidationResult) -> None:
         """Validate concentric duration."""
         duration_raw = self._get_metric_value(
             metrics, "concentric_duration_ms", "concentric_duration"
@@ -268,9 +264,7 @@ class SJMetricsValidator(MetricsValidator):
             format_str="{value:.3f} m/s",
         )
 
-    def _check_power_metrics(
-        self, metrics: MetricsDict, result: SJValidationResult, profile: AthleteProfile
-    ) -> None:
+    def _check_power_metrics(self, metrics: MetricsDict, result: SJValidationResult) -> None:
         """Validate power metrics (peak and mean)."""
         power_checks = [
             ("peak_power", "peak_power_w", SJBounds.PEAK_POWER, ""),
@@ -305,9 +299,7 @@ class SJMetricsValidator(MetricsValidator):
                     value=power,
                 )
 
-    def _check_force_metrics(
-        self, metrics: MetricsDict, result: SJValidationResult, profile: AthleteProfile
-    ) -> None:
+    def _check_force_metrics(self, metrics: MetricsDict, result: SJValidationResult) -> None:
         """Validate force metrics."""
         peak_force = self._get_metric_value(metrics, "peak_force_n", "peak_force")
         if peak_force is None:

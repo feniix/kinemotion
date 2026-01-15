@@ -165,13 +165,11 @@ def calculate_sj_metrics(
         peak_concentric_velocity = 0.0
 
     # Calculate power and force if mass is provided
-    peak_power = calculate_peak_power(
+    peak_power = _calculate_peak_power(velocities, concentric_start, takeoff_frame, mass_kg)
+    mean_power = _calculate_mean_power(
         positions, velocities, concentric_start, takeoff_frame, fps, mass_kg
     )
-    mean_power = calculate_mean_power(
-        positions, velocities, concentric_start, takeoff_frame, fps, mass_kg
-    )
-    peak_force = calculate_peak_force(
+    peak_force = _calculate_peak_force(
         positions, velocities, concentric_start, takeoff_frame, fps, mass_kg
     )
 
@@ -193,12 +191,10 @@ def calculate_sj_metrics(
     )
 
 
-def calculate_peak_power(
-    positions: FloatArray,
+def _calculate_peak_power(
     velocities: FloatArray,
     concentric_start: int,
     takeoff_frame: int,
-    fps: float,
     mass_kg: float | None,
 ) -> float | None:
     """Calculate peak power using Sayers et al. (1999) regression equation.
@@ -212,11 +208,9 @@ def calculate_peak_power(
     - Superior to Lewis formula (73% error) and Harman equation
 
     Args:
-        positions: 1D array of vertical positions (not used in regression)
         velocities: 1D array of vertical velocities
         concentric_start: Frame index where concentric phase begins
         takeoff_frame: Frame index where takeoff occurs
-        fps: Video frames per second
         mass_kg: Athlete mass in kilograms
 
     Returns:
@@ -246,7 +240,7 @@ def calculate_peak_power(
     return float(peak_power)
 
 
-def calculate_mean_power(
+def _calculate_mean_power(
     positions: FloatArray,
     velocities: FloatArray,
     concentric_start: int,
@@ -297,7 +291,7 @@ def calculate_mean_power(
     return float(mean_power)
 
 
-def calculate_peak_force(
+def _calculate_peak_force(
     positions: FloatArray,
     velocities: FloatArray,
     concentric_start: int,

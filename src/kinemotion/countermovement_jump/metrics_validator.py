@@ -124,8 +124,8 @@ class CMJMetricsValidator(MetricsValidator):
         self._check_flight_time(data, result, profile)
         self._check_jump_height(data, result, profile)
         self._check_countermovement_depth(data, result, profile)
-        self._check_concentric_duration(data, result, profile)
-        self._check_eccentric_duration(data, result, profile)
+        self._check_concentric_duration(data, result)
+        self._check_eccentric_duration(data, result)
         self._check_peak_velocities(data, result, profile)
 
         # CROSS-VALIDATION CHECKS
@@ -220,7 +220,7 @@ class CMJMetricsValidator(MetricsValidator):
         )
 
     def _check_concentric_duration(
-        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
+        self, metrics: MetricsDict, result: CMJValidationResult
     ) -> None:
         """Validate concentric duration (contact time)."""
         duration_raw = self._get_metric_value(
@@ -256,9 +256,7 @@ class CMJMetricsValidator(MetricsValidator):
                 value=duration,
             )
 
-    def _check_eccentric_duration(
-        self, metrics: MetricsDict, result: CMJValidationResult, profile: AthleteProfile
-    ) -> None:
+    def _check_eccentric_duration(self, metrics: MetricsDict, result: CMJValidationResult) -> None:
         """Validate eccentric duration."""
         duration_raw = self._get_metric_value(
             metrics, "eccentric_duration_ms", "eccentric_duration"

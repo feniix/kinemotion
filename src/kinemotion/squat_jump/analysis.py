@@ -21,7 +21,6 @@ class SJPhase(Enum):
 def detect_sj_phases(
     positions: FloatArray,
     fps: float,
-    squat_hold_threshold: float = 0.02,
     velocity_threshold: float = 0.1,
     window_length: int = 5,
     polyorder: int = 2,
@@ -38,7 +37,6 @@ def detect_sj_phases(
     Args:
         positions: 1D array of vertical positions (normalized coordinates)
         fps: Video frames per second
-        squat_hold_threshold: Threshold for detecting squat hold phase (m)
         velocity_threshold: Threshold for detecting flight phase (m/s)
         window_length: Window size for velocity smoothing
         polyorder: Polynomial order for smoothing
@@ -183,6 +181,26 @@ def detect_squat_start(
     return None
 
 
+def _find_takeoff_threshold_crossing(
+    velocities: FloatArray,
+    search_start: int,
+    search_end: int,
+    velocity_threshold: float,
+    min_duration_frames: int,
+) -> int | None:
+    """Find first frame where velocity exceeds threshold for minimum duration."""
+    above_threshold = velocities[search_start:search_end] <= -velocity_threshold
+    if not np.any(above_threshold):
+        return None
+
+    threshold_indices = np.nonzero(above_threshold)[0]
+    for idx in threshold_indices:
+        if idx + min_duration_frames < len(above_threshold):
+            if np.all(above_threshold[idx : idx + min_duration_frames]):
+                return search_start + idx
+    return None
+
+
 def detect_takeoff(
     positions: FloatArray,
     velocities: FloatArray,
@@ -234,17 +252,41 @@ def detect_takeoff(
     # Verify velocity exceeds threshold
     if velocities[takeoff_frame] > -velocity_threshold:
         # Velocity not high enough - actual takeoff may be later
-        # Look for frames where velocity exceeds threshold
-        above_threshold = velocities[search_start:search_end] <= -velocity_threshold
-        if np.any(above_threshold):
-            # Find first frame above threshold with sufficient duration
-            threshold_indices = np.where(above_threshold)[0]
-            for idx in threshold_indices:
-                if idx + min_duration_frames < len(above_threshold):
-                    if np.all(above_threshold[idx : idx + min_duration_frames]):
-                        return search_start + idx
+        # Look for frames where velocity exceeds threshold with duration filter
+        return _find_takeoff_threshold_crossing(
+            velocities, search_start, search_end, velocity_threshold, min_duration_frames
+        )
 
     return takeoff_frame if velocities[takeoff_frame] <= -velocity_threshold else None
+
+
+def _detect_impact_landing(
+    accelerations: FloatArray,
+    search_start: int,
+    search_end: int,
+) -> int | None:
+    """Detect landing by finding the maximum acceleration spike."""
+    landing_accelerations = accelerations[search_start:search_end]
+    if len(landing_accelerations) == 0:
+        return None
+
+    # Find maximum acceleration spike (impact)
+    landing_idx = int(np.argmax(landing_accelerations))
+    return search_start + landing_idx
+
+
+def _refine_landing_by_velocity(
+    velocities: FloatArray,
+    landing_frame: int,
+) -> int:
+    """Refine landing frame by looking for positive (downward) velocity."""
+    if landing_frame < len(velocities) and velocities[landing_frame] < 0:
+        # Velocity still upward - landing might not be detected yet
+        # Look ahead for where velocity becomes positive
+        for i in range(landing_frame, min(landing_frame + 10, len(velocities))):
+            if velocities[i] >= 0:
+                return i
+    return landing_frame
 
 
 def detect_landing(
@@ -270,6 +312,8 @@ def detect_landing(
         velocity_threshold: Maximum velocity threshold for landing detection
         min_flight_frames: Minimum frames in flight before landing
         landing_search_window_s: Time window to search for landing after peak (seconds)
+        window_length: Window size for velocity smoothing
+        polyorder: Polynomial order for smoothing
 
     Returns:
         Frame index where landing occurs, or None if not detected
@@ -294,8 +338,7 @@ def detect_landing(
 
     # Find peak height (minimum position value in normalized coords = highest point)
     flight_positions = positions[search_start:search_end]
-    peak_idx = int(np.argmin(flight_positions))
-    peak_frame = search_start + peak_idx
+    peak_frame = search_start + int(np.argmin(flight_positions))
 
     # After peak, look for landing using impact detection
     landing_search_start = peak_frame + min_flight_frames
@@ -312,8 +355,12 @@ def detect_landing(
         landing_window = window_length
         if landing_window % 2 == 0:
             landing_window += 1
+        # Use polyorder for smoothing (must be at least 2 for deriv=2)
+        eff_polyorder = max(2, polyorder)
         accelerations = np.abs(
-            savgol_filter(positions, landing_window, 2, deriv=2, delta=1.0, mode="interp")
+            savgol_filter(
+                positions, landing_window, eff_polyorder, deriv=2, delta=1.0, mode="interp"
+            )
         )
     else:
         # Fallback for short sequences
@@ -321,22 +368,10 @@ def detect_landing(
         accelerations = np.abs(np.diff(velocities_abs, prepend=velocities_abs[0]))
 
     # Find impact: maximum positive acceleration (deceleration spike)
-    landing_accelerations = accelerations[landing_search_start:landing_search_end]
+    landing_frame = _detect_impact_landing(accelerations, landing_search_start, landing_search_end)
 
-    if len(landing_accelerations) == 0:
+    if landing_frame is None:
         return None
 
-    # Find maximum acceleration spike (impact)
-    landing_idx = int(np.argmax(landing_accelerations))
-    landing_frame = landing_search_start + landing_idx
-
     # Additional verification: velocity should be positive (downward) at landing
-    if landing_frame < len(velocities) and velocities[landing_frame] < 0:
-        # Velocity still upward - landing might not be detected yet
-        # Look ahead for where velocity becomes positive
-        for i in range(landing_frame, min(landing_frame + 10, len(velocities))):
-            if velocities[i] >= 0:
-                landing_frame = i
-                break
-
-    return landing_frame
+    return _refine_landing_by_velocity(velocities, landing_frame)
