@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.76.0 (2026-01-15)
+
+### Feat
+
+- **backend**: integrate Squat Jump (SJ) analysis endpoints
+- **squat-jump**: add experimental Squat Jump (SJ) analysis module
+
 ## kinemotion-v0.75.0 (2026-01-14)
 
 ### Feat
