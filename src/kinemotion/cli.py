@@ -4,6 +4,7 @@ import click
 
 from .countermovement_jump.cli import cmj_analyze
 from .drop_jump.cli import dropjump_analyze
+from .squat_jump.cli import sj_analyze
 
 
 @click.group()
@@ -17,6 +18,7 @@ def cli() -> None:  # type: ignore[return]
 # Type ignore needed because @click.group() transforms cli into a click.Group
 cli.add_command(dropjump_analyze)  # type: ignore[attr-defined]
 cli.add_command(cmj_analyze)  # type: ignore[attr-defined]
+cli.add_command(sj_analyze)  # type: ignore[attr-defined]
 
 
 if __name__ == "__main__":

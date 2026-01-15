@@ -90,6 +90,7 @@ markers = [
     "core: Tests for core/ module",
     "countermovement_jump: Tests for counter movement jump analysis",
     "drop_jump: Tests for drop jump analysis",
+    "squat_jump: Tests for squat jump analysis",
     "cli: Tests for CLI interface",
     "validation: Tests for validation logic",
 ]

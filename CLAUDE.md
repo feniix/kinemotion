@@ -11,6 +11,7 @@ Kinemotion: Video-based kinematic analysis for athletic performance using pose e
 
 - **Drop Jump**: Ground contact time, flight time, reactive strength index
 - **Counter Movement Jump (CMJ)**: Jump height, flight time, countermovement depth, triple extension
+- **Squat Jump (SJ)**: Pure concentric power, force production, requires athlete mass
 - **Planned:** Sprint analysis, weightlifting form, wall ball (see multi-sport comparison)
 
 ## Current Roadmap (MVP-First Approach)
@@ -100,13 +101,17 @@ src/kinemotion/
 ├── drop_jump/              # Drop jump: cli, analysis, kinematics, debug_overlay
 │   ├── metrics_validator.py    # Drop jump validator (extends MetricsValidator)
 │   └── validation_bounds.py    # Drop jump bounds (DropJumpBounds)
+├── squat_jump/             # SJ: cli, analysis, kinematics, debug_overlay
+│   ├── metrics_validator.py    # SJ validator (extends MetricsValidator)
+│   └── validation_bounds.py    # SJ bounds (SJBounds, etc.)
 └── [other modules]
 
-tests/                      # 620 tests (comprehensive coverage across all modules)
+tests/                      # 650+ tests (comprehensive coverage across all modules)
 ├── conftest.py             # Shared fixtures (cli_runner, minimal_video, sample_video_path)
 ├── core/                   # Core module tests (13 files)
 ├── drop_jump/              # Drop jump tests (8 files)
 ├── countermovement_jump/   # CMJ tests (6 files)
+├── squat_jump/             # SJ tests (4 files)
 └── cli/                    # CLI tests (3 files)
 docs/                       # CMJ_GUIDE, TRIPLE_EXTENSION, REAL_TIME_ANALYSIS, etc.
 ```

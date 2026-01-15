@@ -19,6 +19,7 @@
 
 - **Drop Jump**: Ground contact time, flight time, reactive strength index
 - **Counter Movement Jump (CMJ)**: Jump height, flight time, countermovement depth, triple extension biomechanics
+- **Squat Jump (SJ)**: Pure concentric power, force production, requires athlete mass
 
 ## Features
 
@@ -50,6 +51,14 @@
 - **Skeleton overlay** - biomechanical visualization
 - **Metrics**: Jump height, flight time, countermovement depth, eccentric/concentric durations
 - **Validated accuracy**: 50.6cm jump (±1 frame precision)
+
+### Squat Jump (SJ) Analysis
+
+- **Static squat start** - pure concentric power test (no countermovement)
+- **Power/Force calculations** - Sayers regression (R² = 0.87, \<1% error vs force plates)
+- **Mass required** - athlete body weight needed for kinetic calculations
+- **Metrics**: Jump height, flight time, squat hold/concentric durations, peak/mean power, peak force
+- **Phase detection**: Squat hold → concentric → flight → landing
 
 ## ⚠️ Validation Status
 
@@ -196,7 +205,22 @@ kinemotion cmj-analyze video.mp4
 kinemotion cmj-analyze video.mp4 --output debug.mp4
 ```
 
-### Common Options (Both Jump Types)
+### Analyzing Squat Jump (SJ)
+
+Analyzes pure concentric power production:
+
+```bash
+# Mass is required for power/force calculations
+kinemotion sj-analyze video.mp4 --mass 75.0
+
+# Complete analysis with all outputs
+kinemotion sj-analyze video.mp4 --mass 75.0 \
+  --output debug.mp4 \
+  --json-output results.json \
+  --verbose
+```
+
+### Common Options (All Jump Types)
 
 ```bash
 # Save metrics to JSON
@@ -356,6 +380,31 @@ metrics = process_cmj_video("video.mp4", output_video="debug.mp4")
 # - Skeleton overlay (foot→shin→femur→trunk)
 # - Joint angles (ankle, knee, hip, trunk)
 # - Phase-coded visualization
+```
+
+### Squat Jump (SJ) API
+
+```python
+from kinemotion import process_sj_video
+
+# Mass is required for power/force calculations
+metrics = process_sj_video(
+    video_path="athlete_sj.mp4",
+    mass_kg=75.0,  # Required: athlete body mass
+    quality="balanced",
+    verbose=True
+)
+
+# Access results
+print(f"Jump height: {metrics.jump_height:.3f}m")
+print(f"Squat hold: {metrics.squat_hold_duration*1000:.1f}ms")
+print(f"Concentric: {metrics.concentric_duration*1000:.1f}ms")
+
+# Power/force (only available if mass provided)
+if metrics.peak_power:
+    print(f"Peak power: {metrics.peak_power:.0f}W")
+    print(f"Mean power: {metrics.mean_power:.0f}W")
+    print(f"Peak force: {metrics.peak_force:.0f}N")
 ```
 
 ### CSV Export Example
