@@ -23,7 +23,7 @@ description: |
   assistant: "I'll use the python-backend-developer to extract shared logic to core/ modules - target is <3% duplication."
   <commentary>Code quality requires DRY patterns and shared utilities</commentary>
   </example>
-model: haiku
+model: inherit
 color: green
 ---
 

@@ -23,7 +23,7 @@ description: |
   assistant: "I'll use the computer-vision-engineer for changes to debug_overlay.py - they know the MediaPipe landmark indices (hip:23/24, knee:25/26, ankle:27/28)."
   <commentary>File pattern trigger: debug_overlay.py</commentary>
   </example>
-model: haiku
+model: inherit
 color: cyan
 ---
 

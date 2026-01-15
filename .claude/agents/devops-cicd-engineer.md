@@ -23,7 +23,7 @@ description: |
   assistant: "I'll use the devops-cicd-engineer to update sonar-project.properties with the coverage threshold quality gate."
   <commentary>File pattern trigger: sonar-project.properties</commentary>
   </example>
-model: haiku
+model: inherit
 color: green
 ---
 

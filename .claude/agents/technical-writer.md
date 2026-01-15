@@ -23,7 +23,7 @@ description: |
   assistant: "Since this involves CLAUDE.md, I'll use the technical-writer to update the quick reference and ensure it stays synchronized with docs/."
   <commentary>File pattern trigger: CLAUDE.md</commentary>
   </example>
-model: haiku
+model: inherit
 color: magenta
 ---
 

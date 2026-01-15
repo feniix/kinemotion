@@ -23,7 +23,7 @@ description: |
   assistant: "Since this is in tests/**, I'll use the qa-test-engineer to update the shared fixtures with proper cleanup and documentation."
   <commentary>File pattern trigger: tests/**/*.py</commentary>
   </example>
-model: haiku
+model: inherit
 color: yellow
 ---
 
