@@ -1,5 +1,5 @@
 # Makefile for Reveal.js Presentation with reveal-md
-# Using npx - no installation required!
+# Using bunx - no installation required!
 
 .PHONY: all serve watch pdf html static clean help
 
@@ -12,29 +12,29 @@ serve:
 	@echo "Opening http://localhost:1948"
 	@echo "Press 's' for speaker notes view"
 	@echo "Press Ctrl+C to stop"
-	@npx reveal-md slides.md --watch
+	@bunx reveal-md slides.md --watch
 
 # Watch mode with live reload
 watch:
 	@echo "Starting in watch mode with live reload..."
-	@npx reveal-md slides.md --watch
+	@bunx reveal-md slides.md --watch
 
 # Export to PDF (requires Chrome/Chromium)
 pdf:
 	@echo "Exporting to PDF..."
-	@npx reveal-md slides.md --print slides.pdf
+	@bunx reveal-md slides.md --print slides.pdf
 	@echo "✅ PDF exported: slides.pdf"
 
 # Export to static HTML site
 html:
 	@echo "Exporting to static HTML..."
-	@npx reveal-md slides.md --static presentation-output
+	@bunx reveal-md slides.md --static presentation-output
 	@echo "✅ Static site created in presentation-output/"
 
 # Export to standalone single HTML file
 standalone:
 	@echo "Creating standalone HTML file..."
-	@npx reveal-md slides.md --static presentation-output --static-dirs=false
+	@bunx reveal-md slides.md --static presentation-output --static-dirs=false
 	@cp presentation-output/index.html ../kinemotion-presentation.html
 	@echo "✅ Standalone HTML: ../kinemotion-presentation.html"
 
@@ -42,7 +42,7 @@ standalone:
 speaker:
 	@echo "Starting with speaker notes..."
 	@echo "Press 's' to open speaker view"
-	@npx reveal-md slides.md
+	@bunx reveal-md slides.md
 
 # Clean generated files
 clean:

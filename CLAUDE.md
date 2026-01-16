@@ -11,7 +11,7 @@ Kinemotion: Video-based kinematic analysis for athletic performance using pose e
 
 - **Drop Jump**: Ground contact time, flight time, reactive strength index
 - **Counter Movement Jump (CMJ)**: Jump height, flight time, countermovement depth, triple extension
-- **Squat Jump (SJ)**: Pure concentric power, force production, requires athlete mass
+- **Squat Jump (SJ)**: Pure concentric power, force production, requires athlete mass (⚠️ experimental - see sj-guide.md)
 - **Planned:** Sprint analysis, weightlifting form, wall ball (see multi-sport comparison)
 
 ## Current Roadmap (MVP-First Approach)
@@ -155,15 +155,17 @@ User uploads video → Frontend (React) → Backend API (FastAPI) → kinemotion
 - Backend: Google Cloud Run (GitHub Actions, Workload Identity Federation)
 - CLI: PyPI (v0.34.0, standalone usage + backend integration)
 
-### Key Differences: Drop Jump vs CMJ
+### Key Differences: Drop Jump vs CMJ vs SJ
 
-| Feature    | Drop Jump                  | CMJ                          |
-| ---------- | -------------------------- | ---------------------------- |
-| Starting   | Elevated box               | Floor level                  |
-| Algorithm  | Forward search             | Backward search from peak    |
-| Velocity   | Absolute (magnitude)       | Signed (direction matters)   |
-| Parameters | Auto-tuned quality presets | Auto-tuned quality presets   |
-| Key Metric | Ground contact time        | Jump height from flight time |
+| Feature    | Drop Jump                  | CMJ                             | SJ                             |
+| ---------- | -------------------------- | ------------------------------- | ------------------------------ |
+| Starting   | Elevated box               | Floor level                     | Static squat position          |
+| Algorithm  | Forward search             | Backward search from peak       | Squat hold detection → takeoff |
+| Velocity   | Absolute (magnitude)       | Signed (direction matters)      | Signed (upward motion)         |
+| Mass       | Optional                   | Optional                        | **Required** for power/force   |
+| Parameters | Auto-tuned quality presets | Auto-tuned quality presets      | Auto-tuned quality presets     |
+| Key Metric | Ground contact time        | Jump height from flight time    | Peak power, force production   |
+| Use Case   | Reactive strength (RSI)    | Athletic performance (with SSC) | Pure concentric power (no SSC) |
 
 ## Critical Gotchas
 
@@ -181,7 +183,22 @@ User uploads video → Frontend (React) → Backend API (FastAPI) → kinemotion
   - At 90° lateral: MediaPipe confuses left/right feet (occlusion)
   - At 45° oblique: Both legs clearly separated → accurate tracking
 
+**SJ Specific:**
+
+- **Mass is required** for power/force calculations (`--mass` or `mass_kg` parameter)
+- Static squat hold detection: athlete must hold squat position briefly (≥150ms at \<0.1 m/s)
+- No countermovement - pure concentric movement from squat position
+- Power calculated via Sayers regression (validated, R²=0.87)
+- **45° oblique view recommended** (same rationale as CMJ)
+
 See [Implementation Details](docs/technical/implementation-details.md) for complete technical reference.
+
+**Jump-specific guides:**
+
+- [CMJ Guide](docs/guides/cmj-guide.md) - Counter Movement Jump analysis
+- [SJ Guide](docs/guides/sj-guide.md) - Squat Jump analysis (mass required)
+- [Drop Jump Guide](docs/guides/drop-jump-guide.md) - Drop jump analysis, RSI calculation
+- [Bulk Processing](docs/guides/bulk-processing.md) - Batch processing for all jump types
 
 ## Testing & Quality
 
@@ -300,6 +317,9 @@ kinemotion dropjump-analyze video.mp4
 # CMJ with debug video
 kinemotion cmj-analyze video.mp4 --output debug.mp4
 
+# Squat Jump (mass required for power/force)
+kinemotion sj-analyze video.mp4 --mass 75.0 --output debug.mp4
+
 # Batch processing
 kinemotion cmj-analyze videos/*.mp4 --batch --workers 4
 ```
@@ -310,10 +330,15 @@ kinemotion cmj-analyze videos/*.mp4 --batch --workers 4
 # Drop jump
 from kinemotion import process_dropjump_video
 metrics = process_dropjump_video("video.mp4", quality="balanced")
+rsi = metrics.flight_time / metrics.ground_contact_time
 
 # CMJ
 from kinemotion import process_cmj_video
 metrics = process_cmj_video("video.mp4", quality="balanced")
+
+# Squat Jump (mass required for power/force)
+from kinemotion import process_sj_video
+metrics = process_sj_video("video.mp4", mass_kg=75.0)
 ```
 
 ## Type Safety & Dependencies
