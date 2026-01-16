@@ -36,14 +36,14 @@ where:
    - Recommended: Create test rig with marked heights on wall
    - Use measuring tape to verify exact heights
 
-1. **Camera positioning:**
+2. **Camera positioning:**
 
    - Mount camera on tripod at 60fps or higher
    - Position to capture full drop trajectory
    - Ensure consistent distance and angle for all drops
    - Adequate lighting (consistent throughout)
 
-1. **Drop execution:**
+3. **Drop execution:**
 
    - Position ball at marked height
    - Release (don't throw) from rest
@@ -142,14 +142,14 @@ python scripts/plot_validation_results.py results.json --output-dir plots/
 
 | Metric                        | Threshold | Rationale                            |
 | ----------------------------- | --------- | ------------------------------------ |
-| Mean Absolute Error (MAE)     | \< 20ms   | Acceptable for 30-60fps video        |
-| Root Mean Square Error (RMSE) | \< 30ms   | Accounts for larger outliers         |
+| Mean Absolute Error (MAE)     | < 20ms    | Acceptable for 30-60fps video        |
+| Root Mean Square Error (RMSE) | < 30ms    | Accounts for larger outliers         |
 | Correlation (r)               | > 0.99    | Strong linear relationship           |
-| Systematic Bias               | \< 5ms    | No consistent under/over-measurement |
+| Systematic Bias               | < 5ms     | No consistent under/over-measurement |
 
 ### Confidence Levels
 
-- **High:** Error \< 10ms → reliable measurement
+- **High:** Error < 10ms → reliable measurement
 - **Medium:** Error 10-20ms → acceptable, note in results
 - **Low:** Error > 20ms → investigate cause
 
@@ -189,7 +189,7 @@ python scripts/plot_validation_results.py results.json --output-dir plots/
 
 **Large Errors (> 20ms):**
 
-- Low frame rate (\< 30fps) - insufficient temporal resolution
+- Low frame rate (< 30fps) - insufficient temporal resolution
 - Video recording at different frame rate than specified
 - Ball bouncing or multiple contact points
 - Occlusion during flight
@@ -204,21 +204,21 @@ python scripts/plot_validation_results.py results.json --output-dir plots/
    - Avoid shadows on ball or background
    - Avoid reflective backgrounds
 
-1. **Camera Setup:**
+2. **Camera Setup:**
 
    - Use 60fps or higher
    - Verify actual frame rate in recording properties
    - Use manual focus (avoid autofocus hunting)
    - High contrast background (ball visibility)
 
-1. **Drop Execution:**
+3. **Drop Execution:**
 
    - Release from rest (no initial velocity)
    - Ensure ball falls vertically (no rotation)
    - Allow complete impact capture (don't cut short)
    - Repeat consistently across all heights
 
-1. **Quality Control:**
+4. **Quality Control:**
 
    - Check each video for:
      - Clear ball visibility throughout
@@ -255,8 +255,8 @@ Sample Results (30 drops):
 
 **PASS:** All three criteria met:
 
-- ✅ MAE \< 20ms
-- ✅ RMSE \< 30ms
+- ✅ MAE < 20ms
+- ✅ RMSE < 30ms
 - ✅ Correlation > 0.99
 
 **FAIL:** Any criterion not met
@@ -279,12 +279,12 @@ Sample Results (30 drops):
    - Solution: Use 60fps minimum (120fps ideal)
    - Verify: Check video properties
 
-1. **Landing detection issues** - Ball bounces or unclear contact
+2. **Landing detection issues** - Ball bounces or unclear contact
 
    - Solution: Ensure ball lands on dark/uniform background
    - Solution: Check for motion blur
 
-1. **Lighting problems** - Poor ball visibility
+3. **Lighting problems** - Poor ball visibility
 
    - Solution: Increase lighting consistency
    - Solution: Use high-contrast background
@@ -307,8 +307,8 @@ Sample Results (30 drops):
 **Causes:**
 
 1. Frame rate metadata incorrect (camera reports 60fps, actually 59.7fps)
-1. Systematic delay in takeoff/landing detection
-1. Video processing lag
+2. Systematic delay in takeoff/landing detection
+3. Video processing lag
 
 **Solutions:**
 
@@ -316,16 +316,16 @@ Sample Results (30 drops):
 - If bias > 5ms, investigate algorithm parameters
 - Document bias for future corrections
 
-### Correlation Low (\< 0.99)
+### Correlation Low (< 0.99)
 
 **Problem:** Error increases with height (or height-independent outliers)
 
 **Causes:**
 
 1. Tracking degradation at different heights
-1. Height-dependent lighting changes
-1. Camera angle effects
-1. Incomplete test data
+2. Height-dependent lighting changes
+3. Camera angle effects
+4. Incomplete test data
 
 **Solutions:**
 
@@ -348,9 +348,9 @@ If validation **PASSES**:
 If validation **FAILS**:
 
 1. Investigate specific cause (see Troubleshooting)
-1. Collect additional test videos addressing identified issue
-1. Retest with improvements
-1. Document what was changed and why
+2. Collect additional test videos addressing identified issue
+3. Retest with improvements
+4. Document what was changed and why
 
 ### Integration with Broader Validation
 
@@ -396,10 +396,10 @@ This test is **Task 1.4** in the validation roadmap.
 If you want to manually verify a video:
 
 1. Open video in frame-by-frame capable player (VLC, FFmpeg)
-1. Find first frame where ball is in motion (takeoff)
-1. Find first frame where ball contacts ground (landing)
-1. Count frames between takeoff and landing
-1. Divide by frame rate: `flight_time = frame_count / fps`
+2. Find first frame where ball is in motion (takeoff)
+3. Find first frame where ball contacts ground (landing)
+4. Count frames between takeoff and landing
+5. Divide by frame rate: `flight_time = frame_count / fps`
 
 **Example:**
 

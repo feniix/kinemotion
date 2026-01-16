@@ -13,7 +13,7 @@ ______________________________________________________________________
 This document outlines a rigorous, phased approach to evaluate whether RTMLib/RTMPose is a viable replacement for MediaPipe in kinemotion's pose estimation pipeline. The evaluation focuses on two primary dimensions:
 
 1. **Performance**: Landmark extraction speed and efficiency
-1. **Accuracy**: Landmark detection accuracy and downstream metric reliability
+2. **Accuracy**: Landmark detection accuracy and downstream metric reliability
 
 **Key Finding**: RTMLib's `BodyWithFeet` class using **Halpe26** format provides **all 13 landmarks** kinemotion requires, including the critical heel and foot_index (big_toe) landmarks.
 
@@ -96,7 +96,7 @@ ______________________________________________________________________
    uv add --optional benchmark onnxruntime          # other platforms
    ```
 
-1. **Write minimal test script** (`scripts/benchmark/test_rtmpose_poc.py`)
+2. **Write minimal test script** (`scripts/benchmark/test_rtmpose_poc.py`)
 
    ```python
    """Proof of concept: RTMLib landmark extraction."""
@@ -141,12 +141,12 @@ ______________________________________________________________________
            print(f"  {name}: ({x:.1f}, {y:.1f}) confidence={conf:.3f}")
    ```
 
-1. **Visual verification**: Overlay both systems' landmarks on same frame
+3. **Visual verification**: Overlay both systems' landmarks on same frame
 
    - Create side-by-side comparison image
    - Verify landmarks align visually
 
-1. **Coordinate normalization test**
+4. **Coordinate normalization test**
 
    - RTMLib returns pixel coordinates
    - Verify normalization: `x_norm = x / frame_width`, `y_norm = y / frame_height`
@@ -226,10 +226,10 @@ print(f"RTMLib: {rtm_fps:.1f} FPS")
 #### Metrics to Collect
 
 1. **Inference FPS** (frames per second, inference only)
-1. **Total processing time** (including frame I/O)
-1. **Memory usage** (via `tracemalloc`)
-1. **Model initialization time** (cold start, first frame)
-1. **Warm inference time** (subsequent frames)
+2. **Total processing time** (including frame I/O)
+3. **Memory usage** (via `tracemalloc`)
+4. **Model initialization time** (cold start, first frame)
+5. **Warm inference time** (subsequent frames)
 
 #### Deliverables
 
@@ -266,7 +266,7 @@ For a freely falling object dropped from height `h`:
    - 60fps recording recommended
    - Store in `samples/validation/physics/`
 
-1. **Extend validation script**
+2. **Extend validation script**
 
    Modify `scripts/validate_known_heights.py`:
 
@@ -279,7 +279,7 @@ For a freely falling object dropped from height `h`:
    )
    ```
 
-1. **Run validation for both systems**
+3. **Run validation for both systems**
 
    ```bash
    # MediaPipe baseline
@@ -400,20 +400,20 @@ def compute_agreement(mp_values, rtm_values):
 
 #### Success Criteria
 
-| Metric         | Target Agreement        | Acceptable              | Deal-Breaker |
-| -------------- | ----------------------- | ----------------------- | ------------ |
-| Flight time    | R² ≥ 0.99, diff \< 10ms | R² ≥ 0.95, diff \< 20ms | R² \< 0.90   |
-| Jump height    | R² ≥ 0.99, diff \< 1cm  | R² ≥ 0.95, diff \< 2cm  | R² \< 0.90   |
-| Ground contact | R² ≥ 0.98, diff \< 15ms | R² ≥ 0.95, diff \< 25ms | R² \< 0.90   |
-| RSI            | R² ≥ 0.98               | R² ≥ 0.95               | R² \< 0.90   |
+| Metric         | Target Agreement       | Acceptable             | Deal-Breaker |
+| -------------- | ---------------------- | ---------------------- | ------------ |
+| Flight time    | R² ≥ 0.99, diff < 10ms | R² ≥ 0.95, diff < 20ms | R² < 0.90    |
+| Jump height    | R² ≥ 0.99, diff < 1cm  | R² ≥ 0.95, diff < 2cm  | R² < 0.90    |
+| Ground contact | R² ≥ 0.98, diff < 15ms | R² ≥ 0.95, diff < 25ms | R² < 0.90    |
+| RSI            | R² ≥ 0.98              | R² ≥ 0.95              | R² < 0.90    |
 
 #### Discrepancy Investigation
 
 For videos where systems disagree significantly (>2 std deviations):
 
 1. Visual inspection of debug videos from both systems
-1. Frame-by-frame landmark comparison
-1. Identify root cause (detection failure, jitter, occlusion, etc.)
+2. Frame-by-frame landmark comparison
+3. Identify root cause (detection failure, jitter, occlusion, etc.)
 
 #### Deliverables
 
@@ -452,9 +452,9 @@ MediaPipe known issue: Confuses left/right feet at 90° lateral view.
 **Methodology**:
 
 1. Identify stationary frames (athlete standing still before jump)
-1. Extract landmark positions over N consecutive stationary frames
-1. Compute standard deviation of each landmark position
-1. Lower std = more stable tracking
+2. Extract landmark positions over N consecutive stationary frames
+3. Compute standard deviation of each landmark position
+4. Lower std = more stable tracking
 
 ```python
 """Jitter analysis on stationary frames."""
@@ -479,7 +479,7 @@ def compute_jitter(landmarks_over_frames: np.ndarray) -> dict:
 
 **Success Criteria**:
 
-- Mean jitter \< 2px (normalized: \< 0.002)
+- Mean jitter < 2px (normalized: < 0.002)
 - RTMLib jitter ≤ MediaPipe jitter
 
 #### Test 3: Confidence Score Analysis
@@ -487,8 +487,8 @@ def compute_jitter(landmarks_over_frames: np.ndarray) -> dict:
 **Questions to Answer**:
 
 1. Do high-confidence detections agree between systems?
-1. Do low-confidence detections correlate with errors?
-1. Which system has more reliable confidence estimation?
+2. Do low-confidence detections correlate with errors?
+3. Which system has more reliable confidence estimation?
 
 **Methodology**:
 
@@ -511,13 +511,13 @@ low_conf_agreement = agreement_when(mp_conf < 0.5, rtm_conf < 0.5)
 For videos where systems produce significantly different results:
 
 1. Manual frame-by-frame inspection
-1. Categorize failure modes:
+2. Categorize failure modes:
    - Detection failure (no person detected)
    - Wrong person selected (multi-person scene)
    - Landmark jitter/jump
    - Left/right confusion
    - Occlusion handling
-1. Count failures per category per system
+3. Count failures per category per system
 
 #### Deliverables
 
@@ -619,14 +619,14 @@ ______________________________________________________________________
 
 ## 🎯 Success Criteria Summary
 
-| Category              | Minimum Acceptable    | Target       | Deal-Breaker |
-| --------------------- | --------------------- | ------------ | ------------ |
-| **Performance**       | ≥80% of MediaPipe FPS | ≥100% FPS    | \<50% FPS    |
-| **Flight time MAE**   | ≤25ms                 | ≤20ms        | >30ms        |
-| **Metric agreement**  | R² ≥0.95              | R² ≥0.99     | R² \<0.90    |
-| **Memory usage**      | ≤300MB                | ≤200MB       | >500MB       |
-| **Landmark coverage** | All 13                | All 13       | Missing any  |
-| **Jitter**            | ≤ MediaPipe           | \< MediaPipe | >> MediaPipe |
+| Category              | Minimum Acceptable    | Target      | Deal-Breaker |
+| --------------------- | --------------------- | ----------- | ------------ |
+| **Performance**       | ≥80% of MediaPipe FPS | ≥100% FPS   | \<50% FPS    |
+| **Flight time MAE**   | ≤25ms                 | ≤20ms       | >30ms        |
+| **Metric agreement**  | R² ≥0.95              | R² ≥0.99    | R² \<0.90    |
+| **Memory usage**      | ≤300MB                | ≤200MB      | >500MB       |
+| **Landmark coverage** | All 13                | All 13      | Missing any  |
+| **Jitter**            | ≤ MediaPipe           | < MediaPipe | >> MediaPipe |
 
 ______________________________________________________________________
 

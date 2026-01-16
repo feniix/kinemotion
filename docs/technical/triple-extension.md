@@ -9,8 +9,8 @@ The CMJ debug video now includes **triple extension tracking** - real-time visua
 **Triple extension** is the simultaneous extension (straightening) of three key joints during the propulsive phase of jumping:
 
 1. **Ankle Extension** (plantarflexion) - Pushing through the toes
-1. **Knee Extension** - Straightening the legs
-1. **Hip Extension** - Driving the hips upward/forward
+2. **Knee Extension** - Straightening the legs
+3. **Hip Extension** - Driving the hips upward/forward
 
 ### Why It Matters
 
@@ -88,9 +88,9 @@ All joints: ~180° (full extension)
 ### Why This Happens
 
 1. **Occlusion**: In side view, ankle/knee may be hidden by the body
-1. **Angle**: MediaPipe trained primarily on frontal/oblique views
-1. **Contrast**: Ankle/knee may blend with background
-1. **Resolution**: Lower resolution reduces detection accuracy
+2. **Angle**: MediaPipe trained primarily on frontal/oblique views
+3. **Contrast**: Ankle/knee may blend with background
+4. **Resolution**: Lower resolution reduces detection accuracy
 
 ### What We Do About It
 
@@ -203,22 +203,22 @@ kinemotion cmj-analyze video.mp4 --output debug.mp4
    - Helps MediaPipe see ankle/knee better
    - Still captures vertical motion accurately
 
-1. **Higher resolution** - 1080p minimum, 4K better
+2. **Higher resolution** - 1080p minimum, 4K better
 
    - Improves landmark detection
    - Reduces tracking loss
 
-1. **Contrasting clothing** - Wear fitted, solid-color clothing
+3. **Contrasting clothing** - Wear fitted, solid-color clothing
 
    - Different color than background
    - Helps landmark detection
 
-1. **Good lighting** - Even, bright lighting
+4. **Good lighting** - Even, bright lighting
 
    - No harsh shadows
    - Improves tracking accuracy
 
-1. **Clean background** - Minimal visual clutter
+5. **Clean background** - Minimal visual clutter
 
    - Solid color wall ideal
    - Reduces false detections

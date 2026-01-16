@@ -178,20 +178,20 @@ def _check_flight_time(
 
 **Methods to update**:
 
-1. `_check_flight_time()`
-1. `_check_jump_height()`
-1. `_check_countermovement_depth()`
-1. `_check_concentric_duration()`
-1. `_check_eccentric_duration()`
-1. `_check_peak_velocities()`
-1. `_check_flight_time_height_consistency()`
-1. `_check_velocity_height_consistency()`
-1. `_check_rsi_validity()`
-1. `_check_depth_height_ratio()`
-1. `_check_contact_depth_ratio()`
-1. `_check_triple_extension()`
-1. `_check_joint_compensation_pattern()`
-1. Plus any other validation methods
+01. `_check_flight_time()`
+02. `_check_jump_height()`
+03. `_check_countermovement_depth()`
+04. `_check_concentric_duration()`
+05. `_check_eccentric_duration()`
+06. `_check_peak_velocities()`
+07. `_check_flight_time_height_consistency()`
+08. `_check_velocity_height_consistency()`
+09. `_check_rsi_validity()`
+10. `_check_depth_height_ratio()`
+11. `_check_contact_depth_ratio()`
+12. `_check_triple_extension()`
+13. `_check_joint_compensation_pattern()`
+14. Plus any other validation methods
 
 ### Step 1.4: Update Drop Jump Validator (1-2 hours)
 
@@ -200,10 +200,10 @@ def _check_flight_time(
 Apply the same pattern to all 6 validation methods:
 
 1. `_check_contact_time()`
-1. `_check_flight_time()`
-1. `_check_jump_height()`
-1. `_check_rsi()`
-1. `_check_dual_height_consistency()`
+2. `_check_flight_time()`
+3. `_check_jump_height()`
+4. `_check_rsi()`
+5. `_check_dual_height_consistency()`
 
 ### Step 1.5: Update Serialization (30 min)
 
@@ -722,12 +722,12 @@ if __name__ == '__main__':
    - Tag release with minor version bump
    - Deploy to PyPI
 
-1. **Frontend Deploy**:
+2. **Frontend Deploy**:
 
    - Merge frontend PR
    - Deploy to Vercel (automatic from main branch)
 
-1. **Documentation**:
+3. **Documentation**:
 
    - Update CHANGELOG.md with i18n feature
    - Add i18n documentation to docs/
@@ -738,9 +738,9 @@ if __name__ == '__main__':
 If issues occur:
 
 1. Revert frontend deployment (Vercel: one-click)
-1. Revert backend to previous release
-1. Keep `message` field compatibility ensures clients continue to work
-1. Issue patch release with fixes
+2. Revert backend to previous release
+3. Keep `message` field compatibility ensures clients continue to work
+4. Issue patch release with fixes
 
 ## Success Metrics
 

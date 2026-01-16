@@ -111,10 +111,10 @@ ______________________________________________________________________
 **Required Refactoring (5-6 days):**
 
 1. Extract `MotionAnalyzer` base class (eliminates 700 lines duplication)
-1. Extract `PhaseDetector` abstraction (generic for jump/running/other sports)
-1. Extract `StreamingPoseProcessor` (80 lines)
-1. Extract `MetricsCalculator` interface (100 lines)
-1. Consolidate `api.py` (1150 → 450 lines)
+2. Extract `PhaseDetector` abstraction (generic for jump/running/other sports)
+3. Extract `StreamingPoseProcessor` (80 lines)
+4. Extract `MetricsCalculator` interface (100 lines)
+5. Consolidate `api.py` (1150 → 450 lines)
 
 **Benefit:** Net -170 lines, Duplication 2.96% → 2.5%, enables easy sport addition
 
@@ -143,9 +143,9 @@ ______________________________________________________________________
 **Required Work (Weeks 1-2):**
 
 1. Define running quality presets with ML + Biomechanics
-1. Create validation framework (ground-truth comparison)
-1. Design benchmark dataset
-1. 1-week prototype validation before full Task 4 sprint
+2. Create validation framework (ground-truth comparison)
+3. Design benchmark dataset
+4. 1-week prototype validation before full Task 4 sprint
 
 **Impact:** ML assessment grade 7/10 due to this gap; could block running launch
 
@@ -164,10 +164,10 @@ ______________________________________________________________________
 **Required Infrastructure (Weeks 1-3):**
 
 1. Dockerfile + Docker Compose (5-8 days)
-1. GitHub Actions deployment pipeline (5-7 days)
-1. Locust load testing framework (3-4 days)
-1. Prometheus + Grafana monitoring (4-5 days)
-1. AWS ECS staging environment
+2. GitHub Actions deployment pipeline (5-7 days)
+3. Locust load testing framework (3-4 days)
+4. Prometheus + Grafana monitoring (4-5 days)
+5. AWS ECS staging environment
 
 **Cost:** $100-200/mo staging, $500-1000/mo production (Year 1)
 

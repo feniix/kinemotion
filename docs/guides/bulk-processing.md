@@ -440,9 +440,9 @@ For organizations already using AWS, AWS Batch provides a fully managed batch pr
 ### Setup Overview
 
 1. **Create Docker image with kinemotion**
-1. **Push to Amazon ECR**
-1. **Create AWS Batch job definition**
-1. **Submit jobs via boto3 or AWS CLI**
+2. **Push to Amazon ECR**
+3. **Create AWS Batch job definition**
+4. **Submit jobs via boto3 or AWS CLI**
 
 ### Dockerfile
 
@@ -739,11 +739,11 @@ You might think GPU acceleration would speed up video processing. Here's why it 
 ### MediaPipe GPU Reality
 
 1. **Python package limitations**: pip-installed MediaPipe doesn't include GPU support
-1. **Complex setup**: Requires custom build with OpenGL/CUDA
-1. **Limited speedup**: Benchmarks show 1.5-2x at best, sometimes SLOWER:
+2. **Complex setup**: Requires custom build with OpenGL/CUDA
+3. **Limited speedup**: Benchmarks show 1.5-2x at best, sometimes SLOWER:
    - CPU: 19ms per frame
    - GPU: 23ms per frame (overhead from data transfer)
-1. **Batch size**: MediaPipe processes one frame at a time, negating GPU batch benefits
+4. **Batch size**: MediaPipe processes one frame at a time, negating GPU batch benefits
 
 ### CPU Parallelism is Superior
 
@@ -895,13 +895,13 @@ ______________________________________________________________________
 **For most users:**
 
 1. Start with local parallel processing (free, immediate)
-1. Scale to Modal.com when you need cloud processing (easiest)
-1. Skip GPU acceleration (not worth the complexity)
+2. Scale to Modal.com when you need cloud processing (easiest)
+3. Skip GPU acceleration (not worth the complexity)
 
 **For enterprise:**
 
 1. Use AWS Batch or Google Cloud Run for integration with existing infrastructure
-1. Set up monitoring and error handling
-1. Implement retry logic and result validation
+2. Set up monitoring and error handling
+3. Implement retry logic and result validation
 
 The beauty of kinemotion being a library is its flexibility - choose the approach that fits your needs and infrastructure!

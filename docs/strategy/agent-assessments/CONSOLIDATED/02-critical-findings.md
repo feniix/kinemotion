@@ -90,9 +90,9 @@ ______________________________________________________________________
 **What's Required (Weeks 1-2):**
 
 1. Define running quality presets with ML + Biomechanics
-1. Create validation framework (vs ground-truth force plate)
-1. Design benchmark dataset
-1. 1-week prototype validation before full Task 4 sprint
+2. Create validation framework (vs ground-truth force plate)
+3. Design benchmark dataset
+4. 1-week prototype validation before full Task 4 sprint
 
 **Decision Point:** Must complete BEFORE Week 5 Task 4 starts
 
@@ -113,10 +113,10 @@ ______________________________________________________________________
 **Missing Infrastructure:**
 
 1. Dockerfile + Docker Compose (5-8 days)
-1. GitHub Actions deployment pipeline (5-7 days)
-1. Locust load testing framework (3-4 days)
-1. Prometheus + Grafana monitoring (4-5 days)
-1. AWS ECS staging environment
+2. GitHub Actions deployment pipeline (5-7 days)
+3. Locust load testing framework (3-4 days)
+4. Prometheus + Grafana monitoring (4-5 days)
+5. AWS ECS staging environment
 
 **Timeline:** MUST COMPLETE BY WEEK 3 (gates Task 3 start)
 
@@ -345,24 +345,24 @@ ______________________________________________________________________
 ### Priority 1 (Must Do By Friday)
 
 1. Stakeholder review of this document
-1. Decision on 5 critical issues (refactoring, latency, parameters, infrastructure, validation)
-1. Assign all task owners
-1. Approve budget for infrastructure
+2. Decision on 5 critical issues (refactoring, latency, parameters, infrastructure, validation)
+3. Assign all task owners
+4. Approve budget for infrastructure
 
 ### Priority 2 (Start This Week)
 
 1. Schedule refactoring sprint kickoff
-1. Build latency profiler design (CV + DevOps)
-1. Schedule parameter definition meeting (ML + Biomechanics)
-1. Contact lab partners for Month 3-4 availability
-1. Brief all teams on roadmap
+2. Build latency profiler design (CV + DevOps)
+3. Schedule parameter definition meeting (ML + Biomechanics)
+4. Contact lab partners for Month 3-4 availability
+5. Brief all teams on roadmap
 
 ### Priority 3 (Complete By End of Week 1)
 
 1. Refactoring sprint complete
-1. Latency profiler built and ready
-1. Running parameters defined
-1. Infrastructure Week 1 work started
+2. Latency profiler built and ready
+3. Running parameters defined
+4. Infrastructure Week 1 work started
 
 ______________________________________________________________________
 

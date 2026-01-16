@@ -23,10 +23,10 @@ The feedback system allows coaches to:
 Run the SQL from `backend/supabase-schema.sql` in your Supabase SQL Editor:
 
 1. Go to your Supabase project dashboard
-1. Click on "SQL Editor" in the left sidebar
-1. Click "New query"
-1. Copy and paste the contents of `backend/supabase-schema.sql`
-1. Click "Run"
+2. Click on "SQL Editor" in the left sidebar
+3. Click "New query"
+4. Copy and paste the contents of `backend/supabase-schema.sql`
+5. Click "Run"
 
 This will create:
 
@@ -94,10 +94,10 @@ These should already be configured in your Google Cloud Run deployment.
 ### Analysis Flow
 
 1. **User Uploads Video**: Existing flow unchanged
-1. **Video Analysis**: Backend processes video with kinemotion CLI
-1. **Optional Storage**: If user is authenticated, analysis session is saved to Supabase
-1. **Display Results**: Frontend shows metrics as before
-1. **Coach Feedback**: Coaches can add feedback via the new form
+2. **Video Analysis**: Backend processes video with kinemotion CLI
+3. **Optional Storage**: If user is authenticated, analysis session is saved to Supabase
+4. **Display Results**: Frontend shows metrics as before
+5. **Coach Feedback**: Coaches can add feedback via the new form
 
 ### Data Storage
 
@@ -144,14 +144,14 @@ WHERE jump_type = 'drop_jump'
    uv run pytest  # Tests should pass
    ```
 
-1. **Frontend Testing**:
+2. **Frontend Testing**:
 
    - Upload a video while logged in
    - After analysis completes, click "Add Coach Feedback"
    - Fill out the feedback form and submit
    - Check that data appears in Supabase dashboard
 
-1. **Database Verification**:
+3. **Database Verification**:
 
    - Check Supabase dashboard > Table Editor
    - Verify data appears in `analysis_sessions` and `coach_feedback` tables
@@ -165,12 +165,12 @@ WHERE jump_type = 'drop_jump'
    - Verify SUPABASE_URL and SUPABASE_ANON_KEY are set
    - Check Supabase project is active
 
-1. **Permission Denied**:
+2. **Permission Denied**:
 
    - Ensure RLS policies are correctly applied
    - Check user authentication is working
 
-1. **Feedback Not Saving**:
+3. **Feedback Not Saving**:
 
    - Ensure user is logged in (Supabase auth)
    - Check browser console for error messages

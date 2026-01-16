@@ -105,7 +105,7 @@ Automatically flag low-confidence detections based on tracking quality indicator
 
 - **High:** avg_visibility > 0.8, stable tracking, clear phases
 - **Medium:** avg_visibility 0.6-0.8, OR minor tracking issues
-- **Low:** avg_visibility \< 0.6, OR significant tracking gaps, OR unclear phases
+- **Low:** avg_visibility < 0.6, OR significant tracking gaps, OR unclear phases
 
 **Warning Triggers:**
 
@@ -254,10 +254,10 @@ Repetitions: 10 drops per height × 3 heights = 30 videos
 **Data Collection:**
 
 1. Mark heights on wall with tape
-1. Drop object from each height
-1. Record with camera capturing full drop
-1. Measure actual height with tape measure
-1. Record video filename with true height
+2. Drop object from each height
+3. Record with camera capturing full drop
+4. Measure actual height with tape measure
+5. Record video filename with true height
 
 **Analysis:**
 
@@ -293,8 +293,8 @@ def validate_physics(video_path: str, true_height_m: float):
 
 **Success Criteria:**
 
-- MAE \< 20ms (reasonable for 30-60fps video)
-- RMSE \< 30ms
+- MAE < 20ms (reasonable for 30-60fps video)
+- RMSE < 30ms
 - Systematic bias identified and documented
 - r > 0.99 correlation with theoretical values
 
@@ -459,7 +459,7 @@ def bland_altman_analysis(automated, manual):
 **Target Metrics:**
 
 - **ICC > 0.90:** Excellent reliability
-- **Bias \< 2cm:** Acceptable per Balsalobre 2015
+- **Bias < 2cm:** Acceptable per Balsalobre 2015
 - **r > 0.95:** Strong correlation
 - **95% of differences within ±5cm:** Clinical acceptability
 
@@ -1022,7 +1022,7 @@ def calculate_mdc(sem, confidence=0.95):
 
 - **Within-session ICC:** > 0.90 (excellent)
 - **Between-session ICC:** > 0.85 (good to excellent)
-- **CV:** \< 10% (acceptable variability)
+- **CV:** < 10% (acceptable variability)
 - **MDC:** Establishes meaningful change threshold
 
 **Deliverables:**
@@ -1349,20 +1349,20 @@ Test and document optimal recording conditions.
    - Outdoor cloudy
    - Outdoor dusk
 
-1. **Camera Distance:**
+2. **Camera Distance:**
 
    - 1m (close)
    - 2m (optimal?)
    - 3m (far)
    - 5m (very far)
 
-1. **Camera Angle:**
+3. **Camera Angle:**
 
    - 90° lateral (frontal plane)
    - 60° diagonal
    - 45° diagonal
 
-1. **Background:**
+4. **Background:**
 
    - Plain wall
    - Cluttered (equipment)
@@ -1404,8 +1404,8 @@ Quantify impact of clothing on landmark detection accuracy.
 - Same athlete, 3 clothing conditions:
 
   1. Compression tights + fitted shirt (best case)
-  1. Basketball shorts + t-shirt (typical)
-  1. Loose sweatpants + hoodie (worst case)
+  2. Basketball shorts + t-shirt (typical)
+  3. Loose sweatpants + hoodie (worst case)
 
 - 10 jumps per condition
 
@@ -1594,9 +1594,9 @@ ______________________________________________________________________
 **Weeks 1-2:**
 
 1. Documentation of limitations (2h) ✅
-1. Test-retest determinism test (2h) ✅
-1. Add confidence scores (8h) ✅
-1. Known height validation (4h) ✅
+2. Test-retest determinism test (2h) ✅
+3. Add confidence scores (8h) ✅
+4. Known height validation (4h) ✅
 
 **Weeks 3-4:**
 5\. Parameter sensitivity report (8h) ✅
@@ -1691,23 +1691,23 @@ ______________________________________________________________________
 **When Lab Equipment Becomes Available:**
 
 1. Force plate validation study (gold standard)
-1. Derive correction factors if needed
-1. Publish in peer-reviewed journal
-1. Claim "validated for research use"
+2. Derive correction factors if needed
+3. Publish in peer-reviewed journal
+4. Claim "validated for research use"
 
 **Advanced Features:**
 
 1. Loaded jump support (F-v profiling)
-1. Multi-session longitudinal tracking
-1. Alternative pose models comparison
-1. Machine learning for phase detection
+2. Multi-session longitudinal tracking
+3. Alternative pose models comparison
+4. Machine learning for phase detection
 
 **User-Facing:**
 
 1. Web interface
-1. Mobile app
-1. Training platform integrations
-1. Real-time analysis mode
+2. Mobile app
+3. Training platform integrations
+4. Real-time analysis mode
 
 ______________________________________________________________________
 

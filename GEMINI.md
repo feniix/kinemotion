@@ -55,17 +55,17 @@ docs/                   # Documentation (PARAMETERS.md is key)
 #### Drop Jump Analysis
 
 1. **Pose Tracking** (`core/pose.py`): Extracts 13 body landmarks per frame using MediaPipe.
-1. **Smoothing** (`core/smoothing.py`): Savitzky-Golay filter for noise reduction.
-1. **Contact Detection** (`dropjump/analysis.py`): Velocity-based ground contact detection.
-1. **Sub-Frame Interpolation**: Linear interpolation for precise timing.
-1. **Trajectory Curvature**: Acceleration-based refinement.
-1. **Metrics**: RSI, contact time, jump height.
+2. **Smoothing** (`core/smoothing.py`): Savitzky-Golay filter for noise reduction.
+3. **Contact Detection** (`dropjump/analysis.py`): Velocity-based ground contact detection.
+4. **Sub-Frame Interpolation**: Linear interpolation for precise timing.
+5. **Trajectory Curvature**: Acceleration-based refinement.
+6. **Metrics**: RSI, contact time, jump height.
 
 #### CMJ Analysis (`cmj/analysis.py`)
 
 1. **Strategy**: Uses a **backward search** algorithm starting from the jump peak.
-1. **Signed Velocity**: Calculates signed velocity (negative=up, positive=down) to distinguish concentric/eccentric phases.
-1. **Phase Detection Sequence**:
+2. **Signed Velocity**: Calculates signed velocity (negative=up, positive=down) to distinguish concentric/eccentric phases.
+3. **Phase Detection Sequence**:
    - **Peak Height**: Global minimum y-position.
    - **Takeoff**: Peak *negative* velocity (max upward speed) found by searching backward from peak.
    - **Lowest Point**: Maximum y-position found by searching backward from takeoff.
@@ -88,8 +88,8 @@ docs/                   # Documentation (PARAMETERS.md is key)
 - **Context**: While clinical validation is pending, the tool undergoes rigorous **internal physics validation**.
 - **Methodology**: Objects are dropped from known heights (0.5m, 1.0m, 1.5m). Measured flight times are compared against theoretical physics predictions ($t = \\sqrt{2h/g}$).
 - **Passing Criteria**:
-  - **MAE**: \< 20ms
-  - **RMSE**: \< 30ms
+  - **MAE**: < 20ms
+  - **RMSE**: < 30ms
   - **Correlation**: > 0.99
 
 ### 3. Sub-Frame Interpolation & Robust Derivatives (`dropjump/analysis.py`, `core/smoothing.py`)
@@ -132,9 +132,9 @@ docs/                   # Documentation (PARAMETERS.md is key)
 When contributing code, strictly adhere to the project's quality standards.
 
 1. **Format Code**: `uv run ruff format .`
-1. **Lint and Fix**: `uv run ruff check --fix`
-1. **Type Check**: `uv run pyright`
-1. **Run Tests**: `uv run pytest`
+2. **Lint and Fix**: `uv run ruff check --fix`
+3. **Type Check**: `uv run pyright`
+4. **Run Tests**: `uv run pytest`
 
 **Run all checks before committing**: `uv run ruff check && uv run pyright && uv run pytest`
 
@@ -146,10 +146,10 @@ When contributing code, strictly adhere to the project's quality standards.
 
 - **Adding New Metrics**:
   1. Update `DropJumpMetrics` in `dropjump/kinematics.py`.
-  1. Add calculation logic in `calculate_drop_jump_metrics()`.
-  1. Update `to_dict()` method (remember to cast NumPy types).
-  1. (Optional) Add visualization in `DebugOverlayRenderer`.
-  1. Add tests in `tests/test_kinematics.py`.
+  2. Add calculation logic in `calculate_drop_jump_metrics()`.
+  3. Update `to_dict()` method (remember to cast NumPy types).
+  4. (Optional) Add visualization in `DebugOverlayRenderer`.
+  5. Add tests in `tests/test_kinematics.py`.
 - **Modifying Contact Detection**: Edit `detect_ground_contact()` in `dropjump/analysis.py`.
 - **Adjusting Smoothing**: Modify `smooth_landmarks()` in `core/smoothing.py`.
 

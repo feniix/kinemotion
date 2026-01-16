@@ -156,9 +156,9 @@ ______________________________________________________________________
 ## MVP Phase: Immediate Decisions Needed
 
 1. **Web UI Tech Stack:** FastAPI + React? (recommended for speed) or other?
-1. **Deployment:** Heroku/Railway for backend, Vercel for frontend (free tier)?
-1. **Coach Recruitment:** How to identify and recruit 5-10 coaches for MVP testing?
-1. **Feedback Format:** Survey, interviews, or embedded analytics?
+2. **Deployment:** Heroku/Railway for backend, Vercel for frontend (free tier)?
+3. **Coach Recruitment:** How to identify and recruit 5-10 coaches for MVP testing?
+4. **Feedback Format:** Survey, interviews, or embedded analytics?
 
 ______________________________________________________________________
 
@@ -201,10 +201,10 @@ ______________________________________________________________________
 ## Immediate Actions (This Week)
 
 1. [ ] Get stakeholder sign-off on MVP-first approach (pivot from comprehensive platform)
-1. [ ] Assign Issue #10 owner (Biomechanics Specialist)
-1. [ ] Assign Issue #12 owner (Backend + Frontend devs)
-1. [ ] Confirm resource availability for 3-week MVP sprint
-1. [ ] Identify 5-10 coaches for MVP testing (Week 4)
+2. [ ] Assign Issue #10 owner (Biomechanics Specialist)
+3. [ ] Assign Issue #12 owner (Backend + Frontend devs)
+4. [ ] Confirm resource availability for 3-week MVP sprint
+5. [ ] Identify 5-10 coaches for MVP testing (Week 4)
 
 ______________________________________________________________________
 

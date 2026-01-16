@@ -281,7 +281,7 @@ ______________________________________________________________________
        assert result is not None  # Or appropriate behavior
    ```
 
-1. **Single Element**
+2. **Single Element**
 
    ```python
    def test_function_with_single_element() -> None:
@@ -289,7 +289,7 @@ ______________________________________________________________________
        assert len(result) == 1
    ```
 
-1. **Boundary Values**
+3. **Boundary Values**
 
    ```python
    def test_function_at_min_boundary() -> None:
@@ -301,7 +301,7 @@ ______________________________________________________________________
        assert result is valid
    ```
 
-1. **Invalid Input**
+4. **Invalid Input**
 
    ```python
    def test_function_with_negative_value_raises() -> None:
@@ -309,7 +309,7 @@ ______________________________________________________________________
            function(-1.0)
    ```
 
-1. **Numerical Stability**
+5. **Numerical Stability**
 
    ```python
    def test_function_with_very_small_values() -> None:
@@ -870,13 +870,13 @@ ______________________________________________________________________
    pytest -v --tb=short tests/failing_test.py
    ```
 
-1. **Check assertion details**:
+2. **Check assertion details**:
 
    ```bash
    pytest -vv tests/failing_test.py  # Extra verbose
    ```
 
-1. **Add debug prints** (temporarily):
+3. **Add debug prints** (temporarily):
 
    ```python
    def test_function():
@@ -885,7 +885,7 @@ ______________________________________________________________________
        assert result == expected
    ```
 
-1. **Run single test with pdb**:
+4. **Run single test with pdb**:
 
    ```bash
    pytest --pdb tests/failing_test.py::test_specific
@@ -898,11 +898,11 @@ ______________________________________________________________________
 **Golden Rules**:
 
 1. **Mirror source structure** - Test files match source files
-1. **Use AAA pattern** - Arrange, Act, Assert
-1. **Test behavior, not implementation** - Focus on what, not how
-1. **Include edge cases** - Empty, single, boundary, invalid
-1. **Document domain context** - Especially for biomechanics tests
-1. **Keep tests fast** - Unit tests \<1s, integration \<10s
-1. **Make tests maintainable** - Test stable behavior, avoid brittle assertions
+2. **Use AAA pattern** - Arrange, Act, Assert
+3. **Test behavior, not implementation** - Focus on what, not how
+4. **Include edge cases** - Empty, single, boundary, invalid
+5. **Document domain context** - Especially for biomechanics tests
+6. **Keep tests fast** - Unit tests \<1s, integration \<10s
+7. **Make tests maintainable** - Test stable behavior, avoid brittle assertions
 
 **Remember**: Good tests are documentation of expected behavior. Write tests that help future developers understand what the code should do.

@@ -63,8 +63,8 @@ Supports two jump types with specialized analysis algorithms:
 ## Critical Gotchas
 
 1. **Video Processing**: Read first frame for dimensions (not OpenCV properties), handle rotation metadata (mobile videos), convert NumPy types for JSON
-1. **CMJ Algorithm**: Use signed velocity (not absolute), backward search from peak, lateral view required
-1. **Drop Jump Algorithm**: Forward search, absolute velocity magnitude
+2. **CMJ Algorithm**: Use signed velocity (not absolute), backward search from peak, lateral view required
+3. **Drop Jump Algorithm**: Forward search, absolute velocity magnitude
 
 ## Available Specialized Agents
 

@@ -105,9 +105,9 @@ ______________________________________________________________________
 **Assessment Activities**:
 
 1. **Dependency Evaluation**: Install RTMLib, verify Apple Silicon compatibility
-1. **Landmark Mapping**: Validate Halpe-26 → kinemotion 13-landmark conversion
-1. **API Compatibility**: Ensure RTMPose can match MediaPipe's interface requirements
-1. **Basic Inference**: Test pose estimation on sample videos
+2. **Landmark Mapping**: Validate Halpe-26 → kinemotion 13-landmark conversion
+3. **API Compatibility**: Ensure RTMPose can match MediaPipe's interface requirements
+4. **Basic Inference**: Test pose estimation on sample videos
 
 **Success Criteria**:
 
@@ -122,9 +122,9 @@ ______________________________________________________________________
 **Benchmarking Protocol**:
 
 1. **Controlled Testing**: Same videos, same hardware, same conditions
-1. **Multi-Configuration Testing**: RTMPose lightweight/balanced/performance modes
-1. **Statistical Analysis**: Mean, variance, confidence intervals, effect sizes
-1. **Resource Profiling**: CPU, memory, initialization overhead
+2. **Multi-Configuration Testing**: RTMPose lightweight/balanced/performance modes
+3. **Statistical Analysis**: Mean, variance, confidence intervals, effect sizes
+4. **Resource Profiling**: CPU, memory, initialization overhead
 
 **Performance Decision Tree**:
 
@@ -144,9 +144,9 @@ RTMPose FPS ≥ 80% of MediaPipe?
 **Validation Protocol**:
 
 1. **Physics-Based Ground Truth**: Use known height drop experiments
-1. **Biomechanical Metrics**: Joint angles, triple extension, force-time curves
-1. **Statistical Comparison**: Paired analysis, Bland-Altman plots, correlation analysis
-1. **Downstream Impact**: Jump height, RSI, power calculations consistency
+2. **Biomechanical Metrics**: Joint angles, triple extension, force-time curves
+3. **Statistical Comparison**: Paired analysis, Bland-Altman plots, correlation analysis
+4. **Downstream Impact**: Jump height, RSI, power calculations consistency
 
 **Accuracy Decision Framework**:
 
@@ -164,9 +164,9 @@ RTMPose accuracy ≥ 10% improvement over MediaPipe?
 **Comprehensive Testing**:
 
 1. **Motion Scenarios**: Fast movements, occlusion, multi-person scenes
-1. **Camera Conditions**: Angles, lighting, video quality variations
-1. **Integration Testing**: API compatibility, error handling, edge cases
-1. **Regression Testing**: Ensure no degradation in existing functionality
+2. **Camera Conditions**: Angles, lighting, video quality variations
+3. **Integration Testing**: API compatibility, error handling, edge cases
+4. **Regression Testing**: Ensure no degradation in existing functionality
 
 **Compatibility Decision Matrix**:
 
@@ -388,10 +388,10 @@ ______________________________________________________________________
 ### Assessment Deliverables
 
 1. **Technical Feasibility Report**: Compatibility analysis and integration requirements
-1. **Performance Benchmark Report**: FPS, memory, latency comparisons with statistical analysis
-1. **Accuracy Validation Report**: RMSE, MAE, correlation analysis vs ground truth
-1. **Robustness Assessment Report**: Real-world scenario performance evaluation
-1. **Replacement Decision Document**: Go/no-go recommendation with rationale and risk assessment
+2. **Performance Benchmark Report**: FPS, memory, latency comparisons with statistical analysis
+3. **Accuracy Validation Report**: RMSE, MAE, correlation analysis vs ground truth
+4. **Robustness Assessment Report**: Real-world scenario performance evaluation
+5. **Replacement Decision Document**: Go/no-go recommendation with rationale and risk assessment
 
 ______________________________________________________________________
 
@@ -407,10 +407,10 @@ ______________________________________________________________________
 ### Alternative Assessment Outcomes
 
 1. **Full Replacement Recommended**: Proceed to implementation planning (separate document)
-1. **Conditional Replacement**: Define specific use cases where RTMPose excels
-1. **Hybrid Approach**: RTMPose for accuracy-critical tasks, MediaPipe for performance-critical tasks
-1. **Selective Adoption**: RTMPose for research/validation, MediaPipe for production
-1. **Maintain Current**: MediaPipe remains superior, reassess RTMPose in 6-12 months
+2. **Conditional Replacement**: Define specific use cases where RTMPose excels
+3. **Hybrid Approach**: RTMPose for accuracy-critical tasks, MediaPipe for performance-critical tasks
+4. **Selective Adoption**: RTMPose for research/validation, MediaPipe for production
+5. **Maintain Current**: MediaPipe remains superior, reassess RTMPose in 6-12 months
 
 ### Threshold Adjustments
 
@@ -433,14 +433,14 @@ ______________________________________________________________________
 **Immediate Actions**:
 
 1. Review and approve assessment plan
-1. Allocate hardware and time for Phase 1
-1. Prepare test datasets and ground truth
+2. Allocate hardware and time for Phase 1
+3. Prepare test datasets and ground truth
 
 **Assessment Execution**:
 
 1. **Phase 1**: Technical feasibility verification (2-3 days)
-1. **Phase 2-4**: Parallel performance, accuracy, and robustness assessment (7-11 days)
-1. **Phase 5**: Decision analysis and recommendation (1-2 days)
+2. **Phase 2-4**: Parallel performance, accuracy, and robustness assessment (7-11 days)
+3. **Phase 5**: Decision analysis and recommendation (1-2 days)
 
 **Post-Assessment**:
 

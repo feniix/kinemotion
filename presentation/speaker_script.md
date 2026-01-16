@@ -35,7 +35,7 @@ ______________________________________________________________________
 
 "Hey everyone, can you all see my screen okay? Great. So I've been working on this hobby project called Kinemotion. Quick question for the chat - has anyone here ever tried to measure their vertical jump or analyze sports performance from video? Just drop a yes or no in the chat."
 
-\[Pause for chat responses\]
+[Pause for chat responses]
 
 "Right, for those who have, you know it's either super expensive equipment or tedious manual work. That's exactly why I started this project."
 
@@ -155,7 +155,7 @@ ______________________________________________________________________
 
 "Now for the fun part - let me show you this in action. I'm going to share my terminal window now - let me know if the text is too small for anyone."
 
-\[Switch to terminal view\]
+[Switch to terminal view]
 
 "Can everyone see the terminal clearly? Great. I have a CMJ video here from one of our test athletes."
 
@@ -165,7 +165,7 @@ ______________________________________________________________________
 kinemotion cmj-analyze sample_data/IMG_5813.MOV
 ```
 
-"Watch how quickly this processes... \[run command\] ...There! Processing takes about 3-4 times the video length, so for this 5-second video, about 15-20 seconds. And we have all metrics: jump height of 45.2cm, flight time of 606ms."
+"Watch how quickly this processes... [run command] ...There! Processing takes about 3-4 times the video length, so for this 5-second video, about 15-20 seconds. And we have all metrics: jump height of 45.2cm, flight time of 606ms."
 
 ### Demo 2: Debug Visualization
 
@@ -175,7 +175,7 @@ kinemotion cmj-analyze sample_data/IMG_5813.MOV
 kinemotion cmj-analyze sample_data/IMG_5813.MOV --output debug.mp4
 ```
 
-"\[Open video\] Look at the skeleton overlay. You can see the exact moment of takeoff, how the joints extend, and the landing mechanics. This is invaluable for coaching feedback."
+"[Open video] Look at the skeleton overlay. You can see the exact moment of takeoff, how the joints extend, and the landing mechanics. This is invaluable for coaching feedback."
 
 ### Demo 3: Batch Processing
 
@@ -324,7 +324,7 @@ ______________________________________________________________________
 
 "Feel free to unmute and ask questions, or drop them in the chat - I'll make sure to address everything for the recording as well."
 
-\[Watch both raised hands and chat for questions\]
+[Watch both raised hands and chat for questions]
 
 ______________________________________________________________________
 
@@ -378,7 +378,7 @@ ______________________________________________________________________
 
 "I'll stop the recording now, but happy to stick around for more informal questions if anyone has them."
 
-\[Stop recording, then continue with informal Q&A\]
+[Stop recording, then continue with informal Q&A]
 
 ______________________________________________________________________
 
@@ -387,20 +387,20 @@ ______________________________________________________________________
 ### If demo fails
 
 1. Have pre-recorded output ready to show
-1. Explain common issues (video codec, Python environment)
-1. Pivot to showing results rather than live processing
+2. Explain common issues (video codec, Python environment)
+3. Pivot to showing results rather than live processing
 
 ### If questioned about limitations
 
 1. Acknowledge current constraints honestly
-1. Explain the roadmap to address them
-1. Focus on what it CAN do well now
+2. Explain the roadmap to address them
+3. Focus on what it CAN do well now
 
 ### If internet fails
 
 1. All demos work offline
-1. Have local documentation copy
-1. Screenshots of web resources as backup
+2. Have local documentation copy
+3. Screenshots of web resources as backup
 
 ______________________________________________________________________
 

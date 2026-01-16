@@ -75,11 +75,11 @@ yarn dev
 ### Test the Full Stack
 
 1. Open http://localhost:5173
-1. Upload a CMJ or Drop Jump video (\< 500MB)
-1. Select jump type
-1. Click "Analyze"
-1. Wait 10-60 seconds
-1. See real metrics from kinemotion library
+2. Upload a CMJ or Drop Jump video (< 500MB)
+3. Select jump type
+4. Click "Analyze"
+5. Wait 10-60 seconds
+6. See real metrics from kinemotion library
 
 ## Deployment
 
@@ -399,22 +399,22 @@ gcloud secrets versions access latest --secret=R2_SECRET_KEY --project=kinemotio
 ### After MVP Scaffolding:
 
 1. **Recruit coaches** for testing (5-10 people)
-1. **Gather feedback** on metrics and UI
-1. **Test issue #10 fixes** - integrate when ankle angle is corrected
-1. **Iterate UI** based on coach feedback
+2. **Gather feedback** on metrics and UI
+3. **Test issue #10 fixes** - integrate when ankle angle is corrected
+4. **Iterate UI** based on coach feedback
 
 ### When #10 Complete:
 
 1. Update `backend/pyproject.toml` with new kinemotion version
-1. Redeploy backend (30 minutes)
-1. Metrics automatically improve for all coaches
+2. Redeploy backend (30 minutes)
+3. Metrics automatically improve for all coaches
 
 ### For Production:
 
 1. Add authentication (if needed)
-1. Add user accounts/history (if coaches want it)
-1. Real-time analysis (if coaches request it)
-1. Running gait analysis (if runners request it)
+2. Add user accounts/history (if coaches want it)
+3. Real-time analysis (if coaches request it)
+4. Running gait analysis (if runners request it)
 
 ## Documentation Files
 
@@ -439,10 +439,10 @@ gcloud secrets versions access latest --secret=R2_SECRET_KEY --project=kinemotio
 For issues:
 
 1. Check troubleshooting section above
-1. Review backend logs: `gcloud run services logs tail kinemotion-backend --project=kinemotion-backend`
-1. Check frontend console (browser DevTools)
-1. Review README files in backend/ and frontend/
-1. Check GitHub issues for known problems
+2. Review backend logs: `gcloud run services logs tail kinemotion-backend --project=kinemotion-backend`
+3. Check frontend console (browser DevTools)
+4. Review README files in backend/ and frontend/
+5. Check GitHub issues for known problems
 
 ## Architecture Diagram
 

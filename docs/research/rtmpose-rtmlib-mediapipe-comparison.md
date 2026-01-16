@@ -104,9 +104,9 @@ Input Image
 **Key Innovations:**
 
 1. **SimCC (Simple Coordinate Classification):** Treats localization as classification, not regression
-1. **CSPNeXt Backbone:** Optimized for detection tasks, not ImageNet classification
-1. **GAU (Gated Attention Unit):** Lightweight transformer for keypoint refinement
-1. **Top-Down Paradigm:** Detect person first, then estimate pose
+2. **CSPNeXt Backbone:** Optimized for detection tasks, not ImageNet classification
+3. **GAU (Gated Attention Unit):** Lightweight transformer for keypoint refinement
+4. **Top-Down Paradigm:** Detect person first, then estimate pose
 
 ### 2.2 MediaPipe Architecture
 
@@ -138,9 +138,9 @@ Input Image
 **Key Features:**
 
 1. **BlazePose:** Optimized for mobile inference
-1. **Heatmap Regression:** Traditional approach with upsampling
-1. **ROI Tracking:** Reduces computation in video by tracking previous detection
-1. **Single-Person Optimized:** Best performance with one subject
+2. **Heatmap Regression:** Traditional approach with upsampling
+3. **ROI Tracking:** Reduces computation in video by tracking previous detection
+4. **Single-Person Optimized:** Best performance with one subject
 
 ______________________________________________________________________
 
@@ -440,16 +440,16 @@ From "Robustness Evaluation in Hand Pose Estimation" (arXiv:2303.04566):
 ### 9.2 Why RTMPose Handles Motion Better
 
 1. **SimCC vs Heatmap:** SimCC's coordinate classification is more robust to spatial noise
-1. **CSPNeXt Backbone:** Designed for detection, better feature extraction
-1. **GAU Attention:** Global context helps with partial occlusion
-1. **Top-Down Approach:** Person detection isolates subjects
+2. **CSPNeXt Backbone:** Designed for detection, better feature extraction
+3. **GAU Attention:** Global context helps with partial occlusion
+4. **Top-Down Approach:** Person detection isolates subjects
 
 ### 9.3 Why MediaPipe Struggles
 
 1. **Heatmap Regression:** Sensitive to spatial blur
-1. **Mobile-Optimized:** Accuracy sacrificed for speed
-1. **Single-Person Focus:** Less robust multi-person handling
-1. **ROI Tracking:** Can lose track during fast movements
+2. **Mobile-Optimized:** Accuracy sacrificed for speed
+3. **Single-Person Focus:** Less robust multi-person handling
+4. **ROI Tracking:** Can lose track during fast movements
 
 ______________________________________________________________________
 
@@ -677,12 +677,12 @@ For kinemotion's multi-sport analysis platform:
    - Local development (Apple Silicon)
    - All sports: jumps, sprints, lifts, wall ball
 
-1. **Use MediaPipe** for:
+2. **Use MediaPipe** for:
 
    - Browser-based real-time preview
    - Mobile app development (future)
 
-1. **Avoid full MMPose** unless:
+3. **Avoid full MMPose** unless:
 
    - Training custom models
    - Research/experimentation
@@ -863,11 +863,11 @@ ______________________________________________________________________
 ## 16. References
 
 1. Jiang, T., et al. (2023). "RTMPose: Real-Time Multi-Person Pose Estimation based on MMPose." arXiv:2303.07399
-1. Bazarevsky, V., et al. (2020). "BlazePose: On-device Real-time Body Pose Tracking." arXiv:2006.10204
-1. Gomez, et al. (2025). "Comparison of Visual Trackers for Biomechanical Analysis of Running." arXiv:2505.04713
-1. RTMLib Repository: https://github.com/Tau-J/rtmlib
-1. MMPose Documentation: https://mmpose.readthedocs.io/
-1. MediaPipe Pose: https://developers.google.com/mediapipe/solutions/vision/pose_landmarker
+2. Bazarevsky, V., et al. (2020). "BlazePose: On-device Real-time Body Pose Tracking." arXiv:2006.10204
+3. Gomez, et al. (2025). "Comparison of Visual Trackers for Biomechanical Analysis of Running." arXiv:2505.04713
+4. RTMLib Repository: https://github.com/Tau-J/rtmlib
+5. MMPose Documentation: https://mmpose.readthedocs.io/
+6. MediaPipe Pose: https://developers.google.com/mediapipe/solutions/vision/pose_landmarker
 
 ______________________________________________________________________
 

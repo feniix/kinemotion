@@ -182,9 +182,9 @@ ______________________________________________________________________
 ### Findings
 
 1. **Right ankle** showed more consistent patterns than left
-1. **Range of -12 to +3 frames** is too wide for practical use
-1. **Ankle angle signal is inconsistent** across jumps
-1. Individual landing mechanics vary (flat-footed vs forefoot)
+2. **Range of -12 to +3 frames** is too wide for practical use
+3. **Ankle angle signal is inconsistent** across jumps
+4. Individual landing mechanics vary (flat-footed vs forefoot)
 
 ### Conclusion
 
@@ -206,16 +206,16 @@ ______________________________________________________________________
 ### Key Findings
 
 1. **3σ threshold is appropriate** - Lower thresholds detect noise
-1. **Zero-phase filtering is counterproductive** - Creates curve artifacts
-1. **Sub-frame interpolation provides minimal benefit** - ~0.3 frames (5ms)
-1. **Ankle angle detection is too variable** - Individual landing mechanics differ
+2. **Zero-phase filtering is counterproductive** - Creates curve artifacts
+3. **Sub-frame interpolation provides minimal benefit** - ~0.3 frames (5ms)
+4. **Ankle angle detection is too variable** - Individual landing mechanics differ
 
 ### Why Errors Exist
 
 1. **Frame rate limitation** - At 60fps, 1 frame = 16.7ms
-1. **Manual ground truth observation** - Subjective interpretation of event timing
-1. **Pose estimation latency** - MediaPipe has inherent processing delay
-1. **Smoothing lag** - Savitzky-Golay filter introduces ~1 frame per derivative
+2. **Manual ground truth observation** - Subjective interpretation of event timing
+3. **Pose estimation latency** - MediaPipe has inherent processing delay
+4. **Smoothing lag** - Savitzky-Golay filter introduces ~1 frame per derivative
 
 ### Accuracy Context
 
@@ -236,9 +236,9 @@ ______________________________________________________________________
 ## Recommendations
 
 1. **Keep current algorithm** - All attempted improvements failed or showed marginal benefit
-1. **Document frame rate limitation** - Recommend 120+ fps for research-grade analysis
-1. **Consider RTMPose** - Showed exact takeoff detection (104 vs ground truth 104) in one test
-1. **Focus on other priorities** - Current accuracy is sufficient for MVP use cases
+2. **Document frame rate limitation** - Recommend 120+ fps for research-grade analysis
+3. **Consider RTMPose** - Showed exact takeoff detection (104 vs ground truth 104) in one test
+4. **Focus on other priorities** - Current accuracy is sufficient for MVP use cases
 
 ______________________________________________________________________
 
@@ -374,7 +374,7 @@ At 60 FPS (16.7ms per frame), the entire transition from "just touched" to "full
    - Found: "any force threshold within 0 to 50 N could be used to predict heel-contact time"
    - For takeoff: "10 N or less should be used"
 
-1. **Rojano Ortega et al. (2010)** - "Analysis of the Vertical Ground Reaction Forces and Temporal Factors in the Landing Phase"
+2. **Rojano Ortega et al. (2010)** - "Analysis of the Vertical Ground Reaction Forces and Temporal Factors in the Landing Phase"
 
    - Two peak forces (F1 and F2) in landing force-time curve
    - F1: Impact of metatarsal heads (forefoot)
@@ -467,8 +467,8 @@ Extracted frames from `cmj-45-IMG_6733.MOV`:
 ### Why This Works
 
 1. **Physics:** Deceleration begins the instant foot touches ground (can't decelerate in air)
-1. **Kinematic chain:** Foot contact → foot deceleration → hip deceleration (delay)
-1. **Force plate equivalent:** 10-50N threshold is "first measurable force" = deceleration onset
+2. **Kinematic chain:** Foot contact → foot deceleration → hip deceleration (delay)
+3. **Force plate equivalent:** 10-50N threshold is "first measurable force" = deceleration onset
 
 ### Implications
 

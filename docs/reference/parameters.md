@@ -34,7 +34,7 @@ ______________________________________________________________________
 
 - High quality (visibility > 0.7): Minimal smoothing, no bilateral filter
 - Medium quality (0.4-0.7): +1 smoothing adjustment, enable bilateral
-- Low quality (\< 0.4): +2 smoothing adjustment, enable bilateral, lower confidence
+- Low quality (< 0.4): +2 smoothing adjustment, enable bilateral, lower confidence
 
 **Use `--verbose` to see what was auto-selected for your video!**
 

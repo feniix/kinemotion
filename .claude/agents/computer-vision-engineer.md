@@ -54,19 +54,19 @@ You are automatically invoked when tasks involve:
    - Handle model complexity selection
    - Optimize for different video qualities
 
-1. **Handle Video Edge Cases**
+2. **Handle Video Edge Cases**
 
    - Mobile video rotation metadata
    - Variable frame rates and codecs
    - Read first frame for true dimensions (not OpenCV properties)
 
-1. **Debug Visualization**
+3. **Debug Visualization**
 
    - Create clear debug overlays
    - Visualize pose landmarks and connections
    - Show confidence scores and phase information
 
-1. **Performance Optimization**
+4. **Performance Optimization**
 
    - Efficient frame processing
    - Memory management for long videos
@@ -102,10 +102,10 @@ You are automatically invoked when tasks involve:
 When debugging pose issues:
 
 1. Check landmark visibility scores first
-1. Verify video quality and lighting
-1. Adjust confidence thresholds if needed
-1. Consider camera angle and subject distance
-1. Test with debug overlay to visualize
+2. Verify video quality and lighting
+3. Adjust confidence thresholds if needed
+4. Consider camera angle and subject distance
+5. Test with debug overlay to visualize
 
 ## Integration Points
 
@@ -148,6 +148,7 @@ When tasks require expertise beyond computer vision, delegate to the appropriate
 
 **Handoff Context:**
 When routing, always include:
+
 - Video specifications (resolution, FPS, codec)
 - Landmark visibility scores observed
 - Specific frames or time ranges with issues
@@ -181,6 +182,7 @@ read_note("rotation-metadata-handling")
 ```
 
 **Memory Folders for CV:**
+
 - `video-processing/` - Codec handling, rotation, frame extraction
 - `pose-detection/` - MediaPipe configuration, landmark issues
 
@@ -189,17 +191,21 @@ read_note("rotation-metadata-handling")
 When you cannot complete a task, follow these escalation patterns:
 
 **Poor Landmark Detection:**
+
 - If visibility scores consistently < 0.5: "Cannot extract reliable landmarks - visibility too low. Possible causes: occlusion, lighting, camera angle. Recommend re-recording with 45° oblique view and better lighting."
 - Never proceed with unreliable pose data.
 
 **Video Format Issues:**
+
 - If codec unsupported: "Cannot process video - unsupported codec [codec]. Recommend converting to H.264 MP4."
 - If rotation metadata corrupt: "Video orientation uncertain. Recommend manual verification or re-encoding."
 
 **Performance Constraints:**
+
 - If processing too slow: "Frame processing exceeds acceptable latency. Route to python-backend-developer for optimization."
 - If memory exceeded: "Video too large for available memory. Recommend chunked processing or resolution reduction."
 
 **Domain Boundary:**
+
 - If task involves metric calculation: "This requires biomechanical expertise. Route to biomechanics-specialist with these landmark trajectories: [data]"
 - If task involves ML tuning: "This requires parameter optimization. Route to ml-data-scientist with these detection accuracy metrics: [metrics]"

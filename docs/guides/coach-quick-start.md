@@ -207,7 +207,7 @@ ______________________________________________________________________
 | **Excellent** | 2.5+      | Elite reactive ability     | Ready for intensive plyometrics     |
 | **Very Good** | 2.0 - 2.5 | Strong plyometric capacity | Ready for moderate-high intensity   |
 | **Good**      | 1.5 - 2.0 | Adequate reactive strength | Ready for moderate intensity        |
-| **Fair**      | \< 1.5    | Needs development          | Focus on strength + basic technique |
+| **Fair**      | < 1.5     | Needs development          | Focus on strength + basic technique |
 
 **Sources:** Flanagan (2021), Young (1995) - based on drop jumps with hands on hips
 
@@ -251,7 +251,7 @@ GCT is a key component of RSI. Shorter contact time = better reactive ability.
 
 | Classification | GCT          | What It Means                        |
 | -------------- | ------------ | ------------------------------------ |
-| **Elite**      | \< 180 ms    | Exceptional stretch-shortening cycle |
+| **Elite**      | < 180 ms     | Exceptional stretch-shortening cycle |
 | **Very Good**  | 180 - 200 ms | Fast SSC utilization                 |
 | **Good**       | 200 - 220 ms | Adequate reactive ability            |
 | **Average**    | 220 - 250 ms | Room for improvement                 |
@@ -265,7 +265,7 @@ The "optimal" drop height is where the athlete achieves their **best RSI score**
 
 | RSI Level     | Optimal Drop Height | Guidance                                 |
 | ------------- | ------------------- | ---------------------------------------- |
-| **\< 1.0**    | 15-20 cm            | Focus on landing mechanics first         |
+| **< 1.0**     | 15-20 cm            | Focus on landing mechanics first         |
 | **1.0 - 1.5** | 20-30 cm            | Build basic reactive strength            |
 | **1.5 - 2.0** | 30-40 cm            | Standard testing height                  |
 | **2.0+**      | 30-45 cm            | Test incremental heights to find optimum |
@@ -289,7 +289,7 @@ The "optimal" drop height is where the athlete achieves their **best RSI score**
 
 | RSI Score     | Interpretation              | Training Focus                        |
 | ------------- | --------------------------- | ------------------------------------- |
-| **\< 1.0**    | Not ready for plyometrics   | Strength base, landing mechanics      |
+| **< 1.0**     | Not ready for plyometrics   | Strength base, landing mechanics      |
 | **1.0 - 1.5** | Plyo beginner               | Low-intensity plyometrics + strength  |
 | **1.5 - 2.0** | Developing reactive ability | Moderate plyometrics, progress volume |
 | **2.0 - 2.5** | Good reactive capacity      | Higher intensity plyometrics          |
@@ -299,7 +299,7 @@ The "optimal" drop height is where the athlete achieves their **best RSI score**
 
 How deep the athlete squats before jumping:
 
-- **Too shallow (\< 20 cm)**: Not using full range of motion
+- **Too shallow (< 20 cm)**: Not using full range of motion
 - **Optimal (20 - 35 cm)**: Good balance of depth and speed
 - **Too deep (> 40 cm)**: May be slowing down the jump
 
@@ -310,9 +310,9 @@ ______________________________________________________________________
 ### For Accurate Results
 
 1. **Consistent setup** - Use the same camera position each time for comparable results
-1. **Multiple attempts** - Record 3-5 jumps and use the best result
-1. **Rest between attempts** - 1-2 minutes rest ensures maximum effort
-1. **Standardized instructions** - Tell athletes: "Jump as high as you can"
+2. **Multiple attempts** - Record 3-5 jumps and use the best result
+3. **Rest between attempts** - 1-2 minutes rest ensures maximum effort
+4. **Standardized instructions** - Tell athletes: "Jump as high as you can"
 
 ### Tracking Progress
 

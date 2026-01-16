@@ -322,8 +322,8 @@ with pytest.raises(ValueError):
 ### How It Works
 
 1. **Auto-use fixture** patches kinemotion functions globally
-1. **Per-test override** available with `patch()` for specific behavior
-1. **R2 client** completely mocked with boto3 mock
+2. **Per-test override** available with `patch()` for specific behavior
+3. **R2 client** completely mocked with boto3 mock
 
 ```python
 # Global mock (applied to all tests)
@@ -421,10 +421,10 @@ uv run pytest tests/ -v
 ### To Add More Tests
 
 1. Add test function to appropriate file
-1. Use existing fixtures
-1. Follow AAA pattern
-1. Include docstring
-1. Run: `uv run pytest tests/test_file.py::test_name -v`
+2. Use existing fixtures
+3. Follow AAA pattern
+4. Include docstring
+5. Run: `uv run pytest tests/test_file.py::test_name -v`
 
 ### CI/CD Integration
 

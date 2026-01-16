@@ -34,11 +34,11 @@ Refactoring sprint (extracting abstractions, eliminating duplication) is critica
 **Mitigation Strategies:**
 
 1. **Schedule this week** - Lock in backend dev's calendar NOW
-1. **Define scope clearly** - List exact files/functions to refactor
-1. **Time-box strictly** - 5-6 days max, strict scope boundaries
-1. **Test first** - Ensure existing tests pass before refactoring
-1. **Pair programming** - Backend dev + another dev for continuity
-1. **Daily standups** - Track progress daily, catch issues early
+2. **Define scope clearly** - List exact files/functions to refactor
+3. **Time-box strictly** - 5-6 days max, strict scope boundaries
+4. **Test first** - Ensure existing tests pass before refactoring
+5. **Pair programming** - Backend dev + another dev for continuity
+6. **Daily standups** - Track progress daily, catch issues early
 
 **Contingency:**
 
@@ -83,11 +83,11 @@ Strategic plan assumes \<200ms E2E latency achievable with server-side MediaPipe
 **Mitigation Strategies:**
 
 1. **Week 1 profiling** - Build empirical latency profiler ASAP
-1. **Hybrid architecture** - Client-side TensorFlow.js (primary) + server fallback
-1. **Network optimization** - WebSocket compression, delta updates only
-1. **Processing optimization** - Lite model for speed vs accuracy trade-off
-1. **Cache aggressively** - Pre-compute what we can
-1. **Early decision** - End of Week 1, decide server-only vs hybrid
+2. **Hybrid architecture** - Client-side TensorFlow.js (primary) + server fallback
+3. **Network optimization** - WebSocket compression, delta updates only
+4. **Processing optimization** - Lite model for speed vs accuracy trade-off
+5. **Cache aggressively** - Pre-compute what we can
+6. **Early decision** - End of Week 1, decide server-only vs hybrid
 
 **Contingency:**
 
@@ -133,11 +133,11 @@ Running gait parameters (detection confidence, Butterworth cutoff, etc.) are fun
 **Mitigation Strategies:**
 
 1. **Week 1-2 definition** - Define parameters immediately with ML + Biomechanics
-1. **Prototype testing** - 1-week prototype validation (test on real videos)
-1. **Sensitivity analysis** - Understand which parameters most affect accuracy
-1. **Ground truth** - Compare prototype output to known-good 120fps video
-1. **Safety margins** - Conservative thresholds for accuracy first
-1. **Documentation** - Record parameter rationale for future reference
+2. **Prototype testing** - 1-week prototype validation (test on real videos)
+3. **Sensitivity analysis** - Understand which parameters most affect accuracy
+4. **Ground truth** - Compare prototype output to known-good 120fps video
+5. **Safety margins** - Conservative thresholds for accuracy first
+6. **Documentation** - Record parameter rationale for future reference
 
 **Contingency:**
 
@@ -185,11 +185,11 @@ Infrastructure build (Dockerfile, GitHub Actions, monitoring, AWS setup) MUST co
 **Mitigation Strategies:**
 
 1. **Assign DevOps this week** - Lock calendar NOW
-1. **Prioritize critical path** - Dockerfile → CI/CD → monitoring → optional enhancements
-1. **Early AWS setup** - Account, IAM roles, networking ready Week 1
-1. **Container optimization** - Start with simple, optimize later
-1. **Monitoring baseline** - Prometheus + basic alerting (advanced tuning later)
-1. **Daily standups** - Track progress vs Week 3 deadline
+2. **Prioritize critical path** - Dockerfile → CI/CD → monitoring → optional enhancements
+3. **Early AWS setup** - Account, IAM roles, networking ready Week 1
+4. **Container optimization** - Start with simple, optimize later
+5. **Monitoring baseline** - Prometheus + basic alerting (advanced tuning later)
+6. **Daily standups** - Track progress vs Week 3 deadline
 
 **Contingency:**
 
@@ -238,11 +238,11 @@ Validation study (force plate comparison) is critical for partnership credibilit
 **Mitigation Strategies:**
 
 1. **Contact labs this week** - Identify 3 potential partners (university, sports science center, PT clinic)
-1. **Negotiate access** - Budget $5-10K for lab time + equipment
-1. **Lock dates now** - Reserve Month 3-4 slots before they fill
-1. **Prepare protocol** - Draft validation study protocol (sharing criteria, data collection, analysis plan)
-1. **Backup plan** - Consider alternative validation methods (IMU comparison, optical marker tracking)
-1. **Academic partnership** - Explore co-publishing opportunities (free lab access in exchange for co-authorship)
+2. **Negotiate access** - Budget $5-10K for lab time + equipment
+3. **Lock dates now** - Reserve Month 3-4 slots before they fill
+4. **Prepare protocol** - Draft validation study protocol (sharing criteria, data collection, analysis plan)
+5. **Backup plan** - Consider alternative validation methods (IMU comparison, optical marker tracking)
+6. **Academic partnership** - Explore co-publishing opportunities (free lab access in exchange for co-authorship)
 
 **Contingency:**
 
@@ -474,25 +474,25 @@ ______________________________________________________________________
    - Consider contract resource
    - May slip timeline by 1 week
 
-1. **Latency profiler not complete by Thursday of Week 1**
+2. **Latency profiler not complete by Thursday of Week 1**
 
    - Escalate to CTO
    - Architecture decision will miss Friday deadline
    - Real-time feature delayed
 
-1. **Running parameters not defined by end of Week 2**
+3. **Running parameters not defined by end of Week 2**
 
    - Escalate to VP Engineering
    - Task 4 cannot start Week 5
    - Timeline slips 1-2 weeks
 
-1. **Infrastructure not at 50% by end of Week 1**
+4. **Infrastructure not at 50% by end of Week 1**
 
    - Escalate to DevOps Lead
    - Week 3 deadline at risk
    - May need additional resources
 
-1. **Lab partner not locked by Friday**
+5. **Lab partner not locked by Friday**
 
    - Escalate to Project Manager
    - Validation study timeline at risk

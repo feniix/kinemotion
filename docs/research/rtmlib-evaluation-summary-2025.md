@@ -330,11 +330,11 @@ ______________________________________________________________________
 ## Key Takeaways
 
 1. **Hardware acceleration is critical**: RTMPose goes from 39% to 271% of MediaPipe performance with proper acceleration
-1. **CUDA is fastest**: RTMPose-S on RTX 4070 Ti Super is 2.7x faster than MediaPipe
-1. **CPU CAN be viable with ONNX tuning**: Optimized session options make RTMPose 34% faster than MediaPipe on CPU ✨
-1. **Better accuracy**: RTMPose has 28-34% better landmark stability regardless of platform
-1. **Future-proofing**: RTMPose has active research community and multi-sport support
-1. **ONNX Runtime optimization matters**: Proper `intra_op_num_threads`, `inter_op_num_threads`, and `execution_mode` settings dramatically improve CPU performance
+2. **CUDA is fastest**: RTMPose-S on RTX 4070 Ti Super is 2.7x faster than MediaPipe
+3. **CPU CAN be viable with ONNX tuning**: Optimized session options make RTMPose 34% faster than MediaPipe on CPU ✨
+4. **Better accuracy**: RTMPose has 28-34% better landmark stability regardless of platform
+5. **Future-proofing**: RTMPose has active research community and multi-sport support
+6. **ONNX Runtime optimization matters**: Proper `intra_op_num_threads`, `inter_op_num_threads`, and `execution_mode` settings dramatically improve CPU performance
 
 ______________________________________________________________________
 
@@ -373,5 +373,5 @@ ______________________________________________________________________
 - **Assessment Plan:** `docs/technical/rtmpose-rtmlib-vs-mediapipe-feasibility-assessment-plan.md`
 - **Research Comparison:** `docs/research/rtmpose-rtmlib-mediapipe-comparison.md`
 - **Pose Estimator Comparison:** `docs/research/pose-estimator-comparison-2025.md`
-- **Issue:** \[#10\] Camera angle validation
+- **Issue:** [#10] Camera angle validation
 - **Branch:** `zai-rtmlib-evaluation`

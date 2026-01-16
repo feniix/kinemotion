@@ -1,7 +1,7 @@
 ## Optimal Force–Velocity Profile in Ballistic Movements—Altius: Citius or Fortius?
 
-PIERRE SAMOZINO \[1\], ENRICO REJC \[2\], PIETRO ENRICO DI PRAMPERO \[2\], ALAIN BELLI \[3\],
-and JEAN-BENOI \[ˆ\] T MORIN \[3\]
+PIERRE SAMOZINO [1], ENRICO REJC [2], PIETRO ENRICO DI PRAMPERO [2], ALAIN BELLI [3],
+and JEAN-BENOI [ˆ] T MORIN [3]
 
 1Laboratory of Exercise Physiology (EA4338), University of Savoy, Le Bourget du Lac, FRANCE;
 2Department of Biomedical Sciences and Technologies, University of Udine, Udine, ITALY; and
@@ -11,19 +11,19 @@ ABSTRACT
 
 SAMOZINO, P., E. REJC, P. E. DI PRAMPERO, A. BELLI, and J.-B. MORIN. Optimal Force–Velocity Profile in Ballistic Move
 ments—Altius: Citius or Fortius? Med. Sci. Sports Exerc., Vol. 44, No. 2, pp. 313–322, 2012. Purpose: The study’s purpose was to
-determine the respective influences of the maximal power (P;max \[) and the force–velocity (\]\[F\]\[–\]\[v\]\[) mechanical profile of the lower limb\]
+determine the respective influences of the maximal power (P;max [) and the force–velocity (][F][–][v][) mechanical profile of the lower limb]
 
 neuromuscular system on performance in ballistic movements. Methods: A theoretical integrative approach was proposed to express
 
-obtained on 14 subjects during lower limb ballistic inclined push-offs and (ii) simulated to quantify the respective influence ofballistic performance as a mathematical function of P;max \[and\]\[ F\]\[–\]\[v\]\[ profile. This equation was (i) validated from experimental data\] P;max \[and\]
+obtained on 14 subjects during lower limb ballistic inclined push-offs and (ii) simulated to quantify the respective influence ofballistic performance as a mathematical function of P;max [and][ F][–][v][ profile. This equation was (i) validated from experimental data] P;max [and]
 
 F–v profile on performance. Results: The bias between performances predicted and obtained from experimental measurements was
 
-4%–7%, confirming the validity of the proposed theoretical approach. Simulations showed that ballistic performance was mostly influenced not only by P;max \[but also by the balance between force and velocity capabilities as described by the\]\[ F\]\[–\]\[v\]\[ profile. For each indi-\]
+4%–7%, confirming the validity of the proposed theoretical approach. Simulations showed that ballistic performance was mostly influenced not only by P;max [but also by the balance between force and velocity capabilities as described by the][ F][–][v][ profile. For each indi-]
 
 vidual, there is an optimal F–v profile that maximizes performance, whereas unfavorable F–v balances lead to differences in performance up
 
-(limb extension range,to 30% for a given P P;;max \[. This optimal\]\[) and on the afterload involved in the movement (inertia, inclination). The lower the afterload, the more the opti-\]\[ F\]\[–\]\[v\]\[ profile, which can be accurately determined, depends on some individual characteristics\]
+(limb extension range,to 30% for a given P P;;max [. This optimal][) and on the afterload involved in the movement (inertia, inclination). The lower the afterload, the more the opti-][ F][–][v][ profile, which can be accurately determined, depends on some individual characteristics]
 
 ;
 
@@ -37,7 +37,7 @@ vidual, there is an optimal F–v profile that maximizes performance, whereas un
 
 ;
 
-(limb extension range, Pmax \[) and on the afterload involved in the movement (inertia, inclination). The lower the afterload, the more the opti-\]
+(limb extension range, Pmax [) and on the afterload involved in the movement (inertia, inclination). The lower the afterload, the more the opti-]
 
 mal F–v profile is oriented toward velocity capabilities and the greater the limitation of performance imposed by the maximal velocity of
 
@@ -62,8 +62,8 @@ important: ‘‘force’’ or ‘‘velocity’’ mechanical capability?
 
 Ballistic movements may be defined as maximal movements aiming to accelerate a moving mass as much as possible, that is, to reach the highest possible velocity in the
 
-Address for correspondence: Pierre Samozino, Ph.D., Laboratoire de Physiologie de l’Exercice, Universite´ de Saint-E \[´\] tienne, Me´decine du sport et
-Myologie - Centre Hospitalier Universitaire Bellevue, 42055 Saint-E \[´\] tienne
+Address for correspondence: Pierre Samozino, Ph.D., Laboratoire de Physiologie de l’Exercice, Universite´ de Saint-E [´] tienne, Me´decine du sport et
+Myologie - Centre Hospitalier Universitaire Bellevue, 42055 Saint-E [´] tienne
 Cedex 02, France; E-mail: <pierre.samozino@univ-savoie.fr>.
 Submitted for publication November 2010.
 Accepted for publication July 2011.
@@ -91,7 +91,7 @@ lower limb push-off and, in turn, accelerating body mass as
 much as possible have often been assumed to depend on
 power capabilities of the neuromuscular system involved in
 the movement (14,19,26,29,36,40,43). This explains the
-wide interest of sports performance practitioners in improving muscular power (9,10,12,14,27). On this basis,maximal power output (P;max \[) may be improved by in-\]
+wide interest of sports performance practitioners in improving muscular power (9,10,12,14,27). On this basis,maximal power output (P;max [) may be improved by in-]
 
 creasing the ability to develop high levels of force at low
 velocities (force capabilities or strength) and/or lower levels
@@ -116,10 +116,10 @@ Copyright © 2012 by the American College of Sports Medicine. Unauthorized repro
 
 concentric extension movements (3,33,35,40,43). These relationships describe the changes in external force generation
 and power output with increasing movement velocity and
-may be summarized through three typical variables: the the-oretical maximal force at null velocity (F;0 \[), the\]\[ P\] ;max \[the\]
+may be summarized through three typical variables: the the-oretical maximal force at null velocity (F;0 [), the][ P] ;max [the]
 
 lower limbs can produce over one extension, and the theoretical maximal velocity at which lower limbs can extend
-during one extension under zero load (v \[Y\] 0 \[). These three pa-\]
+during one extension under zero load (v [Y] 0 [). These three pa-]
 
 rameters represent the maximal mechanical capabilities of
 lower limbs to generate external force, power output, and
@@ -128,9 +128,9 @@ the mechanical limits of the entire neuromuscular function,
 they encompass individual muscle mechanical properties
 (e.g., intrinsic F–v and length–tension relationships, rate of
 force development), some morphological factors (e.g., crosssectional area, fascicle length, pennation angle, tendon properties), and neural mechanisms (e.g., motor unit recruitment,
-firing frequency, motor unit synchronization, intermuscularcoordination) (9). Graphically, F;0 \[and\]\[ v\]\[Y\] 0 \[correspond to the\]
+firing frequency, motor unit synchronization, intermuscularcoordination) (9). Graphically, F;0 [and][ v][Y] 0 [correspond to the]
 
-force axis and velocity axis intercepts of the linearrespectively, and P;max \[corresponds to the apex of the para-\] F–v curve,
+force axis and velocity axis intercepts of the linearrespectively, and P;max [corresponds to the apex of the para-] F–v curve,
 
 bolic P–v relationship. Under these conditions, the relationship among these three parameters can be described by the
 following mathematical equation (41):
@@ -145,7 +145,7 @@ following mathematical equation (41):
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-0 \[), the\]\[ P\]
+0 [), the][ P]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -153,7 +153,7 @@ following mathematical equation (41):
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-0 \[and\]\[ v\]\[Y\]
+0 [and][ v][Y]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -161,7 +161,7 @@ following mathematical equation (41):
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-Pmax \[and\]\[ F\]\[–\]\[v\]\[ profile on performance in ballistic lower limb\]
+Pmax [and][ F][–][v][ profile on performance in ballistic lower limb]
 
 movements. Moreover, force and velocity contributions to
 power output depend on the load involved (10,14). Consequently, the secondary aim of this study was to investigate
@@ -180,7 +180,7 @@ maximal jumping performance can be well represented by
 the maximal vTO (vTOmax) of the body CM. As detailed in the
 recent theoretical integrative approach, jumping performance can be expressed as a function of some mechanical
 characteristics of lower limbs. In this approach mentioned
-above (see Samozino et al. \[37\]), vTOmax can be expressed
+above (see Samozino et al. [37]), vTOmax can be expressed
 as follows:
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
@@ -199,7 +199,7 @@ F�0�v0 ½1�
 
 f
 **f** i fY **f** i f2 **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f**
-F \[2\] \[Y\]
+F [2] [Y]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -209,13 +209,13 @@ A
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-ðF \[Y\] 0jgsin>Þ
+ðF [Y] 0jgsin>Þ
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** Y
 
 F 0
 
-2v ~~\[Y\]~~ 0
+2v ~~[Y]~~ 0
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -230,19 +230,19 @@ s
 **f** Y **f** 2 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 F 0
 
-4 ~~\[Y\]~~ v \[2\]
+4 ~~[Y]~~ v [2]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-þ \[2\]
+þ [2]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-Consequently, two athletes with similar Pmax \[could theo-\]
+Consequently, two athletes with similar Pmax [could theo-]
 
-retically present differentferent combinations of F; F0 \[and\] –v mechanical profiles, i.e., dif- \[ v\]\[Y\] 0 \[. The issue is therefore to\]
+retically present differentferent combinations of F; F0 [and] –v mechanical profiles, i.e., dif- [ v][Y] 0 [. The issue is therefore to]
 
-determine whether theperformances independently of F–v profile may influence ballistic P;max \[. In other words, is it\]
+determine whether theperformances independently of F–v profile may influence ballistic P;max [. In other words, is it]
 
 preferable to be ‘‘strong’’ or ‘‘fast’’ to reach the highest performance in ballistic movements? Such an analysis might
 provide greater insight into the relationship between mechanical properties of the neuromuscular system and functional performance, either to further explore animal motor
@@ -258,7 +258,7 @@ values among subjects, making it impossible to identify
 the sole effect of the F–v profile. The influence of force
 and velocity capabilities on jumping performance has been
 recently addressed through a theoretical integrative approach
-mathematically expressing the maximal jump height an indi-vidual can reach as a function ofwere not independent from possible effects ofthe observed positive effects of F F;;0 0 \[and\]\[and\]\[ v\]\[ v\]\[Y\]\[Y\] 00 \[on performance\] P \[(37). However,\] ;max \[, the latter\]
+mathematically expressing the maximal jump height an indi-vidual can reach as a function ofwere not independent from possible effects ofthe observed positive effects of F F;;0 0 [and][and][ v][ v][Y][Y] 00 [on performance] P [(37). However,] ;max [, the latter]
 
 being overlooked.
 
@@ -287,7 +287,7 @@ hPO
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-0 \[and\]\[ v\]\[Y\]
+0 [and][ v][Y]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -295,24 +295,20 @@ hPO
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-where g is the gravitational acceleration (9.81 mIs \[j\]\[2\] ), > is
+where g is the gravitational acceleration (9.81 mIs [j][2] ), > is
 the push-off angle with respect to the horizontal (-), hPO
-is the distance covered by the CM during push-off corresponding to the extension range of lower limbs (m), andF;0 \[(N\]\[I\]\[kg\]\[j\]\[1\]\[ of moving mass) and\]\[ v\]\[Y\] 0 \[(m\]\[I\]\[s\]\[j\]\[1\]\[) are the maxi-\]
+is the distance covered by the CM during push-off corresponding to the extension range of lower limbs (m), andF;0 [(N][I][kg][j][1][ of moving mass) and][ v][Y] 0 [(m][I][s][j][1][) are the maxi-]
 
 mal force at theoretical null velocity and the theoretical
 maximal unloaded velocity of lower limbs, respectively.
 The push-off angle >, assumed to be the same as the axis of
 the force developed, is considered constant over the entire
 push-off. In equation 2, the afterload opposing in motion
-is taken into account through inertia (i.e., the movingmass present here in the normalization of F;0 \[) and gravity\]
+is taken into account through inertia (i.e., the movingmass present here in the normalization of F;0 [) and gravity]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-0 \[(N\]\[I\]\[kg\]\[j\]\[1\]\[ of moving mass) and\]\[ v\]\[Y\]
-
-**f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
-
-;
+0 [(N][I][kg][j][1][ of moving mass) and][ v][Y]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -324,12 +320,16 @@ is taken into account through inertia (i.e., the movingmass present here in the 
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-mass present here in the normalization of F 0 \[) and gravity\]
+;
+
+**f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
+
+mass present here in the normalization of F 0 [) and gravity]
 
 (g � sin >, i.e., the component of the gravity opposed to the
 movement).
 
-sented by the ratio betweenThe F–v mechanical profile of lower limbs can be repre- F;0 \[and\]\[ v\]\[Y\] 0 \[, i.e., by the slope of\]
+sented by the ratio betweenThe F–v mechanical profile of lower limbs can be repre- F;0 [and][ v][Y] 0 [, i.e., by the slope of]
 
 the linear F–v relationship (SFv) given by the following
 equation:
@@ -340,7 +340,7 @@ equation:
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-0 \[and\]\[ v\]\[Y\]
+0 [and][ v][Y]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -360,7 +360,7 @@ v0
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-0 \[and\]\[ v\]\[Y\]
+0 [and][ v][Y]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -368,7 +368,7 @@ v0
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-0 \[and\]\[ v\]\[Y\]
+0 [and][ v][Y]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -379,7 +379,7 @@ v0
 (with the force graphically represented on the vertical axis of
 the F–v relationship).
 
-Thus, the lower the SFv, the steeper the F–v relationship and the higher the force capabilities compared withvelocity ones (7). Note that SFv and P;max \[are theorized to be\]
+Thus, the lower the SFv, the steeper the F–v relationship and the higher the force capabilities compared withvelocity ones (7). Note that SFv and P;max [are theorized to be]
 
 independent.
 
@@ -413,7 +413,7 @@ Substituting equation 3 in equation 2 gives the following:
 
 f
 **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f**
-S \[2\] \[2\] \[Y\]
+S [2] [2] [Y]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -423,7 +423,7 @@ S \[2\] \[2\] \[Y\]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-þ \[S\]\[Fv\]
+þ [S][Fv]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -486,8 +486,8 @@ s
 
 Fv
 
-\[2\]
-4 \[þ\] h
+[2]
+4 [þ] h
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -507,7 +507,7 @@ hPO
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-ðF \[Y\] 0jgsin>Þ
+ðF [Y] 0jgsin>Þ
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -527,7 +527,7 @@ hPO
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-expressed as a function ofOn the other hand, from equations 1 and 3, P; \[and\]\[ S\]\[Fv\]\[:\] F 0 \[can be\]
+expressed as a function ofOn the other hand, from equations 1 and 3, P; [and][ S][Fv][:] F 0 [can be]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -557,7 +557,7 @@ On the other hand, from equations 1 and 3, F
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-max \[and\]\[ S\]\[Fv\]\[:\]
+max [and][ S][Fv][:]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -585,7 +585,7 @@ F 0 ¼ **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
 f
-pj **f** i f **f** i f4 **f** i fP **f** i f \[Y\] **f** i fmax **f** i f **f** i f **f** i fS **f** i fFv **f** i f **f**
+pj **f** i f **f** i f4 **f** i fP **f** i f [Y] **f** i fmax **f** i f **f** i f **f** i fS **f** i fFv **f** i f **f**
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -644,7 +644,7 @@ Substituting equation 5 in equation 4 gives the following:
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
 f
-S **f** i f \[2\] **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f \[2\] **f** i f **f** i f **f** i fi f **f** **f** i f **f** i f **f** i ff **f** i f **f** **f** i f **f** \[Y\] **f** i f **f** **f** i f **f** **f** i f **f** **f** i f **f** **f** i f **f** **f** i f **f** i f **f** **f** **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** iffi
+S **f** i f [2] **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f [2] **f** i f **f** i f **f** i fi f **f** **f** i f **f** i f **f** i ff **f** i f **f** **f** i f **f** [Y] **f** i f **f** **f** i f **f** **f** i f **f** **f** i f **f** **f** i f **f** **f** i f **f** i f **f** **f** **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** iffi
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -652,7 +652,7 @@ S **f** i f \[2\] **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f \[
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-**f** **f** **f** **f** **f** **f** **f** **f** **f** þ \[S\]\[Fv\]
+**f** **f** **f** **f** **f** **f** **f** **f** **f** þ [S][Fv]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -713,8 +713,8 @@ s **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-Fv \[2\] **f** **f** **f** **f** **f** **f** **f** **f** **f**
-4 \[þ\] h
+Fv [2] **f** **f** **f** **f** **f** **f** **f** **f** **f**
+4 [þ] h
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -740,7 +740,7 @@ hPO
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** f **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-pj **f** i f **f** i fP \[Y\] **f** i fmax **f** i f **f** i f **f** i fS **f** i fFv **f** i f **f** i ffi
+pj **f** i f **f** i fP [Y] **f** i fmax **f** i f **f** i f **f** i fS **f** i fFv **f** i f **f** i ffi
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -760,13 +760,13 @@ pj **f** i f **f** i fP \[Y\] **f** i fmax **f** i f **f** i f **f** i fS **f** 
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-tion ofConsequently, P;max \[,\]\[ S\] v \[Fv\] TO \[, and\] max can also be expressed as a func- \[ h\]\[PO\]\[. Equation 6 is true for\]
+tion ofConsequently, P;max [,][ S] v [Fv] TO [, and] max can also be expressed as a func- [ h][PO][. Equation 6 is true for]
 
 j
-hPO 9 0, P \[Y\] max 9 gsin> \[2\] = 4 SFv, and SFv G jgsin> \[2\] =4 P \[Y\] max
+hPO 9 0, P [Y] max 9 gsin> [2] = 4 SFv, and SFv G jgsin> [2] =4 P [Y] max
 (see appendices, Supplemental Digital Content 1a,
 <http://links.lww.com/MSS/A114>, for details on the computations of these values). In the present study, equation 6
-was (i) validated from experimental measurements and (ii)simulated to analyze the respective influences of P;max \[and\]
+was (i) validated from experimental measurements and (ii)simulated to analyze the respective influences of P;max [and]
 
 SFv on jumping performance.
 
@@ -819,7 +819,7 @@ Tests were realized on the Explosive Ergometer
 <http://links.lww.com/MSS/A115>, for a schematic view of
 the EXER) consisting of a metal frame supporting one rail
 on which a seat, fixed on a carriage, was free to move
-(for more details, see Rejc et al. \[34\]). The total moving
+(for more details, see Rejc et al. [34]). The total moving
 mass (seat + carriage) was 31.6 kg. The main frame could be
 inclined up to a maximum angle of 30- with respect to the
 horizontal. The subject could therefore accelerate himself or
@@ -849,12 +849,12 @@ suggested (3,33,43), F–v relationships were determined by
 least squares linear regressions. Because P–v relationships
 are derived from the product of force and velocity, they were
 logically described by second-degree polynomial functions.;
-F–v curves were extrapolated to obtain F 0 \[(then normalized\]
+F–v curves were extrapolated to obtain F 0 [(then normalized]
 
-to total moving mass, i.e., body + carriage seat mass) and v \[Y\] 0 \[,\]
+to total moving mass, i.e., body + carriage seat mass) and v [Y] 0 [,]
 
 which correspond to the intercepts of the F–v curve with the
-force and velocity axis, respectively. According to equation3, SFv was then computed from F;0 \[and\]\[ v\]\[Y\] 0 \[. Values of\]\[ P\] ;max
+force and velocity axis, respectively. According to equation3, SFv was then computed from F;0 [and][ v][Y] 0 [. Values of][ P] ;max
 
 (normalized to body + carriage seat mass) were determined
 from the first mathematical derivation ofequations. Moreover, to test the validity of equation 1, P–v regression P;max
@@ -915,7 +915,7 @@ Y), velocity (vY), and power (PY)
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-0 \[and\]\[ v\]\[Y\]
+0 [and][ v][Y]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -925,7 +925,7 @@ Y), velocity (vY), and power (PY)
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-0 \[. Values of\]\[ P\]
+0 [. Values of][ P]
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -955,15 +955,15 @@ the velocity signal over time during the push-off phase.
 
 Statistical analyses. All data are presented as mean T
 SD. For each subject and each sled angle condition, the
-highestvTOmax computed according to equation 6, from vTO reached in the two trials was compared with P;max \[,\]\[ h\]\[PO\]\[,\]
+highestvTOmax computed according to equation 6, from vTO reached in the two trials was compared with P;max [,][ h][PO][,]
 
 and SFv. After checking distributions normality with the
 Shapiro–Wilk test, the difference between vTO and vTOmax
 (bias) was computed and tested using a t-test for paired
 samples. To complete this comparison, the absolute difference between vTO and vTOmax (absolute bias) was also
-calculated as jðvTOmaxjvTOÞv \[j\] TO \[1\]\[j\]\[100 (36). Using the same\]
+calculated as jðvTOmaxjvTOÞv [j] TO [1][j][100 (36). Using the same]
 
-in P;max \[and\]\[ S\]\[Fv\]\[ at different push-off angles (\]\[>\]\[), each variable\]
+in P;max [and][ S][Fv][ at different push-off angles (][>][), each variable]
 
 being studied separately.
 
@@ -973,15 +973,15 @@ RESULTS
 
 ;
 
-0 \[,\]\[ v\]\[Y\]
+0 [,][ v][Y]
 
 ;
 
 ;
 
-0 \[,\]\[ F\]
+0 [,][ F]
 
-calculated ascomparison method, experimental values of jðvTOmaxjvTOÞv \[j\] TO \[1\]\[j\]\[100 (36). Using the same\] P;max \[were\]
+calculated ascomparison method, experimental values of jðvTOmaxjvTOÞv [j] TO [1][j][100 (36). Using the same] P;max [were]
 
 compared with theoretical values (PmaxTH). After checking
 the homogeneity of variances, the effect of sled angle was
@@ -993,18 +993,18 @@ P value of 0.05 was accepted as the level of significance.
 
 Validation of the theoretical approach. Individual
 F–v and P–v relationships were well fitted by linear
-(r \[2\] = 0.75–0.99, P e 0.012) and second-degree polynomial
-(r \[2\] = 0.70–1.00, P e 0.024) regressions, respectively. Figure 1
+(r [2] = 0.75–0.99, P e 0.012) and second-degree polynomial
+(r [2] = 0.70–1.00, P e 0.024) regressions, respectively. Figure 1
 shows these relationships for two typical subjects with dif-;
-ferentferentP;max \[, and\] F P;–maxv \[ S\] profiles (i.e., different \[Fv\]\[capabilities. Mean\]\[ were 0.39\]\[ T\]\[ 0.04 m, 2.78\]\[ T\]\[ SD values of\] F 0 \[,\]\[ v\]\[ T\]\[Y\] 0 \[ 0.63 m\]\[, and\]\[ S\]\[ h\]\[Fv\]\[I\]\[s\]\[PO\]\[j\]\[) and dif-\]\[,\]\[1\]\[ v\]\[, 24.2\]\[Y\] 0 \[,\]\[ F\] ; \[ T\] 0 \[,\]
+ferentferentP;max [, and] F P;–maxv [ S] profiles (i.e., different [Fv][capabilities. Mean][ were 0.39][ T][ 0.04 m, 2.78][ T][ SD values of] F 0 [,][ v][ T][Y] 0 [ 0.63 m][, and][ S][ h][Fv][I][s][PO][j][) and dif-][,][1][ v][, 24.2][Y] 0 [,][ F] ; [ T] 0 [,]
 
-2.97 NIkg \[j\]\[1\] (or 17.3 T 1.60 NIkg \[j\]\[1\] when normalized to
-body + carriage seat mass), 16.34 T 2.26 WIkg \[j\]\[1\] (or 11.78 T
-1.80 WIkg \[j\]\[1\] when normalized to body + carriage seat
-mass), and j9.33 T 3.31 NIsIm \[j\]\[1\] Ikg \[j\]\[1\] (or j6.64 T
-mass), respectively. The difference between2.12 NIsIm \[j\]\[1\] Ikg \[j\]\[1\] when normalized to body + carriage seat P; \[and\]\[ P\]\[max\] TH
+2.97 NIkg [j][1] (or 17.3 T 1.60 NIkg [j][1] when normalized to
+body + carriage seat mass), 16.34 T 2.26 WIkg [j][1] (or 11.78 T
+1.80 WIkg [j][1] when normalized to body + carriage seat
+mass), and j9.33 T 3.31 NIsIm [j][1] Ikg [j][1] (or j6.64 T
+mass), respectively. The difference between2.12 NIsIm [j][1] Ikg [j][1] when normalized to body + carriage seat P; [and][ P][max] TH
 
-max \[capabilities. Mean\]\[ T\]\[ SD values of\]\[ h\]\[PO\]\[,\]\[ v\]\[Y\]
+max [capabilities. Mean][ T][ SD values of][ h][PO][,][ v][Y]
 
 ;
 
@@ -1016,14 +1016,14 @@ METHODS USED IN THE SIMULATION STUDY
 
 ;
 
-The relative influences of Pmax \[and\]\[ S\]\[Fv\]\[ on\]\[ v\]\[TO\] max \[were\]
+The relative influences of Pmax [and][ S][Fv][ on][ v][TO] max [were]
 
-simulations was obtained from data (analyzed via equation 6. First,determined for differentreported for human maximal lower limb extensions:angles (>). The range of P P;;maxmax v \[values at different push-off\] TO \[and\] max \[ S\] P changes with;max \[Fv\]\[ values used in the\]\[,\]\[ F\] ;0 \[,\]\[ v\]\[Y\] 0 \[) previously\] SFv P were;max
+simulations was obtained from data (analyzed via equation 6. First,determined for differentreported for human maximal lower limb extensions:angles (>). The range of P P;;maxmax v [values at different push-off] TO [and] max [ S] P changes with;max [Fv][ values used in the][,][ F] ;0 [,][ v][Y] 0 [) previously] SFv P were;max
 
-from 10 to 40 WIkg \[j\]\[1\] and SFv until to j40 NIsIm \[j\]\[1\] Ikg \[j\]\[1\]
+from 10 to 40 WIkg [j][1] and SFv until to j40 NIsIm [j][1] Ikg [j][1]
 
 (32,33,36,43). The effect of hPO on performance, previously
-studied and discussed (see Samozino et al. \[37\]), was not
+studied and discussed (see Samozino et al. [37]), was not
 specifically treated here; hPO was set at 0.4 m, which is a
 typical value for humans. Then, sensitivity analyses were
 performed to assess the respective weight of each variable
@@ -1031,29 +1031,27 @@ plotting relative variations in vTOmax against relative variations
 
 The relative influences of P
 
-mass), respectively. The difference between Pmax \[and\]\[ P\]\[max\] TH
+mass), respectively. The difference between Pmax [and][ P][max] TH
 
 was not significant and very low (absolute bias = 1.81% T
 0.76%), which shows the validity of equation 1. Mean T SD
 values of vTO and vTOmax, as well as mean values of absolute
 bias, are presented in Table 1. For each push-off angle, vTO
 and vTOmax were not significantly different, and bias was
-j0.05 T 0.17 mIs \[j\]\[1\] (see Figure, Supplemental Digital
+j0.05 T 0.17 mIs [j][1] (see Figure, Supplemental Digital
 Content 3, <http://links.lww.com/MSS/A116>, which shows
 bias and limits of agreement in a Bland–Altman plot). On
 the other hand, the effect of push-off angle was significant
 on both vTO and vTOmax, with differences between every
-condition (Table 1).Theoretical simulations. As expected, P;max \[positively\]
+condition (Table 1).Theoretical simulations. As expected, P;max [positively]
 
 affects vTOmax, which is clearly shown in Figure 2 for both
 vertical (> = 90-) and horizontal (> = 0-) push-offs. The
-withmain original result was the curvilinear changes in SFv for a given P;max \[(Fig. 2). Such variations highlight\] vTOmax
+withmain original result was the curvilinear changes in SFv for a given P;max [(Fig. 2). Such variations highlight] vTOmax
 
-slightly as a function of boththe existence of an optimalgiven P;max \[and\]\[ h\]\[PO\]\[. Moreover,\] SFv P ( \[ S\] ;SFv \[Fv\] optopt) maximizing \[and\]\[values seem to change\]\[ >\]\[ values, ranging\] vTOmax for
+slightly as a function of boththe existence of an optimalgiven P;max [and][ h][PO][. Moreover,] SFv P ( [ S] ;SFv [Fv] optopt) maximizing [and][values seem to change][ >][ values, ranging] vTOmax for
 
-max \[and\]\[ >\]\[ values, ranging\]
-
-;
+max [and][ >][ values, ranging]
 
 ;
 
@@ -1061,9 +1059,11 @@ max \[and\]\[ >\]\[ values, ranging\]
 
 ;
 
-max \[,\]\[ F\]
+;
 
-0 \[,\]\[ v\]\[Y\]
+max [,][ F]
+
+0 [,][ v][Y]
 
 ;
 
@@ -1077,13 +1077,13 @@ Theoretical simulations. As expected, P
 
 ;
 
-FIGURE 1—Typical F–v (left panel) and P–v (right panel) relationships for two subjects with different F–v profiles (SFv = jF \[–\]
+FIGURE 1—Typical F–v (left panel) and P–v (right panel) relationships for two subjects with different F–v profiles (SFv = jF [–]
 
-0 \[/\]\[v\]\[–\] 0 \[) and\]\[ P\]\[–\]
+0 [/][v][–] 0 [) and][ P][–]
 
-FIGURE 1—Typical F–v (left panel) and P–v (right panel) relationships for two subjects with different F–v profiles (SFv = jF0 \[/\]\[v\]\[–\] 0 \[) and\]\[ P\] max \[values\]
+FIGURE 1—Typical F–v (left panel) and P–v (right panel) relationships for two subjects with different F–v profiles (SFv = jF0 [/][v][–] 0 [) and][ P] max [values]
 
-(gray cross). Subject 1 (open circles) presents a lower P \[–\] max \[and an\]\[ F\]\[–\]\[v\]\[ profile more oriented toward force capabilities than subject 2 (\]\[ filled circles\]\[), who\]
+(gray cross). Subject 1 (open circles) presents a lower P [–] max [and an][ F][–][v][ profile more oriented toward force capabilities than subject 2 (][ filled circles][), who]
 
 presents an F–v profile more oriented toward velocity capabilities.
 
@@ -1099,41 +1099,41 @@ Bias (%)
 
 Theoretical Values
 
-(vTOmax (mIs \[j\]\[1\] )) t-Test
+(vTOmax (mIs [j][1] )) t-Test
 
 - (-)
 
 Experimental Values
 
-(vTO (mIs \[j\]\[1\] ))
+(vTO (mIs [j][1] ))
 
 10 2.45 T 0.22 2.43 T 0.18 ns 4.40 T 4.94
-20 2.32 T 0.25 \[a\] 2.25 T 0.16 \[a\] ns 6.56 T 5.46
-30 2.14 T 0.23 \[ab\] 2.07 T 0.15 \[ab\] ns 5.73 T 3.89
+20 2.32 T 0.25 [a] 2.25 T 0.16 [a] ns 6.56 T 5.46
+30 2.14 T 0.23 [ab] 2.07 T 0.15 [ab] ns 5.73 T 3.89
 
 a Significantly different from > = 10-.
 b Significantly different from > = 20-.
 ns, nonsignificative difference between experimental and theoretical values.
 
-fromin Figure 2. The dependence of j18 to j6 NIsIm \[j\]\[1\] Ikg \[j\]\[1\] for the conditions simulated SFvopt on P;max \[,\]\[ >\]\[, and\]\[ h\]\[PO\]
+fromin Figure 2. The dependence of j18 to j6 NIsIm [j][1] Ikg [j][1] for the conditions simulated SFvopt on P;max [,][ >][, and][ h][PO]
 
 ;
 
-in Figure 2. The dependence of SFvopt on Pmax \[,\]\[ >\]\[, and\]\[ h\]\[PO\]
+in Figure 2. The dependence of SFvopt on Pmax [,][ >][, and][ h][PO]
 
 can be mathematically analyzed: the expression of SFvopt as a
 function of these three variables is a real solution canceling
 out the first mathematical derivative of vTOmax with respect
 to SFv (see appendices, Supplemental Digital Content 1b,
-<http://links.lww.com/MSS/A114>, for detailed computationsof SFvopt). Whatever the value of P;max \[,\]\[ S\]\[Fv\] opt \[decreases when\]
+<http://links.lww.com/MSS/A114>, for detailed computationsof SFvopt). Whatever the value of P;max [,][ S][Fv] opt [decreases when]
 
 ;
 
-of SFvopt). Whatever the value of Pmax \[,\]\[ S\]\[Fv\] opt \[decreases when\]
+of SFvopt). Whatever the value of Pmax [,][ S][Fv] opt [decreases when]
 
-- increases (Fig. 3). For both vertical and horizontal pushoffs, the sensitivity analysis showed thatfluenced by P;max \[than by\]\[ S\]\[Fv\]\[, at least when the\] vTOmax \[ S\] is more in- \[Fv\]\[ reference\]
+- increases (Fig. 3). For both vertical and horizontal pushoffs, the sensitivity analysis showed thatfluenced by P;max [than by][ S][Fv][, at least when the] vTOmax [ S] is more in- [Fv][ reference]
 
-effects ofvalue is equal to P;max \[and\] S \[ S\] Fv \[Fv\] opt (Fig. 4). Moreover, the respective \[ on\]\[ v\]\[TO\] max \[seem to decrease with de-\]
+effects ofvalue is equal to P;max [and] S [ S] Fv [Fv] opt (Fig. 4). Moreover, the respective [ on][ v][TO] max [seem to decrease with de-]
 
 creasing > (Fig. 4).
 
@@ -1148,16 +1148,16 @@ listic performance of the lower limbs depends on bothThe original and main findi
 capabilities and the F–v profile, with the existence of an
 individual optimal F–v profile corresponding to the best
 balance between force and velocity capabilities. This optimal F–v profile, which can be accurately determined,
-depends on some individual characteristics (limb extensionrange, P; \[) and on the afterload involved in the movement\]
+depends on some individual characteristics (limb extensionrange, P; [) and on the afterload involved in the movement]
 
 ;
 
 ;
 
-max \[) and on the afterload involved in the movement\]
+max [) and on the afterload involved in the movement]
 
 FIGURE 3—Changes in optimal F–v profile (SFvopt) as a function of
-the push-off angle (>) for different P \[–\] max \[values. The\]\[ h\] PO \[is fixed here at\]
+the push-off angle (>) for different P [–] max [values. The][ h] PO [is fixed here at]
 
 0.4 m.
 
@@ -1177,7 +1177,7 @@ This linear model, as well as the parabolic P–v relationship,
 has been well supported and experimentally described for
 
 FIGURE 2—Changes in maximal CM vTO (vTOmax) reached at the end of a lower limb push-off, as a function of the changes in the F–v profile (SFv) for
-different P \[–\] max \[values and at two push-off angles (\]\[>\]\[). The\]\[ h\] PO \[is fixed here at 0.4 m. For the vertical push-off (\]\[>\]\[ = 90\]\[-\]\[), the corresponding jump height\]
+different P [–] max [values and at two push-off angles (][>][). The][ h] PO [is fixed here at 0.4 m. For the vertical push-off (][>][ = 90][-][), the corresponding jump height]
 
 (obtained from basic ballistic equations) is presented on the additional y axis. Open circles represent the vTOmax reached for an optimal F–v profile
 (SFvopt).
@@ -1186,9 +1186,9 @@ OPTIMAL FORCE–VELOCITY PROFILE Medicine & Science in Sports & Exercised 317
 
 Copyright © 2012 by the American College of Sports Medicine. Unauthorized reproduction of this article is prohibited.
 
-FIGURE 4—Sensitivity analyses: relative changes in maximal CM vTO (vTOmax) as a function of the relative variations of P \[–\] max \[and\]\[ F\]\[–\]\[v\]\[ profile (\]\[S\] Fv \[) for\]
+FIGURE 4—Sensitivity analyses: relative changes in maximal CM vTO (vTOmax) as a function of the relative variations of P [–] max [and][ F][–][v][ profile (][S] Fv [) for]
 
-two > values. The reference value for P \[–\] max \[is 25 W\]\[I\]\[kg\]\[j\]\[1\]\[ and corresponds to the optimal\]\[ F\]\[–\]\[v\]\[ profile value for\]\[ S\] Fv \[(\]\[j\]\[14.0 for\]\[ >\]\[ = 90\]\[-\]\[ and\]\[ j\]\[8.20 for\]\[ >\]\[ = 0\]\[-\]\[).\]
+two > values. The reference value for P [–] max [is 25 W][I][kg][j][1][ and corresponds to the optimal][ F][–][v][ profile value for][ S] Fv [(][j][14.0 for][ >][ = 90][-][ and][ j][8.20 for][ >][ = 0][-][).]
 
 The hPO is fixed here at 0.4 m. For SFv, the higher the normalized variation, the lower the value because SFv values are only negative and the more
 the F–v profile tends toward force capabilities.
@@ -1196,13 +1196,13 @@ the F–v profile tends toward force capabilities.
 multijoint movements (3,33,43,44). The linearity of the F–v
 relationship, usually presented as hyperbolic for isolated
 muscles (17), is explained by the integrative feature of the
-model. The force generator and, in turn, its maximal force(F;0 \[), unloaded velocity (\]\[v\]\[Y\] 0 \[), and power (\]\[P\] ;max \[) refer here to\]
+model. The force generator and, in turn, its maximal force(F;0 [), unloaded velocity (][v][Y] 0 [), and power (][P] ;max [) refer here to]
 
 the entire in vivo neuromuscular system involving several
 muscles with different mixed fiber composition, architectural characteristics, anatomical joint configuration, level
 of neural activation, and specific coordination strategies
 (7–9,44). The limits of this theoretical approach have been
-previously discussed (37), but the significance and accuracy of its predictions have not been quantified yet. Besidesvalidating equation 1 (P;max \[and\]\[ P\]\[max\] TH \[are very close), the\]
+previously discussed (37), but the significance and accuracy of its predictions have not been quantified yet. Besidesvalidating equation 1 (P;max [and][ P][max] TH [are very close), the]
 
 present results showed no differences between predicted
 (vTOmax) and measured (vTO) values, associated to a low
@@ -1211,11 +1211,11 @@ reproducibility indices previously reported for different
 variables (performance, velocity, force, or power) measured during lower limb maximal extensions (3,18). These
 results support the validity of the proposed theoretical approach, which was strengthened by the sensibility of both
 predicted and experimental values to changes in push-off
-angles. Obviously, the accuracy of equation 6 is enhancedwhen muscular properties (P;max \[and\]\[ S\]\[Fv\]\[) are assessed in\]
+angles. Obviously, the accuracy of equation 6 is enhancedwhen muscular properties (P;max [and][ S][Fv][) are assessed in]
 
 the same conditions (e.g., joints and muscle groups involved, range of motion) under which the actual performance is studied, as it was done here on the EXER.
 
-Muscular capabilities determining jumping performance.ing jumping performance,Although expected, the importance of Among the muscular characteristics determin- P;max \[has the greatest weight.\] P;max \[in setting bal-\]
+Muscular capabilities determining jumping performance.ing jumping performance,Although expected, the importance of Among the muscular characteristics determin- P;max [has the greatest weight.] P;max [in setting bal-]
 
 listic performance needed to be established, as concluded by
 Cronin and Sleivert (12) in their recent review: ‘‘power is
@@ -1225,7 +1225,7 @@ important for determining the success of certain tasks.’’ The
 present results clearly demonstrate this idea. On the other
 hand, the dependence of ballistic performances on muscular
 
-Pmax \[and\]\[ h\]\[PO\]\[), there is an optimal\]\[ F\]\[–\]\[v\]\[ profile that max-\]
+Pmax [and][ h][PO][), there is an optimal][ F][–][v][ profile that max-]
 
 imizes performance. The more this F–v profile differs from
 the optimal one, the lower the performance in comparison
@@ -1239,9 +1239,9 @@ such as jumping (22,26,42). On the basis of Newton’s second law of motion, som
 develop power but rather on the capability to develop a high
 impulse (26,42). Even if fundamental principles of dynamics
 directly relate mechanical impulse to vTO (and in turn jumping performance), the capability to generate impulse does not
-represent an intrinsic mechanical property of the lower limbneuromuscular system, contrary to P;max \[. It is important to\]
+represent an intrinsic mechanical property of the lower limbneuromuscular system, contrary to P;max [. It is important to]
 
-differentiate mechanical outputs (e.g., external force, movement velocity, power output, impulse, mechanical work) frommechanical capabilities of lower limbs (P;max \[,\]\[ v\]\[Y\] 0 \[,\]\[ F\] ;0 \[). On\]
+differentiate mechanical outputs (e.g., external force, movement velocity, power output, impulse, mechanical work) frommechanical capabilities of lower limbs (P;max [,][ v][Y] 0 [,][ F] ;0 [). On]
 
 the one hand, mechanical outputs represent the mechanical
 entities that can be externally measured during a movement
@@ -1253,22 +1253,20 @@ maximal values of some mechanical outputs that could be
 reached by an individual. The proposed theoretical approach
 demonstrates that the ability to develop a high impulse
 against the ground and, in turn, the ability to reach maximal
-CM velocity at the end of a push-off are highly related tothe P;max \[the lower limbs can produce (over a given exten-\]
+CM velocity at the end of a push-off are highly related tothe P;max [the lower limbs can produce (over a given exten-]
 
-sion range).That said, the present results show that P;max \[is not the\]
+sion range).That said, the present results show that P;max [is not the]
 
-only muscular property involved in jumping performance.Indeed, two individuals with the same P;max \[(and the same\]
+only muscular property involved in jumping performance.Indeed, two individuals with the same P;max [(and the same]
 
 hPO) may achieve different performances, be it during a
-vertical jump or a horizontal push-off (Fig. 2). These differences are due to their respectivetheir respective ratios between maximal force ( F–v profiles (F;S0Fv \[) and ve-\] ), i.e., to
+vertical jump or a horizontal push-off (Fig. 2). These differences are due to their respectivetheir respective ratios between maximal force ( F–v profiles (F;S0Fv [) and ve-] ), i.e., to
 
-Plocity (; \[and\] v \[Y\] 0 \[ h\]\[) capabilities. For each individual (given his/her\]\[ F\]\[–\]\[v\]
+Plocity (; [and] v [Y] 0 [ h][) capabilities. For each individual (given his/her][ F][–][v]
 
-0 \[), unloaded velocity (\]\[v\]\[Y\]
+0 [), unloaded velocity (][v][Y]
 
-0 \[), and power (\]\[P\]
-
-;
+0 [), and power (][P]
 
 ;
 
@@ -1276,9 +1274,11 @@ Plocity (; \[and\] v \[Y\] 0 \[ h\]\[) capabilities. For each individual (given 
 
 ;
 
-0 \[,\]\[ F\]
+;
 
-max \[,\]\[ v\]\[Y\]
+0 [,][ F]
+
+max [,][ v][Y]
 
 ;
 
@@ -1304,15 +1304,15 @@ Copyright © 2012 by the American College of Sports Medicine. Unauthorized repro
 
 with the one that could be reached with the same power
 capabilities (Fig. 2). The values of SFv observed here (from;
-j16.8 to j4.9 NIsIm \[j\]\[1\] Ikg \[j\]\[1\] ) are consistent with; F 0 \[and\] ;
+j16.8 to j4.9 NIsIm [j][1] Ikg [j][1] ) are consistent with; F 0 [and] ;
 
-v \[Y\] 0 \[values previously reported (3,32,33,43).\]\[ P\] max \[and\]\[ F\] 0
+v [Y] 0 [values previously reported (3,32,33,43).][ P] max [and][ F] 0
 
 values were slightly lower than those reported during vertical
 push-offs (3,32,33), which is likely due to the specific sitting
 position imposed by the EXER compared with the totally
 extended hip configuration usually tested. Individuals, notably rugby players, as most of our subjects were, may present
-very different F–v profiles, as shown by coefficients of variation forvariation below 20% for SFv of beyond 30% compared with coefficients of P;max \[or\]\[ F\] ;0 \[. Most of these different\]
+very different F–v profiles, as shown by coefficients of variation forvariation below 20% for SFv of beyond 30% compared with coefficients of P;max [or][ F] ;0 [. Most of these different]
 
 individual F–v profiles differ from the optimal ones, thus
 characterizing unfavorable balances between force and velocity capabilities. Indeed, individual F–v profiles observed in
@@ -1327,17 +1327,17 @@ by scientists working on muscle function during maximal
 efforts but also by coaches for training purposes.
 
 Effect of afterloads on optimal F–v profile. The
-optimalacteristics ( F–vh profile depends on some individual char-PO, P;max \[) and on the afterload opposing in\]
+optimalacteristics ( F–vh profile depends on some individual char-PO, P;max [) and on the afterload opposing in]
 
 motion (inertia, inclination). On the one hand, the F–v profile does affect jumping performances when SFv is expressed
 through values normalized to the total moving mass
-(NIsIm \[j\]\[1\] Ikg \[j\]\[1\] ), which may be body mass, body mass plus
+(NIsIm [j][1] Ikg [j][1] ), which may be body mass, body mass plus
 additional loads, or projectile mass. Thus, the interpretation
 of F–v profiles is dependent on the movement considered.
 On the other hand, the computation of the optimal F–v
-profile also takes account of the total moving mass:function of P;max \[, itself expressed relative to moving mass.\] SFvopt is a
+profile also takes account of the total moving mass:function of P;max [, itself expressed relative to moving mass.] SFvopt is a
 
-Consequently, for a given athlete, the optimalnot the same for a javelin throw (highmoving mass) and for a shot put (low relative P;max F P;–maxv \[relative to\] profile is \[, see the\]
+Consequently, for a given athlete, the optimalnot the same for a javelin throw (highmoving mass) and for a shot put (low relative P;max F P;–maxv [relative to] profile is [, see the]
 
 different curves in Fig. 3). The optimal F–v profile also
 depends on the push-off angle and more generally on the
@@ -1367,7 +1367,7 @@ F–v profile and athletic training. Assessing F–v
 profiles when seeking to identify the optimal balance between force and velocity capabilities may be of interest to set
 training loads and regimens, as previously proposed using
 power–load relationships (10,20,27,38). Values of SFv allow
-comparisons among athletes independently from their powercapabilities (which is not possible from only F;0 \[and\]\[ v\]\[Y\] 0
+comparisons among athletes independently from their powercapabilities (which is not possible from only F;0 [and][ v][Y] 0
 
 values) and, thus, to know whether an athlete, as compared
 with another one, is characterized by a ‘‘force’’ or a
@@ -1384,7 +1384,7 @@ practical index to characterize the F–v profile and to design
 appropriate training programs. The present results showed
 that improving ballistic performance may be achieved
 through increasing power capabilities (i.e., shifting F–v
-relationships upward and/or to the right \[21\]) and moving
+relationships upward and/or to the right [21]) and moving
 the F–v profile as close to the optimal one as possible. Such
 changes in the F–v relationship, notably in its slope, may be
 achieved by specific strength training (7,8,21). An athlete
@@ -1392,12 +1392,12 @@ presenting an unfavorable F–v balance in favor of force
 (relatively to his/her optimal profile corresponding to target
 movement specificities) should improve his/her velocity
 capabilities as a priority by training with maximal efforts
-and light (e.g.,being close to F G;030% of one repetition maximum, the latter \[) or negative loading, which is often called\]
+and light (e.g.,being close to F G;030% of one repetition maximum, the latter [) or negative loading, which is often called]
 
 ‘‘ballistic’’ or ‘‘power’’ training (7,8,11,25,27). On the contrary, an athlete with an imbalanced F–v profile oriented
 toward velocity should follow a strength training with heavy
 loads (975%–80% of one repetition maximum) to increase
-his/her force capabilities as a priority (7,8,27). In both cases,it is likely that (i) P;max \[will increase and (ii) the\]\[ F\]\[–\]\[v\]\[ profile\]
+his/her force capabilities as a priority (7,8,27). In both cases,it is likely that (i) P;max [will increase and (ii) the][ F][–][v][ profile]
 
 will be optimized (i.e., change toward the optimal one),
 partly or totally correcting unfavorable F–v balances. As
@@ -1414,19 +1414,19 @@ support previous experimental results about the velocity (or
 
 ;
 
-0 \[values previously reported (3,32,33,43).\]\[ P\]
+0 [values previously reported (3,32,33,43).][ P]
 
-max \[and\]\[ F\]
-
-;
+max [and][ F]
 
 ;
 
-max \[or\]\[ F\]
+;
+
+max [or][ F]
 
 ;
 
-0 \[and\]\[ v\]\[Y\]
+0 [and][ v][Y]
 
 ;
 
@@ -1445,7 +1445,7 @@ OPTIMAL FORCE–VELOCITY PROFILE Medicine & Science in Sports & Exercised 319
 Copyright © 2012 by the American College of Sports Medicine. Unauthorized reproduction of this article is prohibited.
 
 load)-specific changes in performance after training with
-light or heavy loads (10,25,27), with the additional originality of controlling the respective effects ofand P;max \[capabilities.\] F–v qualities
+light or heavy loads (10,25,27), with the additional originality of controlling the respective effects ofand P;max [capabilities.] F–v qualities
 
 F–v profile and optimal load. The proposed approach
 brings new insight into the understanding of the relationships between structure and mechanical function of the
@@ -1461,38 +1461,38 @@ system (notably its mechanical properties), itself influenced
 by the actual load individuals regularly overcome during
 their daily activities. They pointed out, however, that the
 different evidences provided needed to be supported by
-theoretical frameworks describing the general aspects of theneuromuscular system’s ability to provide the P;max \[output\]
+theoretical frameworks describing the general aspects of theneuromuscular system’s ability to provide the P;max [output]
 
-against a particular load. This may be done using the theoretical approach proposed here. Indeed, the slope of therelationship and, thus, the ratio between F;0 \[and\]\[ v\]\[Y\] 0 \[are di-\] F–v
+against a particular load. This may be done using the theoretical approach proposed here. Indeed, the slope of therelationship and, thus, the ratio between F;0 [and][ v][Y] 0 [are di-] F–v
 
 rectly related to the optimal velocity and force-maximizing
 power output and so to the corresponding optimal load.
-From F–v and P–v relationships (Fig. 1), the higher the v \[Y\] 0 \[,\]
+From F–v and P–v relationships (Fig. 1), the higher the v [Y] 0 [,]
 
-the higher the optimal velocity and the lower the optimalload. Conversely, high F;0 \[values are associated with high\]
+the higher the optimal velocity and the lower the optimalload. Conversely, high F;0 [values are associated with high]
 
 optimal loads. Consequently, the optimal load corresponds
-to the mass and inertia of the body only for individuals de-veloping their individual P;max \[during an unloaded vertical\]
+to the mass and inertia of the body only for individuals de-veloping their individual P;max [during an unloaded vertical]
 
-jump. Because (i) maximal jump height changes withprofile for a given P;max \[(Fig. 2, left panel) and (ii) jump\] F–v
+jump. Because (i) maximal jump height changes withprofile for a given P;max [(Fig. 2, left panel) and (ii) jump] F–v
 
 height and power output (relative to body mass) developed
 during a vertical jump are positively related (36), the power
 
 output developed during an unloaded maximal jump depends on the F–v profile. Consequently, jumping performance depends directly on the mean power output developed
-during push-off (for a givenmaximized by both maximizing hPO P;), and the latter can bemax \[and optimizing the\]
+during push-off (for a givenmaximized by both maximizing hPO P;), and the latter can bemax [and optimizing the]
 
 F–v profile. This is illustrated in Figure 5, which shows the
-power output developed during a vertical jump (expressedrelatively to P;max \[) according to the\]\[ F\]\[–\]\[v\]\[ profile expressed\]
+power output developed during a vertical jump (expressedrelatively to P;max [) according to the][ F][–][v][ profile expressed]
 
 relatively to the optimal one (power output was computed
 from equations 6 and 9 of Samozino et al. (36), see appendices for more details, Supplemental Digital Content 1c,
-<http://links.lww.com/MSS/A114>). An optimali.e., an optimal balance betweenvelopment of P;max \[during an unloaded jump (Fig. 5, left\] F;0 \[and\]\[ v\]\[Y\] 0 \[, allows the de-\] F–v profile,
+<http://links.lww.com/MSS/A114>). An optimali.e., an optimal balance betweenvelopment of P;max [during an unloaded jump (Fig. 5, left] F;0 [and][ v][Y] 0 [, allows the de-] F–v profile,
 
 panel) and thus maximization of jumping performance
 (Fig. 5, right panel). Consequently, the body mass represents
 the optimal load for individuals with optimal F–v profiles.
-An athlete with an unfavorablepower output lower thanSuch an athlete would produce P;max P \[during an unloaded jump.\] F;max–v balance develops a \[against a load lower\]
+An athlete with an unfavorablepower output lower thanSuch an athlete would produce P;max P [during an unloaded jump.] F;max–v balance develops a [against a load lower]
 
 than body mass if he/she presents a velocity profile and
 higher than body mass in the case of a force profile.
@@ -1519,7 +1519,7 @@ latter represent their main survival behavior.
 
 ;
 
-0 \[and\]\[ v\]\[Y\]
+0 [and][ v][Y]
 
 ;
 
@@ -1531,7 +1531,7 @@ latter represent their main survival behavior.
 
 ;
 
-0 \[and\]\[ v\]\[Y\]
+0 [and][ v][Y]
 
 ;
 
@@ -1539,11 +1539,11 @@ latter represent their main survival behavior.
 
 ;
 
-FIGURE 5—Left panel: changes in power output developed during a vertical jump (expressed in %P \[–\] max \[) with changes in\]\[ F\]\[–\]\[v\]\[ profile (\]\[S\] Fv \[, expressed in\]
+FIGURE 5—Left panel: changes in power output developed during a vertical jump (expressed in %P [–] max [) with changes in][ F][–][v][ profile (][S] Fv [, expressed in]
 
-%SFvopt). Right panel: effect of the power output developed during a vertical jump (expressed in %P \[–\] max \[) on the jump height reached (expressed\]
+%SFvopt). Right panel: effect of the power output developed during a vertical jump (expressed in %P [–] max [) on the jump height reached (expressed]
 
-relatively to the jump height that could be reached, should the F–v profile be optimal). Values of P \[–\] max \[and\]\[ h\] PO \[were fixed here at 25 W\]\[I\]\[kg\]\[j\]\[1\]\[ and 0.4 m,\]
+relatively to the jump height that could be reached, should the F–v profile be optimal). Values of P [–] max [and][ h] PO [were fixed here at 25 W][I][kg][j][1][ and 0.4 m,]
 
 respectively.
 
@@ -1553,7 +1553,7 @@ Copyright © 2012 by the American College of Sports Medicine. Unauthorized repro
 
 CONCLUSIONS
 
-by theBallistic performance is mostly determined not only P;max \[lower limbs can generate but also by the\]\[ F\]\[–\]\[v\]
+by theBallistic performance is mostly determined not only P;max [lower limbs can generate but also by the][ F][–][v]
 
 mechanical profile characterizing the ratio between maximal
 force capabilities and maximal unloaded extension velocity.
@@ -1576,7 +1576,7 @@ vertical jump height: a simulation study. Med Sci Sports Exerc.
 
 2. Bosco C. La Valutazione della Forza con il Test di Bosco
 
-\[Strength Assessment with the Bosco’s Test\]. Rome (Italy): Societa
+[Strength Assessment with the Bosco’s Test]. Rome (Italy): Societa
 Sampa Sportiva; 1992. p. 56–7.
 3\. Bosco C, Belli A, Astrua M, et al. A dynamometer for evaluation
 
@@ -1770,42 +1770,42 @@ movements in young and elderly women. J Biomech. 2009;42(13):
 
 CM body center of mass
 m body mass or moving mass (kg)
-FgY gravitational acceleration on Earth (9.81 mIs \[j\]\[2\] )
+FgY gravitational acceleration on Earth (9.81 mIs [j][2] )
 
-FY mean external force developed over push-off along the push-off axis (relative to moving mass (NIkg \[j\]\[1\] ))
+FY mean external force developed over push-off along the push-off axis (relative to moving mass (NIkg [j][1] ))
 
-Pv \[Y\] Y mean CM velocity over push-off along the push-off axis (mIs \[j\]\[1\] ) I \[j\]\[1\]
+Pv [Y] Y mean CM velocity over push-off along the push-off axis (mIs [j][1] ) I [j][1]
 
-PF;Y mean power output developed over push-off (relative to moving mass (Wtheoretical maximal value of FY Ikg \[j\]\[1\] ))
+PF;Y mean power output developed over push-off (relative to moving mass (Wtheoretical maximal value of FY Ikg [j][1] ))
 
 F;0 theoretical maximal value of FY that lower limbs can produce during one extension at a theoretical null vY (relative to moving mass (NIkgj1))
 
-v \[Y\] theoretical maximal value of v \[Y\]
+v [Y] theoretical maximal value of v [Y]
 
 ;
 
 0 theoretical maximal value of F
 
-Pv \[Y\] ;0 theoretical maximal value ofmaximal PY v \[Y\] at which lower limbs can extend during one extension under the influence of muscle action in a theoretical unloaded condition (mI j1 Is \[j\]\[1\] )
+Pv [Y] ;0 theoretical maximal value ofmaximal PY v [Y] at which lower limbs can extend during one extension under the influence of muscle action in a theoretical unloaded condition (mI j1 Is [j][1] )
 
-PP;maxmaxTH maximaltheoretical value of PY that lower limbs can produce during a push-off (W P;max \[estimated from equation 1 (W\]\[I\]\[kg\]\[j\]\[1\]\[)\] Ikgj1)
+PP;maxmaxTH maximaltheoretical value of PY that lower limbs can produce during a push-off (W P;max [estimated from equation 1 (W][I][kg][j][1][)] Ikgj1)
 
 ;
 
 max maximal P
 
-PmaxTH theoretical value of P;max \[estimated from equation 1 (W\]\[I\]\[kg\]\[j\]\[1\]\[)\]
+PmaxTH theoretical value of P;max [estimated from equation 1 (W][I][kg][j][1][)]
 
 hPO push-off distance determined by lower limb extension range (m)
-vTO CM velocity at takeoff (mIs \[j\]\[1\] )
-vTOmax maximal vTO an individual can reach (mIs \[j\]\[1\] )
+vTO CM velocity at takeoff (mIs [j][1] )
+vTOmax maximal vTO an individual can reach (mIs [j][1] )
 
 - push-off angle with respect to the horizontal (-)
-  SSFvFvopt slope of linearoptimal value of F S–vFv relationship (N maximizing vITOsImmax \[j\] for given values of \[1\] Ikg \[j\]\[1\] ) P;max
+  SSFvFvopt slope of linearoptimal value of F S–vFv relationship (N maximizing vITOsImmax [j] for given values of [1] Ikg [j][1] ) P;max
 
 ;
 
-max \[and\]\[ h\]\[PO\]\[ (N\]\[I\]\[s\]\[I\]\[m\]\[j\]\[1\]\[I\]\[kg\]\[j\]\[1\]\[)\]
+max [and][ h][PO][ (N][I][s][I][m][j][1][I][kg][j][1][)]
 
 ;
 

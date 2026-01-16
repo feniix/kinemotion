@@ -5,9 +5,9 @@
 
 # **Assessing Stride Variables and Vertical Stiffness with GPS-Embedded Accel-** **erometers: Preliminary Insights for the Monitoring of Neuromuscular Fatigue** **on the Field**
 
-**Martin Buchheit** **\[1,2,3\]**  **, Andrew Gray** **\[4,5\]** **and Jean-Benoit Morin** **\[6\]**
-**1** Sport Science Department, Myorobie Association, Montvalezan, France; **2** Performance Department, Paris SaintGermain Football Club, Saint-Germain-en-Laye, France; **\[3 \]** Institute of Sport, Exercise and Active Living, College of
-Sport and Exercise Science, Victoria University, Melbourne, Australia; **\[4\]** Athletic Data Innovations, Sydney, Australia;
+**Martin Buchheit** **[1,2,3]**  **, Andrew Gray** **[4,5]** **and Jean-Benoit Morin** **[6]**
+**1** Sport Science Department, Myorobie Association, Montvalezan, France; **2** Performance Department, Paris SaintGermain Football Club, Saint-Germain-en-Laye, France; **[3 ]** Institute of Sport, Exercise and Active Living, College of
+Sport and Exercise Science, Victoria University, Melbourne, Australia; **[4]** Athletic Data Innovations, Sydney, Australia;
 **5** Cronulla Sharks Rugby League Football Club, Australia; **6** Laboratoire Motricité Humaine Education Sport Santé,
 Université de Nice Sophia Antipolis, Nice, France.
 
@@ -18,7 +18,7 @@ GPS-imbedded accelerometer to assess stride variables and
 vertical stiffness (K), which are directly related to neuromuscular fatigue during field-based high-intensity runs. The ability to
 detect stride imbalances was also examined. A team sport player
 performed a series of 30-s runs on an instrumented treadmill (6
-runs at 10, 17 and 24 km∙h \[-1\] ) with or without his right ankle
+runs at 10, 17 and 24 km∙h [-1] ) with or without his right ankle
 taped (aimed at creating a stride imbalance), while wearing on
 his back a commercially-available GPS unit with an embedded
 100-Hz tri-axial accelerometer. Contact (CT) and flying (FT)
@@ -86,8 +86,8 @@ stride asymmetries during running.
 Using a single-subject design protocol, a 36-y old team
 sport player (1.82 m, 80 kg) performed a series of 30-s
 runs at a 1% incline on a motorized instrumented tread
-mill (ADAL3D-WR, MD, HEF Tecmachine, AndrézieuxBoutheon, France): 2 sets of 3 runs at 10 km∙h \[-1\], 6 at 17
-km/h and 6 at 24 km∙h \[-1\] ) with or without his right ankle
+mill (ADAL3D-WR, MD, HEF Tecmachine, AndrézieuxBoutheon, France): 2 sets of 3 runs at 10 km∙h [-1], 6 at 17
+km/h and 6 at 24 km∙h [-1] ) with or without his right ankle
 taped (aimed at slightly shortening/stiffening the Achilles
 tendon and in turn, creating a stride imbalance, Figure 1).
 
@@ -109,7 +109,7 @@ the belt while holding the handlebars, before re-loading
 the treadmill at the end of each rest; the treadmill was
 never stopped so that the speed could be adjusted for the
 next run. The order of each run was randomized (e.g., 17,
-10, 24, 17, 24, 10, 10, 27 km∙h \[-1\], etc.) within each set for
+10, 24, 17, 24, 10, 10, 27 km∙h [-1], etc.) within each set for
 each running condition, with the taped condition performed during set 2 and 4. The testing sequence was
 therefore the following: 3 runs at each speed untaped, 3
 runs at each speed taped, 3 runs at each speed untaped and

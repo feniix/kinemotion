@@ -17,18 +17,21 @@ Kinemotion: Video-based kinematic analysis for athletic performance using pose e
 ## Current Roadmap (MVP-First Approach)
 
 **Phase 1: MVP Validation (Weeks 1-3)**
+
 - Issue #10 (P0): ✅ Validated optimal camera angle for MediaPipe (45° oblique recommended)
 - Issue #11 (P0): Validate CMJ metrics with phase progression tests
 - Issue #12 (P0): Build simple web UI (upload → analyze → export)
 - **Goal:** Get product in coaches' hands, gather market feedback
 
 **Phase 2: Market-Driven Development (Week 4+)**
+
 - Real-Time Analysis (if coaches ask for live feedback)
 - Running Gait Analysis (if runners/coaches ask for it)
 - API & Integrations (if partners request them)
 - **Goal:** Build features customers actually want
 
 **See:**
+
 - `docs/strategy/1-STRATEGIC_SUMMARY.md` - Strategic direction
 - `docs/strategy/MVP_VALIDATION_CHECKPOINTS.md` - Phase 2 decision gates
 - `docs/strategy/MVP_FEEDBACK_COLLECTION.md` - Feedback collection plan
@@ -141,24 +144,26 @@ The project has evolved into a complete platform with three main components:
 ```
 
 **Data Flow:**
+
 ```
 User uploads video → Frontend (React) → Backend API (FastAPI) → kinemotion CLI → Results stored in Supabase → Frontend displays results
 ```
 
 **Deployment:**
+
 - Frontend: Vercel (auto-deploy from main, manual trigger)
 - Backend: Google Cloud Run (GitHub Actions, Workload Identity Federation)
 - CLI: PyPI (v0.34.0, standalone usage + backend integration)
 
 ### Key Differences: Drop Jump vs CMJ
 
-| Feature | Drop Jump | CMJ |
-|---------|-----------|-----|
-| Starting | Elevated box | Floor level |
-| Algorithm | Forward search | Backward search from peak |
-| Velocity | Absolute (magnitude) | Signed (direction matters) |
-| Parameters | Auto-tuned quality presets | Auto-tuned quality presets |
-| Key Metric | Ground contact time | Jump height from flight time |
+| Feature    | Drop Jump                  | CMJ                          |
+| ---------- | -------------------------- | ---------------------------- |
+| Starting   | Elevated box               | Floor level                  |
+| Algorithm  | Forward search             | Backward search from peak    |
+| Velocity   | Absolute (magnitude)       | Signed (direction matters)   |
+| Parameters | Auto-tuned quality presets | Auto-tuned quality presets   |
+| Key Metric | Ground contact time        | Jump height from flight time |
 
 ## Critical Gotchas
 
@@ -206,8 +211,9 @@ uv run pytest benchmarks/test_filtering.py::TestBilateralTemporalFilter --benchm
 ```
 
 **Benchmark files:**
+
 - `benchmarks/test_filtering.py` - bilateral_temporal_filter, detect_outliers_ransac
-- `benchmarks/test_drop_jump.py` - _assign_contact_states, detect_ground_contact
+- `benchmarks/test_drop_jump.py` - \_assign_contact_states, detect_ground_contact
 
 **Output format:** Shows min/max/mean/stddev/median execution times. With `--benchmark-compare`, shows % change from previous run (+/- for faster/slower).
 
@@ -275,6 +281,7 @@ View HTML report: `uv run pytest --cov-report=html && open htmlcov/index.html`
 5. Apply Extract Method pattern for complex functions (see recent refactoring)
 
 **Maintainability Patterns:**
+
 - Extract Method: Break down functions with complexity >15
 - Parameter Object: Bundle related parameters into dataclasses
 - Early Return: Reduce nesting by handling edge cases first
@@ -315,7 +322,7 @@ metrics = process_cmj_video("video.mp4", quality="balanced")
 
 **Key versions:**
 
-- Python: 3.12.7 (supports >=3.10,<3.13)
+- Python: 3.12.7 (supports >=3.10,\<3.13)
 - NumPy: >=1.26.0
 - pytest: 9.0.0
 - MediaPipe: >=0.10.9
@@ -412,6 +419,7 @@ This project integrates multiple MCP (Model Context Protocol) servers for enhanc
 ### Core MCP Tools
 
 #### **basic-memory** - Knowledge Management
+
 - **Purpose**: Store and retrieve project context, notes, and architectural decisions
 - **Scope**: **Project-scoped** - all operations are constrained to the `dropjump` project
 - **Use Cases**:
@@ -438,6 +446,7 @@ This project integrates multiple MCP (Model Context Protocol) servers for enhanc
   - **Build conversations**: Call `build_context()` before complex tasks to enhance context
 
 #### **exa** - Web Search & Code Context
+
 - **Purpose**: Real-time web search and code example retrieval
 - **Use Cases**:
   - Search for libraries, SDKs, and API documentation
@@ -449,6 +458,7 @@ This project integrates multiple MCP (Model Context Protocol) servers for enhanc
 - **Example**: "React useState hook examples" returns fresh, high-quality code context
 
 #### **ref** - Documentation Search
+
 - **Purpose**: Search and retrieve documentation from web and private resources
 - **Use Cases**:
   - Find API reference documentation
@@ -460,6 +470,7 @@ This project integrates multiple MCP (Model Context Protocol) servers for enhanc
 - **Example**: Search Python pandas documentation or GitHub repo guides
 
 #### **sequential-thinking** - Complex Reasoning
+
 - **Purpose**: Break down complex problems into step-by-step thinking
 - **Use Cases**:
   - Plan multi-step implementations
@@ -473,6 +484,7 @@ This project integrates multiple MCP (Model Context Protocol) servers for enhanc
   - Verify hypotheses before finalizing
 
 #### **serena** - Semantic Code Analysis
+
 - **Purpose**: Intelligent code exploration and precise symbol manipulation
 - **Use Cases**:
   - Understand codebase architecture efficiently
@@ -489,43 +501,48 @@ This project integrates multiple MCP (Model Context Protocol) servers for enhanc
 ### Usage Patterns
 
 **For Research & Context Building:**
+
 ```
 exa (code context) + ref (documentation) → build_context (in basic-memory)
 ```
 
 **For Complex Problem Solving:**
+
 ```
 sequential-thinking (decompose) → serena (code analysis) → implement
 ```
 
 **For Code Refactoring:**
+
 ```
 serena (find_symbol) → sequential-thinking (plan changes) → serena (replace/insert)
 ```
 
 **For Knowledge Management:**
+
 ```
 write_note (save findings) → search_notes (retrieve later) → build_context (enhance conversations)
 ```
 
 ### When to Use Each Tool
 
-| Task | Primary | Secondary |
-|------|---------|-----------|
-| Understand codebase architecture | **serena** (symbols overview) | basic-memory (build_context) |
-| Find specific function/class | **serena** (find_symbol) | - |
-| Search for best practices | **exa** (get_code_context_exa) | ref (documentation) |
-| Debug complex logic | **sequential-thinking** | serena (find_referencing_symbols) |
-| Save findings for future use | **basic-memory** (write_note) | - |
-| Load project context into conversation | **basic-memory** (build_context) | - |
-| Search project knowledge base | **basic-memory** (search_notes) | - |
-| Edit code precisely | **serena** (replace_symbol_body) | - |
-| Search project code patterns | **serena** (search_for_pattern) | - |
-| Find API documentation | **ref** (ref_search_documentation) | exa (web_search_exa) |
+| Task                                   | Primary                            | Secondary                         |
+| -------------------------------------- | ---------------------------------- | --------------------------------- |
+| Understand codebase architecture       | **serena** (symbols overview)      | basic-memory (build_context)      |
+| Find specific function/class           | **serena** (find_symbol)           | -                                 |
+| Search for best practices              | **exa** (get_code_context_exa)     | ref (documentation)               |
+| Debug complex logic                    | **sequential-thinking**            | serena (find_referencing_symbols) |
+| Save findings for future use           | **basic-memory** (write_note)      | -                                 |
+| Load project context into conversation | **basic-memory** (build_context)   | -                                 |
+| Search project knowledge base          | **basic-memory** (search_notes)    | -                                 |
+| Edit code precisely                    | **serena** (replace_symbol_body)   | -                                 |
+| Search project code patterns           | **serena** (search_for_pattern)    | -                                 |
+| Find API documentation                 | **ref** (ref_search_documentation) | exa (web_search_exa)              |
 
 ### Practical Memory Usage Examples
 
 **Example 1: Building Context for CMJ Development**
+
 ```python
 # At start of complex CMJ work, load existing knowledge
 build_context("memory://biomechanics/*")  # Load all biomechanics notes
@@ -540,6 +557,7 @@ write_note(
 ```
 
 **Example 2: Retrieving API Reference During Implementation**
+
 ```python
 # Search for quick reference while implementing
 search_notes("API reference CMJ metrics")  # Find API documentation
@@ -548,6 +566,7 @@ build_context("memory://api/*")  # Get all API quick commands
 ```
 
 **Example 3: Quality Gate Review Before Commit**
+
 ```python
 # Load quality standards and testing patterns
 build_context("memory://development/*")  # Load quality gates
@@ -556,6 +575,7 @@ search_notes("test coverage requirements")  # Find specific requirements
 ```
 
 **Example 4: Task Prioritization and Strategic Planning**
+
 ```python
 # Load roadmap and priorities when planning new work
 build_context("memory://strategy/*")  # Get current roadmap
@@ -570,6 +590,7 @@ build_context("memory://project-management/*")  # Get subagent routing
 `tmux-cli` is a bash command that enables Claude Code to control CLI applications running in separate tmux panes - launch programs, send input, capture output, and manage interactive sessions. Run `tmux-cli --help` for detailed usage instructions.
 
 **Use cases:**
+
 - Interact with scripts that wait for user input
 - Launch another Claude Code instance for parallel analysis, review, or debugging
 - Run Python scripts with the Pdb debugger to step through execution

@@ -205,19 +205,19 @@ class RealTimeCMJAnalyzer:
    - Can't use future frames to refine past estimates
    - Velocity estimates noisier
 
-1. **No global optimization**:
+2. **No global optimization**:
 
    - Can't find "true" peak (don't know it yet)
    - Can't refine takeoff by working backward
    - Miss opportunities for sub-frame interpolation
 
-1. **False positives**:
+3. **False positives**:
 
    - May detect non-jump movements
    - Need robust state machine
    - Sensitive to noise
 
-1. **Accuracy degradation**:
+4. **Accuracy degradation**:
 
    - Estimated: 55-60cm instead of 50.6cm (±10% error)
    - Frame detection: ±2-3 frames instead of ±1
@@ -300,13 +300,13 @@ ______________________________________________________________________
            return None
    ```
 
-1. **Jump completion detector**:
+2. **Jump completion detector**:
 
    - Monitor position stability
    - Detect landing (velocity → near zero)
    - Wait 1 second after landing to ensure complete
 
-1. **Analyze buffered frames**:
+3. **Analyze buffered frames**:
 
    - Call existing `detect_cmj_phases()`
    - Use proven algorithm
@@ -341,9 +341,9 @@ ______________________________________________________________________
 **Implementation**:
 
 1. **Causal filter** (exponential smoothing or one-sided Savitzky-Golay)
-1. **Forward phase detection** (state machine)
-1. **Event triggers** (real-time callbacks)
-1. **Extensive validation** (test against known jumps)
+2. **Forward phase detection** (state machine)
+3. **Event triggers** (real-time callbacks)
+4. **Extensive validation** (test against known jumps)
 
 **Expected accuracy**: 55-60cm (±10% error)
 
@@ -396,9 +396,9 @@ ______________________________________________________________________
 **Solutions for 60fps**:
 
 1. Use GPU acceleration
-1. Use lighter MediaPipe model (reduced accuracy)
-1. Process every other frame
-1. Use dedicated hardware (Jetson Nano, etc.)
+2. Use lighter MediaPipe model (reduced accuracy)
+3. Process every other frame
+4. Use dedicated hardware (Jetson Nano, etc.)
 
 ### Memory Requirements
 
@@ -719,19 +719,19 @@ ______________________________________________________________________
    - Efficient memory management
    - Thread-safe if needed
 
-1. **JumpCompletionDetector**
+2. **JumpCompletionDetector**
 
    - Analyze recent frames
    - Detect landing + stability
    - Trigger analysis
 
-1. **RealtimeCMJAnalyzer wrapper**
+3. **RealtimeCMJAnalyzer wrapper**
 
    - Manages buffer
    - Calls existing offline algorithm
    - Returns results with latency info
 
-1. **Testing suite**
+4. **Testing suite**
 
    - Validate against known jumps
    - Test various scenarios
@@ -749,19 +749,19 @@ ______________________________________________________________________
    - One-sided Savitzky-Golay
    - Adaptive filtering
 
-1. **Forward phase detector**
+2. **Forward phase detector**
 
    - State machine
    - Event triggers
    - Robust to noise
 
-1. **Instant metrics calculator**
+3. **Instant metrics calculator**
 
    - No backward refinement
    - Immediate results
    - Error handling
 
-1. **Extensive validation**
+4. **Extensive validation**
 
    - Compare with offline
    - Test accuracy degradation

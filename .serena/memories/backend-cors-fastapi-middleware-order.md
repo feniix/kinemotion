@@ -7,6 +7,7 @@
 ### Middleware Order Matters (LIFO)
 
 FastAPI processes middleware in **LIFO (Last In, First Out)** order:
+
 - Middleware added FIRST → Runs LAST (wraps all other middleware)
 - Middleware added LAST → Runs FIRST (innermost handler)
 
@@ -64,6 +65,7 @@ app.state.limiter = limiter
 ### Why This Order Is Critical
 
 **Request Flow (with correct order):**
+
 ```
 Request → CORS Middleware → Rate Limiter → Endpoint Handler
                 ↑                 ↓
@@ -73,6 +75,7 @@ Request → CORS Middleware → Rate Limiter → Endpoint Handler
 If rate limiter throws 503, CORS middleware still wraps it → **503 WITH CORS headers**
 
 **Wrong Order (CORS added after rate limiter):**
+
 ```
 Request → Rate Limiter → CORS Middleware → Endpoint Handler
               ↓              (never reached)
@@ -91,6 +94,7 @@ CORS_ORIGINS=https://kinemotion.vercel.app,https://other-domain.com
 ```
 
 **Important:** The code strips whitespace from each origin, so these are equivalent:
+
 - `https://a.com,https://b.com`
 - `https://a.com, https://b.com` (with spaces after comma)
 

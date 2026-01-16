@@ -331,14 +331,14 @@ ______________________________________________________________________
    - Testing connectivity
    - Troubleshooting latency issues
 
-1. **"Interpret Real-Time Metrics During Practice"**
+2. **"Interpret Real-Time Metrics During Practice"**
 
    - What each metric means
    - Normal ranges by athlete type
    - What to look for (form issues)
    - When to pause/correct technique
 
-1. **"Use Real-Time Feedback for On-The-Spot Coaching"**
+3. **"Use Real-Time Feedback for On-The-Spot Coaching"**
 
    - How \<200ms latency enables live coaching
    - Coaching cues based on metrics
@@ -354,7 +354,7 @@ ______________________________________________________________________
    - How MediaPipe processes video in real-time
    - Limitations and recovery strategies
 
-1. **"Understanding the Metrics"**
+2. **"Understanding the Metrics"**
 
    - What CMJ height actually measures
    - What RSI tells you about explosiveness
@@ -376,14 +376,14 @@ ______________________________________________________________________
    - Event types (frame received, metric updated, error)
    - Connection lifecycle (open → receive → close)
 
-1. **"Real-Time Event Structure"**
+2. **"Real-Time Event Structure"**
 
    - Metric update event schema
    - Timestamp handling (frame vs server time)
    - Confidence scores for each metric
    - How to handle out-of-order events
 
-1. **"Performance Optimization for Streaming"**
+3. **"Performance Optimization for Streaming"**
 
    - Buffer size strategies
    - Handling variable network latency
@@ -408,7 +408,7 @@ ______________________________________________________________________
    - Frame rate (30 fps minimum)
    - What counts as "successful" video
 
-1. **"Interpret Your Running Metrics"**
+2. **"Interpret Your Running Metrics"**
 
    - Ground Contact Time (GCT): What's normal?
    - Cadence: Optimal ranges (160-180 steps/min)
@@ -416,7 +416,7 @@ ______________________________________________________________________
    - Landing Pattern: Heel vs midfoot vs forefoot
    - Injury correlation: What metrics predict injury risk?
 
-1. **"Fix Common Running Form Issues"**
+3. **"Fix Common Running Form Issues"**
 
    - "I have high ground contact time" → cues and drills
    - "My cadence is too low" → progression plan
@@ -432,7 +432,7 @@ ______________________________________________________________________
    - Ground contact time and power production
    - Landing mechanics and injury prevention
 
-1. **"2D Camera Limitations"**
+2. **"2D Camera Limitations"**
 
    - What we can and can't see from side view
    - Why oblique angles help
@@ -454,14 +454,14 @@ ______________________________________________________________________
    - Cadence calculation
    - GCT calculation methodology
 
-1. **"Running Metrics: Calculation & Validation"**
+2. **"Running Metrics: Calculation & Validation"**
 
    - GCT: Time from contact to liftoff
    - Cadence: Steps per minute from stance duration
    - Stride Length: Distance between consecutive ground contacts
    - Validation against force plates (correlation studies)
 
-1. **"Integration with Biomechanics Research"**
+3. **"Integration with Biomechanics Research"**
 
    - Published references for GCT ranges
    - Injury prediction research
@@ -657,21 +657,21 @@ ______________________________________________________________________
    - Interpret JSON output
    - Diátaxis: Tutorial (learning-oriented)
 
-1. **"Build a Simple Dashboard in 30 Minutes"**
+2. **"Build a Simple Dashboard in 30 Minutes"**
 
    - Use Python SDK
    - Upload video
    - Display results in web interface
    - Diátaxis: Tutorial
 
-1. **"Connect to a Real Integration in 1 Hour"**
+3. **"Connect to a Real Integration in 1 Hour"**
 
    - Set up Kinemotion API key
    - Call coaching platform webhook
    - See metrics appear in dashboard
    - Diátaxis: Tutorial
 
-1. **"Deploy Real-Time Analysis (4-6 hours)"**
+4. **"Deploy Real-Time Analysis (4-6 hours)"**
 
    - Set up WebSocket connection
    - Stream video from browser
@@ -687,7 +687,7 @@ ______________________________________________________________________
    - Understand triple extension progression
    - Improve technique
 
-1. **"Analyze Your First Running Video"**
+2. **"Analyze Your First Running Video"**
 
    - Film yourself running
    - Analyze gait
@@ -748,13 +748,13 @@ ______________________________________________________________________
    - Design decisions (why MediaPipe? why this architecture?)
    - Comparison with alternatives (force plate, IMU, other video analysis)
 
-1. **"Why Real-Time is Hard (and How We Do It)"**
+2. **"Why Real-Time is Hard (and How We Do It)"**
 
    - Latency budget breakdown
    - WebSocket vs polling
    - Trade-offs: Accuracy vs speed, cost vs features
 
-1. **"How to Scale Kinemotion"**
+3. **"How to Scale Kinemotion"**
 
    - Batch processing architecture
    - Parallel video processing
@@ -772,14 +772,14 @@ ______________________________________________________________________
    - GCT: Efficiency and injury risk
    - Triple extension: Technique quality
 
-1. **"Movement Science Foundation"**
+2. **"Movement Science Foundation"**
 
    - Force production and movement
    - Kinetic chain concepts
    - Why sequential extension matters
    - Injury risk indicators
 
-1. **"2D Video Analysis: What We Gain and Lose"**
+3. **"2D Video Analysis: What We Gain and Lose"**
 
    - Advantages: Accessibility, cost, smartphone compatibility
    - Limitations: Depth perception, 3D rotation
@@ -798,7 +798,7 @@ ______________________________________________________________________
    - Developer experience comparison
    - Use case fit analysis
 
-1. **"Open Architecture Strategy"**
+2. **"Open Architecture Strategy"**
 
    - Why open APIs matter
    - Integration ecosystem benefits
@@ -1122,20 +1122,20 @@ ______________________________________________________________________
 ### Immediate Actions (This Week)
 
 1. **Assign Task 5 Owner:** Technical Writer + Backend Dev pair
-1. **Start OpenAPI Spec:** Design-first approach (spec before code)
-1. **Create Integration Examples Plan:** Decide which 3 examples, resources needed
-1. **Set Up Documentation Infrastructure:** GitHub Pages, Swagger UI deployment
-1. **Review CLAUDE.md:** Update with documentation strategy
+2. **Start OpenAPI Spec:** Design-first approach (spec before code)
+3. **Create Integration Examples Plan:** Decide which 3 examples, resources needed
+4. **Set Up Documentation Infrastructure:** GitHub Pages, Swagger UI deployment
+5. **Review CLAUDE.md:** Update with documentation strategy
 
 ______________________________________________________________________
 
 ### Quick Wins (Sprint 1)
 
 1. Complete OpenAPI 3.1 specification
-1. Deploy Swagger UI for interactive exploration
-1. Create first integration example (coaching dashboard)
-1. Publish error code reference
-1. Create quick start tutorial
+2. Deploy Swagger UI for interactive exploration
+3. Create first integration example (coaching dashboard)
+4. Publish error code reference
+5. Create quick start tutorial
 
 **Impact:** Enables developer attraction immediately
 
@@ -1144,10 +1144,10 @@ ______________________________________________________________________
 ### Strategic Investments (Sprints 3-6)
 
 1. Build case studies with real athlete data (credibility)
-1. Publish validation white papers (scientific authority)
-1. Establish benchmarks across populations (reference)
-1. Create video tutorials (accessibility)
-1. Engage coach community with real-time guides (adoption)
+2. Publish validation white papers (scientific authority)
+3. Establish benchmarks across populations (reference)
+4. Create video tutorials (accessibility)
+5. Engage coach community with real-time guides (adoption)
 
 **Impact:** Positions Kinemotion as trusted platform
 
@@ -1272,10 +1272,10 @@ The roadmap's success depends on strategic documentation addressing four distinc
 **Critical Path:**
 
 1. Task 1: Fix ankle angle (credibility foundation)
-1. Task 5: Complete API documentation (developer attraction)
-1. Task 3: Document real-time (market differentiator)
-1. Task 4: Document running analysis (market expansion)
-1. Task 5 (extended): Scientific credibility through case studies and validation
+2. Task 5: Complete API documentation (developer attraction)
+3. Task 3: Document real-time (market differentiator)
+4. Task 4: Document running analysis (market expansion)
+5. Task 5 (extended): Scientific credibility through case studies and validation
 
 **Expected Outcome:** By month 6, Kinemotion will have comprehensive, well-organized documentation that attracts developers, guides coaches, enables integrations, and establishes scientific credibility - positioning it as the "accurate, extensible, developer-friendly" platform alternative to expensive proprietary systems.
 

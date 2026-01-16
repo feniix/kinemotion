@@ -1,6 +1,6 @@
 # Multidirectional Leg Asymmetry Assessment in Sport
 
-Jennifer Hewit, MSc, CSCS, \[1\] John Cronin, PhD, \[1,2\] and Patria Hume, PhD \[1\]
+Jennifer Hewit, MSc, CSCS, [1] John Cronin, PhD, [1,2] and Patria Hume, PhD [1]
 
 1Sport Performance Research Institute New Zealand, AUT University, Auckland, New Zealand; and 2School of
 Exercise, Biomedical and Health Sciences, Edith Cowan University, Joondalup, Western Australia, Australia
@@ -157,7 +157,7 @@ the injured limb, for example.
 Leg asymmetry magnitudes can be
 calculated from jump distance and/or
 jump height measurements (e.g., tape
-measure, Vertec \[Gill Athletics, Champaign, IL\], etc.) or if the technology is
+measure, Vertec [Gill Athletics, Champaign, IL], etc.) or if the technology is
 available, a force plate (e.g., peak force
 and peak power). Measures such as
 jump height and distance may be less
@@ -495,27 +495,27 @@ medicine. Sports Med 26: 217–238, 1998.
    extremity functional performance tests.
    J Orthop Sports Phys Ther 26: 138–142,
 
-1.
+3.
 
-1. Brosky J, Nitz A, Malone T, Caborn D, and
+4. Brosky J, Nitz A, Malone T, Caborn D, and
    Rayens M. Intrarater reliability of selected
    clinical outcome measures following
    anterior cruciate ligament reconstruction.
    J Orthop Sports Phys Ther 29: 39–48,
 
-1.
+5.
 
-1. Chamari K, Chaouachi A, Hambli M,
+6. Chamari K, Chaouachi A, Hambli M,
    Kaouech F, Wisloff U, and Castagna C. The
    five-jump test for distance as a field test to
    assess lower limb explosive power in soccer
    players. J Strength Cond Res 22: 944, 2008.
 
-1. Cronin J and Hansen K. Strength and
+7. Cronin J and Hansen K. Strength and
    power predictors of sports speed.
    J Strength Cond Res 19: 349–357, 2005.
 
-1. Greenberger H and Paterno M. The testretest reliability of a one-legged hop for
+8. Greenberger H and Paterno M. The testretest reliability of a one-legged hop for
 
 distance in healthy young adults. J Orthop
 Sports Phys Ther 19: 62, 1994.
@@ -527,7 +527,7 @@ Sports Phys Ther 19: 62, 1994.
    functional asymmetries. J Strength Cond
    Res 23: 2500–2506, 2009.
 
-1. Hoffman J, Ratamess N, Klatt M,
+8. Hoffman J, Ratamess N, Klatt M,
 
 Faigenbaum A, and Kang J. Do bilateral
 power deficits influence direction-specific
@@ -535,17 +535,17 @@ movement patterns? Res Sports Med 15:
 
 125–132, 2007.
 
-9. Hopper D, Goh S, Wentworth L, Chan D,
-   Chau J, Wootton G, Strauss G, and Boyle J.
-   Test-retest reliability of knee rating scales
-   and functional hop tests one year following
-   anterior cruciate ligament reconstruction.
-   Phys Ther Sport 3: 10–18, 2002.
+09. Hopper D, Goh S, Wentworth L, Chan D,
+    Chau J, Wootton G, Strauss G, and Boyle J.
+    Test-retest reliability of knee rating scales
+    and functional hop tests one year following
+    anterior cruciate ligament reconstruction.
+    Phys Ther Sport 3: 10–18, 2002.
 
-1. Markovic G, Dizdar D, Jukic I, and
-   Cardinale M. Reliability and factorial
-   validity of squat and countermovement
-   jump tests. J Strength Cond Res 18:
+10. Markovic G, Dizdar D, Jukic I, and
+    Cardinale M. Reliability and factorial
+    validity of squat and countermovement
+    jump tests. J Strength Cond Res 18:
 
 551–555, 2004.
 
@@ -597,7 +597,7 @@ J Strength Cond Res 20: 971–977, 2006.
     cruciate ligament rupture. Am J Sports
     Med 19: 513–518, 1991.
 
-01. Paterno M, Ford K, Myer G, Heyl R, and
+17. Paterno M, Ford K, Myer G, Heyl R, and
     Hewett T. Limb asymmetries in landing and
     jumping 2 years following anterior cruciate
     ligament reconstruction. Clin J Sports Med
@@ -616,7 +616,7 @@ Sci 6: 1–6, 1996.
     imbalances in professional basketball players.
     J Athletic Train 44: 39–47, 2009.
 
-01. Walmsley RP and Amell TK. The
+20. Walmsley RP and Amell TK. The
     application and interpretation of intraclass
     correlations in the assessment of reliability
     in isokinetic dynamometry. Isokinetics

@@ -55,7 +55,7 @@ print(f"Eccentric duration: {metrics.eccentric_duration*1000:.0f}ms")
    - Formula: h = (g × t²) / 8
    - Typical range: 0.20-0.60m for athletes
 
-1. **Flight Time** (s) - Time spent airborne
+2. **Flight Time** (s) - Time spent airborne
 
    - Typical range: 300-600ms
 
@@ -67,22 +67,22 @@ print(f"Eccentric duration: {metrics.eccentric_duration*1000:.0f}ms")
    - Typical range: 0.20-0.40m
    - Deeper ≠ always better (optimal depth varies by athlete)
 
-1. **Eccentric Duration** (s) - Time from countermovement start to lowest point
+2. **Eccentric Duration** (s) - Time from countermovement start to lowest point
 
    - Downward phase duration
    - Typical range: 300-800ms
 
-1. **Concentric Duration** (s) - Time from lowest point to takeoff
+3. **Concentric Duration** (s) - Time from lowest point to takeoff
 
    - Upward phase duration
    - Typical range: 200-500ms
 
-1. **Total Movement Time** (s) - Full movement from countermovement to takeoff
+4. **Total Movement Time** (s) - Full movement from countermovement to takeoff
 
    - Sum of eccentric + concentric durations
    - Typical range: 500-1200ms
 
-1. **Transition Time** (s) - Duration at lowest point (amortization phase)
+5. **Transition Time** (s) - Duration at lowest point (amortization phase)
 
    - Brief pause at countermovement bottom
    - Shorter = better stretch-shortening cycle utilization
@@ -95,7 +95,7 @@ print(f"Eccentric duration: {metrics.eccentric_duration*1000:.0f}ms")
    - Indicates countermovement speed
    - Typical range: 0.5-1.5 m/s
 
-1. **Peak Concentric Velocity** (m/s) - Maximum upward speed
+2. **Peak Concentric Velocity** (m/s) - Maximum upward speed
 
    - Indicates propulsion force
    - Typical range: 1.5-3.0 m/s
@@ -103,9 +103,9 @@ print(f"Eccentric duration: {metrics.eccentric_duration*1000:.0f}ms")
 ### Triple Extension (in debug video)
 
 1. **Ankle Angle** - Dorsiflexion/plantarflexion
-1. **Knee Angle** - Flexion/extension
-1. **Hip Angle** - Flexion/extension
-1. **Trunk Tilt** - Forward/backward lean
+2. **Knee Angle** - Flexion/extension
+3. **Hip Angle** - Flexion/extension
+4. **Trunk Tilt** - Forward/backward lean
 
 **Note**: Ankle/knee angles have limited visibility in lateral view videos (~20-30% of frames). Trunk angle is available throughout. See docs/TRIPLE_EXTENSION.md for details.
 
@@ -115,7 +115,7 @@ print(f"Eccentric duration: {metrics.eccentric_duration*1000:.0f}ms")
 
 - **Duration**: Variable (1-3 seconds typical)
 - **Characteristics**: Near-zero velocity, stable position
-- **Detection**: Velocity \< 0.01 normalized units
+- **Detection**: Velocity < 0.01 normalized units
 - **Note**: May not be present if athlete starts moving immediately
 
 ### 2. Eccentric Phase (Countermovement)
@@ -200,9 +200,9 @@ Parameters automatically adjust based on:
 The CMJ algorithm works backward from peak height for robust detection:
 
 1. Find peak height (global minimum position)
-1. Find takeoff (peak upward velocity before peak)
-1. Find lowest point (maximum position before takeoff)
-1. Find landing (acceleration spike after peak)
+2. Find takeoff (peak upward velocity before peak)
+3. Find lowest point (maximum position before takeoff)
+4. Find landing (acceleration spike after peak)
 
 **Why this is better:**
 
@@ -324,13 +324,13 @@ for result in results:
 ### Required Setup
 
 1. **Lateral (Side) View** - Camera perpendicular to sagittal plane (90° angle)
-1. **Distance** - 3-5 meters from athlete (optimal: ~4m)
-1. **Height** - Camera at athlete's hip height (0.8-1.2m)
-1. **Framing** - Full body visible (head to feet) throughout jump
-1. **Orientation** - Landscape preferred (portrait works but less ideal)
-1. **Stability** - Tripod required (no hand-held)
-1. **Frame Rate** - 30+ fps minimum (60fps recommended)
-1. **Resolution** - 1080p or higher
+2. **Distance** - 3-5 meters from athlete (optimal: ~4m)
+3. **Height** - Camera at athlete's hip height (0.8-1.2m)
+4. **Framing** - Full body visible (head to feet) throughout jump
+5. **Orientation** - Landscape preferred (portrait works but less ideal)
+6. **Stability** - Tripod required (no hand-held)
+7. **Frame Rate** - 30+ fps minimum (60fps recommended)
+8. **Resolution** - 1080p or higher
 
 ### Why Lateral View is Required
 
@@ -361,19 +361,19 @@ See `docs/CAMERA_SETUP.md` for detailed setup guide.
 
 ### Countermovement Depth
 
-- **Too shallow** (\< 0.15m): May not utilize full potential
+- **Too shallow** (< 0.15m): May not utilize full potential
 - **Optimal** (0.20-0.35m): Good technique
 - **Too deep** (> 0.40m): May slow down transition
 
 ### Eccentric/Concentric Ratio
 
-- **\< 1.0**: Very fast transition (good for power)
+- **< 1.0**: Very fast transition (good for power)
 - **1.0-2.0**: Normal range (good technique)
 - **> 2.0**: Slow transition (may indicate fatigue)
 
 ### Transition Time
 
-- **\< 50ms**: Excellent stretch-shortening cycle
+- **< 50ms**: Excellent stretch-shortening cycle
 - **50-100ms**: Good
 - **100-150ms**: Average
 - **> 150ms**: May indicate technique issues
@@ -437,11 +437,11 @@ The CMJ module has been validated with:
 
    - Linthorne, N. P. (2001). Analysis of standing vertical jumps using a force platform
 
-1. **Stretch-Shortening Cycle**
+2. **Stretch-Shortening Cycle**
 
    - Komi, P. V. (2000). Stretch-shortening cycle: a powerful model to study muscle function
 
-1. **Video-Based Motion Analysis**
+3. **Video-Based Motion Analysis**
 
    - Validated approach using flight time method (force plate standard)
 

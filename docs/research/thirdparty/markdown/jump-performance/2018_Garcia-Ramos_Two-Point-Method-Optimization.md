@@ -34,8 +34,8 @@ ARTICLE
 Amador García-Ramos a,b, Alejandro Pérez-Castilla a and Slobodan Jaric c
 
 aDepartment of Physical Education and Sport, Faculty of Sport Sciences, University of Granada, Granada,
-Spain; \[b\] Department of Sports Sciences and Physical Conditioning, Faculty of Education, CIEDE, Catholic
-University of the Most Holy Concepción, Concepción, Chile; \[c\] Department of Kinesiology and Applied
+Spain; [b] Department of Sports Sciences and Physical Conditioning, Faculty of Education, CIEDE, Catholic
+University of the Most Holy Concepción, Concepción, Chile; [c] Department of Kinesiology and Applied
 Physiology & Biomechanics and Movement Science Graduate Program, University of Delaware, Newark,
 DE, USA
 
@@ -50,11 +50,11 @@ was evaluated before and after each testing procedure. Five twopoint methods (0�
 
 –
 F-V relationship. The most distant two-point method (0 75 kg)
-revealed a comparable reliability (CV\< 12.1%; ICC> 0.72) and high
+revealed a comparable reliability (CV< 12.1%; ICC> 0.72) and high
 concurrent validity (r > 0.91) with respect to the multiple-point
-method (CV\< 10.9%; ICC> 0.72). The reliability and validity of the twopoint methods decreased with the proximity of the applied loads.
+method (CV< 10.9%; ICC> 0.72). The reliability and validity of the twopoint methods decreased with the proximity of the applied loads.
 Unloaded jump height was significantly reduced after both testing
-procedures (p \< 0.05). These results support the two-point method
+procedures (p < 0.05). These results support the two-point method
 based on distant loads as a quick and less prone to fatigue procedure
 for testing the F-V relationship through vertical jumps.
 
@@ -161,7 +161,7 @@ Participants
 
 Totally, 18 physical active men volunteered to participate in this study (age:
 22.3 ± 2.1 years, body mass 75.7 ± 7.0 kg, height 177.7 ± 6.3 cm; data presented as
-mean ± standard deviation \[SD\]). Selection criteria included (I) having at least 1 year of
+mean ± standard deviation [SD]). Selection criteria included (I) having at least 1 year of
 resistance training experience which included vertical jump exercises, (II) being able to
 jump with a proper technique against the maximum tested load (75 kg or more), and
 (III) being free of musculoskeletal pain or injury that could compromise testing.
@@ -206,10 +206,10 @@ absolute loads were used for all participants to simplify the testing procedure.
 ’ –maximum load represented a 99.6 ± 8.4% of participants body mass \[range = 83.6
 
 –
-112.6%\] and it allowed a jump height of 8.1 ± 2.4 cm \[range = 4.3 13.6 cm\] and
+112.6%\] and it allowed a jump height of 8.1 ± 2.4 cm [range = 4.3 13.6 cm] and
 
 –
-8.7 ± 2.4 cm \[range = 5.8 13.2 cm\] during the SJ and CMJ exercises, respectively. The
+8.7 ± 2.4 cm [range = 5.8 13.2 cm] during the SJ and CMJ exercises, respectively. The
 trial with the highest maximum velocity at each loading condition was used for
 modelling the F-V relationship since it is highly correlated with vertical jump height
 (García-Ramos et al., 2015). The level of fatigue induced by the testing procedure was
@@ -277,14 +277,14 @@ Data are presented as means and SD, while the Pearson’s correlation coefficien
 presented through their median values and range. The reliability of the F-V relationship
 parameters obtained from different methods was assessed through the coefficient of
 variation (CV) and intra-class correlation coefficient (ICC; model 3.1). Acceptable
-reliability was determined as a CV \< 10% and an ICC > 0.70 (Cormack, Newton,
+reliability was determined as a CV < 10% and an ICC > 0.70 (Cormack, Newton,
 McGuigan, & Doyle, 2008). Significant differences in reliability were identified when the
 CV or ICC of the two-point method was above/below the 95% confidence interval of
 the multiple-point method. Paired samples t-tests and Cohen’s d effect size (ES) were
 used to compare the magnitude of the F-V relationship parameters between the five
 two-point methods and the multiple-point method as well as the unloaded jump height
 before and after the testing procedure. The criteria to interpret the magnitude of the ES
-was as follows: negligible (\< 0.20), small (0.20–0.50), moderate (0.50–0.80) and large
+was as follows: negligible (< 0.20), small (0.20–0.50), moderate (0.50–0.80) and large
 
 6 A. GARCÍA-RAMOS ET AL.
 
@@ -315,12 +315,12 @@ SPORTS BIOMECHANICS 7
 (> 0.80) (Cohen, 1988). The r coefficients were used to assess the concurrent validity of
 two-point methods respect to the multiple-point method and to explore the association
 between the change in jump height and the magnitude of the F-V relationship parameters. The criteria to interpret the strength of the correlations were as follows: trivial
-(\< 0.1), small (0.1–0.3), moderate (0.3–0.5), high (0.5–0.7), very high (0.7–0.9) or
+(< 0.1), small (0.1–0.3), moderate (0.3–0.5), high (0.5–0.7), very high (0.7–0.9) or
 practically perfect (> 0.9) (Hopkins, Marshall, Batterham, & Hanin, 2009). The agree
 –
 ment between the multiple- and two-point methods was quantified using Bland
 Altman 95% limits of agreement (LoA) technique (bias ± (1.96 x SDdiff)). Statistical
-significance was accepted at p \< 0.05 level, and confidence limits were set at 95%. The
+significance was accepted at p < 0.05 level, and confidence limits were set at 95%. The
 reliability assessment was performed by means of a custom spreadsheet (Hopkins,
 2000), while all other statistical analyses were performed using the software package
 SPSS version 22.0 (SPSS Inc., Chicago, IL, USA).
@@ -331,7 +331,7 @@ Reliability of the F-V relationship parameters
 
 The reliability of the two-point methods tended to decrease with the use of more
 proximal loads in both jumping modalities (Tables 1-2). An acceptable reliability (CV
-\< 10% and ICC > 0.70) of the F-V relationship parameters for both jumping modalities
+< 10% and ICC > 0.70) of the F-V relationship parameters for both jumping modalities
 was only observed for the multiple-point method and the two-point method based on
 
 –
@@ -466,7 +466,7 @@ Concurrent validity of the F-V relationship parameters
 
 The F-V relationship recorded from the multiple-point method was highly linear when
 obtained either from the data averaged across the participants (r ≥ 0.99) or from the
-individual force and velocity data (r = 0.99 \[0.97, 1.00\] for SJ; r = 0.98 \[0.95, 0.99\]) for
+individual force and velocity data (r = 0.99 [0.97, 1.00] for SJ; r = 0.98 [0.95, 0.99]) for
 CMJ). As a consequence of the high linearity reported, the F-V relationships obtained
 from the two-point methods (particularly the 0–60 and 0–75 two-point methods)
 considerably overlapped with the F-V relationship obtained from the multiple-point
@@ -475,7 +475,7 @@ method (Figure 1).
 The concurrent validity of the F-V relationship parameters obtained from the two
 –
 point methods tended to decrease with the use of more proximal loads (0 17 kg
-\< 0–30 kg \< 0–45 kg \< 0–60 kg = 0–75 kg) (Table 3). Only the two more distant two
+< 0–30 kg < 0–45 kg < 0–60 kg = 0–75 kg) (Table 3). Only the two more distant two
 – –
 point methods (i.e., 0 60 kg and 0 75 kg) provided practically perfect correlations
 (0.91 ≤ r ≤ 0.98) as well as small differences in their magnitudes (all ES ≤ 0.23) with
@@ -525,7 +525,7 @@ the multiple-point method. However, both the reliability and concurrent validity
 Figure 2. Individual changes in unloaded jump height after the testing procedure based on multiple
 loads during the squat jump (SJ) and countermovement jump (CMJ) exercises. The solid lines show
 the median difference. p, p-value (paired samples t-tests); ES, Cohen’s d effect size (\[jump height
-pre—jump height post\]/SD both); %Δ, percentage differences (\[jump height pre—jump height post\]/
+pre—jump height post\]/SD both); %Δ, percentage differences ([jump height pre—jump height post]/
 jump height post x 100).
 
 12
@@ -595,7 +595,7 @@ SPORTS BIOMECHANICS 11
 Figure 3. Relationship between the changes in unloaded jump height and maximum force (upper
 panel), maximum velocity (middle panel) and maximum power (lower panel) during the squat jump
 (SJ; straight line and filled dots) and countermovement jump (CMJ; dashed line and empty dots)
-exercises. r, Pearson’s correlation coefficient; p, p-value (significant association; p \< 0.05).
+exercises. r, Pearson’s correlation coefficient; p, p-value (significant association; p < 0.05).
 
 12 A. GARCÍA-RAMOS ET AL.
 
@@ -628,7 +628,7 @@ between experimental points on the reliability and concurrent validity of the
 F-V relationship parameters obtained from the two-point method. Pérez-Castilla et al.
 (2018) found that the reliability and concurrent validity of the F-V relationship parameters
 during the bench press throw exercise tended to decrease with the proximity between
-experimental points (40–50% \< 30–60% \< 20–70% of one-repetition maximum). Similarly,
+experimental points (40–50% < 30–60% < 20–70% of one-repetition maximum). Similarly,
 García-Ramos et al. (2018) showed that two distant loads should be considered in the leg
 cycle ergometer exercise to maximise the reliability of the F-V relationship parameters, but
 avoiding very high resistances that provide cadences lower than 110 rpm since their lower
@@ -726,8 +726,8 @@ No potential conflict of interest was reported by the authors.
 
 Funding
 
-This study was supported by the University of Granada under a postdoctoral grant \[perfeccionamiento de doctors\] awarded to AGR and by the Spanish Ministry of Education, Culture and
-Sport under a pre-doctoral grant \[FPU15/03649\] awarded to APC.
+This study was supported by the University of Granada under a postdoctoral grant [perfeccionamiento de doctors] awarded to AGR and by the Spanish Ministry of Education, Culture and
+Sport under a pre-doctoral grant [FPU15/03649] awarded to APC.
 
 ORCID
 

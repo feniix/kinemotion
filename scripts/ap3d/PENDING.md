@@ -10,7 +10,7 @@ The scripts can scan directories, generate manifests, and perform basic MPJPE ca
 
 ### 1. Coordinate Normalization
 
-- [ ] **Problem:** MediaPipe is normalized \[0,1\], AP3D Ground Truth is likely in mm or centralized camera coordinates.
+- [ ] **Problem:** MediaPipe is normalized [0,1], AP3D Ground Truth is likely in mm or centralized camera coordinates.
 - [ ] **Task:** Implement a scaling/normalization factor (e.g., using torso length) to make MPJPE meaningful.
 - [ ] **Task:** Add Procrustes Alignment (Kabsch Algorithm) to handle translation/rotation offsets between models.
 

@@ -78,8 +78,8 @@ gcloud run logs read kinemotion-backend --limit 50
 **In Vercel Dashboard:**
 
 1. Go to Settings → Environment Variables
-1. Add/update `VITE_API_URL` with your Cloud Run URL
-1. Redeploy frontend
+2. Add/update `VITE_API_URL` with your Cloud Run URL
+3. Redeploy frontend
 
 **Or via CLI:**
 

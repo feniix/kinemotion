@@ -53,8 +53,8 @@ velocities = compute_signed_velocity(positions)  # Keeps sign
 **Algorithm:**
 
 1. Find peak height first (global argmin)
-1. Work backward: takeoff → lowest point
-1. Work forward: landing after peak
+2. Work backward: takeoff → lowest point
+3. Work forward: landing after peak
 
 **Why:** More robust than forward search, avoids false detections from video start.
 
@@ -68,13 +68,13 @@ OpenCV vs NumPy ordering:
 ## Video Processing Gotchas
 
 1. Read first frame for dimensions (not OpenCV properties)
-1. Handle rotation metadata (mobile videos)
-1. Preserve aspect ratio (SAR)
-1. Validate dimensions in write_frame()
+2. Handle rotation metadata (mobile videos)
+3. Preserve aspect ratio (SAR)
+4. Validate dimensions in write_frame()
 
 ## CMJ Specific Gotchas
 
 1. **Lateral view required** - Front view won't work (parallax errors)
-1. **Signed velocity** - Critical for phase detection
-1. **Backward search** - Requires complete video (not real-time)
-1. **MediaPipe limitations** - Ankle/knee only 18-27% visible in side view
+2. **Signed velocity** - Critical for phase detection
+3. **Backward search** - Requires complete video (not real-time)
+4. **MediaPipe limitations** - Ankle/knee only 18-27% visible in side view

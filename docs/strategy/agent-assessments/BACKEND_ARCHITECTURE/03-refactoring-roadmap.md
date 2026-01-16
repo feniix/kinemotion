@@ -396,9 +396,9 @@ python -m pytest tests/perf/ -v --benchmark-only
 **Fallback Plan:**
 
 1. Pause refactoring
-1. Revert changes, keep current api.py
-1. Implement Task 3 with duplicate code (acceptable short-term)
-1. Extract abstraction post-MVP
+2. Revert changes, keep current api.py
+3. Implement Task 3 with duplicate code (acceptable short-term)
+4. Extract abstraction post-MVP
 
 ### If Type Safety Breaks
 
@@ -425,9 +425,9 @@ async def process_video_streaming(
 **Solution:**
 
 1. Identify failing test
-1. Check if it uses private functions (now moved)
-1. Update import: `from kinemotion.core.streaming import StreamingPoseProcessor`
-1. Re-run: Should pass
+2. Check if it uses private functions (now moved)
+3. Update import: `from kinemotion.core.streaming import StreamingPoseProcessor`
+4. Re-run: Should pass
 
 ## File Changes Summary
 

@@ -1905,14 +1905,14 @@ ______________________________________________________________________
    - Establish performance baseline
    - Create regression test fixtures
 
-1. **Task 1 Preparation (Ankle Fix)**
+2. **Task 1 Preparation (Ankle Fix)**
 
    - Prepare comprehensive test suite for foot_index validation
    - Get biomechanics specialist to review change
    - Plan rapid rollback if needed
    - Schedule 2-hour validation window
 
-1. **Task 2 Scope Finalization**
+3. **Task 2 Scope Finalization**
 
    - Finalize test list (40-50 tests as outlined)
    - Estimate resource needs per test type
@@ -2005,10 +2005,10 @@ ______________________________________________________________________
 **Critical Success Factors:**
 
 1. **Early baseline testing** (Week 1) for real-time latency
-1. **Ankle angle fix validation** must be comprehensive
-1. **Phase detection abstraction** must work for all sports
-1. **Daily coverage tracking** to stay on pace
-1. **Performance profiling** from project start
+2. **Ankle angle fix validation** must be comprehensive
+3. **Phase detection abstraction** must work for all sports
+4. **Daily coverage tracking** to stay on pace
+5. **Performance profiling** from project start
 
 **Resource Requirements:**
 

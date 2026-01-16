@@ -34,8 +34,8 @@ Alberto Fílter a,b, Jesús Olivares b,c, Alfredo Santalla a,b, Fabio Y. Nakamur
 and Bernardo Requena b
 
 aFaculty of Sport, University of Pablo de Olavide (UPO), Seville, Spain; bResearch and Development Department, Football Science Institute (FSI),
-Granada, Spain; \[c\] Mixed University Institute of Sport and Health (IMUDS), Granada, Spain; \[d\] NAR – Nucleus of High Performance in Sport, Sao Paulo,
-Brazil; \[e\] University of South Wales, Pontypridd, Wales, UK; \[f\] Department of Human Movement Science, Federal University of Sao Paulo, Brazil
+Granada, Spain; [c] Mixed University Institute of Sport and Health (IMUDS), Granada, Spain; [d] NAR – Nucleus of High Performance in Sport, Sao Paulo,
+Brazil; [e] University of South Wales, Pontypridd, Wales, UK; [f] Department of Human Movement Science, Federal University of Sao Paulo, Brazil
 
 ABSTRACT
 The speed performance is involved not only in linear sprints, but also in a wide spectrum of multidirectional movements, such as curve sprinting. Curved sprint can be defined as sprint with gradual and
@@ -46,8 +46,8 @@ obtained by soccer players in linear sprint. Forty experienced soccer players pe
 curve sprint (using the penalty arc) to right and left side (17 m), and 3 linear sprints (17 m) in two different
 days. The ICCs (inter-session reliability) were 0.93 for sprint curve right side (CSRS) and 0.89 for sprint
 curve left side (CSLS), considered “acceptable”. The CVs (intra-session reliability) were 0.87% in CSRS and
-1.15% in CSLS. The coefficient of determination (R \[2\] ) between linear and curve sprinting was ~35%. The
-association between curve sides was “very large” (r = 0.878; p \< 0.01). In summary, we showed that “curve
+1.15% in CSLS. The coefficient of determination (R [2] ) between linear and curve sprinting was ~35%. The
+association between curve sides was “very large” (r = 0.878; p < 0.01). In summary, we showed that “curve
 sprint test” is highly reliable, and that curvilinear and linear sprints are different and independent actions.
 
 ARTICLE HISTORY
@@ -264,12 +264,12 @@ between curve sprint speed (in both “weak” and “good” sides)
 and linear sprint speed, to help coaches and sport scientists
 estimate the extent of variation in straight sprint performance
 to a given variation in curvilinear sprint performance (i.e., shared
-variance). Total variance was reported by the coefficient of determination (R \[2\] ) and the respective level of significance (p \< 0.05).
+variance). Total variance was reported by the coefficient of determination (R [2] ) and the respective level of significance (p < 0.05).
 Additionally, a Pearson product moment correlation coefficient
 was used to test the correlation between “weak” and “good”
 curve sprint performances, which was classified according to the
 criteria defined by Hopkins et al. (Hopkins, Marshall, Batterham, &
-Hanin, 2009). The level of significance was set at p \< 0.05.
+Hanin, 2009). The level of significance was set at p < 0.05.
 
 JOURNAL OF SPORTS SCIENCES 3
 
@@ -295,7 +295,7 @@ than 5%, specifically 0.87% in CSRS (17 m) and 1.15% in CSLS
 4 A. FÍLTER ET AL.
 
 Table 1. Descriptive data for testing sessions 1 and 2 to know relative and absolute reliability data with mean, p value for differences between the sessions, effect size
-(ES), reliability statistics (intra-class correlation coefficient \[ICC\], typical error \[TE\], coefficient variations \[CV\]) in semi-professional soccer players.
+(ES), reliability statistics (intra-class correlation coefficient [ICC], typical error [TE], coefficient variations [CV]) in semi-professional soccer players.
 
 Relative CV Absolute
 
@@ -397,19 +397,19 @@ side) possibly run fast to the other side (e.g., to the left side).
 Initially, it would make sense to expect differences between
 both sides due to the specialisation of each player based on
 
-Table 2. Pearson’s correlation and coefficient of determination (R \[2\] ) (p ≤ 0.05)
+Table 2. Pearson’s correlation and coefficient of determination (R [2] ) (p ≤ 0.05)
 were used to define relationship between “good/weak” sprint curve.
 
 Sprint curve “good” side (17m)
 
 Sprint curve “weak” side (17m) r .878
-R \[2\] .77
+R [2] .77
 
-p \< .001†
+p < .001†
 
 - Significant (p ≤ 0.01) relationship between variables.
 
-Table 3. Coefficient of determination (R \[2\] ) (p ≤ 0.05) was used to calculate the
+Table 3. Coefficient of determination (R [2] ) (p ≤ 0.05) was used to calculate the
 proportion of the curve sprint variance explained by the linear sprint.
 
 Sprint curve “good”
@@ -418,16 +418,16 @@ Sprint curve “weak”
 
 side (17m) side (17m)
 
-Sprint curve “weak” R \[2\] .77
+Sprint curve “weak” R [2] .77
 
 side (17m)
 
-Sprint curve “weak” R \[2\] .77
+Sprint curve “weak” R [2] .77
 
-side (17m) p \< .001†
+side (17m) p < .001†
 
-Linear sprint (17m) R \[2\] .34 .37
-p \< .001† \< .001†
+Linear sprint (17m) R [2] .34 .37
+p < .001† < .001†
 
 side (17m)
 

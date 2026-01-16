@@ -34,13 +34,13 @@ apply to the journal pertain.
 
 **Humeral torsion and shoulder rotation range of motion parameters in elite swimmers**
 
-Kylie Holt \[1\]
+Kylie Holt [1]
 
-Craig Boettcher \[2\]
+Craig Boettcher [2]
 
-Mark Halaki \[3\]
+Mark Halaki [3]
 
-Karen A Ginn \[2 \]
+Karen A Ginn [2 ]
 
 1 Department of Physical Therapies, Australian Institute of Sport, Canberra, Australia
 
@@ -60,7 +60,7 @@ Australian Institute of Sport, Australian Sports Commission
 
 Leverrier Street, Bruce, ACT 2617, Australia
 
-Tel:  +61 414791911
+Tel: +61 414791911
 
 Fax: +61 2 6214 1753
 
@@ -106,7 +106,7 @@ p\<0.001) with passive ROM greater than active ROM (p\<0.001) and active IR ROM
 
 measured in supine greater than measured in prone (p\<0.001). There were no associations
 
-between any rotation ROM variables and current or history of shoulder pain (r \[2\] =0.058;
+between any rotation ROM variables and current or history of shoulder pain (r [2] =0.058;
 
 p=0.46). **Conclusions:** Humeral torsion angle and passive shoulder IR ROM were similar
 
@@ -132,17 +132,17 @@ shoulder external rotation (ER) range of motion (ROM) during the throwing action
 
 been shown that reduced shoulder ER ROM in a throwing athlete can lead to decreased
 
-performance \[1\] and increased chance of injury. \[2,3\]
+performance [1] and increased chance of injury. [2,3]
 
 Biomechanical analysis has shown that shoulder IR is the dominant movement during
 
-freestyle swimming, \[4\] the stroke most commonly swum by all swimmers. \[5\] Consequently,
+freestyle swimming, [4] the stroke most commonly swum by all swimmers. [5] Consequently,
 
 adequate shoulder IR ROM is believed to be important for both injury prevention and
 
-performance enhancement in the swimming population. \[6\] Active shoulder IR ROM of
+performance enhancement in the swimming population. [6] Active shoulder IR ROM of
 
-between 40°-50° is considered to be ideal for swimming athletes. \[6\] However, little objective
+between 40°-50° is considered to be ideal for swimming athletes. [6] However, little objective
 
 data is available to support this claim. Further examination of shoulder rotation ROM in elite
 
@@ -152,13 +152,13 @@ swimming.
 
 The orientation of the proximal end of the humerus (humeral torsion) can influence
 
-shoulder rotation ROM measurements. \[7\] Greater humeral retrotorsion will result in increased
+shoulder rotation ROM measurements. [7] Greater humeral retrotorsion will result in increased
 
 shoulder ER and decreased IR ROM with no change in the total shoulder ROM. In throwing
 
 athletes, greater humeral retrotorsion is seen in the throwing arm relative to the non-throwing
 
-arm. \[8\] It is believed that this change is due to the osseous torsional loading on the humerus
+arm. [8] It is believed that this change is due to the osseous torsional loading on the humerus
 
 during throwing, resulting in the increased shoulder ER ROM observed in the throwing arm
 
@@ -170,7 +170,7 @@ humeral torsion would be symmetrical given the bilateral nature of swimming. Onl
 
 3
 
-study has examined humeral torsion in swimmers. \[9\] This study examined 29 young swimmers
+study has examined humeral torsion in swimmers. [9] This study examined 29 young swimmers
 
 (average age 15.9 years) and found increased humeral retrotorsion in the dominant limb i.e. a
 
@@ -186,7 +186,7 @@ a particular athletic task so that the confounding variables of poor technique c
 
 controlled. Only one small study has examined the shoulder rotation ROM characteristics in
 
-elite swimmers. \[10\] A much larger sample size is required to establish a normative database of
+elite swimmers. [10] A much larger sample size is required to establish a normative database of
 
 the optimal shoulder rotation ROM for swimming in order to draw valid associations between
 
@@ -230,17 +230,17 @@ were taken in the one testing session. Test order was block randomised by side (
 
 non-dominant) and measurement (torsion, ROM).
 
-Humeral torsion was measured in supine using a non-invasive ultrasound (US) technique \[7\]
+Humeral torsion was measured in supine using a non-invasive ultrasound (US) technique [7]
 
 using two real time US machines (Xario XG and Toshiba XG SSA-680A) with 12 MHz
 
 linear transducer PLT-1204BT (Toshiba Medical Systems, Tochigi, Japan) each modified
 
-with the attachment of a spirit level on the US head. \[7\]
+with the attachment of a spirit level on the US head. [7]
 
 Internal and external shoulder rotation ROM were measured from digital photographs,
 
-with the humerus abducted to 90° in the coronal plane and elbow in 90° flexion \[11\] . Passive
+with the humerus abducted to 90° in the coronal plane and elbow in 90° flexion [11] . Passive
 
 rotation ROM was measured in supine and active rotation ROM was measured in both supine
 
@@ -256,7 +256,7 @@ Inter-rater reliability was calculated using a subset of the data (10 subjects) 
 
 ROM measures and indicated that there were high correlations between the two raters (r ≥
 
-0.976) with smallest detectable difference \< 0.75° for all ROM measures.
+0.976) with smallest detectable difference < 0.75° for all ROM measures.
 
 The normality of the distribution of the data was checked and confirmed using probability
 
@@ -278,7 +278,7 @@ significant differences when significant ANOVA results were found. Effect sizes 
 
 calculated using Cohen’s d with \<0.2 indicating nil, 0.2 to \<0.6 indicating small, 0.6 to \<0.8
 
-indicating medium and ≥0.8 indicating large effect sizes \[12\] .
+indicating medium and ≥0.8 indicating large effect sizes [12] .
 
 Associations between the amount of humeral torsion and shoulder rotation ROM measures
 
@@ -382,7 +382,7 @@ Multiple regression analysis revealed no associations between current shoulder p
 
 history of shoulder pain with the degree of humeral torsion or any of the shoulder ROM
 
-variables measured (r \[2\] =0.058, p=0.46).
+variables measured (r [2] =0.058, p=0.46).
 
 **Discussion**
 
@@ -416,7 +416,7 @@ swimmers did demonstrate a much higher degree of humeral torsion angle in their 
 
 shoulder than professional pitchers with an average humeral torsion of 27±10° (Table 1)
 
-compared to values in pitchers between 5° to 10°. \[8\] In addition, there was no bilateral
+compared to values in pitchers between 5° to 10°. [8] In addition, there was no bilateral
 
 8
 
@@ -436,11 +436,11 @@ The elite swimming athletes in the current study demonstrated similar average hu
 
 torsion values as normal participants. Mean humeral torsion of 26±11° was reported in a
 
-study using CT to measure humeral torsion in 410 normal shoulders. \[13\] Measurements of
+study using CT to measure humeral torsion in 410 normal shoulders. [13] Measurements of
 
 humeral torsion in the non-dominant shoulder of elite overhead athletes, which would only be
 
-subjected to normal day to day activities, report mean values of between 23° and 29°. \[8,14-16\]
+subjected to normal day to day activities, report mean values of between 23° and 29°. [8,14-16]
 
 The 6.4° mean difference in the degree of humeral torsion between dominant and non
 
@@ -448,7 +448,7 @@ dominant sides in the male swimmers in the current study is well within one stan
 
 deviation of normative humeral torsion values challenging whether this difference is
 
-functionally meaningful. \[13\] It would seem that, unlike throwing, the mechanical stresses
+functionally meaningful. [13] It would seem that, unlike throwing, the mechanical stresses
 
 associated with swimming do not influence the orientation of the humeral head on its shaft.
 
@@ -472,7 +472,7 @@ Unfortunately it is not possible to compare the ROM results in the current study
 
 only other study examining shoulder rotation ROM in elite swimmers as no details are
 
-provided in this previous study on the method used to measure rotation ROM \[17\] . The passive
+provided in this previous study on the method used to measure rotation ROM [17] . The passive
 
 shoulder rotation ranges recorded in the current study, however, are similar to other studies
 
@@ -484,13 +484,13 @@ average passive IR ranges slightly higher than the current study (dominant and n
 
 67°) and passive ER ranges slightly lower (dominant 101°; non-dominant 96°) were
 
-reported. \[18\] In a small study of 20 older male recreational swimmers, \[19\] passive ER ROM was
+reported. [18] In a small study of 20 older male recreational swimmers, [19] passive ER ROM was
 
 slightly greater than 100° (dominant 103°; non-dominant 101°) and passive IR ROM on the
 
 non-dominant shoulder averaged 65°, similar to the current study. However, average
 
-dominant shoulder passive IR ROM (53°) in these non-elite swimmers \[19\] was much less than
+dominant shoulder passive IR ROM (53°) in these non-elite swimmers [19] was much less than
 
 that found in the current study. As swimming is not likely to be the main mechanical
 
@@ -512,7 +512,7 @@ shoulder IR rotation ROM in males was found to be between 62° (dominant) and 64
 
 dominant) and in females ranged between 69° (dominant) and 68° (non-dominant) with
 
-similar variability (standard deviations) to the current study. \[20\] However, passive shoulder ER
+similar variability (standard deviations) to the current study. [20] However, passive shoulder ER
 
 ROM was greater in our elite swimming cohort compared with these control participants
 
@@ -520,11 +520,11 @@ ROM was greater in our elite swimming cohort compared with these control partici
 
 10
 
-passive ER ROM in both dominant and non-dominant shoulders. \[20\] These results would
+passive ER ROM in both dominant and non-dominant shoulders. [20] These results would
 
 suggest that, contrary to popular opinion, a selective increase in passive shoulder IR ROM
 
-bilaterally is not present in elite swimming athletes. \[9\] The increased shoulder rotation
+bilaterally is not present in elite swimming athletes. [9] The increased shoulder rotation
 
 flexibility in the elite swimmers in the current study compared to age-related control
 
@@ -536,13 +536,13 @@ elevation required during most swimming strokes.
 
 During swimming athletes must be able to reach extreme ranges of motion at the
 
-shoulder. \[21\] Therefore, active ROM i.e. the ability of the swimmer to utilize available ROM,
+shoulder. [21] Therefore, active ROM i.e. the ability of the swimmer to utilize available ROM,
 
-has been considered to be of primary importance in assessing ROM in swimmers. \[10,22,23\]
+has been considered to be of primary importance in assessing ROM in swimmers. [10,22,23]
 
 Active rotation ROM has most commonly been measured in the supine position utilized in
 
-the current study. \[22-24\] In our cohort of elite swimmers, both active IR and ER ROM measured
+the current study. [22-24] In our cohort of elite swimmers, both active IR and ER ROM measured
 
 in supine was less than passive rotation ROM measured in the same position (Figure 2).
 
@@ -556,17 +556,17 @@ active shoulder rotation ranges do not differ markedly in magnitude from those r
 
 other studies examining swimming athletes. Active IR ROM of 45-49° and active ER ROM
 
-of 100-102° have been reported in collegiate swimmers. \[22\] In a group of high school and
+of 100-102° have been reported in collegiate swimmers. [22] In a group of high school and
 
 collegiate swimming athletes average active IR ROM of approximately 55-60° and average
 
-active ER ROM of approximately 86-92° have been reported. \[23\] Similarly, average bilateral
+active ER ROM of approximately 86-92° have been reported. [23] Similarly, average bilateral
 
 active IR ROM of approximately 54° and average bilateral active ER ROM of approximately
 
-97° have been reported in 74 young swimmers (average age 15±3 years). \[24\]
+97° have been reported in 74 young swimmers (average age 15±3 years). [24]
 
-Shoulder IR ROM of between 40-50° is considered to be ideal for swimming athletes. \[6\]
+Shoulder IR ROM of between 40-50° is considered to be ideal for swimming athletes. [6]
 
 Elite swimmers in this study did demonstrate passive IR ROM and active IR ROM measured
 
@@ -606,7 +606,7 @@ large cohort of swimming athletes currently competing at an elite level. These r
 
 the findings of previous smaller studies which reported no relationship between shoulder pain
 
-and rotation ROM in swimming athletes. \[10,18,22\] The finding of no relationship between the
+and rotation ROM in swimming athletes. [10,18,22] The finding of no relationship between the
 
 degree of humeral torsion and current or past shoulder pain in the current study provides
 
@@ -810,7 +810,7 @@ active ER ROM in supine, e) active IR ROM in prone, f) active ER ROM in prone.
 
 measured passively and actively in both supine and prone for dominant and non-dominant
 
-shoulders. \[† \] indicates significant differences between dominant and non-dominant, * indicates
+shoulders. [† ] indicates significant differences between dominant and non-dominant, * indicates
 
 significant differences between execution of rotation ROM: passive, active in supine, active
 

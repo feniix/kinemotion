@@ -30,8 +30,8 @@ ______________________________________________________________________
 **Objective**:
 
 1. **Identify** each attempted rep (segment video into individual reps)
-1. **Validate** each rep against HYROX standards
-1. **Report** which reps are valid and which are no-reps (with reasons)
+2. **Validate** each rep against HYROX standards
+3. **Report** which reps are valid and which are no-reps (with reasons)
 
 **Formula**: `valid_reps = attempted_reps - no_reps`
 
@@ -484,22 +484,22 @@ For debug video: kinemotion wallball-analyze video.mp4 --output debug.mp4
    - Can test rep detection without validation logic
    - Can improve validators without changing detection
 
-1. **Per-rep granularity**: Every attempted rep is identified and evaluated
+2. **Per-rep granularity**: Every attempted rep is identified and evaluated
 
    - Matches HYROX judging workflow (judge calls each rep)
    - Enables detailed performance analysis
 
-1. **Transparent violations**: Clear reasons for no-reps
+3. **Transparent violations**: Clear reasons for no-reps
 
    - Athletes know exactly what to fix
    - Coaches can analyze patterns (e.g., "depth violations increase with fatigue")
 
-1. **Extensible validators**: Easy to add new standards
+4. **Extensible validators**: Easy to add new standards
 
    - Each validator is independent function
    - Can add timing requirements, tempo, etc. in future
 
-1. **Testable components**: Clear interfaces enable unit testing
+5. **Testable components**: Clear interfaces enable unit testing
 
    - Mock pose landmarks to test state machine
    - Mock rep segments to test validators
@@ -528,8 +528,8 @@ ______________________________________________________________________
 A rep does **not count** if:
 
 1. **Insufficient squat depth**: Hip crease doesn't go below top of knee
-1. **Target miss**: Ball doesn't reach target height on wall
-1. **Ball resting**: Ball rests on ground between reps (not allowed)
+2. **Target miss**: Ball doesn't reach target height on wall
+3. **Ball resting**: Ball rests on ground between reps (not allowed)
 
 **Judge requirement**: One judge per athlete to call no-reps in real-time
 
@@ -591,9 +591,9 @@ def validate_squat_depth(
 **Algorithm**:
 
 1. Track ball position over time (using ball tracking from 2.3)
-1. Detect low vertical position (below waist height)
-1. Check for minimal movement (stationary threshold)
-1. Measure duration (>1-2 seconds = violation)
+2. Detect low vertical position (below waist height)
+3. Check for minimal movement (stationary threshold)
+4. Measure duration (>1-2 seconds = violation)
 
 **Similar to**: Phase detection logic in `cmj/analysis.py` and `dropjump/analysis.py`
 
@@ -643,8 +643,8 @@ def detect_ball_resting(
 **Sub-challenges**:
 
 1. **Ball tracking**: Detect and track ball position (pose estimation doesn't include balls)
-1. **Trajectory analysis**: Detect peak height per rep
-1. **Calibration**: Convert pixel coordinates to real-world meters
+2. **Trajectory analysis**: Detect peak height per rep
+3. **Calibration**: Convert pixel coordinates to real-world meters
 
 #### 3.3.1 Ball Tracking
 
@@ -1776,22 +1776,22 @@ ______________________________________________________________________
    - Use `core/smoothing.py` patterns
    - Interpolate missing frames using trajectory prediction
 
-1. **Adaptive thresholding**:
+2. **Adaptive thresholding**:
 
    - Dynamically adjust HSV range based on lighting
    - Learn ball color from initial frames
 
-1. **Pose-guided ROI**:
+3. **Pose-guided ROI**:
 
    - Limit search area to reduce false positives
    - Predict ball location based on hand position
 
-1. **User calibration**:
+4. **User calibration**:
 
    - Allow custom HSV ranges via CLI
    - Provide visualization tool to help users select color range
 
-1. **Fallback strategies**:
+5. **Fallback strategies**:
 
    - If tracking fails, rely on squat depth only (partial validation)
    - Warn user about tracking quality in metrics
@@ -1816,18 +1816,18 @@ ______________________________________________________________________
    - Athlete height-based (fallback)
    - Manual override (user provides pixels-per-meter)
 
-1. **Validation**:
+2. **Validation**:
 
    - Sanity checks on calibration values
    - Compare athlete height in video to known height
    - Warn if calibration seems off
 
-1. **Tolerance margins**:
+3. **Tolerance margins**:
 
    - Don't require pixel-perfect height
    - Use reasonable tolerances (e.g., ±5cm)
 
-1. **User guidance**:
+4. **User guidance**:
 
    - Clear documentation on camera setup
    - Tips for improving calibration accuracy
@@ -1851,16 +1851,16 @@ ______________________________________________________________________
    - Histogram equalization
    - Adaptive brightness/contrast adjustment
 
-1. **Multiple color models**:
+2. **Multiple color models**:
 
    - HSV (primary)
    - LAB color space (lighting-independent, if HSV fails)
 
-1. **User presets**:
+3. **User presets**:
 
    - Provide presets for common conditions (indoor, outdoor, bright, dim)
 
-1. **Real-time feedback**:
+4. **Real-time feedback**:
 
    - Show ball detection in debug overlay
    - Allow user to adjust color range interactively
@@ -1884,19 +1884,19 @@ ______________________________________________________________________
    - Use physics (parabolic motion) to predict occluded frames
    - Interpolate position during brief occlusions
 
-1. **Phase awareness**:
+2. **Phase awareness**:
 
    - Know when ball should be visible (flight phase)
    - Don't penalize missing detections during expected occlusion
 
-1. **Multiple tracking approaches**:
+3. **Multiple tracking approaches**:
 
    - Optical flow as backup
    - Kalman filter for prediction
 
 **Acceptance criteria**:
 
-- Handle brief occlusions (\< 0.5 seconds)
+- Handle brief occlusions (< 0.5 seconds)
 - Accurate trajectory reconstruction
 
 ### 7.5 Different Ball Colors/Materials
@@ -1912,12 +1912,12 @@ ______________________________________________________________________
    - Provide presets for common balls
    - Make presets easy to add
 
-1. **Learning mode**:
+2. **Learning mode**:
 
    - Let user click on ball in first frame
    - Auto-detect HSV range from selection
 
-1. **Documentation**:
+3. **Documentation**:
 
    - List tested ball colors
    - Instructions for custom colors
@@ -1936,7 +1936,7 @@ ______________________________________________________________________
 Following kinemotion standards (70 tests for 2 jump types):
 
 - **Target**: 20-30 tests for wall ball module
-- **Code duplication**: Keep \< 3%
+- **Code duplication**: Keep < 3%
 - **Type coverage**: 100% (pyright strict)
 
 ### 8.2 Unit Tests
@@ -1993,31 +1993,31 @@ Following kinemotion standards (70 tests for 2 jump types):
    - All reps valid
    - Good lighting, clear ball visibility
 
-1. **`depth_norep.mp4`**: Squat depth violations
+2. **`depth_norep.mp4`**: Squat depth violations
 
    - 5 reps with insufficient depth
    - Various knee angles (85°, 95°, 100°)
 
-1. **`height_norep.mp4`**: Ball height violations
+3. **`height_norep.mp4`**: Ball height violations
 
    - 5 reps where ball doesn't reach target
    - Various heights (2.5m, 2.7m, 2.9m for 3m target)
 
-1. **`resting_norep.mp4`**: Ball resting violations
+4. **`resting_norep.mp4`**: Ball resting violations
 
    - 3 reps with ball resting on ground
    - Various rest durations (1s, 2s, 3s)
 
-1. **`mixed_noreps.mp4`**: Multiple violation types
+5. **`mixed_noreps.mp4`**: Multiple violation types
 
    - Real-world scenario with various issues
 
-1. **`difficult_lighting.mp4`**: Challenging conditions
+6. **`difficult_lighting.mp4`**: Challenging conditions
 
    - Bright/dim lighting, shadows
    - Tests robustness
 
-1. **`occlusion.mp4`**: Ball partially occluded
+7. **`occlusion.mp4`**: Ball partially occluded
 
    - Tests trajectory prediction
 
@@ -2055,14 +2055,14 @@ Before each release:
 - [ ] Test calibration methods (target-based, athlete-based)
 - [ ] Test debug overlay rendering
 - [ ] Test JSON output format
-- [ ] Verify code duplication \< 3% (`npx jscpd src/kinemotion`)
+- [ ] Verify code duplication < 3% (`npx jscpd src/kinemotion`)
 
 ### 8.6 Performance Benchmarks
 
 **Target performance** (60-second video, 1080p, 30fps):
 
-- Processing time: \< 2 minutes
-- Memory usage: \< 1GB
+- Processing time: < 2 minutes
+- Memory usage: < 1GB
 - Ball tracking success rate: > 80%
 
 ### 8.7 CI/CD Integration
@@ -2122,7 +2122,7 @@ buffer.append(ball_position)
 **Key findings**:
 
 - Joint angles more robust than vertical positions
-- Knee angle \< 90° indicates full squat depth
+- Knee angle < 90° indicates full squat depth
 - Works with any camera angle (not just lateral)
 
 **Relevant code examples**:
@@ -2188,17 +2188,17 @@ ______________________________________________________________________
    - Add YOLO as optional backend (more accurate, requires model)
    - Add optical flow tracking (backup for occlusion)
 
-1. **Improved calibration UI**:
+2. **Improved calibration UI**:
 
    - Interactive calibration tool
    - Click target/reference in video frame
 
-1. **Real-time processing**:
+3. **Real-time processing**:
 
    - Live webcam analysis (see `docs/technical/real-time-analysis.md`)
    - Immediate no-rep feedback
 
-1. **Mobile app integration**:
+4. **Mobile app integration**:
 
    - iOS/Android app with kinemotion backend
    - HYROX-specific UI
@@ -2212,18 +2212,18 @@ ______________________________________________________________________
    - Sled push/pull
    - (Full HYROX workout analysis)
 
-1. **3D tracking**:
+2. **3D tracking**:
 
    - Dual-camera stereo setup
    - Improved depth perception
    - Better height validation
 
-1. **ML-based ball detection**:
+3. **ML-based ball detection**:
 
    - Train custom YOLO model on medicine balls
    - Improve robustness to lighting/occlusion
 
-1. **Competition integration**:
+4. **Competition integration**:
 
    - Official HYROX judge tool
    - Real-time leaderboard integration
@@ -2244,9 +2244,9 @@ Wall ball no-rep detection is **feasible and valuable** for kinemotion:
 **Key insights**:
 
 1. Use **45° camera angle** for superior ball visibility
-1. Use **joint angles** for camera-agnostic squat validation
-1. Hybrid **pose-guided HSV** tracking balances simplicity and accuracy
-1. **Phased implementation** delivers value incrementally
+2. Use **joint angles** for camera-agnostic squat validation
+3. Hybrid **pose-guided HSV** tracking balances simplicity and accuracy
+4. **Phased implementation** delivers value incrementally
 
 ### 11.2 Estimated Effort
 
@@ -2273,10 +2273,10 @@ Wall ball no-rep detection is **feasible and valuable** for kinemotion:
 **Next steps**:
 
 1. Create test fixtures (record wall ball videos)
-1. Implement Phase 1 MVP (1 week sprint)
-1. Validate with real athletes
-1. Iterate based on feedback
-1. Continue with Phases 2-4
+2. Implement Phase 1 MVP (1 week sprint)
+3. Validate with real athletes
+4. Iterate based on feedback
+5. Continue with Phases 2-4
 
 ### 11.4 Success Metrics
 
@@ -2302,7 +2302,7 @@ Wall ball no-rep detection is **feasible and valuable** for kinemotion:
 **Overall success**:
 
 - [ ] All 20-30 tests pass
-- [ ] Code duplication \< 3%
+- [ ] Code duplication < 3%
 - [ ] Documentation complete
 - [ ] Positive user feedback from HYROX athletes
 

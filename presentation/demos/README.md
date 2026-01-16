@@ -80,10 +80,10 @@ python batch_processing_demo.py
 **What the script does**:
 
 1. Finds all videos in `sample_data/`
-1. Processes with 1 worker (sequential)
-1. Processes with 4 workers (parallel)
-1. Compares performance
-1. Exports results to JSON
+2. Processes with 1 worker (sequential)
+3. Processes with 4 workers (parallel)
+4. Compares performance
+5. Exports results to JSON
 
 **Talking points**:
 
@@ -104,10 +104,10 @@ jupyter notebook api_demo.ipynb
 **What the notebook demonstrates**:
 
 1. Single video analysis with API
-1. Accessing all metrics
-1. Custom team assessment workflow
-1. Ranking athletes by RSI
-1. CSV export for further analysis
+2. Accessing all metrics
+3. Custom team assessment workflow
+4. Ranking athletes by RSI
+5. CSV export for further analysis
 
 **Talking points**:
 
@@ -122,26 +122,26 @@ jupyter notebook api_demo.ipynb
 ### Before Presenting
 
 1. **Test all demos** - Run each one to verify they work
-1. **Have backups** - Screenshots or pre-recorded videos
-1. **Increase font size** - Terminal at 18pt minimum
-1. **Clear output** - Remove old files before demo
-1. **Position windows** - Terminal and slides side-by-side
+2. **Have backups** - Screenshots or pre-recorded videos
+3. **Increase font size** - Terminal at 18pt minimum
+4. **Clear output** - Remove old files before demo
+5. **Position windows** - Terminal and slides side-by-side
 
 ### During Demo
 
 1. **Explain first** - "This command will..."
-1. **Type slowly** - People are reading along
-1. **Highlight output** - Point to key metrics
-1. **Pause for questions** - After each demo
-1. **Have backup ready** - If demo fails, show screenshot
+2. **Type slowly** - People are reading along
+3. **Highlight output** - Point to key metrics
+4. **Pause for questions** - After each demo
+5. **Have backup ready** - If demo fails, show screenshot
 
 ### If Demo Fails
 
 1. Show pre-recorded video
-1. Display screenshot of expected output
-1. Explain what should happen
-1. Move on confidently
-1. Offer to show working version after presentation
+2. Display screenshot of expected output
+3. Explain what should happen
+4. Move on confidently
+5. Offer to show working version after presentation
 
 ## Troubleshooting
 

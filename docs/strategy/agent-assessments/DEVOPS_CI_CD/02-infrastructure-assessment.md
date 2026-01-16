@@ -633,14 +633,14 @@ app.mount("/metrics", metrics_app)
    - p95 latency (histogram)
    - CPU/Memory usage
 
-1. **Analysis Dashboard:**
+2. **Analysis Dashboard:**
 
    - Analyses by sport (pie chart)
    - Completion rate (gauge)
    - Average latency by sport
    - Failed analyses by error type
 
-1. **Infrastructure Dashboard:**
+3. **Infrastructure Dashboard:**
 
    - Container restarts
    - Scaling events (replicas added/removed)
@@ -758,10 +758,10 @@ CLI packaging: ✓ Releases on GitHub
 Multi-artifact releases:
 
 1. **CLI Tool** (Python package) → PyPI + GitHub Releases
-1. **Real-Time Service** (Docker image) → Registry
-1. **Python SDK** (Python package) → PyPI
-1. **JavaScript SDK** (npm package) → npm registry
-1. **API Documentation** → GitHub Pages
+2. **Real-Time Service** (Docker image) → Registry
+3. **Python SDK** (Python package) → PyPI
+4. **JavaScript SDK** (npm package) → npm registry
+5. **API Documentation** → GitHub Pages
 
 ### Unified Release Workflow
 
@@ -1071,9 +1071,9 @@ ______________________________________________________________________
 **Mitigation (MANDATORY):**
 
 1. **Performance testing in Week 1 of Task 3** (non-negotiable)
-1. Measure latency with realistic video resolution
-1. Load test with 25 concurrent streams
-1. If latency > 250ms: Plan fallback architecture
+2. Measure latency with realistic video resolution
+3. Load test with 25 concurrent streams
+4. If latency > 250ms: Plan fallback architecture
    - Client-side MediaPipe lite model (lower accuracy, faster)
    - Queue-based architecture with delayed feedback (coaching mode)
    - Async processing (not real-time, but still fast)
@@ -1108,9 +1108,9 @@ ______________________________________________________________________
 **Mitigation:**
 
 1. Start with CPU instances (cheaper)
-1. Monitor CPU usage and latency correlation
-1. Scale to GPU only if needed (Week 4+)
-1. Alternative: Model optimization (quantization, pruning)
+2. Monitor CPU usage and latency correlation
+3. Scale to GPU only if needed (Week 4+)
+4. Alternative: Model optimization (quantization, pruning)
 
 #### RISK 3: Deployment Failures (LOW PROBABILITY, HIGH IMPACT)
 
@@ -1130,10 +1130,10 @@ ______________________________________________________________________
 **Mitigation:**
 
 1. **Staging-only for first 2 weeks** (Week 3-4)
-1. Canary deployment: 10% traffic → 50% → 100% (Week 5+)
-1. Automated rollback: If error rate > 5% → rollback
-1. Monitoring alerts: Page on-call for critical metrics
-1. Runbook: documented procedures for common failures
+2. Canary deployment: 10% traffic → 50% → 100% (Week 5+)
+3. Automated rollback: If error rate > 5% → rollback
+4. Monitoring alerts: Page on-call for critical metrics
+5. Runbook: documented procedures for common failures
 
 #### RISK 4: Testing Gaps on Real-Time Code (MEDIUM PROBABILITY, MEDIUM IMPACT)
 
@@ -1153,9 +1153,9 @@ ______________________________________________________________________
 **Mitigation:**
 
 1. WebSocket testing library in place (pytest-asyncio, websockets)
-1. Chaos engineering tests (simulate network failures)
-1. Stress tests: 100+ concurrent connections, hold 10 minutes
-1. Code review focus: All async/await code requires review
+2. Chaos engineering tests (simulate network failures)
+3. Stress tests: 100+ concurrent connections, hold 10 minutes
+4. Code review focus: All async/await code requires review
 
 #### RISK 5: Monitoring Gap (MEDIUM PROBABILITY, MEDIUM IMPACT)
 
@@ -1174,9 +1174,9 @@ ______________________________________________________________________
 **Mitigation:**
 
 1. **Prometheus + Grafana mandatory by Week 2 of Task 3**
-1. Alert rules in place before production deploy
-1. Simulated alerts during staging
-1. On-call rotation established
+2. Alert rules in place before production deploy
+3. Simulated alerts during staging
+4. On-call rotation established
 
 ### Medium Risks
 
@@ -1212,16 +1212,16 @@ ______________________________________________________________________
 
    - Locust framework
    - 25-concurrent baseline test
-   - Latency assertion: p95 \< 200ms
+   - Latency assertion: p95 < 200ms
    - Error rate assertion: \<1%
 
-1. **Build Dockerfile** (Week 1-2)
+2. **Build Dockerfile** (Week 1-2)
 
    - Multi-stage build
    - Size target: \<500MB
    - Health check endpoint
 
-1. **Docker Compose for Development** (Week 1-2)
+3. **Docker Compose for Development** (Week 1-2)
 
    - FastAPI + Redis + PostgreSQL
    - Enables local testing of full system
@@ -1235,13 +1235,13 @@ ______________________________________________________________________
    - Dashboards for health monitoring
    - Alert rules for SLOs
 
-1. **Deployment Pipeline** (Week 3-4)
+2. **Deployment Pipeline** (Week 3-4)
 
    - GitHub Actions workflow for staging
    - Manual approval for production
    - Automated rollback capability
 
-1. **Performance Profiling Automation** (Week 3-4)
+3. **Performance Profiling Automation** (Week 3-4)
 
    - py-spy integration in CI
    - Bottleneck identification
@@ -1255,19 +1255,19 @@ ______________________________________________________________________
    - Private registry for staging
    - ECR/GCR for production
 
-1. **Integration Testing Framework** (Month 2+)
+2. **Integration Testing Framework** (Month 2+)
 
    - API endpoint testing (Task 5)
    - Webhook testing
    - SDK testing
 
-1. **Database Migration Infrastructure** (Month 2+)
+3. **Database Migration Infrastructure** (Month 2+)
 
    - Alembic for PostgreSQL migrations
    - Versioned schemas
    - Rollback procedures
 
-1. **API Documentation Automation** (Month 2+)
+4. **API Documentation Automation** (Month 2+)
 
    - OpenAPI/Swagger generation
    - Multi-version API docs
@@ -1550,10 +1550,10 @@ ______________________________________________________________________
 ### Recommended Actions Before Task 3 Starts
 
 1. **Mandatory:** Performance testing infrastructure (Week 1)
-1. **Mandatory:** Containerization and deployment pipeline (Week 1-2)
-1. **Mandatory:** Monitoring infrastructure (Week 2-3)
-1. **High Priority:** Load testing framework (Week 1)
-1. **High Priority:** WebSocket testing (Week 2)
+2. **Mandatory:** Containerization and deployment pipeline (Week 1-2)
+3. **Mandatory:** Monitoring infrastructure (Week 2-3)
+4. **High Priority:** Load testing framework (Week 1)
+5. **High Priority:** WebSocket testing (Week 2)
 
 ### Critical Success Factors
 
@@ -1612,8 +1612,8 @@ ______________________________________________________________________
 
 - [ ] All staging tests passing
 - [ ] Load testing: 25-concurrent successful
-- [ ] Latency: p95 \< 200ms validated
-- [ ] Error rate: \< 1% under load
+- [ ] Latency: p95 < 200ms validated
+- [ ] Error rate: < 1% under load
 - [ ] Monitoring: All dashboards healthy
 - [ ] Alerts: Tested and tuned
 - [ ] Rollback: Tested and documented

@@ -32,9 +32,9 @@ export const EXTERNAL_LINKS = {
 
 1. Go to [Google Forms](https://forms.google.com)
 
-1. Create a new form for feature requests
+2. Create a new form for feature requests
 
-1. Include fields like:
+3. Include fields like:
 
    - Name/Email (optional)
    - Feature category (Analysis, UI, Performance, etc.)
@@ -42,7 +42,7 @@ export const EXTERNAL_LINKS = {
    - Use case/priority
    - Additional comments
 
-1. Get the form URL:
+4. Get the form URL:
 
    - Click "Send" (top right)
    - Click the link icon (🔗)
@@ -90,8 +90,8 @@ import FeatureRequestButton from '../components/FeatureRequestButton'
 The feature request system is integrated into the `ResultsDisplay` component in a dedicated feedback section:
 
 1. **Coach Feedback Button**: Only shows when database is connected
-1. **Feature Request Button**: Always available, opens Google Forms
-1. **Report Issue Button**: Links to GitHub Issues
+2. **Feature Request Button**: Always available, opens Google Forms
+3. **Report Issue Button**: Links to GitHub Issues
 
 ## Analytics Tracking
 
@@ -112,8 +112,8 @@ To disable this, remove the analytics tracking from `FeatureRequestButton.tsx`.
 The buttons use inline styles for easy customization. You can modify the styles by:
 
 1. **Editing Component Styles**: Update `FeatureRequestButton.tsx`
-1. **Using CSS Classes**: Add custom CSS classes via the `className` prop
-1. **Theme Customization**: Modify colors in the component variants
+2. **Using CSS Classes**: Add custom CSS classes via the `className` prop
+3. **Theme Customization**: Modify colors in the component variants
 
 ## Button Variants
 
@@ -138,20 +138,20 @@ The buttons use inline styles for easy customization. You can modify the styles 
 ## Testing the Integration
 
 1. **Backend Running**: Ensure the backend is running
-1. **Database Status**: Test with database connected/disconnected
-1. **Button Functionality**: Verify buttons open correct URLs
-1. **Responsive Design**: Test on different screen sizes
+2. **Database Status**: Test with database connected/disconnected
+3. **Button Functionality**: Verify buttons open correct URLs
+4. **Responsive Design**: Test on different screen sizes
 
 ## Example User Flow
 
 1. User completes video analysis
-1. Results display with metrics
-1. User sees "Share Your Feedback" section
-1. Options based on database status:
+2. Results display with metrics
+3. User sees "Share Your Feedback" section
+4. Options based on database status:
    - **Database Connected**: Coach feedback + feature request + report issue
    - **Database Offline**: Feature request + report issue + status message
-1. Clicking feature request opens Google Forms in new tab
-1. User can submit feedback without interrupting their workflow
+5. Clicking feature request opens Google Forms in new tab
+6. User can submit feedback without interrupting their workflow
 
 ## Files Structure
 

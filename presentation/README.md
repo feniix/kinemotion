@@ -39,14 +39,14 @@ This presentation package contains everything you need to deliver a compelling t
    - Post-presentation follow-up
    - Success metrics tracking
 
-1. **`speaker_script.md`** (Full script)
+2. **`speaker_script.md`** (Full script)
 
    - Word-for-word speaker notes for each slide
    - Timing guidelines and transitions
    - Common Q&A responses prepared
    - Technical troubleshooting tips
 
-1. **`demos/`** (Live demo scripts)
+3. **`demos/`** (Live demo scripts)
 
    - `batch_processing_demo.py` - Parallel processing demonstration
    - `api_demo.ipynb` - Interactive Jupyter notebook for API demo
@@ -77,9 +77,9 @@ ______________________________________________________________________
 ### Key Messages
 
 1. Hobby project exploring computer vision and biomechanics
-1. Technical challenges and solutions in video analysis
-1. Open-source approach and community contributions
-1. Practical applications and future possibilities
+2. Technical challenges and solutions in video analysis
+3. Open-source approach and community contributions
+4. Practical applications and future possibilities
 
 ______________________________________________________________________
 
@@ -105,15 +105,15 @@ npx reveal-md slides.md
    npx reveal-md slides.md
    ```
 
-1. **Open presenter view**: Press `s` for speaker notes
+2. **Open presenter view**: Press `s` for speaker notes
 
-1. **Test demos**:
+3. **Test demos**:
 
    ```bash
    kinemotion --version
    ```
 
-1. **Check font sizes**:
+4. **Check font sizes**:
 
    - Terminal: 18pt minimum
    - IDE: 16pt minimum
@@ -217,10 +217,10 @@ ______________________________________________________________________
 ### Unique Value Propositions
 
 1. **Accessibility**: No expensive equipment needed
-1. **Automation**: No manual frame selection
-1. **Scalability**: Batch process hundreds of videos
-1. **Transparency**: Open-source, auditable code
-1. **Flexibility**: CLI and API interfaces
+2. **Automation**: No manual frame selection
+3. **Scalability**: Batch process hundreds of videos
+4. **Transparency**: Open-source, auditable code
+5. **Flexibility**: CLI and API interfaces
 
 ______________________________________________________________________
 
@@ -229,9 +229,9 @@ ______________________________________________________________________
 ### Progressive Complexity
 
 1. Start simple (single command)
-1. Show visual output (debug video)
-1. Demonstrate batch processing
-1. End with API integration
+2. Show visual output (debug video)
+3. Demonstrate batch processing
+4. End with API integration
 
 ### Engagement Techniques
 
@@ -245,9 +245,9 @@ ______________________________________________________________________
 If live demo fails:
 
 1. Switch to pre-recorded screen capture
-1. Show output files already generated
-1. Focus on explaining the process
-1. Offer post-presentation demo
+2. Show output files already generated
+3. Focus on explaining the process
+4. Offer post-presentation demo
 
 ______________________________________________________________________
 
@@ -324,10 +324,10 @@ ______________________________________________________________________
 ### Follow-up Actions
 
 1. Send thank-you email with resources
-1. Share presentation slides and recording
-1. Provide installation support
-1. Schedule one-on-one demos
-1. Create Slack/Teams channel for Q&A
+2. Share presentation slides and recording
+3. Provide installation support
+4. Schedule one-on-one demos
+5. Create Slack/Teams channel for Q&A
 
 ### Materials to Share
 

@@ -150,22 +150,22 @@ A comprehensive review of the Kinemotion project revealed significant inconsiste
 ### 🔴 Critical (Blocks Usage/Credibility)
 
 1. False accuracy claims (71%, 88%, 1.35x factor)
-1. Documented features that don't exist
-1. Arbitrary correction factors without validation
+2. Documented features that don't exist
+3. Arbitrary correction factors without validation
 
 ### 🟠 Major (Significant Problems)
 
 1. File location documentation errors
-1. Velocity calculation inconsistency
-1. Fully implemented features not exposed
-1. No integration testing
-1. Algorithmic inconsistencies
+2. Velocity calculation inconsistency
+3. Fully implemented features not exposed
+4. No integration testing
+5. Algorithmic inconsistencies
 
 ### 🟡 Minor (Quality Issues)
 
 1. Type annotation gaps
-1. Excessive type ignore usage
-1. Unclear architectural decisions
+2. Excessive type ignore usage
+3. Unclear architectural decisions
 
 ## Impact Analysis
 
@@ -192,9 +192,9 @@ A comprehensive review of the Kinemotion project revealed significant inconsiste
 ### Primary Causes
 
 1. **Evolution without refactoring**: Features added to core without CLI integration
-1. **Documentation drift**: Docs not updated as code changed
-1. **No validation culture**: Accuracy claims made without testing
-1. **Poor architectural planning**: No clear path from feature to user
+2. **Documentation drift**: Docs not updated as code changed
+3. **No validation culture**: Accuracy claims made without testing
+4. **Poor architectural planning**: No clear path from feature to user
 
 ### Contributing Factors
 
@@ -229,29 +229,29 @@ A comprehensive review of the Kinemotion project revealed significant inconsiste
 ### Immediate (Day 1)
 
 1. Remove or caveat all accuracy claims
-1. Fix file location documentation
-1. Add warning about unvalidated accuracy
+2. Fix file location documentation
+3. Add warning about unvalidated accuracy
 
 ### Short-term (Week 1)
 
 1. Connect CoM tracking to CLI
-1. Connect adaptive threshold to CLI
-1. Fix velocity calculation consistency
-1. Update all documentation
+2. Connect adaptive threshold to CLI
+3. Fix velocity calculation consistency
+4. Update all documentation
 
 ### Medium-term (Month 1)
 
 1. Conduct validation study
-1. Add integration tests
-1. Remove or justify correction factor
-1. Refactor feature architecture
+2. Add integration tests
+3. Remove or justify correction factor
+4. Refactor feature architecture
 
 ### Long-term (Quarter 1)
 
 1. Establish continuous documentation validation
-1. Create ground truth test dataset
-1. Implement proper accuracy benchmarking
-1. Redesign CLI/core integration
+2. Create ground truth test dataset
+3. Implement proper accuracy benchmarking
+4. Redesign CLI/core integration
 
 ## Conclusion
 

@@ -25,7 +25,7 @@ Article views: 55
 Full Terms & Conditions of access and use can be found at
 [http://www.tandfonline.com/action/journalInformation?journalCode=rjsp20](http://www.tandfonline.com/action/journalInformation?journalCode=rjsp20)
 
-**Download by:** \[University of Otago\] **Date:** 26 September 2015, At: 08:20
+**Download by:** [University of Otago] **Date:** 26 September 2015, At: 08:20
 
 JOURNAL OF SPORTS SCIENCES, 2015
 <http://dx.doi.org/10.1080/02640414.2015.1090010>
@@ -35,8 +35,8 @@ JOURNAL OF SPORTS SCIENCES, 2015
 Filipe Conceição a,b, Juvenal Fernandesa, Martin Lewisc, Juan José Gonzaléz-Badillod and Pedro Jimenéz-Reyese
 
 aFaculdade de Desporto, Universidade do Porto, Porto, Portugal; bLaboratório de Biomecânica, Universidade do Porto, Porto, Portugal; cCollege of
-Arts and Science, School of Science & Technology, Nottingham Trent University, Nottingham, UK; \[d\] Facultad del Deporte, Universidad Pablo de
-Olavide, Sevilla, Spain; \[e\] Faculty of Physical Sciences and Sport, Catholic University of San Antonio, Murcia, Spain
+Arts and Science, School of Science & Technology, Nottingham Trent University, Nottingham, UK; [d] Facultad del Deporte, Universidad Pablo de
+Olavide, Sevilla, Spain; [e] Faculty of Physical Sciences and Sport, Catholic University of San Antonio, Murcia, Spain
 
 ABSTRACT
 The purpose of this study was to investigate the relationship between movement velocity and relative
@@ -45,18 +45,18 @@ squat. The percentage of one repetition maximum (%1RM) has typically been used a
 parameter to control resistance training; however, more recent research has proposed movement
 velocity as an alternative. Fifteen participants performed a load progression with a range of loads
 until they reached their 1RM. Maximum instantaneous velocity (Vmax) and mean propulsive velocity
-(MPV) of the knee extension phase of each exercise were assessed. For all exercises, a strong relationship between Vmax and the %1RM was found: leg press (r \[2\] adj \[= 0.96; 95% CI for slope is \[\]\[−\]\[0.0244,\]
+(MPV) of the knee extension phase of each exercise were assessed. For all exercises, a strong relationship between Vmax and the %1RM was found: leg press (r [2] adj \[= 0.96; 95% CI for slope is [][−][0.0244,]
 
-−0.0258\], P \< 0.0001), full squat (r \[2\] adj \[= 0.94; 95% CI for slope is \[\]\[−\]\[0.0144,\]\[ −\]\[0.0139\],\]\[ P\]\[ \< 0.0001) and half\]
+−0.0258\], P < 0.0001), full squat (r [2] adj \[= 0.94; 95% CI for slope is [][−][0.0144,][ −][0.0139],\][ P][ < 0.0001) and half]
 
-squat (r \[2\] adj \[= 0.97; 95% CI for slope is \[\]\[−\]\[0.0135,\]\[ −\]\[0.00143\],\]\[ P\]\[ \< 0.0001); for MPV, leg press (\]\[r\]\[2\] adj \[= 0.96;\]
+squat (r [2] adj \[= 0.97; 95% CI for slope is [][−][0.0135,][ −][0.00143],\][ P][ < 0.0001); for MPV, leg press (][r][2] adj [= 0.96;]
 
-95% CI for slope is \[−0.0169, −0.0175\], P \< 0.0001, full squat (r \[2\] adj \[= 0.95; 95% CI for slope is \[\]\[−\]\[0.0136,\]
+95% CI for slope is [−0.0169, −0.0175], P < 0.0001, full squat (r [2] adj \[= 0.95; 95% CI for slope is [][−][0.0136,]
 
-−0.0128\], P \< 0.0001) and half squat (r \[2\] adj \[= 0.96; 95% CI for slope is \[\]\[−\]\[0.0116, 0.0124\],\]\[ P\]\[ \< 0.0001). The\]
+−0.0128\], P < 0.0001) and half squat (r [2] adj \[= 0.96; 95% CI for slope is [][−][0.0116, 0.0124],\][ P][ < 0.0001). The]
 
-1RM was attained with a MPV and Vmax of 0.21 ± 0.06 m s \[−\]\[1\] and 0.63 ± 0.15 m s \[−\]\[1\], 0.29 ± 0.05 m s \[−\]\[1\] and
-0.89 ± 0.17 m s \[−\]\[1\], 0.33 ± 0.05 m s \[−\]\[1\] and 0.95 ± 0.13 m s \[−\]\[1\] for leg press, full squat and half squat,
+1RM was attained with a MPV and Vmax of 0.21 ± 0.06 m s [−][1] and 0.63 ± 0.15 m s [−][1], 0.29 ± 0.05 m s [−][1] and
+0.89 ± 0.17 m s [−][1], 0.33 ± 0.05 m s [−][1] and 0.95 ± 0.13 m s [−][1] for leg press, full squat and half squat,
 respectively. Results indicate that it is possible to determine an exercise-specific %1RM by measuring
 movement velocity for that exercise.
 
@@ -269,13 +269,13 @@ six to eight load increments, starting from 20 kg in the half
 squat and full squat exercises (≈20% 1RM) and 60 kg in the leg
 press (≈30% 1RM). Similar to bench press studies, increments
 in each load were approximately 10% 1RM until reaching a
-mean propulsive velocity (MPV) of 0.5 m·s \[−\]\[1\] (Sanchez-Medina,
+mean propulsive velocity (MPV) of 0.5 m·s [−][1] (Sanchez-Medina,
 Perez, & Gonzalez-Badillo, 2010), followed by increments of 5
 to 1 kg until 1RM was achieved. For those loads moved at a
-MPV up to 1.15 m·s \[−\]\[1\], four repetitions were performed with a
+MPV up to 1.15 m·s [−][1], four repetitions were performed with a
 3- to 4-min rest interval; two repetitions for medium loads
-(0.5 m·s \[−\]\[1\] ≤ MPV ≤ 1.15 m·s \[−\]\[1\] ), with 5-min rest and one
-repetition (MPV \< 0.5 m·s \[−\]\[1\] ) for maximum loads and 6-min
+(0.5 m·s [−][1] ≤ MPV ≤ 1.15 m·s [−][1] ), with 5-min rest and one
+repetition (MPV < 0.5 m·s [−][1] ) for maximum loads and 6-min
 recovery. The right knee angle was measured to ensure consistent knee joint angles for each repetition in the load progression. Knee joint angle was defined as zero degrees when
 the leg was extended. The command provided by the
 researcher to the participant to initiate the knee extension
@@ -326,7 +326,7 @@ Microsoft software Corporation, Seattle, WA, USA). To examine
 any difference in the form of the relationship between MPV
 and %1RM and Vmax and %1RM data were plotted and fitted
 by first-order linear polynomials. The degree of linear correlation between movement velocity and the %1RM was examined using Pearson’s product moment correlation (r), R square
-(r \[2\] ) and R \[2\] adjusted (r \[2\] adj \[). The confidence interval (CI) was set\]
+(r [2] ) and R [2] adjusted (r [2] adj [). The confidence interval (CI) was set]
 
 at 95%. To test the gradients and intercepts of the regression
 equations, they were compared with Z-tests using Graphpad
@@ -347,30 +347,30 @@ The mean and SD of the best performances obtained were: leg
 press, 1RM = 235.2 ± 40.7 kg; full squat, 1RM = 124.2 ± 26.6 kg
 and half squat, 1RM = 145.0 ± 46.5 kg. For all exercises, a
 strong relationship between Vmax and the %1RM was found:
-leg press (r \[2\] adj \[= 0.96; 95% CI for slope is \[\]\[−\]\[0.0244,\]\[ −\]\[0.0258\],\]
+leg press (r [2] adj \[= 0.96; 95% CI for slope is [][−][0.0244,][ −][0.0258],\]
 
-P \< 0.0001), full squat (r \[2\] adj \[= 0.94; 95% CI for slope is \[\]\[−\]\[0.0144,\]
+P < 0.0001), full squat (r [2] adj \[= 0.94; 95% CI for slope is [][−][0.0144,]
 
-−0.0139\], P \< 0.0001) and half squat (r \[2\] adj \[= 0.97; 95% CI for\]
+−0.0139\], P < 0.0001) and half squat (r [2] adj [= 0.97; 95% CI for]
 
-slope is \[−0.0135, −0.00143\], P\< 0.0001), as shown in Figure 3.
+slope is [−0.0135, −0.00143], P< 0.0001), as shown in Figure 3.
 Similar results were observed in the MPV and the %1RM
-relationship: leg press (r \[2\] adj \[= 0.96; 95% CI for slope is\]
+relationship: leg press (r [2] adj [= 0.96; 95% CI for slope is]
 
-\[−0.0169, −0.0175\], P \< 0.0001), full squat (r \[2\] adj \[= 0.95; 95%\]
+[−0.0169, −0.0175], P < 0.0001), full squat (r [2] adj [= 0.95; 95%]
 
-CI for slope is \[−0.0136, −0.0128\], P \< 0.0001) and half squat
-(r \[2\] adj \[= 0.96; 95% CI for slope is \[\]\[−\]\[0.0116,\]\[ −\]\[0.0124\],\]\[ P\]\[ \< 0.0001),\]
+CI for slope is [−0.0136, −0.0128], P < 0.0001) and half squat
+(r [2] adj \[= 0.96; 95% CI for slope is [][−][0.0116,][ −][0.0124],\][ P][ < 0.0001),]
 
 as also shown in Figure 3.
 
-The 1RM was attained with an MPV of 0.21 ± 0.03 m·s \[−\]\[1\]
+The 1RM was attained with an MPV of 0.21 ± 0.03 m·s [−][1]
 
-for the leg press, 0.30 ± 0.04 m·s \[−\]\[1\] for the full squat and
-0.33 ± 0.03 m·s \[−\]\[1\] for the half squat. Concerning Vmax, the
+for the leg press, 0.30 ± 0.04 m·s [−][1] for the full squat and
+0.33 ± 0.03 m·s [−][1] for the half squat. Concerning Vmax, the
 1RM was achieved with a propulsive velocity of
-0.62 ± 0.13 m·s \[−\]\[1\] for the leg press, 0.91 ± 0.14 m·s \[−\]\[1\] for
-the full squat and 1.01 ± 0.07 m·s \[−\]\[1\] for the half squat
+0.62 ± 0.13 m·s [−][1] for the leg press, 0.91 ± 0.14 m·s [−][1] for
+the full squat and 1.01 ± 0.07 m·s [−][1] for the half squat
 (Table 1). The changes in the MPV at each 5% load increment in the leg press, full squat and half squat are shown in
 Table 2. Increments are fairly stable throughout the entire
 range of relative percentages which allowed a linear relationship to be defined between load intensity and movement velocity.
@@ -378,32 +378,32 @@ range of relative percentages which allowed a linear relationship to be defined 
 For all the exercises, the differences between the Vmax and
 %1RM gradients and the MPV and %1RM gradients were
 statistically significant as presented in Table 3 (leg press:
-P \< 0.0001, full squat: P = 0.006, half squat: P \< 0.0001).
+P < 0.0001, full squat: P = 0.006, half squat: P < 0.0001).
 
 After testing the slopes for the same exercise in pairs, we move
 on to test all the slopes of all the exercises. We found that the
 
-slopes were statistical different with P \< 0.001 except between
+slopes were statistical different with P < 0.001 except between
 Vmax half squat and Vmax full squat where P = 0.055 (Table 4).
 
 Regression equations can be derived to enable the calculation of the percentage 1RM being lifted based on the MPV of
 the movement. These equations are as follows:
 
-(a) Full squat, load = −71.684 × (MPV) + 121.03; r \[2\] adj \[= 0.95;\]
+(a) Full squat, load = −71.684 × (MPV) + 121.03; r [2] adj [= 0.95;]
 
-95% CI for slope is \[−69.41, −74,137\], P \< 0.001
+95% CI for slope is [−69.41, −74,137], P < 0.001
 
-(b) Half squat, load = −80.372 × (MPV) + 125.19; r \[2\] adj \[= 0.96;\]
+(b) Half squat, load = −80.372 × (MPV) + 125.19; r [2] adj [= 0.96;]
 
-95% CI for slope is \[−77.95, −82,289\], P \< 0.001
+95% CI for slope is [−77.95, −82,289], P < 0.001
 
-(c) Leg press, load = −55.509 × (MPV) + 109.29; r \[2\] adj \[= 0.96;\]
+(c) Leg press, load = −55.509 × (MPV) + 109.29; r [2] adj [= 0.96;]
 
-95% CI for slope is \[−53.883, −57.134\], P \< 0.001
+95% CI for slope is [−53.883, −57.134], P < 0.001
 
 Following a comparison of Vmax slopes for full squat and
 half squat, we investigated their intercepts, which revealed
-they were significantly different (P \< 0.0001). Differences
+they were significantly different (P < 0.0001). Differences
 
 –
 between the maximum velocity load relationship (gradient)
@@ -414,15 +414,15 @@ doing so a new common equation for both these exercises has
 been established (Figure 4).
 
 Full squat and half squat, load = −68.581 × (Vmax) + 2.512;
-r \[2\] \[−\]\[67.156,\]\[ −\]\[70.005\],\]\[ P\]\[ \< 0.001.\]
+r [2] [−][67.156,][ −][70.005],\][ P][ < 0.001.]
 
-(a) Full squat, load = −71.684 × (MPV) + 121.03; r \[2\]
+(a) Full squat, load = −71.684 × (MPV) + 121.03; r [2]
 
-(b) Half squat, load = −80.372 × (MPV) + 125.19; r \[2\]
+(b) Half squat, load = −80.372 × (MPV) + 125.19; r [2]
 
-(c) Leg press, load = −55.509 × (MPV) + 109.29; r \[2\]
+(c) Leg press, load = −55.509 × (MPV) + 109.29; r [2]
 
-adj \[= 0.96; 95% CI for slope is \[\]\[−\]\[67.156,\]\[ −\]\[70.005\],\]\[ P\]\[ \< 0.001.\]
+adj \[= 0.96; 95% CI for slope is [][−][67.156,][ −][70.005],\][ P][ < 0.001.]
 
 Discussion
 
@@ -443,7 +443,7 @@ Figure 3. Measurement of relative load and Vmax (round dots), relative load and 
 Table 1. Maximum instantaneous velocity and mean propulsive velocity when
 the 1RM is attained during each of the exercises (mean ±SD).
 
-Exercise Maximum velocity (m·s \[−\]\[1\] ) Mean propulsive velocity (m·s \[−\]\[1\] )
+Exercise Maximum velocity (m·s [−][1] ) Mean propulsive velocity (m·s [−][1] )
 
 Full squat 0.91 ± 0.14 0.30 ± 0.04
 Half squat 1.01 ± 0.07 0.33 ± 0.04
@@ -460,7 +460,7 @@ Sánchez-Medina & González-Badillo, 2011). Maximum velocity
 lifts have been proposed to: (i) increase motivation (Hasegawa,
 2010), (ii) maintain the intended movement velocity to
 
-Table 2. Predicted mean propulsive velocity (m·s \[−\]\[1\] ) for the leg press, squat and
+Table 2. Predicted mean propulsive velocity (m·s [−][1] ) for the leg press, squat and
 half squat at each intensity (%1RM).
 
 Load (% 1 RM) Leg press Squat Half squat
@@ -513,8 +513,8 @@ Table 3. Comparison between the slopes of Vmax, to %1RM versus MPV, to %
 Variable 1 Variable 2 Slope comparison
 
 Vmax – % 1RM of full squat MPV – % 1RM of full squat P = 0.0067
-Vmax – % 1RM of half squat MPV – % 1RM of half squat P \< 0.0001
-Vmax – % 1RM of leg press MPV – % 1RM of leg press P \< 0.0001
+Vmax – % 1RM of half squat MPV – % 1RM of half squat P < 0.0001
+Vmax – % 1RM of leg press MPV – % 1RM of leg press P < 0.0001
 
 Table 4. Comparison between the slopes of the relationship movement velocity
 versus relative load, for the Vmax in the full squat, half squat and leg press for
@@ -523,12 +523,12 @@ the MPV in the full squat, half squat and leg press.
 Relationship slope Relationship slope Slope comparison
 
 a. Vmax full squat Vmax half squat P = 0.0552
-Vmax full squat Vmax leg press P \< 0.0001
-Vmax half squat Vmax leg press P \< 0.0001
+Vmax full squat Vmax leg press P < 0.0001
+Vmax half squat Vmax leg press P < 0.0001
 
-b. MPV full squat MPV half squat P \< 0.0001
-MPV full squat MPV leg press P \< 0.0001
-MPV half squat MPV leg press P \< 0.0001
+b. MPV full squat MPV half squat P < 0.0001
+MPV full squat MPV leg press P < 0.0001
+MPV half squat MPV leg press P < 0.0001
 
 more effective for advanced training than traditional slow velocities performed with moderately high loads (Jones, Hunter,
 Fleisig, Escamilla, & Lemak, 1999; Kraemer & Ratamess, 2004),
@@ -581,9 +581,9 @@ using its own equation.
 
 A strong relationship was found between MPV and load for
 the leg press, full squat and half squat which can be seen in
-Figure 3, with r \[2\] adj \[values of 0.96, 0.95 and 0.96, respectively.\]
+Figure 3, with r [2] adj [values of 0.96, 0.95 and 0.96, respectively.]
 
-Previous investigations conducted for the bench press exercise also revealed a close relationship (r \[2\] = 0.98) between
+Previous investigations conducted for the bench press exercise also revealed a close relationship (r [2] = 0.98) between
 relative load (%1RM) and movement velocity (GonzálezBadillo & Sánchez-Medina, 2010). This strong relationship can
 be used to predict or adjust the 1RM value during a training
 session simply by measuring the execution velocity. Note that
@@ -594,7 +594,7 @@ Figure 4. Common predictive equation for relative load and Vmax for combined squ
 
 propulsive velocity difference between 5% load increments
 from 30% to 100% of 1RM for leg press, squat and half squat
-were 0.087, 0.066 and 0.06 m·s \[−\]\[1\], respectively (Table 2). As
+were 0.087, 0.066 and 0.06 m·s [−][1], respectively (Table 2). As
 noted by González-Badillo and Sánchez-Medina (2010), when
 a participant increases their MPV by an increment as shown
 above, then this might be used to establish a 5% increase in

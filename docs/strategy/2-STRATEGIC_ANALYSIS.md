@@ -75,8 +75,8 @@ The sports analytics market is experiencing explosive growth:
 **Transform Kinemotion from a specialized jump analysis tool into a comprehensive athletic performance platform** by:
 
 1. **Immediate Priority:** Resolve documented biomechanics issue (ankle angle calculation) to establish credibility
-1. **Near-Term (2-3 months):** Add real-time capability + running gait analysis → prove multi-sport extensibility
-1. **Platform Expansion (6 months):** Build ecosystem APIs, add 2-3 more sports, establish subscription revenue model
+2. **Near-Term (2-3 months):** Add real-time capability + running gait analysis → prove multi-sport extensibility
+3. **Platform Expansion (6 months):** Build ecosystem APIs, add 2-3 more sports, establish subscription revenue model
 
 **Expected Outcome:** By Month 6, position Kinemotion as the "accurate, extensible, developer-friendly" alternative to expensive proprietary systems.
 
@@ -465,8 +465,8 @@ ______________________________________________________________________
 **Integration Targets:**
 
 1. Coaching Apps: Vimeo Coach, Synq, Catalyst
-1. Wearables: Oura, Whoop, Apple Health
-1. Team Management: TeamSnap, Hudl, Catapult
+2. Wearables: Oura, Whoop, Apple Health
+3. Team Management: TeamSnap, Hudl, Catapult
 
 **Recommended Agent:** Technical Writer + Python Backend Developer
 
@@ -670,23 +670,23 @@ ______________________________________________________________________
 ### This Week
 
 1. Review & stakeholder sign-off
-1. Task 1 owner assignment (ankle fix)
-1. Task 5 owner assignment (API docs)
-1. Resource planning confirmation
+2. Task 1 owner assignment (ankle fix)
+3. Task 5 owner assignment (API docs)
+4. Resource planning confirmation
 
 ### Next Week
 
 1. Task 1 complete (ankle fix deployed)
-1. Task 2 start (CMJ tests)
-1. Task 3 architecture finalized
-1. Task 5 progress on OpenAPI spec
+2. Task 2 start (CMJ tests)
+3. Task 3 architecture finalized
+4. Task 5 progress on OpenAPI spec
 
 ### Within 2 Weeks
 
 1. Tasks 1-2 complete (foundation ready)
-1. Task 3 actively developed (real-time)
-1. Task 5 on track (API examples)
-1. Sprint 2 planning (weeks 4-5)
+2. Task 3 actively developed (real-time)
+3. Task 5 on track (API examples)
+4. Sprint 2 planning (weeks 4-5)
 
 ______________________________________________________________________
 

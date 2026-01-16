@@ -33,12 +33,12 @@ The proposed roadmap (real-time WebSocket analysis, multi-sport support, ecosyst
    - Consolidate api.py (eliminate 40% duplication)
    - **Payoff:** Unblocks real-time, running, APIs without quality regression
 
-1. **BEFORE Task 4:** Extract phase detection abstraction
+2. **BEFORE Task 4:** Extract phase detection abstraction
 
    - Running gait will add new PhaseDetector implementation
    - Prevents duplication spike (2.96% → 5.5%)
 
-1. **PARALLEL with Task 3:** Design API surface (OpenAPI spec, webhooks)
+3. **PARALLEL with Task 3:** Design API surface (OpenAPI spec, webhooks)
 
    - Sport-agnostic endpoints (sport_type parameter, not path)
    - Standardized webhook events
@@ -130,17 +130,17 @@ Data Tier
    - Solution: Frame batching OR separate inference tier
    - Optimization: TensorRT (3-5x faster), Lite model (2x faster)
 
-1. **MEMORY (prevents scaling beyond 20-30 concurrent)**
+2. **MEMORY (prevents scaling beyond 20-30 concurrent)**
 
    - Per connection: ~80MB (frame buffer + poses)
    - Solution: Ring buffers (fixed size), stream to database
 
-1. **NETWORK (10-50ms, depends on bandwidth)**
+3. **NETWORK (10-50ms, depends on bandwidth)**
 
    - Per stream: 4-8 Mbps uncompressed
    - Solution: H.264 compression (25x reduction)
 
-1. **STATE MANAGEMENT (operational at scale)**
+4. **STATE MANAGEMENT (operational at scale)**
 
    - 100 in-memory dicts = slow lookups
    - Solution: Redis (fast, distributed)
@@ -365,13 +365,13 @@ POST /api/v1/webhooks/register
    - Post to Vimeo Coach athlete dashboard
    - Store metrics + trends
 
-1. **Wearable Sync (Oura + Kinemotion)**
+2. **Wearable Sync (Oura + Kinemotion)**
 
    - Combine jump metrics with recovery data
    - Correlate performance with HRV
    - Coaching recommendations
 
-1. **Team Dashboard (TeamSnap Integration)**
+3. **Team Dashboard (TeamSnap Integration)**
 
    - Batch analyze team roster
    - Compare athlete metrics
@@ -479,30 +479,30 @@ ______________________________________________________________________
 ### Key Takeaways
 
 1. **WebSocket + FastAPI:** Production-ready for real-time (\<200ms latency)
-1. **Refactoring First:** 5-6 days upfront saves 2-3 weeks downstream and maintains code quality
-1. **Phase Detection Abstraction:** Enables multi-sport without duplication
-1. **Scaling Strategy:** MVP single-server (5-10 concurrent), grow incrementally to 100+
-1. **Code Quality:** Must enforce \<3% duplication discipline before Task 4
+2. **Refactoring First:** 5-6 days upfront saves 2-3 weeks downstream and maintains code quality
+3. **Phase Detection Abstraction:** Enables multi-sport without duplication
+4. **Scaling Strategy:** MVP single-server (5-10 concurrent), grow incrementally to 100+
+5. **Code Quality:** Must enforce \<3% duplication discipline before Task 4
 
 ### Recommended Next Steps
 
 **THIS WEEK:**
 
 1. Stakeholder sign-off on refactoring plan
-1. Reserve 5-6 days for refactoring sprint
-1. Start performance profiling infrastructure
+2. Reserve 5-6 days for refactoring sprint
+3. Start performance profiling infrastructure
 
 **WEEK 1:**
 
 1. Execute critical refactorings (Days 1-2)
-1. Performance validation (Day 3)
-1. API design finalization (parallel)
+2. Performance validation (Day 3)
+3. API design finalization (parallel)
 
 **BEFORE TASK 3:**
 
 1. All refactorings complete
-1. WebSocket infrastructure ready
-1. Real-time demo working
+2. WebSocket infrastructure ready
+3. Real-time demo working
 
 ______________________________________________________________________
 

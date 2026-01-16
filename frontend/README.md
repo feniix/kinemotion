@@ -122,8 +122,8 @@ Or connect your GitHub repository to Vercel for automatic deployments.
 **Environment Variables on Vercel:**
 
 1. Go to Project Settings > Environment Variables
-1. Add `VITE_API_URL` with your production backend URL
-1. Redeploy
+2. Add `VITE_API_URL` with your production backend URL
+3. Redeploy
 
 ### Manual Build
 

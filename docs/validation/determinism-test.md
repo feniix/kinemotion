@@ -29,7 +29,7 @@ ______________________________________________________________________
    - Create 100 symlinks to same video
    - Process all with batch mode (4 workers)
 
-1. **Process videos**
+2. **Process videos**
 
    ```bash
    kinemotion cmj-analyze data/determinism_test/videos/*.mp4 \
@@ -39,13 +39,13 @@ ______________________________________________________________________
        --quality balanced
    ```
 
-1. **Compare results**
+3. **Compare results**
 
    - Load all 100 JSON outputs
    - Compare to baseline (first result)
    - Check for any differences
 
-1. **Analyze variance**
+4. **Analyze variance**
 
    - Calculate std, range for key metrics
    - Identify any non-deterministic behavior
@@ -54,7 +54,7 @@ ______________________________________________________________________
 ### Success Criteria
 
 - **PASS:** All 100 runs produce byte-identical JSON output
-- **ACCEPTABLE:** Differences only in floating point precision (\< 1e-10)
+- **ACCEPTABLE:** Differences only in floating point precision (< 1e-10)
 - **FAIL:** Any metric shows variance > 1e-6
 
 ______________________________________________________________________
@@ -173,7 +173,7 @@ ______________________________________________________________________
    - Shows exactly which fields have variance
    - Helps narrow down the problem
 
-1. **Check for random seeds**
+2. **Check for random seeds**
 
    ```bash
    grep -r "random\|shuffle" src/kinemotion/
@@ -181,7 +181,7 @@ ______________________________________________________________________
 
    - Look for unseeded random operations
 
-1. **Check for timestamps in calculations**
+3. **Check for timestamps in calculations**
 
    ```bash
    grep -r "time\.time()\|datetime\.now()" src/kinemotion/
@@ -190,7 +190,7 @@ ______________________________________________________________________
    - Timestamps should only be in metadata
    - Not in measurement calculations
 
-1. **Check MediaPipe version**
+4. **Check MediaPipe version**
 
    ```bash
    uv run python -c "import mediapipe; print(mediapipe.__version__)"
@@ -198,7 +198,7 @@ ______________________________________________________________________
 
    - Ensure consistent MediaPipe version
 
-1. **Test sequentially** (remove parallelism variable)
+5. **Test sequentially** (remove parallelism variable)
 
    ```bash
    # Run 10 times sequentially
@@ -221,7 +221,7 @@ ______________________________________________________________________
 
 ### Issue: Small floating point differences
 
-- **Acceptable** if std \< 1e-10
+- **Acceptable** if std < 1e-10
 - **Cause:** Floating point arithmetic order
 - **Fix:** Not needed, this is normal
 
@@ -279,18 +279,18 @@ With determinism confirmed, you can:
    - ICC calculations valid
    - Comparison studies reliable
 
-1. **Make scientific claims**
+2. **Make scientific claims**
 
    - "Algorithm proven deterministic (100/100 runs)"
    - Shows rigorous testing
    - Professional credibility
 
-1. **Debug with confidence**
+3. **Debug with confidence**
 
    - If results differ → real problem, not random noise
    - Can reproduce any issue reliably
 
-1. **Trust the tool**
+4. **Trust the tool**
 
    - Results are stable
    - Not dependent on system state

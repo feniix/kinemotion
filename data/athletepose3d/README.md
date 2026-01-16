@@ -10,9 +10,9 @@ Before downloading, you must read and accept the **AthletePose3D Non-Commercial 
 ## Download Instructions
 
 1. **Accept License:** Visit the [License Page](https://github.com/calvinyeungck/AthletePose3D/blob/main/license/README.md).
-1. **Download Link:** [Google Drive - AthletePose3D Dataset](https://drive.google.com/drive/folders/10YnMJAluiscnLkrdiluIeehNetdry5Ft?usp=sharing)
-1. **Priority Subset:** Download the **Figure Skating** subset (recommended priority for jump analysis).
-1. **Extract:** Place raw `.mp4/.mov` files in `videos/` and `.pkl/.npy` ground truth in `ground_truth/`.
+2. **Download Link:** [Google Drive - AthletePose3D Dataset](https://drive.google.com/drive/folders/10YnMJAluiscnLkrdiluIeehNetdry5Ft?usp=sharing)
+3. **Priority Subset:** Download the **Figure Skating** subset (recommended priority for jump analysis).
+4. **Extract:** Place raw `.mp4/.mov` files in `videos/` and `.pkl/.npy` ground truth in `ground_truth/`.
 
 ## Directory Structure
 
@@ -35,13 +35,13 @@ Once you have downloaded the data:
    python scripts/ap3d/prepare_ap3d_data.py
    ```
 
-1. **Run baseline validation:**
+2. **Run baseline validation:**
 
    ```bash
    python scripts/ap3d/validate_baseline.py
    ```
 
-1. **Review the report:**
+3. **Review the report:**
    Check `reports/ap3d_baseline_validation.md` for results.
 
 ## Citation

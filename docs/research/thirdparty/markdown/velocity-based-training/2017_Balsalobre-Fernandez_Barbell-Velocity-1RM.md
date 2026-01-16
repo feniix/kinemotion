@@ -23,17 +23,17 @@ Published online: 24 Nov 2016.
 Full Terms & Conditions of access and use can be found at
 [http://www.tandfonline.com/action/journalInformation?journalCode=rjsp20](http://www.tandfonline.com/action/journalInformation?journalCode=rjsp20)
 
-**Download by:** \[Athabasca University\] **Date:** 24 November 2016, At: 10:43
+**Download by:** [Athabasca University] **Date:** 24 November 2016, At: 10:43
 
 JOURNAL OF SPORTS SCIENCES, 2016
 <http://dx.doi.org/10.1080/02640414.2016.1260152>
 
 ### Validity and reliability of a low-cost digital dynamometer for measuring isometric strength of lower limb
 
-Natalia Romero-Franco \[a\], Pedro Jiménez-Reyes \[b\] and Juan A. Montaño-Munuera \[c\]
+Natalia Romero-Franco [a], Pedro Jiménez-Reyes [b] and Juan A. Montaño-Munuera [c]
 
 aNursery and Physiotherapy department, University of the Balearic Islands, Palma de Mallorca, Spain; bSports Science department, Catholic
-University of San Antonio of Murcia, Murcia, Spain; \[c\] Physiotherapy department, Catholic University of San Antonio of Murcia, Murcia, Spain
+University of San Antonio of Murcia, Murcia, Spain; [c] Physiotherapy department, Catholic University of San Antonio of Murcia, Murcia, Spain
 
 ABSTRACT
 Lower limb isometric strength is a key parameter to monitor the training process or recognise muscle
@@ -141,7 +141,7 @@ The protocol for measuring the maximal isometric strength in
 every lower limb movements was strictly identical for the 3
 sessions, although the testing order was always randomised
 (Figure 1). After a full explanation of experimental procedures,
-participants carried out 5 min of jogging (8 km · h \[−\]\[1\] ) as warmup prior to the isometric strength measurements. Then, the
+participants carried out 5 min of jogging (8 km · h [−][1] ) as warmup prior to the isometric strength measurements. Then, the
 body region of the subject that was going to be tested was
 fixed to the low-cost digital dynamometer with a belt and
 strap, and a little pillow between the strap and the body
@@ -215,7 +215,7 @@ almost perfect (0.81 1.00), substancial (0.61 0.80), moderate
 Data were analysed using SPSS for Windows, version 19
 (SPSS, Inc., Chicago, USA). Significance was determined at
 
-P \< 0.05.
+P < 0.05.
 
 Results
 
@@ -226,21 +226,21 @@ isokinetic dynamometer and the low-cost digital dynamometer in the main movement
 
 An almost perfect correlation between the low-cost dynamometer and the isokinetic dynamometer for the measurement
 of strength was observed for all lower limb movements
-(r > 0.941, SEE \< 1.04 P \< 0.001) (Figure 2).
+(r > 0.941, SEE < 1.04 P < 0.001) (Figure 2).
 
 Also, an almost perfect agreement between the values of
 strength obtained with both the low-cost dynamometer and
 the isokinetic dynamometer was observed as revealed by the
-ICC for all the lower limb movements (ICC > 0.9, P \< 0.001) and
+ICC for all the lower limb movements (ICC > 0.9, P < 0.001) and
 Bland–Altman plots (Figure 3). No statistically significant differences between the 2 instruments on the measurement of
 
 Table 1. Concurrent validity of isokinetic dynamometer and the low-cost digital dynamometer for isometric strength estimation.
 
 Strength values Isokinetic Low-cost
-(N) \[b\] dynamom \[a\] dynamom \[a\] SEE
+(N) [b] dynamom [a] dynamom [a] SEE
 
 Strength values Isokinetic Low-cost r ICC
-(N) \[b\] dynamom \[a\] dynamom \[a\] SEE (95% CI) (95% CI)
+(N) [b] dynamom [a] dynamom [a] SEE (95% CI) (95% CI)
 
 Ankle flexion 2.8 ± 1.1 2.8 ± 1.2 1.00 0.994 (0.984–1.000)*0.993 (0.976–9.98)*
 Ankle extension 1.9 ± 0.6 1.8 ± 0.6 1.00 0.996 (0.987–0.999)*0.995 (0.980–0.999)*
@@ -258,7 +258,7 @@ r
 (95% CI)
 
 CI: confidence interval; ICC: intra-class correlation; N: Newton; r: Pearson correlation; SEE: standard error of the estimate.
-\*P \< 0.001.
+\*P < 0.001.
 avalues given as mean ± standard deviation.
 bvalues normalised to body mass (kg).
 
@@ -275,9 +275,9 @@ Table 2 shows the isometric strength values reported by the lowcost digital dyna
 
 reliability of the method using the digital dynamometer to assess
 the isometric strength of the main lower limb movement was
-almost perfect for all movements (ICC > 0.88; SEM \< 16.3;
-P \< 0.001). Similar results were found for the inter-tester reliability, that was almost perfect for all the lower limb movements
-(ICC > 0.83, SEM \< 11.9, P ≤ 0.002), except for hip abduction, that
+almost perfect for all movements (ICC > 0.88; SEM < 16.3;
+P < 0.001). Similar results were found for the inter-tester reliability, that was almost perfect for all the lower limb movements
+(ICC > 0.83, SEM < 11.9, P ≤ 0.002), except for hip abduction, that
 was substantial (ICC = 0.764, SEM = 7.39, P = 0.008).
 
 Table 2. Reliability measures for the digital dynamometer.
@@ -287,13 +287,13 @@ JOURNAL OF SPORTS SCIENCES 5
 Intra-tester reliability Inter-tester reliability
 
 Strength values Session 1
-(N) \[b\] (T1) \[a\]
+(N) [b] (T1) [a]
 
 Session 3
-(T1ʹ) \[a\] (T2) \[a\]
+(T1ʹ) [a] (T2) [a]
 
 Strength values Session 1 Session 2 Session 3 ICC ICC
-(N) \[b\] (T1) \[a\] (T1ʹ) \[a\] (T2) \[a\] (95% CI) SEM (95% CI) SEM
+(N) [b] (T1) [a] (T1ʹ) [a] (T2) [a] (95% CI) SEM (95% CI) SEM
 
 Ankle flexion 2.8 ± 1.2 2.8 ± 1.2 2.6 ± 1.2 0.970 (0.894–0.992)*7.2 0.994 (0.972–0.999)* 3.9
 Ankle extension 1.8 ± 0.6 1.8 ± 0.5 1.6 ± 0.5 0.886 (0.633–0.968)*11.2 0.878 (0.510–0.974)* 11.9
@@ -307,13 +307,13 @@ Hip int. rotation 1.5 ± 0.3 1.5 ± 0.3 1.4 ± 0.4 0.892 (0.649–0.970)*9.7 0.8
 Hip ext. rotation 1.4 ± 0.3 1.4 ± 0.3 1.3 ± 0.3 0.974 (0.906–0.993)*4.8 0.865 (0.470–0.971)* 8.6
 
 Session 2
-(T1) \[a\] (T1ʹ) \[a\]
+(T1) [a] (T1ʹ) [a]
 
 ICC
-(T2) \[a\] (95% CI) SEM
+(T2) [a] (95% CI) SEM
 
 Ext.: external; Int.: internal; N: Newton; SEM: standard error of the measurement; T1: tester 1, first session; T1’: tester 1, second session; T2: tester 2.
-\*P \< 0.001.
+\*P < 0.001.
 avalues given as mean ± standard deviation.
 bvalues normalised to body mass (kg).
 

@@ -92,9 +92,9 @@ This documentation follows a structured organization:
 Start here:
 
 1. **[Coach Quick Start Guide](guides/coach-quick-start.md)** - **START HERE** - Analyze jumps in 3 easy steps
-1. [Camera Setup Guide](guides/camera-setup.md) - Critical first step
-1. [CMJ Guide](guides/cmj-guide.md) - Understanding CMJ analysis
-1. [Parameters Reference](reference/parameters.md) - Adjusting analysis settings
+2. [Camera Setup Guide](guides/camera-setup.md) - Critical first step
+3. [CMJ Guide](guides/cmj-guide.md) - Understanding CMJ analysis
+4. [Parameters Reference](reference/parameters.md) - Adjusting analysis settings
 
 ### For Researchers
 
@@ -102,18 +102,18 @@ Start here:
 
 1. [**Validation Status**](validation-status.md) - **READ FIRST** - Limitations and appropriate use
 
-1. [Sports Biomechanics Pose Estimation](research/sports-biomechanics-pose-estimation.md) - Research analysis
+2. [Sports Biomechanics Pose Estimation](research/sports-biomechanics-pose-estimation.md) - Research analysis
 
-1. [Pose Systems Quick Reference](reference/pose-systems.md) - System comparisons
+3. [Pose Systems Quick Reference](reference/pose-systems.md) - System comparisons
 
-1. [Validation Roadmap](development/validation-roadmap.md) - Planned validation activities
+4. [Validation Roadmap](development/validation-roadmap.md) - Planned validation activities
 
 ### For Developers
 
 1. [Triple Extension](technical/triple-extension.md) - Biomechanics implementation
-1. [IMU Metadata](technical/imu-metadata.md) - Video processing details
-1. [Validation Plan](development/validation-plan.md) - Testing strategy
-1. Main [CLAUDE.md](../CLAUDE.md) - Complete project documentation
+2. [IMU Metadata](technical/imu-metadata.md) - Video processing details
+3. [Validation Plan](development/validation-plan.md) - Testing strategy
+4. Main [CLAUDE.md](../CLAUDE.md) - Complete project documentation
 
 ______________________________________________________________________
 

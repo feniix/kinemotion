@@ -13,7 +13,7 @@ Validating a monocular (single-camera) pose estimation system against a 3D gold-
 In monocular video, the same movement (e.g., a 50cm jump) results in different pixel displacements depending on:
 
 1. **Camera Distance:** An athlete further away produces fewer pixels per cm.
-1. **Resolution:** 1080p vs. 4K changes the pixel count for the same physical movement.
+2. **Resolution:** 1080p vs. 4K changes the pixel count for the same physical movement.
 
 ### Methodology: Procrustes Alignment
 
@@ -21,8 +21,8 @@ To compare MediaPipe landmarks (normalized `[0, 1]` or pixel coordinates) with A
 
 - **Process:**
   1. **Translation:** Center both point clouds (MediaPipe and Ground Truth) at the same origin (e.g., the midpoint of the hips).
-  1. **Scaling:** Calculate a global scaling factor based on stable anatomical anchors (e.g., torso length or hip width) averaged over the entire sequence.
-  1. **Rotation:** Apply a rotation matrix to align the orientations of the two models.
+  2. **Scaling:** Calculate a global scaling factor based on stable anatomical anchors (e.g., torso length or hip width) averaged over the entire sequence.
+  3. **Rotation:** Apply a rotation matrix to align the orientations of the two models.
 - **Result:** This yields a unit-invariant **MPJPE (Mean Per Joint Position Error)** that tells us how many physical millimeters the system is off by, regardless of camera placement.
 
 ### Implementation Difficulty: Medium

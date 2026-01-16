@@ -11,34 +11,34 @@ ______________________________________________________________________
 ### 👔 For Executives & Decision-Makers (10 min)
 
 1. **Start here:** [1-STRATEGIC_SUMMARY.md](./1-STRATEGIC_SUMMARY.md) - 5-minute overview
-1. **Then read:** [CONSOLIDATED/01-agent-consensus.md](./agent-assessments/CONSOLIDATED/01-agent-consensus.md) - What all experts agreed on
-1. **Then decide:** [CONSOLIDATED/04-decision-points.md](./agent-assessments/CONSOLIDATED/04-decision-points.md) - 3 critical decisions needed this week
+2. **Then read:** [CONSOLIDATED/01-agent-consensus.md](./agent-assessments/CONSOLIDATED/01-agent-consensus.md) - What all experts agreed on
+3. **Then decide:** [CONSOLIDATED/04-decision-points.md](./agent-assessments/CONSOLIDATED/04-decision-points.md) - 3 critical decisions needed this week
 
 ### 🏗️ For Architects & Technical Leadership (45 min)
 
 1. **Start here:** [2-STRATEGIC_ANALYSIS.md](./2-STRATEGIC_ANALYSIS.md) - Full strategic analysis
-1. **Review:** [CONSOLIDATED/02-critical-findings.md](./agent-assessments/CONSOLIDATED/02-critical-findings.md) - Top risks and gaps
-1. **Deep dive:** Select agent assessments below by area
-1. **Action:** [CONSOLIDATED/05-next-steps.md](./agent-assessments/CONSOLIDATED/05-next-steps.md) - This week's actions
+2. **Review:** [CONSOLIDATED/02-critical-findings.md](./agent-assessments/CONSOLIDATED/02-critical-findings.md) - Top risks and gaps
+3. **Deep dive:** Select agent assessments below by area
+4. **Action:** [CONSOLIDATED/05-next-steps.md](./agent-assessments/CONSOLIDATED/05-next-steps.md) - This week's actions
 
 ### 👨‍💻 For Development Teams (1-2 hours)
 
 1. **Start here:** [CONSOLIDATED/03-roadmap-adjustments.md](./agent-assessments/CONSOLIDATED/03-roadmap-adjustments.md) - What's changing from original plan
-1. **Your role:** Find your expert agent folder below
-1. **Action:** Read 01-executive-summary.md + 03-reference/checklist for your domain
-1. **Timeline:** [CONSOLIDATED/timeline-roadmap.md](./agent-assessments/CONSOLIDATED/timeline-roadmap.md) - When each task starts
+2. **Your role:** Find your expert agent folder below
+3. **Action:** Read 01-executive-summary.md + 03-reference/checklist for your domain
+4. **Timeline:** [CONSOLIDATED/timeline-roadmap.md](./agent-assessments/CONSOLIDATED/timeline-roadmap.md) - When each task starts
 
 ### 📊 For Risk Management (30 min)
 
 1. **Risk analysis:** [CONSOLIDATED/risk-register.md](./agent-assessments/CONSOLIDATED/risk-register.md) - All risks ranked by probability × impact
-1. **Mitigation strategies:** Each agent assessment includes risk section
-1. **Timeline:** [CONSOLIDATED/timeline-roadmap.md](./agent-assessments/CONSOLIDATED/timeline-roadmap.md) - When risks surface
+2. **Mitigation strategies:** Each agent assessment includes risk section
+3. **Timeline:** [CONSOLIDATED/timeline-roadmap.md](./agent-assessments/CONSOLIDATED/timeline-roadmap.md) - When risks surface
 
 ### 🎯 For Resource Planning (20 min)
 
 1. **Resource needs:** [CONSOLIDATED/04-decision-points.md](./agent-assessments/CONSOLIDATED/04-decision-points.md) - Who's needed when
-1. **Dependencies:** [CONSOLIDATED/decision-matrix.md](./agent-assessments/CONSOLIDATED/decision-matrix.md) - Task dependencies
-1. **Bottlenecks:** Look for 🔴 RED items in agent assessments
+2. **Dependencies:** [CONSOLIDATED/decision-matrix.md](./agent-assessments/CONSOLIDATED/decision-matrix.md) - Task dependencies
+3. **Bottlenecks:** Look for 🔴 RED items in agent assessments
 
 ______________________________________________________________________
 
@@ -183,10 +183,10 @@ ______________________________________________________________________
 **By Friday:**
 
 1. [ ] Stakeholder review of [1-STRATEGIC_SUMMARY.md](./1-STRATEGIC_SUMMARY.md)
-1. [ ] Leadership decision on [04-decision-points.md](./agent-assessments/CONSOLIDATED/04-decision-points.md)
-1. [ ] Assign Task 1 owner (ankle fix - 2-3 days)
-1. [ ] Assign Task 5 owner (API docs - 2 weeks)
-1. [ ] Secure DevOps engineer (60% FTE, 6 weeks)
+2. [ ] Leadership decision on [04-decision-points.md](./agent-assessments/CONSOLIDATED/04-decision-points.md)
+3. [ ] Assign Task 1 owner (ankle fix - 2-3 days)
+4. [ ] Assign Task 5 owner (API docs - 2 weeks)
+5. [ ] Secure DevOps engineer (60% FTE, 6 weeks)
 
 **Rationale:** Tasks 1 & 5 have no blockers; infrastructure decisions gate Task 3
 

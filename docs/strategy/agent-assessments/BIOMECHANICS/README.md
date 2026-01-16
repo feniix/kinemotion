@@ -23,8 +23,8 @@ ______________________________________________________________________
 **Critical Actions:**
 
 1. Validate foot_index visibility (2 hours in Task 1)
-1. Plan validation study for Month 3-4
-1. Accept recreational running scope in marketing
+2. Plan validation study for Month 3-4
+3. Accept recreational running scope in marketing
 
 ______________________________________________________________________
 

@@ -593,9 +593,9 @@ The debug video includes:
 **Solutions**:
 
 1. **Check video quality**: Ensure the athlete is clearly visible in profile view
-1. **Increase smoothing**: Use `--smoothing-window 7` or higher
-1. **Adjust detection confidence**: Try `--detection-confidence 0.6` or `--tracking-confidence 0.6`
-1. **Generate debug video**: Use `--output` to visualize what's being tracked
+2. **Increase smoothing**: Use `--smoothing-window 7` or higher
+3. **Adjust detection confidence**: Try `--detection-confidence 0.6` or `--tracking-confidence 0.6`
+4. **Generate debug video**: Use `--output` to visualize what's being tracked
 
 ### No Pose Detected
 
@@ -604,9 +604,9 @@ The debug video includes:
 **Solutions**:
 
 1. **Verify video format**: OpenCV must be able to read the video
-1. **Check framing**: Ensure full body is visible in side view
-1. **Lower confidence thresholds**: Try `--detection-confidence 0.3 --tracking-confidence 0.3`
-1. **Test video playback**: Verify video opens correctly with standard video players
+2. **Check framing**: Ensure full body is visible in side view
+3. **Lower confidence thresholds**: Try `--detection-confidence 0.3 --tracking-confidence 0.3`
+4. **Test video playback**: Verify video opens correctly with standard video players
 
 ### Incorrect Contact Detection
 
@@ -615,11 +615,11 @@ The debug video includes:
 **Solutions**:
 
 1. **Generate debug video**: Visualize contact states to diagnose the issue
-1. **Adjust velocity threshold**:
+2. **Adjust velocity threshold**:
    - If missing contacts: decrease to `--velocity-threshold 0.01`
    - If false contacts: increase to `--velocity-threshold 0.03`
-1. **Adjust minimum frames**: `--min-contact-frames 5` for longer required contact
-1. **Check visibility**: Lower `--visibility-threshold 0.3` if feet are partially obscured
+3. **Adjust minimum frames**: `--min-contact-frames 5` for longer required contact
+4. **Check visibility**: Lower `--visibility-threshold 0.3` if feet are partially obscured
 
 ### Jump Height Seems Wrong
 
@@ -628,9 +628,9 @@ The debug video includes:
 **Solutions**:
 
 1. **Check video quality**: Ensure video frame rate is adequate (30fps or higher recommended)
-1. **Verify flight time detection**: Check `flight_start_frame` and `flight_end_frame` in JSON
-1. **Compare measurements**: JSON output includes both `jump_height_m` (primary) and `jump_height_kinematic_m` (kinematic-only)
-1. **Check for drop jump detection**: If doing a drop jump, ensure first phase is elevated enough (>5% of frame height)
+2. **Verify flight time detection**: Check `flight_start_frame` and `flight_end_frame` in JSON
+3. **Compare measurements**: JSON output includes both `jump_height_m` (primary) and `jump_height_kinematic_m` (kinematic-only)
+4. **Check for drop jump detection**: If doing a drop jump, ensure first phase is elevated enough (>5% of frame height)
 
 ### Video Codec Issues
 
@@ -639,30 +639,30 @@ The debug video includes:
 **Solutions**:
 
 1. **Install additional codecs**: Ensure OpenCV has proper video codec support
-1. **Try different output format**: Use `.avi` extension instead of `.mp4`
-1. **Check output path**: Ensure write permissions for output directory
+2. **Try different output format**: Use `.avi` extension instead of `.mp4`
+3. **Check output path**: Ensure write permissions for output directory
 
 ## How It Works
 
 1. **Pose Tracking**: MediaPipe extracts 2D pose landmarks (foot points: ankles, heels, foot indices) from each frame
-1. **Position Calculation**: Averages ankle, heel, and foot index positions to determine foot location
-1. **Smoothing**: Savitzky-Golay filter reduces tracking jitter while preserving motion dynamics
-1. **Contact Detection**: Analyzes vertical position velocity to identify ground contact vs. flight phases
-1. **Phase Identification**: Finds continuous ground contact and flight periods
+2. **Position Calculation**: Averages ankle, heel, and foot index positions to determine foot location
+3. **Smoothing**: Savitzky-Golay filter reduces tracking jitter while preserving motion dynamics
+4. **Contact Detection**: Analyzes vertical position velocity to identify ground contact vs. flight phases
+5. **Phase Identification**: Finds continuous ground contact and flight periods
    - Automatically detects drop jumps vs regular jumps
    - For drop jumps: identifies box → drop → ground contact → jump sequence
-1. **Sub-Frame Interpolation**: Estimates exact transition times between frames
+6. **Sub-Frame Interpolation**: Estimates exact transition times between frames
    - Uses Savitzky-Golay derivative for smooth velocity calculation
    - Linear interpolation of velocity to find threshold crossings
    - Achieves sub-millisecond timing precision (at 30fps: ±10ms vs ±33ms)
    - Reduces timing error by 60-70% for contact and flight measurements
    - Smoother velocity curves eliminate false threshold crossings
-1. **Trajectory Curvature Analysis**: Refines transitions using acceleration patterns
+7. **Trajectory Curvature Analysis**: Refines transitions using acceleration patterns
    - Computes second derivative (acceleration) from position trajectory
    - Detects landing impact by acceleration spike
    - Identifies takeoff by acceleration change patterns
    - Provides independent validation and refinement of velocity-based detection
-1. **Metric Calculation**:
+8. **Metric Calculation**:
    - Ground contact time = contact phase duration (using fractional frames)
    - Flight time = flight phase duration (using fractional frames)
    - Jump height = kinematic estimate from flight time: (g × t²) / 8
@@ -712,9 +712,9 @@ uv run ruff check && uv run pyright && uv run pytest
 Before committing code, ensure all checks pass:
 
 1. Format with Black
-1. Fix linting issues with ruff
-1. Ensure type safety with pyright
-1. Run all tests with pytest
+2. Fix linting issues with ruff
+3. Ensure type safety with pyright
+4. Run all tests with pytest
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines and requirements, or [CLAUDE.md](CLAUDE.md) for detailed development guidelines.
 

@@ -247,7 +247,7 @@ ______________________________________________________________________
   - `outlier_percentage` (float): Percentage of frames with outliers
   - `position_variance` (float): Position tracking variance (lower = better)
   - `fps` (float): Video frame rate
-- `warnings` (array\[string\]): List of quality warnings
+- `warnings` (array[string]): List of quality warnings
 
 **Confidence levels:**
 
@@ -478,11 +478,11 @@ ______________________________________________________________________
 ## Design Principles
 
 1. **`data` = what was measured** - Physical metrics and results only
-1. **`metadata` = how/context** - Quality, video info, processing details
-1. **Flat data structure** - Easy DataFrame conversion, no deep nesting
-1. **Nested metadata** - Organized by category (quality, video, processing, algorithm)
-1. **Future-proof** - Can add fields without breaking existing code
-1. **Industry standard** - Follows REST API patterns
+2. **`metadata` = how/context** - Quality, video info, processing details
+3. **Flat data structure** - Easy DataFrame conversion, no deep nesting
+4. **Nested metadata** - Organized by category (quality, video, processing, algorithm)
+5. **Future-proof** - Can add fields without breaking existing code
+6. **Industry standard** - Follows REST API patterns
 
 ______________________________________________________________________
 

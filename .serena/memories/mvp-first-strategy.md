@@ -21,12 +21,12 @@ ______________________________________________________________________
    - Validate on real video
    - Establish accuracy credibility
 
-1. **Issue #11 (P0)**: Validate CMJ metrics with phase progression tests
+2. **Issue #11 (P0)**: Validate CMJ metrics with phase progression tests
 
    - Add phase progression tests
    - Prove metrics are reproducible
 
-1. **Issue #12 (P0)**: Build simple web UI MVP
+3. **Issue #12 (P0)**: Build simple web UI MVP
 
    - Upload video → see metrics → export results
    - Get product in coaches' hands
@@ -118,7 +118,7 @@ ______________________________________________________________________
 ## Next Immediate Actions
 
 1. Start Issue #10 (ankle angle fix + validation)
-1. Start Issue #11 (metrics tests)
-1. Start Issue #12 (web UI)
-1. Week 4: Recruit coaches for MVP testing
-1. Week 5: Gather feedback, make Phase 2 decision
+2. Start Issue #11 (metrics tests)
+3. Start Issue #12 (web UI)
+4. Week 4: Recruit coaches for MVP testing
+5. Week 5: Gather feedback, make Phase 2 decision

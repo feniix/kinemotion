@@ -7,8 +7,8 @@
 **Current State**: 174 test functions across 23 test files. Strong test quality with excellent edge case coverage and documentation, but suffers from:
 
 1. ❌ Naming inconsistencies (module vs function focus)
-1. ❌ Misplaced test files (wrong directory)
-1. ❌ 8 modules without dedicated tests (including critical validation.py and pose.py)
+2. ❌ Misplaced test files (wrong directory)
+3. ❌ 8 modules without dedicated tests (including critical validation.py and pose.py)
 
 **Overall Grade**: B+ (Production-ready for MVP, needs cleanup before Phase 2)
 
@@ -174,10 +174,10 @@ def test_cmj_full_pipeline():
 **Contents**:
 
 1. Test file naming conventions (mirror source structure)
-1. When to use class-based vs function-based organization
-1. Test type categorization (unit/integration/e2e)
-1. Edge case testing checklist
-1. Parameterized test guidelines
+2. When to use class-based vs function-based organization
+3. Test type categorization (unit/integration/e2e)
+4. Edge case testing checklist
+5. Parameterized test guidelines
 
 **Estimated Time**: 2 hours
 
@@ -298,24 +298,24 @@ ______________________________________________________________________
 ### Week 1 (6 hours)
 
 1. [ ] Move test_adaptive_threshold.py to dropjump/ (15 min)
-1. [ ] Create tests/core/test_validation.py (2 hours)
-1. [ ] Rename/expand tests/core/test_pose.py (2 hours)
-1. [ ] Update CLAUDE.md test count (10 min)
-1. [ ] Run full test suite and verify coverage maintained
+2. [ ] Create tests/core/test_validation.py (2 hours)
+3. [ ] Rename/expand tests/core/test_pose.py (2 hours)
+4. [ ] Update CLAUDE.md test count (10 min)
+5. [ ] Run full test suite and verify coverage maintained
 
 ### Weeks 2-3 (5 hours)
 
-6. [ ] Consolidate test_aspect_ratio.py into test_video_io.py (30 min)
-1. [ ] Consolidate test_polyorder.py into test_smoothing.py (30 min)
-1. [ ] Create tests/core/test_auto_tuning.py (1.5 hours)
-1. [ ] Create tests/core/test_metadata.py (1 hour)
-1. [ ] Document testing standards (1.5 hours)
+06. [ ] Consolidate test_aspect_ratio.py into test_video_io.py (30 min)
+07. [ ] Consolidate test_polyorder.py into test_smoothing.py (30 min)
+08. [ ] Create tests/core/test_auto_tuning.py (1.5 hours)
+09. [ ] Create tests/core/test_metadata.py (1 hour)
+10. [ ] Document testing standards (1.5 hours)
 
 ### Month 2 (Optional - 6 hours)
 
 11. [ ] Add pytest markers (unit/integration/e2e) (2 hours)
-01. [ ] Add debug overlay tests (3 hours)
-01. [ ] Create test matrix visualization (1 hour)
+12. [ ] Add debug overlay tests (3 hours)
+13. [ ] Create test matrix visualization (1 hour)
 
 ______________________________________________________________________
 

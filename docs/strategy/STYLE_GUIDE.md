@@ -247,14 +247,14 @@ ______________________________________________________________________
 Recommended structure for all strategic documents:
 
 1. **Title** (H1)
-1. **Metadata** (Date, Status, Audience)
-1. **Separator** (---)
-1. **Executive Summary** (H2) - if applicable
-1. **Key Findings** (H2) - if applicable
-1. **Detailed Content** (H2 sections)
-1. **Next Steps** (H2) - if applicable
-1. **Questions?** (H2) - if applicable
-1. **Footer** - Last Updated date
+2. **Metadata** (Date, Status, Audience)
+3. **Separator** (---)
+4. **Executive Summary** (H2) - if applicable
+5. **Key Findings** (H2) - if applicable
+6. **Detailed Content** (H2 sections)
+7. **Next Steps** (H2) - if applicable
+8. **Questions?** (H2) - if applicable
+9. **Footer** - Last Updated date
 
 ______________________________________________________________________
 

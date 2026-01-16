@@ -164,10 +164,10 @@ ______________________________________________________________________
 **Option B gives you:**
 
 1. ✅ **Zero future breaking changes** - all additions go in metadata
-1. ✅ **Complete context** - video, processing, algorithm info
-1. ✅ **Research-ready** - full reproducibility
-1. ✅ **Industry standard** - matches REST API patterns
-1. ✅ **Validation-ready** - all context needed for validation studies
+2. ✅ **Complete context** - video, processing, algorithm info
+3. ✅ **Research-ready** - full reproducibility
+4. ✅ **Industry standard** - matches REST API patterns
+5. ✅ **Validation-ready** - all context needed for validation studies
 
 **The cost:**
 
@@ -280,10 +280,10 @@ ______________________________________________________________________
 **Full Option B implementation now** because:
 
 1. You're in **alpha** - breaking changes are expected and fine
-1. You'll need this info for **validation studies** anyway
-1. Get it **right once** - no incremental migrations
-1. **Professional structure** from day 1
-1. **Zero future breaking changes**
+2. You'll need this info for **validation studies** anyway
+3. Get it **right once** - no incremental migrations
+4. **Professional structure** from day 1
+5. **Zero future breaking changes**
 
 The extra work now (adding video/processing/algorithm fields) is minimal compared to the benefit of getting the structure correct permanently.
 
@@ -292,7 +292,7 @@ ______________________________________________________________________
 ## Questions?
 
 1. ✅ **Full Option B implementation?** (data + complete metadata)
-1. ⚠️ **Alternative: Minimal Option A-Prime?** (data + quality only, add rest later)
+2. ⚠️ **Alternative: Minimal Option A-Prime?** (data + quality only, add rest later)
 
 Since you said "full impl now", I interpret this as **Full Option B** - correct?
 

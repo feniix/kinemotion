@@ -9,14 +9,14 @@ ______________________________________________________________________
 ## Table of Contents
 
 1. [Overview](#1-overview)
-1. [Understanding Real-Time Requirements](#2-understanding-real-time-requirements)
-1. [System Comparison](#3-system-comparison)
-1. [RTMO: One-Stage Real-Time](#4-rtmo-one-stage-real-time)
-1. [Architecture Options](#5-architecture-options)
-1. [Implementation Examples](#6-implementation-examples)
-1. [Latency Optimization](#7-latency-optimization)
-1. [Recommended Strategy for kinemotion](#8-recommended-strategy-for-kinemotion)
-1. [References](#9-references)
+2. [Understanding Real-Time Requirements](#2-understanding-real-time-requirements)
+3. [System Comparison](#3-system-comparison)
+4. [RTMO: One-Stage Real-Time](#4-rtmo-one-stage-real-time)
+5. [Architecture Options](#5-architecture-options)
+6. [Implementation Examples](#6-implementation-examples)
+7. [Latency Optimization](#7-latency-optimization)
+8. [Recommended Strategy for kinemotion](#8-recommended-strategy-for-kinemotion)
+9. [References](#9-references)
 
 ______________________________________________________________________
 
@@ -931,12 +931,12 @@ Option C: Full Server-Side
    - Shows if they're in frame
    - No backend changes needed
 
-1. **If needed:** Add hybrid real-time
+2. **If needed:** Add hybrid real-time
 
    - MediaPipe preview + periodic RTMO analysis
    - Best balance of UX and accuracy
 
-1. **Only if demanded:** Full server-side streaming
+3. **Only if demanded:** Full server-side streaming
 
    - WebSocket infrastructure
    - Higher operational complexity
@@ -949,9 +949,9 @@ ______________________________________________________________________
 
 1. **RTMO (CVPR 2024):** Lu, P., et al. "RTMO: Towards High-Performance One-Stage Real-Time Multi-Person Pose Estimation." arXiv:2312.07526
 
-1. **RTMPose (2023):** Jiang, T., et al. "RTMPose: Real-Time Multi-Person Pose Estimation based on MMPose." arXiv:2303.07399
+2. **RTMPose (2023):** Jiang, T., et al. "RTMPose: Real-Time Multi-Person Pose Estimation based on MMPose." arXiv:2303.07399
 
-1. **MediaPipe BlazePose (2020):** Bazarevsky, V., et al. "BlazePose: On-device Real-time Body Pose Tracking." arXiv:2006.10204
+3. **MediaPipe BlazePose (2020):** Bazarevsky, V., et al. "BlazePose: On-device Real-time Body Pose Tracking." arXiv:2006.10204
 
 ### Code & Libraries
 

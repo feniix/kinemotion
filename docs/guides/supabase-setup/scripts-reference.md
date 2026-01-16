@@ -106,9 +106,9 @@ python setup_supabase_db.py
 ### Stage 3: Execute SQL
 
 1. Copy SQL from script output
-1. Go to: https://supabase.com/dashboard/project/YOUR_PROJECT_ID/sql
-1. Create new query and paste SQL
-1. Click "Run"
+2. Go to: https://supabase.com/dashboard/project/YOUR_PROJECT_ID/sql
+3. Create new query and paste SQL
+4. Click "Run"
 
 ### Stage 4: Verify
 
@@ -168,8 +168,8 @@ export SUPABASE_KEY="sb_anon_your-key"
 Check:
 
 1. Supabase project is running (check dashboard)
-1. Credentials are correct
-1. Network connectivity
+2. Credentials are correct
+3. Network connectivity
 
 ### "RLS policy violation"
 
@@ -214,10 +214,10 @@ ______________________________________________________________________
 ## Next Steps
 
 1. Set environment variables
-1. Run a setup script
-1. Execute SQL in Supabase
-1. Verify tables and RLS
-1. Test backend connection
-1. Start frontend for full integration
+2. Run a setup script
+3. Execute SQL in Supabase
+4. Verify tables and RLS
+5. Test backend connection
+6. Start frontend for full integration
 
 For detailed instructions: See `SETUP_GUIDE.md`

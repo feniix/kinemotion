@@ -742,9 +742,9 @@ def process_video(video_path: str) -> AnalysisResult:
 **Required changes for multi-person/real-time:**
 
 1. Add optional `max_persons` parameter
-1. Return `List[AnalysisResult]` instead of single result
-1. Handle person tracking IDs
-1. Backward compatible: `max_persons=1` defaults to current behavior
+2. Return `List[AnalysisResult]` instead of single result
+3. Handle person tracking IDs
+4. Backward compatible: `max_persons=1` defaults to current behavior
 
 ### 7.2 Gait Cycle Detection Abstraction
 
@@ -835,8 +835,8 @@ ______________________________________________________________________
 **Recommended Change:**
 
 1. **Primary:** Client-side MediaPipe (TensorFlow.js) via WebGL
-1. **Fallback:** Server-side MediaPipe for unsupported browsers
-1. **Result:** \<200ms on modern devices, \<300ms fallback
+2. **Fallback:** Server-side MediaPipe for unsupported browsers
+3. **Result:** \<200ms on modern devices, \<300ms fallback
 
 **Implementation:**
 
@@ -930,13 +930,13 @@ ______________________________________________________________________
 
 1. **Architecture Decision (Week 1 Task 3):** Client-side vs server-side. CLIENT-SIDE is critical for \<200ms.
 
-1. **Latency Profiling (Week 1 Task 3):** Don't assume metrics from docs. Measure actual system.
+2. **Latency Profiling (Week 1 Task 3):** Don't assume metrics from docs. Measure actual system.
 
-1. **Task 1 Dependency:** Ankle fix must complete before running analysis starts. It's blocking.
+3. **Task 1 Dependency:** Ankle fix must complete before running analysis starts. It's blocking.
 
-1. **Sport-Specific Confidence Profiles:** Generic thresholds insufficient. Add profiles for each sport.
+4. **Sport-Specific Confidence Profiles:** Generic thresholds insufficient. Add profiles for each sport.
 
-1. **Cycle Detection Abstraction:** Before Task 4, create reusable CycleDetector interface for extensibility.
+5. **Cycle Detection Abstraction:** Before Task 4, create reusable CycleDetector interface for extensibility.
 
 ### 10.3 Revised Sprint 2-3 Timeline (Weeks 4-7)
 
@@ -960,8 +960,8 @@ This maintains the "3-sport platform by week 7" goal while reducing risk.
 **Bottom line:** MediaPipe is production-ready for athletic analysis. The limiting factors are:
 
 1. **Architectural** (latency, multi-person tracking) - not CV
-1. **Biomechanics** (Task 1 ankle fix) - addressed separately
-1. **Parameter tuning** (confidence thresholds per sport) - achievable
+2. **Biomechanics** (Task 1 ankle fix) - addressed separately
+3. **Parameter tuning** (confidence thresholds per sport) - achievable
 
 No fundamental CV blockers. Proceed with confidence.
 

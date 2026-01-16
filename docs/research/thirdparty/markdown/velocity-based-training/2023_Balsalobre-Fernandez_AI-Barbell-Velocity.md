@@ -2,7 +2,7 @@
 
 ### BALSALOBRE-FERNÁNDEZ, Carlos, XU, Jiaqing, JARVIS, Paul, THOMPSON, Steve <http://orcid.org/0000-0001-7674-3685>, TANNION, Kyran and BISHOP, Chris Available from Sheffield Hallam University Research Archive (SHURA) at: <https://shura.shu.ac.uk/32150/>
 
-This document is the Accepted Version \[AM\]
+This document is the Accepted Version [AM]
 
 **Citation:**
 
@@ -10,7 +10,7 @@ BALSALOBRE-FERNÁNDEZ, Carlos, XU, Jiaqing, JARVIS, Paul, THOMPSON,
 Steve, TANNION, Kyran and BISHOP, Chris (2023). Validity of a smartphone app
 using artificial intelligence for the real time measurement of barbell velocity in the
 bench press exercise. Journal of Strength and Conditioning Research, 37 (12),
-e640-e645. \[Article\]
+e640-e645. [Article]
 
 **Copyright and re-use policy**
 
@@ -42,13 +42,13 @@ e640-e645. \[Article\]
 
 12 transducer (LPT). A very high correlation was observed between devices at each loading
 
-13 condition (50%1-RM: _r_ = 0.90 \[0.82, 0.97\]; 75%1-RM: _r_ = 0.92 \[0.86, 0.98\]). Results
+13 condition (50%1-RM: _r_ = 0.90 [0.82, 0.97]; 75%1-RM: _r_ = 0.92 [0.86, 0.98]). Results
 
 14 showed trivial differences between the app and LPT at both 50%1-RM (g = -0.06) and
 
-15 75%1-RM (g = -0.12). Bland-Altman analysis showed a bias estimate of -0.010 m.s \[-1 \] and
+15 75%1-RM (g = -0.12). Bland-Altman analysis showed a bias estimate of -0.010 m.s [-1 ] and
 
-16 0.026 m.s \[-1\] for the 50% and 75%1-RM, respectively. Finally, similar levels of reliability, as
+16 0.026 m.s [-1] for the 50% and 75%1-RM, respectively. Finally, similar levels of reliability, as
 
 17 revealed by the coefficient of variation (CV) were observed for both devices (50%1-RM:
 
@@ -166,7 +166,7 @@ e640-e645. \[Article\]
 
 74 press exercise were recruited (mean ± SD: age = 24.7 ± 4.5 years; mass = 77.2 ± 10.4 kg;
 
-75 Bench press 1-RM = 1.0 ± 0.3 kg.kg \[-1\] ). Subjects were instructed to avoid any strenuous
+75 Bench press 1-RM = 1.0 ± 0.3 kg.kg [-1] ). Subjects were instructed to avoid any strenuous
 
 76 exercise two days before the testing session, had no reported injuries during the time of
 
@@ -288,7 +288,7 @@ e640-e645. \[Article\]
 
 135 10% were deemed acceptable (4) and guidelines from (10) were used to interpret ICC values,
 
-136 where: > 0.90 = excellent, 0.75-0.90 = good, 0.50-0.74 = moderate, and \< 0.50 = poor. Limits
+136 where: > 0.90 = excellent, 0.75-0.90 = good, 0.50-0.74 = moderate, and < 0.50 = poor. Limits
 
 137 of agreement (LOA) and 95% CI between the LPT and the My Jump Lab app were
 
@@ -298,13 +298,13 @@ e640-e645. \[Article\]
 
 140 bias between methods was determined by paired samples _t_ -tests for each load, with statistical
 
-141 significance set at _p_ \< 0.05. Finally, practical significance between the LPT and My Jump
+141 significance set at _p_ < 0.05. Finally, practical significance between the LPT and My Jump
 
 142 Lab app was also determined using Cohen's _d_ with a Hedges _g_ correction effect sizes with
 
 143 95% CI. These were interpreted in line with suggestions by Rhea (2004) relative to the
 
-144 “recreationally trained” sample in the present study: \< 0.35 = trivial, 0.35-0.79 = small, 0.80
+144 “recreationally trained” sample in the present study: < 0.35 = trivial, 0.35-0.79 = small, 0.80
 
 145 1.49 = moderate and > 1.50 = large. The statistical software Jamovi 2.3.21 for macOS was
 
@@ -340,21 +340,21 @@ e640-e645. \[Article\]
 
 161 Figures 1 and 2 show scatter plot graphs presenting all trials for 50% and 75% of maximum
 
-162 load, respectively, with correction equations and _r_ \[2\] values. Pearson’s _r_ values were as follows:
+162 load, respectively, with correction equations and _r_ [2] values. Pearson’s _r_ values were as follows:
 
-163 50% load (0.90 \[0.82, 0.97\]) and 75% (0.92 \[0.86, 0.98\]). Figures 3 and 4 show Bland
+163 50% load (0.90 [0.82, 0.97]) and 75% (0.92 [0.86, 0.98]). Figures 3 and 4 show Bland
 
 164 Altman plots for 50% load and 75% load, respectively. Mean differences (bias estimate) for
 
-165 50% load concentric velocity were -0.010 m.s \[-1\] (95%CI: -0.024, 0.003 m.s \[-1\] ), indicating
+165 50% load concentric velocity were -0.010 m.s [-1] (95%CI: -0.024, 0.003 m.s [-1] ), indicating
 
 166 perfect levels of agreement between two methods. Almost perfect levels of agreement were
 
 167 also evidence between LPT and the app when the bias estimate was applied to 75% load
 
-168 concentric velocity (-0.026 m.s \[-1\] ; 95%CI: -0.038, -0.014 m.s \[-1\] ). Coefficients of determination
+168 concentric velocity (-0.026 m.s [-1] ; 95%CI: -0.038, -0.014 m.s [-1] ). Coefficients of determination
 
-169 of the regression line in the Bland-Altman plots were R \[2\] = 0.01 and R \[2\] = 0.08 for 50% and
+169 of the regression line in the Bland-Altman plots were R [2] = 0.01 and R [2] = 0.08 for 50% and
 
 170 75% load, respectively.
 
@@ -372,7 +372,7 @@ e640-e645. \[Article\]
 
 177 these loads. From a validity standpoint, the My Jump Lab app showed a near perfect
 
-178 correlation with an LPT for the measurement of MCV across different loads ( _r_ - 0.920; _r_ _\[2\]_ =
+178 correlation with an LPT for the measurement of MCV across different loads ( _r_ - 0.920; _r_ _[2]_ =
 
 179 0.803). The reliability were excellent for both loads across the LPT (ICC = 0.97-0.98) and
 
@@ -398,9 +398,9 @@ e640-e645. \[Article\]
 
 190 by the Bland-Altman analysis (Figure 3 and 4), which shows mean bias estimates of -0.010
 
-191 \[lower -0.168 and upper 0.147 limits of agreement\] at 50% self-reported loads and -0.026
+191 [lower -0.168 and upper 0.147 limits of agreement] at 50% self-reported loads and -0.026
 
-192 \[lower -0.166 and upper 0.114 limits of agreement\] at 75%, indicating excellent levels of
+192 [lower -0.166 and upper 0.114 limits of agreement] at 75%, indicating excellent levels of
 
 193 agreement between the two technologies. LPT’s can cost a minimum of $400, often
 
@@ -734,13 +734,13 @@ e640-e645. \[Article\]
 
 358 **Figure 1.** Linear regression for mean velocity between the two measurement methods during
 
-359 50% of maximum load, inclusive of correction factor equation and R \[2\] .
+359 50% of maximum load, inclusive of correction factor equation and R [2] .
 
 360
 
 361 **Figure 2.** Linear regression for mean velocity between the two measurement methods during
 
-362 75% of maximum load, inclusive of correction factor equation and R \[2\] .
+362 75% of maximum load, inclusive of correction factor equation and R [2] .
 
 363
 

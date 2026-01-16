@@ -11,9 +11,9 @@ ______________________________________________________________________
 This document specifies all quality presets and parameters for Kinemotion, organized by:
 
 1. Jump metrics (Drop Jump, CMJ) - VALIDATED
-1. Running gait - RECOMMENDED (needs validation)
-1. Real-time optimization - PROFILING NEEDED
-1. Multi-person detection - DESIGN PHASE
+2. Running gait - RECOMMENDED (needs validation)
+3. Real-time optimization - PROFILING NEEDED
+4. Multi-person detection - DESIGN PHASE
 
 ______________________________________________________________________
 

@@ -115,7 +115,7 @@ revolutions per minute (rpm’s) within the range of 60–
 80\. The test began at a power output of 50 W for men,
 40 W for women over 60 kg body weight, and 30 W
 for women under 60 kg body weight. The power output was increased by the same increment every 3 minutes until the subject could no longer continue. The
-peak power output was interpolated based on the proportional time achieved during the terminal stage. Oxygen uptake (V \[˙\] O2) was measured using open-circuit
+peak power output was interpolated based on the proportional time achieved during the terminal stage. Oxygen uptake (V [˙] O2) was measured using open-circuit
 
 **Table 1.** Mean (� _SD_ ) characteristics of the subjects in
 part 1.\*
@@ -127,13 +127,13 @@ Height (cm)
 Weight (kg)
 Percent fat
 Peak power output (W)
-Peak power output (W·kg \[�\]\[1\] )
-Peak V \[˙\] O2 (L·min \[�\]\[1\] )
-Peak V \[˙\] O2 (ml·min \[�\]\[1\] - kg \[�\]\[1\] )
-Peak HR (b·min \[�\]\[1\] )
+Peak power output (W·kg [�][1] )
+Peak V [˙] O2 (L·min [�][1] )
+Peak V [˙] O2 (ml·min [�][1] - kg [�][1] )
+Peak HR (b·min [�][1] )
 IAT power output (W)
-IAT power output (W·kg \[�\]\[1\] )
-IAT HR (b·min \[�\]\[1\] )
+IAT power output (W·kg [�][1] )
+IAT HR (b·min [�][1] )
 
 23.0 � 3.6
 
@@ -192,23 +192,23 @@ Age (yr)
 Height (cm)
 Weight (kg)
 Percent fat
-Peak V \[˙\] O2 (L·min \[�\]\[1\] )
-Peak V \[˙\] O2 (ml·min \[�\]\[1\] - kg \[�\]\[1\] )
-Ventilatory threshold (L·min \[�\]\[1\] )
+Peak V [˙] O2 (L·min [�][1] )
+Peak V [˙] O2 (ml·min [�][1] - kg [�][1] )
+Ventilatory threshold (L·min [�][1] )
 
 Age (yr) 20.2 � 1.5
 Height (cm) 191.4 � 4.9
 Weight (kg) 89.3 � 7.8
 Percent fat 12.8 � 2.8
-Peak V \[˙\] O2 (L·min \[�\]\[1\] ) 4.60 � 0.50
-Peak V \[˙\] O2 (ml·min \[�\]\[1\] - kg \[�\]\[1\] ) 51.5 � 2.2
-Ventilatory threshold (L·min \[�\]\[1\] ) 3.32 � 0.54
+Peak V [˙] O2 (L·min [�][1] ) 4.60 � 0.50
+Peak V [˙] O2 (ml·min [�][1] - kg [�][1] ) 51.5 � 2.2
+Ventilatory threshold (L·min [�][1] ) 3.32 � 0.54
 
 Respiratory compensation threshold
-(L·min \[�\]\[1\] ) 3.71 � 0.44
-HRpeak (b·min \[�\]\[1\] ) 182 � 9
-HR at VT (b·min \[�\]\[1\] ) 136 � 6
-HR at RCT (b·min \[�\]\[1\] ) 150 � 4
+(L·min [�][1] ) 3.71 � 0.44
+HRpeak (b·min [�][1] ) 182 � 9
+HR at VT (b·min [�][1] ) 136 � 6
+HR at RCT (b·min [�][1] ) 150 � 4
 
 182 � 9
 
@@ -218,8 +218,8 @@ HR at RCT (b·min \[�\]\[1\] ) 150 � 4
 
 - HR � heart rate.
 
-spirometry (Quinton Q-Plex, Seattle, WA). Peak V \[˙\] O2
-was defined as the highest continuous full minute V \[˙\] O2
+spirometry (Quinton Q-Plex, Seattle, WA). Peak V [˙] O2
+was defined as the highest continuous full minute V [˙] O2
 observed during the test. HR was measured by radiotelemetry (Polar Electro Oy, Port Washington, NY).
 Blood lactate was measured in capillary blood obtained from a fingertip at rest, at the end of each stage
 of exercise, and at 1, 3, 5, and 10 minutes postexercise
@@ -296,8 +296,8 @@ _**Part 2**_
 
 Prior to the experimental protocol, each subject was
 evaluated during incremental treadmill exercise using
-an Astrand protocol. Exercise was continued to volitional fatigue. V \[˙\] O2 was measured using open-circuit
-spirometry and V \[˙\] O2peak was defined as the highest
+an Astrand protocol. Exercise was continued to volitional fatigue. V [˙] O2 was measured using open-circuit
+spirometry and V [˙] O2peak was defined as the highest
 
 112 Foster, Florhaug, Franklin, Gottschall, Hrovatin, Parker, Doleshal, and Dodge
 
@@ -305,7 +305,7 @@ spirometry and V \[˙\] O2peak was defined as the highest
 
 Steady state 0.5 m/0.5 m 1.0 m/1.0 m 2.0 m/ 2.0 m �10% �25% �50%
 
-Heart rate (b·min \[�\]\[1\] )
+Heart rate (b·min [�][1] )
 
 Rest 79 � 13
 
@@ -319,7 +319,7 @@ Rest 79 � 13
 
 90 m 166 � 9
 
-Blood lactate (mmol·l \[�\]\[1\] )
+Blood lactate (mmol·l [�][1] )
 
 Rest 1.1 � 0.5
 
@@ -529,10 +529,10 @@ Rest 0.0 � 0.0
 
 - _p_ � 0.05 compared to steady state.
 
-continuous 60-second V \[˙\] O2 during the exercise bout.
+continuous 60-second V [˙] O2 during the exercise bout.
 Ventilatory and respiratory compensation thresholds
 were determined according to changes in the slopes of
-the V \[˙\] CO2 vs. V \[˙\] O2 and V \[˙\] E vs. V \[˙\] CO2 relationships, respectively (3). HR was measured using radiotelemetry.
+the V [˙] CO2 vs. V [˙] O2 and V [˙] E vs. V [˙] CO2 relationships, respectively (3). HR was measured using radiotelemetry.
 Subsequently, each subject was monitored during
 basketball practice sessions and/or during competitive
 matches. The pattern of exercise during these bouts
@@ -886,54 +886,54 @@ the athlete (Figure 4).
 
 #### **References**
 
-1. BANGSBO, J. Physiology of intermittent exercise. In: _Exercise and_
-   _Sport Science_ W.E. Garrett and D.T. Kirkendall, eds. Philadelphia: Lippincott, Williams and Wilkins, 2000. pp. 31–52.
+01. BANGSBO, J. Physiology of intermittent exercise. In: _Exercise and_
+    _Sport Science_ W.E. Garrett and D.T. Kirkendall, eds. Philadelphia: Lippincott, Williams and Wilkins, 2000. pp. 31–52.
 
-1. BANISTER, E.W., T.W. CLAVERT, M.V. SAVAGE, AND T. BACH. A
-   systems model of training for athletic performance. _Aust. J._
-   _Sports Med._ 7:57–61. 1975.
+02. BANISTER, E.W., T.W. CLAVERT, M.V. SAVAGE, AND T. BACH. A
+    systems model of training for athletic performance. _Aust. J._
+    _Sports Med._ 7:57–61. 1975.
 
-1. BEAVER, W.L., K. WASSERMAN, AND B.J. WHIPP. A new method
-   for detecting the anaerobic threshold by gas exchange. _J. Appl._
-   _Physiol._ 60:2020–2027. 1986.
+03. BEAVER, W.L., K. WASSERMAN, AND B.J. WHIPP. A new method
+    for detecting the anaerobic threshold by gas exchange. _J. Appl._
+    _Physiol._ 60:2020–2027. 1986.
 
-1. BORG, G., P. HASSMEN, AND M. LANGERSTROM. Perceived exertion in relation to heart rate and blood lactate during arm
-   and leg exercise. _Eur. J. Appl. Physiol._ 65:679–685. 1985.
+04. BORG, G., P. HASSMEN, AND M. LANGERSTROM. Perceived exertion in relation to heart rate and blood lactate during arm
+    and leg exercise. _Eur. J. Appl. Physiol._ 65:679–685. 1985.
 
-1. BROWN, D.D. Pulmonary responses to exercise and training. In:
-   _Exercise and Sport Science._ W.E. Garrett and D.T. Kirkendall, eds.
-   Philadelphia: Lippincott, Williams and Wilkins, 2000. pp. 117–
+05. BROWN, D.D. Pulmonary responses to exercise and training. In:
+    _Exercise and Sport Science._ W.E. Garrett and D.T. Kirkendall, eds.
+    Philadelphia: Lippincott, Williams and Wilkins, 2000. pp. 117–
 
-1.
+06.
 
-1. BUSSO, T., C. DENIS, R. BONNEFOY, A. GEYSSANT, AND J.R. LA
-   COUR. Modeling of adaptations to physical training by using a
-   recursive least squares algorithm. _J. Appl. Physiol._ 82:1685–1693.
+07. BUSSO, T., C. DENIS, R. BONNEFOY, A. GEYSSANT, AND J.R. LA
+    COUR. Modeling of adaptations to physical training by using a
+    recursive least squares algorithm. _J. Appl. Physiol._ 82:1685–1693.
 
-1.
+08.
 
-1. COOPER, K.H. _Aerobics._ New York: Bantam, 1968.
+09. COOPER, K.H. _Aerobics._ New York: Bantam, 1968.
 
-1. EDWARDS, S. _The Heart Rate Monitor Book._ Sacramento: Fleet Feet
-   Press, 1993. pp. 113–129.
+10. EDWARDS, S. _The Heart Rate Monitor Book._ Sacramento: Fleet Feet
+    Press, 1993. pp. 113–129.
 
-1. FITZ-CLARAKE, J.R., R.H. MORTON, AND E.W. BANISTER. Optimizing athletic performance by influence curves. _J. Appl. Phy-_
-   _siol._ 71:1151–1158. 1991.
+11. FITZ-CLARAKE, J.R., R.H. MORTON, AND E.W. BANISTER. Optimizing athletic performance by influence curves. _J. Appl. Phy-_
+    _siol._ 71:1151–1158. 1991.
 
-1. FLECK, S.J. Periodized strength training: A critical review. _J._
-   _Strength Cond. Res._ 13:82–89. 1999.
+12. FLECK, S.J. Periodized strength training: A critical review. _J._
+    _Strength Cond. Res._ 13:82–89. 1999.
 
-1. FOSTER, C. Monitoring training in athletes with reference to overtraining syndrome. _Med. Sci. Sports Exerc._ 30:1164–1168. 1997.
+13. FOSTER, C. Monitoring training in athletes with reference to overtraining syndrome. _Med. Sci. Sports Exerc._ 30:1164–1168. 1997.
 
 Monitoring Exercise Training 115
 
 12. FOSTER, C., E. DANIES, L. HECTOR, A. SNYDER, AND R. WELSH.
     Athletic performance in relation to training load. _Wis. Med. J._
     95:370–374. 1996.
-01. FOSTER, C., J. DANIELS, AND R. YARBROUGH. Physiological and
+13. FOSTER, C., J. DANIELS, AND R. YARBROUGH. Physiological and
     training correlates of marathon running performance. _Aust. J._
     _Sports Med._ 9:58–61. 1977.
-01. FOSTER, C., L. HECTOR, R. WELSH, M. SCHRAGER, M.A. GREEN,
+14. FOSTER, C., L. HECTOR, R. WELSH, M. SCHRAGER, M.A. GREEN,
 
 AND A.C. SNYDER. Effects of specific versus cross training on
 running performance. _Eur. J. Appl. Physiol._ 70:367–372. 1995.
@@ -950,25 +950,25 @@ same maintained exercise intensity. _Eur. J. Appl. Physiol._ 63:101–
     in highly trained cyclists after interval training. _Med. Sci. Sports_
     _Exerc._ 28:1427–1434. 1996.
 
-01. MORTON, R.H., J.R. FITZ-CLARKE, AND E.W. BANISTER. Modeling human performance in running. _J. Appl. Physiol._ 69:1171–
+18. MORTON, R.H., J.R. FITZ-CLARKE, AND E.W. BANISTER. Modeling human performance in running. _J. Appl. Physiol._ 69:1171–
 
-01. 1990.
+19. 1990.
 
-01. MUJIKA, I. The influence of training characteristics and tapering
+20. MUJIKA, I. The influence of training characteristics and tapering
     on the adaptations in highly trained individuals. A review. _Int._
     _J. Sports Med._ 19:439–436. 1996.
 
-01. MUJIKA, I., T. BUSSO, L. LACOSTE, A.G. BARALE, AND J.C. CHA
+21. MUJIKA, I., T. BUSSO, L. LACOSTE, A.G. BARALE, AND J.C. CHA
     TARD. Modeled responses to training and taper in competitive
     swimmers. _Med. Sci. Sports Exerc._ 28:252–258. 1996.
 
-01. ROWBOTTOM, D. Periodization of training. In: _Exercise and Sport_
+22. ROWBOTTOM, D. Periodization of training. In: _Exercise and Sport_
     _Science._ W.E. Garret and D.T. Kirkendall, eds. Philadelphia: Lippincott, Williams and Wilkins, 2000. pp. 499–512.
 
-01. STEGMANN, H., W. KINDERMANN, AND A. SCHNABEL. Lactate
+23. STEGMANN, H., W. KINDERMANN, AND A. SCHNABEL. Lactate
     kinetics and individual anaerobic threshold. _Int. J. Sports Med._
     2:160–165. 1981.
 
-01. VUORIMAA, T., T. VASANKARI, AND H. RUSKO. Comparison of
+24. VUORIMAA, T., T. VASANKARI, AND H. RUSKO. Comparison of
     physiological strain and muscular performance of athletes during 2 intermittent running exercises at the velocity associated
-    with V \[˙\] O2max. _Int. J. Sports Med._ 21:96–101. 2000.
+    with V [˙] O2max. _Int. J. Sports Med._ 21:96–101. 2000.

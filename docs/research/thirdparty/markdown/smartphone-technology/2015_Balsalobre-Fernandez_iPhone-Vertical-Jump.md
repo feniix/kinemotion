@@ -27,7 +27,7 @@ Article views: 2668
 Full Terms & Conditions of access and use can be found at
 [http://www.tandfonline.com/action/journalInformation?journalCode=rjsp20](http://www.tandfonline.com/action/journalInformation?journalCode=rjsp20)
 
-**Download by:** \[80.82.78.170\] **Date:** 14 December 2016, At: 05:22
+**Download by:** [80.82.78.170] **Date:** 14 December 2016, At: 05:22
 
 Journal of Sports Sciences, 2015
 
@@ -36,8 +36,8 @@ Vol. 33, No. 15, 1574 1579, <http://dx.doi.org/10.1080/02640414.2014.996184>
 
 ### The validity and reliability of an iPhone app for measuring vertical jump performance
 
-CARLOS BALSALOBRE-FERNÁNDEZ \[1\], MARK GLAISTER \[2\] &
-RICHARD ANTHONY LOCKEY \[2\]
+CARLOS BALSALOBRE-FERNÁNDEZ [1], MARK GLAISTER [2] &
+RICHARD ANTHONY LOCKEY [2]
 
 1Department of Physical Education, Sport and Human Movement, Autonomous University of Madrid, Madrid, Spain and
 2School of Sport, Health and Applied Science, St Mary’s University, Twickehnham, United Kingdom
@@ -52,9 +52,9 @@ designed iPhone app. My jump was developed to calculate the jump height from fli
 recording facility on the iPhone 5 s. Jump heights of the 100 jumps measured, for both devices, were compared using the
 intraclass correlation coefficient, Pearson product moment correlation coefficient (r), Cronbach’s alpha (α), coefficient of
 variation and Bland–Altman plots. There was almost perfect agreement between the force platform and My Jump for the
-countermovement jump height (intraclass correlation coefficient = 0.997, P \< 0.001; Bland–Altman bias = 1.1 ± 0.5 cm,
-P \< 0.001). In comparison with the force platform, My Jump showed good validity for the CMJ height (r = 0.995,
-P \< 0.001). The results of the present study showed that CMJ height can be easily, accurately and reliably evaluated
+countermovement jump height (intraclass correlation coefficient = 0.997, P < 0.001; Bland–Altman bias = 1.1 ± 0.5 cm,
+P < 0.001). In comparison with the force platform, My Jump showed good validity for the CMJ height (r = 0.995,
+P < 0.001). The results of the present study showed that CMJ height can be easily, accurately and reliably evaluated
 using a specially developed iPhone 5 s app.
 
 Keywords: biomechanics, fitness, physical performance, strength
@@ -175,7 +175,7 @@ this study, calculated the flight time of the CMJ by
 identifying the take-off and the landing frames of the
 video, and then transforming it into a jump height
 using the equation described in the literature (Bosco,
-Luhtanen, & Komi, 1983): h ¼ t \[2\] � 1:22625, with h
+Luhtanen, & Komi, 1983): h ¼ t [2] � 1:22625, with h
 being the jump height in metres and t being the flight
 time of the jump in seconds. The same equation was
 also used to calculate jump heights from the force
@@ -252,7 +252,7 @@ concurrent validity, the bivariate Pearson product
 moment correlation coefficient (r) was used.
 Finally, to analyse the reliability of the app between
 observers, an ICC was used. The level of statistical
-significance was set at P \< 0.05. All calculations
+significance was set at P < 0.05. All calculations
 were performed using IBM SPSS Statistics 22 for
 Mac (IBM Co., USA).
 
@@ -260,22 +260,22 @@ Results
 
 There was almost perfect agreement between the My
 Jump and the force platform CMJ jump heights
-(ICC = 0.997, 95% CI: 0.996–0.998, P \< 0.001)
+(ICC = 0.997, 95% CI: 0.996–0.998, P < 0.001)
 for both observers, with a mean difference of
 1.1 ± 0.5 cm (observer 1) and 1.3 ± 0.5 cm (observer 2) between instruments. My Jump values were
 significantly lower than those obtained with the force
-platform (P \< 0.05). See Figure 2.
+platform (P < 0.05). See Figure 2.
 
 The app showed very good reliability for the five
 CMJ of each participant for jump height (observer 1:
 α = 0.997, CV = 3.4%; observer 2: α = 0.988,
 CV = 3.6%). Also, the Pearson product moment
-correlation coefficient showed almost perfect correlation between the app and the force platform measurements for jump height (r = 0.995, P \< 0.001).
+correlation coefficient showed almost perfect correlation between the app and the force platform measurements for jump height (r = 0.995, P < 0.001).
 See Figure 3.
 
 Finally, when analysing the reliability of the app,
 almost perfect agreement between observer calculations was found for jump height (ICC = 0.999, 95%
-CL = 0.998–0.999, P \< 0.001). The mean difference
+CL = 0.998–0.999, P < 0.001). The mean difference
 between observers was 0.1 ± 0.4 cm. See Figure 4.
 
 Discussion

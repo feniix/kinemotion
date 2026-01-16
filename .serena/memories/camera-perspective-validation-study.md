@@ -48,8 +48,8 @@ The CMJ ankle angle and triple extension algorithms **DO NOT account for camera 
 ### Recommended Path: Option 1 (Simple Correction)
 
 1. **Phase 1 (4-8 hours)**: Collect 12 validation videos, establish correction factors
-1. **Phase 2 (1-2 weeks)**: Implement fixed correction factors in code
-1. **Phase 3 (Future)**: Upgrade to calibration-based correction if needed
+2. **Phase 2 (1-2 weeks)**: Implement fixed correction factors in code
+3. **Phase 3 (Future)**: Upgrade to calibration-based correction if needed
 
 ### Implementation Options Analyzed
 
@@ -59,13 +59,13 @@ The CMJ ankle angle and triple extension algorithms **DO NOT account for camera 
    - Implementation: 1 line of code (`angle * 1.145`)
    - Trade-off: Average correction, assumes identical setups
 
-1. **Option 2: Calibration-Based Correction** (Practical)
+2. **Option 2: Calibration-Based Correction** (Practical)
 
    - Effort: 2-3 weeks
    - Implementation: PerspectiveCorrector class with 2D→3D projection
    - Trade-off: Requires one-time calibration per session
 
-1. **Option 3: Automatic Angle Detection** (Advanced)
+3. **Option 3: Automatic Angle Detection** (Advanced)
 
    - Effort: 4-6 weeks
    - Implementation: Optimization algorithm to infer camera angle
@@ -143,9 +143,9 @@ New file: `src/kinemotion/core/perspective.py`
 ## Next Steps
 
 1. **Phase 1 (Immediate)**: Record 12 validation videos per protocol
-1. **Phase 2 (1-2 weeks)**: Implement Option 1 correction factors
-1. **Phase 3 (Post-MVP)**: Upgrade to Option 2 if higher accuracy needed
-1. **Documentation**: Update recording guidelines with perspective correction info
+2. **Phase 2 (1-2 weeks)**: Implement Option 1 correction factors
+3. **Phase 3 (Post-MVP)**: Upgrade to Option 2 if higher accuracy needed
+4. **Documentation**: Update recording guidelines with perspective correction info
 
 ## Evidence Base
 

@@ -77,9 +77,9 @@ Pose2Sim.kinematics()       # OpenSim inverse kinematics
 **Kinemotion Integration Points:**
 
 1. Replace `PoseTracker` class (src/kinemotion/core/pose.py)
-1. Modify `process_dropjump_video()` / `process_cmj_video()` (src/kinemotion/api.py)
-1. Keep existing: smoothing, signed velocity, backward search, analysis logic
-1. Add: multi-camera input handling, calibration management, OpenSim output parsing
+2. Modify `process_dropjump_video()` / `process_cmj_video()` (src/kinemotion/api.py)
+3. Keep existing: smoothing, signed velocity, backward search, analysis logic
+4. Add: multi-camera input handling, calibration management, OpenSim output parsing
 
 ______________________________________________________________________
 
@@ -132,9 +132,9 @@ ______________________________________________________________________
 Wait for:
 
 1. MVP launch (Week 3)
-1. User feedback (Weeks 4-8)
-1. Market validation (revenue/engagement)
-1. Feature prioritization from actual users
+2. User feedback (Weeks 4-8)
+3. Market validation (revenue/engagement)
+4. Feature prioritization from actual users
 
 ______________________________________________________________________
 
@@ -264,6 +264,6 @@ Pose2Sim migration is **technically feasible** (2-4 weeks, $2-5k) and would prov
 **Next steps:**
 
 1. Complete MVP launch (Week 3)
-1. Collect user feedback (Weeks 4-8)
-1. Test OpenCap if accuracy emerges as pain point (Week 4)
-1. Reassess Pose2Sim decision when GO score ≥ 3/5
+2. Collect user feedback (Weeks 4-8)
+3. Test OpenCap if accuracy emerges as pain point (Week 4)
+4. Reassess Pose2Sim decision when GO score ≥ 3/5

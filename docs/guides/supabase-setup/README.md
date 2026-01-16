@@ -25,8 +25,8 @@ Copy SQL into Supabase Dashboard and test!
 ## For Complete Understanding
 
 1. Read [setup-guide.md](setup-guide.md) for step-by-step instructions
-1. See [scripts-reference.md](scripts-reference.md) for script options
-1. Check [../development/supabase-database-setup.md](../development/supabase-database-setup.md) for technical details
+2. See [scripts-reference.md](scripts-reference.md) for script options
+3. Check [../development/supabase-database-setup.md](../development/supabase-database-setup.md) for technical details
 
 ## What Gets Set Up
 

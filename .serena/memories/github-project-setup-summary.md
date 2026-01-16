@@ -35,14 +35,14 @@
    - Coverage Impact: Medium (+2-5%)
    - Agent: qa-test-engineer
 
-1. **Test Coverage: CMJ Edge Cases**
+2. **Test Coverage: CMJ Edge Cases**
 
    - Scope: Low countermovement, explosive takeoff, incomplete phases, rotation metadata, asymmetric positions
    - Complexity: 3 | Effort: 5 SP
    - Coverage Impact: High (+5-10%, target: 70% from 62.27%)
    - Agent: qa-test-engineer, computer-vision-engineer
 
-1. **Metrics Validation: Establish Physiological Bounds**
+3. **Metrics Validation: Establish Physiological Bounds**
 
    - Scope: RSI, jump height, contact time, flight time, countermovement depth
    - Complexity: 3 | Effort: 5 SP
@@ -50,7 +50,7 @@
    - Agent: biomechanics-specialist, qa-test-engineer
    - Deliverables: Validation bounds config, test fixtures, documentation
 
-1. **Reduce Code Duplication to \<2.5%**
+4. **Reduce Code Duplication to \<2.5%**
 
    - Current: 2.96% | Target: \<2.5%
    - Focus: Debug overlays, phase detection, velocity calculation, parameter tuning
@@ -67,14 +67,14 @@
    - Agent: technical-writer, biomechanics-specialist
    - Milestone: Q1 2025: Documentation & Education
 
-1. **Create API Reference & Quick Start Guide**
+6. **Create API Reference & Quick Start Guide**
 
    - Sections: Quick start, Python API reference, CLI reference, quality presets, troubleshooting
    - Complexity: 2 | Effort: 3 SP
    - Agent: technical-writer, python-backend-developer
    - Milestone: Q1 2025: Documentation & Education
 
-1. **Create Contribution Guidelines & Testing Patterns**
+7. **Create Contribution Guidelines & Testing Patterns**
 
    - Content: Development setup, code style, testing, quality checks, PR submission, test patterns reference
    - Complexity: 2 | Effort: 3 SP
@@ -83,27 +83,27 @@
 
 ### Technical Improvements - Phase 1 (3 issues)
 
-8. **Improve Pose Detection: Occlusion Handling**
+08. **Improve Pose Detection: Occlusion Handling**
 
-   - Scenarios: Arm occlusion, lighting changes, partial visibility, clothing, motion blur
-   - Complexity: 3 | Effort: 5 SP
-   - Agent: computer-vision-engineer, biomechanics-specialist
-   - Milestone: Q2 2025: Performance & Optimization
+    - Scenarios: Arm occlusion, lighting changes, partial visibility, clothing, motion blur
+    - Complexity: 3 | Effort: 5 SP
+    - Agent: computer-vision-engineer, biomechanics-specialist
+    - Milestone: Q2 2025: Performance & Optimization
 
-1. **Optimize Video Processing Pipeline**
+09. **Optimize Video Processing Pipeline**
 
-   - Targets: 30 FPS processing, \<500ms latency per frame
-   - Areas: Frame reading, pose detection, smoothing, calculation
-   - Complexity: 4 | Effort: 8 SP
-   - Agent: python-backend-developer, ml-data-scientist
-   - Milestone: Q2 2025: Performance & Optimization
+    - Targets: 30 FPS processing, \<500ms latency per frame
+    - Areas: Frame reading, pose detection, smoothing, calculation
+    - Complexity: 4 | Effort: 8 SP
+    - Agent: python-backend-developer, ml-data-scientist
+    - Milestone: Q2 2025: Performance & Optimization
 
-1. **Expand CI/CD: Automated Quality Gates**
+10. **Expand CI/CD: Automated Quality Gates**
 
-   - Gates: Coverage gates, performance benchmarks, breaking change detection, duplicate detection, type coverage
-   - Complexity: 3 | Effort: 5 SP
-   - Agent: devops-cicd-engineer
-   - Milestone: Q2 2025: Performance & Optimization
+    - Gates: Coverage gates, performance benchmarks, breaking change detection, duplicate detection, type coverage
+    - Complexity: 3 | Effort: 5 SP
+    - Agent: devops-cicd-engineer
+    - Milestone: Q2 2025: Performance & Optimization
 
 ### Future Enhancements (2 issues)
 
@@ -115,7 +115,7 @@
     - Agent: python-backend-developer, computer-vision-engineer
     - Milestone: Q2 2025: Performance & Optimization
 
-01. **Improve Batch Processing & Worker Management**
+12. **Improve Batch Processing & Worker Management**
 
     - Improvements: Progress tracking, error handling, result management, performance, observability
     - Complexity: 3 | Effort: 5 SP
@@ -208,32 +208,32 @@ Note: GitHub Project custom fields via API not yet available in this implementat
 ### Sprint 1 (Q1 Start): Foundation
 
 1. CMJ Edge Cases (8 SP) - Unblocks testing
-1. CMJ Biomechanics Guide (3 SP) - Education foundation
-1. Metrics Validation (5 SP) - Domain knowledge
+2. CMJ Biomechanics Guide (3 SP) - Education foundation
+3. Metrics Validation (5 SP) - Domain knowledge
 
 Subtotal: 16 SP
 
 ### Sprint 2 (Q1 Continuation): Quality
 
 1. Drop Jump Edge Cases (3 SP) - Quick win
-1. API Reference & Quick Start (3 SP) - User enablement
-1. Contribution Guidelines (3 SP) - Developer enablement
-1. Code Duplication Reduction (5 SP) - Technical debt
+2. API Reference & Quick Start (3 SP) - User enablement
+3. Contribution Guidelines (3 SP) - Developer enablement
+4. Code Duplication Reduction (5 SP) - Technical debt
 
 Subtotal: 14 SP
 
 ### Sprint 3 (Q2 Start): Performance
 
 1. Pose Detection Occlusion (5 SP) - Quality improvement
-1. Video Processing Optimization (8 SP) - Performance foundation
-1. CI/CD Quality Gates (5 SP) - Automation
+2. Video Processing Optimization (8 SP) - Performance foundation
+3. CI/CD Quality Gates (5 SP) - Automation
 
 Subtotal: 18 SP
 
 ### Sprint 4+ (Q2 Continuation): Features
 
 1. Real-time Streaming (13 SP) - Major feature
-1. Batch Processing Improvements (5 SP) - Enhancement
+2. Batch Processing Improvements (5 SP) - Enhancement
 
 ## Quality Metrics Tracked
 
@@ -246,8 +246,8 @@ Subtotal: 18 SP
 ## Next Steps
 
 1. Review issues and acceptance criteria
-1. Assign issues to team members
-1. Begin Sprint 1 with CMJ edge cases and metrics validation
-1. Track progress toward quality metrics
-1. Update custom fields manually via GitHub UI as needed
-1. Use labels for filtering and tracking during sprints
+2. Assign issues to team members
+3. Begin Sprint 1 with CMJ edge cases and metrics validation
+4. Track progress toward quality metrics
+5. Update custom fields manually via GitHub UI as needed
+6. Use labels for filtering and tracking during sprints

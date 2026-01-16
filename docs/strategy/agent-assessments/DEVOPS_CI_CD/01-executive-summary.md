@@ -146,14 +146,14 @@ ______________________________________________________________________
    - Full ecosystem (S3, RDS, CloudWatch)
    - Cost: ~$600-1000/month production
 
-1. **Google Cloud Run**
+2. **Google Cloud Run**
 
    - Simpler deployment
    - Better for initial MVP
    - Limitation: 1 concurrent request per instance (WebSocket issue)
    - Cost: ~$400-800/month
 
-1. **Kubernetes (self-hosted or managed)**
+3. **Kubernetes (self-hosted or managed)**
 
    - Most flexible
    - Steeper learning curve
@@ -175,17 +175,17 @@ ______________________________________________________________________
    - Cost scales with users
    - Best for 100+ concurrent
 
-1. **GPU acceleration** (Expensive)
+2. **GPU acceleration** (Expensive)
 
    - Use GPU instances for MediaPipe
    - Lower latency, faster detection
    - 3-5x cost increase
    - Use only if load requires it
 
-1. **Asynchronous queue** (Queue-based)
+3. **Asynchronous queue** (Queue-based)
 
    - Client sends video, gets results later
-   - Not truly real-time, but fast (\< 5 second delay)
+   - Not truly real-time, but fast (< 5 second delay)
    - Much cheaper, handles 1000s of concurrent
    - Trade-off: Not coaching feedback
 
@@ -199,7 +199,7 @@ ______________________________________________________________________
 
 - **Tasks:** Ankle fix + CMJ tests (proceed as planned)
 - **Infrastructure:** Build Dockerfile, add load tests, performance profiling
-- **Decision point:** Latency validation (\< or > 200ms)
+- **Decision point:** Latency validation (< or > 200ms)
 
 **Deliverable:** Dockerfile ready, latency baseline established
 

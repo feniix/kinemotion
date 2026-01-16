@@ -3,7 +3,7 @@
 ## Type Hints
 
 - **Required**: All functions must have type hints (Pyright strict mode)
-- **Use**: TypedDict for structured data, type aliases for clarity, NDArray\[dtype\] for NumPy
+- **Use**: TypedDict for structured data, type aliases for clarity, NDArray[dtype] for NumPy
 - **Pattern**: Function signatures include parameter and return type hints
   ```python
   def calculate_jump_height(flight_time: float, gravity: float = 9.81) -> float:
@@ -47,10 +47,10 @@
 ## Key Patterns
 
 1. **Shared Logic**: Extract to core/ modules (pose.py, filtering.py, etc.)
-1. **Inheritance**: Use for shared behavior across jump types
-1. **Helper Functions**: Create testable, reusable functions
-1. **Function Composition**: Pass functions as parameters for flexibility
-1. **Type Aliases**: Define at module level for complex types
+2. **Inheritance**: Use for shared behavior across jump types
+3. **Helper Functions**: Create testable, reusable functions
+4. **Function Composition**: Pass functions as parameters for flexibility
+5. **Type Aliases**: Define at module level for complex types
 
 ```python
 FrameIndex = int

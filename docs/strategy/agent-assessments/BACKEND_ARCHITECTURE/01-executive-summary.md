@@ -35,7 +35,7 @@ ______________________________________________________________________
    - Connection managers for state tracking
    - Heartbeat mechanisms for connection health
 
-1. **Latency Budget (achievable \<200ms)**
+2. **Latency Budget (achievable \<200ms)**
 
    - Capture: 33ms (30fps camera)
    - Network: 50ms (LAN)
@@ -44,7 +44,7 @@ ______________________________________________________________________
    - Render: 33ms (browser)
    - **Total: ~166ms (within budget)**
 
-1. **FastAPI Advantages**
+3. **FastAPI Advantages**
 
    - Native async/await support
    - Built-in OpenAPI documentation
@@ -99,19 +99,19 @@ Data Tier
    - Solution: Frame batching (4-8 frames) or separate GPU tier
    - Optimization: TensorRT (3-5x speedup), Lite model (2x faster, lower accuracy)
 
-1. **MEMORY (High - OOM at 100+ concurrent)**
+2. **MEMORY (High - OOM at 100+ concurrent)**
 
    - Per connection: ~80MB (frame buffer + pose cache)
    - 100 streams: ~8GB buffers + 2GB MediaPipe + 2GB OS = 12GB total
    - Solution: Ring buffers (fixed size), stream poses to database
 
-1. **NETWORK (Medium - depends on bandwidth)**
+3. **NETWORK (Medium - depends on bandwidth)**
 
    - Per stream: 4-8 Mbps (720p uncompressed)
    - 100 streams: 400-800 Mbps aggregate
    - Solution: H.264 compression (25x reduction), client-side preprocessing
 
-1. **STATE MANAGEMENT (Medium - naive implementation)**
+4. **STATE MANAGEMENT (Medium - naive implementation)**
 
    - 100 in-memory dicts = O(n) lookups
    - Solution: Redis-backed state (fast, automatic persistence)
@@ -156,19 +156,19 @@ Data Tier
    - Can't accept frame iterator (WebSocket stream)
    - Must decouple for streaming use
 
-1. **No Streaming Pose Processor**
+2. **No Streaming Pose Processor**
 
    - Landmarks stored in-memory array (entire video)
    - Requires frame-by-frame model for WebSocket intake
    - Needs ring buffer for smoothing window
 
-1. **Synchronous Processing Pipeline**
+3. **Synchronous Processing Pipeline**
 
    - api.py functions are blocking (video read → inference → output)
    - WebSocket needs async/await throughout
    - Must refactor to async
 
-1. **Metrics Calculation Tightly Bound to Video Format**
+4. **Metrics Calculation Tightly Bound to Video Format**
 
    - calculate_cmj_metrics() expects complete vertical_positions array
    - Can't calculate partial metrics incrementally
@@ -793,13 +793,13 @@ ______________________________________________________________________
    - Sequence refactorings to minimize risk
    - Assign code reviewers
 
-1. **Set Up Performance Profiling Infrastructure**
+2. **Set Up Performance Profiling Infrastructure**
 
    - Benchmark: Single-stream latency baseline (should be \<500ms current)
    - Profiling: Frame-by-frame timing breakdown
    - Target: \<200ms E2E after refactoring
 
-1. **Reserve 5-6 Days for Refactoring**
+3. **Reserve 5-6 Days for Refactoring**
 
    - Before Task 3 starts, complete critical refactorings
    - Schedule: Weeks 1-2 (parallel with Task 2 CMJ tests)
@@ -815,13 +815,13 @@ ______________________________________________________________________
    - ✓ Add ring buffer implementation
    - ✓ Basic WebSocket infrastructure module
 
-1. **Performance Validation**
+2. **Performance Validation**
 
    - Single-stream latency: Target \<200ms
    - Memory usage: \<300MB per stream
    - CPU usage: \<50% on single core (room for scaling)
 
-1. **API Design Finalization**
+3. **API Design Finalization**
 
    - OpenAPI spec for Task 5 kickoff
    - Webhook schema definition
@@ -835,13 +835,13 @@ ______________________________________________________________________
    - Move jump phase logic to JumpPhaseDetector
    - Create RunningPhaseDetector stub
 
-1. **Consolidate Metrics Calculators**
+2. **Consolidate Metrics Calculators**
 
    - MetricsCalculator ABC
    - Move existing logic to concrete classes
    - Generic interface for Task 4 use
 
-1. **Verify Duplication**
+3. **Verify Duplication**
 
    - Run npx jscpd: Target \<3%
    - Should be ~2.5% after refactoring
@@ -861,18 +861,18 @@ ______________________________________________________________________
    - Real-time for Drop Jump only (CMJ in Month 2)
    - Reduces complexity, enables faster iteration
 
-1. **Aggressive Refactoring**
+2. **Aggressive Refactoring**
 
    - Extract early, often
    - Don't wait for duplication to hit 5%
 
-1. **Testing Discipline**
+3. **Testing Discipline**
 
    - Async code especially needs coverage
    - Mock external dependencies (Redis, WebSocket)
    - Integration tests for critical paths
 
-1. **Type Safety**
+4. **Type Safety**
 
    - Keep Pyright strict
    - Catches interface mismatches early
@@ -917,10 +917,10 @@ ______________________________________________________________________
 ### Key Takeaways
 
 1. **WebSocket + FastAPI:** Production-ready for real-time analysis
-1. **Refactoring First:** 5-6 days upfront saves 2-3 weeks downstream
-1. **Phase Detection Abstraction:** Enables multi-sport without duplication
-1. **Scaling Strategy:** MVP single-server, grow incrementally as demand requires
-1. **Code Quality:** Must enforce \<3% duplication before Task 4
+2. **Refactoring First:** 5-6 days upfront saves 2-3 weeks downstream
+3. **Phase Detection Abstraction:** Enables multi-sport without duplication
+4. **Scaling Strategy:** MVP single-server, grow incrementally as demand requires
+5. **Code Quality:** Must enforce \<3% duplication before Task 4
 
 With disciplined execution of planned refactorings and architectural abstractions, Kinemotion can achieve:
 

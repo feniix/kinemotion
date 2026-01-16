@@ -2,7 +2,7 @@ RESEARCH NOTE
 
 ## USING THE LOAD-VELOCITY RELATIONSHIP FOR 1RM PREDICTION
 
-BORIS JIDOVTSEFF, \[1,2\] NIGEL K. HARRIS, \[2\] JEAN-MICHEL CRIELAARD, \[1\] AND JOHN B. CRONIN \[2\]
+BORIS JIDOVTSEFF, [1,2] NIGEL K. HARRIS, [2] JEAN-MICHEL CRIELAARD, [1] AND JOHN B. CRONIN [2]
 
 1University of Liege, Department of Sports Sciences, Service of Training and Assessment of Physical Fitness, Liege, Belgium; and
 2Institute of Sport and Recreation Research New Zealand, Auckland University of Technology, Auckland, New Zealand
@@ -133,7 +133,7 @@ The best trial was selected for analysis in terms of the highest
 velocity value. Average velocity (AV) was measured for the
 entire concentric phase of each bench press. Intertrial and
 intersession reliability of this parameter has been demonstrated to be very good during concentric bench press
-assessment (coefficient of variation \[CV\],7%) (16).
+assessment (coefficient of variation [CV],7%) (16).
 
 Data Analysis
 Data were sampled at 1,000 Hz via an analogue-to-digital
@@ -151,7 +151,7 @@ of 17Hz.
 
 software (Microsoft, Redmond, Washington, USA). From
 this linear regression, the slope (SLP), theoretical AV at 0 kg
-(AV0), and theoretical load at 0 m/s \[2\]\[1\] (LD0) were calculated.
+(AV0), and theoretical load at 0 m/s [2][1] (LD0) were calculated.
 Mean values and standard deviation of these data were then
 used to describe the change in average velocity with increasing relative load. The accuracy of the prediction formula was
 calculated using the standard error of estimate as follows:
@@ -161,7 +161,7 @@ calculated using the standard error of estimate as follows:
 f
 **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f** i f **f**
 
-- Yð � YÞ \[2\]
+- Yð � YÞ [2]
 
 N
 
@@ -224,12 +224,12 @@ RESULTS
 
 For the whole population, bench press 1RM was 60 6 19 kg.
 Mean and standard deviation for the SLP, AV0, and LD0
-were, respectively: 20.028 6 0.012 m�s \[2\]\[1\] �kg \[2\]\[1\], 1.70 6
-0.13 m�s \[2\]\[1\], and 70 6 22 kg.
+were, respectively: 20.028 6 0.012 m�s [2][1] �kg [2][1], 1.70 6
+0.13 m�s [2][1], and 70 6 22 kg.
 
 LD0 corresponded to 116 6 8% of the 1RM. Figure 1
 illustrates the mean linear regression between AVand relative
-load. AV at 1RM was 0.23 6 0.09 m�s \[2\]\[1\] .
+load. AV at 1RM was 0.23 6 0.09 m�s [2][1] .
 
 The correlations between 1RM and load at zero velocity
 are illustrated in Figure 2. The correlations were practically
@@ -250,7 +250,7 @@ increasing load, making mathematical analysis easier.
 
 The analysis of the AV-relative load relationship revealed
 that the movement velocity associated with 1RM is 0.23 6
-0.09 m�s \[2\]\[1\] and LD0 corresponds to 116 6 8% of the
+0.09 m�s [2][1] and LD0 corresponds to 116 6 8% of the
 1RM. The results support findings that maximum isometric
 
 force is greater than the maximum concentric force (10) as
@@ -326,7 +326,7 @@ relationship need to measure AV at 3 or 4 increasing loads,
 starting with a light load. The load increment may be
 customized. It is unnecessary to use very heavy loads, but
 the decrease in AV between the lightest and heaviest loads
-should reach at least 0.5 m�s \[2\]\[1\] to significantly cover the loadvelocity relationship. The consequent linear regression
+should reach at least 0.5 m�s [2][1] to significantly cover the loadvelocity relationship. The consequent linear regression
 allows the calculation of LD0 and subsequently the
 estimation of 1RM by using equation 1. To get the subject’s
 best performance, it is recommended that 3 to 5 separate

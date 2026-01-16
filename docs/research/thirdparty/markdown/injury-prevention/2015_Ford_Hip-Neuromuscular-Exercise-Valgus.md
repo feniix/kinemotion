@@ -14,21 +14,21 @@ Open Access Journal of Sports Medicine
 
 Number of times this article has been viewed
 
-Kevin R Ford \[1\]
+Kevin R Ford [1]
 
-Anh-Dung Nguyen \[2\]
+Anh-Dung Nguyen [2]
 
-Steven L Dischiavi \[1\]
+Steven L Dischiavi [1]
 
-Eric J Hegedus \[1\]
+Eric J Hegedus [1]
 
-Emma F Zuk \[2\]
+Emma F Zuk [2]
 
-Jeffrey B Taylor \[1\]
+Jeffrey B Taylor [1]
 
 1Department of Physical Therapy,
 High Point University, High Point, NC,
-USA; \[2\] Department of Athletic Training,
+USA; [2] Department of Athletic Training,
 School of Health Sciences, High Point
 University, High Point, NC, USA
 
@@ -75,27 +75,27 @@ Hip-focused neuromuscular exercise interventions have gained considerable attent
 for addressing a myriad of lower extremity injuries. Most notably, anterior cruciate
 
 ligament (ACL) ruptures and patellofemoral pain (PFP) are two knee pathologies that
-may benefit from improved proximal strength and neuromuscular control strategies. \[1\]
+may benefit from improved proximal strength and neuromuscular control strategies. [1]
 Deficits in proximal hip strength or neuromuscular control may lead to dynamic
-lower extremity valgus. \[2\] Dynamic lower extremity valgus is operationally defined
+lower extremity valgus. [2] Dynamic lower extremity valgus is operationally defined
 
 as a combination of motions and rotations in the lower extremity, including hip
 
 adduction and internal rotation, knee abduction, tibial external rotation and anterior
 
-translation, and ankle eversion. \[3\] During sport movements, dynamic lower extremity
+translation, and ankle eversion. [3] During sport movements, dynamic lower extremity
 
 valgus often presents as a knocked-knee posture during deceleration during double leg
 
 and single leg tasks (Figure 1). Importantly, knee abduction moment, which directly
 contributes to dynamic lower extremity valgus, was a significant predictor for future
 ACL injury risk with 73% sensitivity and 78% specificity in a prospective study of
-young female athletes. \[2\] Frontal plane knee motion was predictive, along with hip
+young female athletes. [2] Frontal plane knee motion was predictive, along with hip
 
 internal/external rotation moment, of second ACL injury risk in young athletes who
-returned to their previous sport following reconstructive surgery and rehabilitation. \[4\]
+returned to their previous sport following reconstructive surgery and rehabilitation. [4]
 Additionally, a recent investigation identified that high knee abduction moment was
-predictive of both PFP and ACL injury risk in young female athletes. \[5\]
+predictive of both PFP and ACL injury risk in young female athletes. [5]
 
 Ford et al
 
@@ -118,39 +118,39 @@ extremity biomechanics and hip weakness. ­Biomechanically,
 it has been widely reported that females exhibit increased
 
 lower extremity valgus alignment and load compared with
-males during landing and pivoting movements, \[6–18\] which
+males during landing and pivoting movements, [6–18] which
 was confirmed in a recent systematic review that consis­
 
 tently identified that females land with increased knee
-abduction across a variety of landing conditions. \[19\] Similar
+abduction across a variety of landing conditions. [19] Similar
 
 lower ­extremity valgus alignments are often demonstrated
-by females at the time of ACL injury. \[20–22\]
+by females at the time of ACL injury. [20–22]
 
 Additionally, males have longitudinal increases in hip
 
 strength during adolescent growth compared with no strength
-changes in females. \[23\] The result of these sex differences fol­
+changes in females. [23] The result of these sex differences fol­
 
 lowing growth and development is that males have greater
-overall hip strength compared with females. \[23\] This strength
+overall hip strength compared with females. [23] This strength
 difference aligns with the divergent sex-specific patterns of
 
 ACL and patellofemoral joint injury rates. Competitive, colle­
 giate male cross-country runners exhibit significantly greater
 
 hip extension and abduction strength measured isokinetically
-compared with female runners. \[24\] ­Additionally, runners with
+compared with female runners. [24] ­Additionally, runners with
 
 lower hip abductor and hip extensor strength exhibit greater
-frontal plane and transverse plane hip motion. \[25\] A systematic
+frontal plane and transverse plane hip motion. [25] A systematic
 
 review that investigated hip strength in patients with PFP
 
 found strong evidence that hip abduction, external rotation,
 
 and extension strength were decreased compared with unin­
-jured control subjects. \[26\] Conflicting data exist on the specific
+jured control subjects. [26] Conflicting data exist on the specific
 
 movement patterns that may be present in patients with
 
@@ -159,19 +159,19 @@ active PFP; however, the inability to ­eccentrically control hip
 adduction and internal rotation may lead to greater dynamic
 
 lower extremity valgus commonly seen during landing, squat­
-ting, and running. \[27,28\]
+ting, and running. [27,28]
 
 Altered neuromuscular control strategies during land­
 
 ing may be a potential factor related to lower extremity and
-ACL injuries in women athletes. \[29,30\] In a study of 315 young
+ACL injuries in women athletes. [29,30] In a study of 315 young
 athletes, males had greater hip flexion at initial contact and
-greater hip extensor moment compared with females. \[31\] There
+greater hip extensor moment compared with females. [31] There
 was also significant preference to underutilize the hip com­
 
 pared with the knee extensors in females, which indicates a
 sex-specific hip strategy during drop vertical jumps. Decker
-et al \[32\] showed a decrease in negative joint work (decreased
+et al [32] showed a decrease in negative joint work (decreased
 
 eccentric muscle contraction to absorb landing forces) at the
 
@@ -180,25 +180,25 @@ hip in females compared with males during landing. ­Similarly,
 ACL reconstructed patients had greater hip moments ­during
 
 the stance phase of gait that may provide increased protection
-for the ACL. \[33\] Patients with patellar tendinopathy also dis­
+for the ACL. [33] Patients with patellar tendinopathy also dis­
 
 played increased hip joint moments during hopping compared
-with controls. \[34\] Proximal mechanisms may play a significant
+with controls. [34] Proximal mechanisms may play a significant
 
 role in neuromuscular control strategies for controlling and
 
 compensating for knee loading during a myriad of complex
 
 movements. Neuromuscular training positively alters hip
-kinematics and kinetics. \[35\] Lephart et al \[35\] found increased
+kinematics and kinetics. [35] Lephart et al [35] found increased
 hip flexion at initial contact and increased peak internal hip
 
 extensor moment following a plyometric training protocol.
 These authors suggested that the modifications at the hip
-likely increase the hamstring forces that protect the ACL. \[35\]
+likely increase the hamstring forces that protect the ACL. [35]
 
 Hip posture may play an important role in the mechanical
-efficiency of hamstrings in relation to quadriceps. \[36\]
+efficiency of hamstrings in relation to quadriceps. [36]
 
 Clearly, the hip plays a central role in dynamic lower extrem­
 
@@ -236,7 +236,7 @@ role in dynamic valgus, understanding the functional anatomy
 of the hip is foundational in developing any successful inter­
 
 vention program. The gluteus medius is the primary abductor
-of the hip \[37–39\] and receives assistance in abduction from the
+of the hip [37–39] and receives assistance in abduction from the
 
 gluteus minimus and the piriformis. The proximal attachment
 
@@ -247,13 +247,13 @@ and is fan-shaped, spanning the iliac crest from the anterior
 superior iliac spine to the posterior superior iliac spine. The
 
 muscle tapers into a strong tendon and attaches distally on
-the posterosuperior portion of the greater trochanter. \[40\] The
+the posterosuperior portion of the greater trochanter. [40] The
 gluteus medius is specifically defined by three parts, anterior,
 
 middle, and posterior, that are approximately equal in volume.
 The anterior and middle fibers run almost vertical while the
 posterior fibers run horizontal and almost parallel to the neck
-of the femur. \[41\] Using fine wire electromyography (EMG),
+of the femur. [41] Using fine wire electromyography (EMG),
 
 the three segments of the gluteus medius have been found
 
@@ -265,10 +265,10 @@ onset and duration) more simultaneously during maximal
 
 levels of activity such as the support phases of descending
 
-stairs. \[42,43\]
+stairs. [42,43]
 
 The gluteus maximus is the largest muscle in the gluteal
-region and one of the largest muscles in the body. \[37\] The
+region and one of the largest muscles in the body. [37] The
 
 proximal attachments of the gluteus maximus are along
 
@@ -278,14 +278,14 @@ sacrum and coccyx, and the sacrotuberous ligament. It slopes
 
 inferolaterally at a 45° angle across the ischial tuberosity and
 attaches distally into the superficial fibers of the iliotibial
-tract and the gluteal tuberosity of the femur. \[37,44\] While the
+tract and the gluteal tuberosity of the femur. [37,44] While the
 
 gluteus medius is the primary abductor of the hip, the gluteus
 
 maximus functions primarily as an extensor but also as an
 
 external rotator of the hip, allowing the gluteus maximus to
-control motions in the sagittal and transverse planes. \[37\]
+control motions in the sagittal and transverse planes. [37]
 
 Proper functioning of the posterolateral hip musculature
 
@@ -298,27 +298,27 @@ frontal and transverse planes to maintain a level pelvis and
 
 Hip-focused neuromuscular exercise for dynamic lower extremity valgus
 
-control rotation at the hip. \[37–39,41,43,45,46\] In the frontal plane,
+control rotation at the hip. [37–39,41,43,45,46] In the frontal plane,
 
 the hip abductors must produce a large abduction torque to
 
 counteract the adduction torque produced from the product
 
 of body weight and its larger external moment arm act­
-ing at the hip. \[47\] Failure to produce the abduction force is
+ing at the hip. [47] Failure to produce the abduction force is
 
 observed as a Trendelenburg posture, with the contralateral
-pelvis dropping. \[47\] The important role of the hip abductors
+pelvis dropping. [47] The important role of the hip abductors
 
 in stabilizing the pelvis during single limb function is fur­
 
 ther illustrated during the midstance phase of gait where
 
 activation and force production of the abductors have been
-observed to be the greatest. \[48,49\] In the transverse plane, the
+observed to be the greatest. [48,49] In the transverse plane, the
 
 abductors and external rotators work together to control hip
-and pelvis motion. \[45,46\] Hence, weakness or inefficiency of the
+and pelvis motion. [45,46] Hence, weakness or inefficiency of the
 
 posterolateral hip musculature would decrease stability of
 
@@ -354,7 +354,7 @@ effects. It has been suggested that muscle activation during
 
 an exercise should reach a minimum of 40%–60% MVIC in
 
-order to achieve strength gains. \[50\] This has led to a myriad of
+order to achieve strength gains. [50] This has led to a myriad of
 
 studies that have compared muscle activity during exercises.
 
@@ -396,10 +396,10 @@ Ford et al
 **Notes:** ( **A** ) Side-lying hip abduction. ( **B** ) Side-lying clam with resistance. ( **C** ) Unilateral supine bridge. ( **D** ) Side-bridge (plank).
 
 Activation of the gluteus medius during this exercise
-have been reported to range from 23% to 81% MVIC. \[51–55\]
+have been reported to range from 23% to 81% MVIC. [51–55]
 
 The side-lying hip abduction exercise was observed to have
-16%–43% greater gluteus medius activation in studies \[51,53\]
+16%–43% greater gluteus medius activation in studies [51,53]
 
 when compared with the clam-shell exercise, where the hip
 
@@ -412,10 +412,10 @@ the hip and knee extended compared with a flexed position.
 When comparing gluteus medius activation between side
 lying hip abduction exercise and a unilateral supine bridge
 exercise (Figure 2C), the reports are somewhat conflicting.
-Two studies \[53,54\] observed 8%–13% less gluteus medius acti­
+Two studies [53,54] observed 8%–13% less gluteus medius acti­
 
 vation during the unilateral supine bridge exercise, whereas
-one study \[55\] observed an 8% greater gluteus medius activation
+one study [55] observed an 8% greater gluteus medius activation
 
 during the side-lying hip abduction. The reasons for these
 conflicting findings are unknown.
@@ -437,7 +437,7 @@ the hip off the ground while maintain a neutral alignment
 of the trunk, hips, and knees. The side-bridge has been
 
 observed to require 35%–40% greater activation than the
-side-lying hip abduction exercise. \[53,55\] The greater activation
+side-lying hip abduction exercise. [53,55] The greater activation
 
 during the side-bridge is likely due to the increased demand of
 
@@ -456,7 +456,7 @@ maximus activation have been observed to range between
 17% and 25% MVIC during a bilateral supine exercise and
 
 between 35% and 54% MVIC during a unilateral supine
-bridging exercise. \[53–55\] The magnitudes of gluteus maxi­
+bridging exercise. [53–55] The magnitudes of gluteus maxi­
 
 mus activation during these bridging exercises are similar
 
@@ -470,7 +470,7 @@ ing the hip while the knee is flexed. Direct comparison
 between the quadruped hip extension and unilateral bridging
 
 exercises reveals an approximately 5% difference in glu­
-teus maximus activation. \[53,54\] However, the observed gluteus
+teus maximus activation. [53,54] However, the observed gluteus
 
 maximus activation during these exercises may be misleading
 
@@ -491,7 +491,7 @@ a large abduction torque to counteract the adduction torque
 produced from the product of the body weight and its larger
 
 external moment arm acting at the hip to stabilize the pelvis
-during single limb activities. \[48,49\] Controlled weight-bearing
+during single limb activities. [48,49] Controlled weight-bearing
 
 exercises commonly used to target the gluteus medius include
 
@@ -504,7 +504,7 @@ during these exercises has been reported to range between
 38% and 58% MVIC for hip hikes, 38% and 60% MVIC
 
 for lateral step-ups, and 48% and 82% MVIC for single
-limb squats. \[51–57\] Only one study was found that examined
+limb squats. [51–57] Only one study was found that examined
 
 Open Access Journal of Sports Medicine 2015:6
 
@@ -526,7 +526,7 @@ differences across all three exercises, and it reported a 22%
 and 24% greater activation of the gluteus medius during a
 
 single limb squat exercise compared with a lateral step-up and
-hip hike exercise, respectively. \[53\] Collectively, these findings
+hip hike exercise, respectively. [53] Collectively, these findings
 
 suggest that there is a negligible difference between the hip
 
@@ -549,25 +549,25 @@ these exercises has been reported to range between 41% and
 71% MVIC for single limb squats, 29% and 64% MVIC for
 
 lateral step-ups, 23% and 74% MVIC for forward step-ups,
-and 59% MVIC for single limb dead lifts. \[51,53–57\] Differences in
+and 59% MVIC for single limb dead lifts. [51,53–57] Differences in
 
 gluteus maximus activation between the forward and lateral
-step-up exercises are conflicting, with one study \[56\] report­
-ing an 18% increase and another study \[53\] reporting a 9%
+step-up exercises are conflicting, with one study [56] report­
+ing an 18% increase and another study [53] reporting a 9%
 
 decrease in gluteus maximus activation during the forward
 versus the lateral step-up exercise. There is also conflicting
 
 evidence when comparing single limb squat and the single
-limb dead lift exercises, with one study \[51\] reporting no dif­
-ference and another study \[53\] reporting a 12% greater gluteus
+limb dead lift exercises, with one study [51] reporting no dif­
+ference and another study [53] reporting a 12% greater gluteus
 
 maximus activation during the squat exercise. There is con­
 
 sistent evidence suggesting that there is a 7%–16% increase
 
 in gluteus maximus during the single limb squat compared
-with the forward step-up exercise. \[53,57\] Only one study \[53\] was
+with the forward step-up exercise. [53,57] Only one study [53] was
 
 found that examined gluteus maximus activation across all
 
@@ -609,8 +609,8 @@ activation during these exercises have been reported to be
 
 27%–28% MVIC for lateral band walks, 41% MVIC for
 
-side lunges, and 20%–44% MVIC for forward lunges. \[51,54,55\]
-Only one study \[51\] was found that compared the gluteal muscle
+side lunges, and 20%–44% MVIC for forward lunges. [51,54,55]
+Only one study [51] was found that compared the gluteal muscle
 
 activation across all three exercises. A comparison of gluteus
 
@@ -658,8 +658,8 @@ defined as an “… activity that involves and capitalizes on
 
 the mechanisms of the stretch-shortening cycle to increase
 the efficiency of force production at a joint or increase
-performance”. \[58\] A number of papers provide detailed exer­
-cise descriptions and progressions. \[58–61\] These exercises are
+performance”. [58] A number of papers provide detailed exer­
+cise descriptions and progressions. [58–61] These exercises are
 
 important to assess readiness for return to play, but may also
 provide therapeutic benefit by preferentially recruiting the
@@ -675,12 +675,12 @@ hops (61% MVIC), and split squat jumps (62% MVIC), with
 lesser activation during non-sagittal plane double-limb land­
 
 ings in the frontal (40% MVIC) and transverse (47% MVIC)
-planes. \[62\] Similarly, the gluteus maximus is most highly
+planes. [62] Similarly, the gluteus maximus is most highly
 
 activated during double-limb (63% MVIC) and single-limb
 
 (69.4% MVIC) sagittal plane landings, and less active in other
-planes (\<40% MVIC). \[62\] Of note, these results are during a
+planes (\<40% MVIC). [62] Of note, these results are during a
 
 land, and do not incorporate a subsequent jump which is
 
@@ -688,7 +688,7 @@ common during plyometric activities. True plyometric activi­
 ties, including a rapid change of direction, elicit significantly
 
 higher muscle activation (150%–190% MVIC) than isolated
-landings or controlled exercises. \[63\] Continued work is needed
+landings or controlled exercises. [63] Continued work is needed
 
 to explore gluteal activation patterns during other commonly
 
@@ -703,7 +703,7 @@ muscles. Specifically, there is evidence to suggest that rota­
 tion at the hip during the side-lying hip abduction exercise
 
 can directly influence the magnitude of gluteus medius
-activation. \[64\] It was reported that activation of the gluteus
+activation. [64] It was reported that activation of the gluteus
 
 medius during the side-lying hip abduction exercise was
 
@@ -711,7 +711,7 @@ medius during the side-lying hip abduction exercise was
 
 in neutral. In addition, gluteus maximus activation can be
 directly influenced by the position of the hip in the sagittal
-plane during non-weight-bearing hip extension exercises. \[65\]
+plane during non-weight-bearing hip extension exercises. [65]
 
 There is evidence to suggest that activation of the gluteus
 maximus is 12%–14% greater at 30–60 degrees of hip flexion
@@ -733,7 +733,7 @@ exercises typically used in intervention programs.
 
 The position of the trunk during controlled weight
 bearing and functional exercises has been suggested to
-influence the demands on the hip muscles. Powers \[66\] discusses
+influence the demands on the hip muscles. Powers [66] discusses
 
 this relationship where trunk position, either in the sagittal
 
@@ -746,7 +746,7 @@ joint will increase the demand placed on the hip muscles.
 This theory has been supported by empirical evidence that
 
 reports greater hip muscle activation during jumping and
-running tasks with the trunk in a more flexed position. \[67,68\]
+running tasks with the trunk in a more flexed position. [67,68]
 
 There are limited studies that have examined the role of the
 
@@ -764,7 +764,7 @@ be found that examined the influence of sagittal plane trunk
 **Dovepress**
 
 position on gluteus maximus activation during a forward
-lunge. \[69\] The authors reported that there was a 6% increase in
+lunge. [69] The authors reported that there was a 6% increase in
 
 gluteus maximus activation during a forward lunge with the
 
@@ -778,7 +778,7 @@ tions of exercises on hip muscle activation.
 As previously mentioned, it has been suggested that muscle
 
 activation during an exercise should reach a minimum of
-40%–60% MVIC in order to achieve strength gains. \[50\] These
+40%–60% MVIC in order to achieve strength gains. [50] These
 
 values were derived through procedures that normalized the
 
@@ -821,7 +821,7 @@ A number of recent studies have examined the effects of hip
 focused intervention programs on multi-planar hip strength
 
 and lower extremity biomechanical measures of dynamic
-lower extremity valgus (Table 1). \[70–80\] These programs have
+lower extremity valgus (Table 1). [70–80] These programs have
 
 been wide-ranging in their implementation, based largely on
 
@@ -835,20 +835,20 @@ ABD ER EXT
 
 Biomechanics
 
-Baldon et al \[74\] x x x x ↑ 15%\* Ecc 0% Ecc NT - ↓ ipsilateral trunk inclination, pelvis
+Baldon et al [74] x x x x ↑ 15%\* Ecc 0% Ecc NT - ↓ ipsilateral trunk inclination, pelvis
 
 contralateral depression, hip
 
 adduction and knee abduction during
 
 a single leg squat
-Dolak et al \[78\] x x x ↑ 21%*Iso ↑ 29% Iso NT - NT
-Earl and Hoch \[70\] x x x ↑ 12%* Iso ↑ 17%\* Iso NT - ↓ peak internal knee abduction
+Dolak et al [78] x x x ↑ 21%*Iso ↑ 29% Iso NT - NT
+Earl and Hoch [70] x x x ↑ 12%* Iso ↑ 17%\* Iso NT - ↓ peak internal knee abduction
 
 moment during stance phase of
 
 running
-Ismail et al \[72\] x x ↑ 41%*Con ↑ 33%* Con NT - NT
+Ismail et al [72] x x ↑ 41%*Con ↑ 33%* Con NT - NT
 ↑ 15%*Ecc ↑ 29%* Ecc
 
 ↑ 33%*Con
@@ -856,14 +856,14 @@ Ismail et al \[72\] x x ↑ 41%*Con ↑ 33%* Con NT - NT
 
 NT - NT
 
-Khayambashi et al \[75\] x ↑ 32%–42%*Iso ↑ 37%–56%* Iso NT - NT
-McCurdy et al \[76\] x NT NT NT -  No change in knee abduction angle
+Khayambashi et al [75] x ↑ 32%–42%*Iso ↑ 37%–56%* Iso NT - NT
+McCurdy et al [76] x NT NT NT -  No change in knee abduction angle
 
 during a bilateral drop-jump task
-Myer \[77\] x x x x ↑ 15%–17%*Con NT NT - NT
-Nakagawa et al \[79\] x x x x ↑ 15% Ecc ↑ 6% Ecc NT - NT
+Myer [77] x x x x ↑ 15%–17%*Con NT NT - NT
+Nakagawa et al [79] x x x x ↑ 15% Ecc ↑ 6% Ecc NT - NT
 Stearns and x x x ↑ 7%* Iso NT ↑ 8%\* Iso - ↑ peak hip and knee flexion, ↓
-Powers \[71\]
+Powers [71]
 
 x x x ↑ 7%*Iso NT ↑ 8%* Iso - ↑ peak hip and knee flexion, ↓ average
 
@@ -872,7 +872,7 @@ internal knee adduction moment,
 
 ratio during a bilateral drop-jump task
 
-Willy and Davis \[80\] x x x ↑ 42%*Iso ↑ 24.1%* Iso NT -  No significant kinematic changes
+Willy and Davis [80] x x x ↑ 42%*Iso ↑ 24.1%* Iso NT -  No significant kinematic changes
 
 during running
 
@@ -899,26 +899,26 @@ Ford et al
 the population targeted or stage in the rehabilitation process.
 
 Hip-focused interventions have been used in healthy athletes
-for knee injury prevention strategies, \[77\] and in those diagnosed
-with PFP. \[70,72,74,75\] The duration and volume of hip-focused
+for knee injury prevention strategies, [77] and in those diagnosed
+with PFP. [70,72,74,75] The duration and volume of hip-focused
 
 programs have also varied considerably, with all programs
 
 occurring two to three times per week, but ranging from 4
 
-to 12 weeks in duration. \[70–76\]
+to 12 weeks in duration. [70–76]
 
 Because of the heterogeneity in populations and stages
 
 of rehabilitation, the exercises used to target the hip have
 
 also been variable. Some programs have focused strictly
-on isolated non-weight-bearing hip exercises, \[72,75\] while
+on isolated non-weight-bearing hip exercises, [72,75] while
 
 others have used a combination of non-weight-bearing and
 
 weight-bearing/functional exercises focused either in one
-(sagittal) or multiple (frontal and transverse) planes. \[74,76,78,79\]
+(sagittal) or multiple (frontal and transverse) planes. [74,76,78,79]
 
 Although all programs were varied, common exercises were
 
@@ -943,10 +943,10 @@ their hip-focused intervention, using standard exercises such
 as planks or incorporating an unstable support surface (eg,
 
 BOSU balance trainer) to encourage trunk activation and
-stabilization, \[71,74,77\] while other programs have focused on the
+stabilization, [71,74,77] while other programs have focused on the
 
 latter stages of rehabilitation by including plyometric activi­
-ties in addition to standard strengthening techniques. \[71,77\]
+ties in addition to standard strengthening techniques. [71,77]
 
 Although the implementation methods of hip-focused
 
@@ -955,15 +955,15 @@ intervention programs have been variable, these programs
 consistently produce improved measures of hip extension,
 
 abduction, and external rotation strength (Table 1). Strength
-gains of 7%–42% in hip abduction, \[22,70–72,75,77–80\] 6%–56% in
-hip external rotation, \[70,72,75,78–80\] and 8% in hip extension \[71\] have
+gains of 7%–42% in hip abduction, [22,70–72,75,77–80] 6%–56% in
+hip external rotation, [70,72,75,78–80] and 8% in hip extension [71] have
 
 been previously reported. However, these strength gains need
 
 to be interpreted cautiously. Although no previous studies
 have reported a significant reduction in hip strength, not all
 studies have reported statistically significant improvements
-in strength after hip-focused interventions \[74,80\] which may be
+in strength after hip-focused interventions [74,80] which may be
 
 due to differences in the components, duration, and inten­
 
@@ -988,7 +988,7 @@ controlling dynamic lower extremity valgus during jumping
 or cutting. Past research on the role of hip-focused interven­
 
 tions resulting in improved eccentric hip strength has been
-limited, \[72,74,79\] and no studies have examined eccentric strength
+limited, [72,74,79] and no studies have examined eccentric strength
 
 of the gluteus maximus or the combination of the three car­
 
@@ -999,26 +999,26 @@ focused interventions have translated to improved bio­
 
 mechanics at the hip and knee during athletic activities
 (Table 1). Previous studies report greater peak hip flexion
-during a jump landing \[71\] and less hip adduction and internal
+during a jump landing [71] and less hip adduction and internal
 
 rotation, ipsilateral trunk inclination, and contralateral pelvis
-depression during a single leg squat, \[74\] despite only modest
+depression during a single leg squat, [74] despite only modest
 
 gains in hip strength. At the knee, hip-focused interventions
 
 may result in lower levels of knee adduction moments dur­
-ing running, \[70\] and lower knee-hip extensor moment ratios
+ing running, [70] and lower knee-hip extensor moment ratios
 
 and peak knee abduction angles and moments during jump
-landings, \[71\] although other studies have found no specific bio­
-mechanical changes at the knee. \[76\] Examining previous pro­
+landings, [71] although other studies have found no specific bio­
+mechanical changes at the knee. [76] Examining previous pro­
 
 grams that have documented biomechanical outcomes after
 
 training, hip-focused interventions that include closed chain
 
 activities and trunk stabilization appear to make the largest
-positive impact on distal biomechanics. \[70,71,74\] Considering
+positive impact on distal biomechanics. [70,71,74] Considering
 
 the demands on the gluteus maximus during closed chain
 
@@ -1095,27 +1095,27 @@ and increased EMG activity generally results in improved
 strength, which further results in improved task-related
 
 ­biomechanics. However, improved strength does not always
-result in changes to important biomechanical variables, \[81\]
+result in changes to important biomechanical variables, [81]
 
 and improved biomechanics in sports-related tasks does
 
 not necessarily equal improved biomechanical variables in
-performance of the sport itself. \[80\] Controlling dynamic lower
+performance of the sport itself. [80] Controlling dynamic lower
 
 extremity valgus is complex (Figure 1) and likely involves
 
 a combination of strengthening and activation exercises
 
 and motor control of the hip, as well as use of feedback to
-facilitate integration into higher level activities. \[82–87\] Even
+facilitate integration into higher level activities. [82–87] Even
 
 with the addition of feedback, hip-targeted strengthening
 
 alone is not the answer. Dynamic lower extremity valgus
 and hip muscle inhibition is likely influenced by pain or
-inflammation, \[88\] body structure, \[89,90\] fatigue, \[91–94\] pubertal age
-and maturation, \[9,31,95\] fear and other psychosocial variables, \[96–98\]
-and prior injury. \[99,100\] With the evidence and these variables
+inflammation, [88] body structure, [89,90] fatigue, [91–94] pubertal age
+and maturation, [9,31,95] fear and other psychosocial variables, [96–98]
+and prior injury. [99,100] With the evidence and these variables
 
 in mind, a focus on strengthening the hip to control dynamic
 
@@ -1431,10 +1431,10 @@ Hip-focused neuromuscular exercise for dynamic lower extremity valgus
 
 1993.
 
-0001. Earl JE. Gluteus medius activity during 3 variations of isometric single
+1994. Earl JE. Gluteus medius activity during 3 variations of isometric single
       leg stance. _J Sport Rehabil_ . 2004;13:1–11.
 
-0001. Schmitz RJ, Riemann BL, Thompson T. Gluteus medius activity
+1995. Schmitz RJ, Riemann BL, Thompson T. Gluteus medius activity
 
 during isometric closed-chain hip rotation. _J Sport Rehabil_ . 2002;11:
 

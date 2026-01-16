@@ -4,7 +4,7 @@ Review
 
 # Which factors differentiate athletes with hip/groin pain from those without? A systematic review with meta-analysis
 
-### Andrea B Mosler, \[1,2\] Rintje Agricola, \[3\] Adam Weir, \[4\] Per Hölmich, \[4,5\] Kay M Crossley \[2,6\]
+### Andrea B Mosler, [1,2] Rintje Agricola, [3] Adam Weir, [4] Per Hölmich, [4,5] Kay M Crossley [2,6]
 
 - Additional material is
   published online only. To view
@@ -100,25 +100,25 @@ Hip and groin pain is problematic for athletes, particularly in sports involving
 change of direction and kicking. Groin pain is the
 third most common injury in both soccer and
 Australian Rules football, accounting for 4–16% of
-all injuries sustained per season. \[1 2\] It is also frequent in other football codes, such as Rugby
-League, \[3\] Gaelic Football \[4\] 5 and American
-Football, \[6\] as well as ice hockey. \[7\] The aetiology is
-multifactorial, with coexisting pathological processes occurring in different tissues. \[8\]\[–\]\[11\] Varying
+all injuries sustained per season. [1 2] It is also frequent in other football codes, such as Rugby
+League, [3] Gaelic Football [4] 5 and American
+Football, [6] as well as ice hockey. [7] The aetiology is
+multifactorial, with coexisting pathological processes occurring in different tissues. [8][–][11] Varying
 approaches have been recommended to systematically examine and diagnose groin pain in an
 
-athlete. \[11\]\[–\]\[13\] While the reliability of the tests used
-in these approaches has been examined, \[14\]\[–\]\[16\] there
+athlete. [11][–][13] While the reliability of the tests used
+in these approaches has been examined, [14][–][16] there
 remains a lack of consensus on the terminology and
 diagnostic categories used.
 Intrinsic risk factors for hip/groin pain in athletes
-have been prospectively studied. \[3 17\]\[–\]\[23\] Two systematic reviews identified only past history of injury
+have been prospectively studied. [3 17][–][23] Two systematic reviews identified only past history of injury
 and lower adductor strength as risk factors, while
 there is conflicting evidence for reduced hip range
-of motion. \[4\] 24 Injury prevention programmes
+of motion. [4] 24 Injury prevention programmes
 aimed at reducing the incidence of groin pain by
 addressing these potentially modifiable risk factors
-have had limited efficacy. \[25\]\[–\]\[28\] Hip and groin pain
-still has a high incidence and recurrence rate. \[17 23\]
+have had limited efficacy. [25][–][28] Hip and groin pain
+still has a high incidence and recurrence rate. [17 23]
 
 Therefore, it seems that we do not yet fully understand these injuries and further research is required
 to assist in the understanding of injury mechanisms,
@@ -129,7 +129,7 @@ may be enhanced by knowledge of the factors differentiating athletes with and wi
 pain. Previous case–control and cohort studies
 have examined the relationship between hip/
 groin pain, and various clinical and radiological
-features. \[5 15\]\[–\]\[17 22 29\]\[–\]\[42\] A systematic evaluation of
+features. [5 15][–][17 22 29][–][42] A systematic evaluation of
 this literature may assist in the management and
 prevention of this common athletic injury.
 This study aimed to systematically review the literature examining the factors differentiating athletes with and without hip/groin pain.
@@ -196,9 +196,9 @@ modified Downs and Black scale (see online supplementary B),
 
 –
 which is appropriate for cohort and case control study designs.
-The Downs and Black scale is reliable \[43\] and the modified
-version used in this study had a maximum score of 16. \[44 45\] The
-methodological quality of each article was stratified, as in previous reviews, \[45\] with a total score ≥12 deemed to be high quality,
+The Downs and Black scale is reliable [43] and the modified
+version used in this study had a maximum score of 16. [44 45] The
+methodological quality of each article was stratified, as in previous reviews, [45] with a total score ≥12 deemed to be high quality,
 10 or 11 to be moderate quality, and low quality if the score
 was ≤9. Disagreements in initial ratings of methodological
 quality assessment were discussed between the two reviewers
@@ -239,19 +239,19 @@ conduct the meta-analysis. Standardised mean differences
 continuous data and random effects models were used for each
 meta-analysis. The magnitude of the effect size of the pooled
 SMD was interpreted as large if SMD ≥0.8; moderate if 0.5–
-0.8; weak if 0.2–0.5, and no effect determined if SMD≤0.2. \[46\]
+0.8; weak if 0.2–0.5, and no effect determined if SMD≤0.2. [46]
 
 Statistical heterogeneity of the pooled data was examined
-using the I \[2\] statistic. Sensitivity analysis was conducted by examining the forest plots of the pooled data following omission of
+using the I [2] statistic. Sensitivity analysis was conducted by examining the forest plots of the pooled data following omission of
 the data from each study, one by one.
 For dichotomous data, an OR was calculated for the association between a positive test and the presence of hip and groin
 pain, and data pooled if methodological homogeneity was determined. Effect sizes for the OR were defined as follows: small
 effect OR=1–1.25, medium effect OR=1.25–2 and large effect
-OR≥2. \[47\]
+OR≥2. [47]
 
 For outcome measures with methodological or clinical heterogeneity, qualitative data synthesis and analysis was performed.
 For both quantitative and qualitative data synthesis, a level of
-evidence was assigned to each outcome according to the recommendations proposed by van Tulder et al. \[48\]
+evidence was assigned to each outcome according to the recommendations proposed by van Tulder et al. [48]
 
 RESULTS
 
@@ -260,9 +260,9 @@ The electronic search identified 5269 records and following
 removal of duplicates, the titles and abstracts of 2251 articles
 were screened. The full text of 41 articles were retrieved and
 assessed for eligibility against the inclusion criteria. Two articles
-were added following citation checking. \[36 37\] After reviewing the
+were added following citation checking. [36 37] After reviewing the
 full text of 43 articles, 26 articles were excluded and the
-remaining 17 articles \[5 15 16 30\]\[–\]\[33 35\]\[–\]\[40 50\]\[–\]\[53\] were included for
+remaining 17 articles [5 15 16 30][–][33 35][–][40 50][–][53] were included for
 full review and data synthesis (figure 1).
 
 Methodological quality
@@ -299,11 +299,11 @@ and control.
 Factors differentiating athletes with and without hip/groin pain
 Patient reported outcome measures
 Several studies presented data from PROs, completed by both
-control and hip/groin pain athletes. \[5 30 31 36 52\] None used identical PROs, but three high-quality studies assessed aspects of
-pain using a Likert scale. \[30 31 36\] The Copenhagen hip and groin
-outcome score (HAGOS) was used in one high-quality study, \[5\]
+control and hip/groin pain athletes. [5 30 31 36 52] None used identical PROs, but three high-quality studies assessed aspects of
+pain using a Likert scale. [30 31 36] The Copenhagen hip and groin
+outcome score (HAGOS) was used in one high-quality study, [5]
 
-while another high–quality study \[52\] used both the short form
+while another high–quality study [52] used both the short form
 (SF)-12, and the Hip Disability and Osteoarthritis Outcome
 Score (HOOS). The results of the PROs are summarised in table 2.
 All PROs were able to differentiate between athletes with and
@@ -315,10 +315,10 @@ with and without hip/groin pain.
 Pain provocation tests
 Five studies examined the difference between athletes with and
 without hip/groin pain in response to various pain provocation
-tests. \[16 30 35 36 53\] The pain on adductor squeeze testing was
+tests. [16 30 35 36 53] The pain on adductor squeeze testing was
 recorded by 3 high-quality studies using the same methodology
 (supine, resisted adduction at the medial knee with hips at 45°
-flexion, and knees flexed 90°). \[16 30 53\] One of these studies \[30\]
+flexion, and knees flexed 90°). [16 30 53] One of these studies [30]
 
 reported significantly greater pain experienced during the
 squeeze test in the hip/groin pain group (p\<0.001). However,
@@ -334,13 +334,13 @@ The ORs for the other pain provocation tests examined in
 single studies are: single adductor test (supine, leg straight and
 
 –
-resisted adduction at the ankle): \[16\] OR=4.03 (1.21 13.45), bilateral adductor test (resisted bilateral adduction while athlete holds
+resisted adduction at the ankle): [16] OR=4.03 (1.21 13.45), bilateral adductor test (resisted bilateral adduction while athlete holds
 
 –
-both legs off the bed in 30° hip flexion): \[16\] OR=24.76 (5.35
+both legs off the bed in 30° hip flexion): [16] OR=24.76 (5.35
 
 –
-114.6), active straight leg raise test: \[36\] OR=56.64 (3.27 980.14),
+114.6), active straight leg raise test: [36] OR=56.64 (3.27 980.14),
 
 Mosler AB, et al. Br J Sports Med 2015;49:810. doi:10.1136/bjsports-2015-094602 3 of 12
 
@@ -349,9 +349,9 @@ Mosler AB, et al. Br J Sports Med 2015;49:810. doi:10.1136/bjsports-2015-094602 
 Review
 
 –
-pelvic belt test: \[36\] OR=187.21 (3.27 980.14), impingement
-test: \[35\] OR=50.62 (11.3–226.73).
-The active straight leg raise test was also examined in an additional high-quality study, \[30\] but despite the authors finding a
+pelvic belt test: [36] OR=187.21 (3.27 980.14), impingement
+test: [35] OR=50.62 (11.3–226.73).
+The active straight leg raise test was also examined in an additional high-quality study, [30] but despite the authors finding a
 statistically significant difference between the control and hip/
 groin pain subjects for this test (p=0.001), the mean of the
 
@@ -366,11 +366,11 @@ between hip/groin pain athletes from those without pain.
 
 Range of motion
 Five studies examined hip range of motion, including the variables of hip internal and external rotation, and bent knee fall
-out. \[5 15 33 35 53\]
+out. [5 15 33 35 53]
 
 Hip internal rotation (IR) was measured in prone with
 the hip in neutral flexion/extension in 3 high-quality studies
-(figure 3). \[5 15 53\] The meta-analysis revealed strong evidence that
+(figure 3). [5 15 53] The meta-analysis revealed strong evidence that
 hip IR range in prone is less in athletes with hip and groin pain
 
 –
@@ -380,7 +380,7 @@ SMD=0.42 (0.01 0.83) than those without pain. The difference in range between th
 3.7° (1.1 6.3°) of reduced hip IR in the athletes with pain,
 which represents a weak effect.
 Hip IR was measured in supine with the hip and knee at 90°
-flexion in 2 moderate quality studies. \[33 35\] Meta-analysis provided moderate evidence that hip IR range measured in supine
+flexion in 2 moderate quality studies. [33 35] Meta-analysis provided moderate evidence that hip IR range measured in supine
 
 –
 was less in athletes with hip/groin pain; SMD=0.58 (0.14 1.01)
@@ -389,16 +389,16 @@ figure 4. This moderate effect equated to an average of 3.83°
 –
 (0.31 7.75°) of reduced hip IR in the athletes with pain.
 External rotation (ER) was measured in supine with the hip
-in neutral flexion/extension in three high-quality studies, \[5 15 53\]
+in neutral flexion/extension in three high-quality studies, [5 15 53]
 
 and in supine with the hip in 90° flexion in 1 moderate quality
-study. \[33\] The data was pooled for the three studies with neutral
+study. [33] The data was pooled for the three studies with neutral
 flexion/extension (figure 5). There was strong evidence that hip
 ER range of motion did not differentiate hip/groin pain athletes
 
 −
 from those without pain; SMD=0.18 ( 0.55 to 0.19). In the
-single study \[33\] with hip ER measured in 90° flexion, a weak
+single study [33] with hip ER measured in 90° flexion, a weak
 effect size was present between the hip/groin pain group and
 
 –
@@ -409,7 +409,7 @@ range equates to 2.55° (0.31 4.79°), and provided limited evidence that reduce
 associated with hip/groin pain in athletes.
 Bent knee fall out (BKFO) is a combined movement of hip
 flexion, abduction and external rotation, and was examined in
-two high-quality studies, \[5 15\] Meta-analysis was possible as identical measurement methods were used. There was strong evidence that a higher score on bent knee fall out, representing
+two high-quality studies, [5 15] Meta-analysis was possible as identical measurement methods were used. There was strong evidence that a higher score on bent knee fall out, representing
 reduced range of motion for this test, differentiates athletes with
 
 –
@@ -420,7 +420,7 @@ figure 6. This moderate effect equates to 3.6 cm (1.3 5.8 cm).
 
 Strength
 Strength on the adductor squeeze test measured at 45° hip
-flexion, was examined quantitatively in five studies. \[5 15 30 36 53\]
+flexion, was examined quantitatively in five studies. [5 15 30 36 53]
 
 Data were available for four of these studies, and the pooled
 data (figure 7) demonstrated strong evidence that the presence of
@@ -430,7 +430,7 @@ hip/groin pain was associated with less strength on adductor
 squeeze testing. The effect size was large; SMD=1.41 (0.44 2.37).
 The magnitude of the difference between the case and
 control groups varied between the studies as represented by the
-high statistical heterogeneity I \[2\] =89%. Separating the data into
+high statistical heterogeneity I [2] =89%. Separating the data into
 
 6 of 12 Mosler AB, et al. Br J Sports Med 2015;49:810. doi:10.1136/bjsports-2015-094602
 
@@ -449,11 +449,11 @@ between case and control equates to 49 mm Hg (12 85 mm Hg)
 and 53N (24 83N).
 One high quality study also examined isometric abduction
 strength using a hand-held dynamometer, in supine with neutral
-hip flexion/extension. \[15\] There was no difference between the
+hip flexion/extension. [15] There was no difference between the
 
 –
 hip/groin pain group and the controls for either leg (p=0.71
-0.84). Another high-quality study used an isokinetic dynamometer to compare hip abduction, adduction, flexion, and extension strength. \[51\] In this study, only hip flexion strength was
+0.84). Another high-quality study used an isokinetic dynamometer to compare hip abduction, adduction, flexion, and extension strength. [51] In this study, only hip flexion strength was
 significantly different (higher) in the hip/groin pain group compared with controls (p=0.028). Similarly, the ratio of hip
 flexors/extensors was significantly higher in the hip/groin pain
 group compared to the controls (p=0.02). Therefore, there is
@@ -464,14 +464,14 @@ similar.
 
 Trunk muscle function
 Trunk muscle function was measured in three high-quality
-studies, \[30 31 50\] Table 1. The methodologies and outcome measures were distinctly heterogeneous, precluding meta-analysis.
+studies, [30 31 50] Table 1. The methodologies and outcome measures were distinctly heterogeneous, precluding meta-analysis.
 The first study investigated electromyography activity of transversus abdominus, obliquus internus and externus and rectus
-femoris during an active straight leg raise task. \[31\] The onset of
+femoris during an active straight leg raise task. [31] The onset of
 transversus abdominus activity relative to rectus femoris was
 found to be delayed in the hip/groin pain group in comparison
 to controls (p≤0.05). There was no significant difference
 between the onset timing for the other muscles relative to rectus
-femoris. Another study \[30\] used ultrasound measurements to
+femoris. Another study [30] used ultrasound measurements to
 compare the thickness of tranversus abdominis and obliquus
 internus (as a measure of muscle recruitment capacity) at rest,
 and during both the active straight leg raise task and adductor
@@ -484,7 +484,7 @@ both muscles was not significantly different between groups
 (p≥0.15).
 Isokinetic dynamometry was used in another high-quality
 study to examine abdominal and back extensor muscle
-strength. \[50\] A significantly lower concentric back (p=0.001) and
+strength. [50] A significantly lower concentric back (p=0.001) and
 
 ```
                                       eccentric abdominal (p=0.005) muscle strength, and signifi
@@ -500,7 +500,7 @@ showed strong evidence that trunk muscle function is altered in
 athletes with hip/groin pain compared to athletes without pain.
 
 Radiological
-One low quality study used X-ray to examine the pubic symphyses of athletes with hip/groin pain and those without pain. \[39\]
+One low quality study used X-ray to examine the pubic symphyses of athletes with hip/groin pain and those without pain. [39]
 
 A reliable grading system quantified the abnormalities, which
 were present in all the hip/groin pain subjects (9/20 slight, 9/20
@@ -508,7 +508,7 @@ intermediate, 2/20 advanced). In contrast, the athletic control
 subjects had either no (3/20) or slight (17/20) abnormalities
 seen on X-ray. Another moderate quality study only reported
 the radiographic findings in the hip/groin pain subjects and not
-the control subjects. \[37\] Synthesising the data on X-ray investigations of the pubic symphysis, there is currently limited evidence
+the control subjects. [37] Synthesising the data on X-ray investigations of the pubic symphysis, there is currently limited evidence
 that X-ray findings differentiate athletes with hip/groin pain
 from athletes without pain.
 
@@ -525,7 +525,7 @@ Review
 Figure 5 Forest plot: association between hip/groin pain and hip external rotation range of motion measured with neutral flexion/extension.
 
 Three moderate quality studies examined pubic bone oedema
-using MRI in athletes with hip/groin pain and controls. \[32 38 40\]
+using MRI in athletes with hip/groin pain and controls. [32 38 40]
 
 Dichotomous data for the presence or absence of bone oedema
 were extracted and pooled from these studies (figure 8).
@@ -535,8 +535,8 @@ with bone oedema on MRI would be in the hip/groin pain
 –
 group with a large effect size; OR=41.63 (1.6 1096.60).
 However, there was high heterogeneity demonstrated by this
-pooled result (I \[2\] =88%), and significant sensitivity to the data
-from the study of Cunningham et al \[38\] Figures 8 and 9. The
+pooled result (I [2] =88%), and significant sensitivity to the data
+from the study of Cunningham et al [38] Figures 8 and 9. The
 
 –
 removal of this study data resulted in an OR of 8.1 (3.1 21.2)
@@ -545,7 +545,7 @@ pain, representing moderate evidence, with a large effect size,
 that bone oedema in the pubic symphysis differentiates athletes
 with hip/groin pain from those without this pain.
 The presence of the secondary cleft sign was also examined in
-2 moderate quality studies \[37 38\] and the data were pooled for
+2 moderate quality studies [37 38] and the data were pooled for
 this outcome measure (figure 10). Meta-analysis showed a
 strong association between the presence of the secondary cleft
 
@@ -555,11 +555,11 @@ there was an absence of this sign on pubic symphysis MRI
 examination of 170 athletic controls. These 2 studies provide
 moderate evidence that the presence of the secondary cleft sign
 differentiates athletes with and without hip/groin pain.
-Other abnormalities were reported by 4 MRI studies. \[32 37 38 40\]
+Other abnormalities were reported by 4 MRI studies. [32 37 38 40]
 
 However, inconsistent methods of reporting and analysis of these
 abnormalities precluded data synthesis.
-One moderate quality cohort study investigated the radiological signs of femoroacetabular impingement (FAI). \[35\] This
+One moderate quality cohort study investigated the radiological signs of femoroacetabular impingement (FAI). [35] This
 study used MRI of the hip to determine whether higher α
 angles correlated with the presence of symptomatic hips.
 Athletes with symptomatic hips were found to have significantly
@@ -572,12 +572,12 @@ with hip/groin pain from those without these symptoms.
 
 Other outcome measures
 Biomarkers of cartilage damage and inflammation circulating in
-the blood were examined in one high-quality study, \[52\] Table 1.
+the blood were examined in one high-quality study, [52] Table 1.
 The biomarkers examined were cartilage oligomeric matrix
 protein (COMP) and C reactive protein (CRP). COMP is a connective tissue extracellular matrix protein that is a marker of
 
 cartilage turnover, and increased levels of COMP are associated
-with joint inflammation and OA. \[52\] CRP is another biological
+with joint inflammation and OA. [52] CRP is another biological
 marker that is associated with inflammation. Athletes with
 symptomatic FAI had a 24% increase (p=0.04) in circulating
 levels of COMP and a 276% increase (p\<0.001) in circulating
@@ -612,7 +612,7 @@ of the various clinical and radiological tests can determine the
 presence of individual diagnostic categories.
 The PROs used in the included studies were inconsistent, precluding meta-analysis. Furthermore, in some case–control
 studies, PROs were used to exclude symptomatic athletes from
-control groups. \[30 31 36\] Impairments in PROs ranged from 0 to
+control groups. [30 31 36] Impairments in PROs ranged from 0 to
 55%, suggesting that further cross-sectional and cohort studies
 should use valid, reliable and consistent PROs to enable comparisons between studies.
 
@@ -632,7 +632,7 @@ criteria in research studies. This makes examining their ability to
 differentiate somewhat artificial in cases where assignment to
 case or control group has used pain provocation tests. We found
 one high-quality study that compared the ability of various pain
-provocation tests, conducted by a blinded assessor, to differentiate athletes with and without hip/groin pain. \[16\] Another highquality cohort study \[53\] examined pain on the adductor squeeze
+provocation tests, conducted by a blinded assessor, to differentiate athletes with and without hip/groin pain. [16] Another highquality cohort study [53] examined pain on the adductor squeeze
 test, making meta-analysis possible for this test only. An OR of
 
 –
@@ -642,7 +642,7 @@ squeeze test differentiates athletes with and without current hip/
 groin pain. The results of the meta-analysis do not, however,
 measure the validity of this test to diagnose any specific individual entity of groin pain. The lack of studies that met the inclusion criteria for this review means that only limited evidence
 exists for the diagnostic potential of the single adductor, bilateral adductor, active straight leg raise, pelvic belt, and impingement tests to differentiate athletes with groin pain.
-Hip IR measured in 90° flexion was examined in two moderate quality studies. \[33 35\] Meta-analysis found moderate evidence,
+Hip IR measured in 90° flexion was examined in two moderate quality studies. [33 35] Meta-analysis found moderate evidence,
 with a moderate effect size, that this movement is less in athletes
 
 –
@@ -653,14 +653,14 @@ evidence, with a small effect size, that IR measured in neutral
 flexion/extension differentiates these groups; SMD=0.42 (0.01
 0.83). The actual difference between groups for both these
 movements was 3.8 and 3.7°, respectively, which approximates
-the reported measurement error. \[15\] The association between a
-loss of hip IR and hip/groin pain has been proposed \[54\]\[–\]\[56\] previously, with several possible mechanisms discussed. Bony
+the reported measurement error. [15] The association between a
+loss of hip IR and hip/groin pain has been proposed [54][–][56] previously, with several possible mechanisms discussed. Bony
 impingement is one plausible mechanism and this review provides some support for this mechanism with one cohort study
 in which the symptomatic group had clinical and radiological
 
-features of FAI. \[35\] The reduced hip range of motion associated
+features of FAI. [35] The reduced hip range of motion associated
 with athletic groin pain has also been proposed to result from
-pain, muscle spasm, or capsular scarring. \[22 55\]
+pain, muscle spasm, or capsular scarring. [22 55]
 
 There was conflicting evidence for hip ER; limited evidence
 that ER measured in 90° hip flexion does discriminate and
@@ -668,11 +668,11 @@ strong evidence that ER measured in neutral flexion/extension
 does not discriminate between athletes with and without hip/
 groin pain. It has been suggested that the neutral position of the
 hip is more reflective of the functional position for the demands
-of football. \[15\] The findings of our review suggest that measuring
+of football. [15] The findings of our review suggest that measuring
 IR and ER in hip flexion may have greater clinical utility in the
 management of hip/groin pain.
 The BKFO test has good intratester and intertester reliability
-with a measurement error of 2–3 cm. \[15\] Meta-analysis of 2 highquality case–control studies \[5\] 15 found that hip/groin pain
+with a measurement error of 2–3 cm. [15] Meta-analysis of 2 highquality case–control studies [5] 15 found that hip/groin pain
 athletes had lower range of motion in this test by 3.6 cm
 
 –
@@ -682,7 +682,7 @@ been examined and prospective cohort research is recommended.
 Hip adduction strength is considered important in hip/groin
 pain, and lower scores on the adductor squeeze test at 45°hip
 flexion were observed in hip/groin pain athletes in a
-meta-analysis of four high-quality case–control studies. \[5 15 30 36\]
+meta-analysis of four high-quality case–control studies. [5 15 30 36]
 
 The magnitude of the difference between the pain/no pain
 groups varied between the studies and there was high statistical
@@ -705,39 +705,39 @@ Review
 
 Figure 10 Forest plot: association between hip/groin pain and presence of secondary cleft sign.
 
-groin pain in a small study of Australian rules footballers, \[57\] but
+groin pain in a small study of Australian rules footballers, [57] but
 this finding is yet to be tested in other populations. The measurement of adductor squeeze strength is, therefore, recommended in the screening for hip/groin pain in athletes and also
 to monitor the treatment response in athletes with current hip/
 groin pain.
 In single studies, other strength measures (isokinetic hip
 extension, adduction and abduction, isometric hip abduction)
-did not differentiate between hip/groin pain athletes and controls. \[15 51\] There is limited evidence that hip flexion and hip
+did not differentiate between hip/groin pain athletes and controls. [15 51] There is limited evidence that hip flexion and hip
 flexion/extension ratio did differentiate, with higher hip flexion
-strength found in the hip/groin pain group. \[51\] Prospective
+strength found in the hip/groin pain group. [51] Prospective
 studies using varying methods of measurement have identified
 lower adduction strength as predictive of athletes who develop
-hip/groin pain. \[3 21 23 26\] Our systematic review, therefore, suggests that further investigation with reliable, valid and consistent
+hip/groin pain. [3 21 23 26] Our systematic review, therefore, suggests that further investigation with reliable, valid and consistent
 measurement methods and instruments is required to determine
 which measures of strength, apart from the adductor squeeze
 test, differentiate athletes with and without hip/groin pain.
 Trunk muscle function was examined in three high-quality
-case–control studies \[30 31 50\] using diverse measurement methods,
+case–control studies [30 31 50] using diverse measurement methods,
 table 1. Different aspects of trunk muscle function were evaluated: onset timing of the abdominals, eccentric and concentric
 abdominal and back strength, and abdominal muscle bulk at
 rest and with activity. These studies provide strong evidence
 that trunk muscle function is altered in hip/groin pain athletes
 and we suggest that it should be assessed and addressed in
 management. A randomised controlled trial of an exercise programme that included exercises aimed to improve trunk muscle
-function has also been shown to be successful for the management of long-standing groin pain. \[58\] 59 The cross-sectional
+function has also been shown to be successful for the management of long-standing groin pain. [58] 59 The cross-sectional
 nature of the included studies means that it is unknown
 whether the altered trunk muscle function precedes or results
 from hip/groin pain. Future prospective studies can examine
 this question.
 Only one low quality study of pubic symphysis X-ray was
-included in our review. \[39\] This study found more abnormalities
+included in our review. [39] This study found more abnormalities
 in the hip/groin pain athletes. However, there was no information available on the activity type or level in the controls, and a
 previous study found higher activity levels to be associated with
-a greater incidence of X-ray abnormalities. \[60\] It is possible that
+a greater incidence of X-ray abnormalities. [60] It is possible that
 the observed abnormalities are a result of activity rather than
 related to the presence of hip/groin pain. Therefore, there was
 limited evidence to indicate that pubic symphysis X-ray differs
@@ -747,14 +747,14 @@ the athlete is not yet established.
 We found moderate evidence that pubic bone oedema differentiates athletes with hip/groin pain from those without pain.
 However, a prospective study of 19 elite junior soccer players
 found pubic bone marrow oedema in 13 asymptomatic players
-at baseline. \[34\] One retrospective study in this review found no
-bone oedema in 100 controls, \[38\] including 50 soccer players.
+at baseline. [34] One retrospective study in this review found no
+bone oedema in 100 controls, [38] including 50 soccer players.
 The absence of bone oedema in the 50 soccer player controls
 
 contradicts other studies of asymptomatic footballers in which
-54–72% had oedema. \[32 34 40\] Similarly, there was moderate evidence that the presence of a secondary cleft sign differentiates
+54–72% had oedema. [32 34 40] Similarly, there was moderate evidence that the presence of a secondary cleft sign differentiates
 hip/groin pain athletes from athletes without pain, with an
-absence of this sign in 170 asymptomatic control subjects. \[37 38\]
+absence of this sign in 170 asymptomatic control subjects. [37 38]
 
 It is worth noting that both these studies were from the same
 clinic and may contain the same data set of MRI, thus potentially influencing these findings. Our review found moderate evidence that the presence of bone oedema and the secondary cleft
@@ -763,12 +763,12 @@ groin pain. However, research with more rigorous methodology
 is required to better understand the clinical and prognostic significance of these findings. A recent review of the radiological
 findings in athletic groin pain also found that methodological
 quality was lacking and a systematic approach was needed in
-future research. \[61\]
+future research. [61]
 
 The presence of radiological signs of FAI in athletes was
-examined in one moderate quality study \[35\] providing limited evidence that these signs can differentiate athletes with hip/groin
+examined in one moderate quality study [35] providing limited evidence that these signs can differentiate athletes with hip/groin
 pain. There are many studies suggesting that the radiological
-features of FAI are highly prevalent in athletic populations, \[41\] 42 62–64 and in athletes with hip/groin pain.65 66
+features of FAI are highly prevalent in athletic populations, [41] 42 62–64 and in athletes with hip/groin pain.65 66
 
 –
 However, case control, cross-sectional and prospective studies

@@ -9,7 +9,7 @@ This guide provides best practices for recording drop jump and CMJ videos to ens
 Kinemotion now supports **45° angle camera positioning** as the standard setup, providing better landmark visibility and tracking accuracy compared to pure lateral views. This guide covers:
 
 1. **Single iPhone at 45°** (recommended standard setup)
-1. **Dual iPhone stereo setup** (advanced - for improved accuracy)
+2. **Dual iPhone stereo setup** (advanced - for improved accuracy)
 
 **Why 45° instead of lateral (90°)?**
 
@@ -66,13 +66,13 @@ Side view visualization:
 **Step-by-step:**
 
 1. **Position athlete at drop box** - Have athlete stand at their jumping position
-1. **Identify sagittal plane** - Imagine a line from front to back through athlete's center
-1. **Mark 45° position** - From athlete's side, move 45° toward the front
+2. **Identify sagittal plane** - Imagine a line from front to back through athlete's center
+3. **Mark 45° position** - From athlete's side, move 45° toward the front
    - If athlete faces North, camera should be Southeast or Southwest
    - Camera sees athlete's front-side (not pure profile)
-1. **Set distance** - Measure 3-5m from athlete's jumping position
-1. **Set height** - Camera lens at athlete's hip height (130-150 cm typical)
-1. **Level tripod** - Ensure camera is level (not tilted up/down)
+4. **Set distance** - Measure 3-5m from athlete's jumping position
+5. **Set height** - Camera lens at athlete's hip height (130-150 cm typical)
+6. **Level tripod** - Ensure camera is level (not tilted up/down)
 
 #### 2. Frame Composition
 
@@ -311,23 +311,23 @@ Each camera view:
 ##### Option A: Manual start (simple)
 
 1. Start recording on iPhone 1
-1. Start recording on iPhone 2 within 1-2 seconds
-1. **Synchronization cue:** Have athlete clap hands or jump once before actual test
-1. Use this event to sync videos in post-processing
+2. Start recording on iPhone 2 within 1-2 seconds
+3. **Synchronization cue:** Have athlete clap hands or jump once before actual test
+4. Use this event to sync videos in post-processing
 
 ##### Option B: Audio sync (better)
 
 1. Use external audio cue (clap, beep, voice command)
-1. Both iPhones record audio
-1. Align videos using audio waveform in post-processing
-1. Software like Pose2Sim has built-in sync tools
+2. Both iPhones record audio
+3. Align videos using audio waveform in post-processing
+4. Software like Pose2Sim has built-in sync tools
 
 ##### Option C: Hardware sync (best, requires equipment)
 
 1. Use external trigger device
-1. Starts both cameras simultaneously
-1. Most accurate synchronization
-1. Requires additional hardware
+2. Starts both cameras simultaneously
+3. Most accurate synchronization
+4. Requires additional hardware
 
 **Recommendation:** Start with Option A (manual + clap sync), upgrade to Option B if needed.
 
@@ -343,7 +343,7 @@ Each camera view:
    - Mount on rigid board
    - Grid size: 7x5 or similar
 
-1. **Checkerboard** (alternative)
+2. **Checkerboard** (alternative)
 
    - Print large checkerboard (A3 or larger)
    - 8x6 or 9x7 grid
@@ -475,17 +475,17 @@ ______________________________________________________________________
 **How to set up iPhone for optimal recording:**
 
 1. **Open Camera app**
-1. **Settings → Camera → Record Video**
+2. **Settings → Camera → Record Video**
    - Select: **1080p at 60 fps** (or 30 fps if 60 not available)
-1. **Settings → Camera → Formats**
+3. **Settings → Camera → Formats**
    - Select: **Most Compatible** (H.264, not HEVC)
-1. **Before recording:**
+4. **Before recording:**
    - **Lock focus:** Tap and hold on athlete until "AE/AF Lock" appears
    - **Lock exposure:** Swipe up/down to adjust brightness, then keep locked
-1. **Frame composition:**
+5. **Frame composition:**
    - Position athlete in center
    - Ensure full body visible with margins
-1. **Start recording** before athlete begins jump sequence
+6. **Start recording** before athlete begins jump sequence
 
 **ProTip:** Record a test video first and verify:
 
@@ -648,41 +648,41 @@ ______________________________________________________________________
 **Solutions:**
 
 1. Add lighting sources
-1. Change background or athlete clothing for contrast
-1. Lock focus on athlete (tap and hold)
-1. Increase shutter speed (reduce exposure if needed)
-1. Ensure 1080p resolution
+2. Change background or athlete clothing for contrast
+3. Lock focus on athlete (tap and hold)
+4. Increase shutter speed (reduce exposure if needed)
+5. Ensure 1080p resolution
 
 ### Jump Height Seems Incorrect
 
 **Possible causes:**
 
 1. Camera angle not optimal (measurement error)
-1. Athlete moving horizontally (drift during jump)
-1. Camera not level (tilted)
-1. Poor video quality affecting tracking
+2. Athlete moving horizontally (drift during jump)
+3. Camera not level (tilted)
+4. Poor video quality affecting tracking
 
 **Solutions:**
 
 1. Verify camera angle with measuring app or protractor
-1. Coach athlete to jump straight up (minimal drift)
-1. Use tripod level indicator or phone level app
-1. Use `--quality accurate` for best results with good videos
+2. Coach athlete to jump straight up (minimal drift)
+3. Use tripod level indicator or phone level app
+4. Use `--quality accurate` for best results with good videos
 
 ### "No Drop Jump Detected" Error
 
 **Possible causes:**
 
 1. Video doesn't include complete sequence
-1. Athlete cut off in framing
-1. Very poor tracking quality
+2. Athlete cut off in framing
+3. Very poor tracking quality
 
 **Solutions:**
 
 1. Start recording before athlete steps on box
-1. Adjust framing - test with practice jump
-1. Improve video quality (lighting, focus, resolution)
-1. Use manual `--drop-start-frame` flag if auto-detection fails
+2. Adjust framing - test with practice jump
+3. Improve video quality (lighting, focus, resolution)
+4. Use manual `--drop-start-frame` flag if auto-detection fails
 
 ### Dual Camera: Videos Not Synchronized
 
@@ -691,9 +691,9 @@ ______________________________________________________________________
 **Solutions:**
 
 1. Verify both videos have identical frame rates
-1. Use audio/visual cue to sync (clap, beep)
-1. Use Pose2Sim synchronization module
-1. Consider hardware trigger for future recordings
+2. Use audio/visual cue to sync (clap, beep)
+3. Use Pose2Sim synchronization module
+4. Consider hardware trigger for future recordings
 
 ______________________________________________________________________
 
@@ -764,13 +764,13 @@ ______________________________________________________________________
    - Focus sharp throughout
    - No motion blur
 
-1. **Quality metrics:**
+2. **Quality metrics:**
 
    - File size appropriate (60fps 1080p ≈ 200MB/min)
    - No dropped frames (smooth playback)
    - Audio clear (if using for sync)
 
-1. **Test analysis:**
+3. **Test analysis:**
 
    - Run kinemotion on video
    - Check debug overlay output
@@ -806,13 +806,13 @@ ______________________________________________________________________
    - Mark 4m distance circle
    - Label "Camera 1" and "Camera 2" positions
 
-1. **Document your setup:**
+2. **Document your setup:**
 
    - Take photos of camera positions
    - Note tripod height settings
    - Save camera settings screenshot
 
-1. **Use same equipment** across sessions
+3. **Use same equipment** across sessions
 
    - Same iPhone(s)
    - Same tripod height
@@ -895,11 +895,11 @@ ______________________________________________________________________
 **Quick setup:**
 
 1. Position camera 45° from athlete's sagittal plane
-1. 4 meters distance, hip height (130-150cm)
-1. 1080p @ 60 fps, landscape, locked focus/exposure
-1. Frame full body with 10-15% margins
-1. Even lighting, plain background
-1. Record full jump sequence
+2. 4 meters distance, hip height (130-150cm)
+3. 1080p @ 60 fps, landscape, locked focus/exposure
+4. Frame full body with 10-15% margins
+5. Even lighting, plain background
+6. Record full jump sequence
 
 **Expected accuracy:** Good for training/assessment (~8-12° joint angles)
 
@@ -908,11 +908,11 @@ ______________________________________________________________________
 **Quick setup:**
 
 1. Position Camera 1 at +45° (right), Camera 2 at -45° (left)
-1. Both 4m distance, both hip height, 90° separation
-1. Identical settings: 1080p @ 60fps
-1. Calibrate with ChArUco/checkerboard pattern
-1. Sync with clap or audio cue
-1. Process with Pose2Sim for 3D reconstruction
+2. Both 4m distance, both hip height, 90° separation
+3. Identical settings: 1080p @ 60fps
+4. Calibrate with ChArUco/checkerboard pattern
+5. Sync with clap or audio cue
+6. Process with Pose2Sim for 3D reconstruction
 
 **Expected accuracy:** Research-grade (~5-7° joint angles, 30mm RMSE)
 

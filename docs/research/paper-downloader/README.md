@@ -101,11 +101,11 @@ The script provides detailed logging:
 ## How It Works
 
 1. Reads DOIs from `dois.txt` or command-line
-1. For each DOI, tries multiple Sci-Hub mirrors
-1. Parses HTML to find embedded PDF link
-1. Downloads PDF and saves to topic directory
-1. Validates download (size > 10KB)
-1. Reports success/failure
+2. For each DOI, tries multiple Sci-Hub mirrors
+3. Parses HTML to find embedded PDF link
+4. Downloads PDF and saves to topic directory
+5. Validates download (size > 10KB)
+6. Reports success/failure
 
 ## Sci-Hub Mirrors
 

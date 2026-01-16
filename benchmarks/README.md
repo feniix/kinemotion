@@ -63,8 +63,8 @@ test_large_300_frames                0.0464     -23%  (from 0.0602)
 ## Adding New Benchmarks
 
 1. Create a new test class with `@pytest.mark.benchmark`
-1. Use the `benchmark` fixture to time your function
-1. Generate realistic test data
+2. Use the `benchmark` fixture to time your function
+3. Generate realistic test data
 
 ```python
 @pytest.mark.benchmark

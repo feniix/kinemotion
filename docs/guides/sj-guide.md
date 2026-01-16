@@ -59,7 +59,7 @@ print(f"Peak power: {metrics.peak_power:.0f}W")
    - Formula: h = (g × t²) / 8
    - Typical range: 0.25-0.50m (lower than CMJ due to no SSC)
 
-1. **Flight Time** (ms) - Time spent airborne
+2. **Flight Time** (ms) - Time spent airborne
 
    - Typical range: 300-500ms
 
@@ -71,12 +71,12 @@ print(f"Peak power: {metrics.peak_power:.0f}W")
    - Validation: Sayers et al. (1999), R² = 0.87, \<1% error
    - Typical range: 3000-8000W (recreational), 9000-15000W (elite)
 
-1. **Mean Power** (W) - Average power during concentric phase
+2. **Mean Power** (W) - Average power during concentric phase
 
    - Formula: P = (mass × g × height) / concentric_duration
    - Typical ratio: 15-25% of peak power (external mechanical work)
 
-1. **Peak Force** (N) - Maximum ground reaction force
+3. **Peak Force** (N) - Maximum ground reaction force
 
    - Formula: F = 1.3 × mass × (acceleration + g)
    - Typical range: 2.0-2.5× body weight (recreational), 3.0-4.5× (elite)
@@ -88,13 +88,13 @@ print(f"Peak power: {metrics.peak_power:.0f}W")
    - Typical range: 500-2000ms
    - Longer holds may indicate setup or hesitation
 
-1. **Concentric Duration** (ms) - Time from squat hold to takeoff
+2. **Concentric Duration** (ms) - Time from squat hold to takeoff
 
    - Upward propulsion phase
    - Typical range: 200-500ms
    - Shorter = better explosive power
 
-1. **Peak Concentric Velocity** (m/s) - Maximum upward speed
+3. **Peak Concentric Velocity** (m/s) - Maximum upward speed
 
    - Indicates propulsion capability
    - Typical range: 1.6-2.6 m/s (recreational), 2.8-4.0 m/s (elite)
@@ -105,7 +105,7 @@ print(f"Peak power: {metrics.peak_power:.0f}W")
 
 - **Duration**: 500-2000ms typical
 - **Characteristics**: Static squat position, near-zero velocity
-- **Detection**: Velocity \< 0.1 m/s for minimum duration (150ms)
+- **Detection**: Velocity < 0.1 m/s for minimum duration (150ms)
 - **Purpose**: Establish consistent starting position
 - **Color in Debug Video**: 🔵 Blue
 
@@ -168,7 +168,7 @@ Peak power uses the **Sayers et al. (1999)** regression equation:
 
 - **Study**: 108 college athletes, force plate validation
 - **Correlation**: R² = 0.87 (strong)
-- **Error**: \< 1% underestimation (SEE = 355W)
+- **Error**: < 1% underestimation (SEE = 355W)
 - **Superior to**: Lewis formula (73% error) and Harman equation
 
 This is the **gold standard** for SJ power estimation from jump height.
@@ -295,13 +295,13 @@ for result in results:
 ### Required Setup
 
 1. **Lateral (Side) View** - Camera perpendicular to sagittal plane (90° or 45° oblique)
-1. **Distance** - 3-5 meters from athlete (optimal: ~4m)
-1. **Height** - Camera at athlete's hip height (0.8-1.2m)
-1. **Framing** - Full body visible (head to feet) throughout jump
-1. **Orientation** - Landscape preferred
-1. **Stability** - Tripod required (no hand-held)
-1. **Frame Rate** - 30+ fps minimum (60fps recommended)
-1. **Resolution** - 1080p or higher
+2. **Distance** - 3-5 meters from athlete (optimal: ~4m)
+3. **Height** - Camera at athlete's hip height (0.8-1.2m)
+4. **Framing** - Full body visible (head to feet) throughout jump
+5. **Orientation** - Landscape preferred
+6. **Stability** - Tripod required (no hand-held)
+7. **Frame Rate** - 30+ fps minimum (60fps recommended)
+8. **Resolution** - 1080p or higher
 
 ### Recommended Camera Angle
 
@@ -317,10 +317,10 @@ Pure lateral (90°) may cause MediaPipe to confuse left/right feet due to occlus
 ### Recording Protocol
 
 1. Athlete starts in standing position
-1. Athlete squats down to ~90° knee angle and holds briefly
-1. Without any countermovement, athlete explosively jumps upward
-1. Land softly on both feet
-1. Remain in frame for complete sequence
+2. Athlete squats down to ~90° knee angle and holds briefly
+3. Without any countermovement, athlete explosively jumps upward
+4. Land softly on both feet
+5. Remain in frame for complete sequence
 
 ## Interpreting Results
 
@@ -347,7 +347,7 @@ Pure lateral (90°) may cause MediaPipe to confuse left/right feet due to occlus
 
 ### Concentric Duration
 
-- **Elite (explosive)**: \< 300ms
+- **Elite (explosive)**: < 300ms
 - **Average**: 300-500ms
 - **Slow**: > 500ms
 
@@ -407,13 +407,13 @@ The SJ module has been validated with:
    - Peak power regression: P = 60.7×h + 45.3×mass - 2055
    - R² = 0.87, superior to Lewis and Harman equations
 
-1. **Valenzuela et al. (2020)** - Reference power values for jump squat
+2. **Valenzuela et al. (2020)** - Reference power values for jump squat
 
    - N=684 elite athletes, 16 sports
    - Male: 23.64 ± 6.12 W/kg
    - Female: 19.35 ± 5.49 W/kg
 
-1. **Stretch-Shortening Cycle Comparison**
+3. **Stretch-Shortening Cycle Comparison**
 
    - SJ eliminates SSC for pure concentric assessment
    - CMJ-SJ difference indicates SSC contribution (typically 10-20%)

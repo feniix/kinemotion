@@ -58,11 +58,11 @@ Front. Physiol. 7:677.
 
 # Effectiveness of an Individualized Training Based on Force-Velocity Profiling during Jumping
 
-[Pedro Jiménez-Reyes](http://loop.frontiersin.org/people/277427/overview) \[1\] [, Pierre Samozino](http://loop.frontiersin.org/people/275146/overview) \[2\] [, Matt Brughelli](http://loop.frontiersin.org/people/275552/overview) \[3\] [and Jean-Benoît Morin](http://loop.frontiersin.org/people/50242/overview) \[3, 4\]
+[Pedro Jiménez-Reyes](http://loop.frontiersin.org/people/277427/overview) [1] [, Pierre Samozino](http://loop.frontiersin.org/people/275146/overview) [2] [, Matt Brughelli](http://loop.frontiersin.org/people/275552/overview) [3] [and Jean-Benoît Morin](http://loop.frontiersin.org/people/50242/overview) [3, 4]
 
 1 Faculty of Sport, Catholic University of San Antonio, Murcia, Spain, 2 Laboratoire Interuniversitaire de Biologie de la motricité
-(EA7424), University of Savoie Mont Blanc, Le Bourget du Lac, France, \[3\] Sports Performance Research Institute New Zealand
-(SPRINZ), Auckland University of Technology, Auckland, New Zealand, \[4\] Université Côte d’Azur, LAMHESS, Nice, France
+(EA7424), University of Savoie Mont Blanc, Le Bourget du Lac, France, [3] Sports Performance Research Institute New Zealand
+(SPRINZ), Auckland University of Technology, Auckland, New Zealand, [4] Université Côte d’Azur, LAMHESS, Nice, France
 
 Ballistic performances are determined by both the maximal lower limb power output
 (Pmax) and their individual force-velocity (F-v) mechanical profile, especially the F-v
@@ -317,7 +317,7 @@ up straight and still on the center of the jumping area. They
 kept their arms on their hips for jumps without load and on the
 bar for loaded jumps, this hand position remaining the same
 during the entire movement. Subjects were asked to maintain
-their individual starting position (∼90 \[◦\] knee angle) for about 2 s
+their individual starting position (∼90 [◦] knee angle) for about 2 s
 and then apply force as fast as possible and jump for maximum
 height. Countermovement was verbally forbidden and carefully
 checked. If all these requirements were not met, the trial was
@@ -357,14 +357,14 @@ from F0 and v0 according to Samozino et al. (2012). Values of
 Pmax (normalized to body mass) were determined as: Pmax =
 F0·v0/4 (Samozino et al., 2012, 2014). From Pmax and hpo values,
 there is an individual theoretical optimal F-v profile (normalized
-to body mass, in N.s.kg \[−\]\[1\] .m \[−\]\[1\] ) maximizing vertical jumping
+to body mass, in N.s.kg [−][1] .m [−][1] ) maximizing vertical jumping
 performance that was computed for each subject using equations
 proposed by Samozino et al. (2012). The F-v imbalance (FVimb,
 in %), was then individually computed as recently proposed by
 Samozino et al. (2014):
 
 SFv
-Fvimb = 100. |1 − SFv opt \[|\]
+Fvimb = 100. |1 − SFv opt [|]
 
 A FVimb value around 0% indicates a F-v proifile equal to 100%
 of the optimal proifile (perfect balance between force and velocity
@@ -573,8 +573,8 @@ standardized effect size (ES). Between-group (optimized group
 vs. non-optimized group) differences in pre and post-training
 jump height and F-v profile in (%) of Optimal F-v were also
 assessed using standardized ES. The magnitude of the withingroup and between-group changes was interpreted by using
-values of trivial (\< 0.20), small (0.20 to \< 0.60), moderate (0.60
-to \< 1.20), large (1.20 to \< 2.00), and extremely large of the
+values of trivial (< 0.20), small (0.20 to < 0.60), moderate (0.60
+to < 1.20), large (1.20 to < 2.00), and extremely large of the
 between-athlete variation at pre (i.e., smallest worthwhile change,
 SWC).
 The probability that these differences actually exist was then
@@ -636,7 +636,7 @@ Non-optimized 88.6 ± 38.1 81.8 ± 34.7 −5.54 ± 17.6 −0.17 ± 0.15 Trivial 
 
 Control 77.9 ± 33.1 79.3 ± 34.5 1.91 ± 17.1 0.01 ± 0.08 Trivial most likely 1 – 14 – 5
 
-~~Pmax (W·kg~~ \[−\]\[1\] ~~)~~
+~~Pmax (W·kg~~ [−][1] ~~)~~
 
 Force deficit 30.7 ± 5.6 30.5 ± 5.8 −0.40 ± 8.4 −0.04 ± 0.17 Trivial likely 7 – 12 – 3
 
@@ -648,7 +648,7 @@ Non-optimized 23.5 ± 3.5 24.0 ± 3.3 2.42 ± 6.1 0.13 ± 0.16 Trivial likely 5 
 
 Control 23.2 ± 2.5 23.4 ± 5.6 0.61 ± 15.7 0.09 ± 0.58 Trivial unclear 7 – 11 – 2
 
-~~F0 (N·kg~~ \[−\]\[1\] ~~)~~
+~~F0 (N·kg~~ [−][1] ~~)~~
 
 Force deficit 29.1 ± 4.1 35.9 ± 4.2 24.0 ± 10.8 1.60 ± 0.17 Large +ive most likely 0 – 2 – 20
 
@@ -660,7 +660,7 @@ Non-optimized 34.1 ± 7.4 33.2 ± 7.1 −2.32 ± 6.8 −0.12 ± 0.13 Trivial lik
 
 Control 31.9 ± 6.8 31.9 ± 7.0 0.21 ± 3.8 0.00 ± 0.06 Trivial most likely 2 – 17 – 1
 
-~~v0 (m·s~~ \[−\]\[1\] ~~)~~
+~~v0 (m·s~~ [−][1] ~~)~~
 
 Force deficit 4.29 ± 0.93 3.44 ± 0.78 −18.9 ± 11.8 −0.88 ± 0.24 Moderate -ive most likely 21 – 0 – 1
 
@@ -1180,7 +1180,7 @@ Contreras, B., Vigotsky, A. D., Schoenfeld, B. J., Beardsley, C., McMaster,
 D. T., Reyneke, J., et al. (2016). Effects of a six-week hip thrust
 versus front squat resistance training program on performance in
 adolescent males: a randomized-controlled trial. J. Strength Cond. Res.
-[doi: 10.1519/jsc.0000000000001510. \[Epub ahead of print\].](https://doi.org/10.1519/jsc.0000000000001510)
+[doi: 10.1519/jsc.0000000000001510. [Epub ahead of print].](https://doi.org/10.1519/jsc.0000000000001510)
 Cormie, P., McCaulley, G. O., and McBride, J. M. (2007). Power versus strengthpower jump squat training: influence on the load-power relationship.
 Med. Sci. Sports Exerc. 39, 996–1003. doi: 10.1097/mss.0b013e31804
 
@@ -1370,7 +1370,7 @@ determine the dose response for strength development. Med. Sci. Sports Exerc.
 [35, 456–464. doi: 10.1249/01.MSS.0000053727.63505.D4](https://doi.org/10.1249/01.MSS.0000053727.63505.D4)
 Rønnestad, B. R., Hansen, J., and Nygaard, H. (2016). 10 weeks of heavy strength
 training improves performance-related measurements in elite cyclists. J. Sports
-[Sci. doi: 10.1080/02640414.2016.1215499. \[Epub ahead of print\].](https://doi.org/10.1080/02640414.2016.1215499)
+[Sci. doi: 10.1080/02640414.2016.1215499. [Epub ahead of print].](https://doi.org/10.1080/02640414.2016.1215499)
 Rønnestad, B. R., Kojedal, O., Losnegard, T., Kvamme, B., and Raastad, T.
 (2012). Effect of heavy strength training on muscle thickness, strength, jump
 performance, and endurance performance in well-trained Nordic Combined

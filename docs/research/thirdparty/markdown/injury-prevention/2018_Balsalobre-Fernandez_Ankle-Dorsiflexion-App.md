@@ -31,7 +31,7 @@ Carlos Balsalobre-Fernández a,b, Natalia Romero-Francoc and Pedro Jiménez-Reye
 
 aDepartment of Physical Education, Sport and Human Movement, Universidad Autónoma de Madrid, Madrid, Spain; bLaboratory of Exercise
 Physiology Research Group, Department of Health and Human Performance, School of Physical Activity and Sport Sciences-INEF, Universidad
-Politécnica de Madrid, Madrid, Spain; \[c\] Nursing and Physiotherapy Department, University of the Balearic Islands, Palma de Mallorca, Spain;
+Politécnica de Madrid, Madrid, Spain; [c] Nursing and Physiotherapy Department, University of the Balearic Islands, Palma de Mallorca, Spain;
 dFaculty of Sport, Catholic University of San Antonio, Murcia, Spain
 
 ABSTRACT
@@ -217,13 +217,13 @@ the digital inclinometer for the measurement of dorsiflexion
 
 –
 angle (r = 0.989, 95% CI = 0.986 0.993, Slope of the regression
-line = 1.0002, p \< 0.001, SEE = 0.48º). See Figure 2.
+line = 1.0002, p < 0.001, SEE = 0.48º). See Figure 2.
 
 Trivial, non-significant differences between the values
 obtained with each instrument were observed as revealed by
 the paired-samples T-test (SMD = 0.16; Mean difference = 0.54 ± 0.4 º; Dorsiflex app: 35.7 ± 3.2 º; Digital inclinometer: 35.2 ± 3.3 º, p = 0.10). Moreover, the analysis of the
 regression line when plotting the mean of the two instruments vs. the difference between the two instruments (i.e.,
-Bland-Altman plot) showed that the systematic bias was similar between the whole range of angles measured (R \[2\] = 0.005).
+Bland-Altman plot) showed that the systematic bias was similar between the whole range of angles measured (R [2] = 0.005).
 See Figure 3.
 
 Reliability

@@ -161,7 +161,7 @@ def calculate_metrics(
     ...
 ```
 
-### When to Use NDArray\[dtype\]
+### When to Use NDArray[dtype]
 
 ✅ **Use for:**
 
@@ -280,12 +280,12 @@ typeCheckingMode = "strict"
 ## Best Practices Summary
 
 1. **Use TypedDict** for dictionary returns (JSON, config)
-1. **Use type aliases** for complex nested types
-1. **Use NDArray\[dtype\]** when dtype matters
-1. **Use modern syntax** (`|` for unions)
-1. **Convert NumPy types** in `to_dict()`: `int()`, `float()`
-1. **Handle None** in optional fields explicitly
-1. **Type all functions** (strict mode enforced)
+2. **Use type aliases** for complex nested types
+3. **Use NDArray[dtype]** when dtype matters
+4. **Use modern syntax** (`|` for unions)
+5. **Convert NumPy types** in `to_dict()`: `int()`, `float()`
+6. **Handle None** in optional fields explicitly
+7. **Type all functions** (strict mode enforced)
 
 See individual module files for implementation examples:
 

@@ -15,7 +15,7 @@ characteristics that predisposed athletes to increased dynamic valgus. Results: 
 with an average age of 15.4 years were included in this study. Forty-nine percent of athletes demonstrated an increase in
 dynamic valgus determined by drop-jump assessment after exercise. A significantly greater percentage of athletes were
 graded “medium or high risk” in jumps recorded after the exercise protocol (68%) as compared with before the exercise
-protocol (44%; P \< .01). Female athletes (P \< .01) and those older than 15 years of age (P \< .01) were the most affected by
+protocol (44%; P < .01). Female athletes (P < .01) and those older than 15 years of age (P < .01) were the most affected by
 fatigue. Conclusions: In conclusion, our study found that exercise increases dynamic knee valgus in youth athletes.
 Female athletes and those older than 15 years of age were most significantly affected by exercise. Greater fatigue levels
 were found to correlate with an increase in dynamic knee valgus, which may place athletes at greater anterior cruciate
@@ -25,7 +25,7 @@ ligament injury risk. The field-based exercise drop-jump test is a low-cost and 
 
 # More than 120,000 anterior cruciate ligament(ACL) injuries occur every year, with the ma
 
-jority of injuries occurring in high school athletes. \[1\] The
+jority of injuries occurring in high school athletes. [1] The
 Centers for Disease Control and Prevention estimates
 
 From the Henry Ford Health System, Detroit, Michigan (M.S.F., J.M.,
@@ -48,20 +48,20 @@ Floor East, 6777 West Maple, West Bloomfield, MI 48322. E-mail:
 0749-8063/18991/$36.00
 [https://doi.org/10.1016/j.arthro.2019.07.018](https://doi.org/10.1016/j.arthro.2019.07.018)
 
-that in 2006 the total financial impact of ACL reconstruction was nearly $1 billion to the US health system. \[2\]
+that in 2006 the total financial impact of ACL reconstruction was nearly $1 billion to the US health system. [2]
 
 The vast majority of ACL injuries are categorized as
 noncontact injuries, with 70% of noncontact injuries
-occurring when landing from a jump. \[3\] It is also well
+occurring when landing from a jump. [3] It is also well
 established in the literature that there is an increased
 
 risk of ACL injury in female patients compared with
-male patients. \[4-6\] Several factors can predispose an individual to ACL injury, including genetic predisposition,
+male patients. [4-6] Several factors can predispose an individual to ACL injury, including genetic predisposition,
 sex, hormone levels in female patients, narrow femoral
 notch width, poor neuromuscular control, and landing
-biomechanics. \[2,5\] Of the known risk factors, neuromuscular control and landing biomechanics are modifiable risk factors. \[7-10\]
+biomechanics. [2,5] Of the known risk factors, neuromuscular control and landing biomechanics are modifiable risk factors. [7-10]
 
-In 2005, Hewett et al. \[11\] found that an increased
+In 2005, Hewett et al. [11] found that an increased
 knee valgus angle during a drop-jump correlated with
 increased ACL injury risk. This drop-jump test has
 since been used as a tool to identify athletes who are
@@ -75,22 +75,22 @@ neuromuscular training. Historically, the drop-jump
 test required the use of sophisticated computerized
 motion-analysis systems with marker technology to
 determine precise knee valgus angles. However, in
-2016, Redler et al. \[12\] validated a field-based drop-jump
+2016, Redler et al. [12] validated a field-based drop-jump
 test as a reliable and reproducible method to identify
 an individual with poor lower limb neuromuscular
 control. The authors found that lower-limb neuromuscular control using a field-based drop-jump could
 be adequately assessed by physicians, physical therapists, athletic trainers, and coaches without significant
 training in motion-capture technology. The sensitivity
 of the field-based drop-jump for determining
-medium-or high-risk athletes was found to be 95%. \[12\]
+medium-or high-risk athletes was found to be 95%. [12]
 
 Appendix 1 outlines the previous study’s findings.
 Although previous studies have suggested that lowerextremity muscle fatigue is a risk factor for ACL
-injury, \[13-17\] the precise impact of fatigue on injury risk
+injury, [13-17] the precise impact of fatigue on injury risk
 to the ACL is still unknown. A recent systematic review
 attempted to measure this risk; however, no correlation
 could be found, in part due to the heterogeneity of
-testing protocols and tasks identified. \[18\] Therefore, a
+testing protocols and tasks identified. [18] Therefore, a
 more thorough investigation of the effect of fatigue on
 ACL injury risk is required.
 The primary purpose of this study was to determine
@@ -122,19 +122,19 @@ knee surgery, history of patellar instability, lowerextremity neuromuscular diso
 of any current or previous musculoskeletal injuries.
 The field drop-jump test was performed in a similar
 manner to the previously validated study by Redler
-et al. \[12\] A digital video recording device was positioned
+et al. [12] A digital video recording device was positioned
 
 on a stand that was 40 inches in height and 12 feet
 away from the drop-jump box. The drop-jump box
 comprised a square platform 15 inches in width and 12
 inches tall. The setup was consistent with previous
-studies. \[12,19,20\] Athlete fatigue was determined objectively by percent reduction in maximum vertical jump.
+studies. [12,19,20] Athlete fatigue was determined objectively by percent reduction in maximum vertical jump.
 To measure maximum vertical jump, athletes were
 instructed to jump with maximum effort and tag a
 sticker to a tape-measure placed on a wall. The
 maximum vertical jump was recorded in inches. White
 circular marker/stickers were placed on the participant’s anterior superior iliac spine, patella, tibial
-tubercle, and the center of the ankle. \[12,21\] Athletes then
+tubercle, and the center of the ankle. [12,21] Athletes then
 completed 3 drop-jumps, which were video recorded.
 For the drop-jump, athletes were instructed to stand
 with their feet shoulder width apart, drop off of the box
@@ -146,7 +146,7 @@ complete a standardized exercise protocol consisting of a
 timed period of high-intensity aerobic task, instructed to
 be performed at maximum intensity. The protocol was
 created by the study team and was modeled after previous
-studies. \[22-24\] The goal was to create a circuit of plyometric
+studies. [22-24] The goal was to create a circuit of plyometric
 exercises, with comparable short durations, while using
 minimal equipment. The protocol was created to be
 applicable to average high school athletes, both male and
@@ -165,7 +165,7 @@ vertical jump, which was used to quantify fatigue. A
 decrease in maximum vertical jump of at least 20% was
 considered a fatigued state. The use of before-and-after
 jumping tasks to quantify level of fatigue has been used
-in previous studies, albeit with variation. \[22-24\] Athletes
+in previous studies, albeit with variation. [22-24] Athletes
 then completed 3 postexercise drop-jump tests immediately following the postexercise vertical jump. Postexercise jumps were also video recorded (Fig 1).
 Video observers consisted of physical therapists, athletic trainers, and senior orthopaedic surgery residents.
 Observers were recruited from local colleges as well as
@@ -186,7 +186,7 @@ postexercise) Observers were sent 2 secure links via
 e-mail to 2 websites containing videos of the athletes
 completing the drop-jump tests along with an online
 survey for each video, a method previously used by
-Redler et al. \[12\] Videos were separated by sex to decrease
+Redler et al. [12] Videos were separated by sex to decrease
 bias. One video contained pre- and postexercise dropjumps of the 38 male athletes and the other video
 contained the 47 female athletes. The videos were
 
@@ -212,7 +212,7 @@ Appendix 1). Observers were then asked to rate each
 jump video as either “low,” “medium,” or “high”
 dynamic valgus (Fig 2). Our protocol was based on the
 previously validated study using drop jump by Redler
-et al. \[12\] All ratings for each athlete’s pre-/postexercise
+et al. [12] All ratings for each athlete’s pre-/postexercise
 jumps were aggregated, and the most common rating
 was assigned to determine 1 pre- and 1 postexercise
 classification for the athlete. An increase in dynamic
@@ -231,14 +231,14 @@ FATIGUE INCREASES DYNAMIC KNEE VALGUS 217
 using means, standard deviations (SDs), and ranges. All
 continuous data are described using means and SDs,
 whereas categorical data are described using counts and
-column percentages. The c \[2\] or Fisher exact test was
+column percentages. The c [2] or Fisher exact test was
 used to compare categorical variables between groups,
 including the proportion of patients with increased risk
 compared before and after exercise. Intraclass correlation coefficients were used to determine the agreement
 in ratings between judges. Although arbitrary, the
 agreement classifications for intraclass correlation
 coefficients have been described as \<0.40: poor; 0.40 to
-0.60: fair; 0.60 to 0.74: good, and >0.75: strong. \[25\]
+0.60: fair; 0.60 to 0.74: good, and >0.75: strong. [25]
 
 Univariate analysis was employed to identify factors
 that predisposed athletes to increased dynamic valgus; P
@@ -247,7 +247,7 @@ covariates. Subgroup analysis was conducted based on
 sex, age group, and athletes who increased in risk
 following exercise (n ¼ 38). Risk factors assessed
 included height, weight, body mass index, vertical
-jump/change in vertical jump, and fatigue level. Statistical significance was set at P \< .05. All analyses were
+jump/change in vertical jump, and fatigue level. Statistical significance was set at P < .05. All analyses were
 performed using SAS 9.4 (SAS Institute, Cary, NC).
 
 Results
@@ -305,11 +305,11 @@ with increased in risk (n ¼ 38) was too small for reliable
 analysis.
 There was a significant increase in the proportion of
 athletes ranked medium or high risk postexercise
-compared with pre-exercise (68% vs 44%; P \< .01, c \[2\]
+compared with pre-exercise (68% vs 44%; P < .01, c [2]
 
 test). Similarly, a significantly greater proportion of
-female athletes (P \< .01) and athletes �15 years old
-(P \< .01) were rated medium/high risk following the
+female athletes (P < .01) and athletes �15 years old
+(P < .01) were rated medium/high risk following the
 exercise protocol compared to pre-exercise (Table 3).
 However, when a univariate analysis was run on all
 players, sex and age group were not found to be significant predictors (Table 4). A post-hoc power analysis
@@ -324,18 +324,18 @@ as measured through a drop-jump test protocol.
 Moreover, we found female athletes and those athletes
 older than the age of 15 to be more likely to demonstrate increased dynamic knee valgus.
 Several studies have suggested that fatigue alters
-lower-limb biomechanics, \[26-28\] leading to an increased
-risk of ACL injury. \[14,29,30\] However, there are inconsistencies between these studies in regards to fatigue
+lower-limb biomechanics, [26-28] leading to an increased
+risk of ACL injury. [14,29,30] However, there are inconsistencies between these studies in regards to fatigue
 protocols, athletic tasks studied, and the effects of fatigue
-on lower extremity joint angles. \[18\] In 2005, Mandelbaum
-et al. \[31\] studied the effectiveness of neuromuscular and
+on lower extremity joint angles. [18] In 2005, Mandelbaum
+et al. [31] studied the effectiveness of neuromuscular and
 
 proprioceptive training in preventing ACL injuries. They
 reported 88% fewer ACL injuries in athletes enrolled in
 neuromuscular training compared with the control
 group. Subsequent studies have demonstrated similar
 improvements in lower-extremity biomechanics and
-ACL injury risk reduction. \[9,32,33\] However, despite the
+ACL injury risk reduction. [9,32,33] However, despite the
 extensive implementation of ACL injury-prevention
 
 218 M. S. FIDAI ET AL.
@@ -343,7 +343,7 @@ extensive implementation of ACL injury-prevention
 Fig 3. Percentage of athletes with increased dynamic valgus after fatigue.
 
 programs, there has not been a corresponding decrease
-in the incidence of ACL injury. \[4,34-36\] Our study found a
+in the incidence of ACL injury. [4,34-36] Our study found a
 significant increase in dynamic knee valgus after exercise. This change in lower-limb neuromuscular control
 was found to correlate with the amount of fatigue, as
 athletes demonstrating more than 20% fatigue were
@@ -362,8 +362,8 @@ has been shown to be a cost-effective strategy in
 reducing societal ACL injury cost burden, it can still
 require significant time otherwise devoted to
 
-conditioning or sport-specific training. \[37\] Evidencebased prevention programs recommend starting
-6 weeks before competition and can require maintenance programs during the season. \[38,39\] Therefore,
+conditioning or sport-specific training. [37] Evidencebased prevention programs recommend starting
+6 weeks before competition and can require maintenance programs during the season. [38,39] Therefore,
 effective selection of athletes in need of a time-intensive
 
 neuromuscular training can be facilitated by fatigue
@@ -379,8 +379,8 @@ patients have a greater rate of ACL injury, with
 commonly cited risk factors such as smaller ligament
 size, posterior-inferior slope of the lateral tibia plateau,
 increased knee and generalized laxity, and increased
-body mass index. \[4-6\] In addition, greater injury rates
-have been reported in girls following puberty. \[40-42\] This
+body mass index. [4-6] In addition, greater injury rates
+have been reported in girls following puberty. [40-42] This
 may be due to the musculoskeletal changes associated
 with maturation, leading to poorer neuromuscular
 
@@ -424,10 +424,10 @@ Male 48.6% (18) 64.9% (24) .16
 
 > 15 y 30.6% (11) 66.7% (24) \<.01
 
-NOTE. c \[2\] test P values are displayed. Bold P values are statistically
+NOTE. c [2] test P values are displayed. Bold P values are statistically
 significant.
 
-control and landing mechanics in female athletes. \[43,44\]
+control and landing mechanics in female athletes. [43,44]
 
 As the majority of the athletes in the current study
 are female, this could also explain why our study found
@@ -447,7 +447,7 @@ foot separation distance. Previous studies using the
 
 Table 4. Univariate Comparisons by Sex and Age Group
 
-drop-jump also identify this limitation. \[12,20\] To account
+drop-jump also identify this limitation. [12,20] To account
 for all these factors, a sophisticated motion-analysis and
 video capture system in several planes of motion are
 required and thus not feasible outside of a laboratory.
@@ -456,7 +456,7 @@ single-camera system in the coronal plane has been
 shown to be a valid screening tool. The test, when
 evaluating medium- and high-risk athletes, has a high
 sensitivity (95%) with high inter-rater (k ¼ 0.92) and
-moderate intra-rater (k ¼ 0.55) reliabilities. \[12\] As a
+moderate intra-rater (k ¼ 0.55) reliabilities. [12] As a
 screening tool, the drop jump’s high sensitivity is
 desirable. In the current study, the number of athletes
 determined to have either medium- or high- amount of
@@ -476,7 +476,7 @@ recordings. Subtle variances appreciated during a live
 drop-jump test that influence an observer’s rating may
 be lost in a video. However, this testing and grading
 protocol has been used previously and demonstrated
-strong accuracy. \[12\] Second, the exercise protocol used in
+strong accuracy. [12] Second, the exercise protocol used in
 
 Covariate Female n ¼ 47 Male n ¼ 38 P Value \[*\] Age �15 y n ¼ 44 Age >15 y n ¼ 36 P Value \[*\]
 
@@ -515,7 +515,7 @@ protocol for this testing context was not available.
 However, despite being a novel protocol, we did identify a drop in maximum vertical jump following the
 exercise protocol in most athletes, indicating ability to
 induce leg fatigue. Previous investigations in the literature have used 20% reduction in jumping ability to
-quantify fatigue induced by their respective protocol. \[22,23\] Although this was our benchmark to define a
+quantify fatigue induced by their respective protocol. [22,23] Although this was our benchmark to define a
 fatigued state as well, we decided to carry out the
 postexercise drop-jump assessment, regardless if an
 athlete reached 20% fatigue threshold or not. We
@@ -835,10 +835,10 @@ known as valgus alignment. The knees and hips are not
 flexed as much contributing to a rough landing.
 
 1. Off balance/heel landing
-1. Narrow landing stance
-1. Valgus (“knock-knee”) alignment
-1. Poor kneecap separation distance
-1. Knees and hips not flexed enough
+2. Narrow landing stance
+3. Valgus (“knock-knee”) alignment
+4. Poor kneecap separation distance
+5. Knees and hips not flexed enough
 
 222.e2 M. S. FIDAI ET AL.
 
@@ -856,7 +856,7 @@ kneecaps. The knees and hips are both bent to facilitate
 a smooth landing.
 
 1. Landing evenly on balls of feet
-1. Landing with feet shoulder width apart
-1. Neutral alignment of knees
-1. Good separation distance between kneecaps
-1. Knees and hips flexed
+2. Landing with feet shoulder width apart
+3. Neutral alignment of knees
+4. Good separation distance between kneecaps
+5. Knees and hips flexed

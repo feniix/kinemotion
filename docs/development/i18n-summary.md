@@ -5,8 +5,8 @@
 We are implementing internationalization (i18n) support for Kinemotion validation messages using a **structured data approach** where:
 
 1. **Backend** (Python/FastAPI): Returns structured validation data with translation keys and context
-1. **Frontend** (React/TypeScript): Handles all translation and presentation logic
-1. **Result**: Decoupled, maintainable, and scalable i18n system
+2. **Frontend** (React/TypeScript): Handles all translation and presentation logic
+3. **Result**: Decoupled, maintainable, and scalable i18n system
 
 ## Why This Approach?
 
@@ -262,14 +262,14 @@ frontend/src/main.tsx (UPDATED)
    # PyPI automatically deploys on tag
    ```
 
-1. **Frontend Deploy**:
+2. **Frontend Deploy**:
 
    ```bash
    git push origin main
    # Vercel automatically deploys
    ```
 
-1. **Release Checklist**:
+3. **Release Checklist**:
 
    - [ ] All tests passing (backend + frontend)
    - [ ] No type errors (pyright strict)
@@ -285,26 +285,26 @@ frontend/src/main.tsx (UPDATED)
 ### Phase 1: Backend (4-6 hours)
 
 1. Update ValidationIssue dataclass (15 min)
-1. Update ValidationResult methods (30 min)
-1. Update CMJ validator (2-3 hours)
-1. Update Drop Jump validator (1-2 hours)
-1. Update serialization (30 min)
-1. Add tests (1-2 hours)
+2. Update ValidationResult methods (30 min)
+3. Update CMJ validator (2-3 hours)
+4. Update Drop Jump validator (1-2 hours)
+5. Update serialization (30 min)
+6. Add tests (1-2 hours)
 
 ### Phase 2: Frontend (6-8 hours)
 
 1. Create translation files (1 hour)
-1. Setup i18next (2 hours)
-1. Update components (2-3 hours)
-1. Add tests (1-2 hours)
+2. Setup i18next (2 hours)
+3. Update components (2-3 hours)
+4. Add tests (1-2 hours)
 
 ### Phase 3: Testing & QA (4-6 hours)
 
 1. Backend unit tests
-1. Frontend component tests
-1. E2E tests
-1. Manual testing with multiple languages
-1. Verify message key completeness
+2. Frontend component tests
+3. E2E tests
+4. Manual testing with multiple languages
+5. Verify message key completeness
 
 ## Success Criteria
 
@@ -322,11 +322,11 @@ frontend/src/main.tsx (UPDATED)
 ## Next Steps
 
 1. **Review this specification** with team
-1. **Create feature branch**: `feat/i18n-validation-messages`
-1. **Start Phase 1**: Backend implementation
-1. **Follow Quick Start Guide** at `docs/development/i18n-quick-start-guide.md`
-1. **Reference Architecture** at `docs/development/i18n-architecture-diagram.md`
-1. **Full specification** at `docs/development/i18n-validation-messages-specification.md`
+2. **Create feature branch**: `feat/i18n-validation-messages`
+3. **Start Phase 1**: Backend implementation
+4. **Follow Quick Start Guide** at `docs/development/i18n-quick-start-guide.md`
+5. **Reference Architecture** at `docs/development/i18n-architecture-diagram.md`
+6. **Full specification** at `docs/development/i18n-validation-messages-specification.md`
 
 ## Questions & Support
 

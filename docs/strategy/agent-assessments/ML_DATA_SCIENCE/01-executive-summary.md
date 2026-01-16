@@ -201,9 +201,9 @@ Needed for:
 ### Recommended Studies (4 total, 5 days each)
 
 1. **Ankle angle fix impact** (Week 2): Confirm fix improves angle, not height
-1. **Savgol window optimization** (Week 2): Find best window size for jump
-1. **Running confidence threshold** (Week 4): Find optimal threshold for GCT
-1. **Filter strategy comparison** (Week 5): Butterworth vs Savgol vs adaptive
+2. **Savgol window optimization** (Week 2): Find best window size for jump
+3. **Running confidence threshold** (Week 4): Find optimal threshold for GCT
+4. **Filter strategy comparison** (Week 5): Butterworth vs Savgol vs adaptive
 
 ______________________________________________________________________
 
@@ -236,27 +236,27 @@ ______________________________________________________________________
 ### Week 1-2: Foundation (13-16 days)
 
 1. Define running parameters (ML + Biomechanics) → 3-4 days
-1. Create validation framework (ML + QA) → 2 days
-1. Design benchmark dataset (ML + QA) → 3-4 days
-1. Build latency profiler (CV Engineer) → 3 days
+2. Create validation framework (ML + QA) → 2 days
+3. Design benchmark dataset (ML + QA) → 3-4 days
+4. Build latency profiler (CV Engineer) → 3 days
 
 **Deliverable:** Parameter spec + validation protocol + latency baseline
 
 ### Week 3-5: Validation (38-49 days)
 
 1. Run parameter sweeps (ML + Backend) → 5-7 days
-1. Execute validation studies (ML + Biomechanics) → 10-15 days
-1. Robustness testing (QA + ML) → 10-15 days
-1. Ablation studies (ML + QA) → 20 days
+2. Execute validation studies (ML + Biomechanics) → 10-15 days
+3. Robustness testing (QA + ML) → 10-15 days
+4. Ablation studies (ML + QA) → 20 days
 
 **Deliverable:** Validation reports + robustness matrix + ablation findings
 
 ### Month 2+: Refinement
 
 1. Publish validation study paper
-1. Release benchmark datasets
-1. Implement multi-person (if desired)
-1. Launch real-time demo
+2. Release benchmark datasets
+3. Implement multi-person (if desired)
+4. Launch real-time demo
 
 ______________________________________________________________________
 

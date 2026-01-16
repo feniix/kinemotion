@@ -8,11 +8,11 @@ _International Journal of Sports Physiology and Performance_
 
 **Article Title:** Putting the ‘i’ Back in Team
 
-**Authors:** Patrick Ward \[1\], Aaron J. Coutts \[2\], Ricard Pruna \[3\], and Alan McCall \[4,5\]
+**Authors:** Patrick Ward [1], Aaron J. Coutts [2], Ricard Pruna [3], and Alan McCall [4,5]
 
-**Affiliations:** \[1\] Seattle Seahawks, Seattle, WA, USA. \[2\] Faculty of Health, University of
-Technology Sydney (UTS), Australia. \[3\] FC Barcelona, Barcelona, Spain. \[4\] Arsenal Football
-Club, London, UK. \[5\] Edinburgh Napier University, Edinburgh, UK.
+**Affiliations:** [1] Seattle Seahawks, Seattle, WA, USA. [2] Faculty of Health, University of
+Technology Sydney (UTS), Australia. [3] FC Barcelona, Barcelona, Spain. [4] Arsenal Football
+Club, London, UK. [5] Edinburgh Napier University, Edinburgh, UK.
 
 **Journal:** _International Journal of Sports Physiology and Performance_
 
@@ -28,7 +28,7 @@ _International Journal of Sports Physiology and Performance_
 
 **Title: Putting the** _**‘i’**_ **back in team**
 
-**Authors: Patrick Ward** **\[1\]** **, Aaron J Coutts** **\[2\]** **, Ricard Pruna** **\[3\]** **, Alan McCall** **\[4,5 \]**
+**Authors: Patrick Ward** **[1]** **, Aaron J Coutts** **[2]** **, Ricard Pruna** **[3]** **, Alan McCall** **[4,5 ]**
 
 **Institution:**
 
@@ -101,9 +101,9 @@ collaborate with the coaching staff on the design and implementation of the trai
 
 individual players and the team as a collective.’ The gold standard is likely to follow an evidence-led
 
-approach \[1,2\] using the integration of coaching expertise, athlete values, and the best relevant research
+approach [1,2] using the integration of coaching expertise, athlete values, and the best relevant research
 
-evidence into the decision-making process for the day-to-day service delivery to players” \[2\] . The aim of
+evidence into the decision-making process for the day-to-day service delivery to players” [2] . The aim of
 
 this commentary is to highlight how an evidence-led approach, targeted at the individual player is
 
@@ -154,11 +154,11 @@ identifying important trends in player’s data and/or deviations from normal pa
 
 strategies were first reported for individual sport athletes (e.g., endurance sports) as a way to identify risks of
 
-overtraining \[3-6\], this approach has since been adopted by team-sports to guide the training process \[2,7\] . The
+overtraining [3-6], this approach has since been adopted by team-sports to guide the training process [2,7] . The
 
 information obtained from these measures are commonly used to identify players who are not responding
 
-well to team training, individualising rehabilitation and/or identifying reduced readiness or injury risk \[7\] . In
+well to team training, individualising rehabilitation and/or identifying reduced readiness or injury risk [7] . In
 
 team sports, individualised monitoring can be particularly challenging when working with individuals given
 
@@ -182,13 +182,13 @@ the literature.
 
 A number of statistical approaches have been reported to identify individual differences across
 
-periods of time in physical therapy, exercise, and elite sport \[8-11\] . The aim of implementing these analyses is to
+periods of time in physical therapy, exercise, and elite sport [8-11] . The aim of implementing these analyses is to
 
 enhance the decision-making around issues relating to individual athletes. Analytic approaches such as those
 
-drawing from single-subject research design and time series analysis \[12\], or those using a magnitude-based
+drawing from single-subject research design and time series analysis [12], or those using a magnitude-based
 
-inference (MBI) approach to analysing the individual \[9,13\] may provide fast thinking sports science and
+inference (MBI) approach to analysing the individual [9,13] may provide fast thinking sports science and
 
 medicine practitioners with simple methods of analysing individual player data.
 
@@ -198,31 +198,31 @@ Magnitude-based inference is a statistical approach that allows the practitioner
 
 magnitude of the observed effect, relative to some standardized threshold, as being either substantial or
 
-trivial \[14\] . While initially proposed for making group comparisons, this method has recently been extended to
+trivial [14] . While initially proposed for making group comparisons, this method has recently been extended to
 
-assessing individuals \[9,13,15\] . Through this approach, practitioners can statistically evaluate the direction of a
+assessing individuals [9,13,15] . Through this approach, practitioners can statistically evaluate the direction of a
 
 “Putting the ‘i’ Back in Team” by Ward P, Coutts AJ, Pruna R, McCall A
 _International Journal of Sports Physiology and Performance_
 © 2018 Human Kinetics, Inc.
 
-player’s trend and the magnitude of that trend over time \[9\], allowing for more meaningful and evidence-led
+player’s trend and the magnitude of that trend over time [9], allowing for more meaningful and evidence-led
 
 conversations with coaches regarding the health, well-being and performance capacity of players.
 
 Through the MBI approach, the practitioner can qualitatively assess the observed effect relative to a
 
-smallest worthwhile change (SWC) \[14\] . Several methods exist for calculating the SWC such as practical
+smallest worthwhile change (SWC) [14] . Several methods exist for calculating the SWC such as practical
 
 experience in sport, recent publications identifying typical variations in the variable of interest for a similar
 
 level of player, or more commonly, by multiplying the between-subject (player) standard deviation (SD) by
 
-0.2 \[16\] . While this approach may be useful when analysing performance testing data for groups of athletes (e.g.,
+0.2 [16] . While this approach may be useful when analysing performance testing data for groups of athletes (e.g.,
 
 vertical jump for athletes in each position group of an American Football team) the magnitude of between
 
-subject SD falls victim to the heterogeneity of the group \[15\] limiting its utility to detect changes when evaluating
+subject SD falls victim to the heterogeneity of the group [15] limiting its utility to detect changes when evaluating
 
 serial measures within the individual (e.g., Daily Wellness Questionnaire data). This has led some authors to
 
@@ -230,7 +230,7 @@ determine the SWC from the within-individual coefficient-of-variation (CV), as t
 
 individualized to that person’s typical variation but also takes into account the repeated measures structure of
 
-the data \[15\] . For example, Plews and colleagues \[17\] took an individualized MBI approach to evaluate the heart
+the data [15] . For example, Plews and colleagues [17] took an individualized MBI approach to evaluate the heart
 
 rate variability (HRV) of elite triathletes during a specific training block. The authors established a SWC in
 
@@ -238,9 +238,9 @@ Ln rMSSD (the natural logarithm of the square root of the mean sum of the square
 
 adjacent normal R:R intervals) as 0.5\*individual athlete CV and found that a large linear decrease in Ln
 
-rMSSD CV for the athlete’s 7-day rolling average revealed a trend towards non-functional over-reaching \[17\] .
+rMSSD CV for the athlete’s 7-day rolling average revealed a trend towards non-functional over-reaching [17] .
 
-This approach is similar to examining individualized z-scores, a commonly used method in sports science \[18\] .
+This approach is similar to examining individualized z-scores, a commonly used method in sports science [18] .
 
 However, it may be easier for practitioners to explain data to coaches or players/athletes in reference to
 
@@ -252,7 +252,7 @@ appropriate for analysing meaningful changes in training and monitoring data. Fo
 
 and/or wellness response of players on a team can be analysed using a within-individual MBI approach by
 
-applying similar logic to that of Plews and colleagues \[17\] . In doing so, the outcomes can be visualized to show
+applying similar logic to that of Plews and colleagues [17] . In doing so, the outcomes can be visualized to show
 
 when meaningful changes in the player’s training plan occur. MBI can also be applied to various other team
 
@@ -264,7 +264,7 @@ _International Journal of Sports Physiology and Performance_
 
 of preseason training. This type of visualization has been suggested as a positive feature of taking an MBI
 
-approach to data analysis \[13\] .
+approach to data analysis [13] .
 
 _Statistical Process Control_
 
@@ -274,7 +274,7 @@ method”, is a single-subject approach that can be applied by the practitioner 
 
 trend in any type of monitoring data. Taking its roots in industrial quality control, SPC has since been applied
 
-in both social work and physical therapy settings \[11,19\] . The SPC analysis utilizes a control chart, which
+in both social work and physical therapy settings [11,19] . The SPC analysis utilizes a control chart, which
 
 visualizes the individual player’s time series data with respect to that individual’s control line (average) and
 
@@ -286,11 +286,11 @@ would warrant further investigation. To evaluate whether more subtle shifts in t
 
 place, run time errors can be established to identify, for example, periods of time where several observations
 
-(e.g., 8 or 9) reside above or below the control line indicating a potential shift in the overall process \[19\] . The
+(e.g., 8 or 9) reside above or below the control line indicating a potential shift in the overall process [19] . The
 
 versatility of SPC provides the practitioner with options of setting their own UCL and LCL. For example,
 
-instead of 2SD control limit, a practitioner may feel it important to be _alerted_ when a value exceeds 1SD \[8\] .
+instead of 2SD control limit, a practitioner may feel it important to be _alerted_ when a value exceeds 1SD [8] .
 
 The control limits may be initially set with general heuristics in mind ( _fast working sports science_ approach),
 
@@ -302,11 +302,11 @@ It is common practice for sports practitioners to use the entire historic data o
 
 "mean" and "SD", however, this may be limited given the changes in training demands that take place
 
-throughout a season, for example between the pre- and in-season periods \[20,21\] . Therefore, it might be
+throughout a season, for example between the pre- and in-season periods [20,21] . Therefore, it might be
 
 more useful to evaluate data that is recent, for example a 28 day mean and SD or to use some form of
 
-rolling average \[22\] .
+rolling average [22] .
 
 Figure 2 provides an example of an individual player’s 48 h post-match values from a test of isometric
 
@@ -336,15 +336,15 @@ commonly seen when international level players transition from club to national 
 
 tournaments. To account for these limitations, while still evaluating individual differences in training,
 
-mixed model analyses have been recommended \[10,23,24\] . These types of models allow the practitioner to
+mixed model analyses have been recommended [10,23,24] . These types of models allow the practitioner to
 
 leverage the _“wisdom of the crowd”_ via fixed effects while also analysing individual differences
 
-through the specification of random intercepts and/or slopes \[25\] . In brief, a mixed-model approach
+through the specification of random intercepts and/or slopes [25] . In brief, a mixed-model approach
 
 represents a compromise between pooled data (e.g., the average across all observations) and non-pooled
 
-data (e.g., the averages for the individuals themselves, such as SPC) \[25\] . This approach is useful in sports
+data (e.g., the averages for the individuals themselves, such as SPC) [25] . This approach is useful in sports
 
 science where player’s that have a small number of observations may initially be better represented by
 
@@ -358,7 +358,7 @@ athlete deviates from the group. Therefore, such a model may be useful for explo
 
 responses that athletes may have to the prescribed training dose.
 
-Mixed-model approaches have begun to find their way into the sports science literature \[20,26,27\] .
+Mixed-model approaches have begun to find their way into the sports science literature [20,26,27] .
 
 However, it is generally uncommon for sports scientists and medicine professionals to discuss random
 
@@ -368,7 +368,7 @@ discussion of the model’s random effects it is challenging to understand the r
 
 individual differences displayed by players. One method to utilize the random effects of the model is to
 
-determine the “effect” of interest based off the between-subject SD \[14\] . The typical within-individual
+determine the “effect” of interest based off the between-subject SD [14] . The typical within-individual
 
 variation can be used to represent the confidence we place on a change in a player’s value from one
 
@@ -420,7 +420,7 @@ _International Journal of Sports Physiology and Performance_
 
 1. Buchheit M. Houston, We Still Have a Problem. Int J Sports Physiol Perform. 2017;12:1111-4.
 
-1. Coutts AJ. Challenges in Developing Evidence-Based Practice in High-Performance Sport. Int J
+2. Coutts AJ. Challenges in Developing Evidence-Based Practice in High-Performance Sport. Int J
 
 Sports Physiol Perform. 2017;12:717-8.
 
@@ -450,11 +450,11 @@ _Insights_, M. Kellmann and B. Beckmann, Editors. 2017, Routledge: Abingdon. p. 
 
 Technologies Applied to Training and Performance Monitoring. 2017;12:S263-272.
 
-9. Hopkins WG. A spreadsheet for monitoring an individuals changes and trends. Sportsci. 2017;21:5
+09. Hopkins WG. A spreadsheet for monitoring an individuals changes and trends. Sportsci. 2017;21:5
 
-1.
+10.
 
-1. Kwok OM, Underhill AT, Berry JW, Luo W, Elliot TR, and Yoon M. Analyzing Longitudinal
+11. Kwok OM, Underhill AT, Berry JW, Luo W, Elliot TR, and Yoon M. Analyzing Longitudinal
 
 Data with Multilevel Models: An Example with Individuals Living with Lower Extremity
 Intra-articular Fractures. Rehabil Psychol. 2008;53:370-386.

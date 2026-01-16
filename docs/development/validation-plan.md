@@ -91,15 +91,15 @@ These methods cost nothing and can be done immediately by any user.
 **How to do it**:
 
 1. Download My Jump Lab app from the links above
-1. Record 10-20 jumps (countermovement or drop jumps)
-1. Process same video with both My Jump Lab and Kinemotion
-1. Compare jump heights, contact times, flight times
-1. Calculate: mean difference, correlation, percentage error
+2. Record 10-20 jumps (countermovement or drop jumps)
+3. Process same video with both My Jump Lab and Kinemotion
+4. Compare jump heights, contact times, flight times
+5. Calculate: mean difference, correlation, percentage error
 
 **What to expect**:
 
 - If correlation r > 0.85: Good agreement
-- If mean difference \< 5cm for jump height: Acceptable
+- If mean difference < 5cm for jump height: Acceptable
 - If contact/flight times within ±30ms: Reasonable for 30fps video
 
 **Time required**: 2-3 hours
@@ -122,14 +122,14 @@ These methods cost nothing and can be done immediately by any user.
 **How to do it**:
 
 1. Download Tracker from <https://physlets.org/tracker/>
-1. Open your drop jump video in Tracker
-1. Set coordinate system (origin at ground level)
-1. Calibrate scale using known reference (e.g., drop box height)
-1. Track ankle/heel position frame-by-frame (autotrack feature available)
-1. Export position data (time vs. vertical position)
-1. Identify takeoff/landing from position data
-1. Calculate jump height from trajectory
-1. Compare with Kinemotion results
+2. Open your drop jump video in Tracker
+3. Set coordinate system (origin at ground level)
+4. Calibrate scale using known reference (e.g., drop box height)
+5. Track ankle/heel position frame-by-frame (autotrack feature available)
+6. Export position data (time vs. vertical position)
+7. Identify takeoff/landing from position data
+8. Calculate jump height from trajectory
+9. Compare with Kinemotion results
 
 **What to compare**:
 
@@ -163,11 +163,11 @@ These methods cost nothing and can be done immediately by any user.
 **How to do it**:
 
 1. Record 5-10 jumps at 60fps or 120fps (slow-motion on phone)
-1. Use free video player (VLC, QuickTime) to step through frame-by-frame
-1. Manually mark takeoff frame and landing frame
-1. Calculate flight time: (frames_between / frame_rate)
-1. Calculate jump height: h = g × t² / 8 (where t = flight time, g = 9.81 m/s²)
-1. Compare with Kinemotion results
+2. Use free video player (VLC, QuickTime) to step through frame-by-frame
+3. Manually mark takeoff frame and landing frame
+4. Calculate flight time: (frames_between / frame_rate)
+5. Calculate jump height: h = g × t² / 8 (where t = flight time, g = 9.81 m/s²)
+6. Compare with Kinemotion results
 
 **What to expect**:
 
@@ -191,18 +191,18 @@ These methods cost nothing and can be done immediately by any user.
    - Compare with position-based height
    - Should agree within 10-15%
 
-1. **Velocity at takeoff**:
+2. **Velocity at takeoff**:
 
    - Calculate: v = g × t / 2 (where t = flight time)
    - Check: Is takeoff velocity reasonable? (1.5-2.5 m/s for typical jumps)
 
-1. **Drop height calibration**:
+3. **Drop height calibration**:
 
    - If you know drop box height (e.g., 40cm)
    - Does calibrated measurement match reality?
    - Test with known reference heights
 
-1. **Repeatability**:
+4. **Repeatability**:
 
    - Do 3 identical jumps
    - Results should be within 5-10% of each other
@@ -219,10 +219,10 @@ These methods cost nothing and can be done immediately by any user.
 **How to do it**:
 
 1. Record 5 jumps
-1. Process with Kinemotion
-1. Process same videos again (fresh analysis)
-1. Compare results - should be identical (deterministic algorithm)
-1. If using different videos of same jumps:
+2. Process with Kinemotion
+3. Process same videos again (fresh analysis)
+4. Compare results - should be identical (deterministic algorithm)
+5. If using different videos of same jumps:
    - Calculate ICC (intraclass correlation)
    - Target: ICC > 0.90 (excellent reliability)
 
@@ -251,9 +251,9 @@ Optional methods if you have budget for equipment.
 **How to do it**:
 
 1. Purchase or build jump mat
-1. Record 20-30 jumps with simultaneous video + jump mat
-1. Compare contact times and flight times
-1. Calculate correlation and agreement statistics
+2. Record 20-30 jumps with simultaneous video + jump mat
+3. Compare contact times and flight times
+4. Calculate correlation and agreement statistics
 
 **What to expect**:
 
@@ -293,7 +293,7 @@ ______________________________________________________________________
   - r > 0.90: Excellent
   - r = 0.80-0.90: Good
   - r = 0.70-0.80: Acceptable
-  - r \< 0.70: Needs improvement
+  - r < 0.70: Needs improvement
 
 **Tool**: Any spreadsheet (Excel, Google Sheets) or Python pandas
 
@@ -307,13 +307,13 @@ ______________________________________________________________________
 
 - Calculate: mean(abs(Kinemotion - Reference))
 - Shows typical error magnitude
-- Target: MAE \< 5cm for jump height, \< 30ms for timing at 30fps
+- Target: MAE < 5cm for jump height, < 30ms for timing at 30fps
 
 ### 5.4 Percentage Error
 
 - Calculate: mean(abs((Kinemotion - Reference) / Reference) × 100)
 - Shows relative error
-- Target: \< 10% for practical use
+- Target: < 10% for practical use
 
 **Example Python Code**:
 
@@ -368,7 +368,7 @@ ______________________________________________________________________
 #### Phase 1 Success Criteria
 
 - Correlation r > 0.85 with Tracker/My Jump Lab
-- Mean difference \< 5cm for jump height
+- Mean difference < 5cm for jump height
 - Contact/flight times within ±30ms
 - Event detection within ±2-3 frames
 
@@ -454,15 +454,15 @@ ______________________________________________________________________
 
 ### Jump Height
 
-- ✅ **Acceptable**: MAE \< 5cm, r > 0.85
-- ⭐ **Good**: MAE \< 3cm, r > 0.90
-- 🏆 **Excellent**: MAE \< 2cm, r > 0.95
+- ✅ **Acceptable**: MAE < 5cm, r > 0.85
+- ⭐ **Good**: MAE < 3cm, r > 0.90
+- 🏆 **Excellent**: MAE < 2cm, r > 0.95
 
 ### Contact Time / Flight Time
 
-- ✅ **Acceptable**: MAE \< 30ms (at 30fps), r > 0.80
-- ⭐ **Good**: MAE \< 20ms (at 30fps), r > 0.85
-- 🏆 **Excellent**: MAE \< 10ms (at 60fps), r > 0.90
+- ✅ **Acceptable**: MAE < 30ms (at 30fps), r > 0.80
+- ⭐ **Good**: MAE < 20ms (at 30fps), r > 0.85
+- 🏆 **Excellent**: MAE < 10ms (at 60fps), r > 0.90
 
 ### Event Detection
 
@@ -526,9 +526,9 @@ Sometimes opportunities arise unexpectedly:
 **If this happens**:
 
 1. Explain your tool and validation goal
-1. Ask if you can run 10-20 test jumps for comparison
-1. Offer to share results (may help their research too)
-1. Be flexible with timing (work around their schedule)
+2. Ask if you can run 10-20 test jumps for comparison
+3. Offer to share results (may help their research too)
+4. Be flexible with timing (work around their schedule)
 
 **Cost**: Usually free if someone gives you access, just your time
 
@@ -648,13 +648,13 @@ ______________________________________________________________________
    - Are contact times sensible? (150-300ms typical for drop jumps)
    - Does flight time correlate with perceived jump height?
 
-1. **Internal consistency**
+2. **Internal consistency**
 
    - Do better jumps (feel higher) measure higher?
    - Do repeated similar jumps give similar results?
    - Do trends over time make sense (improving with training)?
 
-1. **Comparative validation**
+3. **Comparative validation**
 
    - Does athlete A (known to jump higher) measure higher than athlete B?
    - Do measurements track with performance (vertical jump improvement = better game performance)?
@@ -675,10 +675,10 @@ ______________________________________________________________________
 You don't need perfect validation on day one. Start simple:
 
 1. **Phase 1**: Compare with My Jump Lab (1 week, free)
-1. **Phase 2**: Manual verification (1 week, free)
-1. **Phase 3**: Document results (1 week)
-1. **Phase 4**: Community validation (ongoing)
-1. **Phase 5**: Opportunistic upgrades (if lab access becomes available)
+2. **Phase 2**: Manual verification (1 week, free)
+3. **Phase 3**: Document results (1 week)
+4. **Phase 4**: Community validation (ongoing)
+5. **Phase 5**: Opportunistic upgrades (if lab access becomes available)
 
 ### Honest Limitations
 

@@ -10,9 +10,9 @@ _Journal of Applied Biomechanics_
 **Article Title:** The Validity and Reliability of an iPhone App for Measuring Running
 Mechanics
 
-**Authors:** Carlos Balsalobre-Fernández \[1\], Hovannes Agopyan \[2\], and Jean-Benoit Morin \[2\]
+**Authors:** Carlos Balsalobre-Fernández [1], Hovannes Agopyan [2], and Jean-Benoit Morin [2]
 
-**Affiliations:** \[1\] Department of Sport Sciences, European University of Madrid, Spain.
+**Affiliations:** [1] Department of Sport Sciences, European University of Madrid, Spain.
 2Université Côte d'Azur, LAMHESS, Nice, France.
 
 **Journal:** _Journal of Applied Biomechanics_
@@ -30,7 +30,7 @@ _Journal of Applied Biomechanics_
 
 **The validity and reliability of an iPhone app for measuring running mechanics**
 
-_Carlos Balsalobre-Fernández_ _\[1\]_ _, Hovannes Agopyan_ _\[2\]_ _, Jean-Benoit Morin_ _\[2 \]_
+_Carlos Balsalobre-Fernández_ _[1]_ _, Hovannes Agopyan_ _[2]_ _, Jean-Benoit Morin_ _[2 ]_
 
 _1 Department of Sport Sciences, European University of Madrid, Spain_
 
@@ -106,23 +106,23 @@ _Journal of Applied Biomechanics_
 
 There is a large body of research highlighting the importance of monitoring running
 
-mechanics for both performance and injury-prevention purposes \[1–4\] . From the performance
+mechanics for both performance and injury-prevention purposes [1–4] . From the performance
 
 enhancement perspective, the measurement of leg stiffness, vertical oscillation of the center
 
 of mass, and ground contact time is of great interest since these variables seems to play a key
 
-role in running performance \[1,5–7\] and could be used to detect neuromuscular fatigue \[8\] . In the
+role in running performance [1,5–7] and could be used to detect neuromuscular fatigue [8] . In the
 
 context of injury prevention, several studies have proposed that stride variables such as leg
 
 stiffness or leg asymmetry when running could be used as indicators for non-contact lower
 
-limb injuries \[3,9,10\] .
+limb injuries [3,9,10] .
 
 The instruments considered the gold standard for measuring running mechanics are
 
-force platforms and instrumented treadmills \[11,12\] . However, the fact that these are unavailable
+force platforms and instrumented treadmills [11,12] . However, the fact that these are unavailable
 
 in many performance centers and clinics (particularly those with fewer resources) may
 
@@ -132,25 +132,25 @@ and long-term follow-up impossible. For this reason, many researchers have looke
 
 validation of more affordable and practical devices to measure running mechanics, mainly
 
-based on opto-electronic devices and accelerometers \[11,13,14\] . Among these, the _Optojump Next_
+based on opto-electronic devices and accelerometers [11,13,14] . Among these, the _Optojump Next_
 
 is probably the most widely used because of its high degree of validity and reliability
 
-compared with force platforms \[15,16\] . Moreover, contact and aerial times can be used to
+compared with force platforms [15,16] . Moreover, contact and aerial times can be used to
 
 calculate leg stiffness, vertical oscillation, step frequency and maximal force of each stride in
 
 a very valid, reliable and accurate way using the mathematical model proposed by Morin et
 
-al. \[17–19\] . Meanwhile, recent studies have analyzed the validity and reliability of less expensive
+al. [17–19] . Meanwhile, recent studies have analyzed the validity and reliability of less expensive
 
-field-based and easier-to-use accelerometers \[11,13,20\] . However, while highly reliable, their
+field-based and easier-to-use accelerometers [11,13,20] . However, while highly reliable, their
 
 validity and accuracy in comparison with photoelectric systems are still low for clinical
 
 purposes. For example, a recent study showed that the _Myotest_ device overestimates stride
 
-contact and aerial time by 35-103% compared with the _Optojump next_ system \[13\] especially at
+contact and aerial time by 35-103% compared with the _Optojump next_ system [13] especially at
 
 “The Validity and Reliability of an iPhone App for Measuring Running Mechanics”
 by Balsalobre-Fernández C, Agopyan H, Morin JB
@@ -163,7 +163,7 @@ running mechanics in a practical, affordable but still highly valid and reliable
 
 Previous studies have shown the high level of validity and reliability of an iPhone app
 
-for measuring aerial time in jumping activities \[21,22\] . The app calculates aerial time very
+for measuring aerial time in jumping activities [21,22] . The app calculates aerial time very
 
 accurately thanks to the high-speed camera present on the latest iPhone models, which
 
@@ -193,7 +193,7 @@ computations of time (i.e., contact and aerial times) measured with two devices,
 
 necessary to recruit more subjects. Similar analyses with low sample sizes have been used in
 
-previous studies in which the computations are independent from subject’s characteristics \[23\] .
+previous studies in which the computations are independent from subject’s characteristics [23] .
 
 After being informed about experimental procedures, the participants provided written
 
@@ -240,19 +240,19 @@ measured with both the app and the opto-electronic device are used to calculate 
 
 oscillation, step frequency, relative maximum force, and leg stiffness of each step using the
 
-equations validated in Morin et al. \[17\], on the basis of the following data entered into the app:
+equations validated in Morin et al. [17], on the basis of the following data entered into the app:
 
 subject’s body mass, height, and running speed. Specifically, maximal force (in N) was
 
 𝑡𝑎
 
-𝑡𝑐 \[+ 1)\]\[, with \] _\[m\]_ \[ being the body mass \]
+𝑡𝑐 [+ 1)][, with ] _[m]_ [ being the body mass ]
 
 calculated using the following equation: 𝐹𝑚𝑎𝑥= 𝑚𝑔
 
 𝜋
 
-2 \[(\]
+2 [(]
 
 of the subject (in kg), _ta_ the aerial time and _tc_ the contact time. Then, leg stiffness (in kN/m)
 
@@ -289,7 +289,7 @@ and jogging, participants performed 6 different 30 s runs at a zero incline on a
 
 motorized treadmill (HEF Tecmachine, Andrezieux-Boutheon, France) at 2.77, 3.33, 3.88,
 
-4.44, 5 and 5.55 m·s \[-1\] in a randomized order. One minute of passive rest was allowed
+4.44, 5 and 5.55 m·s [-1] in a randomized order. One minute of passive rest was allowed
 
 between each run. Eight steps of each run were analyzed simultaneously with _Runmatic_ and
 
@@ -309,7 +309,7 @@ In order to allow participants to stabilize their running pattern at each speed,
 
 as synchronize the iPhone app with the _Optojump Next_, the runners were told to drop onto the
 
-treadmill with the right foot. Both systems then started recording at the 12 \[th\] step (i.e., 6 \[th\] left
+treadmill with the right foot. Both systems then started recording at the 12 [th] step (i.e., 6 [th] left
 
 step). Finally, the app calculated the running mechanics variables using the aforementioned
 
@@ -342,7 +342,7 @@ systematic bias, we used the T-test for independent measures and one-way ANOVA t
 
 complemented with the analysis of the slope of the linear regression line and the SEE. The
 
-level of statistical significance was set at P \< 0.05. All calculations were performed using
+level of statistical significance was set at P < 0.05. All calculations were performed using
 
 IBM SPSS Statistics 22 for Mac (IBM Co., USA).
 
@@ -358,7 +358,7 @@ p\<0.001, SEE = 0.0056; _Aerial time_ : r = 0.94, p\<0.001, SEE = 0.0048) (see F
 
 Moreover, there was a very high agreement between instruments as revealed by the ICC (2,1)
 
-( _Contact time_ : ICC = 0.991, Confidence Interval \[CI\] = 0.987 to 0.994; _Aerial time_ : ICC =
+( _Contact time_ : ICC = 0.991, Confidence Interval [CI] = 0.987 to 0.994; _Aerial time_ : ICC =
 
 0.965, CI = 0.948 to 0.977).
 
@@ -366,7 +366,7 @@ When proceeding with an independent measures’ T-test, a systematic bias was
 
 observed between _Runmatic_ and the _Optojump Next_ system for the aerial time (mean
 
-difference: +0.006s in _Runmatic_, CI = 0.0017 to 0.01, p \< 0.05) but not for the contact time
+difference: +0.006s in _Runmatic_, CI = 0.0017 to 0.01, p < 0.05) but not for the contact time
 
 “The Validity and Reliability of an iPhone App for Measuring Running Mechanics”
 by Balsalobre-Fernández C, Agopyan H, Morin JB
@@ -379,7 +379,7 @@ analyzing the difference between instruments across low (2.77 - 3.33 m/s), moder
 
 4.44 m/s) and high (5 – 5.5 m/s) running velocities a statistically significant difference, by
 
-which lower velocities produced higher differences, was observed (p\< 0.001) for both contact
+which lower velocities produced higher differences, was observed (p< 0.001) for both contact
 
 and aerial time. Finally, when analyzing each set of 8 steps to test the reliability of the
 
@@ -387,9 +387,9 @@ instruments for measuring different steps of the same run, both _Runmatic_ and t
 
 _Next_ system had almost identical, very high Cronbach’s alpha and low coefficients of
 
-variation values ( _Contact time: Runmatic_ \[CV = 2.82%, α = 0.996\], _Optojump Next_ \[CV =
+variation values ( _Contact time: Runmatic_ [CV = 2.82%, α = 0.996], _Optojump Next_ \[CV =
 
-2.89%, α = 0.996\]; _Aerial time: Runmatic_ \[CV = 5.2%, α = 0.993\], _Optojump Next_ \[CV =
+2.89%, α = 0.996\]; _Aerial time: Runmatic_ [CV = 5.2%, α = 0.993], _Optojump Next_ \[CV =
 
 5.4%, α = 0.969\]).
 
@@ -411,7 +411,7 @@ measurement of contact and aerial times, with an ICC higher than 0.96 and a corr
 
 coefficient ranging from 0.94-0.99 in both variables. Also, the linear regression analyses
 
-showed very high determination coefficients (R \[2\] = 0.89-0.98) and slopes ranging from 0.82
+showed very high determination coefficients (R [2] = 0.89-0.98) and slopes ranging from 0.82
 
 1.03, highlighting the ability of the app to obtain similar values to those measured with the
 
@@ -458,13 +458,13 @@ when measuring each set of 8 steps for the different runs and running velocities
 
 aforementioned differences should be consistent and therefore, the app could be used to track
 
-changes in performance over time. These results are in line with the study by Girard et al. \[24\]
+changes in performance over time. These results are in line with the study by Girard et al. [24]
 
 in which high levels of intra- and inter-day reliability were observed in the computation of
 
 mechanical running parameters using the spring-mass model described in Morin et al. and an
 
-instrumented treadmill \[17\] . This could therefore be a useful technique for coaches or therapists
+instrumented treadmill [17] . This could therefore be a useful technique for coaches or therapists
 
 who wish to monitor running mechanics over time without advanced instruments.
 
@@ -485,7 +485,7 @@ the reliability of _Myotest_ when measuring contact time, aerial time and step f
 
 high to very high (ICC = 0.835-0.999), its validity was not acceptable, with absolute mean
 
-bias up to 103 % between devices \[13\] . In conclusion, the app analyzed in the present study is
+bias up to 103 % between devices [13] . In conclusion, the app analyzed in the present study is
 
 both a valid and reliable tool for measuring contact time, aerial time, vertical oscillation, leg
 
@@ -508,50 +508,50 @@ _Journal of Applied Biomechanics_
    Biomechanical Factors Affecting Running Economy. _Sport Med_ . 2016.
    doi:10.1007/s40279-016-0474-4.
 
-1. Santos-Concejero J, Tam N, Granados C, et al. Stride angle as a novel indicator of
+2. Santos-Concejero J, Tam N, Granados C, et al. Stride angle as a novel indicator of
    running economy in well-trained runners. _J Strength Cond Res_ . 2014;28(7):18891895. doi:10.1519/jsc.0000000000000325.
 
-1. Butler RJ, Crowell HP, Davis IM. Lower extremity stiffness: Implications for
+3. Butler RJ, Crowell HP, Davis IM. Lower extremity stiffness: Implications for
    performance and injury. _Clin Biomech_ . 2003;18(6):511-517. doi:10.1016/S02680033(03)00071-8.
 
-1. Pappas P, Paradisis G, Vagenas G. Leg and vertical stiffness (a)symmetry between
+4. Pappas P, Paradisis G, Vagenas G. Leg and vertical stiffness (a)symmetry between
    dominant and non-dominant legs in young male runners. _Hum Mov Sci_ . 2015;40:273283. doi:10.1016/j.humov.2015.01.005.
 
-1. Barnes KR, Kilding AE. Running economy: measurement, norms, and determining
+5. Barnes KR, Kilding AE. Running economy: measurement, norms, and determining
    factors. _Sport Med - Open_ . 2015;1(1):8. doi:10.1186/s40798-015-0007-y.
 
-1. Santos-Concejero J, Olivan J, Mate-Munoz JL, et al. Gait Cycle Characteristics and
+6. Santos-Concejero J, Olivan J, Mate-Munoz JL, et al. Gait Cycle Characteristics and
    Running Economy in Elite Eritrean and European Runners. _Int J Sports Physiol_
    _Perform_ . 2014. doi:10.1123/ijspp.2014-0179.
 
-1. Chapman RF, Laymon AS, Wilhite DP, McKenzie JM, Tanner DA, Stager JM.
+7. Chapman RF, Laymon AS, Wilhite DP, McKenzie JM, Tanner DA, Stager JM.
    Ground Contact Time as an Indicator of Metabolic Cost in Elite Distance Runners.
 
 _Med Sci Sport Exerc_ . 2012;44(5):917-925.
 
-8. Buchheit M, Gray A, Morin J-B. Assessing Stride Variables and Vertical Stiffness
-   with GPS-Embedded Accelerometers: Preliminary Insights for the Monitoring of
-   Neuromuscular Fatigue on the Field. _J Sport Sci Med_ . 2015;14:698-701.
+08. Buchheit M, Gray A, Morin J-B. Assessing Stride Variables and Vertical Stiffness
+    with GPS-Embedded Accelerometers: Preliminary Insights for the Monitoring of
+    Neuromuscular Fatigue on the Field. _J Sport Sci Med_ . 2015;14:698-701.
 
-1. Hewit J, Cronin J, Hume P. Multidirectional Leg Asymmetry Assessment in Sport.
-   _Strength Cond J_ . 2012;34(1):82-86. doi:10.1519/SSC.0b013e31823e83db.
+09. Hewit J, Cronin J, Hume P. Multidirectional Leg Asymmetry Assessment in Sport.
+    _Strength Cond J_ . 2012;34(1):82-86. doi:10.1519/SSC.0b013e31823e83db.
 
-1. Fousekis K, Tsepis E, Poulmedis P, Athanasopoulos S, Vagenas G. Intrinsic risk
-   factors of non-contact quadriceps and hamstring strains in soccer: a prospective study
-   of 100 professional players. _Br J Sports Med_ . 2011;45(9):709-714.
-   doi:10.1136/bjsm.2010.077560.
+10. Fousekis K, Tsepis E, Poulmedis P, Athanasopoulos S, Vagenas G. Intrinsic risk
+    factors of non-contact quadriceps and hamstring strains in soccer: a prospective study
+    of 100 professional players. _Br J Sports Med_ . 2011;45(9):709-714.
+    doi:10.1136/bjsm.2010.077560.
 
-1. Watari R, Hettinga B, Osis S, Ferber R. Validation of a Torso-Mounted
-   Accelerometer for Measures of Vertical Oscillation and Ground Contact Time During
-   Treadmill Running. _J Appl Biomech_ . 2015;11(1):86-95. doi:10.1123/jab.2015-0200.
+11. Watari R, Hettinga B, Osis S, Ferber R. Validation of a Torso-Mounted
+    Accelerometer for Measures of Vertical Oscillation and Ground Contact Time During
+    Treadmill Running. _J Appl Biomech_ . 2015;11(1):86-95. doi:10.1123/jab.2015-0200.
 
-1. Bundle MW, Powell MO, Ryan LJ. Design and testing of a high-speed treadmill to
-   measure ground reaction forces at the limit of human gait. _Med Eng Phys_ .
-   2015;37(9):892-897. doi:10.1016/j.medengphy.2015.04.009.
+12. Bundle MW, Powell MO, Ryan LJ. Design and testing of a high-speed treadmill to
+    measure ground reaction forces at the limit of human gait. _Med Eng Phys_ .
+    2015;37(9):892-897. doi:10.1016/j.medengphy.2015.04.009.
 
-1. Gindre C, Lussiana T, Hebert-Losier K, Morin J-B. Reliability and validity of the
-   Myotest® for measuring running stride kinematics. _J Sports Sci_ . 2015:1-7.
-   doi:10.1080/02640414.2015.1068436.
+13. Gindre C, Lussiana T, Hebert-Losier K, Morin J-B. Reliability and validity of the
+    Myotest® for measuring running stride kinematics. _J Sports Sci_ . 2015:1-7.
+    doi:10.1080/02640414.2015.1068436.
 
 “The Validity and Reliability of an iPhone App for Measuring Running Mechanics”
 by Balsalobre-Fernández C, Agopyan H, Morin JB
@@ -562,42 +562,42 @@ _Journal of Applied Biomechanics_
     optical measurement system for measuring ground contact time during running. _J_
     _Strength Cond Res_ . 2015:1. doi:10.1519/JSC.0000000000001299.
 
-01. Glatthorn JF, Gouge S, Nussbaumer S, Stauffacher S, Impellizzeri FM, Maffiuletti
+15. Glatthorn JF, Gouge S, Nussbaumer S, Stauffacher S, Impellizzeri FM, Maffiuletti
     NA. Validity and reliability of Optojump photoelectric cells for estimating vertical
     jump height. _J Strength Cond Res_ . 2011;25(2):556-560.
 
-01. Ruggiero L, Dewhurst S, Bampouras TM. Validity and Reliability of Two FieldBased Leg Stiffness Devices: Implications for Practical Use. _J Appl Biomech_ . 2016.
+16. Ruggiero L, Dewhurst S, Bampouras TM. Validity and Reliability of Two FieldBased Leg Stiffness Devices: Implications for Practical Use. _J Appl Biomech_ . 2016.
     doi:10.1123/jab.2015-0297.
 
-01. Morin JB, Dalleau G, Kyröläinen H, Jeannin T, Belli A. A simple method for
+17. Morin JB, Dalleau G, Kyröläinen H, Jeannin T, Belli A. A simple method for
     measuring stiffness during running. _J Appl Biomech_ . 2005;21(2):167-180.
     doi:10.1519/JSC.0b013e318260edad.
 
-01. Coleman DR, Cannavan D, Horne S, Blazevich AJ. Leg stiffness in human running:
+18. Coleman DR, Cannavan D, Horne S, Blazevich AJ. Leg stiffness in human running:
     Comparison of estimates derived from previously published models to direct
     kinematic-kinetic measures. _J Biomech_ . 2012;45(11):1987-1991.
     doi:10.1016/j.jbiomech.2012.05.010.
 
-01. Pappas P, Paradisis G, Tsolakis C, Smirniotou A, Morin J-B. Reliabilities of leg and
+19. Pappas P, Paradisis G, Tsolakis C, Smirniotou A, Morin J-B. Reliabilities of leg and
     vertical stiffness during treadmill running. _Sports Biomech_ . 2014;13(4):391-399.
     doi:10.1080/14763141.2014.981853.
 
-01. Gouttebarge V, Wolfard R, Griek N, de Ruiter CJ, Boschman JS, van Dieën JH.
+20. Gouttebarge V, Wolfard R, Griek N, de Ruiter CJ, Boschman JS, van Dieën JH.
     Reproducibility and validity of the myotest for measuring step frequency and ground
     contact time in recreational runners. _J Hum Kinet_ . 2015;45:19-26. doi:10.1515/hukin2015-0003.
 
-01. Balsalobre-Fernández C, Glaister M, Lockey RA. The validity and reliability of an
+21. Balsalobre-Fernández C, Glaister M, Lockey RA. The validity and reliability of an
     iPhone app for measuring vertical jump performance. _J Sports Sci_ . 2015;33(15):15741579. doi:10.1080/02640414.2014.996184.
 
-01. Gallardo-Fuentes F, Gallardo-Fuentes J, Ramírez-Campillo R, et al. Inter And IntraSession Reliability And Validity Of The My Jump App For Measuring Different
+22. Gallardo-Fuentes F, Gallardo-Fuentes J, Ramírez-Campillo R, et al. Inter And IntraSession Reliability And Validity Of The My Jump App For Measuring Different
     Jump Actions In Trained Male And Female Athletes. _J Strength Cond Res_ . 2015.
     doi:10.1519/JSC.0000000000001304.
 
-01. Morin J-B, Belli A. A simple method for measurement of maximal downstroke power
+23. Morin J-B, Belli A. A simple method for measurement of maximal downstroke power
     on friction-loaded cycle ergometer. _J Biomech_ . 2004;37(1):141-145.
     doi:10.1016/S0021-9290(03)00253-7.
 
-01. Girard O, Brocherie F, Morin JB, Millet GP. Intra- and Inter-Session Reliability of
+24. Girard O, Brocherie F, Morin JB, Millet GP. Intra- and Inter-Session Reliability of
     Running Mechanics During Treadmill Sprints. _Int J Sports Physiol Perform_ . 2015.
     doi:10.1123/ijspp.2015-0145.
 
@@ -618,7 +618,7 @@ _Journal of Applied Biomechanics_
 ## —
 
 **Figure 2** Linear relationship between _Runmatic_ app and the opto-electronic device for the
-measurement of (A) contact time and (B) aerial time at speeds ranging 2.77-5.55 m·s \[-1\] .
+measurement of (A) contact time and (B) aerial time at speeds ranging 2.77-5.55 m·s [-1] .
 
 “The Validity and Reliability of an iPhone App for Measuring Running Mechanics”
 by Balsalobre-Fernández C, Agopyan H, Morin JB

@@ -59,7 +59,7 @@ studies were included if the following criteria were met: (a) participants were
 
 competitive middle- and/or long-distance runners; (b) participants had a _V_ O2max
 
-60mL·kg \[-1-\]      - min \[-1\] ; (c) studies were controlled trials published in peer-reviewed journals;
+60mL·kg [-1-] - min [-1] ; (c) studies were controlled trials published in peer-reviewed journals;
 
 (d) studies analyzed the effects of strength-training programs with a duration greater
 
@@ -79,7 +79,7 @@ analyzed effect of strength training programs on RE in high-level middle- and lo
 
 distance runners showed a large, beneficial effect (standardized mean difference
 
-\[95%Confidence Interval\] = -1.42 \[-2.23, -0.60\]). In conclusion, a strength-training
+[95%Confidence Interval] = -1.42 [-2.23, -0.60]). In conclusion, a strength-training
 
 program including low to high intensity resistance exercises and plyometric exercises
 
@@ -201,7 +201,7 @@ Studies were eligible for further analysis if the following inclusion criteria w
 
 participants were middle- and/or long- distance runners (studies with triathletes or any
 
-other kind of athletes were excluded); (b) participants had a _V_ O2max value > 60mL·kg \[-1-\]
+other kind of athletes were excluded); (b) participants had a _V_ O2max value > 60mL·kg [-1-]
 
 ```
   - min [-1] ; (c) studies were controlled trials published in peer-reviewed journals; (d) studies
@@ -279,7 +279,7 @@ duplicates and reviewing the resultant 174 full-text articles, 5 studies met the
 
 criteria (33,37,51,52,54). Excluded studies had at least one of the following
 
-characteristics: (a) participants had _V_ O2max values \< 60 ml·kg \[-1\]        - min \[-1\] ; (b) participants
+characteristics: (a) participants had _V_ O2max values < 60 ml·kg [-1] - min [-1] ; (b) participants
 
 5
 
@@ -291,7 +291,7 @@ training interventions lasted less than 4 weeks; (e) RE was not measured. Thus, 
 
 overall sample for the present meta-analysis resulted in 93 high-level middle- and long
 
-distance runners with _V_ O2max > 60 ml·kg \[-1\] - min \[-1\] .
+distance runners with _V_ O2max > 60 ml·kg [-1] - min [-1] .
 
 **Level of evidence and quality of the studies**
 
@@ -309,7 +309,7 @@ A summary of participants' characteristics is presented in Table 2. The total nu
 
 participants was 93 (78 males and 15 females) with an age ranging from 17.3 to 29.8
 
-years. Participants' _V_ O2max ranged between 61.2-71.1 ml·kg \[-1\]        - min \[-1\] . All participants
+years. Participants' _V_ O2max ranged between 61.2-71.1 ml·kg [-1] - min [-1] . All participants
 
 competed in middle- and long-distance running events at national and/or international
 
@@ -349,13 +349,13 @@ total of 30-200 jumps and/or 5-10 repetitions of 20-150 m sprints.
 
 **Effects of strength training on running economy**
 
-The average RE change was -2.32 ± 2.07 and 0.57 ± 2.48 ml·kg \[-1\]       - min \[-1\] for the
+The average RE change was -2.32 ± 2.07 and 0.57 ± 2.48 ml·kg [-1] - min [-1] for the
 
 intervention and control group, respectively. The meta-analysis demonstrated an
 
 overall, significant, large beneficial effect of the strength-training interventions on RE
 
-when compared to the control group (SMD \[95%CI\] = -1.43 \[-2.23, -0.64\], Z = 3.53,
+when compared to the control group (SMD [95%CI] = -1.43 [-2.23, -0.64], Z = 3.53,
 
 p\<0.001). Four studies showed a large effect of the intervention (SMD >1.0) and
 
@@ -365,9 +365,9 @@ another one showed a moderate effect. See Figure 2.
 
 The I-squared test showed a significant heterogeneity among the included studies
 
-( _I_ \[2\] =61%, p=0.03). However, further analysis showed that the removal of the study by
+( _I_ [2] =61%, p=0.03). However, further analysis showed that the removal of the study by
 
-Paavolainen et al. (37) reduced the heterogeneity to 0 ( _I_ \[2\] = 0%, p=0.77), indicating that
+Paavolainen et al. (37) reduced the heterogeneity to 0 ( _I_ [2] = 0%, p=0.77), indicating that
 
 this study was the source of heterogeneity. In addition, the contribution of this particular
 
@@ -375,7 +375,7 @@ study was the lowest of the 5 studies (13.5% _vs_ . 20.3-24.1%). When removing t
 
 aforementioned study, the re-calculated average RE change was -1.88 ± 2.31 and 0.51 ±
 
-2.76 ml·kg \[-1\]       - min \[-1\] for the intervention and control group, respectively. This resulted in
+2.76 ml·kg [-1] - min [-1] for the intervention and control group, respectively. This resulted in
 
 7
 
@@ -383,7 +383,7 @@ Copyright © National Strength and Conditioning Association Unauthorized reprodu
 
 an overall large, beneficial and significant effect of the strength-training interventions
 
-(SMD \[95%CI\] = -1.06 \[-1.56, -0.56\], Z = 4.16, p\<0.001).
+(SMD [95%CI] = -1.06 [-1.56, -0.56], Z = 4.16, p\<0.001).
 
 **DISCUSSION**
 
@@ -568,11 +568,11 @@ trained middle- and long-distance runners to achieve an optimum performance.
 1. Baar, K. Using molecular biology to maximize concurrent training. _Sports Med_
    44 Suppl 2: 117–125, 2014.
 
-1. Balsalobre-Fernández, C, Tejero-González, CM, and del Campo-Vecino, J.
+2. Balsalobre-Fernández, C, Tejero-González, CM, and del Campo-Vecino, J.
    Seasonal strength performance and its relationship with training load on elite
    runners. _J Sports Sci Med_ 14: 9–15, 2015.
 
-1. Barnes, KR and Kilding, AE. Running economy: measurement, norms, and
+3. Barnes, KR and Kilding, AE. Running economy: measurement, norms, and
    determining factors. _Sport Med - Open_ 1, 2015.
 
 11
@@ -582,22 +582,22 @@ Copyright © National Strength and Conditioning Association Unauthorized reprodu
 4. Beattie, K, Kenny, IC, Lyons, M, and Carson, BP. The effect of strength training
    on performance in endurance athletes. _Sport Med_ 44: 845–865, 2014.
 
-1. Bevan, HR, Bunce, PJ, Owen, NJ, Bennett, MA, Cook, CJ, Cunningham, DJ, et
+5. Bevan, HR, Bunce, PJ, Owen, NJ, Bennett, MA, Cook, CJ, Cunningham, DJ, et
    al. Optimal loading for the development of peak power output in professional
    rugby players. _J Strength Cond Res_ 24: 43–47, 2010.
 
-1. Billat, V, Lepretre, PM, Heugas, AM, Laurence, MH, Salim, D, and Koralsztein,
+6. Billat, V, Lepretre, PM, Heugas, AM, Laurence, MH, Salim, D, and Koralsztein,
    JP. Training and bioenergetic characteristics in elite male and female Kenyan
    runners. _Med Sci Sport Exerc_ 35: 297–304, 2003.
 
-1. Bosco, C, Montanari, G, Ribacchi, R, Giovenali, P, Latteri, F, Iachelli, G, et al.
+7. Bosco, C, Montanari, G, Ribacchi, R, Giovenali, P, Latteri, F, Iachelli, G, et al.
    Relationship between the efficiency of muscular work during jumping and the
    energetics of running. _Eur J Appl Physiol Occup Physiol_ 56: 138–43, 1987.
 
-1. Bransford, DR and Howley, ET. Oxygen cost of running in trained and untrained
+8. Bransford, DR and Howley, ET. Oxygen cost of running in trained and untrained
    men and women. _Med Sci Sports_ 9: 41–4, 1977.
 
-1. Cormie, P, McGuigan, MR, and Newton, RU. Adaptations in athletic
+9. Cormie, P, McGuigan, MR, and Newton, RU. Adaptations in athletic
    performance after ballistic power versus strength training. _Med Sci Sport Exerc_
    42: 1582–1598, 2010.
 
@@ -611,19 +611,19 @@ pacing during 10 km running time trial. _Eur J Appl Physiol_, 2015.
 11. Folland, JP and Williams, AG. The adaptations to strength training. _Sport Med_
     37: 145–168, 2007.
 
-01. Foster, C and Lucia, A. Running economy : the forgotten factor in elite
+12. Foster, C and Lucia, A. Running economy : the forgotten factor in elite
     performance. _Sports Med_ 37: 316–9, 2007.
 
-01. Francesca-Piacentini, M, De Ioannon, G, Comotto, S, Spedicato, A, Vernillo, G,
+13. Francesca-Piacentini, M, De Ioannon, G, Comotto, S, Spedicato, A, Vernillo, G,
     and La Torre, A. Concurrent strength and endurance training effects on running
     economy in master endurance runners. _J Strength Cond Res_ 27: 2295–2303,
 
-01.
+14.
 
-01. Fry, AC. The role of resistance exercise intensity on muscle fibre adaptations.
+15. Fry, AC. The role of resistance exercise intensity on muscle fibre adaptations.
     _Sport Med_ 34: 663–679, 2004.
 
-01. Fyfe, JJ, Bishop, DJ, and Stepto, NK. Interference between concurrent resistance
+16. Fyfe, JJ, Bishop, DJ, and Stepto, NK. Interference between concurrent resistance
     and endurance exercise: molecular bases and the role of individual training
 
 12
@@ -635,43 +635,43 @@ variables. _Sports Med_ 44: 743–762, 2014.
 16. García-Pallarés, J and Izquierdo, M. Strategies to optimize concurrent training of
     strength and aerobic fitness for rowing and canoeing. _Sport Med_ 41: 329–343,
 
-01.
+17.
 
-01. González-Badillo, JJ, Gorostiaga, EM, Arellano, R, and Izquierdo, M. Moderate
+18. González-Badillo, JJ, Gorostiaga, EM, Arellano, R, and Izquierdo, M. Moderate
     resistance training volume produces more favorable strength gains than high or
     low volumes during a short-term training cycle. _J Strength Cond Res_ 19: 689–
     697, 2005.
 
-01. González-Badillo, JJ, Izquierdo, M, and Gorostiaga, E. Moderate volume of high
+19. González-Badillo, JJ, Izquierdo, M, and Gorostiaga, E. Moderate volume of high
     relative training intensity produces greater strength gains compared with low and
     high volumes in competitive weightlifters. _J Strength Cond Res_ 20: 73–81, 2006.
 
-01. Gorostiaga, EM, Navarro-Amézqueta, I, Calbet, JAL, Hellsten, Y, Cusso, R,
+20. Gorostiaga, EM, Navarro-Amézqueta, I, Calbet, JAL, Hellsten, Y, Cusso, R,
     Guerrero, M, et al. Energy metabolism during repeated sets of leg press exercise
     leading to failure or not. _PLoS One_ 7: e40621, 2012.
 
-01. HajGhanbari, B, Yamabayashi, C, Buna, TR, Coelho, JD, Freedman, KD,
+21. HajGhanbari, B, Yamabayashi, C, Buna, TR, Coelho, JD, Freedman, KD,
     Morton, TA, et al. Effects of respiratory muscle training on performance in
     athletes: a systematic review with meta-analyses. _J Strength Cond Res_ 27: 1643–
     63, 2013.
 
-01. Hudgins, B, Scharfenberg, J, Triplett, NT, and McBride, JM. Relationship
+22. Hudgins, B, Scharfenberg, J, Triplett, NT, and McBride, JM. Relationship
     between jumping ability and running performance in events of varying distance.
     _J Strength Cond Res_ 27: 563–567, 2013.
 
-01. Hunter, SK, Joyner, MJ, and Jones, AM. The two-hour marathon: what’s the
+23. Hunter, SK, Joyner, MJ, and Jones, AM. The two-hour marathon: what’s the
     equivalent for women? _J Appl Physiol_, 2014.
 
-01. Izquierdo, M, Ibañez, J, González-Badillo, JJ, Häkkinen, K, Ratamess, NA,
+24. Izquierdo, M, Ibañez, J, González-Badillo, JJ, Häkkinen, K, Ratamess, NA,
     Kraemer, WJ, et al. Differential effects of strength training leading to failure
     versus not to failure on hormonal responses, strength, and muscle power gains. _J_
     _Appl Physiol_ 100: 1647–1656, 2006.
 
-01. Izquierdo-Gabarren, M, De Txabarri Expósito, RG, García-Pallarés, J, SánchezMedina, L, De Villarreal, ESS, and Izquierdo, M. Concurrent endurance and
+25. Izquierdo-Gabarren, M, De Txabarri Expósito, RG, García-Pallarés, J, SánchezMedina, L, De Villarreal, ESS, and Izquierdo, M. Concurrent endurance and
     strength training not to failure optimizes performance gains. _Med Sci Sport Exerc_
     42: 1191–1199, 2010.
 
-01. Joyner, MJ. Modeling: optimal marathon performance on the basis of
+26. Joyner, MJ. Modeling: optimal marathon performance on the basis of
     physiological factors. _J Appl Physiol_ 70: 683–7, 1991.
 
 13
@@ -681,42 +681,42 @@ Copyright © National Strength and Conditioning Association Unauthorized reprodu
 26. Karp, JR. Training characteristics of qualifiers for the U.S. Olympic Marathon
     Trials. _Int J Sports Physiol Perform_ 2: 72–92, 2007.
 
-01. Kelly, CM, Burnett, AF, and Newton, MJ. The effect of strength training on
+27. Kelly, CM, Burnett, AF, and Newton, MJ. The effect of strength training on
     three-kilometer performance in recreational women endurance runners. _J_
     _Strength Cond Res_ 22: 396–403, 2008.
 
-01. Krahenbuhl, GS and Pangrazi, RP. Characteristics associated with running
+28. Krahenbuhl, GS and Pangrazi, RP. Characteristics associated with running
     performance in young boys. _Med Sci Sports Exerc_ 15: 486–90, 1983.
 
-01. Kyrolainen, H, Avela, J, McBride, JM, Koskinen, S, Andersen, JL, Sipila, S, et
+29. Kyrolainen, H, Avela, J, McBride, JM, Koskinen, S, Andersen, JL, Sipila, S, et
     al. Effects of power training on muscle structure and neuromuscular
     performance. _Scand J Med Sci Sports_ 15: 58–64, 2005.
 
-01. Kyröläinen, H, Belli, A, and Komi, P V. Biomechanical factors affecting running
+30. Kyröläinen, H, Belli, A, and Komi, P V. Biomechanical factors affecting running
     economy. _Med Sci Sports Exerc_ 33: 1330–7, 2001.
 
-01. Lacour, JR and Bourdin, M. Factors affecting the energy cost of level running at
+31. Lacour, JR and Bourdin, M. Factors affecting the energy cost of level running at
     submaximal speed. _Eur J Appl Physiol_, 2015.
 
-01. Lucia, A, Esteve-Lanao, J, Oliván, J, Gómez-Gallego, F, San Juan, AF, Santiago,
+32. Lucia, A, Esteve-Lanao, J, Oliván, J, Gómez-Gallego, F, San Juan, AF, Santiago,
     C, et al. Physiological characteristics of the best Eritrean runners—exceptional
     running economy. _Appl Physiol Nutr Metab_ 31: 530–540, 2006.
 
-01. Mikkola, J, Rusko, H, Nummela, A, Pollari, T, and Hakkinen, K. Concurrent
+33. Mikkola, J, Rusko, H, Nummela, A, Pollari, T, and Hakkinen, K. Concurrent
     endurance and explosive type strength training improves neuromuscular and
     anaerobic characteristics in young distance runners. _Int J Sports Med_ 28: 602–
     611, 2007.
 
-01. de Morton, NA. The PEDro scale is a valid measure of the methodological
+34. de Morton, NA. The PEDro scale is a valid measure of the methodological
     quality of clinical trials: a demographic study. _Aust J Physiother_ 55: 129–33,
 
-01.
+35.
 
-01. Nummela, AT, Paavolainen, LM, Sharwood, KA, Lambert, MI, Noakes, TD, and
+36. Nummela, AT, Paavolainen, LM, Sharwood, KA, Lambert, MI, Noakes, TD, and
     Rusko, HK. Neuromuscular factors determining 5 km running performance and
     running economy in well-trained athletes. _Eur J Appl Physiol_ 97: 1–8, 2006.
 
-01. Oxford Centre for Evidence-based Medicine. Levels of evidence. Univ Oxford.
+37. Oxford Centre for Evidence-based Medicine. Levels of evidence. Univ Oxford.
 
 4–5, 2009.
 
@@ -732,41 +732,41 @@ economy and muscle power. _J Appl Physiol_ 86: 1527–1533, 1999.
 38. Pellegrino, J, Ruby, BC, and Dumke, CL. Effect of plyometrics on the energy
     cost of running and mhc and titin isoforms. _Med Sci Sports Exerc_, 2015.
 
-01. Ramirez-Campillo, R, Alvarez, C, Henriquez-Olguin, C, Baez, EB, Martinez, C,
+39. Ramirez-Campillo, R, Alvarez, C, Henriquez-Olguin, C, Baez, EB, Martinez, C,
     Andrade, DC, et al. Effects of plyometric training on endurance and explosive
     strength performance in competitive middle- and long-distance runners. _J_
     _Strength Cond Res_ 28: 97–104, 2014.
 
-01. Rhea, MR. Determining the magnitude of treatment effects in strength training
+40. Rhea, MR. Determining the magnitude of treatment effects in strength training
     research through the use of the effect size. _J Strength Cond Res_ 18: 918–920,
 
-01.
+41.
 
-01. Rønnestad, B, Kojedal, Ø, Losnegard, T, Kvamme, B, Raastad, T, Ronnestad,
+42. Rønnestad, B, Kojedal, Ø, Losnegard, T, Kvamme, B, Raastad, T, Ronnestad,
     BR, et al. Effect of heavy strength training on muscle thickness, strength, jump
     performance, and endurance performance in well-trained Nordic Combined
     athletes. _Eur J Appl Physiol_ 112: 2341–2352, 2012.
 
-01. Ronnestad, BR and Mujika, I. Optimizing strength training for running and
+43. Ronnestad, BR and Mujika, I. Optimizing strength training for running and
     cycling endurance performance: A review. _Scand J Med Sci Sports_ in press,
 
-01.
+44.
 
-01. Sale, DG. Neural adaptation to resistance training. _Med Sci Sports Exerc_ 20:
+45. Sale, DG. Neural adaptation to resistance training. _Med Sci Sports Exerc_ 20:
     S135–45, 1988.
 
-01. Samozino, P, Rabita, G, Dorel, S, Slawinski, J, Peyrot, N, Saez de Villarreal, E,
+46. Samozino, P, Rabita, G, Dorel, S, Slawinski, J, Peyrot, N, Saez de Villarreal, E,
     et al. A simple method for measuring power, force, velocity properties, and
     mechanical effectiveness in sprint running. _Scand J Med Sci Sports_, 2015.
 
-01. Sampson, JA and Groeller, H. Is repetition failure critical for the development of
+47. Sampson, JA and Groeller, H. Is repetition failure critical for the development of
     muscle hypertrophy and strength? _Scand J Med Sci Sports_, 2015.
 
-01. Sanchez-Medina, L and González-Badillo, JJ. Velocity loss as an indicator of
+48. Sanchez-Medina, L and González-Badillo, JJ. Velocity loss as an indicator of
     neuromuscular fatigue during resistance training. _Med Sci Sport Exerc_ 43: 1725–
     1734, 2011.
 
-01. Sano, K, Ishikawa, M, Nobue, A, Danno, Y, Akiyama, M, Oda, T, et al. Muscletendon interaction and EMG profiles of world class endurance runners during
+49. Sano, K, Ishikawa, M, Nobue, A, Danno, Y, Akiyama, M, Oda, T, et al. Muscletendon interaction and EMG profiles of world class endurance runners during
     hopping. _Eur J Appl Physiol_ 113: 1395–1403, 2013.
 
 15
@@ -777,42 +777,42 @@ Copyright © National Strength and Conditioning Association Unauthorized reprodu
     measures of muscle-tendon interaction improve our understanding of the
     superiority of Kenyan endurance runners? _Eur J Appl Physiol_, 2014.
 
-01. Santos-Concejero, J, Billaut, F, Grobler, L, Olivan, J, Noakes, TD, and Tucker,
+49. Santos-Concejero, J, Billaut, F, Grobler, L, Olivan, J, Noakes, TD, and Tucker,
     R. Maintained cerebral oxygenation during maximal self-paced exercise in elite
     Kenyan runners. _J Appl Physiol_ jap.00909.2014, 2014.
 
-01. Santos-Concejero, J, Tam, N, Granados, C, Irazusta, J, Bidaurrazaga-Letona, I,
+50. Santos-Concejero, J, Tam, N, Granados, C, Irazusta, J, Bidaurrazaga-Letona, I,
     Zabala-Lili, J, et al. Interaction effects of stride angle and strike pattern on
     running economy. _Int J Sport Med_ 35: 1118–1123, 2014.
 
-01. Saunders, PU, Telford, RD, Pyne, DB, Peltola, EM, Cunningham, RB, Gore, CJ,
+51. Saunders, PU, Telford, RD, Pyne, DB, Peltola, EM, Cunningham, RB, Gore, CJ,
     et al. Short-term plyometric training improves running economy in highly trained
     middle and long distance runners. _J Strength Cond Res_ 20: 947–54, 2006.
 
-01. Sedano, S, Marín, PJ, Cuadrado, G, and Redondo, JC. Concurrent training in elite
+52. Sedano, S, Marín, PJ, Cuadrado, G, and Redondo, JC. Concurrent training in elite
     male runners: the influence of strength versus muscular endurance training on
     performance outcomes. _J Strength Cond Res_ 27: 2433–43, 2013.
 
-01. Staron, RS, Karapondo, DL, Kraemer, WJ, Fry, AC, Gordon, SE, Falkel, JE, et
+53. Staron, RS, Karapondo, DL, Kraemer, WJ, Fry, AC, Gordon, SE, Falkel, JE, et
     al. Skeletal muscle adaptations during early phase of heavy-resistance training in
     men and women. _J Appl Physiol_ 76: 1247–55, 1994.
 
-01. Støren, Ø, Helgerud, J, Støa, EM, and Hoff, J. Maximal strength training
+54. Støren, Ø, Helgerud, J, Støa, EM, and Hoff, J. Maximal strength training
     improves running economy in distance runners. _Med Sci Sport Exerc_ 40: 1087–
     1092, 2008.
 
-01. de Villarreal, ESS, Izquierdo, M, and Gonzalez-Badillo, JJ. Enhancing jump
+55. de Villarreal, ESS, Izquierdo, M, and Gonzalez-Badillo, JJ. Enhancing jump
     performance after combined vs. maximal power, heavy-resistance, and
     plyometric training alone. _J Strength Cond Res_ 25: 3274–3281, 2011.
 
-01. Wilber, RL and Pitsiladis, YP. Kenyan and Ethiopian distance runners: what
+56. Wilber, RL and Pitsiladis, YP. Kenyan and Ethiopian distance runners: what
     makes them so good? _Int J Sport Physiol Perform_ 7: 92–102, 2012.
 
-01. Willardson, JM, Emmett, J, Oliver, JA, and Bressel, E. Effect of short-term
+57. Willardson, JM, Emmett, J, Oliver, JA, and Bressel, E. Effect of short-term
     failure versus nonfailure training on lower body muscular endurance. _Int J Sport_
     _Physiol Perform_ 3: 279–293, 2008.
 
-01. Yamamoto, LM, Lopez, RM, Klau, JF, Casa, DJ, Kraemer, WJ, and Maresh,
+58. Yamamoto, LM, Lopez, RM, Klau, JF, Casa, DJ, Kraemer, WJ, and Maresh,
     CM. The effects of resistance training on endurance distance running
     performance among highly trained runners: a systematic review. _J Strength Cond_
     _Res_ 22: 2036–2044, 2008.
@@ -835,7 +835,7 @@ mean difference (SMD), with 95% Confidence Interval (CI) between the interventio
 
 the overall SMD and CI for all studies in the meta-analysis. Mean and SD represent
 
-absolute measures of RE in ml·kg \[-1\]       - min \[-1\] .
+absolute measures of RE in ml·kg [-1] - min [-1] .
 
 17
 
@@ -912,7 +912,7 @@ Copyright © National Strength and Conditioning Association Unauthorized reprodu
 
 VO2Max
 
-(mL\*kg \[-\]
+(mL\*kg [-]
 
 1\*min-1)
 
@@ -996,11 +996,11 @@ VO2Max
 
 RE = running economy; M/F = male/female; VO2Max = maximal oxygen consumption. \*RE
 
-and VO2Max values were measured in mL\*kg \[-1\]\*min \[-1\], except in Støren et al (CITA), in
+and VO2Max values were measured in mL\*kg [-1]\*min [-1], except in Støren et al (CITA), in
 
-which RE was measured in mL\*kg \[-0.75\]\*min \[-1\], and in Sauders et al. (CITA), in which RE was
+which RE was measured in mL\*kg [-0.75]\*min [-1], and in Sauders et al. (CITA), in which RE was
 
-measured in L\*min \[-1\] .
+measured in L\*min [-1] .
 
 Copyright © National Strength and Conditioning Association Unauthorized reproduction of this article is prohibited.
 
@@ -1031,7 +1031,7 @@ type
 
 # weeks of
 
-Sessions/week Duration (min) **SMD \[95%CI\]**
+Sessions/week Duration (min) **SMD [95%CI]**
 intervention
 
 Range of
@@ -1044,7 +1044,7 @@ ST/PLY: 0;
 
 RT: 40
 
-15-90 **-3.78 \[-5.45, -2.1\]**
+15-90 **-3.78 [-5.45, -2.1]**
 
 ST/PLY/
 
@@ -1080,9 +1080,9 @@ Mikkola et al.
 
 PLY/RT PLY: (alternate leg
 
-9 3 30 **-0.54 \[-1.58, 0.49\]**
+9 3 30 **-0.54 [-1.58, 0.49]**
 
-8 3 30-60 **-1.03 \[-1.87, -0.18\]**
+8 3 30-60 **-1.03 [-1.87, -0.18]**
 
 PLY: 0; RT:
 
@@ -1174,7 +1174,7 @@ RT RT: (half squats,
 
 4sets/4reps)
 
-**-1.45 \[-2.56, -0.35\]**
+**-1.45 [-2.56, -0.35]**
 
 Copyright © National Strength and Conditioning Association Unauthorized reproduction of this article is prohibited.
 
@@ -1212,7 +1212,7 @@ and reps, about
 
 45-60min
 
-**-1.17 \[-2.24, -0.10\]**
+**-1.17 [-2.24, -0.10]**
 
 RT: 40-70;
 

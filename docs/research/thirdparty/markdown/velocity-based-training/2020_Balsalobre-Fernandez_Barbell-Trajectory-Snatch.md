@@ -6,7 +6,7 @@ International Journal of Strength and Conditioning
 
 # **Validity and Reliability of a** **Computer Vision System to** **Determine Bar Displacement** **and Velocity**
 
-Christopher B. Taber \[1\], Emma Patterson \[1\], Jui Shah \[1\], Padraig Francis \[1\], & Justin Wager \[1\]
+Christopher B. Taber [1], Emma Patterson [1], Jui Shah [1], Padraig Francis [1], & Justin Wager [1]
 
 _1Department of Physical Therapy and Human Movement Science, Sacred Heart University, Fairfield, USA_
 
@@ -34,9 +34,9 @@ Pearson’s product-moment correlation coefficient
 Bland-Altman Plots. Displacement data showed
 moderate to nearly perfect correlations ( _r_ =0.430.94) and moderate to excellent reliability (ICC=
 0.67-0.98) and Bland-Altman plots revealing little
-bias (\< 2cm). Average velocity data showed large to
+bias (< 2cm). Average velocity data showed large to
 nearly perfect correlations ( _r_ =0.67-0.95) and good
-to excellent reliability (ICC= 0.79-0.94) with BlandAltman revealing little bias (\< 0.06 m/s). Taken
+to excellent reliability (ICC= 0.79-0.94) with BlandAltman revealing little bias (< 0.06 m/s). Taken
 together the VBA examined in this study was both
 valid and reliable compared with a gold standard
 criterion measurement of MC. These results provide
@@ -448,7 +448,7 @@ In conclusion, this investigation provides another tool
 which coaches can use to track and monitor barbell
 kinematics for their athletes. Analysis revealed
 moderate to nearly perfect correlations for MCV
-and ROM.  Previously, wireless sensors have been
+and ROM. Previously, wireless sensors have been
 less valid and reliable compared to LPT for tracking
 common strength movements (8). However, newer
 technology such as computer vision and inertial
@@ -483,36 +483,36 @@ field of strength and conditioning.
    technologies for the measurement of barbell velocity
    in different resistance training exercises. Frontiers in
    physiology: 649, 2017.
-1. Cormack SJ, Newton RU, McGuigan MR, and Doyle
+2. Cormack SJ, Newton RU, McGuigan MR, and Doyle
    TL. Reliability of measures obtained during single
    and repeated countermovement jumps. International
    journal of sports physiology and performance 3: 131144, 2008.
-1. Feuerbacher JF, Jacobs MW, Dragutinovic B,
+3. Feuerbacher JF, Jacobs MW, Dragutinovic B,
    Goldmann J-P, Cheng S, and Schumann M. Validity
    and test-retest reliability of the Vmaxpro sensor for
    evaluation of movement velocity in the deep squat.
    Journal of Strength and Conditioning Research 37:
    35-40, 2023.
-1. Fritschi R, Seiler J, and Gross M. Validity and effects
+4. Fritschi R, Seiler J, and Gross M. Validity and effects
    of placement of velocity-based training devices.
    Sports 9: 123, 2021.
-1. Hopkins WG. Correlation coefficient: a new view of
+5. Hopkins WG. Correlation coefficient: a new view of
    statistics. Recuperado de: <http://www> sportsci org/
    resource/stats/correl html, 2000.
-1. Koo TK and Li MY. A guideline of selecting and
+6. Koo TK and Li MY. A guideline of selecting and
    reporting intraclass correlation coefficients for
    reliability research. Journal of chiropractic medicine
    15: 155-163, 2016.
-1. Mann B. Developing explosive athletes: Use of
+7. Mann B. Developing explosive athletes: Use of
    velocity based training in athletes. Ultimate Athlete
    Concepts, 2016.
-1. Orange ST, Metcalfe JW, Liefeith A, Marshall P,
+8. Orange ST, Metcalfe JW, Liefeith A, Marshall P,
    Madden LA, Fewster CR, and Vince RV. Validity and
    reliability of a wearable inertial sensor to measure
    velocity and power in the back squat and bench press.
    The Journal of Strength & Conditioning Research 33:
    2398-2408, 2019.
-1. Orange ST, Metcalfe JW, Marshall P, Vince RV,
+9. Orange ST, Metcalfe JW, Marshall P, Vince RV,
 
 **Validity and Reliability of a Computer Vision System to Determine**
 **Bar Displacement and Velocity**

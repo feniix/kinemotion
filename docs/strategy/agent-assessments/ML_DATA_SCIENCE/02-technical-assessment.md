@@ -154,14 +154,14 @@ Based on published running biomechanics research:
    - Dataset: 10 reference running videos (various speeds)
    - Expected optimal: 0.68-0.75 for balanced preset
 
-1. **Filter Frequency Optimization:**
+2. **Filter Frequency Optimization:**
 
    - Test lower body Butterworth cutoff: 3-8 Hz
    - Test arm Butterworth cutoff: 8-15 Hz
    - Metric: GCT precision, phase detection accuracy
    - Expected optimal: 5Hz lower body, 12Hz arms
 
-1. **Window Size Validation:**
+3. **Window Size Validation:**
 
    - Test Savgol window: 5, 7, 9, 11, 13 frames
    - Metric: Smoothing quality vs lag (measured in stride cycles)
@@ -576,9 +576,9 @@ Single-person baseline:
 Multi-person challenges:
 
 1. Person occlusion (one athlete behind another)
-1. Overlapping bounding boxes
-1. Variable distances from camera
-1. Partial frame visibility
+2. Overlapping bounding boxes
+3. Variable distances from camera
+4. Partial frame visibility
 
 **Recommended adjustments for multi-person:**
 
@@ -621,17 +621,17 @@ Frame -> MediaPipe Pose (multiple people) -> Person ID Assignment ->
    - Solution: Hungarian algorithm (matches current frame to previous frame based on distance)
    - Complexity: Medium (algorithm + implementation)
 
-1. **Bounding Box Management:** Multiple people → multiple bounding boxes
+2. **Bounding Box Management:** Multiple people → multiple bounding boxes
 
    - Solution: Z-ordering (sort by distance from camera)
    - Complexity: Low (spatial sorting)
 
-1. **Occlusion Handling:** When person A occludes person B
+3. **Occlusion Handling:** When person A occludes person B
 
    - Solution: Kalman filter to predict position during occlusion (simple), OR interpolate from surrounding frames (medium)
    - Complexity: Medium
 
-1. **Per-Person Metrics:** Calculate metrics independently for each person
+4. **Per-Person Metrics:** Calculate metrics independently for each person
 
    - Solution: Refactor metrics calculation to accept person ID
    - Complexity: Medium (affects all analysis modules)
@@ -665,19 +665,19 @@ Multi-person scaling (estimated):
 **Mitigation strategies:**
 
 1. For multi-person real-time: Use lite model + fast presets (brings 2-person to 70ms)
-1. For multi-person offline: Accept lower fps (10fps is acceptable for batch processing)
-1. For multi-person + real-time: Process subset of bodies (e.g., lower body only)
+2. For multi-person offline: Accept lower fps (10fps is acceptable for batch processing)
+3. For multi-person + real-time: Process subset of bodies (e.g., lower body only)
 
 ### Architecture Design (Needed Before Implementation)
 
 **Recommendation:** Create design document with:
 
 1. Person tracking algorithm specification (Hungarian algorithm or alternative)
-1. ID consistency validation strategy
-1. Occlusion handling approach
-1. Per-person output format (JSON schema)
-1. Performance benchmarks (latency estimates per N people)
-1. Fallback strategy if N > 5 people detected
+2. ID consistency validation strategy
+3. Occlusion handling approach
+4. Per-person output format (JSON schema)
+5. Performance benchmarks (latency estimates per N people)
+6. Fallback strategy if N > 5 people detected
 
 ### Status: SKIPPED ENTIRELY
 
@@ -717,14 +717,14 @@ Total:    166ms ✓ (meets 200ms target)
    - Buffering: 10-30ms (depends on codec, driver)
    - Actual: 30-50ms typical
 
-1. **Network latency (50-150ms, not 50ms):**
+2. **Network latency (50-150ms, not 50ms):**
 
    - Ideal LAN/WiFi: 10-30ms
    - Typical WiFi: 30-80ms
    - Mobile 4G: 50-150ms
    - Assumption of 50ms only true for LAN
 
-1. **Processing latency (40-80ms per component):**
+3. **Processing latency (40-80ms per component):**
 
    **MediaPipe inference times (from research):**
 
@@ -741,7 +741,7 @@ Total:    166ms ✓ (meets 200ms target)
 
    **Total processing: 40-100ms depending on preset**
 
-1. **Render latency (16-50ms, not always 33ms):**
+4. **Render latency (16-50ms, not always 33ms):**
 
    - WebGL rendering: 8-16ms (fast, modern browsers)
    - Canvas rendering: 16-33ms (slower)
@@ -890,7 +890,7 @@ def profile_end_to_end():
    - 3 network conditions (LAN, WiFi, 4G)
      = 81 test scenarios
 
-1. **Generate latency profile report:**
+2. **Generate latency profile report:**
 
    - Create heatmap: Model × Resolution × Preset
    - Show: Processing latency, network impact, render cost
@@ -1068,8 +1068,8 @@ Total: ~37-40 test videos covering all dimensions
 **For each test video:**
 
 1. Run Kinemotion algorithm
-1. Compare output metrics to ground truth (if available) or manual review
-1. Record:
+2. Compare output metrics to ground truth (if available) or manual review
+3. Record:
    - Detection rate (% frames with full pose)
    - Landmark visibility scores (distribution)
    - Metric accuracy (if ground truth available)
@@ -1406,7 +1406,7 @@ ______________________________________________________________________
 **Recommendation:** Either:
 
 1. Extend timeline to 10-12 weeks for solid validation, OR
-1. Reduce scope (skip multi-person, defer advanced ablation studies to month 4)
+2. Reduce scope (skip multi-person, defer advanced ablation studies to month 4)
 
 ### Key Decisions Required
 
@@ -1482,9 +1482,9 @@ ______________________________________________________________________
 **The roadmap has strong market positioning and technical execution strategy. However, ML/Data Science execution is underdefined.** To maintain credibility and avoid post-launch accuracy issues:
 
 1. **Immediate (Week 1-2):** Define sport-specific parameters, create validation framework, start latency profiling
-1. **Short-term (Week 3-5):** Validate metrics against ground truth, create benchmark datasets, profile robustness
-1. **Medium-term (Month 2-3):** Publish validation studies, define ablation studies for scientific rigor
-1. **Long-term (Month 4+):** Implement multi-person detection, expand to additional sports with proven architecture
+2. **Short-term (Week 3-5):** Validate metrics against ground truth, create benchmark datasets, profile robustness
+3. **Medium-term (Month 2-3):** Publish validation studies, define ablation studies for scientific rigor
+4. **Long-term (Month 4+):** Implement multi-person detection, expand to additional sports with proven architecture
 
 **Estimated additional effort:** 48-60 days (distributed across 12 weeks)
 **Expected ROI:** High (credibility + competitive advantage in accuracy positioning)
@@ -1501,13 +1501,13 @@ ______________________________________________________________________
    - PACE dataset: 55K frames with 258K annotations for pose in cluttered environments
    - Key finding: Validation datasets are gold standard for credibility
 
-1. **Running Gait Analysis Research:**
+2. **Running Gait Analysis Research:**
 
    - Stanford study: CNN-based gait parameter extraction from single video, achieved high correlation
    - Nature 2024: Validation of portable video-based gait analysis for prosthesis users
    - Key finding: Video-based running analysis can achieve high accuracy (correlation >0.90) when properly validated
 
-1. **Human Pose Robustness (CVPR 2024):**
+3. **Human Pose Robustness (CVPR 2024):**
 
    - Improving Robustness of 3D Human Pose Estimation study shows:
 
@@ -1517,7 +1517,7 @@ ______________________________________________________________________
 
    - Model generalization across populations important
 
-1. **Synthetic Gait Models (Nature Communications 2025):**
+4. **Synthetic Gait Models (Nature Communications 2025):**
 
    - AI models trained on synthetic physics-based gaits can match real-data models
 

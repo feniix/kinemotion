@@ -36,13 +36,13 @@ ______________________________________________________________________
    - Social media: CrossFit communities, running clubs
    - Forums: Reddit r/crossfit, track & field communities
 
-1. **Organized Communities**
+2. **Organized Communities**
 
    - CrossFit boxes (contact local affiliates)
    - University track programs
    - Basketball coaching forums
 
-1. **Direct Outreach**
+3. **Direct Outreach**
 
    - Email template below
 
@@ -95,8 +95,8 @@ When coaches use the MVP, track:
 **Track:**
 
 - [ ] "Yes, looks good"
-- [ ] "Pretty close, but \[specific issue\]"
-- [ ] "Not accurate - \[reason\]"
+- [ ] "Pretty close, but [specific issue]"
+- [ ] "Not accurate - [reason]"
 
 **Follow-up if uncertain:** "Would you trust these metrics for coaching decisions?"
 
@@ -108,7 +108,7 @@ ______________________________________________________________________
 
 **Track:**
 
-- [ ] "I use \[app/tool\] currently"
+- [ ] "I use [app/tool] currently"
 - [ ] "I just watch and eyeball it"
 - [ ] "I don't analyze videos"
 - [ ] "I use Dartfish/VueMotion/etc"
@@ -129,19 +129,19 @@ ______________________________________________________________________
    - Trade-off: More complex, takes longer to build
    - Estimated availability: 3-4 weeks
 
-1. **Running Gait Analysis** - Same metrics for running videos
+2. **Running Gait Analysis** - Same metrics for running videos
 
    - "I work with runners and want to analyze running form"
    - Trade-off: Different sport, may not be relevant to jumpers
    - Estimated availability: 2-3 weeks
 
-1. **Integration with My App** - API so the tool can work within your existing platform
+3. **Integration with My App** - API so the tool can work within your existing platform
 
    - "We want to embed this in our coaching app/system"
    - Trade-off: Requires technical setup from your end
    - Estimated availability: 2 weeks
 
-1. **Better UI/UX** - Improve this interface, add more details
+4. **Better UI/UX** - Improve this interface, add more details
 
    - "The current interface needs improvement"
    - Trade-off: Slower to ship new features
@@ -178,7 +178,7 @@ ______________________________________________________________________
 - "I need multiple athlete comparison"
 - "I need video slow-motion/annotation tools"
 - "I need mobile app, not web"
-- "I need \[specific metric\] tracked"
+- "I need [specific metric] tracked"
 
 ______________________________________________________________________
 
@@ -291,9 +291,9 @@ ______________________________________________________________________
 **Format:**
 
 1. Greeting + context (2 min)
-1. MVP demo/walkthrough (5 min)
-1. Questions 1-5 (10 min)
-1. Open feedback (2-3 min)
+2. MVP demo/walkthrough (5 min)
+3. Questions 1-5 (10 min)
+4. Open feedback (2-3 min)
 
 ### Compensation
 
@@ -309,7 +309,7 @@ ______________________________________________________________________
 Send thank you email with:
 
 - Results summary (when available)
-- "Your feedback led us to \[Feature X\]"
+- "Your feedback led us to [Feature X]"
 - Link to product launch when Phase 2 ships
 
 ______________________________________________________________________

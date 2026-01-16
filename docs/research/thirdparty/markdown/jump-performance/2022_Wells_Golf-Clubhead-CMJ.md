@@ -6,7 +6,7 @@
 
 4 **Authors**
 
-5 Jack ET Wells \[1\], Andrew CS Mitchell \[2\] ., Laura H Charalambous \[2\], and Iain M Fletcher \[2\]
+5 Jack ET Wells [1], Andrew CS Mitchell [2] ., Laura H Charalambous [2], and Iain M Fletcher [2]
 
 6 1 The Professional Golfers’ Association, National Training Academy, Ping House, The
 
@@ -356,7 +356,7 @@
 
 172 prior to impact (TrackMan, 2021). The TrackMan has been evidenced to have a median offset
 
-173 of -0.48 m \[.\] s \[-1\] and be within 1.12 m \[.\] s \[-1 \] 87% of the time when compared to a benchmark system
+173 of -0.48 m [.] s [-1] and be within 1.12 m [.] s [-1 ] 87% of the time when compared to a benchmark system
 
 174 (Leach et al., 2017). The TrackMan was set-up based on the manufacturer’s guidelines with
 
@@ -444,7 +444,7 @@
 
 9
 
-215 Jump height = _v_ _\[2\]_ _to / 2 g_
+215 Jump height = _v_ _[2]_ _to / 2 g_
 
 216 Where _v_ = velocity at take-off and _g_ = gravity.
 
@@ -484,7 +484,7 @@
 
 234 Windows (version 26.0; Chicago, USA), with an alpha level of _p≤_ 0.05 used to assess statistical
 
-235 significance. The effect size was determined as weak ( _r_ \< 0.3), moderate ( _r_ = 0.3-0.5) and
+235 significance. The effect size was determined as weak ( _r_ < 0.3), moderate ( _r_ = 0.3-0.5) and
 
 236 strong ( _r_ - 0.5) based on the thresholds established by Cohen (1988).
 
@@ -548,17 +548,17 @@ Jump height .982 .971 .989 3.57 2.87 4.28
 
 254 Table 2: Mean and standard deviation for the countermovement jump and driver clubhead
 
-255 velocity along with Pearsons correlation ( _r_ ) and the coefficient of determination ( _R_ _\[2\]_ ) for each
+255 velocity along with Pearsons correlation ( _r_ ) and the coefficient of determination ( _R_ _[2]_ ) for each
 
 256 of the variables measured.
 
-Mean SD _r_ _R_ _\[2\]_
+Mean SD _r_ _R_ _[2]_
 
-Clubhead velocity (m \[.\] s \[-1\] ) 49.21 2.54     -
+Clubhead velocity (m [.] s [-1] ) 49.21 2.54 -
 
-Net impulse (N \[.\] s) 180.92 26.00 0.689\* 0.475
+Net impulse (N [.] s) 180.92 26.00 0.689\* 0.475
 
-Positive impulse (N \[.\] s) 282.70 42.98 0.695\* 0.483
+Positive impulse (N [.] s) 282.70 42.98 0.695\* 0.483
 
 Average power (W) 1771.94 295.08 0.645\* 0.416
 
@@ -716,13 +716,13 @@ Jump height (m) 0.30 0.06 0.176 0.031
 
 326 of 0.24 m. This is further substantiated given that golfer 42 had a greater relative power (23.21
 
-327 W \[.\] kg \[-1\] ) than golfer 35 (19.64 W \[.\] kg \[-1\] ). This highlights that although a golfer may be more
+327 W [.] kg [-1] ) than golfer 35 (19.64 W [.] kg [-1] ). This highlights that although a golfer may be more
 
 328 ‘powerful’ during a CMJ, this does not necessarily translate into greater jump height.
 
 329 Positive impulse ( _r_ = 0.695, _p_ \<0.001) and net impulse ( _r_ = 0.689, _p_ \<0.001) presented the
 
-330 strongest relationships with CHV, albeit only marginally. (Table 2). Despite this, the _R_ _\[2\]_
+330 strongest relationships with CHV, albeit only marginally. (Table 2). Despite this, the _R_ _[2]_
 
 331 difference between peak power and positive impulse is 5.3% (Table 2), which could make a
 
@@ -788,7 +788,7 @@ Jump height (m) 0.30 0.06 0.176 0.031
 
 361 Take-off velocity = √(0.35\*(2\*9.81))
 
-362 Take-off velocity = 2.62 m \[.\] s \[-1\]
+362 Take-off velocity = 2.62 m [.] s [-1]
 
 363 Where _d_ = jump height and _g_ = gravity
 
@@ -800,9 +800,9 @@ Jump height (m) 0.30 0.06 0.176 0.031
 
 366 Net impulse = _m_ - _v_
 
-367 Net impulse = 77 kg * 2.62 m \[.\] s \[-1\]
+367 Net impulse = 77 kg * 2.62 m [.] s [-1]
 
-368 Net impulse = 201.74 N \[.\] s
+368 Net impulse = 201.74 N [.] s
 
 369 Where _m_ = mass and _v_ = take-off velocity of the centre of mass.
 
@@ -920,11 +920,11 @@ Jump height (m) 0.30 0.06 0.176 0.031
 
 424 _Technology_, 233(2), pp. 186–192.
 
-425 7) Cochran, A. and Stobbs, J. (1999) ' _Search for the Perfect Swing'_, 6 \[th\] ed, Chicago, IL,
+425 7) Cochran, A. and Stobbs, J. (1999) ' _Search for the Perfect Swing'_, 6 [th] ed, Chicago, IL,
 
 426 Triumph Books.
 
-427 8) Cohen, J. (1988) ' _Statistical Power Analysis for the Behavioral Sciences'_ (2 \[nd\] ed.), New
+427 8) Cohen, J. (1988) ' _Statistical Power Analysis for the Behavioral Sciences'_ (2 [nd] ed.), New
 
 428 Jersey, Lawrence Erlbaum.
 
@@ -1032,7 +1032,7 @@ Jump height (m) 0.30 0.06 0.176 0.031
 
 478 swing instruction', In Toms, M. (Ed.), _Routledge International Handbook of Golf_
 
-479 _Science_, 1 \[st\] ed., Oxford, Routledge, pp. 15-25.
+479 _Science_, 1 [st] ed., Oxford, Routledge, pp. 15-25.
 
 480 24) McBride, J.M., Kirby, T.J., Haines, T.L. and Skinner, J. (2010) ‘Relationship between
 
@@ -1090,7 +1090,7 @@ Jump height (m) 0.30 0.06 0.176 0.031
 
 506 32) TrackMan (2021). Available from: [https://trackmangolf.com/what-we-track](https://trackmangolf.com/what-we-track) (Date
 
-507 Accessed 10 \[th\] May 2021)
+507 Accessed 10 [th] May 2021)
 
 508 33) Wells, J.E.T., Mitchell, A.C.S, Charalambous, L.H. and Fletcher, I.M. (2018)
 

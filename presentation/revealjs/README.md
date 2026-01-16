@@ -157,13 +157,13 @@ npx reveal-md slides.md --print slides.pdf
    make serve
    ```
 
-1. Open in browser: <http://localhost:1948>
+2. Open in browser: <http://localhost:1948>
 
-1. Press `f` for fullscreen
+3. Press `f` for fullscreen
 
-1. Share browser window in Zoom
+4. Share browser window in Zoom
 
-1. Use speaker view (`s`) on a second monitor
+5. Use speaker view (`s`) on a second monitor
 
 ## Customization
 

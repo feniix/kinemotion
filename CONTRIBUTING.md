@@ -37,12 +37,12 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 We actively welcome pull requests! Here's how to submit one:
 
 1. Fork the repository
-1. Create a new branch from `main` for your changes
-1. Make your changes following our coding standards
-1. Add or update tests as needed
-1. Ensure all tests pass and code quality checks succeed
-1. Update documentation if needed
-1. Submit a pull request
+2. Create a new branch from `main` for your changes
+3. Make your changes following our coding standards
+4. Add or update tests as needed
+5. Ensure all tests pass and code quality checks succeed
+6. Update documentation if needed
+7. Submit a pull request
 
 ## Development Setup
 
@@ -60,20 +60,20 @@ We actively welcome pull requests! Here's how to submit one:
    cd kinemotion
    ```
 
-1. **Install asdf plugins** (if not already installed):
+2. **Install asdf plugins** (if not already installed):
 
    ```bash
    asdf plugin add python
    asdf plugin add uv
    ```
 
-1. **Install versions specified in `.tool-versions`**:
+3. **Install versions specified in `.tool-versions`**:
 
    ```bash
    asdf install
    ```
 
-1. **Install project dependencies**:
+4. **Install project dependencies**:
 
    ```bash
    uv sync
@@ -263,9 +263,9 @@ tests/
 ### Adding New Features
 
 1. **Core functionality** (reusable across jump types) → `core/`
-1. **Jump-specific logic** → appropriate module (e.g., `dropjump/`)
-1. **New jump type** → create new module alongside `dropjump/`
-1. **Tests** → corresponding test file in `tests/`
+2. **Jump-specific logic** → appropriate module (e.g., `dropjump/`)
+3. **New jump type** → create new module alongside `dropjump/`
+4. **Tests** → corresponding test file in `tests/`
 
 ## Commit Message Guidelines
 
@@ -297,20 +297,20 @@ Refactor contact detection to use derivative-based velocity
    - Tests ([pytest](https://docs.pytest.org/))
    - Code formatting ([black](https://github.com/psf/black))
 
-1. **Code review** by maintainers:
+2. **Code review** by maintainers:
 
    - Code quality and style
    - Test coverage
    - Documentation
    - Performance implications
 
-1. **Feedback and iteration**:
+3. **Feedback and iteration**:
 
    - Address review comments
    - Push updates to your branch
    - Checks re-run automatically
 
-1. **Merge**:
+4. **Merge**:
 
    - Once approved and all checks pass
    - Squash and merge into `main`

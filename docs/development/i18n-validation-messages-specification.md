@@ -55,8 +55,8 @@ class ValidationIssue:
 **Levels**:
 
 1. `[domain]` - Always `validation` (for future expansion: e.g., `analysis`, `tracking`)
-1. `[metric]` - Metric name: `flight_time`, `jump_height`, `rsi`, `triple_extension`, etc.
-1. `[condition]` - Severity/reason: `within_range`, `outside_range`, `below_minimum`, `above_maximum`, `invalid_calculation`
+2. `[metric]` - Metric name: `flight_time`, `jump_height`, `rsi`, `triple_extension`, etc.
+3. `[condition]` - Severity/reason: `within_range`, `outside_range`, `below_minimum`, `above_maximum`, `invalid_calculation`
 
 ### Examples
 
@@ -617,10 +617,10 @@ export default i18n;
 ### Strategy
 
 1. Keep `message` field (always populated)
-1. Add optional `message_key` and `context` fields
-1. Old clients use `message`
-1. New clients use `message_key` + `context` for i18n
-1. Remove `message` field in v0.70.0 if needed
+2. Add optional `message_key` and `context` fields
+3. Old clients use `message`
+4. New clients use `message_key` + `context` for i18n
+5. Remove `message` field in v0.70.0 if needed
 
 ### Client Compatibility Matrix
 
@@ -732,10 +732,10 @@ test('ValidationIssue falls back to message field', () => {
 ## Implementation Timeline
 
 1. **Week 1**: Backend changes (ValidationIssue, validator updates)
-1. **Week 1**: Backend tests and validation
-1. **Week 2**: Frontend translation files and i18next setup
-1. **Week 2**: Component updates and testing
-1. **Testing**: E2E and cross-browser validation
+2. **Week 1**: Backend tests and validation
+3. **Week 2**: Frontend translation files and i18next setup
+4. **Week 2**: Component updates and testing
+5. **Testing**: E2E and cross-browser validation
 
 ## Message Key Reference
 
@@ -813,7 +813,7 @@ test('ValidationIssue falls back to message field', () => {
 ## Future Enhancements
 
 1. **Dynamic Translation Loading**: Load only the language user selects
-1. **Translation Management System**: Integrate with Crowdin or similar
-1. **Right-to-Left Support**: For Arabic, Hebrew, etc.
-1. **Regional Variants**: en-US, en-GB, es-MX, es-ES, etc.
-1. **Glossary**: Medical/biomechanical term translations with context
+2. **Translation Management System**: Integrate with Crowdin or similar
+3. **Right-to-Left Support**: For Arabic, Hebrew, etc.
+4. **Regional Variants**: en-US, en-GB, es-MX, es-ES, etc.
+5. **Glossary**: Medical/biomechanical term translations with context

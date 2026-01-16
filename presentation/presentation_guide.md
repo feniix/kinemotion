@@ -65,21 +65,21 @@ ______________________________________________________________________
    - Virtual background OFF (can interfere with screen share)
    - "Touch up appearance" optional
 
-1. **Audio Settings**
+2. **Audio Settings**
 
    - Use headphones to prevent echo
    - Test with "Test Speaker & Microphone"
    - Enable "Original Sound" for better quality
    - Mute when not speaking
 
-1. **Screen Share Settings**
+3. **Screen Share Settings**
 
    - Share "Desktop" not individual windows (easier switching)
    - Enable "Share computer sound" if showing videos
    - Optimize for "Motion and video" when showing debug videos
    - Show cursor/pointer
 
-1. **Recording Settings**
+4. **Recording Settings**
 
    - Confirm who will record (host or you)
    - Request "Record to Cloud" for better quality
@@ -182,10 +182,10 @@ echo "Let me know in chat if text is too small"
 #### During Demos
 
 1. **Type commands slowly** - People are reading along
-1. **Explain before executing** - "This command will..."
-1. **Highlight output** - Use mouse or annotation
-1. **Pause on results** - Give time to absorb
-1. **Repeat key points** - For recording clarity
+2. **Explain before executing** - "This command will..."
+3. **Highlight output** - Use mouse or annotation
+4. **Pause on results** - Give time to absorb
+5. **Repeat key points** - For recording clarity
 
 ### Managing Audience Interaction
 
@@ -213,12 +213,12 @@ echo "Let me know in chat if text is too small"
    - "Drop in chat: Have you used computer vision before?"
    - "On a scale of 1-5, how familiar are you with pose estimation?"
 
-1. **Break Points**
+2. **Break Points**
 
    - "I'll pause here for questions"
    - "Feel free to unmute if you have questions"
 
-1. **Visual Cues**
+3. **Visual Cues**
 
    - "Thumbs up if you can see my terminal"
    - "Raise hand if the text is too small"
@@ -244,19 +244,19 @@ ______________________________________________________________________
 ```
 
 1. Switch to backup video
-1. Show screenshots
-1. Explain what should happen
-1. Move on confidently
-1. Offer to show after presentation
+2. Show screenshots
+3. Explain what should happen
+4. Move on confidently
+5. Offer to show after presentation
 
 ### Connection Issues
 
 #### Your Connection Drops
 
 1. Rejoin immediately via phone app
-1. Ask co-host to explain you're reconnecting
-1. Have slides accessible to co-host
-1. Resume from clear checkpoint
+2. Ask co-host to explain you're reconnecting
+3. Have slides accessible to co-host
+4. Resume from clear checkpoint
 
 #### Screen Share Not Working
 
@@ -278,18 +278,18 @@ ______________________________________________________________________
 ### If Running Over Time
 
 1. Skip to key demos
-1. Summarize remaining slides
-1. Share full deck after
-1. Focus on main takeaway
-1. Offer follow-up session
+2. Summarize remaining slides
+3. Share full deck after
+4. Focus on main takeaway
+5. Offer follow-up session
 
 ### If Running Under Time
 
 1. Add more demo scenarios
-1. Show additional features
-1. Dive deeper into technical details
-1. Extended Q&A
-1. Live coding session
+2. Show additional features
+3. Dive deeper into technical details
+4. Extended Q&A
+5. Live coding session
 
 ______________________________________________________________________
 
@@ -472,16 +472,16 @@ ______________________________________________________________________
 
 ## 💡 Presenter Pro Tips
 
-1. **Test everything early** - Technical issues always take longer than expected
-1. **Large fonts always** - If you think it's too big, it's probably just right
-1. **Practice transitions** - Smooth transitions look professional
-1. **Have water** - Dry mouth is real
-1. **Engage early** - Ask audience questions in first 2 minutes
-1. **Show passion** - Enthusiasm is contagious
-1. **Be honest** - Acknowledge limitations builds trust
-1. **Follow up** - The real value often comes after the presentation
-1. **Record yourself** - Review for improvement
-1. **Enjoy it** - Your energy affects the room
+01. **Test everything early** - Technical issues always take longer than expected
+02. **Large fonts always** - If you think it's too big, it's probably just right
+03. **Practice transitions** - Smooth transitions look professional
+04. **Have water** - Dry mouth is real
+05. **Engage early** - Ask audience questions in first 2 minutes
+06. **Show passion** - Enthusiasm is contagious
+07. **Be honest** - Acknowledge limitations builds trust
+08. **Follow up** - The real value often comes after the presentation
+09. **Record yourself** - Review for improvement
+10. **Enjoy it** - Your energy affects the room
 
 ______________________________________________________________________
 

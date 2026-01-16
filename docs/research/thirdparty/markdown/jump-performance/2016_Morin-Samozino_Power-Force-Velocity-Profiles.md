@@ -24,21 +24,21 @@ _**Keywords**_ _:_ explosive performance, jump, sprint, team sports, athletics, 
 One of the main physical performance determinants in sports
 such as athletics, rugby, soccer, football, volleyball, and basketball
 is the ability to produce high mechanical power output during jumps
-and sprint accelerations. \[1,2\] This power output depends on the ability
+and sprint accelerations. [1,2] This power output depends on the ability
 of athletes’ neuromuscular and osteoarticular systems to generate
 high levels of force, apply it with effectiveness onto the environment (ie, supporting ground, ball, projectile), and produce this
 force at high contraction velocity. Force and velocity are therefore
 considered the underpinning features of mechanical power output
-in sport movements. \[3,4\] Although the assessment and long-term
+in sport movements. [3,4] Although the assessment and long-term
 monitoring of these capabilities is paramount for both performance
 and rehabilitation processes, such an accurate evaluation has long
 been associated with expensive and often laboratory-based technologies. Recently, our research group has presented simple field
-methods to compute force, velocity, and power output in jumping \[5\]
-and sprinting \[6\] calculated via measurements from widely accessible
+methods to compute force, velocity, and power output in jumping [5]
+and sprinting [6] calculated via measurements from widely accessible
 and practical devices. Thanks to these methods, all the important
 mechanical outputs of jumping and sprinting can be derived from
 basic measures of body mass, lower-limb length, jump height, and
-distance–time or speed–time measurements only. \[6–8\]
+distance–time or speed–time measurements only. [6–8]
 Recently, we had the opportunity to discuss the implementation of these “simple methods” with many sport practitioners, and
 we realized that beyond the description presented in the published
 papers, it was necessary to detail how to interpret the measurements
@@ -66,16 +66,16 @@ mechanical variables of interest are presented in Table 1.
 ## **Vertical Profiling for Ballistic Push-Off** **Performance**
 
 The input measurements necessary to correctly determine vertical
-profile \[5,9,10\] are the athlete’s body mass, lower-limb length in fully
+profile [5,9,10] are the athlete’s body mass, lower-limb length in fully
 extended position, starting height, and jump height (measured under
 a spectrum of loading parameters). The latter can now be easily and
-accurately measured using simple and accessible devices. \[7,8\] Jump
+accurately measured using simple and accessible devices. [7,8] Jump
 height should be measured across repeated measurements with at
 least 5 additional loads (evenly ranging between 0 kg and the additional load with which the athlete is able to jump about 10 cm), after
 which the F–V profile and all other computations can be completed.
 Research conclusions show that jumping performance is determined by maximal mechanical power output ( _VTC-Pmax_ ) and the
 magnitude of the relative difference between the slope of the linear
-F–V relationship ( _Sfv_ ) and _Sfv_ opt for a given individual ( _FVimb_ ). \[9\]
+F–V relationship ( _Sfv_ ) and _Sfv_ opt for a given individual ( _FVimb_ ). [9]
 Thus, in practical terms, should a training program be designed to
 improve athletes’ ballistic push-off performance (eg, jumps, single
 maximal push-offs, change of direction), the focus should be placed
@@ -123,7 +123,7 @@ _Sfv_ opt For a given push-off distance, body
 mass, and _Pmax_, the unique value of _Sfv_
 that maximizes jump height. For detailed
 computation, see Appendix in Samozino
-et al. \[10\]
+et al. [10]
 
 _FVimb_ (%) Magnitude of the relative difference
 between _Sfv_ and _Sfv_ opt for a given individual. Computed as ( _Sfv_ / _Sfvopt_ ) × 100
@@ -255,7 +255,7 @@ sport actions involving jumps), and will be discussed in the following section d
 ## **Horizontal Profiling for Sprint Performance**
 
 The inputs that must be measured to determine the horizontal
-profile \[6\] are the athlete’s body mass and height and either distance–
+profile [6] are the athlete’s body mass and height and either distance–
 time or speed–time running data. The latter can be measured using
 a series of timing gates (at least 5 split times, eg, 5, 10, 20, 30,
 and 40 m) or a laser or radar device (eg, ~50-Hz Stalker ATSII
@@ -265,11 +265,11 @@ then be computed from the simple modeling of the derivation of
 the speed–time curve that leads to horizontal acceleration data.
 Likewise, the mechanical effectiveness of force application can be
 determined via the linear relationship between ratio of force ( _RF_ )
-and running velocity \[11\] (Figure 3). Our research has shown that, in
+and running velocity [11] (Figure 3). Our research has shown that, in
 addition to maximal mechanical power output in the horizontal
 direction ( _HZT-Pmax_ ), 100-m performance was related to the ability
 to apply high amounts of force in the horizontal direction ( _RF_ and
-rate of decrease in _RF_ \[ _DRF_ \] indices). \[11–13\] With regard to shorter
+rate of decrease in _RF_ \[ _DRF_ \] indices). [11–13] With regard to shorter
 sprints (ie, acceleration-only phases, eg, up to 10–20 m in rugby
 or soccer specialists), recent results have shown that the shorter
 the distance considered, the higher the relationship between sprint
@@ -323,7 +323,7 @@ production; _HZT-V0,_ maximal running velocity.
 Power-Force-Velocity Profiles and Training **271**
 
 **Figure 4** — Decision tree to interpret the force-velocity-power profiles in relationship with ballistic push-off (eg, jumping) and sprinting performances.
-These mechanistic relationships are based on both the theoretical features of our models \[5,6,9–13,20\] and some experimental evidence ( \[18,19\] and unpublished
+These mechanistic relationships are based on both the theoretical features of our models [5,6,9–13,20] and some experimental evidence ( [18,19] and unpublished
 data). In sprinting, the shorter the acceleration distance, the higher the importance of _HZT-F0_ capabilities compared with _HZT-V0,_ and vice versa. Abbreviations: _FVimb,_ magnitude of the relative difference between the slope of the linear force–velocity relationship ( _Sfv_ ) and _Sfv_ opt; _VTC-Pmax,_ maximal
 mechanical power output; _HZT-F0,_ maximal horizontal force production; _DRF,_ rate of decrease in the ratio of force with increasing speed during sprint
 acceleration; _HZT-V0,_ maximal running velocity; _RFmax,_ maximal ratio of force.
@@ -339,7 +339,7 @@ injury prevention, this suggests that this player could be given more
 strength and horizontal strength work than others and probably less
 maximal sprint velocity work. This could directly reduce the risk for
 sprinting-related injuries for this player by reducing the total time
-he would be exposed to high-speed running. \[14–17\] For this player,
+he would be exposed to high-speed running. [14–17] For this player,
 compared with player C (and potentially compared with the average
 value of the group/team), _HZT-F0_ should be developed, especially
 through increasing _RFmax_ . Adding the previously described vertical profiling to this horizontal profiling could help better determine
@@ -347,7 +347,7 @@ whether a lower _HZT-F0_ is due to an overall deficit of lower-limb
 strength (as indicated by a low _VTC-Pmax_ ) and/or a deficit in the
 transfer of this strength in the specific horizontal push-off motion
 (technical capability). Differences in horizontal profiles have been
-reported in elite rugby players according to individual player positions \[18\] and in young soccer players. \[19\]
+reported in elite rugby players according to individual player positions [18] and in young soccer players. [19]
 
 ## **Practical Synthesis**
 
@@ -374,15 +374,15 @@ sport-specific movements (ballistic push-offs and sprint accelerations),
 and can therefore be used for long-term monitoring and training processes. Furthermore, they may also be implemented in injury-prevention
 and -rehabilitation processes since diagnostic information will assist in
 better-designed sprint-related training programs, and clear differences
-have been observed between injured and noninjured players. \[20,21\]
+have been observed between injured and noninjured players. [20,21]
 The limitations of these approaches have been extensively
-discussed, \[5,6,22\] and the main perspective stems from the fact that
+discussed, [5,6,22] and the main perspective stems from the fact that
 these profiling methods give information as to _what_ specific muscle
 outputs should be developed, not _how_ this should be done. This
 will be the next challenge that we are pleased to undertake: testing
 and investigating the most-efficient practical (training) methods to
 improve each mechanical determinant of performance and further
-extending the current knowledge on this topic \[4\] using the novel
+extending the current knowledge on this topic [4] using the novel
 approaches presented here.
 
 **Acknowledgments**
@@ -408,93 +408,93 @@ Brughelli for their careful reading and comments on the revised manuscript.
 2. Cronin JB, Hansen KT. Strength and power predictors of sports speed.
    _J Strength Cond Res_ [. 2005;19:349–357. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=15903374&dopt=Abstract)
 
-1. Cormie P, McGuigan MR, Newton RU. Developing maximal neuromuscular power: part 1—biological basis of maximal power production. _Sports Med_ [. 2011;41(1):17–38. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=21142282&dopt=Abstract) [doi:10.2165/11537690-](http://dx.doi.org/10.2165/11537690-000000000-00000)
+3. Cormie P, McGuigan MR, Newton RU. Developing maximal neuromuscular power: part 1—biological basis of maximal power production. _Sports Med_ [. 2011;41(1):17–38. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=21142282&dopt=Abstract) [doi:10.2165/11537690-](http://dx.doi.org/10.2165/11537690-000000000-00000)
    [000000000-00000](http://dx.doi.org/10.2165/11537690-000000000-00000)
 
-1. Cormie P, McGuigan MR, Newton RU. Developing maximal neuromuscular power: part 2—training considerations for improving
+4. Cormie P, McGuigan MR, Newton RU. Developing maximal neuromuscular power: part 2—training considerations for improving
    maximal power production. _Sports Med_ [. 2011;41:125–146. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=21244105&dopt=Abstract)
    [doi:10.2165/11538500-000000000-00000](http://dx.doi.org/10.2165/11538500-000000000-00000)
 
-1. Samozino P, Morin JB, Hintzy F, Belli A. A simple method for measuring force, velocity and power output during squat jump. _J Biomech_ .
+5. Samozino P, Morin JB, Hintzy F, Belli A. A simple method for measuring force, velocity and power output during squat jump. _J Biomech_ .
    [2008;41:2940–2945. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=18789803&dopt=Abstract) [doi:10.1016/j.jbiomech.2008.07.028](http://dx.doi.org/10.1016/j.jbiomech.2008.07.028)
 
-1. Samozino P, Rabita G, Dorel S, Slawinski J, Peyrot N, Saez de Villarreal E, Morin JB. A simple method for measuring power, force,
+6. Samozino P, Rabita G, Dorel S, Slawinski J, Peyrot N, Saez de Villarreal E, Morin JB. A simple method for measuring power, force,
    velocity properties, and mechanical effectiveness in sprint running
 
-\[published online ahead of print\]. _Scand J Med Sci Sports_ . 2015;
+[published online ahead of print]. _Scand J Med Sci Sports_ . 2015;
 [doi:10.1111/sms.12490 PubMed](http://dx.doi.org/10.1111/sms.12490)
 
-7. Balsalobre-Fernández C, Glaister M, Lockey RA. The validity and
-   reliability of an iPhone app for measuring vertical jump performance.
-   _J Sports Sci_ [. 2015;33(15):1574–1579. PubMed doi:10.1080/026404](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=25555023&dopt=Abstract)
-   14.2014.996184
+07. Balsalobre-Fernández C, Glaister M, Lockey RA. The validity and
+    reliability of an iPhone app for measuring vertical jump performance.
+    _J Sports Sci_ [. 2015;33(15):1574–1579. PubMed doi:10.1080/026404](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=25555023&dopt=Abstract)
+    14.2014.996184
 
-1. Stanton R, Kean CO, Scanlan AT. My Jump for vertical jump assessment. _Br J Sports Med_ . 2015; [doi:10.1136/bjsports-2015-094831.](http://dx.doi.org/10.1136/bjsports-2015-094831)
-   [PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=26124470&dopt=Abstract)
+08. Stanton R, Kean CO, Scanlan AT. My Jump for vertical jump assessment. _Br J Sports Med_ . 2015; [doi:10.1136/bjsports-2015-094831.](http://dx.doi.org/10.1136/bjsports-2015-094831)
+    [PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=26124470&dopt=Abstract)
 
-1. Samozino P, Edouard P, Sangnier S, Brughelli M, Gimenez P, Morin JB.
-   Force–velocity profile: imbalance determination and effect on lower limb
-   ballistic performance. _Int J Sports Med_ [. 2014;35:505–510. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=24227123&dopt=Abstract)
+09. Samozino P, Edouard P, Sangnier S, Brughelli M, Gimenez P, Morin JB.
+    Force–velocity profile: imbalance determination and effect on lower limb
+    ballistic performance. _Int J Sports Med_ [. 2014;35:505–510. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=24227123&dopt=Abstract)
 
-1. Samozino P, Rejc E, Di Prampero PE, Belli A, Morin JB. Optimal
-   force–velocity profile in ballistic movements—altius: citius or fortius?
-   _Med Sci Sports Exerc_ [. 2012;44(2):313–322. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=21775909&dopt=Abstract) [doi:10.1249/](http://dx.doi.org/10.1249/MSS.0b013e31822d757a)
-   [MSS.0b013e31822d757a](http://dx.doi.org/10.1249/MSS.0b013e31822d757a)
+10. Samozino P, Rejc E, Di Prampero PE, Belli A, Morin JB. Optimal
+    force–velocity profile in ballistic movements—altius: citius or fortius?
+    _Med Sci Sports Exerc_ [. 2012;44(2):313–322. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=21775909&dopt=Abstract) [doi:10.1249/](http://dx.doi.org/10.1249/MSS.0b013e31822d757a)
+    [MSS.0b013e31822d757a](http://dx.doi.org/10.1249/MSS.0b013e31822d757a)
 
-1. Morin JB, Edouard P, Samozino P. Technical ability of force application
-   as a determinant factor of sprint performance. _Med Sci Sports Exerc_ .
-   [2011;43:1680–1688. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=21364480&dopt=Abstract) [doi:10.1249/MSS.0b013e318216ea37](http://dx.doi.org/10.1249/MSS.0b013e318216ea37)
+11. Morin JB, Edouard P, Samozino P. Technical ability of force application
+    as a determinant factor of sprint performance. _Med Sci Sports Exerc_ .
+    [2011;43:1680–1688. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=21364480&dopt=Abstract) [doi:10.1249/MSS.0b013e318216ea37](http://dx.doi.org/10.1249/MSS.0b013e318216ea37)
 
-1. Morin JB, Bourdin M, Edouard P, Peyrot N, Samozino P, Lacour JR.
-   Mechanical determinants of 100-m sprint running performance. _Eur_
-   _J Appl Physiol_ [. 2012;112:3921–3930. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=22422028&dopt=Abstract) [doi:10.1007/s00421-](http://dx.doi.org/10.1007/s00421-012-2379-8)
-   [012-2379-8](http://dx.doi.org/10.1007/s00421-012-2379-8)
+12. Morin JB, Bourdin M, Edouard P, Peyrot N, Samozino P, Lacour JR.
+    Mechanical determinants of 100-m sprint running performance. _Eur_
+    _J Appl Physiol_ [. 2012;112:3921–3930. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=22422028&dopt=Abstract) [doi:10.1007/s00421-](http://dx.doi.org/10.1007/s00421-012-2379-8)
+    [012-2379-8](http://dx.doi.org/10.1007/s00421-012-2379-8)
 
-1. Rabita G, Dorel S, Slawinski J, et al. Sprint mechanics in world-class
-   athletes: a new insight into the limits of human locomotion. _Scand J_
-   _Med Sci Sports_ [. 2015;25:583–594. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=25640466&dopt=Abstract) [doi:10.1111/sms.12389](http://dx.doi.org/10.1111/sms.12389)
+13. Rabita G, Dorel S, Slawinski J, et al. Sprint mechanics in world-class
+    athletes: a new insight into the limits of human locomotion. _Scand J_
+    _Med Sci Sports_ [. 2015;25:583–594. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=25640466&dopt=Abstract) [doi:10.1111/sms.12389](http://dx.doi.org/10.1111/sms.12389)
 
-1. Arnason A, Sigurdsson SB, Gudmundsson A, Holme I, Engebretsen
-   L, Bahr R. Physical fitness, injuries, and team performance in soccer.
-   _Med Sci Sports Exerc_ [. 2004;36:278–285. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=14767251&dopt=Abstract) [doi:10.1249/01.](http://dx.doi.org/10.1249/01.MSS.0000113478.92945.CA)
-   [MSS.0000113478.92945.CA](http://dx.doi.org/10.1249/01.MSS.0000113478.92945.CA)
+14. Arnason A, Sigurdsson SB, Gudmundsson A, Holme I, Engebretsen
+    L, Bahr R. Physical fitness, injuries, and team performance in soccer.
+    _Med Sci Sports Exerc_ [. 2004;36:278–285. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=14767251&dopt=Abstract) [doi:10.1249/01.](http://dx.doi.org/10.1249/01.MSS.0000113478.92945.CA)
+    [MSS.0000113478.92945.CA](http://dx.doi.org/10.1249/01.MSS.0000113478.92945.CA)
 
-1. Feddermann-Demont N, Junge A, Edouard P, Branco P, Alonso
-   JM. Injuries in 13 international athletics championships between
-   2007–2012. _Br J Sports Med_ [. 2014;48:513–522. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=24620039&dopt=Abstract) [doi:10.1136/](http://dx.doi.org/10.1136/bjsports-2013-093087)
-   [bjsports-2013-093087](http://dx.doi.org/10.1136/bjsports-2013-093087)
+15. Feddermann-Demont N, Junge A, Edouard P, Branco P, Alonso
+    JM. Injuries in 13 international athletics championships between
+    2007–2012. _Br J Sports Med_ [. 2014;48:513–522. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=24620039&dopt=Abstract) [doi:10.1136/](http://dx.doi.org/10.1136/bjsports-2013-093087)
+    [bjsports-2013-093087](http://dx.doi.org/10.1136/bjsports-2013-093087)
 
-1. Ueblacker P, Mueller-Wohlfahrt HW, Ekstrand J. Epidemiological and clinical outcome comparison of indirect (‘strain’) versus
-   direct (‘contusion’) anterior and posterior thigh muscle injuries
-   in male elite football players: UEFA Elite League study of 2287
-   thigh injuries (2001–2013). _Br J Sports Med_ . 2015; [doi:10.1136/](http://dx.doi.org/10.1136/bjsports-2014-094285)
-   [bjsports-2014-094285. PubMed](http://dx.doi.org/10.1136/bjsports-2014-094285)
+16. Ueblacker P, Mueller-Wohlfahrt HW, Ekstrand J. Epidemiological and clinical outcome comparison of indirect (‘strain’) versus
+    direct (‘contusion’) anterior and posterior thigh muscle injuries
+    in male elite football players: UEFA Elite League study of 2287
+    thigh injuries (2001–2013). _Br J Sports Med_ . 2015; [doi:10.1136/](http://dx.doi.org/10.1136/bjsports-2014-094285)
+    [bjsports-2014-094285. PubMed](http://dx.doi.org/10.1136/bjsports-2014-094285)
 
-1. Woods C, Hawkins RD, Maltby S, Hulse M, Thomas A, Hodson A.
-   The Football Association Medical Research Programme: an audit of
-   injuries in professional football—analysis of hamstring injuries. _Br J_
-   _Sports Med_ [. 2004;38:36–41. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=14751943&dopt=Abstract) [doi:10.1136/bjsm.2002.002352](http://dx.doi.org/10.1136/bjsm.2002.002352)
+17. Woods C, Hawkins RD, Maltby S, Hulse M, Thomas A, Hodson A.
+    The Football Association Medical Research Programme: an audit of
+    injuries in professional football—analysis of hamstring injuries. _Br J_
+    _Sports Med_ [. 2004;38:36–41. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=14751943&dopt=Abstract) [doi:10.1136/bjsm.2002.002352](http://dx.doi.org/10.1136/bjsm.2002.002352)
 
-1. Cross MR, Brughelli M, Brown SR, et al. Mechanical properties of
-   sprinting in elite rugby union and rugby league. _Int J Sports Physiol_
-   _Perform_ [. 2015;10:695–702. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=25310279&dopt=Abstract) [doi:10.1123/ijspp.2014-0151](http://dx.doi.org/10.1123/ijspp.2014-0151)
+18. Cross MR, Brughelli M, Brown SR, et al. Mechanical properties of
+    sprinting in elite rugby union and rugby league. _Int J Sports Physiol_
+    _Perform_ [. 2015;10:695–702. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=25310279&dopt=Abstract) [doi:10.1123/ijspp.2014-0151](http://dx.doi.org/10.1123/ijspp.2014-0151)
 
-1. Buchheit M, Samozino P, Glynn JA, et al. Mechanical determinants
-   of acceleration and maximal sprinting speed in highly trained young
-   soccer players. _J Sports Sci_ [. 2014;32:1906–1913. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=25356503&dopt=Abstract) [doi:10.10](http://dx.doi.org/10.1080/02640414.2014.965191)
-   [80/02640414.2014.965191](http://dx.doi.org/10.1080/02640414.2014.965191)
+19. Buchheit M, Samozino P, Glynn JA, et al. Mechanical determinants
+    of acceleration and maximal sprinting speed in highly trained young
+    soccer players. _J Sports Sci_ [. 2014;32:1906–1913. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=25356503&dopt=Abstract) [doi:10.10](http://dx.doi.org/10.1080/02640414.2014.965191)
+    [80/02640414.2014.965191](http://dx.doi.org/10.1080/02640414.2014.965191)
 
-1. Mendiguchia J, Samozino P, Martinez-Ruiz E, et al. Progression of
-   mechanical properties during on-field sprint running after returning to
-   sports from a hamstring muscle injury in soccer players. _Int J Sports_
-   _Med_ [. 2014;35:690–695. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=24424959&dopt=Abstract) [doi:10.1055/s-0033-1363192](http://dx.doi.org/10.1055/s-0033-1363192)
+20. Mendiguchia J, Samozino P, Martinez-Ruiz E, et al. Progression of
+    mechanical properties during on-field sprint running after returning to
+    sports from a hamstring muscle injury in soccer players. _Int J Sports_
+    _Med_ [. 2014;35:690–695. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=24424959&dopt=Abstract) [doi:10.1055/s-0033-1363192](http://dx.doi.org/10.1055/s-0033-1363192)
 
-1. Mendiguchia J, Edouard P, Samozino P, et al. Field monitoring
-   of sprinting power-force-velocity profile before, during and after
-   hamstring injury: 2 case reports. _J Sports Sci_ . 2016;34(6):535–541.
-   [PubMed doi:10.1080/02640414.2015.1122207](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=26648237&dopt=Abstract)
+21. Mendiguchia J, Edouard P, Samozino P, et al. Field monitoring
+    of sprinting power-force-velocity profile before, during and after
+    hamstring injury: 2 case reports. _J Sports Sci_ . 2016;34(6):535–541.
+    [PubMed doi:10.1080/02640414.2015.1122207](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=26648237&dopt=Abstract)
 
-1. Samozino P, Morin JB, Hintzy F, Belli A. Jumping ability: a theoretical integrative approach. _J Theor Biol_ [. 2010;264:11–18. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=20109471&dopt=Abstract)
-   [doi:10.1016/j.jtbi.2010.01.021](http://dx.doi.org/10.1016/j.jtbi.2010.01.021)
+22. Samozino P, Morin JB, Hintzy F, Belli A. Jumping ability: a theoretical integrative approach. _J Theor Biol_ [. 2010;264:11–18. PubMed](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=20109471&dopt=Abstract)
+    [doi:10.1016/j.jtbi.2010.01.021](http://dx.doi.org/10.1016/j.jtbi.2010.01.021)
 
 **IJSPP Vol. 11, No. 2, 2016**

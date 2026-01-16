@@ -236,12 +236,12 @@ ______________________________________________________________________
 For sports biomechanics markerless systems:
 
 1. ✅ **Multi-camera** (≥2, ideally 4-8)
-1. ✅ **90° camera separation** (optimal triangulation)
-1. ✅ **Biomechanical constraints** (OpenSim skeletal model)
-1. ✅ **Proper calibration** (intrinsic + extrinsic)
-1. ✅ **Temporal filtering** (Butterworth 4th order, 6 Hz)
-1. ✅ **Sport-specific training** (fine-tune on athletic data)
-1. ✅ **Gold standard validation** (compare to Vicon/Qualisys)
+2. ✅ **90° camera separation** (optimal triangulation)
+3. ✅ **Biomechanical constraints** (OpenSim skeletal model)
+4. ✅ **Proper calibration** (intrinsic + extrinsic)
+5. ✅ **Temporal filtering** (Butterworth 4th order, 6 Hz)
+6. ✅ **Sport-specific training** (fine-tune on athletic data)
+7. ✅ **Gold standard validation** (compare to Vicon/Qualisys)
 
 ______________________________________________________________________
 
@@ -272,12 +272,12 @@ ______________________________________________________________________
 
 **Key Papers (Full citations in main documentation):**
 
-- **\[1\]** Pagnon et al. (2022) - Pose2Sim validation: <https://doi.org/10.3390/s22072712>
-- **\[2\]** Dill et al. (2024) - Stereo MediaPipe validation: <https://doi.org/10.3390/s24237772>
-- **\[3\]** Yeung et al. (2025) - AthletePose3D dataset: <https://arxiv.org/abs/2503.07499>
-- **\[4\]** Bazarevsky et al. (2020) - MediaPipe Pose: <https://arxiv.org/abs/2006.10204>
-- **\[5\]** Cao et al. (2019) - OpenPose: <https://doi.org/10.1109/TPAMI.2019.2929257>
-- **\[11\]** Delp et al. (2007) - OpenSim: <https://doi.org/10.1109/TBME.2007.901024>
+- **[1]** Pagnon et al. (2022) - Pose2Sim validation: <https://doi.org/10.3390/s22072712>
+- **[2]** Dill et al. (2024) - Stereo MediaPipe validation: <https://doi.org/10.3390/s24237772>
+- **[3]** Yeung et al. (2025) - AthletePose3D dataset: <https://arxiv.org/abs/2503.07499>
+- **[4]** Bazarevsky et al. (2020) - MediaPipe Pose: <https://arxiv.org/abs/2006.10204>
+- **[5]** Cao et al. (2019) - OpenPose: <https://doi.org/10.1109/TPAMI.2019.2929257>
+- **[11]** Delp et al. (2007) - OpenSim: <https://doi.org/10.1109/TBME.2007.901024>
 
 ______________________________________________________________________
 
@@ -311,7 +311,7 @@ A: Use MediaPipe (TensorFlow.js) for browser. RTMLib is Python/server-side only.
 A: Yes. RTMLib `lightweight` mode: 25-40 FPS. MediaPipe: 30+ FPS. Both work on CPU.
 
 **Q: How do I validate my setup?**
-A: Compare against marker-based system (Vicon/Qualisys). Calculate CMC, RMSE, ROM errors, Bland-Altman plots \[1,2\].
+A: Compare against marker-based system (Vicon/Qualisys). Calculate CMC, RMSE, ROM errors, Bland-Altman plots [1,2].
 
 ______________________________________________________________________
 

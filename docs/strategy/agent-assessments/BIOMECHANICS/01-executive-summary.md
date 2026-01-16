@@ -119,7 +119,7 @@ ______________________________________________________________________
    - Once confirmed: proceed with foot_index fix
    - Add fallback strategy to spec
 
-1. **Approve Task 2 (CMJ testing):**
+2. **Approve Task 2 (CMJ testing):**
 
    - Standard expansion; no biomechanics concerns
    - Ensure ankle angle progression test included
@@ -133,7 +133,7 @@ ______________________________________________________________________
    - Decide: proceed full Task 4 or adjust scope
    - Timeline: 1 week parallel with other work
 
-1. **Document physiological bounds:**
+2. **Document physiological bounds:**
 
    - All metrics should have warning thresholds
    - Publish in API documentation
@@ -257,11 +257,11 @@ ______________________________________________________________________
 **PROCEED with modifications:**
 
 1. Ankle fix is correct; prototype validation first
-1. CMJ testing expansion is low-risk
-1. Running metrics feasible but less accurate than jump metrics
-1. Recommend prototype validation for running (1 week, low risk)
-1. Plan validation study for Month 3-4 (credibility)
-1. Defer stride length to Phase 2 (reduces scope complexity)
+2. CMJ testing expansion is low-risk
+3. Running metrics feasible but less accurate than jump metrics
+4. Recommend prototype validation for running (1 week, low risk)
+5. Plan validation study for Month 3-4 (credibility)
+6. Defer stride length to Phase 2 (reduces scope complexity)
 
 **Expected 6-month state:** Multi-sport platform with documented accuracy, ready for partnership conversations backed by validation study.
 

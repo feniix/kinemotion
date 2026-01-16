@@ -600,7 +600,7 @@ flexion during the stance phase and a shorter tstance compared to middle- and lo
 The calculations for stiffness strongly depend on the ratio between tstance and tflight. In
 addition, body mass, gravitational acceleration, leg length and running speed are taken
 into account (Morin et al., 2005). Likewise, Duty factor (DF) is calculated as the ratio of
-tstance over stride time (DF = tstance/(2 \[.\] tstance/(2 \[.\] (tstance+tflight)), Appendix, Equation 16)
+tstance over stride time (DF = tstance/(2 [.] tstance/(2 [.] (tstance+tflight)), Appendix, Equation 16)
 (Blum et al., 2009; Forrester & Townend, 2015; Mann et al., 2014; Vernillo et al., 2017)
 and therefore DF carries similar information as the stiffness models. DF is a convenient
 measure to (visually) identify running styles as a short tstance with long tflight can be
@@ -609,7 +609,7 @@ comparisons as it is a dimensionless ratio, and does not rely on many assumption
 walking, the stance phase is longer than half the stride time, and thus the DF exceeds 0.5.
 In running, the DF decreases nonlinearly from 0.45 at very low running speeds to 0.28 at
 ~22 km/h (Forrester & Townend, 2015). For running speeds up to ~25 km/h the relation
-tflight \< tstance holds (Carrard et al., 2018; Chapman et al., 2012; Concejero et al., 2013;
+tflight < tstance holds (Carrard et al., 2018; Chapman et al., 2012; Concejero et al., 2013;
 Dorn et al., 2012; Gómez-Molina et al., 2017; Hanley & Mohan, 2014; Mann et al., 2015;
 Nummela et al., 2007; Pavei et al., 2017; Roche-Seruendo et al., 2018; Weyand et al.,
 2000). A too low DF can be uneconomical given the high muscle activation during short
@@ -935,12 +935,12 @@ cycle.
    a larger step width, or a wider pelvis, will theoretically increase the change in angular
    momentum, which may partly account for individual differences.
 
-1. During the stance phase, the legs swing in the opposite direction constituting an angular
+2. During the stance phase, the legs swing in the opposite direction constituting an angular
    momentum around the longitudinal axis (Hinrichs, 1987). This angular momentum will be
    greater when the mass of the leg is further away from the hip, and when the velocity of the
    leg is higher.
 
-1. During late push-off, transverse plane pelvic rotation lengthens the step (‘pelvic step’),
+3. During late push-off, transverse plane pelvic rotation lengthens the step (‘pelvic step’),
    thereby increasing the angular momentum around the longitudinal axis (Bruijn et al., 2008;
    Preece et al., 2016).
 
@@ -1985,15 +1985,15 @@ joint loading and injury risk. _Footwear Science_, _8_ (1), 1-11. [https://doi.o
 m is the participant’s body mass in kilograms.
 
 L0 leg length in metres at rest. This can be measured from trochanter major to the ground.
-g is the acceleration due to gravity (−9.81 m/s \[2\] )
+g is the acceleration due to gravity (−9.81 m/s [2] )
 
 _**7.1 Transformations between speed, SF, SL**_
 
-Vx ¼ \[SL\]
+Vx ¼ [SL]
 
 tstep
 
-SF ¼ \[60\]
+SF ¼ [60]
 
 tstep
 
@@ -2023,15 +2023,15 @@ dstance¼vx � tstance (6)
 
 dflight¼ SL� dstance (7)
 
-dBCoM� ic¼ \[1\] (8)
+dBCoM� ic¼ [1] (8)
 
-2 \[�\] \[v\]\[x\]\[ �\] \[t\]\[stance\]
+2 [�] [v][x][ �] [t][stance]
 
 SF
 SFnorm¼ ~~f f~~ **f** i ~~f~~ **f** i ~~f~~ **f** i **f** i ~~**f**~~ (9)
 ~~p~~ L0 _=_ g
 
-tstance _;_ norm ¼ ~~p~~ \[t\]\[stance\] ~~f~~ L ~~f~~ **f** i 0 ~~f~~ **f** i _=_ ~~f~~ **f** i g **f** i ~~**f**~~ (10)
+tstance _;_ norm ¼ ~~p~~ [t][stance] ~~f~~ L ~~f~~ **f** i 0 ~~f~~ **f** i _=_ ~~f~~ **f** i g **f** i ~~**f**~~ (10)
 
 **f** i **f** i **f** i **f** i
 
@@ -2039,9 +2039,9 @@ tstance _;_ norm ¼ ~~p~~ \[t\]\[stance\] ~~f~~ L ~~f~~ **f** i 0 ~~f~~ **f** i 
 
 _**7.3 Equations based on the ballistic trajectory**_
 
-tlift¼ \[1\] (11)
+tlift¼ [1] (11)
 
-2 \[�\] \[t\]\[flight\]
+2 [�] [t][flight]
 
 vyi¼ g � tlift (12)
 
@@ -2049,9 +2049,9 @@ vyi¼ g � tlift (12)
 
 **f** i **f** i **f** i **f** i
 
-VDflight¼vyi � tlift þ \[1\]
+VDflight¼vyi � tlift þ [1]
 
-2 \[g\]\[ �\] \[t\]\[lift\]
+2 [g][ �] [t][lift]
 
 **f** i **f** i **f** i **f** i
 
@@ -2067,7 +2067,7 @@ vyi represents the initial vertical speed at the onset of the flight phase; the 
 the peak of the flight phase. These equations assume that there is no difference between landing
 and take-off height and air resistance can be neglected.
 
-Steptangle ¼ g � tswing � \[2\] (14)
+Steptangle ¼ g � tswing � [2] (14)
 
 8
 
@@ -2084,7 +2084,7 @@ _Hooke’s law (linear spring)_
 
 **f** i **f** i **f** i **f** i
 
-Vertical ratio ¼ \[VD\]\[ste\]\[p\] (15)
+Vertical ratio ¼ [VD][ste][p] (15)
 
 SL
 
@@ -2105,15 +2105,15 @@ The estimate of peak vertical force during contact (Morin et al., 2005)
 
 **f** i **f** i **f** i **f** i
 
-_\[π\]_ \[t\]\[fli\]\[g\]\[ht\]
+_[π]_ [t][fli][g][ht]
 
-2 \[ð\] t
-
-**f** i **f** i **f** i **f** i
+2 [ð] t
 
 **f** i **f** i **f** i **f** i
 
-Fmax¼ m � g � _\[π\]_
+**f** i **f** i **f** i **f** i
+
+Fmax¼ m � g � _[π]_
 
 **f** i **f** i **f** i **f** i
 
@@ -2137,9 +2137,9 @@ Vertical displacement of the BCoM during the stance phase Morin et al., 2005)
 
 **f** i **f** i **f** i **f** i
 
-\[max\]
+[max]
 
-m \[�\] \[t\]\[stance2\] _π_ \[2\]
+m [�] [t][stance2] _π_ [2]
 
 **f** i **f** i **f** i **f** i
 
@@ -2152,14 +2152,14 @@ m \[�\] \[t\]\[stance2\] _π_ \[2\]
 
 **f** i **f** i **f** i **f** i
 
-VDstance ¼ � \[F\]\[max\]
+VDstance ¼ � [F][max]
 
 **f** i **f** i **f** i **f** i
 
 **f** i **f** i **f** i **f** i
 
-þ g � \[t\]\[stance2\]
-_π_ \[2\] 8
+þ g � [t][stance2]
+_π_ [2] 8
 
 **f** i **f** i **f** i **f** i
 
@@ -2196,13 +2196,13 @@ f **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** 
 
 2
 
-_L_ 0 \[2\] � _vx_ � _tstance_
+_L_ 0 [2] � _vx_ � _tstance_
 
 s � 2 �
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-_L_ 0 \[2\] � _vx_ � _tstance_
+_L_ 0 [2] � _vx_ � _tstance_
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
@@ -2210,7 +2210,7 @@ _L_ 0 \[2\] � _vx_ � _tstance_
 
 **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f** **f**
 
-Kleg¼ \[F\]\[max\] (23)
+Kleg¼ [F][max] (23)
 
 ΔL
 

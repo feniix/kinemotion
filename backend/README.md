@@ -317,14 +317,14 @@ uv run ruff check --fix
    - Download files
    - Delete temporary files
 
-1. **AnalysisResponse**: Standardized response format
+2. **AnalysisResponse**: Standardized response format
 
    - Status code and message
    - Metrics data
    - Storage URL
    - Processing time
 
-1. **FastAPI Application**
+3. **FastAPI Application**
 
    - CORS middleware for frontend integration
    - Three main endpoints
@@ -439,10 +439,10 @@ R2 is optional. If you don't want cloud storage, simply omit environment variabl
 Check:
 
 1. Video file is valid and readable
-1. Video shows clear drop jump or CMJ motion
-1. Camera angle is lateral (side view)
-1. Athlete is visible throughout motion
-1. Frame rate is 30fps or higher
+2. Video shows clear drop jump or CMJ motion
+3. Camera angle is lateral (side view)
+4. Athlete is visible throughout motion
+5. Frame rate is 30fps or higher
 
 ### "Could not detect CMJ phases"
 
@@ -527,10 +527,10 @@ const analyzeVideo = async (file: File) => {
 When adding new features:
 
 1. Maintain type hints (pyright strict)
-1. Follow existing error handling patterns
-1. Add appropriate validation for inputs
-1. Update this README with new endpoints
-1. Test with real videos before committing
+2. Follow existing error handling patterns
+3. Add appropriate validation for inputs
+4. Update this README with new endpoints
+5. Test with real videos before committing
 
 ## License
 

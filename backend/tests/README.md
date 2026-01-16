@@ -372,27 +372,27 @@ with patch("kinemotion_backend.app.process_cmj_video") as mock:
 ## Known Limitations
 
 1. **Real Video Processing** - Tests mock kinemotion analysis. For real video testing, use the main project's test videos.
-1. **R2 Credentials** - R2 client tests are fully mocked. Integration requires real R2 credentials.
-1. **MediaPipe** - Pose tracking is mocked. Real testing requires actual videos.
-1. **Large Files** - 501MB test fixture uses memory. Could be optimized with temp file generation.
+2. **R2 Credentials** - R2 client tests are fully mocked. Integration requires real R2 credentials.
+3. **MediaPipe** - Pose tracking is mocked. Real testing requires actual videos.
+4. **Large Files** - 501MB test fixture uses memory. Could be optimized with temp file generation.
 
 ## Maintenance Notes
 
 ### Adding New Tests
 
 1. Use AAA pattern (Arrange, Act, Assert)
-1. Include descriptive docstrings
-1. Use existing fixtures when possible
-1. Mock external dependencies
-1. Test both happy path and error cases
+2. Include descriptive docstrings
+3. Use existing fixtures when possible
+4. Mock external dependencies
+5. Test both happy path and error cases
 
 ### Updating Fixtures
 
 When kinemotion metrics change:
 
 1. Update `sample_cmj_metrics` and `sample_dropjump_metrics` in `conftest.py`
-1. Run all tests to verify
-1. Update test assertions if needed
+2. Run all tests to verify
+3. Update test assertions if needed
 
 ### Debugging Failed Tests
 

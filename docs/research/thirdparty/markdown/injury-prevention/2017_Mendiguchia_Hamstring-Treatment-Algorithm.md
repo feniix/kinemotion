@@ -1,15 +1,15 @@
 ## A Multifactorial, Criteria-based Progressive Algorithm for Hamstring Injury Treatment
 
-JURDAN MENDIGUCHIA \[1\], ENRIQUE MARTINEZ-RUIZ \[2\], PASCAL EDOUARD \[3,4,5\], JEAN-BENOI \[ˆ\] T MORIN \[6\],
-FRANCISCO MARTINEZ-MARTINEZ \[7\], FERNANDO IDOATE \[8\], and ALBERTO MENDEZ-VILLANUEVA \[9\]
+JURDAN MENDIGUCHIA [1], ENRIQUE MARTINEZ-RUIZ [2], PASCAL EDOUARD [3,4,5], JEAN-BENOI [ˆ] T MORIN [6],
+FRANCISCO MARTINEZ-MARTINEZ [7], FERNANDO IDOATE [8], and ALBERTO MENDEZ-VILLANUEVA [9]
 
 1Department of Physical Therapy, ZENTRUM Rehab and Performance Center, Baran˜ain, SPAIN; 2Chair of Sports
-Traumatology, Catholic University of San Antonio, Murcia, SPAIN; \[3\] Inter-university Laboratory of Human Movement Biology
-(LIBM EA), University of Lyon, University Jean Monnet, Saint Etienne, FRANCE; \[4\] Department of Clinical and Exercise
+Traumatology, Catholic University of San Antonio, Murcia, SPAIN; [3] Inter-university Laboratory of Human Movement Biology
+(LIBM EA), University of Lyon, University Jean Monnet, Saint Etienne, FRANCE; [4] Department of Clinical and Exercise
 Physiology, Sports Medicine Unity, University Hospital of Saint-Etienne, Faculty of medicine, Saint-Etienne, FRANCE;
 5Medical Commission, French Athletics Federation (FFA), Paris, FRANCE; 6Universite´ Coˆte d"Azur, LAMHESS, Nice,
-FRANCE; \[7\] Virgin of Arrixaca University Hospital, Murcia, SPAIN; \[8\] Radiology Department, San Miguel Clinic, Pamplona,
-SPAIN; and \[9\] ASPIRE Academy for Sports Excellence, Doha, QATAR
+FRANCE; [7] Virgin of Arrixaca University Hospital, Murcia, SPAIN; [8] Radiology Department, San Miguel Clinic, Pamplona,
+SPAIN; and [9] ASPIRE Academy for Sports Excellence, Doha, QATAR
 
 ABSTRACT
 
@@ -23,7 +23,7 @@ program that effectively promotes muscle tissue repair and functional recovery i
 
 player performance and availability. Purpose: This study aimed to assess the concurrent effectiveness of administering an individualized
 
-and multifactorial criteria-based algorithm (rehabilitation algorithm \[RA\]) on hamstring injury rehabilitation in comparison with using a
+and multifactorial criteria-based algorithm (rehabilitation algorithm [RA]) on hamstring injury rehabilitation in comparison with using a
 
 general rehabilitation protocol (RP). Methods: Implementing a double-blind randomized controlled trial approach, two equal groups of
 
@@ -235,7 +235,7 @@ stratify subjects according to six main parameters: playing
 position (i.e., goalkeeper, defender, midfield, and forward),
 playing status (i.e., starting or substitute), age (i.e., young
 
-\[e24 yr\] or old \[Q25 yr\]), mechanism of injury (i.e., highspeed running or stretching), primary injured muscle (biceps
+[e24 yr] or old [Q25 yr]), mechanism of injury (i.e., highspeed running or stretching), primary injured muscle (biceps
 femoris, semitendinosus, and semimembranosus), and history of previous hamstring strain injury. These parameters
 have previously been shown to affect RTS and reinjury rates
 in football players (1,23,24,39).
@@ -288,7 +288,7 @@ percentage (%) for categorical variables.
 
 RP. The RP group completed a recently described protocol that emphases loading the hamstrings during lengthening actions and is accompanied by a general rehabilitation
 and progressive running program (for more information about
-the RP, please see Askling et al. \[3\]). Football players assigned
+the RP, please see Askling et al. [3]). Football players assigned
 to RP worked on their program on a daily basis. The previously mentioned physical therapist (E.M.R.) supervised at least
 four rehabilitation sessions per week (three sessions of general
 rehabilitation or progressive running program and one session
@@ -322,7 +322,7 @@ treatment, adding an additional afternoon session (same content) to eventually f
 criteria and content were selected and timed according to current knowledge on the biology of muscle injury and repair (20),
 the different risk factors associated with the hamstring injury
 (i.e., poor flexibility, diminished strength, altered lumbopelvic
-control, fatigue, etc. \[23,24,39\]), and the main mechanisms
+control, fatigue, etc. [23,24,39]), and the main mechanisms
 causing the injury (sprinting or stretching) (1,40).
 During the regeneration phase of the RA, football players
 daily worked both legs with a single session integrating exer[cises (see Video, Supplemental Digital Content 1, http://links.](http://links.lww.com/MSS/A882)
@@ -406,7 +406,7 @@ to sport, was conducted on a different day from the Askling
 H-test or any other test performed during the functional phase.
 Players were required to have not engaged in vigorous
 exercise within the previous 2 d before the sprint running
-test. A standardized warm-up, consisting of 5 min of lowpace (È10 kmIh \[j\]\[1\] ) running, 3 min of lower limb muscle
+test. A standardized warm-up, consisting of 5 min of lowpace (È10 kmIh [j][1] ) running, 3 min of lower limb muscle
 stretching, 5 min of sprint-specific drills, and three progressive
 6-s sprints separated by 2 min of passive rest, was performed
 before the test. Subjects were then allowed 5 min of free
@@ -417,8 +417,8 @@ usual football shoes and ran during similar times (i.e., same
 hour), environmental conditions of temperature (22.5-C T 5.2-C
 for RA group vs 20.9-C T 4.8-C for RP group), humidity
 (30.4% T 15.7% for RA group vs 30.4% T 19.1% for RP
-group), and wind (8.6 T 7.8 kmIh \[j\]\[1\] for RA group vs 6.5 T
-7.4 kmIh \[j\]\[1\] for RP group) according to anemometer PCEAM 82 (PCE Ibe´rica, Tobarra, Albacete, Spain).
+group), and wind (8.6 T 7.8 kmIh [j][1] for RA group vs 6.5 T
+7.4 kmIh [j][1] for RP group) according to anemometer PCEAM 82 (PCE Ibe´rica, Tobarra, Albacete, Spain).
 Running speed was measured during each of the two
 sprints by means of a Radar Stalker ATS System (33 Hz;
 Radar Sales, Minneapolis, MN), placed on a tripod 10 m
@@ -473,7 +473,7 @@ being trivial, beneficial, or harmful with the following scale:
 likely; and 999.5%, most likely.
 Continuous variables are presented as means T SD unless
 otherwise stated. Data were first log-transformed to reduce
-bias arising from nonuniformity error. The standardized difference or effect size (ES, 90% confidence interval \[CI\]) in
+bias arising from nonuniformity error. The standardized difference or effect size (ES, 90% confidence interval [CI]) in
 the selected variables was calculated using the pooled baseline SD. Threshold values for Cohen ES statistics were 90.2
 
 (small), 90.6 (moderate), and 91.2 (large) (19). Uncertainly
@@ -574,10 +574,10 @@ RP (n = 15) RA (n = 16) Standardized Differences (90% CI) MBI Qualitative Assess
 
 5 m (s) 1.38 T 0.10 1.35 T 0.08 j0.27 (j0.80 to 0.26) (19/0/81) Unclear
 10 m (s) 2.15 T 0.15 2.08 T 0.10 j0.46 (j0.96 to 0.05) (7/0/93) Likely
-Top speed (mIs \[j\]\[1\] ) 7.7 T 0.7 8.4 T 0.4 0.75 (0.29 to 1.22) (99/0/1) Very likely
-V0 (mIs \[j\]\[1\] ) 8.2 T 0.9 8.9 T 0.5 0.71 (0.24 to 1.18) (99/0/1) Very likely
-FH0 (NIkg \[j\]\[1\] ) 7.9 T 1.3 7.9 T 1.1 0.06 (j0.47 to 0.59) (58/0/42) Unclear
-Pmax (WIkg \[j\]\[1\] ) 16.0 T 2.9 17.5 T 2.5 0.47 (j0.04 to 0.98) (94/0/6) Likely
+Top speed (mIs [j][1] ) 7.7 T 0.7 8.4 T 0.4 0.75 (0.29 to 1.22) (99/0/1) Very likely
+V0 (mIs [j][1] ) 8.2 T 0.9 8.9 T 0.5 0.71 (0.24 to 1.18) (99/0/1) Very likely
+FH0 (NIkg [j][1] ) 7.9 T 1.3 7.9 T 1.1 0.06 (j0.47 to 0.59) (58/0/42) Unclear
+Pmax (WIkg [j][1] ) 16.0 T 2.9 17.5 T 2.5 0.47 (j0.04 to 0.98) (94/0/6) Likely
 
 MBI, magnitude-based inferences.
 
@@ -715,15 +715,15 @@ REFERENCES
 1. Arnason A, Sigurdsson SB, Gudmundsson A, Holme I, Engebretsen L,
    Bahr R. Risk factors for injuries in football. Am J Sports Med.
    2004;32(1 Suppl):5S–16S.
-1. Askling CM, Tengvar M, Tarassova O, Thorstensson A. Acute
+2. Askling CM, Tengvar M, Tarassova O, Thorstensson A. Acute
    hamstring injuries in Swedish elite sprinters and jumpers: a prospective randomised controlled clinical trial comparing two rehabilitation protocols. Br J Sports Med. 2014;48(7):532–9.
-1. Askling CM, Tengvar M, Thorstensson A. Acute hamstring injuries in Swedish elite football: a prospective randomised controlled
+3. Askling CM, Tengvar M, Thorstensson A. Acute hamstring injuries in Swedish elite football: a prospective randomised controlled
    clinical trial comparing two rehabilitation protocols. Br J Sports
    Med. 2013;47(15):953–9.
-1. Bezodis IN, Kerwin DG, Salo AI. Lower-limb mechanics during
+4. Bezodis IN, Kerwin DG, Salo AI. Lower-limb mechanics during
    the support phase of maximum-velocity sprint running. Med Sci
    Sports Exerc. 2008;40(4):707–15.
-1. Blanch P, Gabbett TJ. Has the athlete trained enough to return to
+5. Blanch P, Gabbett TJ. Has the athlete trained enough to return to
    play safely? The acute:chronic workload ratio permits clinicians
 
 "
@@ -772,39 +772,39 @@ fabrication, falsification, or inappropriate data manipulation.
 13. Freckleton G, Cook J, Pizzari T. The predictive validity of a single
     leg bridge test for hamstring injuries in Australian Rules Football
     Players. Br J Sports Med. 2014;48(8):713–7.
-01. Hamilton B. Hamstring muscle strain injuries: what can we learn
+14. Hamilton B. Hamstring muscle strain injuries: what can we learn
     from history? Br J Sports Med. 2012;46(13):900–3.
-01. Hamilton B, Tol JL, Almusa E, et al. Platelet-rich plasma does not
+15. Hamilton B, Tol JL, Almusa E, et al. Platelet-rich plasma does not
     enhance return to play in hamstring injuries: a randomised controlled trial. Br J Sports Med. 2015;49(14):943–50.
-01. Hamilton RT, Shultz SJ, Schmitz RJ, Perrin DH. Triple-hop distance as a valid predictor of lower limb strength and power. J Athl
+16. Hamilton RT, Shultz SJ, Schmitz RJ, Perrin DH. Triple-hop distance as a valid predictor of lower limb strength and power. J Athl
     Train. 2008;43(2):144–51.
-01. Harvey D. Assessment of the flexibility of elite athletes using the
+17. Harvey D. Assessment of the flexibility of elite athletes using the
     modified Thomas test. Br J Sports Med. 1998;32(1):68–70.
-01. Hopkins WG, Batterham AM. Error rates, decisive outcomes
+18. Hopkins WG, Batterham AM. Error rates, decisive outcomes
     and publication bias with several inferential methods. Sports Med.
     2016;46:1563–73.
-01. Hopkins WG, Marshall SW, Batterham AM, Hanin J. Progressive
+19. Hopkins WG, Marshall SW, Batterham AM, Hanin J. Progressive
     statistics for studies in sports medicine and exercise science. Med
     Sci Sports Exerc. 2009;41(1):3–13.
-01. Ja¨rvinen TA, Ja¨rvinen M, Kalimo H. Regeneration of injured
+20. Ja¨rvinen TA, Ja¨rvinen M, Kalimo H. Regeneration of injured
     skeletal muscle after the injury. Muscles Ligaments Tendons J.
     2014;3(4):337–45.
-01. Kelln BM, McKeon PO, Gontkof LM, Hertel J. Hand-held
+21. Kelln BM, McKeon PO, Gontkof LM, Hertel J. Hand-held
     dynamometry: reliability of lower extremity muscle testing in
     healthy, physically active, young adults. J Sport Rehabil.
     2008;17(2):160–70.
-01. Liebenson C, Karpowicz AM, Brown SH, Howarth SJ, McGill
+22. Liebenson C, Karpowicz AM, Brown SH, Howarth SJ, McGill
     SM. The active straight leg raise test and lumbar spine stability.
     PM R. 2009;1(6):530–5.
-01. Mendiguchia J, Alentorn-Geli E, Brughelli M. Hamstring strain
+23. Mendiguchia J, Alentorn-Geli E, Brughelli M. Hamstring strain
     injuries: are we heading in the right direction? Br J Sports Med.
     2012;46(2):81–5.
-01. Mendiguchia J, Brughelli M. A return-to-sport algorithm for acute
+24. Mendiguchia J, Brughelli M. A return-to-sport algorithm for acute
     hamstring injuries. Phys Ther Sport. 2011;12(1):2–14.
-01. Mendiguchia J, Garrues MA, Cronin JB, et al. Nonuniform changes
+25. Mendiguchia J, Garrues MA, Cronin JB, et al. Nonuniform changes
     in MRI measurements of the thigh muscles after two hamstring
     strengthening exercises. J Strength Cond Res. 2013;27(3):574–81.
-01. Morin JB, Gimenez P, Edouard P, et al. Sprint acceleration mechanics: the major role of hamstrings in horizontal force production. Front Physiol. 2015;6:404.
+26. Morin JB, Gimenez P, Edouard P, et al. Sprint acceleration mechanics: the major role of hamstrings in horizontal force production. Front Physiol. 2015;6:404.
 
 AN ALGORITHM FOR HAMSTRING INJURY TREATMENT Medicine & Science in Sports & Exercised 1491
 
@@ -813,50 +813,50 @@ Copyright © 2017 by the American College of Sports Medicine. Unauthorized repro
 27. Orchard J, Best TM. The management of muscle strain injuries: an early
     return versus the risk of recurrence. Clin J Sport Med. 2002;12(1):3–5.
 
-01. Pas HI, Reurink G, Tol JL, Weir A, Winters M, Moen MH. Efficacy of rehabilitation (lengthening) exercises, platelet-rich plasma
+28. Pas HI, Reurink G, Tol JL, Weir A, Winters M, Moen MH. Efficacy of rehabilitation (lengthening) exercises, platelet-rich plasma
     injections, and other conservative interventions in acute hamstring
     injuries: an updated systematic review and meta-analysis. Br J
     Sports Med. 2015;49(18):1197–205.
 
-01. Peetrons P. Ultrasound of muscles. Eur Radiol. 2002;12(1):35–43.
+29. Peetrons P. Ultrasound of muscles. Eur Radiol. 2002;12(1):35–43.
 
-01. Reurink G, Almusa E, Goudswaard GJ, et al. No association
+30. Reurink G, Almusa E, Goudswaard GJ, et al. No association
     between fibrosis on magnetic resonance imaging at return to play
     and hamstring reinjury risk. Am J Sports Med. 2015;43(5):1228–34.
 
-01. Reurink G, Goudswaard GJ, Oomen HG, et al. Reliability of the
+31. Reurink G, Goudswaard GJ, Oomen HG, et al. Reliability of the
     active and passive knee extension test in acute hamstring injuries.
     Am J Sports Med. 2013;41(8):1757–61.
 
-01. Robinson ME, Dannecker EA. Critical issues in the use of muscle testing
+32. Robinson ME, Dannecker EA. Critical issues in the use of muscle testing
     for the determination of sincerity of effort. Clin J Pain. 2004;20(6):392–8.
 
-01. Samozino P, Rabita G, Dorel S, et al. A simple method for measuring power, force, velocity properties, and mechanical effectiveness in sprint running. Scand J Med Sci Sports. 2016;26(6):648–58.
+33. Samozino P, Rabita G, Dorel S, et al. A simple method for measuring power, force, velocity properties, and mechanical effectiveness in sprint running. Scand J Med Sci Sports. 2016;26(6):648–58.
 
-01. Sanfilippo JL, Silder A, Sherry MA, Tuite MJ, Heiderscheit BC.
+34. Sanfilippo JL, Silder A, Sherry MA, Tuite MJ, Heiderscheit BC.
     Hamstring strength and morphology progression after return to
     sport from injury. Med Sci Sports Exerc. 2013;45(3):448–54.
 
-01. Schulz KF, Altman DG, Moher D. CONSORT 2010 statement:
+35. Schulz KF, Altman DG, Moher D. CONSORT 2010 statement:
     updated guidelines for reporting parallel group randomised trials.
     J Pharmacol Pharmacother. 2010;1(12):100–7.
 
-01. Silder A, Thelen DG, Heiderscheit BC. Effects of prior hamstring
+36. Silder A, Thelen DG, Heiderscheit BC. Effects of prior hamstring
     strain injury on strength, flexibility, and running mechanics. Clin
     Biomech (Bristol, Avon). 2010;25(7):681–6.
 
-01. Thorborg K, Roos EM, Bartels EM, Petersen J, Ho¨lmich P. Validity, reliability and responsiveness of patient-reported outcome
+37. Thorborg K, Roos EM, Bartels EM, Petersen J, Ho¨lmich P. Validity, reliability and responsiveness of patient-reported outcome
     questionnaires when assessing hip and groin disability: a systematic review. Br J Sports Med. 2010;44(16):1186–96.
 
-01. Tol JL, Hamilton B, Eirale C, Muxart P, Jacobsen P, Whiteley R.
+38. Tol JL, Hamilton B, Eirale C, Muxart P, Jacobsen P, Whiteley R.
     At return to play following hamstring injury the majority of professional football players have residual isokinetic deficits. Br J
     Sports Med. 2014;48(18):1364–9.
 
-01. van Beijsterveldt AM, van de Port IG, Vereijken AJ, Backx FJ.
+39. van Beijsterveldt AM, van de Port IG, Vereijken AJ, Backx FJ.
     Risk factors for hamstring injuries in male soccer players: a systematic review of prospective studies. Scand J Med Sci Sports.
     2013;23(3):253–62.
 
-01. Woods C, Hawkins RD, Maltby S, Hulse M, Thomas A, Hodson
+40. Woods C, Hawkins RD, Maltby S, Hulse M, Thomas A, Hodson
     A. The Football Association Medical Research Programme: an
     audit of injuries in professional football—analysis of hamstring
     injuries. Br J Sports Med. 2004;38(1):36–41.

@@ -7,8 +7,8 @@ Complete guide for setting up the Supabase database and environment configuratio
 The setup process has three stages:
 
 1. **Local Environment Setup** - Configure `.env` files with Supabase credentials
-1. **Database Schema Setup** - Create tables and Row Level Security (RLS) policies
-1. **Production Setup** (Optional) - Configure Google Cloud secrets for Cloud Run
+2. **Database Schema Setup** - Create tables and Row Level Security (RLS) policies
+3. **Production Setup** (Optional) - Configure Google Cloud secrets for Cloud Run
 
 ## Prerequisites
 
@@ -79,9 +79,9 @@ This:
 #### Option C: Manual Setup (No Scripts)
 
 1. Go to https://supabase.com/dashboard/project/[your-project-id]/sql
-1. Create a new query
-1. Copy SQL from `backend/supabase-schema.sql` or the script output
-1. Click "Run"
+2. Create a new query
+3. Copy SQL from `backend/supabase-schema.sql` or the script output
+4. Click "Run"
 
 ### 3️⃣ Verify Setup
 
@@ -175,10 +175,10 @@ SUPABASE_ANON_KEY=your-key
 **What it does:**
 
 1. Validates credentials
-1. Displays SQL schema
-1. Shows manual setup instructions
-1. Provides verification checklist
-1. Suggests next steps
+2. Displays SQL schema
+3. Shows manual setup instructions
+4. Provides verification checklist
+5. Suggests next steps
 
 **Options:**
 
@@ -205,11 +205,11 @@ python scripts/setup_supabase_db.py
 **What it does:**
 
 1. Validates Supabase credentials
-1. Generates SQL schema
-1. Saves schema to `backend/supabase-schema.sql`
-1. Displays setup instructions
-1. Shows verification checklist
-1. Creates environment validation report
+2. Generates SQL schema
+3. Saves schema to `backend/supabase-schema.sql`
+4. Displays setup instructions
+5. Shows verification checklist
+6. Creates environment validation report
 
 **Advantages:**
 
@@ -231,8 +231,8 @@ python scripts/setup_supabase_db.py
 **What it does:**
 
 1. Creates Google Secret Manager secrets
-1. Grants Cloud Run service account access
-1. Configures deployment variables
+2. Grants Cloud Run service account access
+3. Configures deployment variables
 
 **Requires:**
 
@@ -292,18 +292,18 @@ export SUPABASE_KEY="sb_anon_your-key"
 **Check:**
 
 1. SUPABASE_URL is correct format
-1. SUPABASE_KEY is valid (not expired)
-1. Supabase project is running (check dashboard)
-1. Network connectivity to Supabase servers
+2. SUPABASE_KEY is valid (not expired)
+3. Supabase project is running (check dashboard)
+4. Network connectivity to Supabase servers
 
 ### RLS Policies Don't Work
 
 **Check:**
 
 1. Policies were created successfully
-1. RLS is actually enabled on the table
-1. User is authenticated (has valid JWT token)
-1. Policy conditions match your user ID
+2. RLS is actually enabled on the table
+3. User is authenticated (has valid JWT token)
+4. Policy conditions match your user ID
 
 **Verify:**
 
@@ -359,9 +359,9 @@ project-root/
 ## Next Steps
 
 1. **Frontend Setup**: See `frontend/README.md`
-1. **Backend Setup**: See `backend/docs/setup.md`
-1. **Testing**: See `docs/development/testing.md`
-1. **Deployment**: See `docs/deployment/`
+2. **Backend Setup**: See `backend/docs/setup.md`
+3. **Testing**: See `docs/development/testing.md`
+4. **Deployment**: See `docs/deployment/`
 
 ## Support
 
@@ -382,6 +382,6 @@ These scripts are designed to be:
 If you encounter issues or need to update scripts:
 
 1. Check script comments for implementation details
-1. Review the generated SQL schema in `backend/supabase-schema.sql`
-1. Manually verify in Supabase Dashboard if needed
-1. Report issues with reproduction steps
+2. Review the generated SQL schema in `backend/supabase-schema.sql`
+3. Manually verify in Supabase Dashboard if needed
+4. Report issues with reproduction steps

@@ -22,8 +22,8 @@ export SUPABASE_KEY="sb_anon_your-key"
 ### 1. Create Supabase Project
 
 1. Go to https://supabase.com and sign up (free)
-1. Create a new project
-1. Note your **Project URL** and **Anon Key** from Settings > API
+2. Create a new project
+3. Note your **Project URL** and **Anon Key** from Settings > API
 
 Example:
 
@@ -57,8 +57,8 @@ Copy the displayed SQL.
 #### Option B: Manual (Fastest for First Time)
 
 1. Go to: https://supabase.com/dashboard/project/YOUR_PROJECT_ID/sql
-1. Click "New Query"
-1. Paste this SQL:
+2. Click "New Query"
+3. Paste this SQL:
 
 ```sql
 -- Enable required extensions
@@ -196,8 +196,8 @@ export SUPABASE_KEY="sb_anon_your-key"
 Check:
 
 1. Credentials are correct
-1. Supabase project is running (check dashboard)
-1. Network connectivity
+2. Supabase project is running (check dashboard)
+3. Network connectivity
 
 ### "RLS policy violation"
 
@@ -234,10 +234,10 @@ VITE_API_URL=http://localhost:8000
 ## Next Steps
 
 1. Start frontend: `cd frontend && yarn dev`
-1. Open http://localhost:5173
-1. Sign up with email
-1. Upload a video to test
-1. See results in Supabase under `analysis_sessions`
+2. Open http://localhost:5173
+3. Sign up with email
+4. Upload a video to test
+5. See results in Supabase under `analysis_sessions`
 
 ## Full Documentation
 

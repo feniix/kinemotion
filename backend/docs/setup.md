@@ -84,23 +84,23 @@ If you want to enable cloud storage for videos and results:
 ### 1. Create R2 Bucket
 
 1. Log in to Cloudflare Dashboard
-1. Navigate to R2 Storage
-1. Create a new bucket (e.g., "kinemotion")
-1. Note the bucket name
+2. Navigate to R2 Storage
+3. Create a new bucket (e.g., "kinemotion")
+4. Note the bucket name
 
 ### 2. Create API Token
 
 1. In Cloudflare Dashboard, go to Account Settings > API Tokens
-1. Create a custom token with R2 permissions:
+2. Create a custom token with R2 permissions:
    - Read/Write permissions on R2
    - Include specific bucket(s) if desired
-1. Copy the API credentials
+3. Copy the API credentials
 
 ### 3. Get Endpoint URL
 
 1. In R2 Storage, select your bucket
-1. Go to Settings
-1. Copy the S3 API endpoint (e.g., `https://abc123.r2.cloudflarestorage.com`)
+2. Go to Settings
+3. Copy the S3 API endpoint (e.g., `https://abc123.r2.cloudflarestorage.com`)
 
 ### 4. Configure Backend
 
@@ -235,8 +235,8 @@ uv run uvicorn kinemotion_backend.app:app --reload
 Check that:
 
 1. R2 credentials are correctly set in `.env`
-1. R2 bucket exists and is accessible
-1. Network connectivity to Cloudflare
+2. R2 bucket exists and is accessible
+3. Network connectivity to Cloudflare
 
 Debug with:
 
@@ -260,18 +260,18 @@ EOF
 If analysis fails:
 
 1. Check video format (MP4, AVI, MOV, etc.)
-1. Ensure video shows clear jumping motion
-1. Try "accurate" quality preset: `/api/analyze?quality=accurate`
-1. Check server logs for detailed errors
+2. Ensure video shows clear jumping motion
+3. Try "accurate" quality preset: `/api/analyze?quality=accurate`
+4. Check server logs for detailed errors
 
 ### Memory Issues
 
 For large videos or low-memory systems:
 
 1. Process smaller videos first
-1. Use "fast" quality preset
-1. Increase available system memory
-1. Consider Docker with memory limits
+2. Use "fast" quality preset
+3. Increase available system memory
+4. Consider Docker with memory limits
 
 ## Docker Deployment
 
@@ -357,16 +357,16 @@ gunicorn --workers 4 --worker-class uvicorn.workers.UvicornWorker kinemotion_bac
 
 2. **Reverse Proxy**: Use nginx to handle static files and load balancing
 
-1. **Monitoring**: Add logging and error tracking (e.g., Sentry)
+3. **Monitoring**: Add logging and error tracking (e.g., Sentry)
 
 ### Security Considerations
 
 1. **CORS**: Set specific allowed origins, not "\*"
-1. **Rate Limiting**: Add rate limiting middleware
-1. **Authentication**: Add API key/JWT authentication if needed
-1. **Validation**: All input validation is already implemented
-1. **HTTPS**: Use SSL/TLS in production
-1. **Secrets**: Never commit `.env` to version control
+2. **Rate Limiting**: Add rate limiting middleware
+3. **Authentication**: Add API key/JWT authentication if needed
+4. **Validation**: All input validation is already implemented
+5. **HTTPS**: Use SSL/TLS in production
+6. **Secrets**: Never commit `.env` to version control
 
 ## Integration with Frontend
 
@@ -438,7 +438,7 @@ grep "ERROR" /var/log/kinemotion-backend.log
 ## Next Steps
 
 1. Set up frontend (React/Vue component for video upload)
-1. Configure production deployment
-1. Set up monitoring and alerts
-1. Create admin dashboard for usage metrics
-1. Add authentication and rate limiting if needed
+2. Configure production deployment
+3. Set up monitoring and alerts
+4. Create admin dashboard for usage metrics
+5. Add authentication and rate limiting if needed

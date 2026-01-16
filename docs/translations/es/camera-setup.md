@@ -9,7 +9,7 @@ Esta guía proporciona las mejores prácticas para grabar videos de drop jumps y
 Kinemotion ahora utiliza **posicionamiento de cámara a 45°** como configuración estándar, proporcionando mejor visibilidad de puntos de referencia y precisión de rastreo comparado con vistas laterales puras. Esta guía cubre:
 
 1. **Un iPhone a 45°** (configuración estándar recomendada)
-1. **Configuración estéreo con dos iPhones** (avanzado - para mayor precisión)
+2. **Configuración estéreo con dos iPhones** (avanzado - para mayor precisión)
 
 **¿Por qué 45° en lugar de lateral (90°)?**
 
@@ -66,13 +66,13 @@ Visualización vista lateral:
 **Paso a paso:**
 
 1. **Posicione al atleta en el cajón** - El atleta debe estar en su posición de salto
-1. **Identifique el plano sagital** - Imagine una línea de adelante hacia atrás a través del centro del atleta
-1. **Marque la posición de 45°** - Desde el lateral del atleta, muévase 45° hacia el frente
+2. **Identifique el plano sagital** - Imagine una línea de adelante hacia atrás a través del centro del atleta
+3. **Marque la posición de 45°** - Desde el lateral del atleta, muévase 45° hacia el frente
    - Si el atleta mira al Norte, la cámara debe estar al Sureste o Suroeste
    - La cámara ve el frente-lateral del atleta (no perfil puro)
-1. **Establezca la distancia** - Mida 3-5m desde la posición de salto del atleta
-1. **Establezca la altura** - Lente de cámara a altura de cadera del atleta (típicamente 130-150 cm)
-1. **Nivele el trípode** - Asegure que la cámara esté nivelada (no inclinada arriba/abajo)
+4. **Establezca la distancia** - Mida 3-5m desde la posición de salto del atleta
+5. **Establezca la altura** - Lente de cámara a altura de cadera del atleta (típicamente 130-150 cm)
+6. **Nivele el trípode** - Asegure que la cámara esté nivelada (no inclinada arriba/abajo)
 
 #### 2. Composición del Encuadre
 
@@ -311,23 +311,23 @@ Vista de cada cámara:
 ##### Opción A: Inicio manual (simple)
 
 1. Iniciar grabación en iPhone 1
-1. Iniciar grabación en iPhone 2 dentro de 1-2 segundos
-1. **Señal de sincronización:** Que el atleta aplauda o salte una vez antes de la prueba real
-1. Usar este evento para sincronizar videos en post-procesamiento
+2. Iniciar grabación en iPhone 2 dentro de 1-2 segundos
+3. **Señal de sincronización:** Que el atleta aplauda o salte una vez antes de la prueba real
+4. Usar este evento para sincronizar videos en post-procesamiento
 
 ##### Opción B: Sincronización de audio (mejor)
 
 1. Usar señal de audio externa (aplauso, pitido, comando de voz)
-1. Ambos iPhones graban audio
-1. Alinear videos usando forma de onda de audio en post-procesamiento
-1. Software como Pose2Sim tiene herramientas de sincronización incorporadas
+2. Ambos iPhones graban audio
+3. Alinear videos usando forma de onda de audio en post-procesamiento
+4. Software como Pose2Sim tiene herramientas de sincronización incorporadas
 
 ##### Opción C: Sincronización por hardware (mejor, requiere equipo)
 
 1. Usar dispositivo de disparo externo
-1. Inicia ambas cámaras simultáneamente
-1. Sincronización más precisa
-1. Requiere hardware adicional
+2. Inicia ambas cámaras simultáneamente
+3. Sincronización más precisa
+4. Requiere hardware adicional
 
 **Recomendación:** Comience con Opción A (manual + aplauso), actualice a Opción B si es necesario.
 
@@ -343,7 +343,7 @@ Vista de cada cámara:
    - Montar en tablero rígido
    - Tamaño de cuadrícula: 7x5 o similar
 
-1. **Tablero de ajedrez** (alternativa)
+2. **Tablero de ajedrez** (alternativa)
 
    - Imprimir tablero de ajedrez grande (A3 o mayor)
    - Cuadrícula 8x6 o 9x7
@@ -475,17 +475,17 @@ ______________________________________________________________________
 **Cómo configurar iPhone para grabación óptima:**
 
 1. **Abrir app Cámara**
-1. **Ajustes → Cámara → Grabar Video**
+2. **Ajustes → Cámara → Grabar Video**
    - Seleccionar: **1080p a 60 fps** (o 30 fps si 60 no disponible)
-1. **Ajustes → Cámara → Formatos**
+3. **Ajustes → Cámara → Formatos**
    - Seleccionar: **Más Compatible** (H.264, no HEVC)
-1. **Antes de grabar:**
+4. **Antes de grabar:**
    - **Bloquear enfoque:** Toque y mantenga en atleta hasta que aparezca "Bloqueo AE/AF"
    - **Bloquear exposición:** Deslice arriba/abajo para ajustar brillo, luego mantenga bloqueado
-1. **Composición de encuadre:**
+5. **Composición de encuadre:**
    - Posicionar atleta en el centro
    - Asegurar cuerpo completo visible con márgenes
-1. **Iniciar grabación** antes de que el atleta comience la secuencia de salto
+6. **Iniciar grabación** antes de que el atleta comience la secuencia de salto
 
 **Consejo Profesional:** Grabe un video de prueba primero y verifique:
 
@@ -648,41 +648,41 @@ ______________________________________________________________________
 **Soluciones:**
 
 1. Agregar fuentes de iluminación
-1. Cambiar fondo o ropa del atleta para contraste
-1. Bloquear enfoque en atleta (toque y mantenga)
-1. Aumentar velocidad de obturación (reducir exposición si es necesario)
-1. Asegurar resolución 1080p
+2. Cambiar fondo o ropa del atleta para contraste
+3. Bloquear enfoque en atleta (toque y mantenga)
+4. Aumentar velocidad de obturación (reducir exposición si es necesario)
+5. Asegurar resolución 1080p
 
 ### La Altura del Salto Parece Incorrecta
 
 **Posibles causas:**
 
 1. Ángulo de cámara no exactamente 45° (error de medición)
-1. Falta parámetro de calibración `--drop-height`
-1. Atleta moviéndose horizontalmente (deriva durante salto)
-1. Cámara no nivelada (inclinada)
+2. Falta parámetro de calibración `--drop-height`
+3. Atleta moviéndose horizontalmente (deriva durante salto)
+4. Cámara no nivelada (inclinada)
 
 **Soluciones:**
 
 1. Verificar ángulo de 45° con app de medición o transportador
-1. Proporcionar altura del cajón: `--drop-height 0.40`
-1. Entrenar al atleta para saltar derecho hacia arriba (deriva mínima)
-1. Usar indicador de nivel de trípode o app de nivel de teléfono
+2. Proporcionar altura del cajón: `--drop-height 0.40`
+3. Entrenar al atleta para saltar derecho hacia arriba (deriva mínima)
+4. Usar indicador de nivel de trípode o app de nivel de teléfono
 
 ### Error "No se Detectó Drop Jump"
 
 **Posibles causas:**
 
 1. Video no incluye secuencia completa
-1. Atleta cortado en encuadre
-1. Calidad de rastreo muy pobre
+2. Atleta cortado en encuadre
+3. Calidad de rastreo muy pobre
 
 **Soluciones:**
 
 1. Iniciar grabación antes de que atleta suba al cajón
-1. Ajustar encuadre - probar con salto de práctica
-1. Mejorar calidad de video (iluminación, enfoque, resolución)
-1. Usar bandera manual `--drop-start-frame` si auto-detección falla
+2. Ajustar encuadre - probar con salto de práctica
+3. Mejorar calidad de video (iluminación, enfoque, resolución)
+4. Usar bandera manual `--drop-start-frame` si auto-detección falla
 
 ### Doble Cámara: Videos No Sincronizados
 
@@ -691,9 +691,9 @@ ______________________________________________________________________
 **Soluciones:**
 
 1. Verificar que ambos videos tengan velocidades de cuadros idénticas
-1. Usar señal audio/visual para sincronizar (aplauso, pitido)
-1. Usar módulo de sincronización de Pose2Sim
-1. Considerar gatillo de hardware para futuras grabaciones
+2. Usar señal audio/visual para sincronizar (aplauso, pitido)
+3. Usar módulo de sincronización de Pose2Sim
+4. Considerar gatillo de hardware para futuras grabaciones
 
 ______________________________________________________________________
 
@@ -764,13 +764,13 @@ ______________________________________________________________________
    - Enfoque nítido durante todo
    - Sin desenfoque de movimiento
 
-1. **Métricas de calidad:**
+2. **Métricas de calidad:**
 
    - Tamaño de archivo apropiado (60fps 1080p ≈ 200MB/min)
    - Sin cuadros perdidos (reproducción suave)
    - Audio claro (si se usa para sincronización)
 
-1. **Prueba de análisis:**
+3. **Prueba de análisis:**
 
    - Ejecutar kinemotion en video
    - Verificar salida de superposición de depuración
@@ -806,13 +806,13 @@ ______________________________________________________________________
    - Marcar círculo de distancia de 4m
    - Etiquetar posiciones "Cámara 1" y "Cámara 2"
 
-1. **Documentar su configuración:**
+2. **Documentar su configuración:**
 
    - Tomar fotos de posiciones de cámara
    - Anotar configuraciones de altura de trípode
    - Guardar captura de pantalla de configuraciones de cámara
 
-1. **Usar mismo equipo** a través de sesiones
+3. **Usar mismo equipo** a través de sesiones
 
    - Mismo(s) iPhone(s)
    - Misma altura de trípode
@@ -895,11 +895,11 @@ ______________________________________________________________________
 **Configuración rápida:**
 
 1. Posicionar cámara a 45° del plano sagital del atleta
-1. 4 metros de distancia, altura de cadera (130-150cm)
-1. 1080p @ 60 fps, horizontal, enfoque/exposición bloqueados
-1. Encuadrar cuerpo completo con márgenes de 10-15%
-1. Iluminación uniforme, fondo simple
-1. Grabar secuencia completa de salto
+2. 4 metros de distancia, altura de cadera (130-150cm)
+3. 1080p @ 60 fps, horizontal, enfoque/exposición bloqueados
+4. Encuadrar cuerpo completo con márgenes de 10-15%
+5. Iluminación uniforme, fondo simple
+6. Grabar secuencia completa de salto
 
 **Precisión esperada:** Buena para entrenamiento/evaluación (~8-12° ángulos articulares)
 
@@ -908,11 +908,11 @@ ______________________________________________________________________
 **Configuración rápida:**
 
 1. Posicionar Cámara 1 a +45° (derecha), Cámara 2 a -45° (izquierda)
-1. Ambas a 4m distancia, ambas a altura de cadera, separación de 90°
-1. Configuraciones idénticas: 1080p @ 60fps
-1. Calibrar con patrón ChArUco/tablero de ajedrez
-1. Sincronizar con aplauso o señal de audio
-1. Procesar con Pose2Sim para reconstrucción 3D
+2. Ambas a 4m distancia, ambas a altura de cadera, separación de 90°
+3. Configuraciones idénticas: 1080p @ 60fps
+4. Calibrar con patrón ChArUco/tablero de ajedrez
+5. Sincronizar con aplauso o señal de audio
+6. Procesar con Pose2Sim para reconstrucción 3D
 
 **Precisión esperada:** Grado de investigación (~5-7° ángulos articulares, 30mm RMSE)
 

@@ -362,15 +362,15 @@ ______________________________________________________________________
 
 1. **RTMPose wins for multi-sport:** Best accuracy across jumps, sprints, weightlifting, and wall ball
 
-1. **RTMLib solves Apple Silicon:** No CUDA, no MMPose, just `pip install rtmlib`
+2. **RTMLib solves Apple Silicon:** No CUDA, no MMPose, just `pip install rtmlib`
 
-1. **MediaPipe still valuable:** Browser deployment via TensorFlow.js for real-time preview
+3. **MediaPipe still valuable:** Browser deployment via TensorFlow.js for real-time preview
 
-1. **OpenPose is deprecated:** Stale (2021), complex setup, no clear advantage
+4. **OpenPose is deprecated:** Stale (2021), complex setup, no clear advantage
 
-1. **Domain-specific training matters:** 69% improvement with athletic-specific fine-tuning
+5. **Domain-specific training matters:** 69% improvement with athletic-specific fine-tuning
 
-1. **Motion blur is real:** MediaPipe struggles with fast movements; RTMPose is more robust
+6. **Motion blur is real:** MediaPipe struggles with fast movements; RTMPose is more robust
 
 ______________________________________________________________________
 
@@ -380,11 +380,11 @@ ______________________________________________________________________
 
 1. **Running Biomechanics (2025):** Gomez et al. "Comparison of Visual Trackers for Biomechanical Analysis of Running" arXiv:2505.04713
 
-1. **Vertical Jump (2024):** "Advancing Field-Based Vertical Jump Analysis" PMC11677309
+2. **Vertical Jump (2024):** "Advancing Field-Based Vertical Jump Analysis" PMC11677309
 
-1. **Athletic Movements (2025):** Yeung et al. "AthletePose3D" arXiv:2503.07499
+3. **Athletic Movements (2025):** Yeung et al. "AthletePose3D" arXiv:2503.07499
 
-1. **Motion Blur (2023):** Pu et al. "Robustness Evaluation in Hand Pose Estimation" arXiv:2303.04566
+4. **Motion Blur (2023):** Pu et al. "Robustness Evaluation in Hand Pose Estimation" arXiv:2303.04566
 
 ### Software
 

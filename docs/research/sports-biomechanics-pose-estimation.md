@@ -8,14 +8,14 @@ ______________________________________________________________________
 
 ## Executive Summary
 
-**Key Finding:** For sports biomechanics research, **Pose2Sim** is currently the best-validated open-source solution, achieving 3-4° joint angle accuracy when validated against gold-standard motion capture systems \[1\].
+**Key Finding:** For sports biomechanics research, **Pose2Sim** is currently the best-validated open-source solution, achieving 3-4° joint angle accuracy when validated against gold-standard motion capture systems [1].
 
 **Critical Insight:** The 2D pose estimator (OpenPose, MediaPipe, etc.) is only the first step. Sports biomechanics requires \[2\]:
 
 1. Multi-camera 3D triangulation
-1. Biomechanical skeletal modeling (OpenSim) \[11\]
-1. Inverse kinematics for joint angles
-1. Validation against gold-standard motion capture
+2. Biomechanical skeletal modeling (OpenSim) [11]
+3. Inverse kinematics for joint angles
+4. Validation against gold-standard motion capture
 
 ______________________________________________________________________
 
@@ -23,7 +23,7 @@ ______________________________________________________________________
 
 ### Why General Pose Estimation is Insufficient
 
-Standard pose estimation libraries (OpenPose \[5\], MediaPipe \[4\], MoveNet \[9\]) are designed for general-purpose human pose detection but fall short for biomechanics because:
+Standard pose estimation libraries (OpenPose [5], MediaPipe [4], MoveNet [9]) are designed for general-purpose human pose detection but fall short for biomechanics because:
 
 | Requirement      | General HPE              | Sports Biomechanics Need              |
 | ---------------- | ------------------------ | ------------------------------------- |
@@ -37,11 +37,11 @@ Standard pose estimation libraries (OpenPose \[5\], MediaPipe \[4\], MoveNet \[9
 
 ### Biomechanics-Specific Challenges
 
-1. **Joint Center Bias**: ML-based detectors have systematic 10-50mm offsets from true anatomical joint centers \[1\]
-1. **Depth Ambiguity**: Monocular 3D estimation is ill-posed (multiple 3D poses → same 2D projection) \[2\]
-1. **Occlusion**: Self-occlusion in lateral views (e.g., 18-27% ankle/knee visibility in lateral camera angles)
-1. **Physical Plausibility**: Need to enforce joint angle limits and kinematic constraints \[11\]
-1. **Temporal Consistency**: Smooth trajectories required for velocity/acceleration calculations \[1\]
+1. **Joint Center Bias**: ML-based detectors have systematic 10-50mm offsets from true anatomical joint centers [1]
+2. **Depth Ambiguity**: Monocular 3D estimation is ill-posed (multiple 3D poses → same 2D projection) [2]
+3. **Occlusion**: Self-occlusion in lateral views (e.g., 18-27% ankle/knee visibility in lateral camera angles)
+4. **Physical Plausibility**: Need to enforce joint angle limits and kinematic constraints [11]
+5. **Temporal Consistency**: Smooth trajectories required for velocity/acceleration calculations [1]
 
 ______________________________________________________________________
 
@@ -54,7 +54,7 @@ ______________________________________________________________________
 - Full pipeline for sports biomechanics: 2D detection → triangulation → OpenSim modeling
 - Validated against Qualisys 31-marker system
 - Open-source, actively maintained
-- **Citation:** Pagnon, D., Domalain, M., & Reveret, L. (2022). Pose2Sim: An End-to-End Workflow for 3D Markerless Sports Kinematics—Part 2: Accuracy. *Sensors*, 22(7), 2712. <https://doi.org/10.3390/s22072712> \[1\]
+- **Citation:** Pagnon, D., Domalain, M., & Reveret, L. (2022). Pose2Sim: An End-to-End Workflow for 3D Markerless Sports Kinematics—Part 2: Accuracy. *Sensors*, 22(7), 2712. <https://doi.org/10.3390/s22072712> [1]
 
 #### Validated Accuracy (vs Qualisys Gold Standard)
 
@@ -111,7 +111,7 @@ ______________________________________________________________________
 
 #### OpenCap Overview
 
-- Stanford-developed, web-based motion capture system \[13\]
+- Stanford-developed, web-based motion capture system [13]
 - Uses smartphones (2+ required)
 - Free, open-source
 - Designed specifically for biomechanics research
@@ -145,7 +145,7 @@ ______________________________________________________________________
 
 #### Stereo MediaPipe Overview
 
-- Two-camera setup using MediaPipe Pose \[4\]
+- Two-camera setup using MediaPipe Pose [4]
 - 2D detection + stereo triangulation
 - No biomechanical constraints (unless added)
 
@@ -154,11 +154,11 @@ ______________________________________________________________________
 - **Median RMSE:** 30.1mm (vs Qualisys)
 - **Monocular MediaPipe:** 56.3mm RMSE
 - **Improvement:** 47% reduction in error with stereo
-- **Statistical significance:** p \< 10⁻⁶
+- **Statistical significance:** p < 10⁻⁶
 
-**Validation Study:** Dill, S., Ahmadi, A., Grimmer, M., Haufe, D., Rohr, M., Zhao, Y., Sharbafi, M., & Hoog Antink, C. (2024). Accuracy Evaluation of 3D Pose Reconstruction Algorithms Through Stereo Camera Information Fusion for Physical Exercises with MediaPipe Pose. *Sensors*, 24(23), 7772. <https://doi.org/10.3390/s24237772> \[2\]
+**Validation Study:** Dill, S., Ahmadi, A., Grimmer, M., Haufe, D., Rohr, M., Zhao, Y., Sharbafi, M., & Hoog Antink, C. (2024). Accuracy Evaluation of 3D Pose Reconstruction Algorithms Through Stereo Camera Information Fusion for Physical Exercises with MediaPipe Pose. *Sensors*, 24(23), 7772. <https://doi.org/10.3390/s24237772> [2]
 
-#### Key Findings \[2\]
+#### Key Findings [2]
 
 - 9 subjects performing squats (correct and incorrect)
 - Validated against Qualisys 11-camera system
@@ -189,16 +189,16 @@ ______________________________________________________________________
 - Addresses failure of general models on high-speed sports
 - Fine-tuning dataset for sport-specific applications
 
-**Citation:** Yeung, C., Suzuki, T., Tanaka, R., Yin, Z., & Fujii, K. (2025). AthletePose3D: A Benchmark Dataset for 3D Human Pose Estimation and Kinematic Validation in Athletic Movements. *arXiv preprint arXiv:2503.07499*. \[3\]
+**Citation:** Yeung, C., Suzuki, T., Tanaka, R., Yin, Z., & Fujii, K. (2025). AthletePose3D: A Benchmark Dataset for 3D Human Pose Estimation and Kinematic Validation in Athletic Movements. *arXiv preprint arXiv:2503.07499*. [3]
 
-#### Dataset Characteristics \[3\]
+#### Dataset Characteristics [3]
 
 - 12 sports movements
 - 1.3M frames, 165K postures
 - High-speed, high-acceleration focus
 - Validated against gold-standard MoCap
 
-#### Performance Impact \[3\]
+#### Performance Impact [3]
 
 - Generic model MPJPE: 214mm
 - After fine-tuning on AthletePose3D: 65mm
@@ -221,10 +221,10 @@ ______________________________________________________________________
 #### Theia3D
 
 - **Type:** Commercial markerless solution
-- **Accuracy:** 2.6°-13.2° RMSE (walking validation) \[14\]
+- **Accuracy:** 2.6°-13.2° RMSE (walking validation) [14]
 - **Features:** Proprietary 2D detector, triangulation, skeletal modeling
 - **Cost:** Commercial licensing
-- **Validation:** Published validation studies available \[14\]
+- **Validation:** Published validation studies available [14]
 
 #### Vald/Simi/Contemplas
 
@@ -237,7 +237,7 @@ ______________________________________________________________________
 
 ## 3. Validation Studies Summary
 
-### 3.1 Pose2Sim Validation (Pagnon et al., 2022) \[1\]
+### 3.1 Pose2Sim Validation (Pagnon et al., 2022) [1]
 
 #### Pose2Sim Study Design
 
@@ -262,23 +262,23 @@ ______________________________________________________________________
 
 \*Systematic offsets due to occlusion or movement patterns
 
-#### Interpretation of CMC (Coefficient of Multiple Correlation) \[1\]
+#### Interpretation of CMC (Coefficient of Multiple Correlation) [1]
 
 - CMC > 0.95: Excellent
 - CMC 0.85-0.94: Very good
 - CMC 0.75-0.84: Good
-- CMC \< 0.75: Poor
+- CMC < 0.75: Poor
 
-#### Key Findings \[1\]
+#### Key Findings [1]
 
 1. Sagittal plane (flexion/extension): Excellent agreement (CMC > 0.9)
-1. Non-sagittal planes: Good to poor (CMC 0.3-0.9)
-1. Systematic offsets can occur (hip running, ankle cycling)
-1. Overall accuracy comparable to marker-based for primary movements
+2. Non-sagittal planes: Good to poor (CMC 0.3-0.9)
+3. Systematic offsets can occur (hip running, ankle cycling)
+4. Overall accuracy comparable to marker-based for primary movements
 
 ______________________________________________________________________
 
-### 3.2 Stereo MediaPipe Validation (Dill et al., 2024) \[2\]
+### 3.2 Stereo MediaPipe Validation (Dill et al., 2024) [2]
 
 #### Stereo MediaPipe Study Design
 
@@ -296,31 +296,31 @@ ______________________________________________________________________
 | Pose2Sim               | ~30-40mm    | Sports biomechanics     |
 | Marker-based           | 1-15mm      | Research gold standard  |
 
-#### Conclusions \[2\]
+#### Conclusions [2]
 
-- Stereo significantly better than monocular (p \< 10⁻⁶)
+- Stereo significantly better than monocular (p < 10⁻⁶)
 - Sufficient for exercise error recognition
 - Not recommended for precise biomechanical research
-- 90° camera angle optimal (confirmed from Pagnon et al. \[1\])
+- 90° camera angle optimal (confirmed from Pagnon et al. [1])
 
 ______________________________________________________________________
 
-### 3.3 AthletePose3D Validation (Yeung et al., 2025) \[3\]
+### 3.3 AthletePose3D Validation (Yeung et al., 2025) [3]
 
-#### Key Findings \[3\]
+#### Key Findings [3]
 
 - **Problem:** SOTA models trained on daily activities fail on athletic movements
 - **MPJPE on athletic motions:** 214mm (generic models)
 - **After fine-tuning:** 65mm MPJPE
 - **Improvement:** 69% error reduction
 
-#### Kinematic Validation \[3\]
+#### Kinematic Validation [3]
 
 - Strong joint angle correlation
 - Limitations in velocity estimation
 - Highlights need for sport-specific training data
 
-#### Impact \[3\]
+#### Impact [3]
 
 - Proves generic pose datasets insufficient for sports
 - Provides benchmark for athletic pose estimation
@@ -613,10 +613,10 @@ ______________________________________________________________________
 #### Option 1: Changes Needed
 
 1. Add 3-4 cameras (one frontal, one lateral, 1-2 at 45° angles)
-1. Implement camera synchronization
-1. Replace single MediaPipe call with Pose2Sim pipeline
-1. Add OpenSim skeletal model
-1. Keep existing: smoothing, signed velocity, backward search
+2. Implement camera synchronization
+3. Replace single MediaPipe call with Pose2Sim pipeline
+4. Add OpenSim skeletal model
+5. Keep existing: smoothing, signed velocity, backward search
 
 #### Option 1: Benefits
 
@@ -661,9 +661,9 @@ ______________________________________________________________________
 #### Option 2: Changes Needed
 
 1. Add 1 camera at 90° from current lateral view
-1. Implement stereo triangulation
-1. Keep MediaPipe as 2D detector
-1. Optionally add OpenSim constraints
+2. Implement stereo triangulation
+3. Keep MediaPipe as 2D detector
+4. Optionally add OpenSim constraints
 
 #### Option 2: Benefits
 
@@ -701,9 +701,9 @@ ______________________________________________________________________
 #### Option 3: Changes Needed
 
 1. Record videos with 2 smartphones
-1. Upload to OpenCap web interface
-1. Download OpenSim results
-1. Parse output for existing metrics
+2. Upload to OpenCap web interface
+3. Download OpenSim results
+4. Parse output for existing metrics
 
 #### Option 3: Benefits
 
@@ -759,7 +759,7 @@ ______________________________________________________________________
 - Use ChArUco boards (more robust than checkerboard)
 - Calibrate at beginning of each session
 - Move calibration board through capture volume
-- Verify reprojection errors \< 1 pixel
+- Verify reprojection errors < 1 pixel
 
 ### 8.2 Data Processing
 
@@ -793,10 +793,10 @@ ______________________________________________________________________
 
 #### Quality Metrics
 
-- OpenSim IK RMS error \< 2-4 cm
+- OpenSim IK RMS error < 2-4 cm
 - Temporal consistency (smooth trajectories)
 - Physical plausibility (no joint angle violations)
-- Reprojection error \< 10 pixels
+- Reprojection error < 10 pixels
 
 ______________________________________________________________________
 
@@ -860,74 +860,74 @@ ______________________________________________________________________
 
 ### Key Publications
 
-**\[1\]** Pagnon, D., Domalain, M., & Reveret, L. (2022). Pose2Sim: An End-to-End Workflow for 3D Markerless Sports Kinematics—Part 2: Accuracy. *Sensors*, 22(7), 2712. <https://doi.org/10.3390/s22072712>
+**[1]** Pagnon, D., Domalain, M., & Reveret, L. (2022). Pose2Sim: An End-to-End Workflow for 3D Markerless Sports Kinematics—Part 2: Accuracy. *Sensors*, 22(7), 2712. <https://doi.org/10.3390/s22072712>
 
 - **Validation:** Qualisys, walking/running/cycling, 3-4° joint angle errors
 - **Key contribution:** Full validated pipeline for sports biomechanics
 
-**\[2\]** Dill, S., Ahmadi, A., Grimmer, M., Haufe, D., Rohr, M., Zhao, Y., Sharbafi, M., & Hoog Antink, C. (2024). Accuracy Evaluation of 3D Pose Reconstruction Algorithms Through Stereo Camera Information Fusion for Physical Exercises with MediaPipe Pose. *Sensors*, 24(23), 7772. <https://doi.org/10.3390/s24237772>
+**[2]** Dill, S., Ahmadi, A., Grimmer, M., Haufe, D., Rohr, M., Zhao, Y., Sharbafi, M., & Hoog Antink, C. (2024). Accuracy Evaluation of 3D Pose Reconstruction Algorithms Through Stereo Camera Information Fusion for Physical Exercises with MediaPipe Pose. *Sensors*, 24(23), 7772. <https://doi.org/10.3390/s24237772>
 
 - **Validation:** Qualisys, squat exercises, 30.1mm RMSE
 - **Key contribution:** Stereo MediaPipe validation for exercises
 
-**\[3\]** Yeung, C., Suzuki, T., Tanaka, R., Yin, Z., & Fujii, K. (2025). AthletePose3D: A Benchmark Dataset for 3D Human Pose Estimation and Kinematic Validation in Athletic Movements. *arXiv preprint arXiv:2503.07499*. <https://arxiv.org/abs/2503.07499>
+**[3]** Yeung, C., Suzuki, T., Tanaka, R., Yin, Z., & Fujii, K. (2025). AthletePose3D: A Benchmark Dataset for 3D Human Pose Estimation and Kinematic Validation in Athletic Movements. *arXiv preprint arXiv:2503.07499*. <https://arxiv.org/abs/2503.07499>
 
 - **Finding:** 69% improvement with sport-specific fine-tuning (214mm → 65mm MPJPE)
 - **Key contribution:** First large-scale athletic movement dataset
 
-**\[4\]** Bazarevsky, V., Grishchenko, I., Raveendran, K., Zhu, T., Zhang, F., & Grundmann, M. (2020). BlazePose: On-device Real-time Body Pose Tracking. *arXiv preprint arXiv:2006.10204*. <https://arxiv.org/abs/2006.10204>
+**[4]** Bazarevsky, V., Grishchenko, I., Raveendran, K., Zhu, T., Zhang, F., & Grundmann, M. (2020). BlazePose: On-device Real-time Body Pose Tracking. *arXiv preprint arXiv:2006.10204*. <https://arxiv.org/abs/2006.10204>
 
 - **Key contribution:** MediaPipe Pose architecture
 
-**\[5\]** Cao, Z., Hidalgo Martinez, G., Simon, T., Wei, S., & Sheikh, Y. A. (2019). OpenPose: Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields. *IEEE Transactions on Pattern Analysis and Machine Intelligence*, 43(1), 172-186. <https://doi.org/10.1109/TPAMI.2019.2929257>
+**[5]** Cao, Z., Hidalgo Martinez, G., Simon, T., Wei, S., & Sheikh, Y. A. (2019). OpenPose: Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields. *IEEE Transactions on Pattern Analysis and Machine Intelligence*, 43(1), 172-186. <https://doi.org/10.1109/TPAMI.2019.2929257>
 
 - **Key contribution:** Part Affinity Fields for multi-person pose estimation
 
 ### Validation Studies (2024-2025)
 
-**\[6\]** Truijen, S., Abdullahi, A., Bijsterbosch, D., van Zoest, E., Conijn, M., Wang, Y., Winds, K., Stoel, R., Struyf, N., Saeys, W., & Jansen, B. (2024). Accuracy, Validity, and Reliability of Markerless Camera-Based 3D Motion Capture Systems versus Marker-Based 3D Motion Capture Systems in Gait Analysis: A Systematic Review and Meta-Analysis. *Sensors*, 24(11), 3686. <https://doi.org/10.3390/s24113686>
+**[6]** Truijen, S., Abdullahi, A., Bijsterbosch, D., van Zoest, E., Conijn, M., Wang, Y., Winds, K., Stoel, R., Struyf, N., Saeys, W., & Jansen, B. (2024). Accuracy, Validity, and Reliability of Markerless Camera-Based 3D Motion Capture Systems versus Marker-Based 3D Motion Capture Systems in Gait Analysis: A Systematic Review and Meta-Analysis. *Sensors*, 24(11), 3686. <https://doi.org/10.3390/s24113686>
 
 - **Key contribution:** Systematic review of markerless systems
 
-**\[7\]** Needham, L., Evans, M., Cosker, D. P., Wade, L., McGuigan, P. M., Bilzon, J. L., & Colyer, S. L. (2024). Synchronised Video, Motion Capture and Force Plate Dataset for Validating Markerless Human Movement Analysis. *Scientific Data*, 11, 1281. <https://doi.org/10.1038/s41597-024-04077-3>
+**[7]** Needham, L., Evans, M., Cosker, D. P., Wade, L., McGuigan, P. M., Bilzon, J. L., & Colyer, S. L. (2024). Synchronised Video, Motion Capture and Force Plate Dataset for Validating Markerless Human Movement Analysis. *Scientific Data*, 11, 1281. <https://doi.org/10.1038/s41597-024-04077-3>
 
 - **Key contribution:** BioCV benchmark dataset for validation
 
-**\[8\]** Adlou, B., Wilburn, C., & Weimar, W. (2025). Motion Capture Technologies for Athletic Performance Enhancement and Injury Risk Assessment: A Review for Multi-Sport Organizations. *Sensors*, 25(14), 4384. <https://doi.org/10.3390/s25144384>
+**[8]** Adlou, B., Wilburn, C., & Weimar, W. (2025). Motion Capture Technologies for Athletic Performance Enhancement and Injury Risk Assessment: A Review for Multi-Sport Organizations. *Sensors*, 25(14), 4384. <https://doi.org/10.3390/s25144384>
 
 - **Key contribution:** Comprehensive review for multi-sport organizations
 
 ### Comparative Studies
 
-**\[9\]** Chung, J.-L., Ong, L.-Y., & Leow, M.-C. (2022). Comparative Analysis of Skeleton-Based Human Pose Estimation. *Future Internet*, 14(12), 380. <https://doi.org/10.3390/fi14120380>
+**[9]** Chung, J.-L., Ong, L.-Y., & Leow, M.-C. (2022). Comparative Analysis of Skeleton-Based Human Pose Estimation. *Future Internet*, 14(12), 380. <https://doi.org/10.3390/fi14120380>
 
 - **Comparison:** OpenPose, PoseNet, MoveNet, MediaPipe Pose
 - **Key contribution:** Performance comparison across systems
 
-**\[10\]** Needham, L., Evans, M., Cosker, D. P., Wade, L., McGuigan, P. M., Bilzon, J. L., & Colyer, S. L. (2021). The accuracy of several pose estimation methods for 3D joint centre localisation. *Scientific Reports*, 11, 20673. <https://doi.org/10.1038/s41598-021-00212-x>
+**[10]** Needham, L., Evans, M., Cosker, D. P., Wade, L., McGuigan, P. M., Bilzon, J. L., & Colyer, S. L. (2021). The accuracy of several pose estimation methods for 3D joint centre localisation. *Scientific Reports*, 11, 20673. <https://doi.org/10.1038/s41598-021-00212-x>
 
 - **Finding:** Task-specific accuracy varies significantly
 - **Key contribution:** Highlighted importance of task-specific validation
 
 ### OpenSim Resources
 
-**\[11\]** Delp, S. L., Anderson, F. C., Arnold, A. S., Loan, P., Habib, A., John, C. T., Guendelman, E., & Thelen, D. G. (2007). OpenSim: Open-Source Software to Create and Analyze Dynamic Simulations of Movement. *IEEE Transactions on Biomedical Engineering*, 54(11), 1940-1950. <https://doi.org/10.1109/TBME.2007.901024>
+**[11]** Delp, S. L., Anderson, F. C., Arnold, A. S., Loan, P., Habib, A., John, C. T., Guendelman, E., & Thelen, D. G. (2007). OpenSim: Open-Source Software to Create and Analyze Dynamic Simulations of Movement. *IEEE Transactions on Biomedical Engineering*, 54(11), 1940-1950. <https://doi.org/10.1109/TBME.2007.901024>
 
 - **Key contribution:** OpenSim biomechanical modeling framework
 
-**\[12\]** Rajagopal, A., Dembia, C. L., DeMers, M. S., Delp, D. D., Hicks, J. L., & Delp, S. L. (2016). Full-Body Musculoskeletal Model for Muscle-Driven Simulation of Human Gait. *IEEE Transactions on Biomedical Engineering*, 63(10), 2068-2079. <https://doi.org/10.1109/TBME.2016.2586891>
+**[12]** Rajagopal, A., Dembia, C. L., DeMers, M. S., Delp, D. D., Hicks, J. L., & Delp, S. L. (2016). Full-Body Musculoskeletal Model for Muscle-Driven Simulation of Human Gait. *IEEE Transactions on Biomedical Engineering*, 63(10), 2068-2079. <https://doi.org/10.1109/TBME.2016.2586891>
 
 - **Key contribution:** Full-body gait model used in Pose2Sim
 
 ### OpenCap Resources
 
-**\[13\]** Uhlrich, S. D., Falisse, A., Kidziński, Ł., Muccini, J., Ko, M., Chaudhari, A. S., Hicks, J. L., & Delp, S. L. (2023). OpenCap: Human movement dynamics from smartphone videos. *PLOS Computational Biology*, 19(10), e1011462. <https://doi.org/10.1371/journal.pcbi.1011462>
+**[13]** Uhlrich, S. D., Falisse, A., Kidziński, Ł., Muccini, J., Ko, M., Chaudhari, A. S., Hicks, J. L., & Delp, S. L. (2023). OpenCap: Human movement dynamics from smartphone videos. *PLOS Computational Biology*, 19(10), e1011462. <https://doi.org/10.1371/journal.pcbi.1011462>
 
 - **Key contribution:** Smartphone-based accessible biomechanics
 
 ### Commercial System Validation
 
-**\[14\]** Kanko, R. M., Laende, E. K., Davis, E. M., Selbie, W. S., & Deluzio, K. J. (2021). Concurrent assessment of gait kinematics using marker-based and markerless motion capture. *Journal of Biomechanics*, 127, 110665. <https://doi.org/10.1016/j.jbiomech.2021.110665>
+**[14]** Kanko, R. M., Laende, E. K., Davis, E. M., Selbie, W. S., & Deluzio, K. J. (2021). Concurrent assessment of gait kinematics using marker-based and markerless motion capture. *Journal of Biomechanics*, 127, 110665. <https://doi.org/10.1016/j.jbiomech.2021.110665>
 
 - **System:** Theia3D validation
 - **Key contribution:** Commercial markerless validation
@@ -1019,10 +1019,10 @@ ______________________________________________________________________
 
 For sports biomechanics applications requiring accurate joint angle measurements:
 
-1. **Use Pose2Sim \[1\]** for research-grade accuracy (3-4° errors)
-1. **Multi-camera setup is essential** (minimum 4 cameras, 90° separation optimal \[1\])
-1. **Biomechanical constraints required** (OpenSim skeletal modeling \[11\])
-1. **Validate against gold standard** (marker-based motion capture \[7\])
-1. **Sport-specific training helps** (AthletePose3D fine-tuning \[3\])
+1. **Use Pose2Sim [1]** for research-grade accuracy (3-4° errors)
+2. **Multi-camera setup is essential** (minimum 4 cameras, 90° separation optimal [1])
+3. **Biomechanical constraints required** (OpenSim skeletal modeling [11])
+4. **Validate against gold standard** (marker-based motion capture [7])
+5. **Sport-specific training helps** (AthletePose3D fine-tuning [3])
 
-The field is rapidly advancing, but Pose2Sim \[1\] currently represents the best-validated open-source solution for sports biomechanics research, with published validation against gold-standard motion capture systems. Recent developments in sport-specific datasets \[3\] and stereo camera validation \[2\] continue to improve accessibility and accuracy of markerless systems for athletic applications \[8\].
+The field is rapidly advancing, but Pose2Sim [1] currently represents the best-validated open-source solution for sports biomechanics research, with published validation against gold-standard motion capture systems. Recent developments in sport-specific datasets [3] and stereo camera validation [2] continue to improve accessibility and accuracy of markerless systems for athletic applications [8].

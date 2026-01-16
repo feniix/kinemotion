@@ -47,11 +47,11 @@ curl http://localhost:8000/health
 ## Testing
 
 1. **Open frontend:** http://localhost:5173
-1. **Upload video:** Any CMJ or Drop Jump video (\< 500MB)
-1. **Select jump type:** CMJ or Drop Jump
-1. **Click "Analyze"**
-1. **Wait 10-60 seconds**
-1. **See real metrics!**
+2. **Upload video:** Any CMJ or Drop Jump video (< 500MB)
+3. **Select jump type:** CMJ or Drop Jump
+4. **Click "Analyze"**
+5. **Wait 10-60 seconds**
+6. **See real metrics!**
 
 ## Test a Video via CLI
 

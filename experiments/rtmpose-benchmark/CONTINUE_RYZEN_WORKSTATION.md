@@ -101,9 +101,9 @@ tracker = RTMPoseTracker(
 ### 7. Results to Collect
 
 1. **FPS Comparison**: RTMPose-S CPU vs MediaPipe baseline
-1. **Input Size Optimization**: Test 128×128, 160×160, 192×192, 256×192
-1. **Accuracy**: Flight time agreement with MediaPipe
-1. **Landmark Stability**: Jitter comparison (px/frame)
+2. **Input Size Optimization**: Test 128×128, 160×160, 192×192, 256×192
+3. **Accuracy**: Flight time agreement with MediaPipe
+4. **Landmark Stability**: Jitter comparison (px/frame)
 
 ### 8. Quick Start Command
 

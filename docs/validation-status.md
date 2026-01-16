@@ -64,7 +64,7 @@ We are currently in **Phase 1** of a multi-stage validation study using the **At
 To transition from 2D pixel-based analysis to research-grade 3D kinematics, we are implementing:
 
 1. **Coordinate Normalization:** Using Procrustes Analysis (Kabsch Algorithm) to align MediaPipe detections with physical world coordinates (mm).
-1. **3D Joint Angles:** Reconstructing anatomical angles (Hip, Knee, Ankle) in 3D space to correct for camera perspective and foreshortening.
+2. **3D Joint Angles:** Reconstructing anatomical angles (Hip, Knee, Ankle) in 3D space to correct for camera perspective and foreshortening.
 
 For detailed technical analysis of why these steps matter for monocular video and how they are implemented, see the [AthletePose3D Methodology Guide](validation/athletepose3d-methodology.md).
 
@@ -282,14 +282,14 @@ ______________________________________________________________________
 **Gold Standard Validation:**
 
 1. Force plate comparison study (n≥20 subjects)
-1. Calculate ICC, bias, limits of agreement
-1. Derive correction factors if needed
-1. Publish in peer-reviewed journal
+2. Calculate ICC, bias, limits of agreement
+3. Derive correction factors if needed
+4. Publish in peer-reviewed journal
 
 **Target Metrics:**
 
 - ICC > 0.90 (excellent reliability)
-- Bias \< 2cm (per Balsalobre-Fernández et al., 2015)
+- Bias < 2cm (per Balsalobre-Fernández et al., 2015)
 - 95% of differences within ±5cm
 
 For detailed roadmap, see [`docs/development/validation-roadmap.md`](development/validation-roadmap.md).

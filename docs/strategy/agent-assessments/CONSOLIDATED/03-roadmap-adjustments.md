@@ -13,12 +13,12 @@ ______________________________________________________________________
 **Key Changes:**
 
 1. Add refactoring sprint (Week 0)
-1. Add parameter definition work (Weeks 1-2)
-1. Add infrastructure build (Weeks 1-3)
-1. Add validation study planning (Week 0)
-1. Adjust Task 3 to include latency decision point (Week 1)
-1. Defer multi-person detection to Task 3B
-1. Add validation study (Month 3-4, not concurrent)
+2. Add parameter definition work (Weeks 1-2)
+3. Add infrastructure build (Weeks 1-3)
+4. Add validation study planning (Week 0)
+5. Adjust Task 3 to include latency decision point (Week 1)
+6. Defer multi-person detection to Task 3B
+7. Add validation study (Month 3-4, not concurrent)
 
 ______________________________________________________________________
 

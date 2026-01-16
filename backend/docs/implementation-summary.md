@@ -378,9 +378,9 @@ Both functions:
 ## Next Steps for Frontend Integration
 
 1. **React Component** - Upload video to `/api/analyze`
-1. **Display Results** - Parse metrics from response
-1. **Error Handling** - Show user-friendly error messages
-1. **R2 Results URL** - Link to results if needed
+2. **Display Results** - Parse metrics from response
+3. **Error Handling** - Show user-friendly error messages
+4. **R2 Results URL** - Link to results if needed
 
 ## Example Frontend Usage
 

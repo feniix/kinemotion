@@ -69,9 +69,9 @@ To decode a filename to its DOI, use URL decoding:
 Some papers were not available on Sci-Hub:
 
 1. `10.2478/hukin-2022-0098` - Bishop 2022 (My Jump Lab validation)
-1. `10.1080/14763141.2020.1869458` - Wells 2022 (Golf CMJ)
-1. `10.1519/JSC.0000000000004337` - Balsalobre-Fernandez 2023 (AI barbell)
-1. Paper #9 - Unpublished Substack blog
+2. `10.1080/14763141.2020.1869458` - Wells 2022 (Golf CMJ)
+3. `10.1519/JSC.0000000000004337` - Balsalobre-Fernandez 2023 (AI barbell)
+4. Paper #9 - Unpublished Substack blog
 
 These can be accessed via institutional library or the links in `online-references-for-papers.md`.
 

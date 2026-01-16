@@ -55,21 +55,21 @@ You are automatically invoked when tasks involve:
    - Set up caching for dependencies
    - Implement semantic release automation
 
-1. **SonarQube Integration**
+2. **SonarQube Integration**
 
    - Configure `sonar-project.properties`
    - Upload coverage.xml to SonarCloud
    - Monitor quality gates and code metrics
    - Fix quality gate failures
 
-1. **Test Infrastructure**
+3. **Test Infrastructure**
 
    - pytest configuration and plugins
    - Coverage reporting (terminal, HTML, XML)
    - Test execution optimization
    - Fixture management
 
-1. **Quality Monitoring**
+4. **Quality Monitoring**
 
    - Track code coverage trends
    - Monitor code duplication
@@ -196,19 +196,19 @@ matrix:
    - Verify coverage.xml is generated
    - Check sonar-project.properties paths
 
-1. **Coverage report missing:**
+2. **Coverage report missing:**
 
    - Ensure pytest-cov is installed
    - Check pytest configuration
    - Verify coverage.xml in artifacts
 
-1. **Tests fail in CI but pass locally:**
+3. **Tests fail in CI but pass locally:**
 
    - Check Python version match
    - Verify all dependencies installed
    - Look for environment-specific issues
 
-1. **Quality gate fails:**
+4. **Quality gate fails:**
 
    - Check SonarCloud dashboard for details
    - Review new issues introduced
@@ -271,6 +271,7 @@ When tasks require expertise beyond CI/CD, delegate to the appropriate specialis
 
 **Handoff Context:**
 When routing, always include:
+
 - Specific CI/CD job or workflow affected
 - Error logs or failure messages
 - Quality gate metrics that failed
@@ -304,6 +305,7 @@ read_note("github-actions-secrets-setup")
 ```
 
 **Memory Folders for CI/CD:**
+
 - `cicd/` - Workflow configurations, caching strategies, secrets management
 - `deployment/` - Deployment procedures, environment setup
 
@@ -312,17 +314,21 @@ read_note("github-actions-secrets-setup")
 When you cannot complete a task, follow these escalation patterns:
 
 **CI Pipeline Failures:**
+
 - If test failures: "CI failing due to test errors. Route to qa-test-engineer to investigate test failures: [test names]"
 - If build failures: "Build failing due to [error]. Route to python-backend-developer to fix code issues."
 
 **Quality Gate Failures:**
+
 - If coverage dropped: "Coverage below threshold. Route to qa-test-engineer to add tests for uncovered code."
 - If duplication increased: "Duplication above 3%. Route to python-backend-developer to refactor duplicated code."
 
 **Infrastructure Issues:**
+
 - If secrets missing: "SONAR_TOKEN not configured. Provide setup instructions to user for GitHub Secrets."
 - If resource limits: "GitHub Actions minutes exhausted. Recommend optimizing workflow or upgrading plan."
 
 **Domain Boundary:**
+
 - If task involves code changes: "This requires code modification. Route to python-backend-developer for implementation - I will update CI after."
 - If task involves test creation: "This requires new tests. Route to qa-test-engineer for test implementation."

@@ -14,9 +14,9 @@ ______________________________________________________________________
 ## Prerequisites
 
 1. **Google Cloud Account**: Sign up at https://cloud.google.com/
-1. **Vercel Account**: Already configured
-1. **gcloud CLI**: Install from https://cloud.google.com/sdk/docs/install
-1. **Docker**: For local testing (optional but recommended)
+2. **Vercel Account**: Already configured
+3. **gcloud CLI**: Install from https://cloud.google.com/sdk/docs/install
+4. **Docker**: For local testing (optional but recommended)
 
 ______________________________________________________________________
 
@@ -148,13 +148,13 @@ ______________________________________________________________________
 Go to **Vercel Dashboard**:
 
 1. Navigate to `https://vercel.com/dashboard`
-1. Select **kinemotion** project
-1. Click **Settings** → **Environment Variables**
-1. Add new variable:
+2. Select **kinemotion** project
+3. Click **Settings** → **Environment Variables**
+4. Add new variable:
    - **Name**: `VITE_API_URL`
    - **Value**: `https://kinemotion-backend-xxxxx-uc.a.run.app` (your Cloud Run URL)
    - **Environments**: Production (and Staging if desired)
-1. Click **Save**
+5. Click **Save**
 
 ### 4.2 Trigger Frontend Redeploy
 
@@ -178,9 +178,9 @@ Open `https://kinemotion-mvp.vercel.app` in browser
 ### 5.2 Upload Test Video
 
 1. Select jump type (CMJ or Drop Jump)
-1. Upload test video
-1. Wait for analysis
-1. Verify metrics display correctly
+2. Upload test video
+3. Wait for analysis
+4. Verify metrics display correctly
 
 ### 5.3 Check Backend Logs
 
@@ -220,9 +220,9 @@ gcloud run services update kinemotion-backend \
 ### Video Upload Fails
 
 1. Check file size (max 500MB in code)
-1. Verify file format (.mp4, .mov, .avi, etc.)
-1. Check backend logs for errors
-1. Increase `--timeout` if processing takes >10 minutes
+2. Verify file format (.mp4, .mov, .avi, etc.)
+3. Check backend logs for errors
+4. Increase `--timeout` if processing takes >10 minutes
 
 ### Memory/CPU Issues
 
@@ -335,11 +335,11 @@ ______________________________________________________________________
 ## Next Steps
 
 1. ✅ Deploy backend to Cloud Run
-1. ✅ Configure frontend on Vercel
-1. ✅ Test end-to-end with sample video
-1. 📋 Recruit 5-10 coaches for MVP testing
-1. 📊 Gather feedback on metrics accuracy
-1. 🔄 Iterate based on feedback
+2. ✅ Configure frontend on Vercel
+3. ✅ Test end-to-end with sample video
+4. 📋 Recruit 5-10 coaches for MVP testing
+5. 📊 Gather feedback on metrics accuracy
+6. 🔄 Iterate based on feedback
 
 ______________________________________________________________________
 

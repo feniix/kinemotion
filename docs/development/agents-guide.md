@@ -7,8 +7,8 @@ This guide explains how Claude Code's specialized agents work in the Kinemotion 
 Claude Code automatically selects the right agent based on:
 
 1. **Keywords** in your message
-1. **File paths** you're working with
-1. **Context** from the conversation
+2. **File paths** you're working with
+3. **Context** from the conversation
 
 You don't need to manually select agents - Claude does it for you!
 
@@ -270,9 +270,9 @@ python-backend-developer implements
 **Steps:**
 
 1. Agent analyzes video quality and lighting
-1. Checks MediaPipe confidence thresholds
-1. Recommends filtering parameters
-1. May consult ML/Data Scientist for parameter tuning
+2. Checks MediaPipe confidence thresholds
+3. Recommends filtering parameters
+4. May consult ML/Data Scientist for parameter tuning
 
 ### Workflow 2: Add New Metric
 
@@ -283,9 +283,9 @@ python-backend-developer implements
 **Steps:**
 
 1. Biomechanics Specialist defines metric biomechanically
-1. Python Backend Developer implements calculation
-1. QA Test Engineer creates tests
-1. Technical Writer documents API and usage
+2. Python Backend Developer implements calculation
+3. QA Test Engineer creates tests
+4. Technical Writer documents API and usage
 
 ### Workflow 3: Performance Issue
 
@@ -296,25 +296,25 @@ python-backend-developer implements
 **Steps:**
 
 1. Agent profiles code to find bottleneck
-1. Applies NumPy vectorization
-1. May consult Computer Vision Engineer for video I/O
-1. QA Test Engineer validates no regression
+2. Applies NumPy vectorization
+3. May consult Computer Vision Engineer for video I/O
+4. QA Test Engineer validates no regression
 
 ## Best Practices
 
 1. **Single Responsibility**: Each agent should have one clear focus
-1. **Detailed Prompts**: Include specific instructions, examples, constraints
-1. **Limited Tools**: Only grant necessary tools for the agent's purpose
-1. **Clear Descriptions**: Make automatic routing triggers obvious
-1. **Version Control**: Commit agents to git for team sharing
+2. **Detailed Prompts**: Include specific instructions, examples, constraints
+3. **Limited Tools**: Only grant necessary tools for the agent's purpose
+4. **Clear Descriptions**: Make automatic routing triggers obvious
+5. **Version Control**: Commit agents to git for team sharing
 
 ### Tips for Best Results
 
 1. **Be specific**: "The hip landmarks are jittery" vs "Something is wrong"
-1. **Mention file names**: "Check src/kinemotion/core/pose.py"
-1. **Use domain terms**: "RSI", "MediaPipe", "vectorize", "pytest"
-1. **Let Claude choose**: Trust automatic routing for most tasks
-1. **Explicit when needed**: Use explicit invocation for edge cases
+2. **Mention file names**: "Check src/kinemotion/core/pose.py"
+3. **Use domain terms**: "RSI", "MediaPipe", "vectorize", "pytest"
+4. **Let Claude choose**: Trust automatic routing for most tasks
+5. **Explicit when needed**: Use explicit invocation for edge cases
 
 ## Managing Agents
 
@@ -359,34 +359,34 @@ You can edit agent files directly in `.claude/agents/` or use:
 If Claude doesn't automatically use an agent:
 
 1. Check if keywords match agent's `description` field
-1. Be more specific in your request
-1. Explicitly invoke the agent by name
+2. Be more specific in your request
+3. Explicitly invoke the agent by name
 
 ### Agent Lacks Required Tools
 
 If agent reports missing tools:
 
 1. Open `/agents` interface
-1. Select the agent
-1. Add required tools to the `tools` field
+2. Select the agent
+3. Add required tools to the `tools` field
 
 ### Agent Provides Incorrect Guidance
 
 1. Review agent's system prompt
-1. Edit to clarify instructions
-1. Add specific examples or constraints
+2. Edit to clarify instructions
+3. Add specific examples or constraints
 
 ## Contributing New Agents
 
 When creating new agents:
 
 1. Identify a clear, focused responsibility
-1. Define automatic routing triggers in `description`
-1. Grant minimal necessary tools
-1. Write detailed system prompt with examples
-1. Test automatic routing with example scenarios
-1. Document in this guide
-1. Commit to version control
+2. Define automatic routing triggers in `description`
+3. Grant minimal necessary tools
+4. Write detailed system prompt with examples
+5. Test automatic routing with example scenarios
+6. Document in this guide
+7. Commit to version control
 
 ## Resources
 

@@ -349,10 +349,10 @@ ______________________________________________________________________
 ### What Needs to Be Decided
 
 1. **By Friday:** Approve 10-12 week timeline (or negotiate timeline)
-1. **By Friday:** Approve hybrid real-time architecture as plan A
-1. **By Friday:** Approve core 3 running metrics for MVP
-1. **By Friday:** Commit resources (DevOps, ML, Biomechanics)
-1. **By Friday:** Approve infrastructure budget ($100-200K Year 1)
+2. **By Friday:** Approve hybrid real-time architecture as plan A
+3. **By Friday:** Approve core 3 running metrics for MVP
+4. **By Friday:** Commit resources (DevOps, ML, Biomechanics)
+5. **By Friday:** Approve infrastructure budget ($100-200K Year 1)
 
 ### What's Already Decided
 

@@ -95,7 +95,7 @@ ______________________________________________________________________
    - [ ] Verify CNAME/domain (if custom domain used)
    - [ ] Test docs site accessibility
 
-1. **Deploy Swagger UI**
+2. **Deploy Swagger UI**
 
    - [ ] Download Swagger UI distribution
    - [ ] Create `/docs/swagger-ui/` directory
@@ -103,13 +103,13 @@ ______________________________________________________________________
    - [ ] Test interactive explorer
    - [ ] Add link to `/docs/README.md`
 
-1. **Set Up GitHub Actions for Docs**
+3. **Set Up GitHub Actions for Docs**
 
    - [ ] Create `.github/workflows/docs-deploy.yml`
    - [ ] Deploy on commits to main branch
    - [ ] Verify deployment works
 
-1. **Create Documentation Style Guide**
+4. **Create Documentation Style Guide**
 
    - [ ] Create `/docs/STYLE_GUIDE.md`
    - [ ] Document code example format
@@ -691,11 +691,11 @@ ______________________________________________________________________
 ## Next Steps (This Week)
 
 1. [ ] Share DOCUMENTATION_STRATEGY.md with team
-1. [ ] Approve action plan (this document)
-1. [ ] Assign Technical Writer as owner
-1. [ ] Confirm Backend Dev support
-1. [ ] Schedule kick-off meeting
-1. [ ] Start Week 1 preparation:
+2. [ ] Approve action plan (this document)
+3. [ ] Assign Technical Writer as owner
+4. [ ] Confirm Backend Dev support
+5. [ ] Schedule kick-off meeting
+6. [ ] Start Week 1 preparation:
    - [ ] Review existing docs
    - [ ] Set up infrastructure
    - [ ] Design OpenAPI spec

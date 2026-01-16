@@ -1,9 +1,9 @@
-Journal of Human Kinetics volume 83/2022, 185-195  DOI: 10.2478/hukin-2022-0098 185
+Journal of Human Kinetics volume 83/2022, 185-195 DOI: 10.2478/hukin-2022-0098 185
 **Section III – Sports Training**
 
 # **Validity and Reliability of Strategy Metrics to Assess** **Countermovement Jump Performance Using the Newly** **Developed My Jump Lab Smartphone Application**
 
-## _by_ _Chris Bishop \[1\], Paul Jarvis \[1\], Anthony Turner \[1\], Carlos Balsalobre-Fernandez \[2\]_
+## _by_ _Chris Bishop [1], Paul Jarvis [1], Anthony Turner [1], Carlos Balsalobre-Fernandez [2]_
 
 _The aim of the present study was to analyse the validity and reliability of the newly developed My Jump Lab_
 _smartphone app, which includes the option to calculate time to take-off and the reactive strength index modified_
@@ -43,7 +43,7 @@ thus provide practitioners with the ability to
 quantify both the outcome measure (i.e., jump
 height), and also a range of strategy-based metrics
 (e.g., time to take-off, reactive strength index
-modified \[RSI_Mod\], impulse, etc.) with high
+modified [RSI_Mod], impulse, etc.) with high
 levels of precision (Chavda et al., 2018; McMahon
 et al., 2018). Importantly, previous research has
 outlined that strategy metrics from the CMJ can
@@ -269,7 +269,7 @@ absolute agreement and 95% confidence intervals
 acceptable (Cormack et al., 2008) and ICC values
 were interpreted in accordance with guidelines
 from Koo and Li (2016) where: > 0.90 = excellent,
-0.75-0.90 = good, 0.50-0.74 = moderate, and \< 0.50
+0.75-0.90 = good, 0.50-0.74 = moderate, and < 0.50
 = poor. Levels of agreement between the force
 plate and the app were determined from BlandAltman plots with 95% upper and lower limits
 (Bland and Altman, 1986). In order to determine
@@ -281,7 +281,7 @@ on Fisher’s r-to-z transformation (Cumming,
 estimate. In order to determine systematic bias
 between measurement methods, paired samples _t_ tests were conducted for each metric with
 
-statistical significance set at _p_ \< 0.05. In the
+statistical significance set at _p_ < 0.05. In the
 eventuality that significant differences were
 evident between measurement methods, followup analysis was conducted using a correction
 factor (i.e., a linear regression equation where the
@@ -297,7 +297,7 @@ determined using Hedges _g_ effect sizes with 95%
 CI. These were interpreted in line with
 suggestions by Rhea (2004) relative to the
 “recreationally trained” sample in the present
-study: \< 0.35 = trivial, 0.35–0.80 = small, 0.81–1.50 =
+study: < 0.35 = trivial, 0.35–0.80 = small, 0.81–1.50 =
 moderate and > 1.50 = large.
 
 **Results**
@@ -330,10 +330,10 @@ methods ( _g_ = 0.00 and 0.10 respectively).
 Figures 1-3 show scatter plot graphs
 presenting all trials for jump height (Figure 1),
 time to take-off (Figure 2) and RSI_Mod (Figure
-3), with correction equations and _r_ _\[2\]_ values.
+3), with correction equations and _r_ _[2]_ values.
 Pearson’s _r_ values were as follows: jump height
-(0.98 \[0.97, 0.99\]), time to take-off (0.81 \[0.72,
-0.88\]), and RSI_Mod (0.85 \[0.78, 0.90\]).
+(0.98 [0.97, 0.99]), time to take-off (0.81 \[0.72,
+0.88\]), and RSI_Mod (0.85 [0.78, 0.90]).
 Specifically, time to take-off required the
 correction equation which was: y = 0.8947x +
 0.1507, where y = the value for time to take-off
@@ -377,7 +377,7 @@ correction factor was applied to the time to takeoff metric, no differences were
 measurement methods, which had the same effect
 on the subsequent RSI_Mod calculation. Both
 measurement methods showed acceptable
-variability for all metrics (CV \< 10%), with the
+variability for all metrics (CV < 10%), with the
 force plate exhibiting moderate to excellent ICC
 data (0.66–0.97) and the app showing good to
 excellent ICC data (0.79–0.96).
@@ -406,7 +406,7 @@ _by Chris Bishop et al._ 189
 
 **Figure** _**3**_
 _Scatter plot presenting a relationship between force plate and My Jump Lab methods for the_
-_calculation of RSI_Mod, including the correction factor and R_ _\[2\]_ _._
+_calculation of RSI_Mod, including the correction factor and R_ _[2]_ _._
 
 **Figure 4**
 _Bland-Altman plot depicting levels of agreement for the force plate and My Jump Lab for jump_
@@ -467,7 +467,7 @@ metric straight away). This suggestion is
 supported by the reported bias in the raw data for
 this metric (0.075 s \[lower -0.082 and upper 0.233
 limits of agreement\]; Figure 5) compared to when
-the correction factor is applied (0.000 s \[lower 0.156 and upper 0.157 limits of agreement\]; Figure
+the correction factor is applied (0.000 s [lower 0.156 and upper 0.157 limits of agreement]; Figure
 6).
 To follow on from this, RSI_Mod is also
 heavily affected by these data, noting it is
@@ -553,7 +553,7 @@ _by Chris Bishop et al._ 193
 
 showing slightly better reliability than the force
 plate (app: ICC = 0.79; force plate: ICC = 0.66).
-Furthermore, all CV values were \< 10% which can
+Furthermore, all CV values were < 10% which can
 be deemed acceptable (Cormack et al., 2008;
 Turner et al., 2015), with RSI_Mod showing the
 largest variability of the metrics. Interestingly, the

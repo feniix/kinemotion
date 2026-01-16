@@ -131,11 +131,11 @@ ffprobe -v quiet -print_format json -show_streams -show_format output.mp4
 **What Would Be Required:**
 
 1. Reverse-engineer Apple's mebx binary format
-1. Decode timestamp synchronization
-1. Handle coordinate frame transformations (device → world coordinates)
-1. Account for video rotation metadata (-90°, 90°, 180°)
-1. Graceful fallback when IMU not available
-1. Testing across iOS versions (format may change)
+2. Decode timestamp synchronization
+3. Handle coordinate frame transformations (device → world coordinates)
+4. Account for video rotation metadata (-90°, 90°, 180°)
+5. Graceful fallback when IMU not available
+6. Testing across iOS versions (format may change)
 
 **Estimated Effort:** Weeks to months of reverse engineering
 
@@ -177,10 +177,10 @@ Accuracy:            ±1-4 frames (17-67ms) for contact detection
 **Reasons:**
 
 1. **No existing parser** - would need custom reverse engineering
-1. **High complexity** - proprietary undocumented format
-1. **Current accuracy is sufficient** - ±30-50ms is acceptable for athletic performance
-1. **Limited scope** - only helps iPhone Camera app users
-1. **Better alternatives exist**:
+2. **High complexity** - proprietary undocumented format
+3. **Current accuracy is sufficient** - ±30-50ms is acceptable for athletic performance
+4. **Limited scope** - only helps iPhone Camera app users
+5. **Better alternatives exist**:
    - Use 120fps cameras for higher temporal resolution
    - Force plates for ground truth validation (research setting)
    - Third-party iOS apps if IMU absolutely needed
@@ -224,9 +224,9 @@ Accuracy:            ±1-4 frames (17-67ms) for contact detection
 **Recommendation:** Focus development effort on:
 
 1. Validating current accuracy against force plates
-1. Improving vision algorithms (multi-camera, ML-based pose refinement)
-1. Better user guidance (camera placement, fps recommendations)
-1. Supporting more jump types (CMJ, squat jumps)
+2. Improving vision algorithms (multi-camera, ML-based pose refinement)
+3. Better user guidance (camera placement, fps recommendations)
+4. Supporting more jump types (CMJ, squat jumps)
 
 These provide better ROI than IMU support.
 
@@ -245,10 +245,10 @@ ______________________________________________________________________
 ### Workflow Recommendations
 
 1. Record video with iPhone
-1. Keep original file intact (preserves IMU even if not currently used)
-1. Use FFmpeg for any necessary trimming/splitting
-1. Process time ranges rather than creating separate files
-1. Convert formats only with stream copying
+2. Keep original file intact (preserves IMU even if not currently used)
+3. Use FFmpeg for any necessary trimming/splitting
+4. Process time ranges rather than creating separate files
+5. Convert formats only with stream copying
 
 ## Key Commands Reference
 

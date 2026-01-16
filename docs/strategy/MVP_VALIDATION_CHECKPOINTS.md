@@ -35,14 +35,14 @@ ______________________________________________________________________
    - [ ] Get them using the MVP (send URL + short tutorial)
    - [ ] Encourage 3-5 test videos per coach
 
-1. **Collect Structured Feedback**
+2. **Collect Structured Feedback**
 
    - [ ] Use feedback collection script (see: `MVP_FEEDBACK_COLLECTION.md`)
    - [ ] Record responses to 5 key questions
    - [ ] Document feature requests and pain points
    - [ ] Track: "Would you pay for this?"
 
-1. **Monitor MVP Stability**
+3. **Monitor MVP Stability**
 
    - [ ] Track error rates and crashes
    - [ ] Monitor video upload success rate

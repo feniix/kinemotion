@@ -35,8 +35,8 @@ SPORTS BIOMECHANICS
 Damian J. Harper a, Jean-Benoit Morin b, Christopher Carling c and John Kiely a
 
 aInstitute of Coaching and Performance, School of Sport and Health Sciences, University of Central
-Lancashire, Preston, UK; \[b\] Laboratory of Human Motricity, Expertise in Sports and Health, Faculty of Sports
-Science, Côte d’Azur University, Nice, France; \[c\] Centre for Elite Performance, French Football Federation,
+Lancashire, Preston, UK; [b] Laboratory of Human Motricity, Expertise in Sports and Health, Faculty of Sports
+Science, Côte d’Azur University, Nice, France; [c] Centre for Elite Performance, French Football Federation,
 Paris, France
 
 **ABSTRACT**
@@ -54,7 +54,7 @@ assessed using the intraclass correlation coefficient (ICC) and coeffi­
 cient of variation (CV%). Sensitivity was evaluated by comparing
 typical error (TE) to the smallest worthwhile change (SWC).
 A number of kinematic and kinetic variables had good (ICC > 0.75,
-CV \< 10%) overall intra-day reliability, and were sensitive to detect
+CV < 10%) overall intra-day reliability, and were sensitive to detect
 small-to-moderate changes in deceleration performance after
 a single familiarisation session. Only kinetic variables had good
 overall inter-day reliability and were sensitive to detect moderate
@@ -81,7 +81,7 @@ velocity to dynamically adapt to evolving technical and tactical game demands. S
 velocity changes can be positive (acceleration) or negative (deceleration), with both
 considered to be critical components of match-play performance. As illustrated in
 team sports such as soccer, players typically perform between 16–39 high-intensity
-accelerations (>3 m/s \[2\] ) and 43–59 high-intensity decelerations (\<-3 m/s \[2\] ) per match
+accelerations (>3 m/s [2] ) and 43–59 high-intensity decelerations (\<-3 m/s [2] ) per match
 
 **CONTACT** Damian J. Harper <DJHarper@uclan.ac.uk>
 
@@ -319,13 +319,13 @@ end of deceleration phase; DECEarly = early deceleration phase representing time
 Instantaneous horizontal deceleration was calculated between each data point cap­
 tured across the entire deceleration phase using the following equation:
 
-_Deceleration m_ � _=s_ \[2\] �
+_Deceleration m_ � _=s_ [2] �
 
-¼ _\[v\]\[f\]_ \[ �\] _\[v\]\[i\]_
+¼ _[v][f]_ [ �] _[v][i]_
 
 � �
 
-_\[v\]\[f\]_ \[ �\] _\[v\]\[i\]_
+_[v][f]_ [ �] _[v][i]_
 
 (1)
 ~~�~~ _tf_ � _ti_ ~~�~~
@@ -364,7 +364,7 @@ HBF _t_ ð Þ ¼ _m_ ½ � _a t_ ð Þ�þ F _air t_ ð Þ (2)
 where _m_ is the body mass of the participant and Fair is the air friction, which is influenced
 by the frontal area of the participant (Af) (Morin et al., 2019):
 
-Af ¼ � 0 _:_ 2025 � height \[0\] _\[:\]_ \[725\] � mass \[0\] _\[:\]_ \[425\] �
+Af ¼ � 0 _:_ 2025 � height [0] _[:]_ [725] � mass [0] _[:]_ [425] �
 
 � 0 _:_ 266 (3)
 
@@ -399,7 +399,7 @@ ICC values: ≤0.49 = poor; 0.50 to 0.74 = moderate; 0.75 to 0.89 = good; ≥0.9
 CV% was interpreted using the following scale (McMahon et al., 2018): >15 poor; 10 to
 15 moderate; 5 to 10 good; \<5 excellent. Overall reliability was interpreted by combining both
 the ICC and the CV% scales as follows: ICC > 0.9 and CV% \<5 = excellent; ICC 0.75 to 0.9 and
-CV% \<10 = good; ICC \< 0.75 or CV% >10 = moderate; ICC \<0.75 and CV% \<10 = poor. The
+CV% \<10 = good; ICC < 0.75 or CV% >10 = moderate; ICC \<0.75 and CV% \<10 = poor. The
 90% confidence intervals for all reliability results were also included.
 
 To determine the sensitivity of each radar-derived variable the raw TE obtained from the
@@ -425,7 +425,7 @@ good overall intra-test reliability. However, only TTS and DECave demonstrated s
 sensitivity to detect the SWC0.5, with TT50% _V_ max, DTS and E-DECave rated as ‘OK’.
 
 All kinetic variables apart from L-HBPave, HBFmax and HBPmax had good (ICC > 0.8,
-CV \< 10%) overall reliability. However, only HBPave had sufficient sensitivity to detect
+CV < 10%) overall reliability. However, only HBPave had sufficient sensitivity to detect
 the SWC0.2. All kinetic variables were sensitive to detect SWC0.5.
 
 _**Inter-day reliability and sensitivity**_
@@ -524,7 +524,7 @@ task performed from velocities ranging between 5 and 8 m/s. In the present study
 decelerations commenced from a much narrower velocity range (7.17 to 7.36 m/s) and
 were measured using a higher sampling rate (47 Hz). In the study by Varley et al. (2012)
 the rate of deceleration was not reported. Therefore, the similar CV% found between
-these studies is likely due to the higher rates of deceleration (−4.36 to −4.44 m/s \[2\] )
+these studies is likely due to the higher rates of deceleration (−4.36 to −4.44 m/s [2] )
 performed in the present study. Nonetheless, based on the findings of the present study,
 DECave is the kinematic variable of choice when monitoring SWC in maximal horizontal
 deceleration ability.
@@ -587,7 +587,7 @@ ple, analysing the raw data points using a rolling average across different time
 attempted to control the start and end of the deceleration phase, it is possible that
 different approaches may lead to improved reliability and sensitivity. For example,
 using a ‘start’ and ‘end’ of deceleration phase criteria that is based on a deceleration
-threshold, such as, when deceleration is below and above −0.2 m/s \[2, \] respectively.
+threshold, such as, when deceleration is below and above −0.2 m/s [2, ] respectively.
 Therefore, future research should investigate the reliability and sensitivity of different
 criteria that could be used to define the ‘start’ and ‘end’ of the deceleration phase.
 Furthermore, the radar device used in this study sampled at a rate of 47 Hz. Other

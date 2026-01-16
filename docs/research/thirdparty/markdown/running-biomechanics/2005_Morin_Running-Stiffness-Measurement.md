@@ -3,9 +3,9 @@ JOURNAL OF APPLIED BIOMECHANICS, 2005, **21**, 167-180
 
 # **A Simple Method for Measuring** **Stiffness During Running**
 
-_Jean-Benoît Morin_ _\[1\]_ _, Georges Dalleau_ _\[2\]_ _, Heikki Kyröläinen_ _\[3\]_ _,_
+_Jean-Benoît Morin_ _[1]_ _, Georges Dalleau_ _[2]_ _, Heikki Kyröläinen_ _[3]_ _,_
 
-_Thibault Jeannin_ _\[1\]_ _, and Alain Belli_ _\[1\]_
+_Thibault Jeannin_ _[1]_ _, and Alain Belli_ _[1]_
 
 _1University of Saint-Etienne; 2University of La Réunion_
 
@@ -22,11 +22,11 @@ this method allows leg and vertical stiffness to be estimated from just a few
 simple mechanical parameters: body mass, forward velocity, leg length, flight
 time, and contact time. We compared this method to force-platform-derived
 stiffness measurements for treadmill dynamometer and overground running
-conditions, at velocities ranging from 3.33 m·s \[–1\] to maximal running velocity
+conditions, at velocities ranging from 3.33 m·s [–1] to maximal running velocity
 in both recreational and highly trained runners. Stiffness values calculated with
 the proposed method ranged from 0.67% to 6.93% less than the force platform
 method, and thus were judged to be acceptable. Furthermore, significant linear
-regressions ( _p_ \< 0.01) close to the identity line were obtained between force
+regressions ( _p_ < 0.01) close to the identity line were obtained between force
 platform and sine-wave model values of stiffness. Given the limits inherent in
 the use of the spring-mass model, it was concluded that this sine-wave method
 allows leg and stiffness estimates in running on the basis of a few mechanical
@@ -40,7 +40,7 @@ runner’s body mass, constituting the “spring-mass model” (Alexander, 1992;
 han, 1989; Cavagna, Heglund, & Taylor, 1977; Cavagna, Saibene, & Margaria,
 
 1Physiology Laboratory, PPEH Res. Unit, Univ. of Saint-Etienne, CHU Bellevue,
-42055 St-Etienne Cedex 02, France; \[2\] Sport Sciences Res. Center, Faculty of Science and
+42055 St-Etienne Cedex 02, France; [2] Sport Sciences Res. Center, Faculty of Science and
 Technology, Univ. of La Réunion, 117 General Ailleret St., 97430 Le Tampon, France;
 3Neuromuscular Res. Center, Univ. of Jyväskylä, PO Box 35, 40014 Jyväskylä, Finland.
 
@@ -90,8 +90,8 @@ informed consent to take part in those protocols.
 Treadmill running: Eight young men (age 24 ± 2 yrs, height 1.78 ± 0.07 m,
 body mass 76.0 ± 7.0 kg; mean ± _SD_ ) volunteered to participate in this study. They
 were physical education students and experienced in treadmill running. After a 5-min
-warm-up at 3.33 m·s \[–1\], they performed 30-s running bouts at 3.33, 3.89, 4.44, 5, 5.56,
-6.11, and 6.67 m·s \[–1\] at their preferred step frequency (separated by 2 min of rest)
+warm-up at 3.33 m·s [–1], they performed 30-s running bouts at 3.33, 3.89, 4.44, 5, 5.56,
+6.11, and 6.67 m·s [–1] at their preferred step frequency (separated by 2 min of rest)
 on a treadmill dynamometer (HEF Techmachine, Andrézieux-Bouthéon, France).
 Using the same calibration procedure as Belli, Bui, Berger, Geyssant, and Lacour
 (2001), we determined the treadmill’s static nonlinearity to be less than 0.5% and 1%,
@@ -107,15 +107,15 @@ _Overground running_ : 10 young men (age 23 ± 3 yrs, height 1.80 ± 0.05 m,
 body mass 66.4 ± 5.3 kg) who were elite middle-distance runners volunteered to
 run over a 10-m force platform (Kistler, Winterthur, Switzerland; natural frequency
 higher than 150 Hz, horizontal to vertical cross-talk lower than 2%) at 4, 5, 6, and
-7 m·s \[–1\] and at their maximal running velocity. Velocity was measured by two pairs
+7 m·s [–1] and at their maximal running velocity. Velocity was measured by two pairs
 of photocells placed at each end of the force platform. Vertical ground reaction
 forces and flight and contact times were measured for one step at each velocity at
 a sampling rate of 1.8 kHz.
 
-_Reference method. Vertical stiffness_ : The vertical stiffness _k_ vert (in kN·m \[–1\] )
+_Reference method. Vertical stiffness_ : The vertical stiffness _k_ vert (in kN·m [–1] )
 was calculated as:
 
-_k_ vert = _F_ max · ∆ _yc_ \[–1\] (1)
+_k_ vert = _F_ max · ∆ _yc_ [–1] (1)
 
 with _F_ max the maximal ground reaction force during contact (in kN) and ∆ _yc_ the
 vertical displacement of the CM when it reaches its lowest point (in m), determined
@@ -123,20 +123,20 @@ by double integration of the vertical acceleration over time, as proposed by Cav
 (1975). Figure 1 shows a typical example of force and vertical displacement of the
 CM evolutions during contact.
 
-_Leg stiffness_ : The stiffness of the leg spring _k_ leg (in kN·m \[–1\] ) was calculated
+_Leg stiffness_ : The stiffness of the leg spring _k_ leg (in kN·m [–1] ) was calculated
 as follows:
-_k_ leg = _F_ max · ∆ _L_ \[–1\] (2)
+_k_ leg = _F_ max · ∆ _L_ [–1] (2)
 
 with ∆ _L_ the peak displacement of the leg spring (in m) calculated from the initial
 leg length _L_ (great trochanter to ground distance in a standing position), running
-velocity _v_ (in m·s \[–1\] ), and the contact time _t_ c (in s), as per Farley and Gonzales
+velocity _v_ (in m·s [–1] ), and the contact time _t_ c (in s), as per Farley and Gonzales
 (1996; Eq. 2 and 3):
 
-∆ _L_ = _L_ – √ _L_ \[2\] – (–– _vt_ 2 _c_ ) \[2\] + ∆ _yc_ (3)
+∆ _L_ = _L_ – √ _L_ [2] – (–– _vt_ 2 _c_ ) [2] + ∆ _yc_ (3)
 
 **Figure 1 — Typical measured (thick line) and modeled (dotted** **line) vertical force over**
 **time during contact on treadmill running, and corresponding downward vertical CM**
-**displacement (thin line) (velocity of 5 m·s** **\[–1\]** **, body mass of 68 kg).**
+**displacement (thin line) (velocity of 5 m·s** **[–1]** **, body mass of 68 kg).**
 
 170 _Morin, Dalleau, et al._
 
@@ -165,7 +165,7 @@ maximal force The modeled vertical stiffness _F_ ^ max over the modeled vertical
 
 ^
 
-_k_ vert = _F_ max · ∆ _yc_ \[–1\] (5)
+_k_ vert = _F_ max · ∆ _yc_ [–1] (5)
 
 ^
 
@@ -181,17 +181,17 @@ flight and contact times (in s)
 
 ^
 
-_tc_ \[2\]
+_tc_ [2]
 
 ^
 
-_F_ max _tc_ \[2\]
+_F_ max _tc_ [2]
 
 and ∆ _y_ ^ _c_ = —— + g — max _c_ _c_ (7)
 
-\[2\]
+[2]
 
-_m_ π \[2\]
+_m_ π [2]
 
 8
 
@@ -203,11 +203,11 @@ The modeled leg stiffness _k_ leg was calculated as follows:
 
 ^ ^
 
-_k_ leg = _F_ max · ∆ _L_ \[–1\] (8)
+_k_ leg = _F_ max · ∆ _L_ [–1] (8)
 
-with ∆ _L_ ^ = _L_ – √ _L_ \[2\] – (—) _vtc_ \[2\] + ∆ _y_ ^ _c_ (9)
+with ∆ _L_ ^ = _L_ – √ _L_ [2] – (—) _vtc_ [2] + ∆ _y_ ^ _c_ (9)
 
-^ \[2\] _vtc_
+^ [2] _vtc_
 
 ^
 
@@ -232,8 +232,8 @@ bias. The statistically significant level was set at 0.05.
 **Results**
 
 The bias between force platform and modeled _F_ (t) areas was 5.33% (ranging from
-11.7% at 3.33 m·s \[–1\] to 1.7% at 6.67 m·s \[–1\] ) for treadmill running, 542 steps analyzed,
-and 2.93% (ranging from 3.17% at 4 m·s \[–1\] to 2.33% at 7 m·s \[–1\] ) for overground
+11.7% at 3.33 m·s [–1] to 1.7% at 6.67 m·s [–1] ) for treadmill running, 542 steps analyzed,
+and 2.93% (ranging from 3.17% at 4 m·s [–1] to 2.33% at 7 m·s [–1] ) for overground
 running, 50 steps analyzed.
 
 Measuring Stiffness During Running 171
@@ -248,8 +248,8 @@ Reference Modeled Bias (%)
 ∆ _L_ (m) 0.20 ± 0.03 0.20 ± 0.03 0.93 ± 0.43
 
 _F_ max (kN) 2.05 ± 0.34 1.91 ± 0.32 6.93 ± 2.52
-_k_ vert (kN·m \[–1\] ) 37.70 ± 8.84 37.74 ± 8.87 0.12 ± 0.53
-_k_ leg (kN·m \[–1\] ) 10.37 ± 2.34 9.75 ± 2.19 6.05 ± 3.02
+_k_ vert (kN·m [–1] ) 37.70 ± 8.84 37.74 ± 8.87 0.12 ± 0.53
+_k_ leg (kN·m [–1] ) 10.37 ± 2.34 9.75 ± 2.19 6.05 ± 3.02
 
 _Note_ : Measured with reference method, corresponding values calculated with proposed
 method and error bias values in between. Values presented are averaged for all partici­
@@ -265,8 +265,8 @@ Reference Modeled Bias (%)
 ∆ _L_ (m) 0.16 ± 0.02 0.16 ± 0.02 0.67 ± 1.09
 
 _F_ max (kN) 2.13 ± 0.21 2.06 ± 0.24 3.24 ± 2.08
-_k_ vert (kN·m \[–1\] ) 51.39 ± 21.46 50.21 ± 20.40 2.30 ± 1.63
-_k_ leg (kN·m \[–1\] ) 13.28 ± 1.85 12.95 ± 2.13 2.54 ± 1.16
+_k_ vert (kN·m [–1] ) 51.39 ± 21.46 50.21 ± 20.40 2.30 ± 1.63
+_k_ leg (kN·m [–1] ) 13.28 ± 1.85 12.95 ± 2.13 2.54 ± 1.16
 
 _Note_ : Measured with reference method, corresponding values calculated with proposed
 method and error bias values in between. Values presented are averaged for all partici­
@@ -275,13 +275,13 @@ pants and all velocities.
 The values of the different mechanical parameters measured and modeled and
 the reference-model bias are shown in Tables 1 and 2 for treadmill and overground
 running, respectively. For the vertical and leg stiffness, we obtained reference-model
-error biases of 0.12% (ranging from 1.53% at 6.67 m·s \[–1\] to 0.07% at 6.11 m·s \[–1\] ) and
-of 6.05% (from 9.82% at 3.33 m·s \[–1\] to 3.88% at 6.67 m·s \[–1\] ), respectively, during
+error biases of 0.12% (ranging from 1.53% at 6.67 m·s [–1] to 0.07% at 6.11 m·s [–1] ) and
+of 6.05% (from 9.82% at 3.33 m·s [–1] to 3.88% at 6.67 m·s [–1] ), respectively, during
 treadmill running. During overground running the bias was 2.30% (from 3.64% at
-5 m·s \[–1\] to 0.25% at 6 m·s \[–1\] ) for the vertical stiffness, and 2.54% (from 3.71% at 5
-m·s \[–1\] to 1.11% at maximal velocity) for leg stiffness.
+5 m·s [–1] to 0.25% at 6 m·s [–1] ) for the vertical stiffness, and 2.54% (from 3.71% at 5
+m·s [–1] to 1.11% at maximal velocity) for leg stiffness.
 
-Further, the reference-model linear regressions were significant ( _p_ \< 0.01; _R_ ²
+Further, the reference-model linear regressions were significant ( _p_ < 0.01; _R_ ²
 = 0.89 to 0.98) for both vertical and leg stiffness either on the treadmill or during
 overground running (Figures 2 and 3, respectively).
 
@@ -291,47 +291,47 @@ and the Scheffé post hoc test demonstrated for treadmill running a significant 
 
 172 _Morin, Dalleau, et al._
 
-**Reference vertical stiffness (kN·m** **\[–1\]** **)**
+**Reference vertical stiffness (kN·m** **[–1]** **)**
 
-**Reference leg stiffness (kN·m** **\[–1\]** **)**
+**Reference leg stiffness (kN·m** **[–1]** **)**
 
-**Figure 2 — Significant reference-model linear regressions (** _**p**_ **\< 0.01) obtained during**
+**Figure 2 — Significant reference-model linear regressions (** _**p**_ **< 0.01) obtained during**
 **treadmill running for vertical stiffness (upper panel) and leg stiffness (lower panel)**
 **compared to the identity line. Each dot represents a mean value of stiffness for a par­**
 **ticipant at the corresponding velocity.**
 
 Measuring Stiffness During Running 173
 
-**Reference vertical stiffness (kN·m** **\[–1\]** **)**
+**Reference vertical stiffness (kN·m** **[–1]** **)**
 
-**Reference leg stiffness (kN·m** **\[–1\]** **)**
+**Reference leg stiffness (kN·m** **[–1]** **)**
 
-**Figure 3 — Significant reference-model linear regressions (** _**p**_ **\< 0.01) obtained during**
+**Figure 3 — Significant reference-model linear regressions (** _**p**_ **< 0.01) obtained during**
 **overground running for vertical stiffness (upper panel) and leg stiffness (lower panel)**
 **compared to the identity line. Each dot represents the value of stiffness of the step**
 **analyzed for each participant at the corresponding velocity.**
 
 174 _Morin, Dalleau, et al._
 
-**Velocity (m·s** **\[–1\]** **)**
+**Velocity (m·s** **[–1]** **)**
 
-**Velocity (m·s** **\[–1\]** **)**
+**Velocity (m·s** **[–1]** **)**
 
 **Figure 4 — Changes in the modeled and reference vertical and leg stiffness with run­**
 **ning velocity during treadmill running (upper panel) and overground running (lower**
-\*_panel). _Significant (__ _**p**_ **\< 0.05) difference in reference-model bias obtained by ANOVA**
+\*_panel). _Significant (__ _**p**_ **< 0.05) difference in reference-model bias obtained by ANOVA**
 **and Scheffé post hoc test.**
 
 Measuring Stiffness During Running 175
 
-ference ( _p_ \< 0.05) between the bias in leg stiffness assessment at 3.33 m·s \[–1\] and
+ference ( _p_ < 0.05) between the bias in leg stiffness assessment at 3.33 m·s [–1] and
 that obtained at the four highest velocities. For overground running, a significant
-difference was observed on the vertical stiffness bias ( _p_ \< 0.05) obtained at 6 m·s \[–1\]
+difference was observed on the vertical stiffness bias ( _p_ < 0.05) obtained at 6 m·s [–1]
 and at the maximal velocity (Figure 4).
 
 The leg length calculation using Winter’s equation led to a mean error bias of
 1.94 ± 1.51%, and the linear regression between the measured leg length and that
-obtained using Winter’s model was significant ( _R_ ² = 0.89; _p_ \< 0.01).
+obtained using Winter’s model was significant ( _R_ ² = 0.89; _p_ < 0.01).
 
 **Discussion**
 
@@ -347,8 +347,8 @@ of the two populations in these two parts of the study.
 Indeed, highly trained middle-distance runners who performed the force plat­
 form protocol showed lower CM displacement and leg length change and higher
 vertical and leg stiffness than the nonspecialists who volunteered to perform the
-treadmill protocol (e.g _._, leg stiffness: 10.37 ± 2.34 kN·m \[–1\] for the treadmill protocol
-group vs. 13.28 ± 1.85 kN·m \[–1 \] for overground runners). This is in line with the study
+treadmill protocol (e.g _._, leg stiffness: 10.37 ± 2.34 kN·m [–1] for the treadmill protocol
+group vs. 13.28 ± 1.85 kN·m [–1 ] for overground runners). This is in line with the study
 of Mero and Komi (1986), who observed higher “apparent spring constants” of the
 support leg and lower CM displacement during running in highly trained sprinters
 compared to less-skilled ones (Luhtanen & Komi, 1980) or marathon runners (Ito,
@@ -364,9 +364,9 @@ provide a calculation method based on a few simple parameters allowing vertical
 and leg stiffness to be assessed during treadmill and overground running without
 a force platform. The low bias obtained between force platform and model values
 (from 0.12% to 6%), and the high determination coefficients (from 0.89 to 0.98, _p_
-\< 0.01), demonstrate the validity of this calculation method during both treadmill
+< 0.01), demonstrate the validity of this calculation method during both treadmill
 and overground running. Furthermore, the validity of this method was tested for a
-wide range of velocities (i.e., from 3.33 to 6.67 m·s \[–1\] on the treadmill and 4 m·s \[–1\]
+wide range of velocities (i.e., from 3.33 to 6.67 m·s [–1] on the treadmill and 4 m·s [–1]
 to maximal velocity on the force platform) with runners of different ability levels,
 from nonspecialists to highly trained middle-distance runners, all giving acceptable
 results (Figures 2 and 3). This may allow us to use the proposed method during
@@ -385,19 +385,19 @@ method during hopping (Dalleau, Belli, Viale, Lacour, & Bourdin, 2004), was
 checked by comparing areas under _F_ ( _t_ ) curves for all steps analyzed on the treadmill
 and on the force plate, and we obtained low error bias values (5.33% and 2.93%,
 respectively). On the treadmill the accuracy of this sine modeling was improved
-at faster velocities, the bias ranging from 11.7% at 3.33 m·s \[–1\] to only 1.7% at 6.67
-m·s \[–1\] . This was probably due to the alteration of the passive impact peak in the
+at faster velocities, the bias ranging from 11.7% at 3.33 m·s [–1] to only 1.7% at 6.67
+m·s [–1] . This was probably due to the alteration of the passive impact peak in the
 vertical ground reaction force at low velocity and to an _F_ ( _t_ ) curve more closely
 approximating a sine curve at faster velocities. This could explain the significant
 effect of velocity on reference-model bias in leg stiffness observed between that
-obtained at 3.33 m·s \[–1\] and that at the four highest velocities (Figure 4, upper panel),
+obtained at 3.33 m·s [–1] and that at the four highest velocities (Figure 4, upper panel),
 the accuracy of the basic sine-wave postulate increasing at faster velocities on the
 treadmill. To the contrary, this velocity effect on the bias was not observed during
 overground running.
 
 The bias in _F_ ( _t_ ) curve fitting by the sine function was rather constant, and the
 previously mentioned velocity effect on reference-model bias was only significant ( _p_
-= 0.043) in vertical stiffness between that obtained at 6 m·s \[–1\] and that at the maximal
+= 0.043) in vertical stiffness between that obtained at 6 m·s [–1] and that at the maximal
 velocity (Figure 4, lower panel). This smaller effect of velocity may be explained
 by the fact that _F_ ( _t_ ) curves of elite level “forefoot striking” runners showed smaller
 or no passive impact peaks, whatever the velocity, with shorter contact times and
@@ -561,7 +561,7 @@ The modeled vertical stiffness _k_ vert was calculated as:
 
 ^ ^ ^
 
-_k_ vert = _F_ max · ∆ _yc_ \[–1\] (5)
+_k_ vert = _F_ max · ∆ _yc_ [–1] (5)
 
 with _F_ ^max the modeled maximal force and ∆ _y_ ^ _c_ the modeled vertical peak displace­
 ment of the center of mass (CM) during contact.
@@ -572,7 +572,7 @@ _F_ max _computations_
 
 The pattern of vertical ground reaction force over time was modeled using the
 following equation:
-_F_ ( _t_ ) = _F_ max · sin(— _t_ π _c_          - _t_ ) (4)
+_F_ ( _t_ ) = _F_ max · sin(— _t_ π _c_ - _t_ ) (4)
 
 with _F_ max the peak force value and _tc_ the contact time.
 
@@ -582,7 +582,7 @@ From this equation, the momentum change during contact is:
 
 _tc_
 
-## t 0 \[ F ( t ) – m g\] · dt = m ∆ u = m g tf (A10)
+## t 0 [ F ( t ) – m g] · dt = m ∆ u = m g tf (A10)
 
 _t_ 0
 
@@ -594,7 +594,7 @@ Substituting Eq. A4 in Eq. A10 gives:
 
 _tc_ π
 
-## t 0 \[ F max · sin(— · t t ) – m g\] · dt = m ∆ u = m g tf (A11)
+## t 0 [ F max · sin(— · t t ) – m g] · dt = m ∆ u = m g tf (A11)
 
 _t_ 0
 
@@ -614,7 +614,7 @@ _tc_ π
 
 π _tc_
 
-## \[– F max — cos (— · c π t )\] – c m g tc = m g tf (A12)
+## [– F max — cos (— · c π t )] – c m g tc = m g tf (A12)
 
 2 _F_ max — _c_ _m_ g ( _tf_ + _tc_ ) (A13)
 
@@ -640,7 +640,7 @@ is obtained by integrating the vertical acceleration of the CM during contact:
 
 _u_ ( _t_ ) = ∫
 
-## tc \[—– – g F ( t ) \] · dt + u ( t 0) (A14)
+## tc [—– – g F ( t ) ] · dt + u ( t 0) (A14)
 
 _F_ ( _t_ )
 
@@ -654,7 +654,7 @@ _u_ ( _t_ ) = ∫
 
 ^
 
-## ttc 0\[ F —–– sin max (— · π t ) – g\] · dt + u ( t 0) (A15)
+## ttc 0[ F —–– sin max (— · π t ) – g] · dt + u ( t 0) (A15)
 
 _F_ max
 
@@ -680,7 +680,7 @@ _tc_
 
 _t_ 0
 
-## u ( t ) = \[– —– — cos max tc (— · π t )\] – g t + u ( t 0) (A16)
+## u ( t ) = [– —– — cos max tc (— · π t )] – g t + u ( t 0) (A16)
 
 _m_
 
@@ -760,13 +760,13 @@ _y_ ( _t_ ) = ∫
 
 max _c_ π _tc_
 
-## \[– —– — cos (— · t ) – g t + g—\] · dt (A21)
+## [– —– — cos (— · t ) – g t + g—] · dt (A21)
 
 max _tc_ π _tc_
 
 ## \[^– —– — cos m m (— · tc t ) – g t + g—2
 
-_F_ max _t_ \[2\] π 1 _tc_
+_F_ max _t_ [2] π 1 _tc_
 
 _tc_
 
@@ -796,21 +796,21 @@ _tc_
 
 _tc_ + g— _tc_ _t_ (A22)
 
-## – —– — sin m max t π c \[2\] (— · t π c t ) – — g12 t \[2\] \] ttc 0 + g— t 2 c
+## – —– — sin m max t π c [2] (— · t π c t ) – — g12 t [2] \] ttc 0 + g— t 2 c
 
 ^
 
-_F_ max _t_ \[2\] π 1 _t_
+_F_ max _t_ [2] π 1 _t_
 
-## y ( t ) = \[– —– — sin max tc (— · π t ) – — g1 t \[2\] \]
+## y ( t ) = \[– —– — sin max tc (— · π t ) – — g1 t [2] \]
 
-\[2\]
+[2]
 
 _m_
 
-_tc_ \[2\]
+_tc_ [2]
 
-π \[2\]
+π [2]
 
 _t_ 0
 
@@ -819,15 +819,15 @@ _t_ 0
 _tc_
 2
 
-## y ( t ) = – —- — sin max tc (— · π t ) – — g t \[2\] + g— tc t (A23)
+## y ( t ) = – —- — sin max tc (— · π t ) – — g t [2] + g— tc t (A23)
 
-\[2\]
+[2]
 
 _m_
 
-## tc \[2\] ( π
+## tc [2] ( π
 
-π \[2\] _tc_
+π [2] _tc_
 
 1
 
@@ -837,11 +837,11 @@ The total CM displacement at the time of half contact, i.e., for _t_ = _tc_ / 2 
 
 ^
 
-_tc_ \[2\]
+_tc_ [2]
 
-π \[2\]
+π [2]
 
-_tc_ \[2\]
+_tc_ [2]
 
 8
 
@@ -861,7 +861,7 @@ The modeled leg stiffness _k_ leg was calculated as:
 
 ^ ^ ^
 
-_k_ leg = _F_ max · ∆ _L_ \[–1\] (8)
+_k_ leg = _F_ max · ∆ _L_ [–1] (8)
 
 ^
 
@@ -879,7 +879,7 @@ assumptions (Farley & Gonzales, 1996; McMahon & Cheng, 1990):
 
 ^
 
-## ∆ L ^ = L – √ L \[2\] – (—– vtc )
+## ∆ L ^ = L – √ L [2] – (—– vtc )
 
 _vtc_
 

@@ -17,18 +17,19 @@ uv run pytest             # Run all tests
 ```
 
 Or combined:
+
 ```bash
 uv run ruff check --fix && uv run ruff format && uv run pyright && uv run pytest
 ```
 
 ## Quality Targets
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Test coverage | ≥ 50% | 80.86% |
-| Code duplication | < 3% | 2.96% |
-| Type errors | 0 | 0 |
-| Lint errors | 0 | 0 |
+| Metric           | Target | Current |
+| ---------------- | ------ | ------- |
+| Test coverage    | ≥ 50%  | 80.86%  |
+| Code duplication | < 3%   | 2.96%   |
+| Type errors      | 0      | 0       |
+| Lint errors      | 0      | 0       |
 
 Check duplication: `npx jscpd src/kinemotion`
 
@@ -75,15 +76,19 @@ src/kinemotion/
 ## Testing
 
 ### Structure
+
 Mirror source: `tests/core/`, `tests/cmj/`, `tests/dropjump/`, `tests/cli/`
 
 ### Fixtures
+
 Use centralized fixtures from `tests/conftest.py`:
+
 - `cli_runner`: Click test runner
 - `minimal_video`: Synthetic test video
 - `sample_video_path`: Path to test fixture
 
 ### Edge Cases to Test
+
 - Empty arrays
 - Single frame videos
 - NaN values in landmarks
@@ -102,12 +107,12 @@ def test_edge_cases(input_data, expected):
 
 ## Key Algorithm Differences
 
-| Aspect | CMJ | Drop Jump |
-|--------|-----|-----------|
-| Search direction | Backward (from peak) | Forward |
-| Velocity type | Signed (direction matters) | Absolute (magnitude) |
-| Key phase | Countermovement detection | Ground contact |
-| Starting position | Floor level | Elevated (box) |
+| Aspect            | CMJ                        | Drop Jump            |
+| ----------------- | -------------------------- | -------------------- |
+| Search direction  | Backward (from peak)       | Forward              |
+| Velocity type     | Signed (direction matters) | Absolute (magnitude) |
+| Key phase         | Countermovement detection  | Ground contact       |
+| Starting position | Floor level                | Elevated (box)       |
 
 ## Common Gotchas
 
@@ -127,6 +132,7 @@ Types: feat, fix, docs, test, refactor, perf, chore
 ```
 
 Examples:
+
 ```
 feat(cmj): add triple extension tracking
 fix(dropjump): correct ground contact detection

@@ -26,9 +26,9 @@ ______________________________________________________________________
 ### Objectives
 
 1. Build containerization foundation
-1. Validate latency requirements (CRITICAL)
-1. Set up performance testing infrastructure
-1. Establish baseline metrics
+2. Validate latency requirements (CRITICAL)
+3. Set up performance testing infrastructure
+4. Establish baseline metrics
 
 ### Detailed Tasks
 
@@ -86,7 +86,7 @@ CMD ["python", "-m", "kinemotion"]
 **Acceptance Criteria:**
 
 - Image builds successfully
-- Size \< 500MB
+- Size < 500MB
 - All dependencies available
 - CLI commands work inside container
 
@@ -444,9 +444,9 @@ ______________________________________________________________________
 ### Objectives
 
 1. Build deployment pipeline
-1. Set up monitoring (Prometheus + Grafana)
-1. Provision staging environment
-1. Create canary deployment strategy
+2. Set up monitoring (Prometheus + Grafana)
+3. Provision staging environment
+4. Create canary deployment strategy
 
 ### Detailed Tasks
 
@@ -871,13 +871,13 @@ jobs:
      --desired-count 1
    ```
 
-1. **Monitor (5 minutes):**
+2. **Monitor (5 minutes):**
 
-   - Check error rate (should be \< 1%)
-   - Check latency (p95 \< 200ms)
+   - Check error rate (should be < 1%)
+   - Check latency (p95 < 200ms)
    - Check logs for errors
 
-1. **If canary successful, scale to 50% traffic:**
+3. **If canary successful, scale to 50% traffic:**
 
    ```bash
    aws ecs update-service \
@@ -886,11 +886,11 @@ jobs:
      --desired-count 2
    ```
 
-1. **Monitor (10 minutes):**
+4. **Monitor (10 minutes):**
 
    - Same checks
 
-1. **If still successful, scale to 100%:**
+5. **If still successful, scale to 100%:**
 
    ```bash
    aws ecs update-service \
@@ -1002,8 +1002,8 @@ python scripts/check_load_test_slo.py results_staging
 
 **Acceptance Criteria:**
 
-- [ ] p95 latency \< 200ms
-- [ ] Error rate \< 1%
+- [ ] p95 latency < 200ms
+- [ ] Error rate < 1%
 - [ ] No crashes or memory leaks
 - [ ] Throughput > 100 concurrent
 
@@ -1030,9 +1030,9 @@ ______________________________________________________________________
 ### Objectives
 
 1. Monitor production latency and error rates
-1. Optimize based on real metrics
-1. Auto-scaling policies tuned
-1. Incident response procedures proven
+2. Optimize based on real metrics
+3. Auto-scaling policies tuned
+4. Incident response procedures proven
 
 ### Continuous Tasks
 
@@ -1050,7 +1050,7 @@ ______________________________________________________________________
 
 - [ ] Dockerfile tested and \<500MB
 - [ ] Docker Compose running locally
-- [ ] Load tests passing (p95 \< 200ms)
+- [ ] Load tests passing (p95 < 200ms)
 - [ ] Performance profiling baseline established
 - [ ] Docker image in ECR
 - [ ] GitHub Actions workflows working

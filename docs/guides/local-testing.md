@@ -115,21 +115,21 @@ curl http://localhost:8000/health
 ### Test 2: API Documentation
 
 1. Open http://localhost:8000/docs
-1. You should see interactive Swagger UI with endpoints
-1. Try `/health` endpoint first to verify it works
+2. You should see interactive Swagger UI with endpoints
+3. Try `/health` endpoint first to verify it works
 
 ### Test 3: Upload a Video (Via Frontend)
 
 1. Open http://localhost:5173 in your browser
-1. You should see:
+2. You should see:
    - File upload input
    - Jump type selector (CMJ / Drop Jump)
    - Analyze button
-1. Upload a CMJ or Drop Jump video (\< 500MB)
-1. Select jump type
-1. Click "Analyze"
-1. Wait 10-60 seconds
-1. See real metrics displayed
+3. Upload a CMJ or Drop Jump video (< 500MB)
+4. Select jump type
+5. Click "Analyze"
+6. Wait 10-60 seconds
+7. See real metrics displayed
 
 ### Test 4: Upload a Video (Via API Directly)
 
@@ -200,13 +200,13 @@ curl -X POST "http://localhost:8000/api/analyze" \
 ### Test 6: Mobile Responsive
 
 1. Open http://localhost:5173 in browser
-1. Open DevTools (F12)
-1. Toggle device toolbar (Ctrl+Shift+M)
-1. Test on various phone sizes:
+2. Open DevTools (F12)
+3. Toggle device toolbar (Ctrl+Shift+M)
+4. Test on various phone sizes:
    - iPhone 12 (390x844)
    - iPad (768x1024)
    - Android (375x667)
-1. Verify:
+5. Verify:
    - All elements fit
    - Buttons are clickable
    - Text is readable
@@ -227,9 +227,9 @@ curl -X POST "http://localhost:8000/api/analyze" \
 **Option 1: Via Frontend UI (Recommended)**
 
 1. Open http://localhost:5173
-1. Upload your video
-1. Select jump type
-1. See metrics
+2. Upload your video
+3. Select jump type
+4. See metrics
 
 **Option 2: Via curl**
 
@@ -410,9 +410,9 @@ du -sh dist/
 ### Check Network Tab
 
 1. Open DevTools (F12)
-1. Go to Network tab
-1. Upload a video
-1. You should see:
+2. Go to Network tab
+3. Upload a video
+4. You should see:
    - POST to `/api/analyze` (200 status after analysis)
    - Response contains metrics JSON
    - No CORS errors
@@ -420,31 +420,31 @@ du -sh dist/
 ### Check Console Tab
 
 1. Open DevTools → Console
-1. Should be clean (no red errors)
-1. You might see vite/react dev messages (yellow is OK)
-1. Look for any red error messages
+2. Should be clean (no red errors)
+3. You might see vite/react dev messages (yellow is OK)
+4. Look for any red error messages
 
 ### Check Application Tab
 
 1. Open DevTools → Application
-1. Go to Storage → Local Storage
-1. You should see environment variables if stored
+2. Go to Storage → Local Storage
+3. You should see environment variables if stored
 
 ## Next Steps After Local Testing
 
 ### If Everything Works ✅
 
 1. Commit changes to GitHub
-1. Deploy backend: `cd backend && flyctl deploy --remote-only`
-1. Deploy frontend: Connect GitHub to Vercel
-1. Recruit coaches for MVP testing
+2. Deploy backend: `cd backend && flyctl deploy --remote-only`
+3. Deploy frontend: Connect GitHub to Vercel
+4. Recruit coaches for MVP testing
 
 ### If Issues Found ❌
 
 1. Check troubleshooting sections above
-1. Review backend logs: Terminal showing `uv run uvicorn`
-1. Review frontend logs: Browser console (F12)
-1. Check API docs at http://localhost:8000/docs for request format
+2. Review backend logs: Terminal showing `uv run uvicorn`
+3. Review frontend logs: Browser console (F12)
+4. Check API docs at http://localhost:8000/docs for request format
 
 ## Advanced: Local Testing with R2 (Optional)
 
@@ -548,7 +548,7 @@ If local testing fails:
    - Backend: Terminal output
    - Frontend: Browser console (F12)
 
-1. **Try fresh install**
+2. **Try fresh install**
 
    ```bash
    # Backend
@@ -558,7 +558,7 @@ If local testing fails:
    cd frontend && rm -rf node_modules yarn.lock && yarn install
    ```
 
-1. **Check environment**
+3. **Check environment**
 
    ```bash
    # Verify Python
@@ -569,7 +569,7 @@ If local testing fails:
    yarn --version
    ```
 
-1. **Test individual components**
+4. **Test individual components**
 
    ```bash
    # Test backend API directly

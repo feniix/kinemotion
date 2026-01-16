@@ -85,10 +85,10 @@ ______________________________________________________________________
 **Data Flow:**
 
 1. User uploads video to Vercel frontend
-1. Frontend calls `VITE_API_URL/api/analyze`
-1. Cloud Run receives request, processes video (60-120 seconds)
-1. Returns metrics JSON
-1. Frontend displays results
+2. Frontend calls `VITE_API_URL/api/analyze`
+3. Cloud Run receives request, processes video (60-120 seconds)
+4. Returns metrics JSON
+5. Frontend displays results
 
 ______________________________________________________________________
 
@@ -190,9 +190,9 @@ echo "Backend URL: $BACKEND_URL"
 ### Deploy Frontend (2 minutes)
 
 1. Go to **Vercel Dashboard** → kinemotion project
-1. Settings → Environment Variables
-1. Add: `VITE_API_URL` = your backend URL from above
-1. Redeploy frontend
+2. Settings → Environment Variables
+3. Add: `VITE_API_URL` = your backend URL from above
+4. Redeploy frontend
 
 ```bash
 # Or via CLI
@@ -287,19 +287,19 @@ ______________________________________________________________________
    - Collect feedback on metrics accuracy
    - Document issues
 
-1. **Monitor Performance** (Week 1-3)
+2. **Monitor Performance** (Week 1-3)
 
    - Check error logs daily
    - Monitor response times
    - Track cost usage
 
-1. **Iterate Based on Feedback** (Week 2-3)
+3. **Iterate Based on Feedback** (Week 2-3)
 
    - Fix validation issues
    - Improve metric calculations
    - Enhance UI based on feedback
 
-1. **Prepare for Scaling** (Post-MVP)
+4. **Prepare for Scaling** (Post-MVP)
 
    - Increase `--max-instances` if needed
    - Add R2 storage for results

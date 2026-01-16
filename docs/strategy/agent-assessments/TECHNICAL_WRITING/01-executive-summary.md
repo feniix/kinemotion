@@ -261,10 +261,10 @@ ______________________________________________________________________
 ## Quick Wins (This Week)
 
 1. **Assign Task 5 Owner** → Technical Writer + Backend Dev pair
-1. **Start OpenAPI Spec** → Design-first approach
-1. **Create Integration Examples Plan** → Resource allocation
-1. **Set Up Swagger UI** → Interactive exploration
-1. **Update CLAUDE.md** → Link to documentation strategy
+2. **Start OpenAPI Spec** → Design-first approach
+3. **Create Integration Examples Plan** → Resource allocation
+4. **Set Up Swagger UI** → Interactive exploration
+5. **Update CLAUDE.md** → Link to documentation strategy
 
 **Impact:** Enables developer attraction within 2 weeks
 
@@ -353,24 +353,24 @@ ______________________________________________________________________
 ### This Week
 
 1. [ ] Review and approve documentation strategy
-1. [ ] Assign Technical Writer as Task 5 owner
-1. [ ] Assign Backend Dev as Task 5 co-owner
-1. [ ] Confirm resource availability (all sprints)
-1. [ ] Schedule kick-off meeting
+2. [ ] Assign Technical Writer as Task 5 owner
+3. [ ] Assign Backend Dev as Task 5 co-owner
+4. [ ] Confirm resource availability (all sprints)
+5. [ ] Schedule kick-off meeting
 
 ### Week 1
 
 1. [ ] Task 1 owner starts ankle fix
-1. [ ] Tech Writer starts OpenAPI spec (design-first)
-1. [ ] Backend Dev confirms API endpoints ready
-1. [ ] Infrastructure: Deploy Swagger UI
+2. [ ] Tech Writer starts OpenAPI spec (design-first)
+3. [ ] Backend Dev confirms API endpoints ready
+4. [ ] Infrastructure: Deploy Swagger UI
 
 ### Week 2
 
 1. [ ] OpenAPI spec v1.0 complete
-1. [ ] First integration example started
-1. [ ] Quick start tutorial drafted
-1. [ ] Error codes documented
+2. [ ] First integration example started
+3. [ ] Quick start tutorial drafted
+4. [ ] Error codes documented
 
 ______________________________________________________________________
 

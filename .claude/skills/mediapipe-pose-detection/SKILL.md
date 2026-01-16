@@ -9,29 +9,29 @@ description: MediaPipe pose detection expertise. Use when debugging landmark tra
 
 ### Lower Body (Primary for Jumps)
 
-| Landmark | Left Index | Right Index | Use Case |
-|----------|------------|-------------|----------|
-| Hip | 23 | 24 | Center of mass, jump height |
-| Knee | 25 | 26 | Triple extension, landing |
-| Ankle | 27 | 28 | Ground contact detection |
-| Heel | 29 | 30 | Takeoff/landing timing |
-| Toe | 31 | 32 | Forefoot contact |
+| Landmark | Left Index | Right Index | Use Case                    |
+| -------- | ---------- | ----------- | --------------------------- |
+| Hip      | 23         | 24          | Center of mass, jump height |
+| Knee     | 25         | 26          | Triple extension, landing   |
+| Ankle    | 27         | 28          | Ground contact detection    |
+| Heel     | 29         | 30          | Takeoff/landing timing      |
+| Toe      | 31         | 32          | Forefoot contact            |
 
 ### Upper Body (Secondary)
 
-| Landmark | Left Index | Right Index | Use Case |
-|----------|------------|-------------|----------|
-| Shoulder | 11 | 12 | Arm swing tracking |
-| Elbow | 13 | 14 | Arm action |
-| Wrist | 15 | 16 | Arm swing timing |
+| Landmark | Left Index | Right Index | Use Case           |
+| -------- | ---------- | ----------- | ------------------ |
+| Shoulder | 11         | 12          | Arm swing tracking |
+| Elbow    | 13         | 14          | Arm action         |
+| Wrist    | 15         | 16          | Arm swing timing   |
 
 ### Reference Points
 
-| Landmark | Index | Use Case |
-|----------|-------|----------|
-| Nose | 0 | Head position |
-| Left Eye | 2 | Face orientation |
-| Right Eye | 5 | Face orientation |
+| Landmark  | Index | Use Case         |
+| --------- | ----- | ---------------- |
+| Nose      | 0     | Head position    |
+| Left Eye  | 2     | Face orientation |
+| Right Eye | 5     | Face orientation |
 
 ## Confidence Thresholds
 
@@ -44,11 +44,11 @@ min_tracking_confidence = 0.5   # Frame-to-frame tracking
 
 ### Quality Presets (auto_tuning.py)
 
-| Preset | Detection | Tracking | Use Case |
-|--------|-----------|----------|----------|
-| `fast` | 0.3 | 0.3 | Quick processing, tolerates errors |
-| `balanced` | 0.5 | 0.5 | Default, good accuracy |
-| `accurate` | 0.7 | 0.7 | Best accuracy, slower |
+| Preset     | Detection | Tracking | Use Case                           |
+| ---------- | --------- | -------- | ---------------------------------- |
+| `fast`     | 0.3       | 0.3      | Quick processing, tolerates errors |
+| `balanced` | 0.5       | 0.5      | Default, good accuracy             |
+| `accurate` | 0.7       | 0.7      | Best accuracy, slower              |
 
 ### Tuning Guidelines
 
@@ -63,6 +63,7 @@ min_tracking_confidence = 0.5   # Frame-to-frame tracking
 **Symptoms**: Landmarks jump erratically between frames
 
 **Solutions**:
+
 1. Apply Butterworth low-pass filter (cutoff 6-10 Hz)
 2. Increase tracking confidence
 3. Use One-Euro filter for real-time applications
@@ -84,6 +85,7 @@ smoothed = one_euro_filter(landmarks, min_cutoff=1.0, beta=0.007)
 **Cause**: Occlusion at 90° lateral camera angle
 
 **Solutions**:
+
 1. Use 45° oblique camera angle (recommended)
 2. Post-process to detect and correct swaps
 3. Use single-leg tracking when possible
@@ -93,11 +95,13 @@ smoothed = one_euro_filter(landmarks, min_cutoff=1.0, beta=0.007)
 **Symptoms**: Landmarks disappear for several frames
 
 **Causes**:
+
 - Athlete moves out of frame
 - Fast motion blur
 - Occlusion by equipment/clothing
 
 **Solutions**:
+
 1. Ensure full athlete visibility throughout video
 2. Use higher frame rate (60+ fps)
 3. Interpolate missing frames (up to 3-5 frames)
@@ -123,11 +127,13 @@ def interpolate_gaps(landmarks, max_gap=5):
 **Symptoms**: Visibility scores consistently below threshold
 
 **Causes**:
+
 - Poor lighting (backlighting, shadows)
 - Low contrast clothing vs background
 - Partial occlusion
 
 **Solutions**:
+
 1. Improve lighting (front-lit, even)
 2. Ensure clothing contrasts with background
 3. Remove obstructions from camera view
@@ -193,6 +199,7 @@ def normalized_to_pixel(landmark, width, height):
 ### Visibility Score
 
 Each landmark has a visibility score (0.0-1.0):
+
 - > 0.5: Likely visible and accurate
 - < 0.5: May be occluded or estimated
 - = 0.0: Not detected
@@ -213,12 +220,12 @@ POSE_CONNECTIONS = [
 
 ### Color Coding
 
-| Element | Color (BGR) | Meaning |
-|---------|-------------|---------|
-| Skeleton | (0, 255, 0) | Green - normal tracking |
+| Element        | Color (BGR)   | Meaning                   |
+| -------------- | ------------- | ------------------------- |
+| Skeleton       | (0, 255, 0)   | Green - normal tracking   |
 | Low confidence | (0, 165, 255) | Orange - visibility < 0.5 |
-| Key angles | (255, 0, 0) | Blue - measured angles |
-| Phase markers | (0, 0, 255) | Red - takeoff/landing |
+| Key angles     | (255, 0, 0)   | Blue - measured angles    |
+| Phase markers  | (0, 0, 255)   | Red - takeoff/landing     |
 
 ## Performance Optimization
 
@@ -315,19 +322,24 @@ LANDMARK QUALITY (per phase)
 ### Phase Detection Criteria
 
 **Standing End**: Last frame before downward hip movement begins
+
 - Look for: Hip starts descending, knees begin flexing
 
 **Lowest Point**: Frame where hip reaches minimum height
+
 - Look for: Deepest squat position, hip at lowest Y coordinate
 
 **Takeoff**: First frame where both feet leave ground
+
 - Look for: Toe/heel landmarks separate from ground plane
 - Note: May be 1-2 frames after visible liftoff due to detection lag
 
 **Peak Height**: Frame where hip reaches maximum height
+
 - Look for: Hip at highest Y coordinate during flight
 
 **Landing**: First frame where foot contacts ground
+
 - Look for: Heel or toe landmark touches ground plane
 - Note: Algorithm may detect 1-2 frames late (velocity-based)
 
@@ -335,13 +347,13 @@ LANDMARK QUALITY (per phase)
 
 For each landmark, observe:
 
-| Quality | Criteria |
-|---------|----------|
-| **Good** | Landmark stable, positioned correctly on body part |
-| **Jittery** | Landmark oscillates ±5-10 pixels between frames |
-| **Offset** | Landmark consistently displaced from actual position |
-| **Lost** | Landmark missing or wildly incorrect |
-| **Swapped** | Left/right landmarks switched |
+| Quality     | Criteria                                             |
+| ----------- | ---------------------------------------------------- |
+| **Good**    | Landmark stable, positioned correctly on body part   |
+| **Jittery** | Landmark oscillates ±5-10 pixels between frames      |
+| **Offset**  | Landmark consistently displaced from actual position |
+| **Lost**    | Landmark missing or wildly incorrect                 |
+| **Swapped** | Left/right landmarks switched                        |
 
 ### Recording Observations Format
 
@@ -379,24 +391,24 @@ When validating, provide structured data:
 
 At 60fps (16.67ms per frame):
 
-| Error Level | Frames | Time | Interpretation |
-|-------------|--------|------|----------------|
-| Perfect | 0 | 0ms | Exact match |
-| Excellent | ±1 | ±17ms | Within human observation variance |
-| Good | ±2 | ±33ms | Acceptable for most metrics |
-| Acceptable | ±3 | ±50ms | May affect precise timing metrics |
-| Investigate | >3 | >50ms | Algorithm may need adjustment |
+| Error Level | Frames | Time  | Interpretation                    |
+| ----------- | ------ | ----- | --------------------------------- |
+| Perfect     | 0      | 0ms   | Exact match                       |
+| Excellent   | ±1     | ±17ms | Within human observation variance |
+| Good        | ±2     | ±33ms | Acceptable for most metrics       |
+| Acceptable  | ±3     | ±50ms | May affect precise timing metrics |
+| Investigate | >3     | >50ms | Algorithm may need adjustment     |
 
 ### Bias Detection
 
 Look for systematic patterns across multiple videos:
 
-| Pattern | Meaning | Action |
-|---------|---------|--------|
-| Consistent +N frames | Algorithm detects late | Adjust threshold earlier |
-| Consistent -N frames | Algorithm detects early | Adjust threshold later |
-| Variable ±N frames | Normal variance | No action needed |
-| Increasing error | Tracking degrades | Check landmark quality |
+| Pattern              | Meaning                 | Action                   |
+| -------------------- | ----------------------- | ------------------------ |
+| Consistent +N frames | Algorithm detects late  | Adjust threshold earlier |
+| Consistent -N frames | Algorithm detects early | Adjust threshold later   |
+| Variable ±N frames   | Normal variance         | No action needed         |
+| Increasing error     | Tracking degrades       | Check landmark quality   |
 
 ### Integration with basic-memory
 
@@ -420,11 +432,13 @@ build_context("memory://biomechanics/*")
 ### Example: CMJ Validation Study Reference
 
 See basic-memory for complete validation study:
+
 - `biomechanics/cmj-phase-detection-validation-45deg-oblique-view-ground-truth`
 - `biomechanics/cmj-landing-detection-bias-root-cause-analysis`
 - `biomechanics/cmj-landing-detection-impact-vs-contact-method-comparison`
 
 Key findings from validation:
+
 - Standing End: 100% accuracy (0 frame error)
 - Takeoff: ~0.7 frame mean error (excellent)
 - Lowest Point: ~2.3 frame mean error (variable)

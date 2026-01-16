@@ -25,4 +25,4 @@ ffmpeg -f lavfi -i testsrc=duration=5:size=320x240:rate=30 \
   -t 5 test-video.mp4
 ```
 
-Keep test videos small (\< 10MB) for fast test execution.
+Keep test videos small (< 10MB) for fast test execution.

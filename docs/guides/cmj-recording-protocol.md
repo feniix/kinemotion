@@ -46,9 +46,9 @@ ______________________________________________________________________
 **Recommended Setup (45° oblique view):**
 
 1. **Position camera at 45° angle** to athlete's side
-1. **Mark athlete position:** Fixed floor position, unchanged clothing and footwear
-1. **Record jumps:** One video per jump (1-3 jumps recommended)
-1. **Maintain consistency:** Same angle, lighting, and distance throughout
+2. **Mark athlete position:** Fixed floor position, unchanged clothing and footwear
+3. **Record jumps:** One video per jump (1-3 jumps recommended)
+4. **Maintain consistency:** Same angle, lighting, and distance throughout
 
 **Important:**
 
@@ -84,7 +84,7 @@ ______________________________________________________________________
 - Use 90° pure lateral view (causes landmark occlusion)
 - Include multiple jumps in a single video file
 - Record with poor lighting (affects landmark detection)
-- Position camera too close (\< 3m) or too far (> 5m)
+- Position camera too close (< 3m) or too far (> 5m)
 
 ______________________________________________________________________
 

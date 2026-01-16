@@ -199,12 +199,12 @@ ______________________________________________________________________
    - Decide client vs server based on data
    - Build latency profiler tool for ongoing monitoring
 
-1. **Task 1 Completion Before Task 4 Start**
+2. **Task 1 Completion Before Task 4 Start**
 
    - Validate foot_index landmark confidence
    - Prevents mid-development discovery of landing classification issues
 
-1. **Separate Multi-Person as Task 3B**
+3. **Separate Multi-Person as Task 3B**
 
    - Prevents scope creep on Task 3 real-time
    - Team features are optional, not blocking MVP
@@ -226,9 +226,9 @@ ______________________________________________________________________
 ## Next Steps
 
 1. **Review this assessment** with stakeholders
-1. **Week 1 Task 3:** Implement latency profiler, validate architecture decision
-1. **Revise sprint planning** to include Task 3B, adjust Task 4 start date
-1. **Proceed with confidence** - no CV blockers detected
+2. **Week 1 Task 3:** Implement latency profiler, validate architecture decision
+3. **Revise sprint planning** to include Task 3B, adjust Task 4 start date
+4. **Proceed with confidence** - no CV blockers detected
 
 ______________________________________________________________________
 

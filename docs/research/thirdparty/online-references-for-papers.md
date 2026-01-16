@@ -320,7 +320,7 @@ This document contains URLs, DOIs, and online references for the papers listed i
 ### 29. Flatt A, Esco M, Nakamura F (2018)
 
 **Title:** Association between Subjective Indicators of Recovery Status and Heart Rate Variability among Divison-1 Sprint-Swimmers
-**Journal:** Sports \[Internet\]. 2018 Sep 11;6(3):93
+**Journal:** Sports [Internet]. 2018 Sep 11;6(3):93
 **DOI:** [10.3390/sports6030093](https://doi.org/10.3390/sports6030093)
 **PubMed:** <https://pubmed.ncbi.nlm.nih.gov/30208575/>
 
@@ -330,7 +330,7 @@ This document contains URLs, DOIs, and online references for the papers listed i
 ### 30. Saw A, Halson S, Mujika I (2018)
 
 **Title:** Monitoring Athletes during Training Camps: Observations and Translatable Strategies from Elite Road Cyclists and Swimmers
-**Journal:** Sports \[Internet\]. 2018 Jul 20;6(3):63
+**Journal:** Sports [Internet]. 2018 Jul 20;6(3):63
 **DOI:** [10.3390/sports6030063](https://doi.org/10.3390/sports6030063)
 **PubMed:** <https://pubmed.ncbi.nlm.nih.gov/30036955/>
 **Full Text (Open Access):** <https://www.mdpi.com/2075-4663/6/3/63/pdf>
@@ -342,7 +342,7 @@ This document contains URLs, DOIs, and online references for the papers listed i
 ### 31. Ward P, Coutts AJ, Pruna R, McCall A (2018)
 
 **Title:** Putting the 'i' Back in Team
-**Journal:** Int J Sports Physiol Perform \[Internet\]. 2018 Jun 28;12:1–14
+**Journal:** Int J Sports Physiol Perform [Internet]. 2018 Jun 28;12:1–14
 **DOI:** [10.1123/ijspp.2018-0154](https://doi.org/10.1123/ijspp.2018-0154)
 **PubMed:** <https://pubmed.ncbi.nlm.nih.gov/29952669/>
 **ResearchGate (Open Access):** <https://www.researchgate.net/publication/326045937>

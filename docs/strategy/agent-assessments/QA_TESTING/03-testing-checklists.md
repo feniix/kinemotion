@@ -672,7 +672,7 @@ Test 4: Frame Rate Robustness
 ✓ Consistency: Same video gives same metrics (repeatability \<1%)
 ✓ Robustness: 5% tolerance across camera angles
 ✓ Asymmetry: Can detect >20% asymmetry (good/poor technique)
-✓ Athlete correlation: Elite \< Recreational \< Beginner (GCT)
+✓ Athlete correlation: Elite < Recreational < Beginner (GCT)
 ✓ Error rate: \<15% vs self-reported metrics
 ✓ No lab equipment needed: All validation non-invasive
 
@@ -780,7 +780,7 @@ ______________________________________________________________________
 - [ ] Running metrics: Within published ranges
 - [ ] Validation: 3-tier approach complete
 - [ ] Consistency: \<5% variation across conditions
-- [ ] Athlete correlation: Elite \< Rec \< Beginner
+- [ ] Athlete correlation: Elite < Rec < Beginner
 
 ### Overall Roadmap (Month 6)
 

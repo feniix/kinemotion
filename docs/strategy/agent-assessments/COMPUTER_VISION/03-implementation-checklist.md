@@ -33,7 +33,7 @@ ______________________________________________________________________
 
 - [ ] **Record decision: Client-side primary vs server-side only**
 
-  - Decision: \[ \] Client-side primary + server fallback | \[ \] Server-side only
+  - Decision: [ ] Client-side primary + server fallback | [ ] Server-side only
   - Rationale: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
   - Sign-off: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 

@@ -208,13 +208,13 @@ ______________________________________________________________________
    - Identify MediaPipe bottleneck
    - Set realistic targets
 
-1. **Prepare Task 1 Validation (2 days)**
+2. **Prepare Task 1 Validation (2 days)**
 
    - Finalize foot_index test suite
    - Get biomechanics specialist review
    - Plan rapid rollback if needed
 
-1. **Finalize Task 2 Scope (1 day)**
+3. **Finalize Task 2 Scope (1 day)**
 
    - Confirm 40-50 new tests feasible
    - Reserve resources for test implementation

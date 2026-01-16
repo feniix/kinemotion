@@ -56,8 +56,8 @@ Search on https://scholar.google.com:
 **Finding the DOI:**
 
 1. Click on the paper title
-1. Look at the URL of the publisher's page
-1. OR click "Cite" → "BibTeX" and the DOI is in the citation
+2. Look at the URL of the publisher's page
+3. OR click "Cite" → "BibTeX" and the DOI is in the citation
 
 **Example BibTeX:**
 
@@ -137,16 +137,16 @@ This helps you recognize DOIs:
 ### Example 1: You have a PDF
 
 1. Open the PDF
-1. Look at the top of the first page
-1. Find text like "DOI: 10.xxxx/xxxxx"
-1. Copy just the DOI part (not "DOI:" prefix)
+2. Look at the top of the first page
+3. Find text like "DOI: 10.xxxx/xxxxx"
+4. Copy just the DOI part (not "DOI:" prefix)
 
 ### Example 2: You have a paper title
 
 1. Search on PubMed or Google Scholar
-1. Click on the result
-1. Look for DOI in the metadata
-1. Copy it
+2. Click on the result
+3. Look for DOI in the metadata
+4. Copy it
 
 ### Example 3: You have a citation
 
@@ -202,8 +202,8 @@ Try finding the DOI for this paper:
 **How to find it:**
 
 1. Search on PubMed: "Balsalobre-Fernandez iPhone vertical jump 2015"
-1. Open the result
-1. DOI is shown in the article metadata
+2. Open the result
+3. DOI is shown in the article metadata
 
 ______________________________________________________________________
 

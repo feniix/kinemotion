@@ -58,15 +58,15 @@ During plantarflexion in CMJ takeoff, toes point downward (away from camera). Th
 **Severity:** MEDIUM
 
 - Jump phase is brief (~300ms), so missing frames are localized
-- Heel is backup that could be used when foot_index confidence \< threshold
+- Heel is backup that could be used when foot_index confidence < threshold
 - Smoothing filters can fill small gaps
 
 **Validation Required Before Deployment:**
 
 1. Test on 5-10 real CMJ videos with current code
-1. Compare foot_index vs heel visibility confidence during concentric phase
-1. Measure ankle angle range with both landmarks
-1. Verify: 30°+ increase during concentric (current likely shows 5-10°)
+2. Compare foot_index vs heel visibility confidence during concentric phase
+3. Measure ankle angle range with both landmarks
+4. Verify: 30°+ increase during concentric (current likely shows 5-10°)
 
 **Fix Approach:**
 
@@ -260,9 +260,9 @@ ______________________________________________________________________
 Why running GCT is harder than jump GCT:
 
 1. Jump has clear acceleration spike (impact on ground)
-1. Running has subtle, repetitive ground contacts
-1. Horizontal velocity is dominant (harder to detect from side view)
-1. Foot may not be clearly visible if ground plane has similar color/texture
+2. Running has subtle, repetitive ground contacts
+3. Horizontal velocity is dominant (harder to detect from side view)
+4. Foot may not be clearly visible if ground plane has similar color/texture
 
 **Approaches for Detection:**
 
@@ -333,9 +333,9 @@ Single-camera video captures:
 To measure stride length absolutely requires:
 
 1. Camera height & distance calibration, OR
-1. Multi-camera stereo setup, OR
-1. Known reference object in frame, OR
-1. IMU integration with step counting
+2. Multi-camera stereo setup, OR
+3. Known reference object in frame, OR
+4. IMU integration with step counting
 
 **Research Gap:** No published validated stride length extraction from 2D smartphone video
 
@@ -682,14 +682,14 @@ ______________________________________________________________________
    - Mitigation: Implement fallback to heel + smoothing filter
    - Detection: Run on 10 test videos before deployment
 
-1. **Heel Was Intentional** (Probability: 10%, Impact: Critical)
+2. **Heel Was Intentional** (Probability: 10%, Impact: Critical)
 
    - Original designers may have chosen heel for specific reason
    - Fix could be wrong direction
    - Mitigation: Review original design rationale first
    - Timeline impact: +1 day investigation
 
-1. **Validation Failure** (Probability: 15%, Impact: Medium)
+3. **Validation Failure** (Probability: 15%, Impact: Medium)
 
    - After fix, ankle angles may still not increase 30°+
    - Could indicate MediaPipe accuracy limit for ankle
@@ -698,8 +698,8 @@ ______________________________________________________________________
 
 **Contingency Plan:**
 
-- If foot_index visibility \< 70%: Use weighted blend of foot_index + heel
-- If ankle angle increase \< 20°: Document limitation, adjust bounds
+- If foot_index visibility < 70%: Use weighted blend of foot_index + heel
+- If ankle angle increase < 20°: Document limitation, adjust bounds
 - If >50% confidence values low: Label as "requires high-quality video"
 
 ### 6.2 Task 4 (Running Metrics) - Risk Level: HIGH
@@ -714,21 +714,21 @@ ______________________________________________________________________
    - Mitigation: Start with recreational runner scope only
    - Timeline impact: +2 weeks for algorithm optimization
 
-1. **Ground Plane Detection Failure** (Probability: 35%, Impact: High)
+2. **Ground Plane Detection Failure** (Probability: 35%, Impact: High)
 
    - Detecting foot contact from 2D requires ground plane knowledge
    - May fail with variable lighting, ground surfaces
    - Mitigation: Restrict to controlled environments initially
    - Timeline impact: +1-2 weeks for robust detection
 
-1. **Stride Length Accuracy Unacceptable** (Probability: 60%, Impact: Medium)
+3. **Stride Length Accuracy Unacceptable** (Probability: 60%, Impact: Medium)
 
    - Without calibration, stride error 10-20%
    - Affects credibility of running metrics
    - Mitigation: Publish stride as "relative to body" not absolute distance
    - Timeline impact: +1 week for design decision
 
-1. **MediaPipe Pose Drops During Running** (Probability: 25%, Impact: Medium)
+4. **MediaPipe Pose Drops During Running** (Probability: 25%, Impact: Medium)
 
    - Fast limb motion can cause detection gaps
    - Affects phase continuity
@@ -839,16 +839,16 @@ INCLUDE IN DOCS:
 **DO IMMEDIATELY:**
 
 1. Start validation study planning (even if low priority for now)
-1. Document accuracy limits in API (±2-3cm jump height, ±5-10° angles)
-1. Add physiological bounds validation to all metrics
-1. Prepare "accuracy statement" document for partnerships
+2. Document accuracy limits in API (±2-3cm jump height, ±5-10° angles)
+3. Add physiological bounds validation to all metrics
+4. Prepare "accuracy statement" document for partnerships
 
 **DO BEFORE MAJOR MARKETING:**
 
 1. Complete validation study (vs force plate or marker system)
-1. Publish results as technical report/white paper
-1. Partner with 2-3 biomechanics researchers for credibility
-1. Include accuracy statements in all marketing claims
+2. Publish results as technical report/white paper
+3. Partner with 2-3 biomechanics researchers for credibility
+4. Include accuracy statements in all marketing claims
 
 **EXAMPLE ACCURATE MARKETING CLAIM:**
 
@@ -980,10 +980,10 @@ ______________________________________________________________________
 **Critical Success Factors:**
 
 1. Validate ankle angle fix on real videos (2 hours)
-1. Document physiological bounds for all metrics
-1. Conduct running prototype validation before full sprint (1 week)
-1. Plan validation study for Month 3-4
-1. Include accuracy statements in all API documentation
+2. Document physiological bounds for all metrics
+3. Conduct running prototype validation before full sprint (1 week)
+4. Plan validation study for Month 3-4
+5. Include accuracy statements in all API documentation
 
 **Expected 6-Month Outcome:**
 

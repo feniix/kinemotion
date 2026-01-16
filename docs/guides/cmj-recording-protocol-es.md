@@ -46,9 +46,9 @@ ______________________________________________________________________
 **Setup Recomendado (vista oblicua de 45°):**
 
 1. **Posicionar cámara a ángulo de 45°** al lado del atleta
-1. **Marcar posición del atleta:** Posición fija en piso, misma ropa y calzado
-1. **Grabar saltos:** Un video por salto (1-3 saltos recomendados)
-1. **Mantener consistencia:** Mismo ángulo, iluminación y distancia
+2. **Marcar posición del atleta:** Posición fija en piso, misma ropa y calzado
+3. **Grabar saltos:** Un video por salto (1-3 saltos recomendados)
+4. **Mantener consistencia:** Mismo ángulo, iluminación y distancia
 
 **Importante:**
 
@@ -84,7 +84,7 @@ ______________________________________________________________________
 - Usar vista lateral pura de 90° (causa oclusión de landmarks)
 - Grabar múltiples saltos en un video
 - Grabar con mala iluminación (afecta detección de landmarks)
-- Posicionar cámara muy cerca (\< 3m) o muy lejos (> 5m)
+- Posicionar cámara muy cerca (< 3m) o muy lejos (> 5m)
 
 ______________________________________________________________________
 

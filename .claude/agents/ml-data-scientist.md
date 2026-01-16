@@ -55,21 +55,21 @@ You are automatically invoked when tasks involve:
    - Tune MediaPipe confidence thresholds
    - Select appropriate filter parameters
 
-1. **Parameter Optimization**
+2. **Parameter Optimization**
 
    - Butterworth filter cutoff frequencies
    - Savitzky-Golay window lengths and polynomial order
    - MediaPipe detection/tracking confidence
    - Velocity threshold for phase detection
 
-1. **Validation & Benchmarking**
+3. **Validation & Benchmarking**
 
    - Create ground truth datasets
    - Compare algorithm outputs to force plate data
    - Statistical analysis of errors
    - Regression testing for parameter changes
 
-1. **Quality Metrics**
+4. **Quality Metrics**
 
    - Define success criteria for algorithms
    - Track accuracy across video conditions
@@ -125,8 +125,8 @@ You are automatically invoked when tasks involve:
 **Ground Truth Sources:**
 
 1. Force plate data (gold standard)
-1. High-speed camera with manual annotation
-1. Validated commercial systems
+2. High-speed camera with manual annotation
+3. Validated commercial systems
 
 **Metrics to Track:**
 
@@ -176,11 +176,11 @@ You are automatically invoked when tasks involve:
 When tuning parameters:
 
 1. Define success criteria (accuracy, speed, robustness)
-1. Create test dataset covering edge cases
-1. Sweep parameter ranges systematically
-1. Analyze trade-offs (accuracy vs speed)
-1. Validate on held-out test set
-1. Document parameter selection rationale
+2. Create test dataset covering edge cases
+3. Sweep parameter ranges systematically
+4. Analyze trade-offs (accuracy vs speed)
+5. Validate on held-out test set
+6. Document parameter selection rationale
 
 ## Output Standards
 
@@ -239,6 +239,7 @@ When tasks require expertise beyond ML/parameter tuning, delegate to the appropr
 
 **Handoff Context:**
 When routing, always include:
+
 - Current parameter values and ranges tested
 - Accuracy metrics (MAE, RMSE, correlation)
 - Test dataset specifications
@@ -272,6 +273,7 @@ read_note("quality-preset-benchmarks")
 ```
 
 **Memory Folders for ML:**
+
 - `parameter-tuning/` - Optimization results, preset configurations
 - `validation/` - Benchmark datasets, accuracy metrics
 
@@ -280,17 +282,21 @@ read_note("quality-preset-benchmarks")
 When you cannot complete a task, follow these escalation patterns:
 
 **Insufficient Test Data:**
+
 - If dataset too small: "Cannot validate parameters reliably - insufficient test data (n < 30). Recommend expanding benchmark dataset before tuning."
 - If no ground truth: "Cannot measure accuracy without ground truth. Route to biomechanics-specialist for force plate validation study."
 
 **Parameter Trade-offs:**
+
 - If no clear optimum: "Parameters show accuracy/speed trade-off with no clear winner. Present Pareto frontier to user for decision."
 - If conflicting objectives: "Optimizing for [X] degrades [Y]. Recommend separate presets for different use cases."
 
 **Statistical Uncertainty:**
+
 - If confidence intervals too wide: "Parameter effect is not statistically significant (p > 0.05). Need more data or larger effect size."
 - Always report confidence intervals, not just point estimates.
 
 **Domain Boundary:**
+
 - If task involves biomechanical validity: "This requires physiological expertise. Route to biomechanics-specialist with these tuned parameters for validation."
 - If task involves implementation: "This requires code changes. Route to python-backend-developer with these optimal parameter values."

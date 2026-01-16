@@ -19,13 +19,13 @@ To evaluate the feasibility and performance of client-side pose estimation using
    yarn install
    ```
 
-1. **Start Dev Server**:
+2. **Start Dev Server**:
 
    ```bash
    yarn dev
    ```
 
-1. **Open Browser**:
+3. **Open Browser**:
    Navigate to the URL shown (usually `http://localhost:5173`).
    **Note**: For WebGPU support, use Chrome/Edge 113+ or similar modern browsers.
 

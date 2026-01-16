@@ -23,11 +23,11 @@ The backend connects to Supabase using the Supabase Python client and environmen
 ### Option A: Create a New Project
 
 1. Go to https://supabase.com/dashboard
-1. Click "New Project"
-1. Choose a name (e.g., "kinemotion")
-1. Set a database password (store securely)
-1. Select your region (us-east-1 recommended for US deployments)
-1. Wait 2-3 minutes for provisioning
+2. Click "New Project"
+3. Choose a name (e.g., "kinemotion")
+4. Set a database password (store securely)
+5. Select your region (us-east-1 recommended for US deployments)
+6. Wait 2-3 minutes for provisioning
 
 ### Option B: Use Existing Project
 
@@ -43,7 +43,7 @@ You'll need these values from your Supabase project:
    - **Anon Key**: Public key for client-side access (starts with `sb_anon_`)
    - **Service Role Key**: Secret key for server-side access (starts with `sb_service_role_`)
 
-1. **Go to Settings → Database**:
+2. **Go to Settings → Database**:
 
    - **Postgres URL**: Connection string (for migrations if needed)
 
@@ -62,9 +62,9 @@ Run the following SQL in your Supabase project to create the required tables:
 ### In Supabase Dashboard:
 
 1. Go to **SQL Editor**
-1. Create a new query
-1. Paste the SQL below
-1. Click "Run"
+2. Create a new query
+3. Paste the SQL below
+4. Click "Run"
 
 ```sql
 -- Enable required extensions
@@ -260,9 +260,9 @@ git push origin main
 GitHub Actions will:
 
 1. Build Docker image
-1. Push to Google Container Registry
-1. Deploy to Cloud Run with environment variables
-1. Inject secrets from Google Secret Manager
+2. Push to Google Container Registry
+3. Deploy to Cloud Run with environment variables
+4. Inject secrets from Google Secret Manager
 
 ## Environment Variables Reference
 
@@ -351,8 +351,8 @@ cat backend/.env | grep SUPABASE_URL
 **Solution**:
 
 1. Verify Supabase project is running: https://supabase.com/dashboard
-1. Check network connectivity to `[project-id].supabase.co`
-1. Verify credentials are correct in `.env`
+2. Check network connectivity to `[project-id].supabase.co`
+3. Verify credentials are correct in `.env`
 
 ### Issue: "RLS policy violation"
 
@@ -413,12 +413,12 @@ For more details, see [Supabase RLS Documentation](https://supabase.com/docs/gui
 ## Next Steps
 
 1. ✅ Create Supabase project
-1. ✅ Gather credentials
-1. ✅ Create database schema
-1. ✅ Configure local `.env` file
-1. ✅ Test backend connection
-1. 📋 Set up frontend authentication (see Frontend Guide)
-1. 📋 Deploy to production (see Deployment Guide)
+2. ✅ Gather credentials
+3. ✅ Create database schema
+4. ✅ Configure local `.env` file
+5. ✅ Test backend connection
+6. 📋 Set up frontend authentication (see Frontend Guide)
+7. 📋 Deploy to production (see Deployment Guide)
 
 ## How to Check Your Implementation
 

@@ -7,12 +7,12 @@ Published by John Wiley & Sons Ltd
 
 # Effects of velocity loss during resistance training on athletic performance, strength gains and muscle adaptations
 
-F. Pareja-Blanco \[1\], D. Rodr�ıguez-Rosell \[1\], L. S�anchez-Medina \[2\], J. Sanchis-Moysi \[3,4\], C. Dorado \[3,4\], R. Mora-Custodio \[1\],
-J. M. Y�a~nez-Garc�ıa \[1\], D. Morales-Alamo \[3,4\], I. P�erez-Su�arez \[3,4\], J. A. L. Calbet \[3,4\], J. J. Gonz�alez-Badillo \[1\]
+F. Pareja-Blanco [1], D. Rodr�ıguez-Rosell [1], L. S�anchez-Medina [2], J. Sanchis-Moysi [3,4], C. Dorado [3,4], R. Mora-Custodio [1],
+J. M. Y�a~nez-Garc�ıa [1], D. Morales-Alamo [3,4], I. P�erez-Su�arez [3,4], J. A. L. Calbet [3,4], J. J. Gonz�alez-Badillo [1]
 
 1Physical Performance & Sports Research Center, Pablo de Olavide University, Seville, Spain, 2Studies, Research & Sports
-Medicine Center, Government of Navarre, Pamplona, Spain, \[3\] Department of Physical Education, Las Palmas de Gran Canaria
-University, Las Palmas de Gran Canaria, Spain, \[4\] Research Institute of Biomedical and Health Sciences (IUIBS), Las Palmas de
+Medicine Center, Government of Navarre, Pamplona, Spain, [3] Department of Physical Education, Las Palmas de Gran Canaria
+University, Las Palmas de Gran Canaria, Spain, [4] Research Institute of Biomedical and Health Sciences (IUIBS), Las Palmas de
 Gran Canaria University, Las Palmas de Gran Canaria, Spain
 Corresponding author: Fernando Pareja-Blanco, Centro de Investigacion en Rendimiento F� �ısico y Deportivo, Universidad Pablo de
 Olavide, Ctra. de Utrera km 1, 41013 Seville, Spain. Tel.: +34 653121522; Fax: +34 954 348 659; E-mail: <fparbla@gmail.com>
@@ -52,7 +52,7 @@ hypothesized that RT eliciting high levels of fatigue,
 as it occurs in typical body-building routines, may
 
 squat strength gains than VL40 and greater improvements
-in CMJ (9.5% vs 3.5%, P \< 0.05), despite VL20
+in CMJ (9.5% vs 3.5%, P < 0.05), despite VL20
 performing 40% fewer repetitions. Although both groups
 increased mean fiber CSA and whole quadriceps muscle
 volume, VL40 training elicited a greater hypertrophy of
@@ -280,7 +280,7 @@ standardize the site and depth of the sample. Upon collection,
 
 –
 muscle samples, weighing 75 100 mg, were divided into two.
-The first half was mounted on cork blocks with the use of Tissue-Tek \[�\] O.C.T.TM embedding medium an orientated so that
+The first half was mounted on cork blocks with the use of Tissue-Tek [�] O.C.T.TM embedding medium an orientated so that
 myofibers could be transversely cut. Specimens were systemati
 –
 cally frozen by immersion (10 15 s) in isopentane, kept at
@@ -368,7 +368,7 @@ the more distal edge of the femur condyles to the iliac spine
 with the subjects lying supine with extended knees. Axial gradient-echo T1-weighted images of the thigh were collected
 from both legs simultaneously using a repetition time of
 132 ms and an echo time of 4.2 ms, a flip angle of 80� with a
-42 cm \[2\] field of view, and a matrix of 256 9 256 pixels
+42 cm [2] field of view, and a matrix of 256 9 256 pixels
 (in-plane spatial resolution = 1.64 mm 9 1.64 mm).
 
 The boundaries of the VL, vastus intermedius (VI), vastus
@@ -476,16 +476,16 @@ and the repetitions performed in different velocity
 ranges by each group are shown in Fig. 2. Subjects
 from the VL20 group trained at a significantly faster
 mean velocity than those from VL40 (0.69 � 0.02 vs
-0.58 � 0.03 m/s, respectively; P \< 0.001), whereas
-VL40 performed more repetitions (P \< 0.001) than
+0.58 � 0.03 m/s, respectively; P < 0.001), whereas
+VL40 performed more repetitions (P < 0.001) than
 VL20 (310.5 � 42.0 vs 185.9 � 22.2). The mean
 fastest repetition during each session (that which
 indicates the relative magnitude of the load being
 lifted) did not differ between groups (0.75 � 0.03 vs
 0.76 � 0.01 m/s, for VL40 and VL20, respectively)
 
-Fig. 2. Number of repetitions in the squat exercise performed in each velocity range, and total number of repetitions completed by both training groups. Data are mean � SD. Statistically significant differences between groups: \*\*P \< 0.01,
-\*\*\*P \< 0.001. VL20: group that trained with a mean velocity loss of 20% in each set (n = 12); VL40: group that trained with
+Fig. 2. Number of repetitions in the squat exercise performed in each velocity range, and total number of repetitions completed by both training groups. Data are mean � SD. Statistically significant differences between groups: \*\*P < 0.01,
+\*\*\*P < 0.001. VL20: group that trained with a mean velocity loss of 20% in each set (n = 12); VL40: group that trained with
 a mean velocity loss of 40% in each set (n = 10). Warm-up repetitions are excluded.
 
 6
@@ -498,7 +498,7 @@ mean magnitude of velocity loss matched
 that intended for each group (41.9 � 1.7% vs
 20.4 � 1.5% for VL40 and VL20, respectively).
 Total work was significantly greater for VL40 compared to VL20 (200.6 � 47.1 vs 127.5 � 15.2 kJ,
-P \< 0.001).
+P < 0.001).
 
 Isoinertial strength assessments
 
@@ -508,37 +508,37 @@ analyzed. Following the training intervention, statistically significant increas
 strength (18.0% and 13.4%), AV (12.5% and 6.0%),
 and AV\<1 (21.7% and 13.7%) for VL20 and VL40
 groups, respectively (Table 2). AV>1 improved in
-VL20 (6.2%, P \< 0.01) but remained unchanged
+VL20 (6.2%, P < 0.01) but remained unchanged
 (+1.0%, P = 0.62) in VL40 (group 9 time interaction P = 0.09).
 
 Vertical jump and sprint ability
 
 CMJ height was increased by 9.5% in the VL20
-group (P \< 0.001), while it remained unchanged
-(+3.5% P = 0.07) in the VL40 (group 9 time interaction P \< 0.05) (Table 2). No statistically significant changes in sprint running performance were
+group (P < 0.001), while it remained unchanged
+(+3.5% P = 0.07) in the VL40 (group 9 time interaction P < 0.05) (Table 2). No statistically significant changes in sprint running performance were
 observed in any group (Table 2).
 
 Fiber type distribution and MHC content
 
 The mean CSA of muscle fibers increased similarly
-in both groups (+10.5%, time effect P \< 0.01). The
+in both groups (+10.5%, time effect P < 0.01). The
 increase in mean CSA was explained by an increase
 
 Velocity loss as a strength training variable
 
-of type I CSA (+9.9% time effect P \< 0.01) and la T
-con minuscula: type II (� +11.1% time effect P \< 0.05)
+of type I CSA (+9.9% time effect P < 0.01) and la T
+con minuscula: type II (� +11.1% time effect P < 0.05)
 (Table 3). No significant changes were observed in
 muscle fiber type (ATPase analysis method,
 Table 3). However, the percentage of MHC-IIX
-decreased in VL40 (P \< 0.001) while it remained
+decreased in VL40 (P < 0.001) while it remained
 unchanged in VL20 (group 9 time interaction
-P \< 0.05, Table 3).
+P < 0.05, Table 3).
 
 Anatomical muscle CSA and volume
 
 Total quadriceps femoris volume (Fig. 3a) was
-increased by 6.0% (time effect P \< 0.05). This was
+increased by 6.0% (time effect P < 0.05). This was
 explained by a significant increase of VM volume
 (Fig. 3c) in both groups, whereas the VL+VI volume
 (Fig. 3d) only increased in the VL40 group
@@ -596,11 +596,11 @@ time time
 Pre Post P-value Pre Post P-value effect interaction
 
 CSA muscle fibers (ATPase)
-CSA (lm \[2\] ) 4935 � 690 5438 � 788 0.02 4800 � 691 5217 � 701 0.05 0.005 0.77
-CSA-I (lm \[2\] ) 4314 � 676 4798 � 804 0.01 4070 � 834 4346 � 873 0.13 0.007 0.41
-CSA-IIA (lm \[2\] ) 5584 � 1259 6233 � 998 0.05 5708 � 893 6169 � 716 0.16 0.03 0.68
-CSA-IIAX (lm \[2\] ) 4619 � 1022 5260 � 962 0.04 4936 � 740 5146 � 744 0.49 0.06 0.31
-CSA-IIX (lm \[2\] ) 4406 � 1037 4927 � 1502 0.30 4130 � 930 4853 � 1016 0.16 0.09 0.77
+CSA (lm [2] ) 4935 � 690 5438 � 788 0.02 4800 � 691 5217 � 701 0.05 0.005 0.77
+CSA-I (lm [2] ) 4314 � 676 4798 � 804 0.01 4070 � 834 4346 � 873 0.13 0.007 0.41
+CSA-IIA (lm [2] ) 5584 � 1259 6233 � 998 0.05 5708 � 893 6169 � 716 0.16 0.03 0.68
+CSA-IIAX (lm [2] ) 4619 � 1022 5260 � 962 0.04 4936 � 740 5146 � 744 0.49 0.06 0.31
+CSA-IIX (lm [2] ) 4406 � 1037 4927 � 1502 0.30 4130 � 930 4853 � 1016 0.16 0.09 0.77
 Percentage fiber type (ATPase)
 Type I (%) 44.3 � 10.4 47.5 � 9.8 0.25 45.9 � 15.7 43.7 � 13.4 0.39 0.78 0.15
 Type IIC (%) 0.1 � 0.2 0.3 � 0.6 0.87 0.5 � 1.1 1.6 � 4.9 0.22 0.34 0.48
@@ -689,8 +689,8 @@ Velocity loss as a strength training variable
 Fig. 3. Changes in muscle volume following 8 weeks of velocity-based resistance training for: (a) Whole quadriceps femoris;
 (b) rectus femoris (RF); (c) vastus medialis (VM); and (d) vastus lateralis plus vastus intermedius (VL+VI). Data are
 mean � SD. VL20: group that trained with a mean velocity loss of 20% in each set (n = 12); VL40: group that trained with a
-mean velocity loss of 40% in each set (n = 10). Intra-group significant differences from Pre to Post: \*\*P \< 0.01, \*\*\*P \< 0.001.
-Significant group 9 time interaction: \[#\] P \< 0.05.
+mean velocity loss of 40% in each set (n = 10). Intra-group significant differences from Pre to Post: \*\*P < 0.01, \*\*\*P < 0.001.
+Significant group 9 time interaction: [#] P < 0.05.
 
 greater improvements in CMJ height than VL40
 (Table 2). Interestingly, VL40 did not improve in the
@@ -743,7 +743,7 @@ changes (Aagaard et al., 2001) or potential differences
 in regional adaptations (Folland & Williams, 2007;
 Sanchis-Moysi et al., 2010, 2011, 2012). In the present
 study, VL40 resulted in greater hypertrophy (VL+VI:
-9.0% vs 3.4%, P \< 0.05) than VL20. However, VL20
+9.0% vs 3.4%, P < 0.05) than VL20. However, VL20
 also increased quadriceps volume (4.6%) and fiber
 size (9.8%), despite performing ~58% of the training
 volume done by VL40. The greater mechanical and
@@ -776,7 +776,7 @@ for sports where very rapid movements and explosive
 force production are decisive for performance. A previous study (Andersen et al., 2010) observed a
 decrease in the early phase of the relative RFD following 14 weeks of RT to failure. This decrease in the
 early relative RFD was positively correlated
-(r = 0.61, P \< 0.05) with the decrease in the area percentage of type IIX muscle fibers (Andersen et al.
+(r = 0.61, P < 0.05) with the decrease in the area percentage of type IIX muscle fibers (Andersen et al.
 2010). These findings might explain the lower gains in
 vertical jump (CMJ) performance observed for VL40
 compared to VL20 in the present study (Table 2).
