@@ -18,7 +18,7 @@ repos:
       - id: mixed-line-ending
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.4
+    rev: v0.14.13
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
@@ -27,7 +27,7 @@ repos:
         exclude: ^TRASH/
 
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.407
+    rev: v1.1.408
     hooks:
       - id: pyright
         files: ^src/
@@ -39,6 +39,7 @@ repos:
       - id: mdformat
         additional_dependencies:
           - mdformat-gfm>=0.3.5  # GitHub Flavored Markdown
+          - mdformat-frontmatter
           - mdformat-tables  # Table formatting
         exclude: (^CLAUDE\.md$|^CHANGELOG\.md$|^presentation/revealjs/slides\.md$|\.claude/agents/.*\.md$|\.claude/skills/.*\.md$|\.basic-memory/.*\.md$|\.serena/.*\.md$|\.gemini/skills/.*\.md$)
 

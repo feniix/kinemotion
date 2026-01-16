@@ -55,50 +55,7 @@ class CMJPhase(Enum):
     UNKNOWN = "unknown"
 
 
-def find_lowest_point(
-    positions: FloatArray,
-    velocities: FloatArray,
-    min_search_frame: int = 80,
-) -> int:
-    """
-    Find the lowest point of countermovement (transition from eccentric to concentric).
-
-    The lowest point occurs BEFORE the peak height (the jump apex). It's where
-    velocity crosses from positive (downward/squatting) to negative (upward/jumping).
-
-    Args:
-        positions: Array of vertical positions (higher value = lower in video)
-        velocities: Array of SIGNED vertical velocities (positive=down, negative=up)
-        min_search_frame: Minimum frame to start searching (default: frame 80)
-
-    Returns:
-        Frame index of lowest point.
-    """
-    # First, find the peak height (minimum y value = highest jump point)
-    peak_height_frame = int(np.argmin(positions))
-
-    # Lowest point MUST be before peak height
-    # Search from min_search_frame to peak_height_frame
-    start_frame = min_search_frame
-    end_frame = peak_height_frame
-
-    if end_frame <= start_frame:
-        start_frame = int(len(positions) * 0.3)
-        end_frame = int(len(positions) * 0.7)
-
-    search_positions = positions[start_frame:end_frame]
-
-    if len(search_positions) == 0:
-        return start_frame
-
-    # Find maximum position value in this range (lowest point in video)
-    lowest_idx = int(np.argmax(search_positions))
-    lowest_frame = start_frame + lowest_idx
-
-    return lowest_frame
-
-
-def find_cmj_takeoff_from_velocity_peak(
+def _find_cmj_takeoff_from_velocity_peak(
     positions: FloatArray,
     velocities: FloatArray,
     lowest_point_frame: int,
@@ -135,7 +92,7 @@ def find_cmj_takeoff_from_velocity_peak(
     return float(takeoff_frame)
 
 
-def find_cmj_landing_from_position_peak(
+def _find_cmj_landing_from_position_peak(
     positions: FloatArray,
     velocities: FloatArray,
     accelerations: FloatArray,
@@ -193,7 +150,7 @@ def find_cmj_landing_from_position_peak(
     reason="Experimental alternative superseded by backward search algorithm",
     since="0.34.0",
 )
-def find_interpolated_takeoff_landing(
+def _find_interpolated_takeoff_landing(
     positions: FloatArray,
     velocities: FloatArray,
     lowest_point_frame: int,
@@ -226,19 +183,19 @@ def find_interpolated_takeoff_landing(
     )
 
     # Find takeoff using peak velocity method (CMJ-specific)
-    takeoff_frame = find_cmj_takeoff_from_velocity_peak(
+    takeoff_frame = _find_cmj_takeoff_from_velocity_peak(
         positions, velocities, lowest_point_frame, fps
     )
 
     # Find landing using position peak and impact detection
-    landing_frame = find_cmj_landing_from_position_peak(
+    landing_frame = _find_cmj_landing_from_position_peak(
         positions, velocities, accelerations, int(takeoff_frame), fps
     )
 
     return (takeoff_frame, landing_frame)
 
 
-def find_takeoff_frame(
+def _find_takeoff_frame(
     velocities: FloatArray,
     peak_height_frame: int,
     fps: float,
@@ -301,7 +258,7 @@ def find_takeoff_frame(
     return float(peak_vel_frame)
 
 
-def find_lowest_frame(
+def _find_lowest_frame(
     velocities: FloatArray, positions: FloatArray, takeoff_frame: float, fps: float
 ) -> float:
     """Find lowest point frame before takeoff."""
@@ -370,7 +327,7 @@ def _find_landing_impact(
     return float(landing_frame)
 
 
-def find_landing_frame(
+def _find_landing_frame(
     accelerations: FloatArray,
     velocities: FloatArray,
     peak_height_frame: int,
@@ -422,7 +379,7 @@ def compute_average_hip_position(
     return (float(np.mean(x_positions)), float(np.mean(y_positions)))
 
 
-def find_standing_end(
+def _find_standing_end(
     velocities: FloatArray,
     lowest_point: float,
     _positions: FloatArray | None = None,
@@ -533,12 +490,12 @@ def detect_cmj_phases(
 
     # Step 2-4: Find all phases using helper functions
     with timer.measure("cmj_find_takeoff"):
-        takeoff_frame = find_takeoff_frame(
+        takeoff_frame = _find_takeoff_frame(
             velocities, peak_height_frame, fps, accelerations=accelerations
         )
 
     with timer.measure("cmj_find_lowest_point"):
-        lowest_point = find_lowest_frame(velocities, positions, takeoff_frame, fps)
+        lowest_point = _find_lowest_frame(velocities, positions, takeoff_frame, fps)
 
     # Determine landing frame
     with timer.measure("cmj_find_landing"):
@@ -552,7 +509,7 @@ def detect_cmj_phases(
             )
             # We still reference peak_height_frame from Hips, as Feet peak
             # might be different/noisy but generally they align in time.
-            landing_frame = find_landing_frame(
+            landing_frame = _find_landing_frame(
                 landing_accelerations,
                 landing_velocities,
                 peak_height_frame,
@@ -560,7 +517,7 @@ def detect_cmj_phases(
             )
         else:
             # Use primary signal (Hips)
-            landing_frame = find_landing_frame(
+            landing_frame = _find_landing_frame(
                 accelerations,
                 velocities,
                 peak_height_frame,
@@ -568,6 +525,6 @@ def detect_cmj_phases(
             )
 
     with timer.measure("cmj_find_standing_end"):
-        standing_end = find_standing_end(velocities, lowest_point, positions, accelerations)
+        standing_end = _find_standing_end(velocities, lowest_point, positions, accelerations)
 
     return (standing_end, lowest_point, takeoff_frame, landing_frame)

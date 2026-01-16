@@ -4,11 +4,11 @@ import numpy as np
 
 from kinemotion.drop_jump.analysis import (
     ContactState,
-    calculate_adaptive_threshold,
+    _calculate_adaptive_threshold,
+    _detect_drop_start,
+    _extract_foot_positions_and_visibilities,
     compute_average_foot_position,
-    detect_drop_start,
     detect_ground_contact,
-    extract_foot_positions_and_visibilities,
     find_contact_phases,
 )
 
@@ -145,7 +145,7 @@ def test_compute_average_foot_position_empty_landmarks():
     assert y == 0.5
 
 
-def test_extract_foot_positions_and_visibilities():
+def test__extract_foot_positions_and_visibilities():
     """Test extraction of foot positions and visibilities from landmarks."""
     smoothed_landmarks = [
         {
@@ -169,7 +169,7 @@ def test_extract_foot_positions_and_visibilities():
         },
     ]
 
-    positions, visibilities = extract_foot_positions_and_visibilities(smoothed_landmarks)
+    positions, visibilities = _extract_foot_positions_and_visibilities(smoothed_landmarks)
 
     assert len(positions) == 4
     assert len(visibilities) == 4
@@ -183,7 +183,7 @@ def test_calculate_adaptive_threshold_short_array():
     """Test adaptive threshold with very short position array."""
     positions = np.array([0.5])  # Single element
 
-    threshold = calculate_adaptive_threshold(positions, fps=30.0)
+    threshold = _calculate_adaptive_threshold(positions, fps=30.0)
 
     # Should return default fallback threshold
     assert threshold == 0.02
@@ -194,7 +194,7 @@ def test_calculate_adaptive_threshold_insufficient_baseline():
     positions = np.array([0.5, 0.51, 0.52])  # Only 3 frames
     fps = 30.0
 
-    threshold = calculate_adaptive_threshold(
+    threshold = _calculate_adaptive_threshold(
         positions, fps=fps, baseline_duration=3.0, smoothing_window=5
     )
 
@@ -214,7 +214,7 @@ def test_detect_drop_start_with_debug():
     )
     fps = 30.0
 
-    drop_frame = detect_drop_start(positions, fps, debug=True)
+    drop_frame = _detect_drop_start(positions, fps, debug=True)
 
     # Should detect drop after stable period
     assert drop_frame > 15  # After unstable start
@@ -227,7 +227,7 @@ def test_detect_drop_start_no_stable_period():
     positions = np.random.uniform(0.3, 0.5, 50)
     fps = 30.0
 
-    drop_frame = detect_drop_start(positions, fps, debug=True)
+    drop_frame = _detect_drop_start(positions, fps, debug=True)
 
     # Should return 0 when no stable period found
     assert drop_frame == 0
@@ -238,7 +238,7 @@ def test_detect_drop_start_too_short_video():
     positions = np.ones(20) * 0.3  # Only 20 frames
     fps = 30.0
 
-    drop_frame = detect_drop_start(positions, fps, min_stationary_duration=1.0, debug=True)
+    drop_frame = _detect_drop_start(positions, fps, min_stationary_duration=1.0, debug=True)
 
     # Should return 0 for too-short video
     assert drop_frame == 0

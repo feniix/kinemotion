@@ -27,7 +27,7 @@ class ContactState(Enum):
     remove_in="1.0.0",
     since="0.34.0",
 )
-def calculate_adaptive_threshold(
+def _calculate_adaptive_threshold(
     positions: FloatArray,
     fps: float,
     baseline_duration: float = 3.0,
@@ -188,7 +188,7 @@ def _find_drop_from_baseline(
     return 0
 
 
-def detect_drop_start(
+def _detect_drop_start(
     positions: FloatArray,
     fps: float,
     min_stationary_duration: float = 1.0,
@@ -580,7 +580,7 @@ def _interpolate_phase_end(
     )
 
 
-def find_interpolated_phase_transitions(
+def _find_interpolated_phase_transitions(
     foot_positions: FloatArray,
     contact_states: list[ContactState],
     velocity_threshold: float,
@@ -622,7 +622,7 @@ def find_interpolated_phase_transitions(
     return interpolated_phases
 
 
-def refine_transition_with_curvature(
+def _refine_transition_with_curvature(
     foot_positions: FloatArray,
     estimated_frame: float,
     transition_type: str,
@@ -720,7 +720,7 @@ def _refine_phase_boundaries(
     Returns:
         Tuple of (refined_start, refined_end) fractional frame indices
     """
-    refined_start = refine_transition_with_curvature(
+    refined_start = _refine_transition_with_curvature(
         foot_positions,
         start_frac,
         start_type,
@@ -728,7 +728,7 @@ def _refine_phase_boundaries(
         smoothing_window=smoothing_window,
         polyorder=polyorder,
     )
-    refined_end = refine_transition_with_curvature(
+    refined_end = _refine_transition_with_curvature(
         foot_positions,
         end_frac,
         end_type,
@@ -739,7 +739,7 @@ def _refine_phase_boundaries(
     return refined_start, refined_end
 
 
-def find_interpolated_phase_transitions_with_curvature(
+def _find_interpolated_phase_transitions_with_curvature(
     foot_positions: FloatArray,
     contact_states: list[ContactState],
     velocity_threshold: float,
@@ -767,7 +767,7 @@ def find_interpolated_phase_transitions_with_curvature(
         List of (start_frame, end_frame, state) tuples with fractional frame indices
     """
     # Get interpolated phases using velocity
-    interpolated_phases = find_interpolated_phase_transitions(
+    interpolated_phases = _find_interpolated_phase_transitions(
         foot_positions, contact_states, velocity_threshold, smoothing_window
     )
 
@@ -808,7 +808,7 @@ def find_interpolated_phase_transitions_with_curvature(
     return refined_phases
 
 
-def find_landing_from_acceleration(
+def _find_landing_from_acceleration(
     positions: FloatArray,
     accelerations: FloatArray,
     takeoff_frame: int,
@@ -954,7 +954,7 @@ def _calculate_average_visibility(
     reason="Alternative implementation not called by pipeline",
     since="0.34.0",
 )
-def extract_foot_positions_and_visibilities(
+def _extract_foot_positions_and_visibilities(
     smoothed_landmarks: list[dict[str, tuple[float, float, float]] | None],
 ) -> tuple[np.ndarray, np.ndarray]:
     """

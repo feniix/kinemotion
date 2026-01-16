@@ -8,13 +8,13 @@ import numpy as np
 
 from kinemotion.drop_jump.analysis import (
     ContactState,
-    calculate_adaptive_threshold,
-    detect_drop_start,
+    _calculate_adaptive_threshold,
+    _detect_drop_start,
+    _find_interpolated_phase_transitions,
+    _find_interpolated_phase_transitions_with_curvature,
+    _refine_transition_with_curvature,
     detect_ground_contact,
     find_contact_phases,
-    find_interpolated_phase_transitions,
-    find_interpolated_phase_transitions_with_curvature,
-    refine_transition_with_curvature,
 )
 
 
@@ -32,7 +32,7 @@ class TestDropStartDetection:
             ]
         )
 
-        drop_frame = detect_drop_start(positions, fps, min_stationary_duration=1.0)
+        drop_frame = _detect_drop_start(positions, fps, min_stationary_duration=1.0)
 
         # Should detect drop after stable period (allow wider tolerance)
         assert 50 <= drop_frame <= 65
@@ -49,7 +49,7 @@ class TestDropStartDetection:
             ]
         )
 
-        drop_frame = detect_drop_start(positions, fps, min_stationary_duration=1.0)
+        drop_frame = _detect_drop_start(positions, fps, min_stationary_duration=1.0)
 
         # Should detect drop after stable period, not during unstable start
         assert drop_frame > 15  # After unstable start
@@ -62,7 +62,7 @@ class TestDropStartDetection:
         rng = np.random.default_rng(42)
         positions = rng.uniform(0.3, 0.5, 50)
 
-        drop_frame = detect_drop_start(positions, fps)
+        drop_frame = _detect_drop_start(positions, fps)
 
         # Should return 0 when no stable period found
         assert drop_frame == 0
@@ -72,7 +72,7 @@ class TestDropStartDetection:
         fps = 30.0
         positions = np.ones(20) * 0.3  # Only 20 frames
 
-        drop_frame = detect_drop_start(positions, fps, min_stationary_duration=1.0, debug=True)
+        drop_frame = _detect_drop_start(positions, fps, min_stationary_duration=1.0, debug=True)
 
         # Should return 0 for too-short video
         assert drop_frame == 0
@@ -197,7 +197,7 @@ class TestInterpolatedPhaseTransitions:
             positions, velocity_threshold=0.02, min_contact_frames=3
         )
 
-        interpolated = find_interpolated_phase_transitions(
+        interpolated = _find_interpolated_phase_transitions(
             positions, contact_states, velocity_threshold=0.02, smoothing_window=5
         )
 
@@ -224,7 +224,7 @@ class TestCurvatureRefinement:
         )
         estimated_frame = 20.0  # Around impact
 
-        refined = refine_transition_with_curvature(
+        refined = _refine_transition_with_curvature(
             positions,
             estimated_frame,
             transition_type="landing",
@@ -247,7 +247,7 @@ class TestCurvatureRefinement:
         )
         estimated_frame = 15.0  # Around takeoff
 
-        refined = refine_transition_with_curvature(
+        refined = _refine_transition_with_curvature(
             positions,
             estimated_frame,
             transition_type="takeoff",
@@ -280,7 +280,7 @@ class TestInterpolatedPhasesWithCurvature:
             positions, velocity_threshold=0.02, min_contact_frames=3
         )
 
-        refined_phases = find_interpolated_phase_transitions_with_curvature(
+        refined_phases = _find_interpolated_phase_transitions_with_curvature(
             positions,
             contact_states,
             velocity_threshold=0.02,
@@ -310,7 +310,7 @@ class TestInterpolatedPhasesWithCurvature:
             positions, velocity_threshold=0.02, min_contact_frames=3
         )
 
-        phases_no_curvature = find_interpolated_phase_transitions_with_curvature(
+        phases_no_curvature = _find_interpolated_phase_transitions_with_curvature(
             positions,
             contact_states,
             velocity_threshold=0.02,
@@ -336,7 +336,7 @@ class TestAdaptiveThreshold:
         movement_positions = np.linspace(0.5, 0.7, 60)
         positions = np.concatenate([baseline_positions, movement_positions])
 
-        threshold = calculate_adaptive_threshold(positions, fps)
+        threshold = _calculate_adaptive_threshold(positions, fps)
 
         # Should have minimum threshold with low noise
         assert 0.005 <= threshold <= 0.02
@@ -352,7 +352,7 @@ class TestAdaptiveThreshold:
         movement_positions = np.linspace(0.5, 0.8, 60)
         positions = np.concatenate([baseline_positions, movement_positions])
 
-        threshold = calculate_adaptive_threshold(positions, fps)
+        threshold = _calculate_adaptive_threshold(positions, fps)
 
         # With higher noise, threshold should be proportionally higher
         assert 0.010 <= threshold <= 0.05

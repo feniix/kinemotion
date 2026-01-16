@@ -53,7 +53,7 @@ def detect_sj_phases(
         window_length += 1
 
     # Step 1: Detect squat hold start
-    squat_hold_start = detect_squat_start(
+    squat_hold_start = _detect_squat_start(
         positions,
         fps,
         velocity_threshold=velocity_threshold,
@@ -75,7 +75,7 @@ def detect_sj_phases(
         )
 
     # Step 3: Detect takeoff (this marks the start of concentric phase)
-    takeoff_frame = detect_takeoff(
+    takeoff_frame = _detect_takeoff(
         positions, velocities, fps, velocity_threshold=velocity_threshold
     )
 
@@ -92,7 +92,7 @@ def detect_sj_phases(
             break
 
     # Step 4: Detect landing
-    landing_frame = detect_landing(
+    landing_frame = _detect_landing(
         positions,
         velocities,
         fps,
@@ -126,7 +126,7 @@ def detect_sj_phases(
     return (squat_hold_start, concentric_start, takeoff_frame, landing_frame)
 
 
-def detect_squat_start(
+def _detect_squat_start(
     positions: FloatArray,
     fps: float,
     velocity_threshold: float = 0.1,
@@ -201,7 +201,7 @@ def _find_takeoff_threshold_crossing(
     return None
 
 
-def detect_takeoff(
+def _detect_takeoff(
     positions: FloatArray,
     velocities: FloatArray,
     fps: float,
@@ -230,7 +230,7 @@ def detect_takeoff(
         return None
 
     # Find squat start to determine where to begin search
-    squat_start = detect_squat_start(positions, fps)
+    squat_start = _detect_squat_start(positions, fps)
     if squat_start is None:
         # If no squat start detected, start from reasonable middle point
         squat_start = len(positions) // 3
@@ -289,7 +289,7 @@ def _refine_landing_by_velocity(
     return landing_frame
 
 
-def detect_landing(
+def _detect_landing(
     positions: FloatArray,
     velocities: FloatArray,
     fps: float,
@@ -322,7 +322,7 @@ def detect_landing(
         return None
 
     # Find takeoff first (needed to determine where to start peak search)
-    takeoff_frame = detect_takeoff(
+    takeoff_frame = _detect_takeoff(
         positions, velocities, fps, velocity_threshold, 5, landing_search_window_s
     )
     if takeoff_frame is None:

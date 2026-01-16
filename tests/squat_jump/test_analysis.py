@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 
 from kinemotion.squat_jump.analysis import (
+    _detect_squat_start,
     detect_sj_phases,
-    detect_squat_start,
 )
 
 pytestmark = [pytest.mark.integration, pytest.mark.squat_jump]
@@ -16,7 +16,7 @@ class TestDetectSquatStart:
 
     def test_detect_squat_start_valid_hold(self, sj_sample_positions, sj_video_config) -> None:
         """Test detection of valid squat hold."""
-        result = detect_squat_start(
+        result = _detect_squat_start(
             positions=sj_sample_positions,
             fps=sj_video_config["fps"],
             velocity_threshold=sj_video_config["velocity_threshold"],
@@ -32,7 +32,7 @@ class TestDetectSquatStart:
         The algorithm may still detect a frame as stable even if there's no
         clear squat hold period. This tests that it doesn't fail catastrophically.
         """
-        result = detect_squat_start(
+        result = _detect_squat_start(
             positions=sj_invalid_no_hold,
             fps=sj_video_config["fps"],
             velocity_threshold=sj_video_config["velocity_threshold"],
@@ -48,7 +48,7 @@ class TestDetectSquatStart:
         The algorithm might still detect a short hold period. This tests
         that it handles edge cases gracefully.
         """
-        result = detect_squat_start(
+        result = _detect_squat_start(
             positions=sj_invalid_short_hold,
             fps=sj_video_config["fps"],
             velocity_threshold=sj_video_config["velocity_threshold"],
@@ -61,7 +61,7 @@ class TestDetectSquatStart:
     def test_detect_squat_start_empty_array(self, sj_video_config) -> None:
         """Test detection with empty position array."""
         empty_positions = np.array([], dtype=np.float64)
-        result = detect_squat_start(
+        result = _detect_squat_start(
             positions=empty_positions,
             fps=sj_video_config["fps"],
             velocity_threshold=sj_video_config["velocity_threshold"],
@@ -72,7 +72,7 @@ class TestDetectSquatStart:
     def test_detect_squat_start_single_frame(self, sj_video_config) -> None:
         """Test detection with single frame."""
         single_frame = np.array([0.6])
-        result = detect_squat_start(
+        result = _detect_squat_start(
             positions=single_frame,
             fps=sj_video_config["fps"],
             velocity_threshold=sj_video_config["velocity_threshold"],
@@ -85,7 +85,7 @@ class TestDetectSquatStart:
         # Add noise to normally static data
         np.random.seed(42)  # For reproducible tests
         noisy_positions = sj_sample_positions + np.random.normal(0, 0.01, len(sj_sample_positions))
-        result = detect_squat_start(
+        result = _detect_squat_start(
             positions=noisy_positions,
             fps=sj_video_config["fps"],
             velocity_threshold=sj_video_config["velocity_threshold"],

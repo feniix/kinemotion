@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from kinemotion.drop_jump.analysis import calculate_adaptive_threshold
+from kinemotion.drop_jump.analysis import _calculate_adaptive_threshold
 
 
 def test_adaptive_threshold_basic() -> None:
@@ -22,7 +22,7 @@ def test_adaptive_threshold_basic() -> None:
 
     positions = np.concatenate([baseline_positions, movement_positions])
 
-    threshold = calculate_adaptive_threshold(positions, fps)
+    threshold = _calculate_adaptive_threshold(positions, fps)
 
     # Threshold should be above baseline noise but below movement velocity
     assert 0.005 <= threshold <= 0.03, f"Threshold {threshold} not in expected range"
@@ -41,7 +41,7 @@ def test_adaptive_threshold_high_noise() -> None:
     movement_positions = np.linspace(0.5, 0.8, 60)
     positions = np.concatenate([baseline_positions, movement_positions])
 
-    threshold = calculate_adaptive_threshold(positions, fps)
+    threshold = _calculate_adaptive_threshold(positions, fps)
 
     # With higher noise, threshold should be proportionally higher
     # Noise std=0.015 with multiplier 1.5 gives ~0.012-0.022 range
@@ -59,7 +59,7 @@ def test_adaptive_threshold_low_noise() -> None:
     movement_positions = np.linspace(0.5, 0.7, 60)
     positions = np.concatenate([baseline_positions, movement_positions])
 
-    threshold = calculate_adaptive_threshold(positions, fps)
+    threshold = _calculate_adaptive_threshold(positions, fps)
 
     # Should still have minimum threshold to avoid being too sensitive
     assert threshold >= 0.005, f"Threshold {threshold} should respect minimum"
@@ -76,7 +76,7 @@ def test_adaptive_threshold_minimum_bound() -> None:
     movement_positions = np.linspace(0.5, 0.7, 60)
     positions = np.concatenate([baseline_positions, movement_positions])
 
-    threshold = calculate_adaptive_threshold(positions, fps)
+    threshold = _calculate_adaptive_threshold(positions, fps)
 
     # Should have minimum threshold even with zero noise
     assert threshold >= 0.005, f"Threshold {threshold} should respect minimum of 0.005"
@@ -93,7 +93,7 @@ def test_adaptive_threshold_maximum_bound() -> None:
     movement_positions = np.linspace(0.5, 0.8, 60)
     positions = np.concatenate([baseline_positions, movement_positions])
 
-    threshold = calculate_adaptive_threshold(positions, fps)
+    threshold = _calculate_adaptive_threshold(positions, fps)
 
     # Should cap at maximum to ensure contact detection still works
     assert threshold <= 0.05, f"Threshold {threshold} should respect maximum of 0.05"
@@ -107,7 +107,7 @@ def test_adaptive_threshold_short_video() -> None:
     rng = np.random.default_rng(42)
     positions = 0.5 + rng.normal(0, 0.01, 60)
 
-    threshold = calculate_adaptive_threshold(positions, fps, baseline_duration=3.0)
+    threshold = _calculate_adaptive_threshold(positions, fps, baseline_duration=3.0)
 
     # Should still work with available frames
     assert 0.005 <= threshold <= 0.05, f"Threshold {threshold} should work with short video"
@@ -120,7 +120,7 @@ def test_adaptive_threshold_very_short_video() -> None:
     # Only 3 frames - not enough for analysis
     positions = np.array([0.5, 0.51, 0.52])
 
-    threshold = calculate_adaptive_threshold(positions, fps, smoothing_window=5)
+    threshold = _calculate_adaptive_threshold(positions, fps, smoothing_window=5)
 
     # Should return default threshold
     assert threshold == pytest.approx(0.02), "Should return default 0.02 for very short video"
@@ -137,7 +137,7 @@ def test_adaptive_threshold_different_fps() -> None:
     movement_positions = np.linspace(0.5, 0.7, 120)
     positions = np.concatenate([baseline_positions, movement_positions])
 
-    threshold = calculate_adaptive_threshold(positions, fps)
+    threshold = _calculate_adaptive_threshold(positions, fps)
 
     # Should work regardless of FPS
     assert 0.005 <= threshold <= 0.05, f"Threshold {threshold} should work at 60fps"
@@ -154,10 +154,10 @@ def test_adaptive_threshold_custom_multiplier() -> None:
     positions = np.concatenate([baseline_positions, movement_positions])
 
     # Test with different multipliers
-    threshold_conservative = calculate_adaptive_threshold(
+    threshold_conservative = _calculate_adaptive_threshold(
         positions, fps, multiplier=2.0
     )  # More conservative
-    threshold_aggressive = calculate_adaptive_threshold(
+    threshold_aggressive = _calculate_adaptive_threshold(
         positions, fps, multiplier=1.2
     )  # More aggressive
 
@@ -184,10 +184,10 @@ def test_adaptive_threshold_baseline_duration() -> None:
     positions = np.concatenate([first_3s, next_2s, movement])
 
     # Use only first 3 seconds (low noise)
-    threshold_3s = calculate_adaptive_threshold(positions, fps, baseline_duration=3.0)
+    threshold_3s = _calculate_adaptive_threshold(positions, fps, baseline_duration=3.0)
 
     # Use first 5 seconds (includes high noise section)
-    threshold_5s = calculate_adaptive_threshold(positions, fps, baseline_duration=5.0)
+    threshold_5s = _calculate_adaptive_threshold(positions, fps, baseline_duration=5.0)
 
     # 5s baseline should have higher threshold due to including high-noise section
     assert threshold_5s >= threshold_3s, (

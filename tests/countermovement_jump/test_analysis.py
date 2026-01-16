@@ -11,41 +11,18 @@ from kinemotion.core.smoothing import (
     interpolate_threshold_crossing,
 )
 from kinemotion.countermovement_jump.analysis import (
+    _find_cmj_landing_from_position_peak,
+    _find_cmj_takeoff_from_velocity_peak,
+    _find_interpolated_takeoff_landing,
+    _find_landing_frame,
+    _find_lowest_frame,
+    _find_standing_end,
+    _find_takeoff_frame,
     compute_signed_velocity,
     detect_cmj_phases,
-    find_cmj_landing_from_position_peak,
-    find_cmj_takeoff_from_velocity_peak,
-    find_interpolated_takeoff_landing,
-    find_landing_frame,
-    find_lowest_frame,
-    find_lowest_point,
-    find_standing_end,
-    find_takeoff_frame,
 )
 
 pytestmark = [pytest.mark.integration, pytest.mark.countermovement_jump]
-
-
-def test_find_lowest_point() -> None:
-    """Test lowest point detection."""
-    # Create trajectory with clear lowest point
-    positions = np.concatenate(
-        [
-            np.linspace(0.5, 0.7, 50),  # Downward
-            np.linspace(0.7, 0.4, 50),  # Upward
-        ]
-    )
-
-    from kinemotion.countermovement_jump.analysis import compute_signed_velocity
-
-    velocities = compute_signed_velocity(positions, window_length=5, polyorder=2)
-
-    # New algorithm searches with min_search_frame=80 by default
-    # For this short test, use min_search_frame=0
-    lowest = find_lowest_point(positions, velocities, min_search_frame=0)
-
-    # Should detect lowest point around frame 50 (with new algorithm may vary)
-    assert 30 <= lowest <= 70  # Wider tolerance for new algorithm
 
 
 def test_detect_cmj_phases_full() -> None:
@@ -180,7 +157,7 @@ def test_interpolate_threshold_crossing_at_boundary() -> None:
 
 
 def test_find_cmj_takeoff_from_velocity_peak_normal() -> None:
-    """Test find_cmj_takeoff_from_velocity_peak with clear peak."""
+    """Test _find_cmj_takeoff_from_velocity_peak with clear peak."""
     # Create velocity data with clear upward peak (most negative)
     positions = np.linspace(0.7, 0.3, 50)  # Dummy positions
     velocities = np.concatenate(
@@ -193,7 +170,7 @@ def test_find_cmj_takeoff_from_velocity_peak_normal() -> None:
     lowest_point_frame = 0
     fps = 30.0
 
-    result = find_cmj_takeoff_from_velocity_peak(positions, velocities, lowest_point_frame, fps)
+    result = _find_cmj_takeoff_from_velocity_peak(positions, velocities, lowest_point_frame, fps)
 
     # Should find the peak around frame 11
     assert isinstance(result, float)
@@ -201,27 +178,27 @@ def test_find_cmj_takeoff_from_velocity_peak_normal() -> None:
 
 
 def test_find_cmj_takeoff_from_velocity_peak_search_window_too_short() -> None:
-    """Test find_cmj_takeoff_from_velocity_peak with search window at boundary."""
+    """Test _find_cmj_takeoff_from_velocity_peak with search window at boundary."""
     positions = np.linspace(0.5, 0.3, 10)
     velocities = np.linspace(-0.01, -0.05, 10)
     lowest_point_frame = 10  # Beyond array length
     fps = 30.0
 
-    result = find_cmj_takeoff_from_velocity_peak(positions, velocities, lowest_point_frame, fps)
+    result = _find_cmj_takeoff_from_velocity_peak(positions, velocities, lowest_point_frame, fps)
 
     # Should return lowest_point_frame + 1 when search window too short
     assert result == float(lowest_point_frame + 1)
 
 
 def test_find_cmj_takeoff_from_velocity_peak_at_start() -> None:
-    """Test find_cmj_takeoff_from_velocity_peak with peak at start of search."""
+    """Test _find_cmj_takeoff_from_velocity_peak with peak at start of search."""
     positions = np.linspace(0.5, 0.3, 30)
     # Peak velocity right at the start
     velocities = np.concatenate([np.array([-0.10]), np.linspace(-0.05, -0.01, 29)])
     lowest_point_frame = 0
     fps = 30.0
 
-    result = find_cmj_takeoff_from_velocity_peak(positions, velocities, lowest_point_frame, fps)
+    result = _find_cmj_takeoff_from_velocity_peak(positions, velocities, lowest_point_frame, fps)
 
     # Should find peak at or near frame 0
     assert isinstance(result, float)
@@ -229,13 +206,13 @@ def test_find_cmj_takeoff_from_velocity_peak_at_start() -> None:
 
 
 def test_find_cmj_takeoff_from_velocity_peak_constant_velocity() -> None:
-    """Test find_cmj_takeoff_from_velocity_peak with constant velocity."""
+    """Test _find_cmj_takeoff_from_velocity_peak with constant velocity."""
     positions = np.linspace(0.5, 0.3, 30)
     velocities = np.ones(30) * -0.05  # Constant velocity
     lowest_point_frame = 5
     fps = 30.0
 
-    result = find_cmj_takeoff_from_velocity_peak(positions, velocities, lowest_point_frame, fps)
+    result = _find_cmj_takeoff_from_velocity_peak(positions, velocities, lowest_point_frame, fps)
 
     # Should find first frame (argmin of constant array returns 0)
     assert isinstance(result, float)
@@ -269,48 +246,15 @@ def test_compute_signed_velocity_even_window() -> None:
     assert np.all(velocities >= 0)  # All downward motion
 
 
-def test_find_lowest_point_invalid_search_range() -> None:
-    """Test find_lowest_point when peak is too early, requiring fallback range."""
-    # Create trajectory where peak is very early
-    positions = np.concatenate(
-        [
-            np.array([0.3, 0.4, 0.5]),  # Peak at frame 0
-            np.linspace(0.5, 0.7, 50),  # Rest of trajectory
-        ]
-    )
-    velocities = compute_signed_velocity(positions)
-
-    result = find_lowest_point(
-        positions,
-        velocities,
-        min_search_frame=80,  # Search start after peak
-    )
-
-    # Should use fallback range (30-70% of video)
-    assert isinstance(result, int)
-    assert 0 <= result < len(positions)
-
-
-def test_find_lowest_point_empty_search_window() -> None:
-    """Test find_lowest_point with empty search window."""
-    positions = np.array([0.5, 0.6, 0.4, 0.5])  # Very short
-    velocities = np.array([0, 0.1, -0.1, 0])
-
-    result = find_lowest_point(positions, velocities, min_search_frame=10)
-
-    # Should handle empty search gracefully
-    assert isinstance(result, int)
-
-
 def test_find_cmj_landing_from_position_peak_no_search_window() -> None:
-    """Test find_cmj_landing_from_position_peak when search window invalid."""
+    """Test _find_cmj_landing_from_position_peak when search window invalid."""
     positions = np.linspace(0.5, 0.7, 15)
     velocities = np.ones(15) * 0.05
     accelerations = compute_acceleration_from_derivative(positions)
     fps = 30.0
 
     # Takeoff at end of array
-    result = find_cmj_landing_from_position_peak(
+    result = _find_cmj_landing_from_position_peak(
         positions, velocities, accelerations, takeoff_frame=14, fps=fps
     )
 
@@ -325,7 +269,7 @@ def test_find_cmj_landing_from_position_peak_short_landing_window() -> None:
     accelerations = compute_acceleration_from_derivative(positions)
     fps = 30.0
 
-    result = find_cmj_landing_from_position_peak(
+    result = _find_cmj_landing_from_position_peak(
         positions, velocities, accelerations, takeoff_frame=5, fps=fps
     )
 
@@ -349,19 +293,6 @@ def test_detect_cmj_phases_peak_too_early() -> None:
 
     # Should return None for invalid peak position
     assert result is None
-
-
-def test_find_lowest_point_with_fallback_positions() -> None:
-    """Test find_lowest_point uses position-based fallback when needed."""
-    # Peak very early, search window ends up empty
-    positions = np.array([0.3] + [0.5] * 20 + [0.7] * 30)
-    velocities = compute_signed_velocity(positions)
-
-    result = find_lowest_point(positions, velocities, min_search_frame=100)
-
-    # Should use fallback logic
-    assert isinstance(result, int)
-    assert 0 <= result < len(positions)
 
 
 # ============================================================================
@@ -536,7 +467,7 @@ def test_find_takeoff_frame_backward_search_peak_velocity() -> None:
     )
 
     # Act: Find takeoff frame
-    takeoff = find_takeoff_frame(velocities, peak_height_frame, fps)
+    takeoff = _find_takeoff_frame(velocities, peak_height_frame, fps)
 
     # Assert: Takeoff should be detected near the velocity peak (frame 80-82)
     assert isinstance(takeoff, float), "Should return float frame number"
@@ -570,7 +501,7 @@ def test_find_lowest_frame_velocity_zero_crossing() -> None:
     velocities = compute_signed_velocity(positions, window_length=5, polyorder=2)
 
     # Act: Find lowest frame
-    lowest = find_lowest_frame(velocities, positions, takeoff_frame, fps)
+    lowest = _find_lowest_frame(velocities, positions, takeoff_frame, fps)
 
     # Assert: Should find zero-crossing or fallback to maximum position
     assert isinstance(lowest, float), "Should return float frame number"
@@ -615,7 +546,7 @@ def test_find_landing_frame_impact_detection() -> None:
     accelerations = compute_acceleration_from_derivative(positions)
 
     # Act: Find landing frame
-    landing = find_landing_frame(accelerations, velocities, peak_height_frame, fps)
+    landing = _find_landing_frame(accelerations, velocities, peak_height_frame, fps)
 
     # Assert: Landing should be detected in expected window
     assert isinstance(landing, float), "Should return float frame number"
@@ -648,7 +579,7 @@ def test_find_standing_end_low_velocity_detection() -> None:
     )
 
     # Act: Find standing end
-    standing_end = find_standing_end(velocities, lowest_point)
+    standing_end = _find_standing_end(velocities, lowest_point)
 
     # Assert: Should detect end of standing phase
     if standing_end is not None:
@@ -667,7 +598,7 @@ def test_find_standing_end_low_velocity_detection() -> None:
 
 
 def test_find_interpolated_takeoff_landing_wrapper_function() -> None:
-    """Test find_interpolated_takeoff_landing wrapper combines takeoff and landing.
+    """Test _find_interpolated_takeoff_landing wrapper combines takeoff and landing.
 
     Wrapper combines takeoff + landing detection.
 
@@ -692,7 +623,7 @@ def test_find_interpolated_takeoff_landing_wrapper_function() -> None:
     lowest_point_frame = 55  # Around where downward motion peaks
 
     # Act: Use wrapper to find both takeoff and landing
-    result = find_interpolated_takeoff_landing(
+    result = _find_interpolated_takeoff_landing(
         positions, velocities, lowest_point_frame, window_length=5, polyorder=2
     )
 

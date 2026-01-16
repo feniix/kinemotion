@@ -10,10 +10,10 @@ from ..core.smoothing import compute_acceleration_from_derivative
 from ..core.timing import NULL_TIMER, Timer
 from .analysis import (
     ContactState,
-    detect_drop_start,
+    _detect_drop_start,  # pyright: ignore[reportPrivateUsage]
+    _find_interpolated_phase_transitions_with_curvature,  # pyright: ignore[reportPrivateUsage]
+    _find_landing_from_acceleration,  # pyright: ignore[reportPrivateUsage]
     find_contact_phases,
-    find_interpolated_phase_transitions_with_curvature,
-    find_landing_from_acceleration,
 )
 
 if TYPE_CHECKING:
@@ -159,7 +159,7 @@ def _determine_drop_start_frame(
     """
     if drop_start_frame is None:
         # Auto-detect where drop jump actually starts (skip initial stationary period)
-        return detect_drop_start(
+        return _detect_drop_start(
             foot_y_positions,
             fps,
             min_stationary_duration=0.5,
@@ -445,7 +445,7 @@ def _analyze_flight_phase(
         accelerations = compute_acceleration_from_derivative(
             foot_y_positions, window_length=smoothing_window, polyorder=polyorder
         )
-        flight_end = find_landing_from_acceleration(
+        flight_end = _find_landing_from_acceleration(
             foot_y_positions, accelerations, flight_start, fps
         )
 
@@ -559,7 +559,7 @@ def calculate_drop_jump_metrics(
     # Find contact phases
     with timer.measure("dj_find_phases"):
         phases = find_contact_phases(contact_states)
-        interpolated_phases = find_interpolated_phase_transitions_with_curvature(
+        interpolated_phases = _find_interpolated_phase_transitions_with_curvature(
             foot_y_positions,
             contact_states,
             velocity_threshold,
