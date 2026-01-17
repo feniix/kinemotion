@@ -1,0 +1,15 @@
+{
+  "name": "kinemotion-presentation",
+  "version": "1.0.0",
+  "description": "Kinemotion presentation using Reveal.js",
+  "scripts": {
+    "start": "npx reveal-md slides.md --watch",
+    "serve": "npx reveal-md slides.md",
+    "pdf": "npx reveal-md slides.md --print slides.pdf",
+    "html": "npx reveal-md slides.md --static presentation-output",
+    "speaker": "npx reveal-md slides.md --separator-notes 'Note:'"
+  },
+  "keywords": ["presentation", "reveal.js", "kinemotion"],
+  "author": "Sebastian Otaegui",
+  "license": "MIT"
+}
