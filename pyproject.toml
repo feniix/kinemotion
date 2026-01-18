@@ -65,6 +65,7 @@ dev = [
     "mkdocstrings[python]>=0.24.0",
     "scipy-stubs>=1.15.3.0",
     "matplotlib>=3.10.8",
+    "poethepoet>=0.32.0",
 ]
 
 
@@ -229,3 +230,9 @@ members = [".", "backend"]
 [tool.uv.sources]
 # Use workspace member for local development
 kinemotion = { workspace = true }
+
+[tool.poe]
+executor.type = "uv"
+
+[tool.poe.tasks]
+download-model = "python -c 'from kinemotion.core.model_downloader import get_model_path; p = get_model_path(\"lite\"); print(f\"Model downloaded: {p}\")'"
