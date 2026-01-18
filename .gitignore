@@ -100,3 +100,6 @@ output/
 .claude-flow/daemon-state.json
 .claude-flow/daemon.pid
 .claude-flow/daemon.log
+
+# MediaPipe model files (downloaded on first use)
+src/kinemotion/models/*.task

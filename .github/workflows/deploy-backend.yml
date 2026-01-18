@@ -78,10 +78,12 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v6
-        with:
-          lfs: true
-        # LFS required for ONNX models used by RTMPose (53MB)
-        # Models are copied into Docker image via COPY src/ ./src/
+
+      - name: Download MediaPipe model
+        run: |
+          mkdir -p src/kinemotion/models
+          curl -L -o src/kinemotion/models/pose_landmarker_lite.task \
+            https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
