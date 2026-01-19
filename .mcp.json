@@ -73,19 +73,6 @@
         "-y",
         "@mettamatt/code-reasoning"
       ]
-    },
-    "claude-flow": {
-      "type": "stdio",
-      "command": "direnv",
-      "args": [
-        "exec",
-        "${PROJECT_ROOT}",
-        "bunx",
-        "claude-flow",
-        "mcp",
-        "start"
-      ],
-      "env": {}
     }
   }
 }

@@ -89,14 +89,7 @@
       "WebFetch(domain:journals.plos.org)",
       "mcp__serena__think_about_whether_you_are_done",
       "mcp__serena__think_about_collected_information",
-      "mcp__serena__rename_symbol",
-      "mcp__claude-flow__config_list",
-      "mcp__claude-flow__system_status",
-      "mcp__claude-flow__hooks_intelligence",
-      "mcp__claude-flow__embeddings_status",
-      "mcp__claude-flow__swarm_init",
-      "mcp__claude-flow__swarm_status",
-      "mcp__basic-memory__delete_note"
+      "mcp__serena__rename_symbol"
     ]
   },
   "enableAllProjectMcpServers": true,

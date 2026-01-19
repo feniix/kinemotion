@@ -54,6 +54,7 @@ coverage.xml
 *.MOV
 *.mp4
 *.avi
+*.json
 *.csv
 !pyproject.toml
 !vercel.json
@@ -97,9 +98,6 @@ data/**
 **/TRASH/
 **/trash/
 output/
-.claude-flow/daemon-state.json
-.claude-flow/daemon.pid
-.claude-flow/daemon.log
 
 # MediaPipe model files (downloaded on first use)
 src/kinemotion/models/*.task
