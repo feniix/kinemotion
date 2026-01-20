@@ -48,12 +48,12 @@ uv run kinemotion cmj-analyze video.mp4
 **Development:**
 
 ```bash
-uv run pytest                           # Run all tests (207 test functions)
+uv run pytest                           # Run all tests
 uv run pytest --cov-report=html         # Generate HTML coverage report
 uv run ruff check --fix && uv run pyright  # Lint + type check
 ```
 
-**Note**: Test count reflects 620 passing tests across 24 test files. Parameterized tests generate additional test instances at runtime. Total coverage: 80.86%.
+**Note**: Test count reflects 724 tests across 34 test files. Parameterized tests generate additional test instances at runtime.
 
 **Coverage Reports:**
 
@@ -109,13 +109,13 @@ src/kinemotion/
 │   └── validation_bounds.py    # SJ bounds (SJBounds, etc.)
 └── [other modules]
 
-tests/                      # 650+ tests (comprehensive coverage across all modules)
+tests/                      # 724 tests (comprehensive coverage across all modules)
 ├── conftest.py             # Shared fixtures (cli_runner, minimal_video, sample_video_path)
-├── core/                   # Core module tests (13 files)
-├── drop_jump/              # Drop jump tests (8 files)
-├── countermovement_jump/   # CMJ tests (6 files)
-├── squat_jump/             # SJ tests (4 files)
-└── cli/                    # CLI tests (3 files)
+├── core/                   # Core module tests
+├── drop_jump/              # Drop jump tests
+├── countermovement_jump/   # CMJ tests
+├── squat_jump/             # SJ tests
+└── cli/                    # CLI tests
 docs/                       # CMJ_GUIDE, TRIPLE_EXTENSION, REAL_TIME_ANALYSIS, etc.
 ```
 
@@ -136,11 +136,11 @@ The project has evolved into a complete platform with three main components:
 │   ├── src/              # Python API endpoints
 │   ├── Dockerfile        # Container configuration
 │   └── pyproject.toml    # FastAPI, Supabase, structlog
-├── src/kinemotion/       # CLI analysis engine - v0.34.0
+├── src/kinemotion/       # CLI analysis engine - v0.76.2
 │   ├── cli.py           # Main CLI commands
 │   ├── api.py           # Python API (used by backend)
-│   └── [modules]        # Core, dj, cmj
-└── tests/               # 620 comprehensive tests (80.86% coverage)
+│   └── [modules]        # Core, dj, cmj, sj
+└── tests/               # 724 comprehensive tests
 ```
 
 **Data Flow:**
@@ -153,7 +153,7 @@ User uploads video → Frontend (React) → Backend API (FastAPI) → kinemotion
 
 - Frontend: Vercel (auto-deploy from main, manual trigger)
 - Backend: Google Cloud Run (GitHub Actions, Workload Identity Federation)
-- CLI: PyPI (v0.34.0, standalone usage + backend integration)
+- CLI: PyPI (v0.76.2, standalone usage + backend integration)
 
 ### Key Differences: Drop Jump vs CMJ vs SJ
 
@@ -208,7 +208,7 @@ See [Implementation Details](docs/technical/implementation-details.md) for compl
 uv run ruff check --fix   # Auto-fix linting
 uv run ruff format        # Format code
 uv run pyright            # Type check (strict)
-uv run pytest             # All tests (627 test functions)
+uv run pytest             # All tests (724 tests)
 ```
 
 ### Performance Benchmarks
@@ -242,36 +242,26 @@ See [benchmarks/README.md](benchmarks/README.md) for details.
 - Ruff (88 char lines, both linting and formatting)
 - Conventional Commits (see below)
 - **Code duplication target: < 3%**
-- **Test coverage: ≥ 50% (current: 80.86% with branch coverage)**
-- **Test count: 620 tests across 24 test files**
-- **SonarQube maintainability: 86% of issues resolved (6/7)**
+- **Test coverage: ≥ 50% target**
+- **Test count: 724 tests across 34 test files**
+- **SonarQube integration for continuous quality tracking**
 
 ### Coverage Summary
 
-**Current:** 80.86% (620 tests, 3296 statements, 1088 branches)
-
-**Coverage by tier:**
-
-- Core algorithms: 89-100% ✅ (smoothing: 100%, filtering: 89%, analysis: 88-94%)
-- API/Integration: 66% ✅ (api.py - improved with helper extraction)
-- CLI modules: 90-91% ✅ (dj: 90.24%, cmj: 91.26%)
-- Validation: 80-100% ✅ (validators, bounds)
-- Kinematics: 92-93% ✅ (cmj: 92.25%, dj: 93.03%)
-- Visualization: 10-40% ✅ (debug overlays - appropriate)
+**Target:** ≥ 50% coverage (724 tests across 34 files)
 
 **Key metrics:**
 
-- All 620 tests pass ✅
+- All 724 tests passing ✅
 - 0 type errors (pyright strict) ✅
 - 0 linting errors (ruff) ✅
-- 100% coverage on critical modules (smoothing, formatting, validation_bounds) ✅
 
 **Test Organization:**
 
-- Mirrored source structure: tests/core/, tests/drop_jump/, tests/countermovement_jump/, tests/cli/
+- Mirrored source structure: tests/core/, tests/drop_jump/, tests/countermovement_jump/, tests/squat_jump/, tests/cli/
 - Centralized fixtures in tests/conftest.py
 - Zero fixture duplication across test files
-- Comprehensive edge case testing (81 new tests added)
+- Comprehensive edge case testing
 
 See [Testing Guide](docs/development/testing.md) for:
 
@@ -347,13 +337,13 @@ metrics = process_sj_video("video.mp4", mass_kg=75.0)
 
 **Key versions:**
 
-- Python: 3.12.7 (supports >=3.10,\<3.13)
+- Python: 3.12.12 (supports >=3.10,<3.13)
 - NumPy: >=1.26.0
 - pytest: 9.0.0
 - MediaPipe: >=0.10.9
 - OpenCV: >=4.9.0
 - SciPy: >=1.11.0
-- uv: 0.9.9
+- uv: 0.9.26
 
 ## Documentation
 
@@ -413,6 +403,7 @@ This project uses Claude Code's native subagent system for automatic task routin
 - **devops-cicd-engineer**: GitHub Actions, SonarQube, CI/CD, test infrastructure
 - **technical-writer**: Documentation (Diátaxis framework), guides, API reference
 - **qa-test-engineer**: Test coverage, edge cases, fixtures, regression testing
+- **frontend-developer**: React/TypeScript, UI components, state management, accessibility
 
 **How It Works:**
 
@@ -446,7 +437,7 @@ This project integrates multiple MCP (Model Context Protocol) servers for enhanc
 #### **basic-memory** - Knowledge Management
 
 - **Purpose**: Store and retrieve project context, notes, and architectural decisions
-- **Scope**: **Project-scoped** - all operations are constrained to the `dropjump` project
+- **Scope**: **Project-scoped** - all operations are constrained to the `kinemotion` project
 - **Use Cases**:
   - Save project summaries and setup information
   - Build context from memory notes for conversations
@@ -508,6 +499,18 @@ This project integrates multiple MCP (Model Context Protocol) servers for enhanc
   - Revise earlier conclusions as understanding deepens
   - Verify hypotheses before finalizing
 
+#### **sonarqube** - Code Quality Analysis
+
+- **Purpose**: Continuous code quality and security analysis via SonarQube Cloud
+- **Use Cases**:
+  - Check code quality metrics and issues
+  - Review security vulnerabilities
+  - Track technical debt
+- **Key Functions**:
+  - Query project quality gates
+  - Review code smells and bugs
+  - Check coverage trends
+
 #### **serena** - Semantic Code Analysis
 
 - **Purpose**: Intelligent code exploration and precise symbol manipulation
@@ -563,6 +566,7 @@ write_note (save findings) → search_notes (retrieve later) → build_context (
 | Edit code precisely                    | **serena** (replace_symbol_body)   | -                                 |
 | Search project code patterns           | **serena** (search_for_pattern)    | -                                 |
 | Find API documentation                 | **ref** (ref_search_documentation) | exa (web_search_exa)              |
+| Check code quality and issues          | **sonarqube**                      | -                                 |
 
 ### Practical Memory Usage Examples
 
