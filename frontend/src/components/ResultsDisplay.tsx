@@ -1,12 +1,13 @@
 import { AnalysisResponse, METRIC_METADATA } from '../types/api'
-import { useEffect, useState } from 'react'
-import FeedbackForm from './FeedbackForm'
+import { useEffect, useState, Suspense, lazy, useCallback } from 'react'
 import FeatureRequestButton from './FeatureRequestButton'
 import { useDatabaseStatus } from '../hooks/useDatabaseStatus'
 import { useLanguage } from '../hooks/useLanguage'
-import { useAuth } from '../hooks/useAuth'
 import { EXTERNAL_LINKS } from '../config/links'
 import './FeedbackForm.css'
+
+// Lazy load FeedbackForm to reduce initial bundle size
+const FeedbackForm = lazy(() => import('./FeedbackForm'))
 
 interface ResultsDisplayProps {
   metrics: AnalysisResponse
@@ -73,6 +74,98 @@ function PhaseCard({ title, metrics }: PhaseCardProps) {
       </div>
     </div>
   )
+}
+
+// Hoist: Helper function to format metric labels (avoids recreating on each render)
+function formatMetricLabel(key: string): string {
+  return key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+}
+
+// Hoist: Static style objects to avoid creating new objects on each render
+const VIDEO_GRID_STYLE = { display: 'grid', gridTemplateColumns: '1fr 1fr' as const, gap: '2rem' }
+const VIDEO_GRID_SINGLE_STYLE = { display: 'grid', gridTemplateColumns: '1fr' as const, gap: '2rem' }
+const FEEDBACK_SECTION_STYLE = {
+  background: '#f8fafc',
+  border: '1px solid #e2e8f0',
+  borderRadius: '8px',
+  padding: '1rem',
+  margin: '1rem 0'
+}
+const FEEDBACK_BUTTON_STYLE = {
+  background: '#10b981',
+  border: 'none',
+  borderRadius: '6px',
+  padding: '0.75rem 1.5rem',
+  color: 'white',
+  fontSize: '0.875rem',
+  fontWeight: '500',
+  cursor: 'pointer',
+  transition: 'background-color 0.2s'
+}
+const FEEDBACK_UNAVAILABLE_STYLE = {
+  color: '#6b7280',
+  fontSize: '0.875rem',
+  fontStyle: 'italic' as const
+}
+const GITHUB_LINK_STYLE = {
+  background: 'transparent',
+  border: '1px solid #6366f1',
+  borderRadius: '6px',
+  padding: '0.75rem 1.5rem',
+  color: '#6366f1',
+  fontSize: '0.875rem',
+  fontWeight: '500',
+  cursor: 'pointer',
+  transition: 'all 0.2s',
+  textDecoration: 'none',
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '0.5rem'
+}
+const DB_ERROR_STYLE = {
+  background: '#fef2f2',
+  border: '1px solid #fecaca',
+  borderRadius: '8px',
+  padding: '1rem',
+  margin: '1rem 0'
+}
+const DB_ERROR_TITLE_STYLE = {
+  color: '#dc2626',
+  fontWeight: '500',
+  marginBottom: '0.5rem'
+}
+const DB_ERROR_MESSAGE_STYLE = {
+  color: '#7f1d1d',
+  fontSize: '0.875rem'
+}
+const DOWNLOAD_LINK_STYLE = {
+  color: 'var(--primary-color)',
+  fontWeight: 500,
+  textDecoration: 'none' as const
+}
+const DOWNLOAD_CONTAINER_STYLE = {
+  textAlign: 'center' as const,
+  marginBottom: '2rem'
+}
+const DOWNLOAD_LINK_WITH_MARGIN_STYLE = {
+  ...DOWNLOAD_LINK_STYLE,
+  marginRight: '1rem'
+}
+const FEEDBACK_HEADING_STYLE = {
+  color: '#475569',
+  fontWeight: '500',
+  marginBottom: '1rem'
+}
+const BUTTONS_CONTAINER_STYLE = {
+  display: 'flex',
+  gap: '1rem',
+  alignItems: 'center',
+  flexWrap: 'wrap' as const
+}
+const FEEDBACK_FOOTER_STYLE = {
+  marginTop: '0.75rem',
+  color: '#64748b',
+  fontSize: '0.75rem'
 }
 
 function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
@@ -146,10 +239,19 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
     return <MetricCard key={key} {...rest} {...props} />
   }
 
-  const { session } = useAuth()
+  // Determine Jump Type context based on available metrics
+  // Define this before handleFeedbackSubmit since it's used there
+  const isDropJump = 'ground_contact_time_ms' in metricsData || 'reactive_strength_index' in metricsData
 
-  const handleFeedbackSubmit = async (feedback: { notes: string; rating: number | null; tags: string[] }) => {
+  // Defer auth read: Read session only when submitting feedback (not on every auth state change)
+  // This avoids unnecessary re-renders when auth state changes but session isn't needed
+  const handleFeedbackSubmit = useCallback(async (feedback: { notes: string; rating: number | null; tags: string[] }) => {
+    // Import supabase dynamically only when needed
+    const { supabase } = await import('../lib/supabase')
+
     try {
+      // Get fresh session only when submitting
+      const { data: { session } } = await supabase?.auth.getSession() ?? { data: { session: null } }
       const token = session?.access_token
       console.log('[Feedback] Session:', session)
       console.log('[Feedback] Token:', token)
@@ -219,10 +321,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
       console.error('Error saving feedback:', error)
       alert('Failed to save feedback. Please try again.')
     }
-  }
-
-  // Determine Jump Type context based on available metrics
-  const isDropJump = 'ground_contact_time_ms' in metricsData || 'reactive_strength_index' in metricsData
+  }, [metrics, isDropJump])
 
   // --- Render Logic ---
 
@@ -305,12 +404,11 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
       .filter(([key, val]) => !excludeKeys.has(key) && typeof val === 'number' && !key.includes('frame'))
       .map(([key, value]) => {
         const metadata = METRIC_METADATA[key] || {}
-        const formatLabel = (k: string) => k.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
 
         return (
           <div key={key} className="detail-item">
             <span className="detail-label">
-              {formatLabel(key)}
+              {formatMetricLabel(key)}
               {metadata.description && <span className="info-icon small" title={metadata.description}>ⓘ</span>}
             </span>
             <span className="detail-value">
@@ -371,7 +469,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
       </div>
 
       {/* 3. Video Previews (Split view if debug video exists) */}
-      <div className="metrics-dashboard" style={{ display: 'grid', gridTemplateColumns: (showOriginal && showDebug) ? '1fr 1fr' : '1fr', gap: '2rem' }}>
+      <div className="metrics-dashboard" style={showOriginal && showDebug ? VIDEO_GRID_STYLE : VIDEO_GRID_SINGLE_STYLE}>
         {showOriginal && (
           <div className="video-preview-container">
             <video
@@ -398,7 +496,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
       </div>
 
       {(showOriginal || showDebug) && (
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={DOWNLOAD_CONTAINER_STYLE}>
           {showOriginal && (
             <a
               href={originalSrc}
@@ -406,7 +504,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
               className="download-link"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: 'var(--primary-color)', fontWeight: 500, marginRight: showDebug ? '1rem' : undefined }}
+              style={showDebug ? DOWNLOAD_LINK_WITH_MARGIN_STYLE : DOWNLOAD_LINK_STYLE}
             >
               {t('results.downloadOriginal')}
             </a>
@@ -419,7 +517,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
               className="download-link"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: 'var(--primary-color)', fontWeight: 500 }}
+              style={DOWNLOAD_LINK_STYLE}
             >
               {t('results.downloadAnalysis')}
             </a>
@@ -450,45 +548,25 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
       )}
 
       {/* Feedback & Feature Request Section */}
-      <div className="metrics-dashboard" style={{
-        background: '#f8fafc',
-        border: '1px solid #e2e8f0',
-        borderRadius: '8px',
-        padding: '1rem',
-        margin: '1rem 0'
-      }}>
-        <div style={{ color: '#475569', fontWeight: '500', marginBottom: '1rem' }}>
+      <div className="metrics-dashboard" style={FEEDBACK_SECTION_STYLE}>
+        <div style={FEEDBACK_HEADING_STYLE}>
           {t('results.feedback.heading')}
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={BUTTONS_CONTAINER_STYLE}>
           {/* Database-dependent feedback - feature flagged */}
           {showFeedbackFeature && dbStatus?.database_connected ? (
             <button
               onClick={() => setShowFeedbackForm(true)}
               className="feedback-button"
-              style={{
-                background: '#10b981',
-                border: 'none',
-                borderRadius: '6px',
-                padding: '0.75rem 1.5rem',
-                color: 'white',
-                fontSize: '0.875rem',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s'
-              }}
+              style={FEEDBACK_BUTTON_STYLE}
               onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#059669'}
               onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#10b981'}
             >
               {t('results.feedback.coachFeedback')}
             </button>
           ) : showFeedbackFeature && (
-            <span style={{
-              color: '#6b7280',
-              fontSize: '0.875rem',
-              fontStyle: 'italic'
-            }}>
+            <span style={FEEDBACK_UNAVAILABLE_STYLE}>
               {t('results.feedback.feedbackUnavailable')}
             </span>
           )}
@@ -501,21 +579,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
             href={EXTERNAL_LINKS.GITHUB_ISSUES}
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              background: 'transparent',
-              border: '1px solid #6366f1',
-              borderRadius: '6px',
-              padding: '0.75rem 1.5rem',
-              color: '#6366f1',
-              fontSize: '0.875rem',
-              fontWeight: '500',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem'
-            }}
+            style={GITHUB_LINK_STYLE}
             onMouseOver={(e) => {
               e.currentTarget.style.backgroundColor = '#6366f1'
               e.currentTarget.style.color = 'white'
@@ -530,24 +594,18 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
           </a>
         </div>
 
-        <div style={{ marginTop: '0.75rem', color: '#64748b', fontSize: '0.75rem' }}>
+        <div style={FEEDBACK_FOOTER_STYLE}>
           {t('results.feedback.helpText')}
         </div>
       </div>
 
       {/* Show database status banner if there are issues */}
       {!dbLoading && !dbStatus?.database_connected && (
-        <div className="metrics-dashboard" style={{
-          background: '#fef2f2',
-          border: '1px solid #fecaca',
-          borderRadius: '8px',
-          padding: '1rem',
-          margin: '1rem 0'
-        }}>
-          <div style={{ color: '#dc2626', fontWeight: '500', marginBottom: '0.5rem' }}>
+        <div className="metrics-dashboard" style={DB_ERROR_STYLE}>
+          <div style={DB_ERROR_TITLE_STYLE}>
             {t('results.database.unavailable')}
           </div>
-          <div style={{ color: '#7f1d1d', fontSize: '0.875rem' }}>
+          <div style={DB_ERROR_MESSAGE_STYLE}>
             {dbStatus?.message || t('results.database.defaultMessage')}
           </div>
         </div>
@@ -555,11 +613,13 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
 
       {/* Feedback Form Modal - feature flagged */}
       {showFeedbackFeature && showFeedbackForm && (
-        <FeedbackForm
-          analysisResponse={metrics}
-          onSubmit={handleFeedbackSubmit}
-          onCancel={() => setShowFeedbackForm(false)}
-        />
+        <Suspense fallback={<div className="feedback-form-loading">Loading...</div>}>
+          <FeedbackForm
+            analysisResponse={metrics}
+            onSubmit={handleFeedbackSubmit}
+            onCancel={() => setShowFeedbackForm(false)}
+          />
+        </Suspense>
       )}
     </div>
   )

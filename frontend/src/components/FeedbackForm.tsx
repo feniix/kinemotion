@@ -14,6 +14,15 @@ interface FeedbackData {
   tags: string[]
 }
 
+// Hoist: Rating label lookup for O(1) access
+const RATING_LABELS: Record<number, string> = {
+  5: 'feedback.ratingLabels.excellent',
+  4: 'feedback.ratingLabels.good',
+  3: 'feedback.ratingLabels.average',
+  2: 'feedback.ratingLabels.needsWork',
+  1: 'feedback.ratingLabels.poor',
+}
+
 export default function FeedbackForm({ analysisResponse, onSubmit, onCancel }: FeedbackFormProps) {
   const { t } = useLanguage()
   const COMMON_TAGS = t('feedback.commonTags', { returnObjects: true }) as string[]
@@ -91,10 +100,7 @@ export default function FeedbackForm({ analysisResponse, onSubmit, onCancel }: F
               ))}
               {feedback.rating && (
                 <span className="rating-text">
-                  {feedback.rating === 5 ? t('feedback.ratingLabels.excellent') :
-                   feedback.rating === 4 ? t('feedback.ratingLabels.good') :
-                   feedback.rating === 3 ? t('feedback.ratingLabels.average') :
-                   feedback.rating === 2 ? t('feedback.ratingLabels.needsWork') : t('feedback.ratingLabels.poor')}
+                  {t(RATING_LABELS[feedback.rating])}
                 </span>
               )}
             </div>
