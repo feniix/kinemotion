@@ -10,6 +10,15 @@ from fastapi.testclient import TestClient
 
 from kinemotion_backend.app.main import create_application
 
+# Try to import httpx AsyncClient for proper async testing
+try:
+    from httpx import AsyncClient
+
+    ASYNC_CLIENT_AVAILABLE = True
+except ImportError:
+    ASYNC_CLIENT_AVAILABLE = False
+    AsyncClient = None  # type: ignore[assignment]
+
 
 @pytest.fixture
 def no_r2_env() -> None:
@@ -136,6 +145,43 @@ def client(app: FastAPI) -> TestClient:
     # Add test password header to all requests for authentication bypass
     test_client.headers["x-test-password"] = "test-password-12345"
     return test_client
+
+
+@pytest.fixture
+async def async_client(app: FastAPI):
+    """Async test client for proper async testing with httpx.
+
+    Uses httpx AsyncClient with ASGI transport for true async testing.
+    Falls back to None if httpx is not available.
+    """
+    if not ASYNC_CLIENT_AVAILABLE:
+        pytest.skip("httpx not available for async testing")
+
+    from httpx import ASGITransport, AsyncClient
+
+    async with AsyncClient(
+        transport=ASGITransport(app=app),
+        base_url="http://test",
+    ) as ac:
+        # Add test password header for authentication bypass
+        ac.headers["x-test-password"] = "test-password-12345"
+        yield ac
+
+
+# Async test fixture wrapper
+@pytest.fixture
+async def async_client_with_sample_data(
+    async_client,
+    sample_cmj_metrics,
+    sample_dropjump_metrics,
+):
+    """Async client with pre-configured sample data mocks.
+
+    Combines the async client with mock data for testing.
+    """
+    # The actual mocking is handled by the autouse mock_kinemotion_analysis fixture
+    # This fixture exists for clarity and potential future expansion
+    yield async_client
 
 
 @pytest.fixture

@@ -8,8 +8,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from kinemotion.core.pose import MediaPipePoseTracker, PoseTrackerFactory
 
 from ..analysis_api import router as database_analysis_router
+from ..database import close_db_executor
 from ..logging_config import get_logger, setup_logging
-from ..routes import analysis_router, health_router, platform_router
+from ..routes import analysis_router, health_router, platform_router, ws_router
+from ..utils.rate_limiting import setup_rate_limiter
 
 # Initialize structured logging
 setup_logging(
@@ -57,6 +59,10 @@ async def lifespan(_app: FastAPI):
             tracker.close()
         global_pose_trackers.clear()
 
+        # Close database thread pool executor
+        logger.info("closing_db_executor")
+        close_db_executor()
+
 
 def create_application() -> FastAPI:
     """Create and configure FastAPI application."""
@@ -67,6 +73,9 @@ def create_application() -> FastAPI:
         lifespan=lifespan,
     )
 
+    # Set up rate limiting (before other middleware for proper order)
+    setup_rate_limiter(app)
+
     # Add CORS middleware
     _add_cors_middleware(app)
 
@@ -75,6 +84,7 @@ def create_application() -> FastAPI:
     app.include_router(analysis_router)  # Main video analysis endpoints
     app.include_router(health_router)
     app.include_router(platform_router)
+    app.include_router(ws_router)  # WebSocket connections
 
     # Add exception handlers
     _add_exception_handlers(app)
@@ -91,7 +101,7 @@ def _add_cors_middleware(app: FastAPI) -> None:
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.CORS_ORIGINS,
+        allow_origins=settings.cors_origins_property,
         allow_credentials=True,
         allow_methods=["GET", "POST", "PUT", "DELETE"],
         allow_headers=["*"],

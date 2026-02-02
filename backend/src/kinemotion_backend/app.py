@@ -12,7 +12,6 @@ from importlib.metadata import version
 from pathlib import Path
 from typing import Any, Literal, cast
 
-import boto3
 from fastapi import (
     FastAPI,
     File,
@@ -41,6 +40,8 @@ from kinemotion_backend.analysis_api import router as analysis_router
 from kinemotion_backend.database import get_database_client
 from kinemotion_backend.logging_config import get_logger, setup_logging
 from kinemotion_backend.middleware import RequestLoggingMiddleware
+from kinemotion_backend.models.responses import AnalysisResponse, MetricsData
+from kinemotion_backend.models.storage import R2StorageClient
 
 # Initialize structured logging
 setup_logging(
@@ -53,192 +54,6 @@ logger = get_logger(__name__)
 # ========== Type Definitions ==========
 
 JumpType = Literal["drop_jump", "cmj"]
-
-
-class AnalysisResponse:
-    """Response structure for video analysis results."""
-
-    def __init__(
-        self,
-        status_code: int,
-        message: str,
-        metrics: dict[str, Any] | None = None,
-        results_url: str | None = None,
-        debug_video_url: str | None = None,
-        original_video_url: str | None = None,
-        error: str | None = None,
-        processing_time_s: float = 0.0,
-    ):
-        self.status_code = status_code
-        self.message = message
-        self.metrics = metrics
-        self.results_url = results_url
-        self.debug_video_url = debug_video_url
-        self.original_video_url = original_video_url
-        self.error = error
-        self.processing_time_s = processing_time_s
-
-    def to_dict(self) -> dict[str, Any]:
-        """Convert response to JSON-serializable dictionary."""
-        result: dict[str, Any] = {
-            "status_code": self.status_code,
-            "message": self.message,
-            "processing_time_s": self.processing_time_s,
-        }
-
-        if self.metrics is not None:
-            result["metrics"] = self.metrics
-
-        if self.results_url is not None:
-            result["results_url"] = self.results_url
-
-        if self.debug_video_url is not None:
-            result["debug_video_url"] = self.debug_video_url
-
-        if self.original_video_url is not None:
-            result["original_video_url"] = self.original_video_url
-
-        if self.error is not None:
-            result["error"] = self.error
-
-        return result
-
-
-# ========== R2 Storage Client ==========
-
-
-class R2StorageClient:
-    """Cloudflare R2 storage client for video and results management."""
-
-    def __init__(self) -> None:
-        """Initialize R2 client with environment configuration."""
-        self.endpoint = os.getenv("R2_ENDPOINT", "")
-        self.access_key = os.getenv("R2_ACCESS_KEY", "")
-        self.secret_key = os.getenv("R2_SECRET_KEY", "")
-        self.bucket_name = os.getenv("R2_BUCKET_NAME") or "kinemotion"
-        # Optional: if set, we will return stable public URLs instead of presigned URLs.
-        # Example: https://<your-public-domain> (custom domain) or https://<bucket>.<account>.r2.dev
-        self.public_base_url = (os.getenv("R2_PUBLIC_BASE_URL") or "").rstrip("/")
-        # Fallback: presigned URL expiration seconds (default 7 days, S3 max)
-        try:
-            self.presign_expiration_s = int(os.getenv("R2_PRESIGN_EXPIRATION_S") or "604800")
-        except ValueError:
-            self.presign_expiration_s = 604800
-
-        if not all([self.endpoint, self.access_key, self.secret_key]):
-            raise ValueError(
-                "R2 credentials not configured. Set R2_ENDPOINT, "
-                "R2_ACCESS_KEY, and R2_SECRET_KEY environment variables."
-            )
-
-        # Initialize S3-compatible client for R2
-        self.client = boto3.client(
-            "s3",
-            endpoint_url=self.endpoint,
-            aws_access_key_id=self.access_key,
-            aws_secret_access_key=self.secret_key,
-            region_name="auto",
-        )
-
-    def generate_presigned_url(self, key: str, expiration: int = 3600) -> str:
-        """Generate presigned URL for object.
-
-        Args:
-            key: Object key
-            expiration: Expiration in seconds (default 1 hour)
-
-        Returns:
-            Presigned URL string
-
-        Raises:
-            OSError: If generation fails
-        """
-        try:
-            return self.client.generate_presigned_url(
-                "get_object",
-                Params={"Bucket": self.bucket_name, "Key": key},
-                ExpiresIn=expiration,
-            )
-        except Exception as e:
-            raise OSError(f"Failed to generate presigned URL: {str(e)}") from e
-
-    def get_object_url(self, key: str) -> str:
-        """Return a long-lived shareable URL for an object key.
-
-        Prefers a stable public URL if `R2_PUBLIC_BASE_URL` is configured.
-        Otherwise, falls back to a presigned URL with `R2_PRESIGN_EXPIRATION_S`.
-        """
-        normalized_key = key.lstrip("/")
-        if self.public_base_url:
-            return f"{self.public_base_url}/{normalized_key}"
-        return self.generate_presigned_url(normalized_key, expiration=self.presign_expiration_s)
-
-    def upload_file(self, local_path: str, remote_key: str) -> str:
-        """Upload file to R2 storage.
-
-        Args:
-            local_path: Local file path to upload
-            remote_key: S3 object key in R2 bucket
-
-        Returns:
-            Presigned URL of uploaded file
-
-        Raises:
-            OSError: If upload fails
-        """
-        try:
-            self.client.upload_file(local_path, self.bucket_name, remote_key)
-            return self.get_object_url(remote_key)
-        except Exception as e:
-            raise OSError(f"Failed to upload to R2: {str(e)}") from e
-
-    def download_file(self, remote_key: str, local_path: str) -> None:
-        """Download file from R2 storage.
-
-        Args:
-            remote_key: S3 object key in R2 bucket
-            local_path: Local path to save downloaded file
-
-        Raises:
-            OSError: If download fails
-        """
-        try:
-            self.client.download_file(self.bucket_name, remote_key, local_path)
-        except Exception as e:
-            raise OSError(f"Failed to download from R2: {str(e)}") from e
-
-    def delete_file(self, remote_key: str) -> None:
-        """Delete file from R2 storage.
-
-        Args:
-            remote_key: S3 object key in R2 bucket
-
-        Raises:
-            OSError: If deletion fails
-        """
-        try:
-            self.client.delete_object(Bucket=self.bucket_name, Key=remote_key)
-        except Exception as e:
-            raise OSError(f"Failed to delete from R2: {str(e)}") from e
-
-    def put_object(self, key: str, body: bytes) -> str:
-        """Put object (bytes) to R2 storage.
-
-        Args:
-            key: S3 object key in R2 bucket
-            body: Binary content to store
-
-        Returns:
-            Presigned URL of uploaded object
-
-        Raises:
-            OSError: If upload fails
-        """
-        try:
-            self.client.put_object(Bucket=self.bucket_name, Key=key, Body=body)
-            return self.get_object_url(key)
-        except Exception as e:
-            raise OSError(f"Failed to put object to R2: {str(e)}") from e
 
 
 # ========== Global State & Lifespan ==========
@@ -278,7 +93,10 @@ async def lifespan(app: FastAPI):
         # Clean up resources
         logger.info("closing_pose_trackers")
         for tracker in global_pose_trackers.values():
-            tracker.close()
+            try:
+                tracker.close()  # type: ignore[attr-defined]
+            except Exception:
+                pass
         global_pose_trackers.clear()
 
 
@@ -555,7 +373,15 @@ async def health_check() -> dict[str, Any]:
     }
 
 
-@app.post("/api/analyze", tags=["Analysis"])
+@app.post(
+    "/api/analyze",
+    response_model=AnalysisResponse,
+    responses={
+        422: {"model": AnalysisResponse, "description": "Validation error"},
+        500: {"model": AnalysisResponse, "description": "Internal server error"},
+    },
+    tags=["Analysis"],
+)
 @limiter.limit("3/minute")
 async def analyze_video(
     request: Request,
@@ -777,7 +603,7 @@ async def analyze_video(
 
                 auth = SupabaseAuth()
                 token = auth_header.split(" ")[1]
-                user_id = auth.get_user_id(token)
+                user_id = await auth.get_user_id(token)
                 logger.info("user_authenticated_for_analysis", user_id=user_id)
         except Exception as e:
             logger.info("analysis_save_no_auth", reason=str(e))
@@ -818,7 +644,7 @@ async def analyze_video(
         response = AnalysisResponse(
             status_code=200,
             message=f"Successfully analyzed {jump_type_display} video",
-            metrics=metrics,
+            metrics=MetricsData(**metrics) if metrics else None,
             results_url=results_url,
             debug_video_url=debug_video_url,
             original_video_url=original_video_url,
@@ -918,7 +744,16 @@ async def analyze_video(
         #         print(f"Warning: Failed to delete R2 video: {e}")
 
 
-@app.post("/api/analyze-local", tags=["Analysis"])
+@app.post(
+    "/api/analyze-local",
+    response_model=AnalysisResponse,
+    responses={
+        404: {"model": AnalysisResponse, "description": "Video not found"},
+        422: {"model": AnalysisResponse, "description": "Validation error"},
+        500: {"model": AnalysisResponse, "description": "Internal server error"},
+    },
+    tags=["Analysis"],
+)
 @limiter.limit("3/minute")
 async def analyze_local_video(
     request: Request,
@@ -975,7 +810,7 @@ async def analyze_local_video(
         response = AnalysisResponse(
             status_code=200,
             message=f"Successfully analyzed {jump_type} video",
-            metrics=metrics,
+            metrics=MetricsData(**metrics) if metrics else None,
             processing_time_s=processing_time,
         )
 

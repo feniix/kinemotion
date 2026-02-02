@@ -56,7 +56,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             token = auth_header.replace("Bearer ", "")
             auth_start = time.perf_counter()
             try:
-                user_email = supabase_auth.get_user_email(token)
+                user_email = await supabase_auth.get_user_email(token)
                 auth_duration_ms = (time.perf_counter() - auth_start) * 1000
 
                 # Bind user email to logging context

@@ -30,6 +30,7 @@ dependencies = [
     "supabase>=2.10.0",
     "pyjwt>=2.8.0",
     "httpx>=0.27.0",
+    "pydantic-settings>=2.0.0",
     # Local development: use editable install via `uv sync`
     # Production deployment: use released package from PyPI
     "kinemotion>=0.70.0",
@@ -78,6 +79,9 @@ filterwarnings = [
     # Suppress Google protobuf deprecation warnings
     # These are transitive dependencies from third-party libraries (e.g., via grpc/storage)
     "ignore:Type.*uses PyType_Spec:DeprecationWarning",
+    # Suppress Supabase client deprecation warnings (timeout/verify parameters)
+    # Internal Supabase library issue, cannot be fixed in our code
+    "ignore::DeprecationWarning:supabase",
 ]
 
 [tool.ruff]

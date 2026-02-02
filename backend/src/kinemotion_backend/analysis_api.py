@@ -4,10 +4,9 @@ from typing import Any
 from uuid import UUID
 
 import structlog
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from kinemotion_backend.app.dependencies import get_auth
+from kinemotion_backend.app.dependencies import get_current_user_email
 from kinemotion_backend.database import get_database_client
 from kinemotion_backend.models import (
     AnalysisSessionCreate,
@@ -20,21 +19,6 @@ from kinemotion_backend.models import (
 
 logger: structlog.stdlib.BoundLogger = structlog.get_logger()
 router = APIRouter(prefix="/api/analysis", tags=["Analysis"])
-security = HTTPBearer()
-
-
-async def get_current_user_email(
-    credentials: HTTPAuthorizationCredentials = Depends(security),  # noqa: B008
-) -> str:
-    """Extract user email from JWT token."""
-    try:
-        return get_auth().get_user_email(credentials.credentials)
-    except Exception as e:
-        logger.warning("user_authentication_failed", error=str(e))
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-        ) from e
 
 
 @router.post(
@@ -94,21 +78,19 @@ async def create_analysis_session(
     responses={401: {"model": DatabaseError}, 500: {"model": DatabaseError}},
 )
 async def get_user_analysis_sessions(
-    limit: int = 50,
+    limit: int = Query(50, ge=1, le=100, description="Maximum number of sessions to return"),
     email: str = Depends(get_current_user_email),
 ) -> list[AnalysisSessionResponse]:
     """Get analysis sessions for the current user.
 
     Args:
-        limit: Maximum number of sessions to return (default: 50)
+        limit: Maximum number of sessions to return (default: 50, range: 1-100)
+        email: Authenticated user email from JWT token
+
+    Returns:
+        List of analysis session records
     """
     try:
-        if limit <= 0 or limit > 100:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Limit must be between 1 and 100",
-            )
-
         db_client = get_database_client()
         sessions = await db_client.get_user_analysis_sessions(user_id=email, limit=limit)
 

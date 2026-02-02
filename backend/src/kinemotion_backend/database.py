@@ -1,6 +1,13 @@
-"""Supabase database integration for kinemotion backend."""
+"""Supabase database integration for kinemotion backend.
 
+Uses async wrapper around synchronous Supabase client to prevent
+blocking the event loop during database operations.
+"""
+
+import asyncio
 import os
+from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 from typing import Any
 
 import structlog
@@ -8,16 +15,45 @@ from supabase import Client, create_client
 
 logger: structlog.stdlib.BoundLogger = structlog.get_logger()
 
+# Thread pool for running sync Supabase operations
+_db_executor: ThreadPoolExecutor | None = None
+
+
+def get_db_executor() -> ThreadPoolExecutor:
+    """Get or create the database thread pool executor.
+
+    Returns:
+        ThreadPoolExecutor instance for database operations
+    """
+    global _db_executor
+    if _db_executor is None:
+        _db_executor = ThreadPoolExecutor(max_workers=5, thread_name_prefix="db_")
+    return _db_executor
+
+
+def close_db_executor() -> None:
+    """Close the database thread pool executor.
+
+    Should be called during application shutdown.
+    """
+    global _db_executor
+    if _db_executor is not None:
+        _db_executor.shutdown(wait=True)
+        _db_executor = None
+
 
 class DatabaseClient:
-    """Supabase database client with async support."""
+    """Supabase database client with async support.
+
+    Uses run_in_executor to wrap synchronous Supabase client operations
+    in async functions, preventing blocking of the event loop.
+    """
 
     def __init__(self) -> None:
         """Initialize Supabase client."""
         self.supabase_url = os.getenv("SUPABASE_URL", "")
 
         # Prefer modern keys, fall back to legacy for compatibility
-        # Check which key source is being used for debugging
         supabase_publishable_key = os.getenv("SUPABASE_PUBLISHABLE_KEY")
         supabase_secret_key = os.getenv("SUPABASE_SECRET_KEY")
         supabase_anon_key = os.getenv("SUPABASE_ANON_KEY")
@@ -49,11 +85,45 @@ class DatabaseClient:
             key_source = "SUPABASE_KEY"
 
         self.client: Client = create_client(self.supabase_url, self.supabase_key)
+        self._executor = get_db_executor()
         logger.info(
             "database_client_initialized",
             supabase_url=self.supabase_url,
             key_source=key_source,
         )
+
+    async def _run_in_executor(self, func: Any, *args: Any) -> Any:
+        """Run a synchronous function in a thread pool.
+
+        Args:
+            func: Synchronous function to execute
+            *args: Arguments to pass to the function
+
+        Returns:
+            Result of the function call
+
+        Raises:
+            Exception: If the function raises an exception
+        """
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(self._executor, partial(func, *args))
+
+    def _sync_create_analysis_session(
+        self,
+        session_data: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Synchronous insert operation.
+
+        Args:
+            session_data: Session data to insert
+
+        Returns:
+            Created session record
+        """
+        response = self.client.table("analysis_sessions").insert(session_data).execute()
+        if response.data:
+            return response.data[0]
+        raise Exception("No data returned from database insert")
 
     async def create_analysis_session(
         self,
@@ -99,22 +169,21 @@ class DatabaseClient:
                 "upload_id": upload_id,
             }
 
-            response = self.client.table("analysis_sessions").insert(session_data).execute()
+            result = await self._run_in_executor(
+                self._sync_create_analysis_session,
+                session_data,
+            )
 
-            if response.data:
-                session_data = response.data[0]
-                if isinstance(session_data, dict) and "id" in session_data:
-                    logger.info(
-                        "analysis_session_created",
-                        user_id=user_id,
-                        jump_type=jump_type,
-                        session_id=session_data["id"],
-                    )
-                    return session_data
-                else:
-                    raise Exception("Invalid data format returned from database")
+            if isinstance(result, dict) and "id" in result:
+                logger.info(
+                    "analysis_session_created",
+                    user_id=user_id,
+                    jump_type=jump_type,
+                    session_id=result["id"],
+                )
+                return result
             else:
-                raise Exception("No data returned from database insert")
+                raise Exception("Invalid data format returned from database")
 
         except Exception as e:
             logger.error(
@@ -125,6 +194,30 @@ class DatabaseClient:
                 exc_info=True,
             )
             raise
+
+    def _sync_get_user_analysis_sessions(
+        self,
+        user_id: str,
+        limit: int,
+    ) -> list[dict[str, Any]]:
+        """Synchronous query operation.
+
+        Args:
+            user_id: User ID to filter by
+            limit: Maximum number of sessions
+
+        Returns:
+            List of analysis sessions
+        """
+        response = (
+            self.client.table("analysis_sessions")
+            .select("*")
+            .eq("user_id", user_id)
+            .order("created_at", desc=True)
+            .limit(limit)
+            .execute()
+        )
+        return response.data or []
 
     async def get_user_analysis_sessions(
         self, user_id: str, limit: int = 50
@@ -142,21 +235,18 @@ class DatabaseClient:
             Exception: If database operation fails
         """
         try:
-            response = (
-                self.client.table("analysis_sessions")
-                .select("*")
-                .eq("user_id", user_id)
-                .order("created_at", desc=True)
-                .limit(limit)
-                .execute()
+            result = await self._run_in_executor(
+                self._sync_get_user_analysis_sessions,
+                user_id,
+                limit,
             )
 
             logger.info(
                 "user_analysis_sessions_retrieved",
                 user_id=user_id,
-                count=len(response.data or []),
+                count=len(result),
             )
-            return response.data or []
+            return result
 
         except Exception as e:
             logger.error(
@@ -166,6 +256,30 @@ class DatabaseClient:
                 exc_info=True,
             )
             raise
+
+    def _sync_get_analysis_session(
+        self,
+        session_id: str,
+        user_id: str,
+    ) -> dict[str, Any] | None:
+        """Synchronous single record query.
+
+        Args:
+            session_id: Session ID to query
+            user_id: User ID for authorization
+
+        Returns:
+            Session data or None
+        """
+        response = (
+            self.client.table("analysis_sessions")
+            .select("*")
+            .eq("id", session_id)
+            .eq("user_id", user_id)
+            .single()
+            .execute()
+        )
+        return response.data
 
     async def get_analysis_session(self, session_id: str, user_id: str) -> dict[str, Any] | None:
         """Get a specific analysis session.
@@ -181,22 +295,19 @@ class DatabaseClient:
             Exception: If database operation fails
         """
         try:
-            response = (
-                self.client.table("analysis_sessions")
-                .select("*")
-                .eq("id", session_id)
-                .eq("user_id", user_id)  # Ensure user can only access their own sessions
-                .single()
-                .execute()
+            result = await self._run_in_executor(
+                self._sync_get_analysis_session,
+                session_id,
+                user_id,
             )
 
             logger.info(
                 "analysis_session_retrieved",
                 session_id=session_id,
                 user_id=user_id,
-                found=response.data is not None,
+                found=result is not None,
             )
-            return response.data
+            return result
 
         except Exception as e:
             logger.error(
@@ -207,6 +318,23 @@ class DatabaseClient:
                 exc_info=True,
             )
             raise
+
+    def _sync_create_coach_feedback(
+        self,
+        feedback_data: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Synchronous feedback insert.
+
+        Args:
+            feedback_data: Feedback data to insert
+
+        Returns:
+            Created feedback record
+        """
+        response = self.client.table("coach_feedback").insert(feedback_data).execute()
+        if response.data:
+            return response.data[0]
+        raise Exception("No data returned from database insert")
 
     async def create_coach_feedback(
         self,
@@ -240,22 +368,21 @@ class DatabaseClient:
                 "tags": tags or [],
             }
 
-            response = self.client.table("coach_feedback").insert(feedback_data).execute()
+            result = await self._run_in_executor(
+                self._sync_create_coach_feedback,
+                feedback_data,
+            )
 
-            if response.data:
-                feedback_data = response.data[0]
-                if isinstance(feedback_data, dict) and "id" in feedback_data:
-                    logger.info(
-                        "coach_feedback_created",
-                        analysis_session_id=analysis_session_id,
-                        coach_user_id=coach_user_id,
-                        feedback_id=feedback_data["id"],
-                    )
-                    return feedback_data
-                else:
-                    raise Exception("Invalid data format returned from database")
+            if isinstance(result, dict) and "id" in result:
+                logger.info(
+                    "coach_feedback_created",
+                    analysis_session_id=analysis_session_id,
+                    coach_user_id=coach_user_id,
+                    feedback_id=result["id"],
+                )
+                return result
             else:
-                raise Exception("No data returned from database insert")
+                raise Exception("Invalid data format returned from database")
 
         except Exception as e:
             logger.error(
@@ -266,6 +393,27 @@ class DatabaseClient:
                 exc_info=True,
             )
             raise
+
+    def _sync_get_session_feedback(
+        self,
+        analysis_session_id: str,
+    ) -> list[dict[str, Any]]:
+        """Synchronous feedback query.
+
+        Args:
+            analysis_session_id: Session ID to query
+
+        Returns:
+            List of feedback records
+        """
+        response = (
+            self.client.table("coach_feedback")
+            .select("*")
+            .eq("analysis_session_id", analysis_session_id)
+            .order("created_at", desc=True)
+            .execute()
+        )
+        return response.data or []
 
     async def get_session_feedback(self, analysis_session_id: str) -> list[dict[str, Any]]:
         """Get all feedback for an analysis session.
@@ -280,20 +428,17 @@ class DatabaseClient:
             Exception: If database operation fails
         """
         try:
-            response = (
-                self.client.table("coach_feedback")
-                .select("*")
-                .eq("analysis_session_id", analysis_session_id)
-                .order("created_at", desc=True)
-                .execute()
+            result = await self._run_in_executor(
+                self._sync_get_session_feedback,
+                analysis_session_id,
             )
 
             logger.info(
                 "session_feedback_retrieved",
                 analysis_session_id=analysis_session_id,
-                count=len(response.data or []),
+                count=len(result),
             )
-            return response.data or []
+            return result
 
         except Exception as e:
             logger.error(

@@ -54,7 +54,7 @@ class SupabaseAuth:
                 message="Will use Auth server fallback for verification",
             )
 
-    def verify_token(self, token: str) -> dict[str, Any]:
+    async def verify_token(self, token: str) -> dict[str, Any]:
         """Verify Supabase JWT token and return decoded payload.
 
         Uses JWKS verification for RS256 tokens, falls back to Auth server
@@ -111,9 +111,13 @@ class SupabaseAuth:
                     ) from e
 
         # Fallback: Verify via Supabase Auth server (works for all projects)
-        return self._verify_via_auth_server(token, start_time)
+        return await self._verify_via_auth_server(token, start_time)
 
-    def _verify_via_auth_server(self, token: str, overall_start_time: float) -> dict[str, Any]:
+    async def _verify_via_auth_server(
+        self,
+        token: str,
+        overall_start_time: float,
+    ) -> dict[str, Any]:
         """Verify token by calling Supabase Auth server.
 
         This is the recommended fallback for HS256 tokens per Supabase docs.
@@ -132,8 +136,8 @@ class SupabaseAuth:
             if self.supabase_anon_key:
                 headers["apikey"] = self.supabase_anon_key
 
-            with httpx.Client() as client:
-                response = client.get(
+            async with httpx.AsyncClient() as client:
+                response = await client.get(
                     f"{self.supabase_url}/auth/v1/user",
                     headers=headers,
                     timeout=10.0,
@@ -179,7 +183,7 @@ class SupabaseAuth:
                 detail=f"Authentication error: {str(e)}",
             ) from e
 
-    def get_user_id(self, token: str) -> str:
+    async def get_user_id(self, token: str) -> str:
         """Extract user ID from JWT token.
 
         Args:
@@ -191,7 +195,7 @@ class SupabaseAuth:
         Raises:
             HTTPException: If token is invalid or user ID not found
         """
-        payload = self.verify_token(token)
+        payload = await self.verify_token(token)
         user_id = payload.get("sub")
 
         if not user_id:
@@ -202,7 +206,7 @@ class SupabaseAuth:
 
         return user_id
 
-    def get_user_email(self, token: str) -> str:
+    async def get_user_email(self, token: str) -> str:
         """Extract user email from JWT token.
 
         Args:
@@ -214,7 +218,7 @@ class SupabaseAuth:
         Raises:
             HTTPException: If token is invalid or email not found
         """
-        payload = self.verify_token(token)
+        payload = await self.verify_token(token)
         email = payload.get("email")
 
         if not email:

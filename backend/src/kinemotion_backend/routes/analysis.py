@@ -16,29 +16,16 @@ from fastapi import (
 )
 from fastapi.responses import JSONResponse
 
-try:
-    from fastapi_limiter.depends import RateLimiter
-
-    fastapi_limiter_available = True
-except ImportError:
-    fastapi_limiter_available = False
-    RateLimiter = None  # type: ignore[assignment]
-
+from ..app.dependencies import get_analysis_service
 from ..auth import SupabaseAuth
 from ..logging_config import get_logger
 from ..models.responses import AnalysisResponse
-from ..services import AnalysisService, is_test_password_valid, validate_referer
-from ..utils import NoOpLimiter
+from ..services import is_test_password_valid, validate_referer
+from ..services.analysis_service import AnalysisService
+from ..utils import limit
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/api", tags=["Analysis"])
-
-# Rate limiting (use NoOpLimiter for testing or when fastapi_limiter unavailable)
-_testing = False  # This should be set from environment
-if _testing or not fastapi_limiter_available:
-    limiter = NoOpLimiter()
-else:
-    limiter = RateLimiter()  # type: ignore[operator]
 
 
 async def get_user_email_for_analysis(
@@ -74,7 +61,7 @@ async def get_user_email_for_analysis(
     token = auth_header.replace("Bearer ", "")
     try:
         auth = SupabaseAuth()
-        email = auth.get_user_email(token)
+        email = await auth.get_user_email(token)
         return email
     except HTTPException:
         raise
@@ -86,8 +73,15 @@ async def get_user_email_for_analysis(
         ) from e
 
 
-@router.post("/analyze")
-@limiter.limit("3/minute")
+@router.post(
+    "/analyze",
+    response_model=AnalysisResponse,
+    responses={
+        422: {"model": AnalysisResponse, "description": "Validation error"},
+        500: {"model": AnalysisResponse, "description": "Internal server error"},
+    },
+)
+@limit("3/minute")
 async def analyze_video(
     request: Request,
     file: UploadFile = File(...),  # noqa: B008
@@ -97,6 +91,7 @@ async def analyze_video(
     referer: str | None = Header(None),  # noqa: B008
     x_test_password: str | None = Header(None),  # noqa: B008
     email: str = Depends(get_user_email_for_analysis),  # noqa: B008
+    analysis_service: AnalysisService = Depends(get_analysis_service),  # noqa: B008
 ) -> JSONResponse:
     """Analyze video and return jump metrics.
 
@@ -125,9 +120,6 @@ async def analyze_video(
 
     # Validate referer (prevent direct API access)
     validate_referer(referer, x_test_password)
-
-    # Initialize analysis service
-    analysis_service = AnalysisService()
 
     try:
         # Convert debug string to boolean
@@ -159,7 +151,7 @@ async def analyze_video(
             status_code=result.status_code,
         )
 
-        # Return JSON response
+        # Return JSON response with 200 status
         return JSONResponse(content=result.to_dict())
 
     except ValueError as e:
@@ -179,20 +171,39 @@ async def analyze_video(
         )
         return JSONResponse(status_code=422, content=error_result.to_dict())
 
-    except Exception as e:
+    except OSError as e:
+        """Handle file I/O errors specifically."""
         elapsed = time.perf_counter() - start_time
         logger.error(
-            "analyze_endpoint_error",
+            "analyze_endpoint_io_error",
             upload_id=request.headers.get("x-upload-id", "unknown"),
             error=str(e),
-            error_type=type(e).__name__,
             processing_time_s=round(elapsed, 2),
             exc_info=True,
         )
 
         error_result = AnalysisResponse(
             status_code=500,
-            message="Internal server error during analysis",
+            message="File processing error during analysis",
+            error="io_error",
+            processing_time_s=elapsed,
+        )
+        return JSONResponse(status_code=500, content=error_result.to_dict())
+
+    except (HTTPException, RuntimeError) as e:
+        """Handle HTTP and runtime errors from service layer."""
+        elapsed = time.perf_counter() - start_time
+        logger.error(
+            "analyze_endpoint_service_error",
+            upload_id=request.headers.get("x-upload-id", "unknown"),
+            error=str(e),
+            error_type=type(e).__name__,
+            processing_time_s=round(elapsed, 2),
+        )
+
+        error_result = AnalysisResponse(
+            status_code=500,
+            message="Analysis service error",
             error=str(e),
             processing_time_s=elapsed,
         )

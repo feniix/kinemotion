@@ -93,7 +93,9 @@ def validate_referer(referer: str | None, x_test_password: str | None = None) ->
         )
 
     # Check if referer starts with any allowed origin
-    referer_valid = any(referer.startswith(origin) for origin in settings.ALLOWED_REFERERS)
+    referer_valid = any(
+        referer.startswith(origin) for origin in settings.allowed_referers_property
+    )
 
     if not referer_valid:
         raise HTTPException(
