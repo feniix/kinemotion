@@ -92,8 +92,11 @@ nav:
       - Configuración de Cámara: translations/es/camera-setup.md
 
 # Exclude files from the documentation build
+# Note: research/thirdparty/ contains imported papers with citation formats
+# (e.g., [1], (2, 5)) that mkdocs-autorefs tries to resolve as cross-references
 exclude_docs: |
   README.md
+  research/thirdparty/
 
 watch:
   - src/kinemotion
