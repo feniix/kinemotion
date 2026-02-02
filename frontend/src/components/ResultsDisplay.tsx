@@ -4,6 +4,7 @@ import FeatureRequestButton from './FeatureRequestButton'
 import { useDatabaseStatus } from '../hooks/useDatabaseStatus'
 import { useLanguage } from '../hooks/useLanguage'
 import { EXTERNAL_LINKS } from '../config/links'
+import { supabase } from '../lib/supabase'
 import './FeedbackForm.css'
 
 // Lazy load FeedbackForm to reduce initial bundle size
@@ -246,9 +247,6 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
   // Defer auth read: Read session only when submitting feedback (not on every auth state change)
   // This avoids unnecessary re-renders when auth state changes but session isn't needed
   const handleFeedbackSubmit = useCallback(async (feedback: { notes: string; rating: number | null; tags: string[] }) => {
-    // Import supabase dynamically only when needed
-    const { supabase } = await import('../lib/supabase')
-
     try {
       // Get fresh session only when submitting
       const { data: { session } } = await supabase?.auth.getSession() ?? { data: { session: null } }
