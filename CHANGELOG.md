@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.76.4 (2026-02-03)
+
+### Fix
+
+- **docs**: exclude thirdparty research from autorefs scanning
+- **frontend**: remove ineffective dynamic supabase import
+
 ## kinemotion-v0.76.3 (2026-02-02)
 
 ### Refactor
