@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.77.0 (2026-02-11)
+
+### Feat
+
+- add coaching interpretation layer with normative benchmarks
+
 ## kinemotion-v0.76.4 (2026-02-03)
 
 ### Fix
