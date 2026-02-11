@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.78.0 (2026-02-11)
+
+### Feat
+
+- wire athlete demographics through full stack for personalized coaching
+
+### Fix
+
+- **backend**: narrow Supabase JSON return type for pyright
+
 ## kinemotion-v0.77.0 (2026-02-11)
 
 ### Feat
