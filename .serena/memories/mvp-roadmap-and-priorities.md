@@ -68,9 +68,14 @@
 
 - ✅ Frontend i18n (English, Spanish, French) - 86+ translation keys, 5 components with tests
 
+**Completed in Phase 1**
+
+- ✅ Coaching interpretations - Rule-based normative benchmarking in backend + frontend display (BiomechAgent-inspired)
+
 **Deferred to Phase 2**
 
 - ⏳ Backend i18n - error messages, response messages (English-only acceptable for MVP; coach feedback will inform priority)
+- ⏳ LLM-powered results chat - Conversational coaching Q&A (pending coach feedback validation)
 
 **Candidates** (based on coach feedback, currently blocked by MVP completion)
 

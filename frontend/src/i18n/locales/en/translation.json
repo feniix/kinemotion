@@ -78,6 +78,27 @@
       "loading": "Loading (Eccentric)",
       "explosion": "Explosion (Concentric)",
       "outcome": "Outcome (Flight)"
+    },
+    "coachingSection": "Coaching Insights",
+    "categories": {
+      "poor": "Poor",
+      "below_average": "Below Average",
+      "average": "Average",
+      "above_average": "Above Average",
+      "good": "Good",
+      "very_good": "Very Good",
+      "excellent": "Excellent",
+      "too_shallow": "Too Shallow",
+      "optimal": "Optimal",
+      "deep": "Deep",
+      "too_deep": "Too Deep"
+    },
+    "interpretationLabels": {
+      "jump_height": "Jump Height",
+      "peak_concentric_velocity": "Peak Velocity",
+      "countermovement_depth": "Countermovement Depth",
+      "rsi": "Reactive Strength Index",
+      "ground_contact_time": "Ground Contact Time"
     }
   },
   "errors": {

@@ -28,6 +28,10 @@ class MetricsData(BaseModel):
     validation: ValidationResults | None = Field(
         None, description="Validation results for metrics"
     )
+    interpretation: dict[str, Any] | None = Field(
+        None,
+        description="Coaching interpretations with normative benchmarks and recommendations",
+    )
 
 
 class AnalysisResponse(BaseModel):

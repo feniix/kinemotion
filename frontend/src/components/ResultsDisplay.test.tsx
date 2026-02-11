@@ -180,6 +180,63 @@ describe('ResultsDisplay', () => {
     expect(screen.queryByText('Download Analysis Video')).not.toBeInTheDocument();
   });
 
+  it('renders coaching insights section when interpretation data is present', () => {
+    const metricsWithInterpretation: AnalysisResponse = {
+      ...commonMetrics,
+      metrics: {
+        ...commonMetrics.metrics,
+        data: {
+          ...commonMetrics.metrics?.data,
+          jump_height_m: 0.50,
+          peak_concentric_velocity_m_s: 3.25,
+        },
+        interpretation: {
+          interpretations: {
+            jump_height: {
+              category: 'average',
+              value: 50.0,
+              range: { low: 41.0, high: 50.0, unit: 'cm' },
+              recommendation: 'Good foundation. Progress to moderate-intensity plyometrics.',
+            },
+            peak_concentric_velocity: {
+              category: 'very_good',
+              value: 3.25,
+              range: { low: 3.0, high: 3.6, unit: 'm/s' },
+              recommendation: 'Strong velocity. Focus on sport-specific transfer.',
+            },
+          },
+        },
+      },
+    };
+
+    render(<ResultsDisplay metrics={metricsWithInterpretation} />);
+
+    // Coaching section heading
+    expect(screen.getByText('Coaching Insights')).toBeInTheDocument();
+    // Category labels
+    expect(screen.getByText('Average')).toBeInTheDocument();
+    expect(screen.getByText('Very Good')).toBeInTheDocument();
+    // Recommendations
+    expect(screen.getByText(/Good foundation/)).toBeInTheDocument();
+    expect(screen.getByText(/Strong velocity/)).toBeInTheDocument();
+  });
+
+  it('does not render coaching insights when no interpretation data', () => {
+    const cmjMetrics: AnalysisResponse = {
+      ...commonMetrics,
+      metrics: {
+        ...commonMetrics.metrics,
+        data: {
+          ...commonMetrics.metrics?.data,
+          jump_height_m: 0.50,
+        },
+      },
+    };
+
+    render(<ResultsDisplay metrics={cmjMetrics} />);
+    expect(screen.queryByText('Coaching Insights')).not.toBeInTheDocument();
+  });
+
   it('formats small numeric values to fixed 2 decimal places when not exponential', () => {
     const smallValueMetrics: AnalysisResponse = {
       ...commonMetrics,

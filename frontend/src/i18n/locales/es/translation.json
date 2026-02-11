@@ -78,6 +78,27 @@
       "loading": "Carga (Excéntrica)",
       "explosion": "Explosión (Concéntrica)",
       "outcome": "Resultado (Vuelo)"
+    },
+    "coachingSection": "Observaciones de Entrenamiento",
+    "categories": {
+      "poor": "Bajo",
+      "below_average": "Por Debajo del Promedio",
+      "average": "Promedio",
+      "above_average": "Por Encima del Promedio",
+      "good": "Bueno",
+      "very_good": "Muy Bueno",
+      "excellent": "Excelente",
+      "too_shallow": "Muy Superficial",
+      "optimal": "Óptimo",
+      "deep": "Profundo",
+      "too_deep": "Muy Profundo"
+    },
+    "interpretationLabels": {
+      "jump_height": "Altura del Salto",
+      "peak_concentric_velocity": "Velocidad Máxima",
+      "countermovement_depth": "Profundidad del Contramovimiento",
+      "rsi": "Índice de Fuerza Reactiva",
+      "ground_contact_time": "Tiempo de Contacto con el Suelo"
     }
   },
   "errors": {

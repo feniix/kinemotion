@@ -40,6 +40,10 @@ Welcome to the kinemotion documentation. This directory contains guides, technic
   - COCO AP benchmarks and speed tests
   - Code examples and migration guide
   - Platform support matrix
+- **[BiomechAgent Paper Analysis 2026](research/biomechagent-paper-analysis-2026.md)** - AI-assisted biomechanical analysis opportunities
+  - Natural language coaching interface rationale
+  - System 1 + System 2 architecture pattern
+  - Tiered implementation strategy (rule-based → LLM → agent)
 - **[Sports Biomechanics Pose Estimation](research/sports-biomechanics-pose-estimation.md)** - Comprehensive research analysis on pose detection systems for sports biomechanics
   - Pose2Sim validation (3-4° accuracy)
   - Stereo MediaPipe validation (30.1mm RMSE)

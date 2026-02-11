@@ -20,6 +20,32 @@ export interface ValidationResults {
 }
 
 /**
+ * Normative range for a metric interpretation
+ */
+export interface InterpretationRange {
+  low: number
+  high: number
+  unit: string
+}
+
+/**
+ * Single metric interpretation with coaching context
+ */
+export interface MetricInterpretation {
+  category: string
+  value: number
+  range: InterpretationRange
+  recommendation: string
+}
+
+/**
+ * Coaching interpretations keyed by metric name
+ */
+export interface InterpretationData {
+  interpretations: Record<string, MetricInterpretation>
+}
+
+/**
  * Analysis metrics response from the API
  */
 export interface AnalysisResponse {
@@ -29,6 +55,7 @@ export interface AnalysisResponse {
     data?: Record<string, string | number>
     metadata?: Record<string, unknown>
     validation?: ValidationResults
+    interpretation?: InterpretationData
   }
   results_url?: string
   debug_video_url?: string

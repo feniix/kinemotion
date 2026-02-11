@@ -91,6 +91,20 @@ GitHub Push (main) → GitHub Actions Workflow
 - Frontend: Tests exist in frontend/ (need assessment)
 - CI: Runs on every push + PR
 
+### Recent Additions (Feb 2026)
+
+- **Coaching Interpretations**: Backend interpretation service generates rule-based coaching insights
+  - `backend/src/kinemotion_backend/services/interpretation_service.py` - Normative benchmarking engine
+  - Classifies metrics against published norms (jump height, RSI, GCT, velocity, CM depth)
+  - Returns per-metric categories, ranges, and coaching recommendations
+  - Integrated into analysis pipeline (MetricsData.interpretation field)
+- **Frontend Benchmark Display**: New coaching insights section in ResultsDisplay
+  - `frontend/src/components/BenchmarkIndicator.tsx` - Visual category/recommendation display
+  - i18n support for categories in EN/ES/FR
+  - Appears between phase timeline and video previews when interpretation data is present
+- **BiomechAgent Paper Analysis**: Strategic research reference
+  - `docs/research/biomechagent-paper-analysis-2026.md` - Full analysis
+
 ### Known Gaps
 
 - Frontend deployment not automated (Vercel manual)

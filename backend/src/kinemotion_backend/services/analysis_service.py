@@ -8,6 +8,7 @@ from fastapi import UploadFile
 
 from ..logging_config import get_logger
 from ..models.responses import AnalysisResponse, MetricsData
+from .interpretation_service import interpret_metrics
 from .storage_service import StorageService
 from .validation import validate_jump_type, validate_video_file
 from .video_processor import VideoProcessorService
@@ -245,6 +246,12 @@ class AnalysisService:
         original_video_url = await self._upload_original_video(temp_path, storage_key)
         results_url = await self._upload_results(metrics, storage_key)
         debug_video_url = await self._upload_debug_video(temp_debug_video_path, storage_key)
+
+        # Generate coaching interpretations from metrics
+        metrics_data = metrics.get("data") or {}
+        interpretation = interpret_metrics(normalized_jump_type, metrics_data)
+        if interpretation:
+            metrics["interpretation"] = interpretation
 
         # Build response
         processing_time = time.perf_counter() - start_time

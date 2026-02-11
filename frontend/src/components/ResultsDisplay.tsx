@@ -1,4 +1,5 @@
-import { AnalysisResponse, METRIC_METADATA } from '../types/api'
+import { AnalysisResponse, METRIC_METADATA, type MetricInterpretation } from '../types/api'
+import BenchmarkIndicator from './BenchmarkIndicator'
 import { useEffect, useState, Suspense, lazy, useCallback } from 'react'
 import FeatureRequestButton from './FeatureRequestButton'
 import { useDatabaseStatus } from '../hooks/useDatabaseStatus'
@@ -385,6 +386,35 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
     )
   }
 
+  // Render coaching insights from interpretation data
+  const renderCoachingInsights = () => {
+    const interpretation = metrics.metrics?.interpretation
+    if (!interpretation?.interpretations) return null
+
+    const entries = Object.entries(interpretation.interpretations) as Array<[string, MetricInterpretation]>
+    if (entries.length === 0) return null
+
+    return (
+      <div className="coaching-insights">
+        {entries.map(([key, interp]) => {
+          const label = t(`results.interpretationLabels.${key}`)
+          return (
+            <div key={key} className="insight-card">
+              <div className="insight-card-header">
+                <span className="insight-metric-label">{label}</span>
+                <span className="insight-metric-value">
+                  {interp.value.toFixed(1)}
+                  <span className="insight-metric-unit">{interp.range.unit}</span>
+                </span>
+              </div>
+              <BenchmarkIndicator interpretation={interp} />
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
   // Render secondary metrics in a grid (everything else)
   const renderDetails = () => {
     const excludeKeys = new Set([
@@ -466,7 +496,15 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
         {renderTimeline()}
       </div>
 
-      {/* 3. Video Previews (Split view if debug video exists) */}
+      {/* 3. Coaching Insights (from interpretation data) */}
+      {metrics.metrics?.interpretation?.interpretations && Object.keys(metrics.metrics.interpretation.interpretations).length > 0 && (
+        <div className="metrics-dashboard">
+          <h3 className="section-title">{t('results.coachingSection')}</h3>
+          {renderCoachingInsights()}
+        </div>
+      )}
+
+      {/* 4. Video Previews (Split view if debug video exists) */}
       <div className="metrics-dashboard" style={showOriginal && showDebug ? VIDEO_GRID_STYLE : VIDEO_GRID_SINGLE_STYLE}>
         {showOriginal && (
           <div className="video-preview-container">
