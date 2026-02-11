@@ -122,7 +122,9 @@ class DatabaseClient:
         """
         response = self.client.table("analysis_sessions").insert(session_data).execute()
         if response.data:
-            return response.data[0]
+            result = response.data[0]
+            assert isinstance(result, dict)
+            return result
         raise Exception("No data returned from database insert")
 
     async def create_analysis_session(
@@ -333,7 +335,9 @@ class DatabaseClient:
         """
         response = self.client.table("coach_feedback").insert(feedback_data).execute()
         if response.data:
-            return response.data[0]
+            result = response.data[0]
+            assert isinstance(result, dict)
+            return result
         raise Exception("No data returned from database insert")
 
     async def create_coach_feedback(
