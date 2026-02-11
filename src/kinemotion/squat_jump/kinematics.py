@@ -9,6 +9,7 @@ from ..core.formatting import format_float_metric
 from ..core.types import FloatArray
 
 if TYPE_CHECKING:
+    from ..core.demographics import AthleteDemographics
     from ..core.metadata import ResultMetadata
 
 
@@ -37,6 +38,7 @@ class SJResultDict(TypedDict, total=False):
     data: SJDataDict
     metadata: dict  # ResultMetadata.to_dict()
     validation: dict  # ValidationResult.to_dict()
+    demographics: dict[str, str | int | None]  # AthleteDemographics.to_dict()
 
 
 @dataclass
@@ -76,6 +78,7 @@ class SJMetrics:
     mass_kg: float | None = None
     tracking_method: str = "hip"
     result_metadata: "ResultMetadata | None" = None
+    demographics: "AthleteDemographics | None" = None
 
     def to_dict(self) -> SJResultDict:
         """Convert metrics to JSON-serializable dictionary.
@@ -116,6 +119,10 @@ class SJMetrics:
 
         if self.result_metadata is not None:
             result["metadata"] = self.result_metadata.to_dict()
+
+        # Include demographics if provided
+        if self.demographics is not None and self.demographics.has_any():
+            result["demographics"] = self.demographics.to_dict()
 
         return result
 

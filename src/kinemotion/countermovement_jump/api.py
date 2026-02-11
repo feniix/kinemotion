@@ -15,6 +15,7 @@ from ..core.auto_tuning import (
     analyze_video_sample,
     auto_tune_parameters,
 )
+from ..core.demographics import AthleteDemographics
 from ..core.filtering import reject_outliers
 from ..core.metadata import (
     AlgorithmConfig,
@@ -396,6 +397,7 @@ class CMJVideoConfig:
     verbose: bool = False
     timer: Timer | None = None
     pose_tracker: "MediaPipePoseTracker | None" = None
+    demographics: AthleteDemographics | None = None
 
     def to_kwargs(self) -> dict:
         """Convert config to kwargs dict for process_cmj_video."""
@@ -410,6 +412,7 @@ class CMJVideoConfig:
             "verbose": self.verbose,
             "timer": self.timer,
             "pose_tracker": self.pose_tracker,
+            "demographics": self.demographics,
         }
 
 
@@ -435,6 +438,7 @@ def process_cmj_video(
     verbose: bool = False,
     timer: Timer | None = None,
     pose_tracker: MediaPipePoseTracker | None = None,
+    demographics: AthleteDemographics | None = None,
 ) -> CMJMetrics:
     """
     Process a single CMJ video and return metrics.
@@ -519,6 +523,10 @@ def process_cmj_video(
                 timer,
                 verbose,
             )
+
+            # Attach demographics if provided
+            if demographics is not None and demographics.has_any():
+                metrics.demographics = demographics
 
             if json_output:
                 _save_metrics_to_json(metrics, json_output, timer, verbose)

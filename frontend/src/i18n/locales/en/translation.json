@@ -30,6 +30,24 @@
     "changeFile": "Change",
     "analyzeButton": "Run Analysis",
     "analyzing": "Analyzing...",
+    "athleteProfile": {
+      "title": "Athlete Profile (Optional)",
+      "hint": "Providing athlete information improves the accuracy of coaching recommendations.",
+      "sex": "Biological Sex",
+      "male": "Male",
+      "female": "Female",
+      "age": "Age",
+      "agePlaceholder": "e.g., 25",
+      "trainingLevel": "Training Level",
+      "notSpecified": "Not specified",
+      "levels": {
+        "untrained": "Untrained",
+        "recreational": "Recreational",
+        "trained": "Trained",
+        "competitive": "Competitive",
+        "elite": "Elite"
+      }
+    },
     "errors": {
       "fileTooLarge": "File size must be less than 500MB. Selected file is {{size}}MB",
       "invalidFileType": "Please select a valid video file"
@@ -80,6 +98,16 @@
       "outcome": "Outcome (Flight)"
     },
     "coachingSection": "Coaching Insights",
+    "comparedTo": "Compared to",
+    "demographicValues": {
+      "male": "Male",
+      "female": "Female",
+      "youth": "Youth (<18)",
+      "adult": "Adult (18-34)",
+      "masters_35": "Masters (35-49)",
+      "masters_50": "Masters (50-64)",
+      "senior": "Senior (65+)"
+    },
     "categories": {
       "poor": "Poor",
       "below_average": "Below Average",

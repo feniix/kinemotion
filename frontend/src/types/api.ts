@@ -39,11 +39,31 @@ export interface MetricInterpretation {
 }
 
 /**
+ * Demographic context returned when athlete demographics were provided
+ */
+export interface DemographicContext {
+  sex?: 'male' | 'female'
+  age_group?: string
+  training_level?: string
+}
+
+/**
  * Coaching interpretations keyed by metric name
  */
 export interface InterpretationData {
   interpretations: Record<string, MetricInterpretation>
+  demographic_context?: DemographicContext
 }
+
+/**
+ * Biological sex for normative comparison
+ */
+export type BiologicalSex = 'male' | 'female'
+
+/**
+ * Training level for normative comparison
+ */
+export type TrainingLevel = 'untrained' | 'recreational' | 'trained' | 'competitive' | 'elite'
 
 /**
  * Analysis metrics response from the API
@@ -62,14 +82,6 @@ export interface AnalysisResponse {
   original_video_url?: string
   processing_time_s?: number
   error?: string | null
-}
-
-/**
- * Request payload for video analysis
- */
-export interface AnalysisRequest {
-  video: File
-  jump_type: 'cmj' | 'dropjump'
 }
 
 /**

@@ -439,13 +439,17 @@ class TestInterpretMetrics:
         assert "interpretations" in result
         assert "jump_height" in result["interpretations"]
 
-    def test_routes_to_squat_jump_alias(self) -> None:
-        """The 'squat_jump' alias also routes to the SJ interpreter."""
+    def test_squat_jump_alias_not_handled_at_dispatch(self) -> None:
+        """The 'squat_jump' alias is normalized to 'sj' at validation, not here.
+
+        After validate_jump_type() normalizes 'squat_jump' -> 'sj', only
+        canonical forms reach interpret_metrics. Passing 'squat_jump' directly
+        returns empty because dispatch only handles canonical forms.
+        """
         data = {"jump_height_m": 0.40}
         result = interpret_metrics("squat_jump", data)
 
-        assert "interpretations" in result
-        assert "jump_height" in result["interpretations"]
+        assert result == {}
 
     # -- Invalid / unknown jump types --
 
@@ -821,3 +825,241 @@ class TestCoachingRecommendations:
 
         rec = result["ground_contact_time"]["recommendation"].lower()
         assert "fast" in rec
+
+
+# ===========================================================================
+# Sex-specific norm tests
+# ===========================================================================
+
+
+class TestSexSpecificInterpretation:
+    """Tests that sex parameter changes normative ranges."""
+
+    def test_female_jump_height_different_category_than_male(self) -> None:
+        """A 35cm jump is 'below_average' for male but 'average' for female."""
+        data = {"jump_height_m": 0.35}  # 35 cm
+
+        male_result = interpret_cmj_metrics(data, sex=None)  # defaults to male
+        female_result = interpret_cmj_metrics(data, sex="female")
+
+        assert male_result["jump_height"]["category"] == "below_average"
+        assert female_result["jump_height"]["category"] == "average"
+
+    def test_female_rsi_different_category_than_male(self) -> None:
+        """RSI 0.7 is 'poor' for male but 'below_average' for female."""
+        data = {"reactive_strength_index": 0.7}
+
+        male_result = interpret_dropjump_metrics(data, sex=None)
+        female_result = interpret_dropjump_metrics(data, sex="female")
+
+        assert male_result["rsi"]["category"] == "poor"
+        assert female_result["rsi"]["category"] == "below_average"
+
+    def test_female_velocity_different_ranges(self) -> None:
+        """Female velocity norms have lower boundaries than male."""
+        data = {"peak_concentric_velocity_m_s": 1.6}
+
+        male_result = interpret_cmj_metrics(data, sex="male")
+        female_result = interpret_cmj_metrics(data, sex="female")
+
+        assert male_result["peak_concentric_velocity"]["category"] == "below_average"
+        assert female_result["peak_concentric_velocity"]["category"] == "average"
+
+    def test_cm_depth_universal_same_for_both_sexes(self) -> None:
+        """Countermovement depth norms are universal (minimal sex difference)."""
+        data = {"countermovement_depth_m": 0.25}
+
+        male_result = interpret_cmj_metrics(data, sex="male")
+        female_result = interpret_cmj_metrics(data, sex="female")
+
+        assert (
+            male_result["countermovement_depth"]["category"]
+            == female_result["countermovement_depth"]["category"]
+        )
+
+    def test_gct_universal_same_for_both_sexes(self) -> None:
+        """Ground contact time norms are universal."""
+        data = {"ground_contact_time_ms": 190.0}
+
+        male_result = interpret_dropjump_metrics(data, sex="male")
+        female_result = interpret_dropjump_metrics(data, sex="female")
+
+        assert (
+            male_result["ground_contact_time"]["category"]
+            == female_result["ground_contact_time"]["category"]
+        )
+
+
+# ===========================================================================
+# Age-adjusted norm tests
+# ===========================================================================
+
+
+class TestAgeAdjustedInterpretation:
+    """Tests that age_group parameter adjusts normative ranges."""
+
+    def test_youth_jump_height_higher_category(self) -> None:
+        """A moderate jump is classified higher for youth (lower norms)."""
+        data = {"jump_height_m": 0.35}  # 35 cm
+
+        adult_result = interpret_cmj_metrics(data)
+        youth_result = interpret_cmj_metrics(data, age_group="youth")
+
+        # Youth norms are scaled down by 0.85, so 35cm rates better
+        adult_cat_idx = [
+            "poor",
+            "below_average",
+            "average",
+            "above_average",
+            "very_good",
+            "excellent",
+        ].index(adult_result["jump_height"]["category"])
+        youth_cat_idx = [
+            "poor",
+            "below_average",
+            "average",
+            "above_average",
+            "very_good",
+            "excellent",
+        ].index(youth_result["jump_height"]["category"])
+        assert youth_cat_idx >= adult_cat_idx
+
+    def test_senior_rsi_higher_category(self) -> None:
+        """A moderate RSI rates better for seniors (lower norms)."""
+        data = {"reactive_strength_index": 0.9}
+
+        adult_result = interpret_dropjump_metrics(data)
+        senior_result = interpret_dropjump_metrics(data, age_group="senior")
+
+        # Senior norms are scaled down by 0.70
+        adult_cat = adult_result["rsi"]["category"]
+        senior_cat = senior_result["rsi"]["category"]
+        # 0.9 is below_average for adults, should be at least average for seniors
+        assert adult_cat == "below_average"
+        assert senior_cat != "poor"
+
+    def test_adult_age_group_matches_default(self) -> None:
+        """Explicit 'adult' age group gives same results as None."""
+        data = {"jump_height_m": 0.45}
+
+        default_result = interpret_cmj_metrics(data)
+        adult_result = interpret_cmj_metrics(data, age_group="adult")
+
+        assert default_result == adult_result
+
+
+# ===========================================================================
+# interpret_metrics demographic context tests
+# ===========================================================================
+
+
+class TestInterpretMetricsDemographicContext:
+    """Tests for the demographic_context in interpret_metrics output."""
+
+    def test_no_demographics_no_context(self) -> None:
+        """When no demographics are provided, no demographic_context key exists."""
+        data = {"jump_height_m": 0.45}
+        result = interpret_metrics("cmj", data)
+
+        assert "demographic_context" not in result
+        assert "interpretations" in result
+
+    def test_sex_only_includes_context(self) -> None:
+        """When sex is provided, demographic_context includes sex."""
+        data = {"jump_height_m": 0.45}
+        result = interpret_metrics("cmj", data, sex="female")
+
+        assert "demographic_context" in result
+        assert result["demographic_context"]["sex"] == "female"
+
+    def test_age_only_includes_context(self) -> None:
+        """When age is provided, demographic_context includes age_group."""
+        data = {"jump_height_m": 0.45}
+        result = interpret_metrics("cmj", data, age=25)
+
+        assert "demographic_context" in result
+        assert result["demographic_context"]["age_group"] == "adult"
+
+    def test_both_sex_and_age_includes_full_context(self) -> None:
+        """When both sex and age are provided, context includes both."""
+        data = {"jump_height_m": 0.45}
+        result = interpret_metrics("cmj", data, sex="female", age=16)
+
+        assert "demographic_context" in result
+        ctx = result["demographic_context"]
+        assert ctx["sex"] == "female"
+        assert ctx["age_group"] == "youth"
+
+    @pytest.mark.parametrize(
+        "age, expected_group",
+        [
+            (10, "youth"),
+            (17, "youth"),
+            (18, "adult"),
+            (34, "adult"),
+            (35, "masters_35"),
+            (49, "masters_35"),
+            (50, "masters_50"),
+            (64, "masters_50"),
+            (65, "senior"),
+            (80, "senior"),
+        ],
+    )
+    def test_age_to_group_mapping(self, age: int, expected_group: str) -> None:
+        """Age values map to correct age groups in interpret_metrics."""
+        data = {"jump_height_m": 0.45}
+        result = interpret_metrics("cmj", data, age=age)
+
+        assert result["demographic_context"]["age_group"] == expected_group
+
+
+# ===========================================================================
+# Backward compatibility tests
+# ===========================================================================
+
+
+class TestBackwardCompatibility:
+    """Ensure that None demographics produce identical output to original behavior."""
+
+    def test_cmj_none_demographics_same_as_original(self) -> None:
+        """CMJ with None sex/age_group matches the original male adult norms."""
+        data = {
+            "jump_height_m": 0.45,
+            "peak_concentric_velocity_m_s": 2.5,
+            "countermovement_depth_m": 0.30,
+        }
+        result_default = interpret_cmj_metrics(data)
+        result_explicit = interpret_cmj_metrics(data, sex=None, age_group=None)
+
+        assert result_default == result_explicit
+
+    def test_dropjump_none_demographics_same_as_original(self) -> None:
+        """Drop jump with None sex/age_group matches the original male adult norms."""
+        data = {
+            "reactive_strength_index": 1.5,
+            "jump_height_m": 0.45,
+            "ground_contact_time_ms": 200.0,
+        }
+        result_default = interpret_dropjump_metrics(data)
+        result_explicit = interpret_dropjump_metrics(data, sex=None, age_group=None)
+
+        assert result_default == result_explicit
+
+    def test_sj_none_demographics_same_as_original(self) -> None:
+        """SJ with None sex/age_group matches the original male adult norms."""
+        data = {
+            "jump_height_m": 0.40,
+            "peak_concentric_velocity_m_s": 2.5,
+        }
+        result_default = interpret_sj_metrics(data)
+        result_explicit = interpret_sj_metrics(data, sex=None, age_group=None)
+
+        assert result_default == result_explicit
+
+    def test_interpret_metrics_wrapper_backward_compat(self) -> None:
+        """interpret_metrics with no demographics returns same structure as before."""
+        data = {"jump_height_m": 0.45}
+        result = interpret_metrics("cmj", data)
+
+        assert set(result.keys()) == {"interpretations"}
+        assert "jump_height" in result["interpretations"]

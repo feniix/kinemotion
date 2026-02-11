@@ -2,18 +2,25 @@ import { useState, useRef } from 'react'
 import RecentUploads from './RecentUploads'
 import { useLanguage } from '../hooks/useLanguage'
 import { RecentUpload } from '../hooks/useRecentUploads'
+import type { BiologicalSex, JumpType, TrainingLevel } from '../types/api'
 
 interface UploadFormProps {
   file: File | null
-  jumpType: 'cmj' | 'dropjump'
+  jumpType: JumpType
   loading: boolean
   enableDebug: boolean
+  sex: BiologicalSex | null
+  age: number | null
+  trainingLevel: TrainingLevel | null
   recentUploads: RecentUpload[]
   onFileChange: (file: File | null) => void
-  onJumpTypeChange: (jumpType: 'cmj' | 'dropjump') => void
+  onJumpTypeChange: (jumpType: JumpType) => void
   onEnableDebugChange: (enable: boolean) => void
+  onSexChange: (sex: BiologicalSex | null) => void
+  onAgeChange: (age: number | null) => void
+  onTrainingLevelChange: (level: TrainingLevel | null) => void
   onAnalyze: () => void
-  onClearHistory?: () => void
+  onClearHistory: () => void
 }
 
 const MAX_FILE_SIZE = 500 * 1024 * 1024 // 500MB
@@ -23,15 +30,22 @@ function UploadForm({
   jumpType,
   loading,
   enableDebug,
+  sex,
+  age,
+  trainingLevel,
   recentUploads,
   onFileChange,
   onJumpTypeChange,
   onEnableDebugChange,
+  onSexChange,
+  onAgeChange,
+  onTrainingLevelChange,
   onAnalyze,
   onClearHistory,
 }: UploadFormProps) {
   const [validationError, setValidationError] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [showAthleteProfile, setShowAthleteProfile] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null); // Create a ref for the file input
   const { t } = useLanguage()
 
@@ -98,7 +112,7 @@ function UploadForm({
     }
   }
 
-  const handleSelectRecentUpload = (_filename: string, jumpType: 'cmj' | 'dropjump') => {
+  const handleSelectRecentUpload = (_filename: string, jumpType: JumpType) => {
     onJumpTypeChange(jumpType)
     // Note: We can't actually access the File object from recent history for privacy reasons,
     // so we just set the jump type. The user would need to select the file again.
@@ -135,7 +149,80 @@ function UploadForm({
         </label>
       </div>
 
-      {/* 2. Unified Action Zone */}
+      {/* 2. Athlete Profile (Optional) */}
+      <div className="athlete-profile-section">
+        <button
+          type="button"
+          className="athlete-profile-toggle"
+          onClick={() => setShowAthleteProfile(!showAthleteProfile)}
+          aria-expanded={showAthleteProfile}
+        >
+          <span>{t('uploadForm.athleteProfile.title')}</span>
+          <span className="toggle-arrow">{showAthleteProfile ? '▲' : '▼'}</span>
+        </button>
+
+        {showAthleteProfile && (
+          <div className="athlete-profile-fields">
+            <p className="athlete-profile-hint">{t('uploadForm.athleteProfile.hint')}</p>
+
+            <div className="profile-field">
+              <label className="profile-label">{t('uploadForm.athleteProfile.sex')}</label>
+              <div className="sex-selector">
+                <button
+                  type="button"
+                  className={`sex-btn ${sex === 'male' ? 'active' : ''}`}
+                  onClick={() => onSexChange(sex === 'male' ? null : 'male')}
+                >
+                  {t('uploadForm.athleteProfile.male')}
+                </button>
+                <button
+                  type="button"
+                  className={`sex-btn ${sex === 'female' ? 'active' : ''}`}
+                  onClick={() => onSexChange(sex === 'female' ? null : 'female')}
+                >
+                  {t('uploadForm.athleteProfile.female')}
+                </button>
+              </div>
+            </div>
+
+            <div className="profile-field">
+              <label className="profile-label" htmlFor="athlete-age">{t('uploadForm.athleteProfile.age')}</label>
+              <input
+                id="athlete-age"
+                type="number"
+                min={5}
+                max={120}
+                placeholder={t('uploadForm.athleteProfile.agePlaceholder')}
+                value={age ?? ''}
+                onChange={(e) => {
+                  const val = e.target.value
+                  onAgeChange(val ? parseInt(val, 10) : null)
+                }}
+                className="age-input"
+              />
+            </div>
+
+            <div className="profile-field">
+              <label className="profile-label" htmlFor="training-level">{t('uploadForm.athleteProfile.trainingLevel')}</label>
+              <select
+                id="training-level"
+                value={trainingLevel ?? ''}
+                onChange={(e) => onTrainingLevelChange((e.target.value || null) as TrainingLevel | null)}
+                className="training-select"
+              >
+                <option value="">{t('uploadForm.athleteProfile.notSpecified')}</option>
+                <option value="untrained">{t('uploadForm.athleteProfile.levels.untrained')}</option>
+                <option value="recreational">{t('uploadForm.athleteProfile.levels.recreational')}</option>
+                <option value="trained">{t('uploadForm.athleteProfile.levels.trained')}</option>
+                <option value="competitive">{t('uploadForm.athleteProfile.levels.competitive')}</option>
+                <option value="elite">{t('uploadForm.athleteProfile.levels.elite')}</option>
+              </select>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 3. Unified Action Zone */}
       <div className={`drop-zone-container ${file ? 'has-file' : ''}`}>
         <div
           className={`upload-drop-zone ${isDragging ? 'dragging' : ''}`}
@@ -197,7 +284,7 @@ function UploadForm({
       <RecentUploads
         uploads={recentUploads}
         onSelect={handleSelectRecentUpload}
-        onClear={onClearHistory || (() => {})}
+        onClear={onClearHistory}
       />
     </div>
   )

@@ -20,7 +20,7 @@ from ..app.dependencies import get_analysis_service
 from ..auth import SupabaseAuth
 from ..logging_config import get_logger
 from ..models.responses import AnalysisResponse
-from ..services import is_test_password_valid, validate_referer
+from ..services import is_test_password_valid, validate_demographics, validate_referer
 from ..services.analysis_service import AnalysisService
 from ..utils import limit
 
@@ -88,6 +88,9 @@ async def analyze_video(
     jump_type: str = Form("cmj"),  # noqa: B008
     quality: str = Form("balanced"),  # noqa: B008
     debug: str = Form("false"),  # noqa: B008
+    sex: str | None = Form(None),  # noqa: B008
+    age: int | None = Form(None),  # noqa: B008
+    training_level: str | None = Form(None),  # noqa: B008
     referer: str | None = Header(None),  # noqa: B008
     x_test_password: str | None = Header(None),  # noqa: B008
     email: str = Depends(get_user_email_for_analysis),  # noqa: B008
@@ -105,9 +108,12 @@ async def analyze_video(
 
     Args:
         file: Video file to analyze (multipart/form-data)
-        jump_type: Type of jump ("drop_jump", "cmj", "sj", or "squat_jump")
+        jump_type: Type of jump ("cmj", "drop_jump", or "sj"; "squat_jump" accepted as alias)
         quality: Analysis quality preset ("fast", "balanced", or "accurate")
         debug: Debug overlay flag ("true" or "false", default "false")
+        sex: Biological sex for normative comparison ("male" or "female")
+        age: Athlete age in years (1-120) for age-adjusted norms
+        training_level: Training level for normative comparison
         email: Authenticated user email (extracted from JWT or test password)
 
     Returns:
@@ -125,6 +131,9 @@ async def analyze_video(
         # Convert debug string to boolean
         enable_debug = debug.lower() == "true"
 
+        # Validate demographics (if provided)
+        normalized_sex, normalized_training_level = validate_demographics(sex, age, training_level)
+
         # Log analysis start
         logger.info(
             "analyzing_video_started",
@@ -132,6 +141,9 @@ async def analyze_video(
             quality=quality,
             debug=enable_debug,
             email=email,
+            sex=normalized_sex,
+            age=age,
+            training_level=normalized_training_level,
         )
 
         # Perform analysis using service layer
@@ -141,6 +153,9 @@ async def analyze_video(
             quality=quality,
             debug=enable_debug,
             user_id=email,
+            sex=normalized_sex,
+            age=age,
+            training_level=normalized_training_level,
         )
 
         # Log analysis completion
@@ -172,7 +187,7 @@ async def analyze_video(
         return JSONResponse(status_code=422, content=error_result.to_dict())
 
     except OSError as e:
-        """Handle file I/O errors specifically."""
+        # Handle file I/O errors specifically
         elapsed = time.perf_counter() - start_time
         logger.error(
             "analyze_endpoint_io_error",
@@ -191,7 +206,7 @@ async def analyze_video(
         return JSONResponse(status_code=500, content=error_result.to_dict())
 
     except (HTTPException, RuntimeError) as e:
-        """Handle HTTP and runtime errors from service layer."""
+        # Handle HTTP and runtime errors from service layer
         elapsed = time.perf_counter() - start_time
         logger.error(
             "analyze_endpoint_service_error",

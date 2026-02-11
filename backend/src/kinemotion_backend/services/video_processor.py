@@ -32,6 +32,8 @@ class VideoProcessorService:
         Raises:
             ValueError: If video processing fails
         """
+        # Input is already normalized by validate_jump_type() so only
+        # canonical forms ("cmj", "drop_jump", "sj") arrive here.
         if jump_type == "drop_jump":
             metrics = process_dropjump_video(
                 video_path,
@@ -48,7 +50,7 @@ class VideoProcessorService:
                 timer=timer,
                 pose_tracker=pose_tracker,  # type: ignore[arg-type]
             )
-        elif jump_type in ("sj", "squat_jump"):
+        elif jump_type == "sj":
             metrics = process_sj_video(
                 video_path,
                 quality=quality,

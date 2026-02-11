@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AnalysisResponse, JumpType } from '../types/api'
+import { AnalysisResponse, JumpType, BiologicalSex, TrainingLevel } from '../types/api'
 import { supabase } from '../lib/supabase'
 
 interface UseAnalysisState {
@@ -10,12 +10,18 @@ interface UseAnalysisState {
   metrics: AnalysisResponse | null
   error: string | null
   enableDebug: boolean
+  sex: BiologicalSex | null
+  age: number | null
+  trainingLevel: TrainingLevel | null
 }
 
 interface UseAnalysisActions {
   setFile: (file: File | null) => void
   setJumpType: (jumpType: JumpType) => void
   setEnableDebug: (enable: boolean) => void
+  setSex: (sex: BiologicalSex | null) => void
+  setAge: (age: number | null) => void
+  setTrainingLevel: (level: TrainingLevel | null) => void
   analyze: () => Promise<void>
   retry: () => Promise<void>
   reset: () => void
@@ -33,6 +39,9 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
   const [metrics, setMetrics] = useState<AnalysisResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [enableDebug, setEnableDebug] = useState(false)
+  const [sex, setSex] = useState<BiologicalSex | null>(null)
+  const [age, setAge] = useState<number | null>(null)
+  const [trainingLevel, setTrainingLevel] = useState<TrainingLevel | null>(null)
 
   const analyze = async () => {
     if (!file) {
@@ -51,6 +60,9 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
     const backendJumpType = jumpType === 'dropjump' ? 'drop_jump' : jumpType
     formData.append('jump_type', backendJumpType)
     formData.append('debug', enableDebug ? 'true' : 'false')
+    if (sex) formData.append('sex', sex)
+    if (age !== null) formData.append('age', String(age))
+    if (trainingLevel) formData.append('training_level', trainingLevel)
 
     try {
       // Use environment variable for API URL in production, or relative proxy in development
@@ -139,6 +151,9 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
     setMetrics(null)
     setError(null)
     setEnableDebug(false)
+    setSex(null)
+    setAge(null)
+    setTrainingLevel(null)
   }
 
   return {
@@ -150,10 +165,16 @@ export function useAnalysis(): UseAnalysisState & UseAnalysisActions {
     metrics,
     error,
     enableDebug,
+    sex,
+    age,
+    trainingLevel,
     // Actions
     setFile,
     setJumpType,
     setEnableDebug,
+    setSex,
+    setAge,
+    setTrainingLevel,
     analyze,
     retry,
     reset,

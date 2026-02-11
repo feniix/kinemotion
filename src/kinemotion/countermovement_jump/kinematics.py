@@ -10,6 +10,7 @@ from ..core.types import FloatArray
 
 if TYPE_CHECKING:
     from ..core.cmj_metrics_validator import ValidationResult
+    from ..core.demographics import AthleteDemographics
     from ..core.metadata import ResultMetadata
     from ..core.quality import QualityAssessment
 
@@ -39,6 +40,7 @@ class CMJResultDict(TypedDict, total=False):
     data: CMJDataDict
     metadata: dict  # ResultMetadata.to_dict()
     validation: dict  # ValidationResult.to_dict()
+    demographics: dict[str, str | int | None]  # AthleteDemographics.to_dict()
 
 
 @dataclass
@@ -88,6 +90,7 @@ class CMJMetrics:
     quality_assessment: "QualityAssessment | None" = None
     result_metadata: "ResultMetadata | None" = None
     validation_result: "ValidationResult | None" = None
+    demographics: "AthleteDemographics | None" = None
 
     def to_dict(self) -> CMJResultDict:
         """Convert metrics to JSON-serializable dictionary with data/metadata structure.
@@ -131,6 +134,10 @@ class CMJMetrics:
         # Include validation results if available
         if self.validation_result is not None:
             result["validation"] = self.validation_result.to_dict()
+
+        # Include demographics if provided
+        if self.demographics is not None and self.demographics.has_any():
+            result["demographics"] = self.demographics.to_dict()
 
         return result
 

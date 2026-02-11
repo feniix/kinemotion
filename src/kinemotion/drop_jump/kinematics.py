@@ -17,6 +17,7 @@ from .analysis import (
 )
 
 if TYPE_CHECKING:
+    from ..core.demographics import AthleteDemographics
     from ..core.dropjump_metrics_validator import ValidationResult
     from ..core.metadata import ResultMetadata
     from ..core.quality import QualityAssessment
@@ -48,6 +49,7 @@ class DropJumpResultDict(TypedDict, total=False):
     data: DropJumpDataDict
     metadata: dict  # ResultMetadata.to_dict()
     validation: dict  # ValidationResult.to_dict()
+    demographics: dict[str, str | int | None]  # AthleteDemographics.to_dict()
 
 
 class DropJumpMetrics:
@@ -79,6 +81,8 @@ class DropJumpMetrics:
         self.result_metadata: ResultMetadata | None = None
         # Validation result
         self.validation_result: ValidationResult | None = None
+        # Demographics
+        self.demographics: AthleteDemographics | None = None
 
     def _build_data_dict(self) -> DropJumpDataDict:
         """Build the data portion of the result dictionary.
@@ -136,6 +140,10 @@ class DropJumpMetrics:
         # Include validation results if available
         if self.validation_result is not None:
             result["validation"] = self.validation_result.to_dict()
+
+        # Include demographics if provided
+        if self.demographics is not None and self.demographics.has_any():
+            result["demographics"] = self.demographics.to_dict()
 
         return result
 

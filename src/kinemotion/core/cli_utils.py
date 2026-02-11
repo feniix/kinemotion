@@ -82,6 +82,36 @@ def batch_processing_options(func: Callable) -> Callable:  # type: ignore[type-a
     return func
 
 
+def demographics_options(func: Callable) -> Callable:  # type: ignore[type-arg]
+    """Add optional athlete demographics options to CLI command.
+
+    These affect only coaching interpretation (normative comparison),
+    not measurement calculations.
+    """
+    func = click.option(
+        "--sex",
+        type=click.Choice(["male", "female"], case_sensitive=False),
+        default=None,
+        help="Biological sex for normative comparison (optional)",
+    )(func)
+    func = click.option(
+        "--age",
+        type=int,
+        default=None,
+        help="Athlete age in years for normative comparison (optional)",
+    )(func)
+    func = click.option(
+        "--training-level",
+        type=click.Choice(
+            ["untrained", "recreational", "trained", "competitive", "elite"],
+            case_sensitive=False,
+        ),
+        default=None,
+        help="Training level for normative comparison (optional)",
+    )(func)
+    return func
+
+
 def common_analysis_options(func: Callable) -> Callable:  # type: ignore[type-arg]
     """Add all common analysis options (output, quality, verbose, batch).
 

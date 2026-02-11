@@ -13,7 +13,12 @@ import { useLanguage } from './hooks/useLanguage'
 
 function App() {
   const { user, loading: authLoading, signOut } = useAuth()
-  const { file, jumpType, loading, uploadProgress, metrics, error, enableDebug, setFile, setJumpType, setEnableDebug, analyze, retry } = useAnalysis()
+  const {
+    file, jumpType, loading, uploadProgress, metrics, error, enableDebug,
+    sex, age, trainingLevel,
+    setFile, setJumpType, setEnableDebug, setSex, setAge, setTrainingLevel,
+    analyze, retry,
+  } = useAnalysis()
   const { recentUploads, addRecentUpload, clearRecentUploads } = useRecentUploads()
   const { backendVersion, kinemotionVersion } = useBackendVersion()
   const { t } = useLanguage()
@@ -75,10 +80,16 @@ function App() {
           jumpType={jumpType}
           loading={loading}
           enableDebug={enableDebug}
+          sex={sex}
+          age={age}
+          trainingLevel={trainingLevel}
           recentUploads={recentUploads}
           onFileChange={setFile}
           onJumpTypeChange={setJumpType}
           onEnableDebugChange={setEnableDebug}
+          onSexChange={setSex}
+          onAgeChange={setAge}
+          onTrainingLevelChange={setTrainingLevel}
           onAnalyze={handleAnalyze}
           onClearHistory={clearRecentUploads}
         />

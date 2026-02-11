@@ -87,6 +87,9 @@ class AnalysisService:
         quality: str = "balanced",
         debug: bool = False,
         user_id: str | None = None,
+        sex: str | None = None,
+        age: int | None = None,
+        training_level: str | None = None,
     ) -> AnalysisResponse:
         """Analyze uploaded video file.
 
@@ -96,6 +99,9 @@ class AnalysisService:
             quality: Analysis quality preset
             debug: Whether to generate debug overlay video
             user_id: Optional user ID for storage organization
+            sex: Biological sex for normative comparison (optional)
+            age: Athlete age in years for normative comparison (optional)
+            training_level: Training level for normative comparison (optional)
 
         Returns:
             AnalysisResponse with results and metadata
@@ -136,6 +142,8 @@ class AnalysisService:
                     start_time=start_time,
                     paths=paths,
                     timer_class=PerformanceTimer,
+                    sex=sex,
+                    age=age,
                 )
             except ValueError as e:
                 logger.error(
@@ -171,6 +179,8 @@ class AnalysisService:
         start_time: float,
         paths: dict[str, str | None],
         timer_class: type,
+        sex: str | None = None,
+        age: int | None = None,
     ) -> AnalysisResponse:
         """Process video and return analysis response.
 
@@ -183,6 +193,8 @@ class AnalysisService:
             start_time: Start time for processing duration
             paths: Dictionary to track temp file paths for cleanup
             timer_class: PerformanceTimer class for timing
+            sex: Biological sex for normative comparison
+            age: Athlete age in years for normative comparison
 
         Returns:
             AnalysisResponse with results
@@ -249,7 +261,7 @@ class AnalysisService:
 
         # Generate coaching interpretations from metrics
         metrics_data = metrics.get("data") or {}
-        interpretation = interpret_metrics(normalized_jump_type, metrics_data)
+        interpretation = interpret_metrics(normalized_jump_type, metrics_data, sex=sex, age=age)
         if interpretation:
             metrics["interpretation"] = interpretation
 

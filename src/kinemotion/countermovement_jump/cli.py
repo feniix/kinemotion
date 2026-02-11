@@ -11,10 +11,12 @@ from ..core.cli_utils import (
     batch_processing_options,
     collect_video_files,
     common_output_options,
+    demographics_options,
     generate_batch_output_paths,
     quality_option,
     verbose_option,
 )
+from ..core.demographics import AthleteDemographics, BiologicalSex, TrainingLevel
 from .api import AnalysisOverrides, process_cmj_video
 from .kinematics import CMJMetrics
 
@@ -65,6 +67,7 @@ def _process_batch_videos(
 @quality_option
 @verbose_option
 @batch_processing_options
+@demographics_options
 # Expert parameters (hidden in help, but always available for advanced users)
 @click.option(
     "--smoothing-window",
@@ -120,6 +123,9 @@ def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters
     output_dir: str | None,
     json_output_dir: str | None,
     csv_summary: str | None,
+    sex: str | None,
+    age: int | None,
+    training_level: str | None,
     smoothing_window: int | None,
     velocity_threshold: float | None,
     countermovement_threshold: float | None,
@@ -169,6 +175,13 @@ def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters
 
     quality_preset = QualityPreset(quality.lower())
 
+    # Build demographics (all optional)
+    demographics = AthleteDemographics(
+        sex=BiologicalSex(sex.lower()) if sex else None,
+        age=age,
+        training_level=TrainingLevel(training_level.lower()) if training_level else None,
+    )
+
     # Group expert parameters
     expert_params = AnalysisParameters(
         smoothing_window=smoothing_window,
@@ -200,6 +213,7 @@ def cmj_analyze(  # NOSONAR(S107) - Click CLI requires individual parameters
                 quality_preset,
                 verbose,
                 expert_params,
+                demographics,
             )
         except Exception as e:
             click.echo(f"Error: {e}", err=True)
@@ -213,6 +227,7 @@ def _process_single(
     quality_preset: QualityPreset,
     verbose: bool,
     expert_params: AnalysisParameters,
+    demographics: AthleteDemographics | None = None,
 ) -> None:
     """Process a single CMJ video by calling the API."""
     try:
@@ -234,6 +249,7 @@ def _process_single(
             detection_confidence=expert_params.detection_confidence,
             tracking_confidence=expert_params.tracking_confidence,
             verbose=verbose,
+            demographics=demographics,
         )
 
         # Print formatted summary to stdout

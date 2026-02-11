@@ -6,11 +6,13 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from ..services.validation import CANONICAL_JUMP_TYPES, JUMP_TYPE_ALIASES
+
 
 class AnalysisSessionCreate(BaseModel):
     """Model for creating a new analysis session."""
 
-    jump_type: str = Field(..., description="Type of jump: 'cmj' or 'drop_jump'")
+    jump_type: str = Field(..., description="Type of jump: 'cmj', 'drop_jump', or 'sj'")
     quality_preset: str = Field(
         ..., description="Analysis quality: 'fast', 'balanced', or 'accurate'"
     )
@@ -20,13 +22,22 @@ class AnalysisSessionCreate(BaseModel):
     analysis_data: dict[str, Any] = Field(..., description="Analysis results as JSON")
     processing_time_s: float | None = Field(None, description="Processing time in seconds")
     upload_id: str | None = Field(None, description="Upload ID from analysis system")
+    athlete_sex: str | None = Field(None, description="Biological sex: 'male' or 'female'")
+    athlete_age: int | None = Field(None, description="Athlete age in years")
+    athlete_training_level: str | None = Field(
+        None,
+        description="Training level: untrained, recreational, trained, competitive, elite",
+    )
 
     @field_validator("jump_type")
     @classmethod
     def validate_jump_type(cls, v: str) -> str:
-        if v not in ["cmj", "drop_jump"]:
-            raise ValueError("jump_type must be 'cmj' or 'drop_jump'")
-        return v
+        normalized = JUMP_TYPE_ALIASES.get(v, v)
+        if normalized not in CANONICAL_JUMP_TYPES:
+            raise ValueError(
+                f"jump_type must be one of: {', '.join(sorted(CANONICAL_JUMP_TYPES))}"
+            )
+        return normalized
 
     @field_validator("quality_preset")
     @classmethod
@@ -51,6 +62,9 @@ class AnalysisSessionResponse(BaseModel):
     analysis_data: dict[str, Any]
     processing_time_s: float | None
     upload_id: str | None
+    athlete_sex: str | None
+    athlete_age: int | None
+    athlete_training_level: str | None
     created_at: datetime
     updated_at: datetime
 

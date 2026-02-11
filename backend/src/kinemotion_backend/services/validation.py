@@ -30,23 +30,35 @@ def validate_video_file(file: UploadFile) -> None:
         raise ValueError("File size exceeds maximum of 500MB")
 
 
+CANONICAL_JUMP_TYPES: set[str] = {"cmj", "drop_jump", "sj"}
+
+JUMP_TYPE_ALIASES: dict[str, str] = {
+    "squat_jump": "sj",
+}
+
+
 def validate_jump_type(jump_type: str) -> str:
-    """Validate jump type parameter (case-insensitive).
+    """Validate and normalize jump type parameter (case-insensitive).
+
+    Accepts canonical types ("cmj", "drop_jump", "sj") and known aliases
+    ("squat_jump" -> "sj"). Returns the canonical form so downstream code
+    only needs to handle three values.
 
     Args:
         jump_type: Jump type to validate
 
     Returns:
-        Normalized jump type (lowercase)
+        Canonical jump type string (lowercase)
 
     Raises:
         ValueError: If jump type is invalid
     """
     normalized = jump_type.lower()
-    valid_types: set[str] = {"drop_jump", "cmj", "sj", "squat_jump"}
-    if normalized not in valid_types:
+    normalized = JUMP_TYPE_ALIASES.get(normalized, normalized)
+    if normalized not in CANONICAL_JUMP_TYPES:
         raise ValueError(
-            f"Invalid jump type: {jump_type}. Must be one of: {', '.join(valid_types)}"
+            f"Invalid jump type: {jump_type}. "
+            f"Must be one of: {', '.join(sorted(CANONICAL_JUMP_TYPES))}"
         )
     return normalized
 
@@ -64,6 +76,51 @@ def is_test_password_valid(x_test_password: str | None = None) -> bool:
     # (tests set env vars after module import)
     test_password = os.getenv("TEST_PASSWORD", "")
     return bool(test_password and x_test_password == test_password)
+
+
+VALID_SEX_VALUES: set[str] = {"male", "female"}
+VALID_TRAINING_LEVELS: set[str] = {
+    "untrained",
+    "recreational",
+    "trained",
+    "competitive",
+    "elite",
+}
+
+
+def validate_demographics(
+    sex: str | None,
+    age: int | None,
+    training_level: str | None,
+) -> tuple[str | None, str | None]:
+    """Validate and normalize demographic parameters.
+
+    Args:
+        sex: Biological sex (case-insensitive "male" or "female")
+        age: Athlete age in years (1-120)
+        training_level: Training level string
+
+    Returns:
+        Tuple of (normalized_sex, normalized_training_level), each lowercase or None.
+
+    Raises:
+        ValueError: If any parameter is invalid
+    """
+    if sex is not None and sex.lower() not in VALID_SEX_VALUES:
+        raise ValueError(f"Invalid sex value '{sex}'. Must be 'male' or 'female'.")
+
+    if age is not None and (age < 1 or age > 120):
+        raise ValueError(f"Invalid age value {age}. Must be between 1 and 120.")
+
+    if training_level is not None and training_level.lower() not in VALID_TRAINING_LEVELS:
+        raise ValueError(
+            f"Invalid training_level '{training_level}'. "
+            f"Must be one of: {', '.join(sorted(VALID_TRAINING_LEVELS))}."
+        )
+
+    normalized_sex = sex.lower() if sex else None
+    normalized_training_level = training_level.lower() if training_level else None
+    return normalized_sex, normalized_training_level
 
 
 def validate_referer(referer: str | None, x_test_password: str | None = None) -> None:

@@ -30,6 +30,24 @@
     "changeFile": "Cambiar",
     "analyzeButton": "Ejecutar Análisis",
     "analyzing": "Analizando...",
+    "athleteProfile": {
+      "title": "Perfil del Atleta (Opcional)",
+      "hint": "Proporcionar información del atleta mejora la precisión de las recomendaciones de entrenamiento.",
+      "sex": "Sexo Biológico",
+      "male": "Masculino",
+      "female": "Femenino",
+      "age": "Edad",
+      "agePlaceholder": "ej., 25",
+      "trainingLevel": "Nivel de Entrenamiento",
+      "notSpecified": "No especificado",
+      "levels": {
+        "untrained": "Sin entrenamiento",
+        "recreational": "Recreativo",
+        "trained": "Entrenado",
+        "competitive": "Competitivo",
+        "elite": "Élite"
+      }
+    },
     "errors": {
       "fileTooLarge": "El tamaño del archivo debe ser menor a 500MB. El archivo seleccionado es {{size}}MB",
       "invalidFileType": "Por favor selecciona un archivo de video válido"
@@ -80,6 +98,16 @@
       "outcome": "Resultado (Vuelo)"
     },
     "coachingSection": "Observaciones de Entrenamiento",
+    "comparedTo": "Comparado con",
+    "demographicValues": {
+      "male": "Masculino",
+      "female": "Femenino",
+      "youth": "Juvenil (<18)",
+      "adult": "Adulto (18-34)",
+      "masters_35": "Masters (35-49)",
+      "masters_50": "Masters (50-64)",
+      "senior": "Senior (65+)"
+    },
     "categories": {
       "poor": "Bajo",
       "below_average": "Por Debajo del Promedio",

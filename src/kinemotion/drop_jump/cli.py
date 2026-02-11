@@ -13,10 +13,12 @@ from ..core.cli_utils import (
     batch_processing_options,
     collect_video_files,
     common_output_options,
+    demographics_options,
     generate_batch_output_paths,
     quality_option,
     verbose_option,
 )
+from ..core.demographics import AthleteDemographics, BiologicalSex, TrainingLevel
 from .api import (
     DropJumpVideoConfig,
     DropJumpVideoResult,
@@ -47,6 +49,7 @@ class AnalysisParameters:
 @quality_option
 @verbose_option
 @batch_processing_options
+@demographics_options
 # Expert parameters (hidden in help, but always available for advanced users)
 @click.option(
     "--drop-start-frame",
@@ -102,6 +105,9 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual
     output_dir: str | None,
     json_output_dir: str | None,
     csv_summary: str | None,
+    sex: str | None,
+    age: int | None,
+    training_level: str | None,
     drop_start_frame: int | None,
     smoothing_window: int | None,
     velocity_threshold: float | None,
@@ -146,6 +152,13 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual
     # Determine if batch mode should be used
     use_batch = batch or len(video_files) > 1
 
+    # Build demographics (all optional)
+    demographics = AthleteDemographics(
+        sex=BiologicalSex(sex.lower()) if sex else None,
+        age=age,
+        training_level=TrainingLevel(training_level.lower()) if training_level else None,
+    )
+
     # Group expert parameters
     expert_params = AnalysisParameters(
         drop_start_frame=drop_start_frame,
@@ -176,6 +189,7 @@ def dropjump_analyze(  # NOSONAR(S107) - Click CLI requires individual
             quality,
             verbose,
             expert_params,
+            demographics,
         )
 
 
@@ -214,6 +228,7 @@ def _process_single(
     quality: str,
     verbose: bool,
     expert_params: AnalysisParameters,
+    demographics: AthleteDemographics | None = None,
 ) -> None:
     """Process a single video by calling the API."""
     click.echo(f"Analyzing video: {video_path}", err=True)
@@ -232,6 +247,7 @@ def _process_single(
             detection_confidence=expert_params.detection_confidence,
             tracking_confidence=expert_params.tracking_confidence,
             verbose=verbose,
+            demographics=demographics,
         )
 
         # Print formatted summary to stdout if no JSON output specified

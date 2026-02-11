@@ -20,6 +20,7 @@ from ..core.auto_tuning import (
     analyze_video_sample,
     auto_tune_parameters,
 )
+from ..core.demographics import AthleteDemographics
 from ..core.filtering import reject_outliers
 from ..core.metadata import (
     AlgorithmConfig,
@@ -105,6 +106,7 @@ class DropJumpVideoConfig:
     verbose: bool = False
     timer: Timer | None = None
     pose_tracker: "MediaPipePoseTracker | None" = None
+    demographics: AthleteDemographics | None = None
 
     def to_kwargs(self) -> dict:
         """Convert config to kwargs dict for process_dropjump_video."""
@@ -120,6 +122,7 @@ class DropJumpVideoConfig:
             "verbose": self.verbose,
             "timer": self.timer,
             "pose_tracker": self.pose_tracker,
+            "demographics": self.demographics,
         }
 
 
@@ -510,6 +513,7 @@ def process_dropjump_video(
     verbose: bool = False,
     timer: Timer | None = None,
     pose_tracker: "MediaPipePoseTracker | None" = None,
+    demographics: AthleteDemographics | None = None,
 ) -> DropJumpMetrics:
     """
     Process a single drop jump video and return metrics.
@@ -620,6 +624,10 @@ def process_dropjump_video(
                 timer,
             )
             metrics.result_metadata = result_metadata
+
+            # Attach demographics if provided
+            if demographics is not None and demographics.has_any():
+                metrics.demographics = demographics
 
             if json_output:
                 _save_dropjump_json(json_output, metrics, timer, verbose)

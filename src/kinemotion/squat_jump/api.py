@@ -15,6 +15,7 @@ from ..core.auto_tuning import (
     analyze_video_sample,
     auto_tune_parameters,
 )
+from ..core.demographics import AthleteDemographics
 from ..core.experimental import experimental
 from ..core.filtering import reject_outliers
 from ..core.metadata import (
@@ -397,6 +398,7 @@ class SJVideoConfig:
     verbose: bool = False
     timer: Timer | None = None
     pose_tracker: "MediaPipePoseTracker | None" = None
+    demographics: AthleteDemographics | None = None
 
     def to_kwargs(self) -> dict:
         """Convert config to kwargs dict for process_sj_video."""
@@ -412,6 +414,7 @@ class SJVideoConfig:
             "verbose": self.verbose,
             "timer": self.timer,
             "pose_tracker": self.pose_tracker,
+            "demographics": self.demographics,
         }
 
 
@@ -444,6 +447,7 @@ def process_sj_video(
     verbose: bool = False,
     timer: Timer | None = None,
     pose_tracker: MediaPipePoseTracker | None = None,
+    demographics: AthleteDemographics | None = None,
 ) -> SJMetrics:
     """
     Process a single SJ video and return metrics.
@@ -532,6 +536,10 @@ def process_sj_video(
                 timer,
                 verbose,
             )
+
+            # Attach demographics if provided
+            if demographics is not None and demographics.has_any():
+                metrics.demographics = demographics
 
             if json_output:
                 _save_metrics_to_json(metrics, json_output, timer, verbose)

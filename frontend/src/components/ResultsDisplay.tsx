@@ -196,8 +196,13 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
   const originalSrc = metrics.original_video_url || localOriginalUrl || undefined
   const showOriginal = Boolean(originalSrc)
   const showDebug = Boolean(metrics.debug_video_url)
+
   // Extract data
   const metricsData = metrics.metrics?.data || {}
+  const interpretation = metrics.metrics?.interpretation
+  const demographicContext = interpretation?.demographic_context
+  const hasCoachingInsights = interpretation?.interpretations != null
+    && Object.keys(interpretation.interpretations).length > 0
   const validationStatus = metrics.metrics?.validation?.status
   const validationIssues = metrics.metrics?.validation?.issues ?? []
   const hasErrors = validationIssues.some(issue => issue.severity === 'ERROR')
@@ -228,7 +233,7 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
 
     return {
       key,
-      label: labelOverride || key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '), // Simple fallback label
+      label: labelOverride || formatMetricLabel(key),
       value: formattedValue,
       unit: asCm ? 'cm' : (metadata.unit || ''),
       description: metadata.description || ''
@@ -388,7 +393,6 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
 
   // Render coaching insights from interpretation data
   const renderCoachingInsights = () => {
-    const interpretation = metrics.metrics?.interpretation
     if (!interpretation?.interpretations) return null
 
     const entries = Object.entries(interpretation.interpretations) as Array<[string, MetricInterpretation]>
@@ -497,9 +501,24 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
       </div>
 
       {/* 3. Coaching Insights (from interpretation data) */}
-      {metrics.metrics?.interpretation?.interpretations && Object.keys(metrics.metrics.interpretation.interpretations).length > 0 && (
+      {hasCoachingInsights && (
         <div className="metrics-dashboard">
           <h3 className="section-title">{t('results.coachingSection')}</h3>
+          {demographicContext && (
+            <div className="demographic-context-banner">
+              <span className="demographic-label">{t('results.comparedTo')}:</span>
+              {demographicContext.sex && (
+                <span className="demographic-tag">
+                  {t(`results.demographicValues.${demographicContext.sex}`)}
+                </span>
+              )}
+              {demographicContext.age_group && (
+                <span className="demographic-tag">
+                  {t(`results.demographicValues.${demographicContext.age_group}`)}
+                </span>
+              )}
+            </div>
+          )}
           {renderCoachingInsights()}
         </div>
       )}
