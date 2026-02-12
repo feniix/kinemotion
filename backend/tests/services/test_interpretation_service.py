@@ -1401,3 +1401,35 @@ class TestTrainingLevelInterpretation:
         assert ctx["sex"] == "female"
         assert ctx["age_group"] == "masters_35"
         assert ctx["training_level"] == "competitive"
+
+    def test_competitive_519cm_jump_is_average(self) -> None:
+        """Regression: 51.9cm competitive male must be 'average', not 'below_average'.
+
+        A competitive male jumping 51.9cm with RSI 3.42 (very_good) and GCT 190ms
+        (good) should not receive 'below_average' jump height feedback.
+        """
+        data = {"jump_height_m": 0.519}
+        result = interpret_cmj_metrics(data, sex="male", training_level="competitive")
+
+        category = result["jump_height"]["category"]
+        assert category == "average", (
+            f"51.9cm competitive male should be 'average', got '{category}'"
+        )
+
+    def test_competitive_jump_height_boundaries_consistent(self) -> None:
+        """Competitive male jump height boundaries align with performance tiers.
+
+        Values at the low end of 'average' and high end of 'below_average' must
+        be in the expected categories.
+        """
+        # Just below average boundary should be below_average
+        low = interpret_cmj_metrics(
+            {"jump_height_m": 0.48}, sex="male", training_level="competitive"
+        )
+        assert low["jump_height"]["category"] == "below_average"
+
+        # Solidly in average range should be average
+        mid = interpret_cmj_metrics(
+            {"jump_height_m": 0.55}, sex="male", training_level="competitive"
+        )
+        assert mid["jump_height"]["category"] == "average"

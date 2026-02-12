@@ -7,7 +7,8 @@ multipliers applied to boundary values.
 References:
     - Meylan et al. (2009) CMJ norms by sex/age
     - Markovic & Jaric (2007) sex differences in jumping
-    - Vanderburgh (2000) age-related performance decline
+    - Alvero-Cruz et al. (2021, Frontiers in Physiology) age-related
+      vertical jump decline in masters athletes (n=256, ages 35-91)
 """
 
 from __future__ import annotations
@@ -39,6 +40,9 @@ JUMP_HEIGHT_NORMS: dict[str, NormTable] = {
 }
 
 # Peak concentric velocity norms (m/s) - sex-specific
+# NOTE: Synthesized from McMahon et al. (2017) sex-difference data and general
+# biomechanics literature. No single published classification table exists for
+# these exact category boundaries.
 PEAK_VELOCITY_NORMS: dict[str, NormTable] = {
     "male": [
         ("below_average", 0.5, 1.8),
@@ -57,6 +61,10 @@ PEAK_VELOCITY_NORMS: dict[str, NormTable] = {
 }
 
 # RSI norms (ratio) - sex-specific
+# NOTE: Synthesized from Flanagan & Comyns (2008) methodology, the widely
+# accepted RSI >= 2.0 benchmark for trained athletes, and sex ratios from
+# Markovic & Jaric (2007). No gold-standard normative classification table
+# for drop jump RSI exists in published literature.
 RSI_NORMS: dict[str, NormTable] = {
     "male": [
         ("poor", 0.3, 0.8),
@@ -126,7 +134,7 @@ TRAINING_FACTORS: dict[str, dict[str, float]] = {
         "untrained": 0.65,
         "recreational": 0.82,
         "trained": 1.00,
-        "competitive": 1.30,
+        "competitive": 1.20,
         "elite": 1.50,
     },
     "peak_velocity": {
