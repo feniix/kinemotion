@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.79.0 (2026-02-12)
+
+### Feat
+
+- add cross-metric coaching insights for holistic jump analysis
+
 ## kinemotion-v0.78.0 (2026-02-11)
 
 ### Feat
