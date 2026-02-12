@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- version list -->
 
+## kinemotion-v0.80.0 (2026-02-12)
+
+### Feat
+
+- add training-level awareness to interpretation service normative data
+
+### Fix
+
+- **backend**: enrich metrics data with RSI from validation for interpretation
+
 ## kinemotion-v0.79.0 (2026-02-12)
 
 ### Feat
