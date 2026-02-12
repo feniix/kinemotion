@@ -261,6 +261,14 @@ class AnalysisService:
 
         # Generate coaching interpretations from metrics
         metrics_data = metrics.get("data") or {}
+
+        # RSI is computed in validation, not in data — enrich for interpretation
+        validation = metrics.get("validation") or {}
+        if "reactive_strength_index" not in metrics_data and "rsi" in validation:
+            rsi_val = validation["rsi"]
+            if isinstance(rsi_val, (int, float)):
+                metrics_data["reactive_strength_index"] = rsi_val
+
         interpretation = interpret_metrics(normalized_jump_type, metrics_data, sex=sex, age=age)
         if interpretation:
             metrics["interpretation"] = interpretation
