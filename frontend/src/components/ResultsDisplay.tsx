@@ -1,4 +1,4 @@
-import { AnalysisResponse, METRIC_METADATA, type MetricInterpretation } from '../types/api'
+import { AnalysisResponse, METRIC_METADATA, type MetricInterpretation, type CoachingInsight } from '../types/api'
 import BenchmarkIndicator from './BenchmarkIndicator'
 import { useEffect, useState, Suspense, lazy, useCallback } from 'react'
 import FeatureRequestButton from './FeatureRequestButton'
@@ -391,6 +391,25 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
     )
   }
 
+  // Render cross-metric coaching insights (limiters, strengths, observations)
+  const renderCrossMetricInsights = (insights: CoachingInsight[]) => {
+    const sorted = [...insights].sort((a, b) => a.priority - b.priority)
+
+    return (
+      <div className="cross-metric-insights">
+        {sorted.map((insight, i) => (
+          <div key={i} className={`cross-insight-card cross-insight-${insight.type}`}>
+            <span className="cross-insight-type-badge">
+              {t(`results.insightTypes.${insight.type}`)}
+            </span>
+            <strong>{t(`results.insights.${insight.key}.title`)}</strong>
+            <p>{t(`results.insights.${insight.key}.description`)}</p>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   // Render coaching insights from interpretation data
   const renderCoachingInsights = () => {
     if (!interpretation?.interpretations) return null
@@ -518,6 +537,9 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
                 </span>
               )}
             </div>
+          )}
+          {interpretation?.coaching_insights && interpretation.coaching_insights.length > 0 && (
+            renderCrossMetricInsights(interpretation.coaching_insights)
           )}
           {renderCoachingInsights()}
         </div>

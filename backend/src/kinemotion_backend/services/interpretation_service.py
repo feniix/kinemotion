@@ -15,6 +15,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from .coaching_insights import (
+    generate_cmj_insights,
+    generate_dropjump_insights,
+    generate_sj_insights,
+)
 from .normative_data import (
     CM_DEPTH_NORMS,
     GCT_NORMS,
@@ -55,10 +60,21 @@ def _classify_value(
         if low <= value <= high:
             return category, low, high
 
-    # Value outside all ranges - return closest boundary category
+    # Value below all ranges → first category
     if value < norms[0][1]:
         return norms[0][0], norms[0][1], norms[0][2]
-    return norms[-1][0], norms[-1][1], norms[-1][2]
+    # Value above all ranges → last category
+    if value > norms[-1][2]:
+        return norms[-1][0], norms[-1][1], norms[-1][2]
+    # Value in a gap between ranges → find closest range
+    best_entry = norms[0]
+    best_dist = min(abs(value - norms[0][1]), abs(value - norms[0][2]))
+    for entry in norms[1:]:
+        dist = min(abs(value - entry[1]), abs(value - entry[2]))
+        if dist < best_dist:
+            best_dist = dist
+            best_entry = entry
+    return best_entry[0], best_entry[1], best_entry[2]
 
 
 def _build_metric_interpretation(
@@ -235,10 +251,10 @@ def interpret_dropjump_metrics(
             cat, height_cm, low, high, "cm", _JUMP_HEIGHT_TIPS
         )
 
-    # Ground contact time (universal, age-adjusted only)
+    # Ground contact time (universal, age-adjusted only, inverse metric)
     gct_ms = metrics_data.get("ground_contact_time_ms")
     if isinstance(gct_ms, (int, float)):
-        norms = get_norms(GCT_NORMS, age_group=age_group)
+        norms = get_norms(GCT_NORMS, age_group=age_group, inverse=True)
         cat, low, high = _classify_value(gct_ms, norms)
         interpretations["ground_contact_time"] = _build_metric_interpretation(
             cat, gct_ms, low, high, "ms", _GCT_TIPS
@@ -295,6 +311,13 @@ _INTERPRETERS: dict[str, Any] = {
     "sj": interpret_sj_metrics,
 }
 
+# Dispatch map from jump type to insight generator function.
+_INSIGHT_GENERATORS: dict[str, Any] = {
+    "cmj": generate_cmj_insights,
+    "drop_jump": generate_dropjump_insights,
+    "sj": generate_sj_insights,
+}
+
 
 def interpret_metrics(
     jump_type: str,
@@ -345,6 +368,14 @@ def interpret_metrics(
         return {}
 
     result: dict[str, Any] = {"interpretations": metric_interpretations}
+
+    # Generate cross-metric coaching insights
+    insight_generator = _INSIGHT_GENERATORS.get(jump_type)
+    if insight_generator is not None:
+        categories = {key: interp["category"] for key, interp in metric_interpretations.items()}
+        insights: list[dict[str, object]] = insight_generator(categories)
+        if insights:
+            result["coaching_insights"] = insights
 
     # Include demographic context when demographics were provided
     if sex is not None or age is not None:

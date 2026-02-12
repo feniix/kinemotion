@@ -115,12 +115,17 @@ AGE_FACTORS: dict[str, float] = {
 def _apply_age_factor(
     norms: NormTable,
     age_group: str | None,
+    *,
+    inverse: bool = False,
 ) -> NormTable:
     """Scale norm boundaries by the age-group factor.
 
     Args:
         norms: Base norm table (adult reference).
         age_group: AgeGroup value string, or None for default (adult).
+        inverse: If True, invert the factor (divide instead of multiply).
+            Use for inverse metrics like GCT where lower is better, so
+            older athletes need *higher* (more lenient) thresholds.
 
     Returns:
         New NormTable with scaled boundaries.
@@ -129,6 +134,8 @@ def _apply_age_factor(
         return norms
 
     factor = AGE_FACTORS.get(age_group, 1.0)
+    if inverse:
+        factor = 1.0 / factor if factor != 0 else 1.0
     return [
         (category, round(low * factor, 1), round(high * factor, 1))
         for category, low, high in norms
@@ -139,6 +146,8 @@ def get_norms(
     base_norms: NormTable | dict[str, NormTable],
     sex: str | None = None,
     age_group: str | None = None,
+    *,
+    inverse: bool = False,
 ) -> NormTable:
     """Return age/sex-adjusted norm table.
 
@@ -146,6 +155,7 @@ def get_norms(
         base_norms: Either a sex-keyed dict or a universal NormTable.
         sex: "male" or "female", or None for male default.
         age_group: AgeGroup value string, or None for adult default.
+        inverse: If True, invert the age factor for inverse metrics (e.g. GCT).
 
     Returns:
         NormTable adjusted for the given demographics.
@@ -158,4 +168,4 @@ def get_norms(
         table = base_norms
 
     # Apply age adjustment
-    return _apply_age_factor(table, age_group)
+    return _apply_age_factor(table, age_group, inverse=inverse)

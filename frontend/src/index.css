@@ -1115,3 +1115,71 @@ body {
   color: var(--text-secondary);
   margin-left: 0.25rem;
 }
+
+/* Cross-metric coaching insights */
+.cross-metric-insights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.cross-insight-card {
+  border-radius: var(--radius-lg);
+  padding: 0.875rem 1.25rem;
+  border-left: 4px solid;
+}
+
+.cross-insight-card strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.cross-insight-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.cross-insight-type-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  margin-bottom: 0.375rem;
+}
+
+.cross-insight-limiter {
+  background: #fff7ed;
+  border-left-color: #f97316;
+}
+
+.cross-insight-limiter .cross-insight-type-badge {
+  background: #fed7aa;
+  color: #c2410c;
+}
+
+.cross-insight-strength {
+  background: #f0fdf4;
+  border-left-color: #22c55e;
+}
+
+.cross-insight-strength .cross-insight-type-badge {
+  background: #bbf7d0;
+  color: #15803d;
+}
+
+.cross-insight-observation {
+  background: #f0f9ff;
+  border-left-color: #3b82f6;
+}
+
+.cross-insight-observation .cross-insight-type-badge {
+  background: #bfdbfe;
+  color: #1d4ed8;
+}

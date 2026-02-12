@@ -48,10 +48,21 @@ export interface DemographicContext {
 }
 
 /**
+ * Cross-metric coaching insight from rule-based analysis
+ */
+export interface CoachingInsight {
+  type: 'strength' | 'limiter' | 'observation'
+  key: string
+  related_metrics: string[]
+  priority: number
+}
+
+/**
  * Coaching interpretations keyed by metric name
  */
 export interface InterpretationData {
   interpretations: Record<string, MetricInterpretation>
+  coaching_insights?: CoachingInsight[]
   demographic_context?: DemographicContext
 }
 

@@ -166,6 +166,24 @@ class TestApplyAgeFactor:
         assert result[0][0] == "low"
         assert result[1][0] == "high"
 
+    def test_inverse_scales_boundaries_up(self) -> None:
+        """Inverse mode divides by factor, scaling boundaries up."""
+        result = _apply_age_factor(self.SAMPLE_NORMS, "masters_50", inverse=True)
+        factor = AGE_FACTORS["masters_50"]
+        inv_factor = 1.0 / factor
+        assert result[0] == ("low", round(10.0 * inv_factor, 1), round(20.0 * inv_factor, 1))
+        assert result[1] == ("high", round(20.0 * inv_factor, 1), round(30.0 * inv_factor, 1))
+
+    def test_inverse_adult_returns_unmodified(self) -> None:
+        """Inverse mode with adult age group still returns unmodified norms."""
+        result = _apply_age_factor(self.SAMPLE_NORMS, "adult", inverse=True)
+        assert result == self.SAMPLE_NORMS
+
+    def test_inverse_none_returns_unmodified(self) -> None:
+        """Inverse mode with None age group returns unmodified norms."""
+        result = _apply_age_factor(self.SAMPLE_NORMS, None, inverse=True)
+        assert result == self.SAMPLE_NORMS
+
 
 # ===========================================================================
 # get_norms
@@ -239,3 +257,24 @@ class TestGetNorms:
         """get_norms(table, None, None) equals table['male'] for sex-specific."""
         result = get_norms(RSI_NORMS, sex=None, age_group=None)
         assert result == RSI_NORMS["male"]
+
+    # -- Inverse age adjustment --
+
+    def test_inverse_gct_masters_50_boundaries_higher(self) -> None:
+        """GCT norms with inverse=True for masters_50 have HIGHER boundaries.
+
+        GCT is an inverse metric (lower = better). For older athletes,
+        thresholds should be more lenient (higher ms values acceptable).
+        """
+        adult_norms = get_norms(GCT_NORMS, age_group=None, inverse=True)
+        masters_norms = get_norms(GCT_NORMS, age_group="masters_50", inverse=True)
+
+        # Masters boundaries should be higher than adult
+        for (_, adult_low, _), (_, masters_low, _) in zip(adult_norms, masters_norms, strict=True):
+            assert masters_low > adult_low
+
+    def test_inverse_adult_same_as_non_inverse(self) -> None:
+        """For adult age group, inverse flag makes no difference."""
+        normal = get_norms(GCT_NORMS, age_group=None, inverse=False)
+        inv = get_norms(GCT_NORMS, age_group=None, inverse=True)
+        assert normal == inv

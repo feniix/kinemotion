@@ -127,6 +127,77 @@
       "countermovement_depth": "Profondeur du Contre-Mouvement",
       "rsi": "Indice de Force Réactive",
       "ground_contact_time": "Temps de Contact au Sol"
+    },
+    "insightTypes": {
+      "strength": "Point Fort",
+      "limiter": "Axe d'Amélioration",
+      "observation": "Observation"
+    },
+    "insights": {
+      "dj_height_limiter": {
+        "title": "La hauteur du saut est le principal limiteur",
+        "description": "Une bonne capacité réactive suggère un déficit de puissance des membres inférieurs plutôt qu'un problème technique. Concentrez-vous sur les squats, les fentes et la pliométrie de base — votre cycle rapide d'étirement-raccourcissement est un atout."
+      },
+      "dj_rsi_limiter": {
+        "title": "La force réactive a besoin de travail",
+        "description": "Bonne hauteur de saut mais contact au sol lent indique que le cycle d'étirement-raccourcissement doit s'améliorer. Travaillez la rigidité de la cheville, les sauts réactifs et la pliométrie de faible intensité."
+      },
+      "dj_both_weak": {
+        "title": "La force réactive et la hauteur doivent être développées",
+        "description": "Construisez d'abord une base générale de force et de puissance. Concentrez-vous sur les squats, les fentes et la mécanique d'atterrissage avant de progresser vers l'entraînement pliométrique."
+      },
+      "dj_rsi_strength": {
+        "title": "La force réactive est un point fort évident",
+        "description": "Le cycle d'étirement-raccourcissement fonctionne bien — transitions rapides de l'atterrissage au décollage."
+      },
+      "dj_gct_strength": {
+        "title": "Excellente efficacité du contact au sol",
+        "description": "Un temps de contact très rapide montre une bonne rigidité de la cheville et une application efficace de la force. C'est un atout clé pour les mouvements sportifs réactifs."
+      },
+      "dj_gct_limiter": {
+        "title": "Le temps de contact au sol est trop long",
+        "description": "Un contact lent suggère une faiblesse de la rigidité de la cheville ou une mauvaise utilisation du CEA. Pratiquez des exercices de réponse rapide, des sauts de cheville et concentrez-vous sur la minimisation du temps au sol."
+      },
+      "dj_gct_observation": {
+        "title": "Le temps de contact au sol est modéré",
+        "description": "Il y a une marge d'amélioration dans l'efficacité du contact. Intégrez des exercices de rigidité de la cheville et visez des contacts plus rapides pendant l'entraînement pliométrique."
+      },
+      "cmj_height_limiter": {
+        "title": "La hauteur du saut limite la performance",
+        "description": "Une vitesse correcte suggère que la technique est raisonnable, mais la production de force doit être améliorée. Concentrez-vous sur le renforcement des membres inférieurs (squats, soulevés de terre) et les méthodes d'entraînement par contraste."
+      },
+      "cmj_velocity_limiter": {
+        "title": "La vitesse de décollage est le limiteur",
+        "description": "Une hauteur adéquate malgré une faible vitesse suggère une bonne technique. Améliorez le taux de développement de la force avec un entraînement explosif — squats sautés, variations d'haltérophilie et exercices balistiques."
+      },
+      "cmj_depth_too_deep": {
+        "title": "Le contre-mouvement est trop profond",
+        "description": "Une profondeur excessive ralentit le cycle d'étirement-raccourcissement et réduit le transfert de puissance. Indiquez un contre-mouvement plus rapide et moins profond — pensez 'flexion rapide' plutôt que squat profond."
+      },
+      "cmj_depth_too_shallow": {
+        "title": "Le contre-mouvement est trop superficiel",
+        "description": "Un contre-mouvement superficiel limite le stockage d'énergie élastique. Indiquez un squat plus profond pour utiliser toute l'amplitude de mouvement — l'athlète précipite peut-être le saut."
+      },
+      "cmj_depth_optimal": {
+        "title": "La profondeur du contre-mouvement est bien calibrée",
+        "description": "Bon équilibre entre profondeur et vitesse dans la phase de contre-mouvement. Maintenez ce schéma."
+      },
+      "cmj_power_strength": {
+        "title": "Excellente production de puissance",
+        "description": "La hauteur et la vitesse sont toutes deux élevées — la puissance des membres inférieurs et la technique fonctionnent bien ensemble. Concentrez-vous sur le maintien de cette capacité et l'application spécifique au sport."
+      },
+      "sj_height_limiter": {
+        "title": "La hauteur du saut peut être limitée par la technique",
+        "description": "Une vitesse raisonnable mais une hauteur moindre pourrait indiquer une application de force inefficace depuis la position statique. Concentrez-vous sur l'amélioration de la mécanique de la position de départ et le développement de la force concentrique."
+      },
+      "sj_velocity_limiter": {
+        "title": "La vitesse concentrique doit être améliorée",
+        "description": "Une bonne hauteur malgré une faible vitesse suggère une marge d'amélioration en force explosive. Concentrez-vous sur le taux de développement de la force avec des squats sautés et un entraînement balistique."
+      },
+      "sj_power_strength": {
+        "title": "Forte production de puissance concentrique",
+        "description": "La hauteur et la vitesse sont toutes deux élevées depuis une position statique — excellente puissance concentrique pure. Cela se transfère bien à l'accélération et aux mouvements explosifs."
+      }
     }
   },
   "errors": {

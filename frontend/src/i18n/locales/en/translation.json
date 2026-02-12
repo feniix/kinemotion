@@ -127,6 +127,77 @@
       "countermovement_depth": "Countermovement Depth",
       "rsi": "Reactive Strength Index",
       "ground_contact_time": "Ground Contact Time"
+    },
+    "insightTypes": {
+      "strength": "Strength",
+      "limiter": "Area to Improve",
+      "observation": "Observation"
+    },
+    "insights": {
+      "dj_height_limiter": {
+        "title": "Jump height is the main limiter",
+        "description": "Strong reactive ability suggests a lower-body power deficit rather than a technique issue. Focus on building strength through squats, lunges, and basic plyometrics — your fast stretch-shortening cycle is an asset to build on."
+      },
+      "dj_rsi_limiter": {
+        "title": "Reactive strength needs work",
+        "description": "Good jump height but slow ground contact indicates the stretch-shortening cycle needs improvement. Work on ankle stiffness drills, quick-response hops, and low-intensity plyometrics."
+      },
+      "dj_both_weak": {
+        "title": "Both reactive strength and jump height need development",
+        "description": "Build a general strength and power base first. Focus on squats, lunges, and landing mechanics before progressing to plyometric training."
+      },
+      "dj_rsi_strength": {
+        "title": "Reactive strength is a clear strength",
+        "description": "The stretch-shortening cycle is functioning well — fast transitions from landing to takeoff."
+      },
+      "dj_gct_strength": {
+        "title": "Excellent ground contact efficiency",
+        "description": "Very fast ground contact time shows strong ankle stiffness and efficient force application. This is a key asset for reactive sports movements."
+      },
+      "dj_gct_limiter": {
+        "title": "Ground contact time is too long",
+        "description": "Slow ground contact suggests weak ankle stiffness or poor SSC utilization. Practice quick-response drills, ankle hops, and focus on minimizing ground time."
+      },
+      "dj_gct_observation": {
+        "title": "Ground contact time is moderate",
+        "description": "Room for improvement in ground contact efficiency. Incorporate ankle stiffness drills and cue faster ground contacts during plyometric training."
+      },
+      "cmj_height_limiter": {
+        "title": "Jump height is limiting performance",
+        "description": "Decent velocity suggests technique is reasonable, but force production needs work. Focus on lower-body strength training (squats, deadlifts) and contrast training methods."
+      },
+      "cmj_velocity_limiter": {
+        "title": "Takeoff velocity is the limiter",
+        "description": "Adequate jump height despite low velocity suggests good technique. Improve rate of force development with explosive training — jump squats, Olympic lift variations, and ballistic exercises."
+      },
+      "cmj_depth_too_deep": {
+        "title": "Countermovement is too deep",
+        "description": "Excessive depth is slowing the stretch-shortening cycle and reducing power transfer. Cue a quicker, shallower countermovement — think 'quick dip' rather than deep squat."
+      },
+      "cmj_depth_too_shallow": {
+        "title": "Countermovement is too shallow",
+        "description": "Shallow countermovement limits elastic energy storage. Cue a deeper squat to use full range of motion — the athlete may be rushing the jump."
+      },
+      "cmj_depth_optimal": {
+        "title": "Countermovement depth is well-calibrated",
+        "description": "Good trade-off between depth and speed in the countermovement phase. Maintain this pattern."
+      },
+      "cmj_power_strength": {
+        "title": "Excellent power production",
+        "description": "Both jump height and velocity are strong — lower-body power and technique are working well together. Focus on maintaining this capacity and sport-specific application."
+      },
+      "sj_height_limiter": {
+        "title": "Jump height may be limited by technique",
+        "description": "Reasonable velocity but lower height could indicate inefficient force application from the static start. Focus on improving starting position mechanics and concentric force development."
+      },
+      "sj_velocity_limiter": {
+        "title": "Concentric velocity needs improvement",
+        "description": "Good height despite low velocity suggests room for improvement in explosive strength. Focus on rate of force development with jump squats and ballistic training."
+      },
+      "sj_power_strength": {
+        "title": "Strong concentric power output",
+        "description": "Both height and velocity are strong from a static start — excellent pure concentric power. This translates well to acceleration and explosive movements."
+      }
     }
   },
   "errors": {

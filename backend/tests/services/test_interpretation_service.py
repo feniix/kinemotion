@@ -117,6 +117,47 @@ class TestClassifyValue:
         assert low == 20.0
         assert high == 30.0
 
+    def test_value_in_gap_closest_to_lower_range(self) -> None:
+        """Value in a gap between ranges classifies to the closest range."""
+        # Ranges with a gap: (0-10), (15-30) — value 12 is closer to 10 than 15
+        gapped_norms = [
+            ("low", 0.0, 10.0),
+            ("high", 15.0, 30.0),
+        ]
+        cat, low, high = _classify_value(12.0, gapped_norms)
+        assert cat == "low"
+        assert low == 0.0
+        assert high == 10.0
+
+    def test_value_in_gap_closest_to_upper_range(self) -> None:
+        """Value in a gap closer to the upper range classifies there."""
+        gapped_norms = [
+            ("low", 0.0, 10.0),
+            ("high", 15.0, 30.0),
+        ]
+        cat, low, high = _classify_value(13.0, gapped_norms)
+        assert cat == "high"
+        assert low == 15.0
+        assert high == 30.0
+
+    def test_age_adjusted_gap_classifies_correctly(self) -> None:
+        """Simulates the real bug: 24.7 in age-adjusted norms with gaps.
+
+        After age factor 0.82, male jump height poor range is (17.2, 24.6)
+        and below_average is (25.4, 32.8). Value 24.7 falls in the gap
+        and should classify as "poor" (distance 0.1) not "excellent".
+        """
+        age_adjusted_norms = [
+            ("poor", 17.2, 24.6),
+            ("below_average", 25.4, 32.8),
+            ("average", 33.6, 41.0),
+            ("above_average", 41.8, 49.2),
+            ("very_good", 50.0, 57.4),
+            ("excellent", 57.4, 83.6),
+        ]
+        cat, _, _ = _classify_value(24.7, age_adjusted_norms)
+        assert cat == "poor"
+
 
 # ===========================================================================
 # _build_metric_interpretation tests
@@ -334,6 +375,40 @@ class TestInterpretDropjumpMetrics:
         result = interpret_dropjump_metrics(data)
 
         assert len(result["ground_contact_time"]["recommendation"]) > 0
+
+    # -- GCT age adjustment (inverse metric) --
+
+    def test_gct_masters_50_ranges_more_lenient(self) -> None:
+        """Masters 50 GCT ranges should be MORE lenient (higher ms) than adult.
+
+        GCT is an inverse metric: lower = better. For older athletes, the
+        thresholds should shift upward (divide by age factor), making it
+        easier to achieve a given category.
+        """
+        # Adult: below_average is 250-350 ms
+        adult = interpret_dropjump_metrics({"ground_contact_time_ms": 300.0}, age_group=None)
+        assert adult["ground_contact_time"]["category"] == "below_average"
+
+        # Masters 50: 300 ms should rate BETTER than below_average
+        # because thresholds shift up (÷0.82 → below_average becomes ~305-427)
+        masters = interpret_dropjump_metrics(
+            {"ground_contact_time_ms": 300.0}, age_group="masters_50"
+        )
+        cat_order = ["excellent", "very_good", "good", "average", "below_average"]
+        adult_idx = cat_order.index(adult["ground_contact_time"]["category"])
+        masters_idx = cat_order.index(masters["ground_contact_time"]["category"])
+        assert masters_idx <= adult_idx  # lower index = better category
+
+    def test_gct_276_masters_50_not_below_average(self) -> None:
+        """276 ms GCT for Masters 50 should NOT be below_average.
+
+        This was the reported bug: with inverse adjustment, 276 ms should
+        classify better since the thresholds are more lenient.
+        """
+        result = interpret_dropjump_metrics(
+            {"ground_contact_time_ms": 276.1}, age_group="masters_50"
+        )
+        assert result["ground_contact_time"]["category"] != "below_average"
 
     # -- Combined --
 
@@ -947,6 +1022,18 @@ class TestAgeAdjustedInterpretation:
 
         assert default_result == adult_result
 
+    def test_masters_50_jump_height_24_7_not_excellent(self) -> None:
+        """24.7 cm jump for Masters 50 male must NOT be 'excellent'.
+
+        This was the reported bug: 24.7 cm fell in a gap between
+        age-adjusted ranges and the old fallback returned 'excellent'.
+        Should classify as 'poor' (closest range).
+        """
+        data = {"jump_height_m": 0.247}  # 24.7 cm
+        result = interpret_cmj_metrics(data, age_group="masters_50")
+
+        assert result["jump_height"]["category"] == "poor"
+
 
 # ===========================================================================
 # interpret_metrics demographic context tests
@@ -1057,9 +1144,103 @@ class TestBackwardCompatibility:
         assert result_default == result_explicit
 
     def test_interpret_metrics_wrapper_backward_compat(self) -> None:
-        """interpret_metrics with no demographics returns same structure as before."""
+        """interpret_metrics with no demographics returns interpretations and possibly insights."""
         data = {"jump_height_m": 0.45}
         result = interpret_metrics("cmj", data)
 
-        assert set(result.keys()) == {"interpretations"}
+        assert "interpretations" in result
         assert "jump_height" in result["interpretations"]
+
+
+# ===========================================================================
+# Coaching insights integration tests
+# ===========================================================================
+
+
+class TestCoachingInsightsIntegration:
+    """Integration tests: verify coaching_insights appear in interpret_metrics output."""
+
+    def test_dropjump_cross_metric_insights_present(self) -> None:
+        """Drop jump with strong RSI + weak height produces coaching insights."""
+        data = {
+            "reactive_strength_index": 2.5,  # very_good
+            "jump_height_m": 0.25,  # poor (25 cm)
+            "ground_contact_time_ms": 160.0,  # excellent
+        }
+        result = interpret_metrics("drop_jump", data)
+
+        assert "coaching_insights" in result
+        insights = result["coaching_insights"]
+        assert isinstance(insights, list)
+        assert len(insights) > 0
+
+        # Should identify height as limiter
+        keys = [i["key"] for i in insights]
+        assert "dj_height_limiter" in keys
+        assert "dj_rsi_strength" in keys
+
+    def test_cmj_cross_metric_insights_present(self) -> None:
+        """CMJ with optimal depth and strong metrics produces coaching insights."""
+        data = {
+            "jump_height_m": 0.70,  # excellent (70 cm)
+            "peak_concentric_velocity_m_s": 3.5,  # very_good/excellent
+            "countermovement_depth_m": 0.25,  # optimal (25 cm)
+        }
+        result = interpret_metrics("cmj", data)
+
+        assert "coaching_insights" in result
+        insights = result["coaching_insights"]
+        keys = [i["key"] for i in insights]
+        assert "cmj_depth_optimal" in keys
+        assert "cmj_power_strength" in keys
+
+    def test_sj_cross_metric_insights_present(self) -> None:
+        """SJ with weak height and average velocity produces insights."""
+        data = {
+            "jump_height_m": 0.25,  # poor (25 cm)
+            "peak_concentric_velocity_m_s": 2.0,  # average
+        }
+        result = interpret_metrics("sj", data)
+
+        assert "coaching_insights" in result
+        insights = result["coaching_insights"]
+        keys = [i["key"] for i in insights]
+        assert "sj_height_limiter" in keys
+
+    def test_no_insights_when_metrics_are_all_average(self) -> None:
+        """When all metrics are average, no cross-metric insights may fire."""
+        data = {
+            "jump_height_m": 0.45,  # average (45 cm)
+            "peak_concentric_velocity_m_s": 2.0,  # average
+        }
+        result = interpret_metrics("sj", data)
+
+        # Both metrics average: no cross-metric rules fire
+        assert "coaching_insights" not in result
+
+    def test_insights_sorted_by_priority(self) -> None:
+        """Insights in the result are sorted by priority."""
+        data = {
+            "reactive_strength_index": 2.3,  # very_good
+            "jump_height_m": 0.25,  # poor
+            "ground_contact_time_ms": 235.0,  # average
+        }
+        result = interpret_metrics("drop_jump", data)
+
+        assert "coaching_insights" in result
+        insights = result["coaching_insights"]
+        priorities = [i["priority"] for i in insights]
+        assert priorities == sorted(priorities)
+
+    def test_insights_coexist_with_demographic_context(self) -> None:
+        """coaching_insights and demographic_context both appear when applicable."""
+        data = {
+            "reactive_strength_index": 2.5,
+            "jump_height_m": 0.25,
+            "ground_contact_time_ms": 160.0,
+        }
+        result = interpret_metrics("drop_jump", data, sex="male", age=50)
+
+        assert "interpretations" in result
+        assert "coaching_insights" in result
+        assert "demographic_context" in result

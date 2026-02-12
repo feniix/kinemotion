@@ -127,6 +127,77 @@
       "countermovement_depth": "Profundidad del Contramovimiento",
       "rsi": "Índice de Fuerza Reactiva",
       "ground_contact_time": "Tiempo de Contacto con el Suelo"
+    },
+    "insightTypes": {
+      "strength": "Fortaleza",
+      "limiter": "Área a Mejorar",
+      "observation": "Observación"
+    },
+    "insights": {
+      "dj_height_limiter": {
+        "title": "La altura del salto es el principal limitante",
+        "description": "La buena capacidad reactiva sugiere un déficit de potencia en tren inferior más que un problema técnico. Enfócate en sentadillas, estocadas y pliometría básica — tu ciclo rápido de estiramiento-acortamiento es un activo."
+      },
+      "dj_rsi_limiter": {
+        "title": "La fuerza reactiva necesita trabajo",
+        "description": "Buena altura de salto pero contacto con el suelo lento indica que el ciclo de estiramiento-acortamiento necesita mejora. Trabaja ejercicios de rigidez de tobillo, saltos rápidos y pliometría de baja intensidad."
+      },
+      "dj_both_weak": {
+        "title": "Tanto la fuerza reactiva como la altura necesitan desarrollo",
+        "description": "Construye primero una base general de fuerza y potencia. Enfócate en sentadillas, estocadas y mecánica de aterrizaje antes de progresar al entrenamiento pliométrico."
+      },
+      "dj_rsi_strength": {
+        "title": "La fuerza reactiva es una fortaleza clara",
+        "description": "El ciclo de estiramiento-acortamiento funciona bien — transiciones rápidas del aterrizaje al despegue."
+      },
+      "dj_gct_strength": {
+        "title": "Excelente eficiencia en el contacto con el suelo",
+        "description": "El tiempo de contacto muy rápido muestra buena rigidez de tobillo y aplicación eficiente de fuerza. Este es un activo clave para movimientos deportivos reactivos."
+      },
+      "dj_gct_limiter": {
+        "title": "El tiempo de contacto con el suelo es muy largo",
+        "description": "El contacto lento sugiere debilidad en rigidez de tobillo o pobre utilización del CEA. Practica ejercicios de respuesta rápida, saltos de tobillo y enfócate en minimizar el tiempo en el suelo."
+      },
+      "dj_gct_observation": {
+        "title": "El tiempo de contacto con el suelo es moderado",
+        "description": "Hay margen de mejora en la eficiencia del contacto. Incorpora ejercicios de rigidez de tobillo y busca contactos más rápidos durante el entrenamiento pliométrico."
+      },
+      "cmj_height_limiter": {
+        "title": "La altura del salto limita el rendimiento",
+        "description": "La velocidad decente sugiere que la técnica es razonable, pero la producción de fuerza necesita trabajo. Enfócate en entrenamiento de fuerza de tren inferior (sentadillas, peso muerto) y métodos de entrenamiento de contraste."
+      },
+      "cmj_velocity_limiter": {
+        "title": "La velocidad de despegue es el limitante",
+        "description": "Altura adecuada a pesar de baja velocidad sugiere buena técnica. Mejora la tasa de desarrollo de fuerza con entrenamiento explosivo — sentadillas con salto, variaciones de levantamientos olímpicos y ejercicios balísticos."
+      },
+      "cmj_depth_too_deep": {
+        "title": "El contramovimiento es muy profundo",
+        "description": "La profundidad excesiva ralentiza el ciclo de estiramiento-acortamiento y reduce la transferencia de potencia. Indica un contramovimiento más rápido y superficial — piensa en 'bajada rápida' en vez de sentadilla profunda."
+      },
+      "cmj_depth_too_shallow": {
+        "title": "El contramovimiento es muy superficial",
+        "description": "Un contramovimiento superficial limita el almacenamiento de energía elástica. Indica una sentadilla más profunda para usar todo el rango de movimiento — el atleta puede estar apresurando el salto."
+      },
+      "cmj_depth_optimal": {
+        "title": "La profundidad del contramovimiento está bien calibrada",
+        "description": "Buen equilibrio entre profundidad y velocidad en la fase de contramovimiento. Mantén este patrón."
+      },
+      "cmj_power_strength": {
+        "title": "Excelente producción de potencia",
+        "description": "Tanto la altura como la velocidad son fuertes — la potencia de tren inferior y la técnica funcionan bien juntas. Enfócate en mantener esta capacidad y la aplicación específica al deporte."
+      },
+      "sj_height_limiter": {
+        "title": "La altura del salto puede estar limitada por la técnica",
+        "description": "Velocidad razonable pero menor altura podría indicar una aplicación de fuerza ineficiente desde la posición estática. Enfócate en mejorar la mecánica de la posición inicial y el desarrollo de fuerza concéntrica."
+      },
+      "sj_velocity_limiter": {
+        "title": "La velocidad concéntrica necesita mejora",
+        "description": "Buena altura a pesar de baja velocidad sugiere margen de mejora en fuerza explosiva. Enfócate en la tasa de desarrollo de fuerza con sentadillas con salto y entrenamiento balístico."
+      },
+      "sj_power_strength": {
+        "title": "Fuerte producción de potencia concéntrica",
+        "description": "Tanto la altura como la velocidad son fuertes desde una posición estática — excelente potencia concéntrica pura. Esto se transfiere bien a la aceleración y movimientos explosivos."
+      }
     }
   },
   "errors": {
