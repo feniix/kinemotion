@@ -134,9 +134,8 @@ class TripleExtensionBounds:
             return 150 <= angle <= 175
         elif profile in (AthleteProfile.UNTRAINED, AthleteProfile.RECREATIONAL):
             return 160 <= angle <= 180
-        elif profile in (AthleteProfile.TRAINED, AthleteProfile.ELITE):
+        elif profile in (AthleteProfile.TRAINED, AthleteProfile.COMPETITIVE, AthleteProfile.ELITE):
             return 170 <= angle <= 185
-        return True
 
     # KNEE ANGLE at takeoff (close to 180° = full extension)
     @staticmethod
@@ -150,9 +149,8 @@ class TripleExtensionBounds:
             return 155 <= angle <= 175
         elif profile in (AthleteProfile.UNTRAINED, AthleteProfile.RECREATIONAL):
             return 165 <= angle <= 182
-        elif profile in (AthleteProfile.TRAINED, AthleteProfile.ELITE):
+        elif profile in (AthleteProfile.TRAINED, AthleteProfile.COMPETITIVE, AthleteProfile.ELITE):
             return 173 <= angle <= 190
-        return True
 
     # ANKLE ANGLE at takeoff (120-155° = plantarflexion, 90° = neutral)
     @staticmethod
@@ -166,9 +164,8 @@ class TripleExtensionBounds:
             return 100 <= angle <= 125
         elif profile in (AthleteProfile.UNTRAINED, AthleteProfile.RECREATIONAL):
             return 110 <= angle <= 140
-        elif profile in (AthleteProfile.TRAINED, AthleteProfile.ELITE):
+        elif profile in (AthleteProfile.TRAINED, AthleteProfile.COMPETITIVE, AthleteProfile.ELITE):
             return 125 <= angle <= 155
-        return True
 
 
 class RSIBounds:
@@ -182,6 +179,7 @@ class RSIBounds:
     UNTRAINED_RANGE = (0.30, 0.80)
     RECREATIONAL_RANGE = (0.80, 1.50)
     TRAINED_RANGE = (1.50, 2.40)
+    COMPETITIVE_RANGE = (1.85, 2.95)  # midpoint of TRAINED and ELITE
     ELITE_RANGE = (2.20, 3.50)
 
     @staticmethod
@@ -195,9 +193,10 @@ class RSIBounds:
             return RSIBounds.RECREATIONAL_RANGE
         elif profile == AthleteProfile.TRAINED:
             return RSIBounds.TRAINED_RANGE
-        elif profile == AthleteProfile.ELITE:
+        elif profile == AthleteProfile.COMPETITIVE:
+            return RSIBounds.COMPETITIVE_RANGE
+        else:
             return RSIBounds.ELITE_RANGE
-        return (RSIBounds.MIN_VALID, RSIBounds.MAX_VALID)
 
     @staticmethod
     def is_valid(rsi: float) -> bool:
@@ -292,7 +291,8 @@ def estimate_athlete_profile(
     - <0.20m: Elderly
     - 0.20-0.35m: Untrained
     - 0.35-0.65m: Recreational
-    - 0.65-0.85m: Trained
+    - 0.65-0.75m: Trained
+    - 0.75-0.85m: Competitive
     - >0.85m: Elite
 
     NOTE: Bounds are calibrated for adult males. Female athletes typically achieve
@@ -318,7 +318,9 @@ def estimate_athlete_profile(
         return AthleteProfile.UNTRAINED
     elif jump_height < 0.65:
         return AthleteProfile.RECREATIONAL
-    elif jump_height < 0.85:
+    elif jump_height < 0.75:
         return AthleteProfile.TRAINED
+    elif jump_height < 0.85:
+        return AthleteProfile.COMPETITIVE
     else:
         return AthleteProfile.ELITE

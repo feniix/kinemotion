@@ -317,9 +317,15 @@ class TestAthleteProfileEstimation:
         profile = estimate_athlete_profile(metrics)
         assert profile == AthleteProfile.TRAINED
 
+    def test_estimate_competitive_profile(self) -> None:
+        """0.55-0.65m jump should estimate competitive."""
+        metrics = {"data": {"jump_height_m": 0.60, "flight_time_ms": 580.0}}
+        profile = estimate_athlete_profile(metrics)
+        assert profile == AthleteProfile.COMPETITIVE
+
     def test_estimate_elite_profile(self) -> None:
-        """>=0.50m jump should estimate elite."""
-        metrics = {"data": {"jump_height_m": 0.55, "flight_time_ms": 580.0}}
+        """>=0.65m jump should estimate elite."""
+        metrics = {"data": {"jump_height_m": 0.70, "flight_time_ms": 650.0}}
         profile = estimate_athlete_profile(metrics)
         assert profile == AthleteProfile.ELITE
 
@@ -334,7 +340,7 @@ class TestAthleteProfileEstimation:
             }
         }
         profile = estimate_athlete_profile(metrics)
-        assert profile == AthleteProfile.ELITE
+        assert profile == AthleteProfile.TRAINED
 
     def test_profile_estimation_multiple_metrics_consistency(self) -> None:
         """Test that multiple metrics agree on profile estimation."""
@@ -368,15 +374,15 @@ class TestAthleteProfileEstimation:
         """Test profile estimation with slightly conflicting metrics."""
         metrics = {
             "data": {
-                # Good jump height for elite SJ
+                # Good jump height for competitive SJ
                 "jump_height_m": 0.55,
-                # But unusually short squat hold (not typical for elite)
+                # But unusually short squat hold (not typical for competitive)
                 "squat_hold_duration_ms": 200.0,
             }
         }
         profile = estimate_athlete_profile(metrics)
-        # Should prioritize jump height for SJ (elite threshold is >=0.50m)
-        assert profile == AthleteProfile.ELITE
+        # Should prioritize jump height for SJ (competitive threshold is 0.55-0.65m)
+        assert profile == AthleteProfile.COMPETITIVE
 
 
 class TestStaticStartCriteria:

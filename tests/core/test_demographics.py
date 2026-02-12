@@ -245,7 +245,7 @@ class TestTrainingLevelToProfile:
             (TrainingLevel.UNTRAINED, AthleteProfile.UNTRAINED),
             (TrainingLevel.RECREATIONAL, AthleteProfile.RECREATIONAL),
             (TrainingLevel.TRAINED, AthleteProfile.TRAINED),
-            (TrainingLevel.COMPETITIVE, AthleteProfile.ELITE),
+            (TrainingLevel.COMPETITIVE, AthleteProfile.COMPETITIVE),
             (TrainingLevel.ELITE, AthleteProfile.ELITE),
         ],
     )

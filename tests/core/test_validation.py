@@ -96,6 +96,7 @@ def test_athlete_profile_enum_values() -> None:
     assert AthleteProfile.UNTRAINED.value == "untrained"
     assert AthleteProfile.RECREATIONAL.value == "recreational"
     assert AthleteProfile.TRAINED.value == "trained"
+    assert AthleteProfile.COMPETITIVE.value == "competitive"
     assert AthleteProfile.ELITE.value == "elite"
 
 
@@ -106,11 +107,12 @@ def test_athlete_profile_ordering() -> None:
         AthleteProfile.UNTRAINED,
         AthleteProfile.RECREATIONAL,
         AthleteProfile.TRAINED,
+        AthleteProfile.COMPETITIVE,
         AthleteProfile.ELITE,
     ]
 
     # All profiles should be distinct
-    assert len(set(profiles)) == 5
+    assert len(set(profiles)) == 6
 
 
 # ===== MetricBounds Tests =====
@@ -228,6 +230,34 @@ def test_metric_bounds_contains_trained() -> None:
     # Outside trained bounds
     assert not bounds.contains(0.35, AthleteProfile.TRAINED)  # Below trained_min
     assert not bounds.contains(0.9, AthleteProfile.TRAINED)  # Above trained_max
+
+
+def test_metric_bounds_contains_competitive() -> None:
+    """Test MetricBounds.contains() for competitive profile (midpoint of trained/elite)."""
+    bounds = MetricBounds(
+        absolute_min=0.0,
+        practical_min=0.1,
+        recreational_min=0.3,
+        recreational_max=0.7,
+        elite_min=0.5,
+        elite_max=1.0,
+        absolute_max=1.5,
+        unit="m",
+    )
+
+    # Competitive uses midpoint between trained and elite
+    # trained_min = (0.3 + 0.5) / 2 = 0.4
+    # trained_max = (0.7 + 1.0) / 2 = 0.85
+    # competitive_min = (0.4 + 0.5) / 2 = 0.45
+    # competitive_max = (0.85 + 1.0) / 2 = 0.925
+
+    assert bounds.contains(0.45, AthleteProfile.COMPETITIVE)  # At competitive_min
+    assert bounds.contains(0.7, AthleteProfile.COMPETITIVE)  # Mid-range
+    assert bounds.contains(0.925, AthleteProfile.COMPETITIVE)  # At competitive_max
+
+    # Outside competitive bounds
+    assert not bounds.contains(0.4, AthleteProfile.COMPETITIVE)  # Below competitive_min
+    assert not bounds.contains(0.95, AthleteProfile.COMPETITIVE)  # Above competitive_max
 
 
 def test_metric_bounds_contains_elite() -> None:

@@ -45,10 +45,16 @@ class TestAthleteProfileEstimation:
         assert profile == AthleteProfile.RECREATIONAL
 
     def test_estimate_trained_profile(self) -> None:
-        """75cm jump should estimate trained."""
-        metrics = {"jump_height": 0.75}
+        """70cm jump should estimate trained."""
+        metrics = {"jump_height": 0.70}
         profile = estimate_athlete_profile(metrics)
         assert profile == AthleteProfile.TRAINED
+
+    def test_estimate_competitive_profile(self) -> None:
+        """80cm jump should estimate competitive."""
+        metrics = {"jump_height": 0.80}
+        profile = estimate_athlete_profile(metrics)
+        assert profile == AthleteProfile.COMPETITIVE
 
     def test_estimate_elite_profile(self) -> None:
         """90cm jump should estimate elite."""

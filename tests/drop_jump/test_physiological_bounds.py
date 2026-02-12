@@ -39,10 +39,16 @@ class TestAthleteProfileEstimation:
         assert profile == AthleteProfile.RECREATIONAL
 
     def test_estimate_trained_profile(self) -> None:
-        """65cm jump should estimate trained."""
-        metrics = {"data": {"jump_height_m": 0.65, "ground_contact_time_ms": 350.0}}
+        """55cm jump with moderate contact should estimate trained."""
+        metrics = {"data": {"jump_height_m": 0.55, "ground_contact_time_ms": 450.0}}
         profile = estimate_athlete_profile(metrics)
         assert profile == AthleteProfile.TRAINED
+
+    def test_estimate_competitive_profile(self) -> None:
+        """65cm jump with fast contact should estimate competitive."""
+        metrics = {"data": {"jump_height_m": 0.65, "ground_contact_time_ms": 350.0}}
+        profile = estimate_athlete_profile(metrics)
+        assert profile == AthleteProfile.COMPETITIVE
 
     def test_estimate_elite_profile(self) -> None:
         """85cm jump should estimate elite."""

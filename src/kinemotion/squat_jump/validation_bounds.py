@@ -190,8 +190,9 @@ def estimate_athlete_profile(
     - <0.15m: Elderly
     - 0.15-0.20m: Untrained
     - 0.20-0.45m: Recreational
-    - 0.45-0.50m: Trained
-    - >0.50m: Elite
+    - 0.45-0.55m: Trained
+    - 0.55-0.65m: Competitive
+    - >0.65m: Elite
 
     NOTE: Squat Jump typically achieves lower heights than CMJ due to
     the lack of pre-stretch (no countermovement). Adjust expectations
@@ -215,7 +216,9 @@ def estimate_athlete_profile(
         return AthleteProfile.UNTRAINED
     elif jump_height < 0.45:
         return AthleteProfile.RECREATIONAL
-    elif jump_height < 0.50:
+    elif jump_height < 0.55:
         return AthleteProfile.TRAINED
+    elif jump_height < 0.65:
+        return AthleteProfile.COMPETITIVE
     else:
         return AthleteProfile.ELITE

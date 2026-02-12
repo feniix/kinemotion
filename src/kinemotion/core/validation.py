@@ -42,6 +42,7 @@ class AthleteProfile(Enum):
     UNTRAINED = "untrained"  # Sedentary, no training
     RECREATIONAL = "recreational"  # Fitness class, moderate activity
     TRAINED = "trained"  # Regular athlete, 3-5 years training
+    COMPETITIVE = "competitive"  # Regular competition, club/regional level
     ELITE = "elite"  # Competitive athlete, college/professional level
 
 
@@ -90,7 +91,12 @@ class MetricBounds:
             trained_min = (self.recreational_min + self.elite_min) / 2
             trained_max = (self.recreational_max + self.elite_max) / 2
             return trained_min <= value <= trained_max
-        return False
+        # Competitive: midpoint between trained and elite
+        trained_min = (self.recreational_min + self.elite_min) / 2
+        trained_max = (self.recreational_max + self.elite_max) / 2
+        competitive_min = (trained_min + self.elite_min) / 2
+        competitive_max = (trained_max + self.elite_max) / 2
+        return competitive_min <= value <= competitive_max
 
     def is_physically_possible(self, value: float) -> bool:
         """Check if value is within absolute physiological limits."""
@@ -264,6 +270,10 @@ class MetricsValidator(ABC):
             AthleteProfile.TRAINED: (
                 (bounds.recreational_min + bounds.elite_min) / 2,
                 (bounds.recreational_max + bounds.elite_max) / 2,
+            ),
+            AthleteProfile.COMPETITIVE: (
+                ((bounds.recreational_min + bounds.elite_min) / 2 + bounds.elite_min) / 2,
+                ((bounds.recreational_max + bounds.elite_max) / 2 + bounds.elite_max) / 2,
             ),
             AthleteProfile.ELITE: (bounds.elite_min, bounds.elite_max),
         }

@@ -626,6 +626,7 @@ class CMJMetricsValidator(MetricsValidator):
             AthleteProfile.UNTRAINED: (160, 180, 165, 182, 110, 140),
             AthleteProfile.RECREATIONAL: (160, 180, 165, 182, 110, 140),
             AthleteProfile.TRAINED: (170, 185, 173, 190, 125, 155),
+            AthleteProfile.COMPETITIVE: (170, 185, 173, 190, 125, 155),
             AthleteProfile.ELITE: (170, 185, 173, 190, 125, 155),
         }
 

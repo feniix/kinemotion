@@ -116,7 +116,8 @@ def _classify_combined_score(combined_score: float) -> AthleteProfile:
         (1.0, AthleteProfile.ELDERLY),
         (1.7, AthleteProfile.UNTRAINED),
         (2.7, AthleteProfile.RECREATIONAL),
-        (3.7, AthleteProfile.TRAINED),
+        (3.2, AthleteProfile.TRAINED),
+        (3.7, AthleteProfile.COMPETITIVE),
     ]
     for threshold, profile in thresholds:
         if combined_score < threshold:
