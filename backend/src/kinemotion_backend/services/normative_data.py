@@ -111,6 +111,48 @@ AGE_FACTORS: dict[str, float] = {
     "senior": 0.70,  # Significant but variable decline
 }
 
+# ---------------------------------------------------------------------------
+# Training level adjustment factors (per-metric, multiplied against norms)
+# ---------------------------------------------------------------------------
+
+# Reference level is "trained" (1.00) — the general active population.
+# Factors derived from CLI MetricBounds midpoints in */validation_bounds.py
+# cross-referenced against base normative ranges above.
+#
+# Training level affects metrics differently: jump height shows ~2x ratio
+# from untrained to elite, while ground contact time only ~1.3x.
+TRAINING_FACTORS: dict[str, dict[str, float]] = {
+    "jump_height": {
+        "untrained": 0.65,
+        "recreational": 0.82,
+        "trained": 1.00,
+        "competitive": 1.30,
+        "elite": 1.50,
+    },
+    "peak_velocity": {
+        "untrained": 0.68,
+        "recreational": 0.85,
+        "trained": 1.00,
+        "competitive": 1.20,
+        "elite": 1.40,
+    },
+    "rsi": {
+        "untrained": 0.55,
+        "recreational": 0.78,
+        "trained": 1.00,
+        "competitive": 1.45,
+        "elite": 1.85,
+    },
+    "ground_contact_time": {
+        "untrained": 0.85,
+        "recreational": 0.92,
+        "trained": 1.00,
+        "competitive": 1.08,
+        "elite": 1.15,
+    },
+    # countermovement_depth: no training factor (technique-dependent)
+}
+
 
 def _apply_age_factor(
     norms: NormTable,
@@ -142,20 +184,59 @@ def _apply_age_factor(
     ]
 
 
+def _apply_training_factor(
+    norms: NormTable,
+    training_level: str | None,
+    metric_key: str | None = None,
+    *,
+    inverse: bool = False,
+) -> NormTable:
+    """Scale norm boundaries by the training-level factor.
+
+    Args:
+        norms: Norm table (already age-adjusted).
+        training_level: Training level string, or None for default (trained).
+        metric_key: Which metric these norms are for (e.g. "jump_height").
+            If the metric has no training factor, norms are returned unchanged.
+        inverse: If True, invert the factor (divide instead of multiply).
+            Use for inverse metrics like GCT where lower is better.
+
+    Returns:
+        New NormTable with scaled boundaries.
+    """
+    if training_level is None or training_level == "trained":
+        return norms
+
+    if metric_key is None or metric_key not in TRAINING_FACTORS:
+        return norms
+
+    factor = TRAINING_FACTORS[metric_key].get(training_level, 1.0)
+    if inverse:
+        factor = 1.0 / factor if factor != 0 else 1.0
+    return [
+        (category, round(low * factor, 1), round(high * factor, 1))
+        for category, low, high in norms
+    ]
+
+
 def get_norms(
     base_norms: NormTable | dict[str, NormTable],
     sex: str | None = None,
     age_group: str | None = None,
     *,
     inverse: bool = False,
+    training_level: str | None = None,
+    metric_key: str | None = None,
 ) -> NormTable:
-    """Return age/sex-adjusted norm table.
+    """Return age/sex/training-adjusted norm table.
 
     Args:
         base_norms: Either a sex-keyed dict or a universal NormTable.
         sex: "male" or "female", or None for male default.
         age_group: AgeGroup value string, or None for adult default.
-        inverse: If True, invert the age factor for inverse metrics (e.g. GCT).
+        inverse: If True, invert adjustment factors for inverse metrics (e.g. GCT).
+        training_level: Training level string, or None for trained default.
+        metric_key: Metric name for training-level factor lookup.
 
     Returns:
         NormTable adjusted for the given demographics.
@@ -167,5 +248,6 @@ def get_norms(
     else:
         table = base_norms
 
-    # Apply age adjustment
-    return _apply_age_factor(table, age_group, inverse=inverse)
+    # Apply age adjustment, then training-level adjustment
+    table = _apply_age_factor(table, age_group, inverse=inverse)
+    return _apply_training_factor(table, training_level, metric_key, inverse=inverse)

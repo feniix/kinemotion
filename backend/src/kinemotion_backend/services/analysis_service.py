@@ -144,6 +144,7 @@ class AnalysisService:
                     timer_class=PerformanceTimer,
                     sex=sex,
                     age=age,
+                    training_level=training_level,
                 )
             except ValueError as e:
                 logger.error(
@@ -181,6 +182,7 @@ class AnalysisService:
         timer_class: type,
         sex: str | None = None,
         age: int | None = None,
+        training_level: str | None = None,
     ) -> AnalysisResponse:
         """Process video and return analysis response.
 
@@ -195,6 +197,7 @@ class AnalysisService:
             timer_class: PerformanceTimer class for timing
             sex: Biological sex for normative comparison
             age: Athlete age in years for normative comparison
+            training_level: Training level for normative comparison
 
         Returns:
             AnalysisResponse with results
@@ -240,6 +243,17 @@ class AnalysisService:
             paths["debug_path"] = temp_debug_video_path
             logger.info("debug_video_path_created", debug_video_path=temp_debug_video_path)
 
+        # Build demographics for CLI validation
+        from kinemotion.core.demographics import (
+            AthleteDemographics,
+            BiologicalSex,
+            TrainingLevel,
+        )
+
+        demo_sex = BiologicalSex(sex) if sex else None
+        demo_training = TrainingLevel(training_level) if training_level else None
+        demographics = AthleteDemographics(sex=demo_sex, age=age, training_level=demo_training)
+
         # Process video with detailed timing
         logger.info("video_processing_started")
         timer = timer_class()
@@ -250,6 +264,7 @@ class AnalysisService:
                 quality=quality,
                 output_video=temp_debug_video_path,
                 timer=timer,
+                demographics=demographics if demographics.has_any() else None,
             )
 
         self._log_stage_metrics(timer.get_metrics())
@@ -269,7 +284,13 @@ class AnalysisService:
             if isinstance(rsi_val, (int, float)):
                 metrics_data["reactive_strength_index"] = rsi_val
 
-        interpretation = interpret_metrics(normalized_jump_type, metrics_data, sex=sex, age=age)
+        interpretation = interpret_metrics(
+            normalized_jump_type,
+            metrics_data,
+            sex=sex,
+            age=age,
+            training_level=training_level,
+        )
         if interpretation:
             metrics["interpretation"] = interpretation
 

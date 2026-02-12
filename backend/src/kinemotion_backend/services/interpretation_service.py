@@ -170,6 +170,7 @@ def interpret_cmj_metrics(
     metrics_data: dict[str, Any],
     sex: str | None = None,
     age_group: str | None = None,
+    training_level: str | None = None,
 ) -> dict[str, Any]:
     """Generate coaching interpretations for CMJ metrics.
 
@@ -177,32 +178,45 @@ def interpret_cmj_metrics(
         metrics_data: The 'data' dict from the analysis response.
         sex: Biological sex for norm selection (None defaults to male).
         age_group: Age group for norm adjustment (None defaults to adult).
+        training_level: Training level for norm adjustment (None defaults to trained).
 
     Returns:
         Dictionary of metric interpretations keyed by metric name.
     """
     interpretations: dict[str, Any] = {}
 
-    # Jump height (sex-specific + age-adjusted)
+    # Jump height (sex-specific + age-adjusted + training-adjusted)
     height_m = metrics_data.get("jump_height_m")
     if isinstance(height_m, (int, float)):
         height_cm = height_m * 100
-        norms = get_norms(JUMP_HEIGHT_NORMS, sex, age_group)
+        norms = get_norms(
+            JUMP_HEIGHT_NORMS,
+            sex,
+            age_group,
+            training_level=training_level,
+            metric_key="jump_height",
+        )
         cat, low, high = _classify_value(height_cm, norms)
         interpretations["jump_height"] = _build_metric_interpretation(
             cat, height_cm, low, high, "cm", _JUMP_HEIGHT_TIPS
         )
 
-    # Peak concentric velocity (sex-specific + age-adjusted)
+    # Peak concentric velocity (sex-specific + age-adjusted + training-adjusted)
     velocity = metrics_data.get("peak_concentric_velocity_m_s")
     if isinstance(velocity, (int, float)):
-        norms = get_norms(PEAK_VELOCITY_NORMS, sex, age_group)
+        norms = get_norms(
+            PEAK_VELOCITY_NORMS,
+            sex,
+            age_group,
+            training_level=training_level,
+            metric_key="peak_velocity",
+        )
         cat, low, high = _classify_value(velocity, norms)
         interpretations["peak_concentric_velocity"] = _build_metric_interpretation(
             cat, velocity, low, high, "m/s", _VELOCITY_TIPS
         )
 
-    # Countermovement depth (universal, age-adjusted only)
+    # Countermovement depth (universal, age-adjusted only, no training factor)
     depth_m = metrics_data.get("countermovement_depth_m")
     if isinstance(depth_m, (int, float)):
         depth_cm = depth_m * 100
@@ -219,6 +233,7 @@ def interpret_dropjump_metrics(
     metrics_data: dict[str, Any],
     sex: str | None = None,
     age_group: str | None = None,
+    training_level: str | None = None,
 ) -> dict[str, Any]:
     """Generate coaching interpretations for Drop Jump metrics.
 
@@ -226,35 +241,54 @@ def interpret_dropjump_metrics(
         metrics_data: The 'data' dict from the analysis response.
         sex: Biological sex for norm selection (None defaults to male).
         age_group: Age group for norm adjustment (None defaults to adult).
+        training_level: Training level for norm adjustment (None defaults to trained).
 
     Returns:
         Dictionary of metric interpretations keyed by metric name.
     """
     interpretations: dict[str, Any] = {}
 
-    # RSI (sex-specific + age-adjusted)
+    # RSI (sex-specific + age-adjusted + training-adjusted)
     rsi = metrics_data.get("reactive_strength_index")
     if isinstance(rsi, (int, float)):
-        norms = get_norms(RSI_NORMS, sex, age_group)
+        norms = get_norms(
+            RSI_NORMS,
+            sex,
+            age_group,
+            training_level=training_level,
+            metric_key="rsi",
+        )
         cat, low, high = _classify_value(rsi, norms)
         interpretations["rsi"] = _build_metric_interpretation(
             cat, rsi, low, high, "ratio", _RSI_TIPS
         )
 
-    # Jump height (sex-specific + age-adjusted)
+    # Jump height (sex-specific + age-adjusted + training-adjusted)
     height_m = metrics_data.get("jump_height_m")
     if isinstance(height_m, (int, float)):
         height_cm = height_m * 100
-        norms = get_norms(JUMP_HEIGHT_NORMS, sex, age_group)
+        norms = get_norms(
+            JUMP_HEIGHT_NORMS,
+            sex,
+            age_group,
+            training_level=training_level,
+            metric_key="jump_height",
+        )
         cat, low, high = _classify_value(height_cm, norms)
         interpretations["jump_height"] = _build_metric_interpretation(
             cat, height_cm, low, high, "cm", _JUMP_HEIGHT_TIPS
         )
 
-    # Ground contact time (universal, age-adjusted only, inverse metric)
+    # Ground contact time (universal, age-adjusted + training-adjusted, inverse metric)
     gct_ms = metrics_data.get("ground_contact_time_ms")
     if isinstance(gct_ms, (int, float)):
-        norms = get_norms(GCT_NORMS, age_group=age_group, inverse=True)
+        norms = get_norms(
+            GCT_NORMS,
+            age_group=age_group,
+            inverse=True,
+            training_level=training_level,
+            metric_key="ground_contact_time",
+        )
         cat, low, high = _classify_value(gct_ms, norms)
         interpretations["ground_contact_time"] = _build_metric_interpretation(
             cat, gct_ms, low, high, "ms", _GCT_TIPS
@@ -267,6 +301,7 @@ def interpret_sj_metrics(
     metrics_data: dict[str, Any],
     sex: str | None = None,
     age_group: str | None = None,
+    training_level: str | None = None,
 ) -> dict[str, Any]:
     """Generate coaching interpretations for Squat Jump metrics.
 
@@ -274,26 +309,39 @@ def interpret_sj_metrics(
         metrics_data: The 'data' dict from the analysis response.
         sex: Biological sex for norm selection (None defaults to male).
         age_group: Age group for norm adjustment (None defaults to adult).
+        training_level: Training level for norm adjustment (None defaults to trained).
 
     Returns:
         Dictionary of metric interpretations keyed by metric name.
     """
     interpretations: dict[str, Any] = {}
 
-    # Jump height (sex-specific + age-adjusted)
+    # Jump height (sex-specific + age-adjusted + training-adjusted)
     height_m = metrics_data.get("jump_height_m")
     if isinstance(height_m, (int, float)):
         height_cm = height_m * 100
-        norms = get_norms(JUMP_HEIGHT_NORMS, sex, age_group)
+        norms = get_norms(
+            JUMP_HEIGHT_NORMS,
+            sex,
+            age_group,
+            training_level=training_level,
+            metric_key="jump_height",
+        )
         cat, low, high = _classify_value(height_cm, norms)
         interpretations["jump_height"] = _build_metric_interpretation(
             cat, height_cm, low, high, "cm", _JUMP_HEIGHT_TIPS
         )
 
-    # Peak concentric velocity (sex-specific + age-adjusted)
+    # Peak concentric velocity (sex-specific + age-adjusted + training-adjusted)
     velocity = metrics_data.get("peak_concentric_velocity_m_s")
     if isinstance(velocity, (int, float)):
-        norms = get_norms(PEAK_VELOCITY_NORMS, sex, age_group)
+        norms = get_norms(
+            PEAK_VELOCITY_NORMS,
+            sex,
+            age_group,
+            training_level=training_level,
+            metric_key="peak_velocity",
+        )
         cat, low, high = _classify_value(velocity, norms)
         interpretations["peak_concentric_velocity"] = _build_metric_interpretation(
             cat, velocity, low, high, "m/s", _VELOCITY_TIPS
@@ -324,6 +372,7 @@ def interpret_metrics(
     metrics_data: dict[str, Any],
     sex: str | None = None,
     age: int | None = None,
+    training_level: str | None = None,
 ) -> dict[str, Any]:
     """Generate coaching interpretations for analysis metrics.
 
@@ -335,6 +384,7 @@ def interpret_metrics(
         metrics_data: The 'data' dict from the analysis response.
         sex: Biological sex string ("male" or "female"), or None for male default.
         age: Athlete age in years, or None for adult default.
+        training_level: Training level string, or None for trained default.
 
     Returns:
         Dictionary with 'interpretations' key containing per-metric analysis.
@@ -362,7 +412,12 @@ def interpret_metrics(
     if interpreter is None:
         return {}
 
-    metric_interpretations = interpreter(metrics_data, sex=sex, age_group=age_group)
+    metric_interpretations = interpreter(
+        metrics_data,
+        sex=sex,
+        age_group=age_group,
+        training_level=training_level,
+    )
 
     if not metric_interpretations:
         return {}
@@ -378,12 +433,14 @@ def interpret_metrics(
             result["coaching_insights"] = insights
 
     # Include demographic context when demographics were provided
-    if sex is not None or age is not None:
+    if sex is not None or age is not None or training_level is not None:
         context: dict[str, Any] = {}
         if sex is not None:
             context["sex"] = sex
         if age_group is not None:
             context["age_group"] = age_group
+        if training_level is not None:
+            context["training_level"] = training_level
         result["demographic_context"] = context
 
     return result

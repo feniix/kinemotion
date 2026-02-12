@@ -1244,3 +1244,160 @@ class TestCoachingInsightsIntegration:
         assert "interpretations" in result
         assert "coaching_insights" in result
         assert "demographic_context" in result
+
+
+# ===========================================================================
+# Training level interpretation tests
+# ===========================================================================
+
+
+class TestTrainingLevelInterpretation:
+    """Tests that training_level parameter adjusts normative ranges."""
+
+    def test_recreational_gets_higher_category_for_same_height(self) -> None:
+        """A moderate jump rates better for recreational (lower norms).
+
+        35cm is below_average for male adult trained; with recreational
+        training level, norms are lowered so the category should be higher.
+        """
+        data = {"jump_height_m": 0.35}  # 35 cm
+
+        default_result = interpret_cmj_metrics(data)
+        rec_result = interpret_cmj_metrics(data, training_level="recreational")
+
+        cat_order = [
+            "poor",
+            "below_average",
+            "average",
+            "above_average",
+            "very_good",
+            "excellent",
+        ]
+        default_idx = cat_order.index(default_result["jump_height"]["category"])
+        rec_idx = cat_order.index(rec_result["jump_height"]["category"])
+        assert rec_idx >= default_idx
+
+    def test_elite_gets_lower_category_for_same_height(self) -> None:
+        """A good jump rates worse for elite (higher norms).
+
+        55cm is above_average for male adult trained; with elite
+        training level, norms are raised so the category should be lower.
+        """
+        data = {"jump_height_m": 0.55}  # 55 cm
+
+        default_result = interpret_cmj_metrics(data)
+        elite_result = interpret_cmj_metrics(data, training_level="elite")
+
+        cat_order = [
+            "poor",
+            "below_average",
+            "average",
+            "above_average",
+            "very_good",
+            "excellent",
+        ]
+        default_idx = cat_order.index(default_result["jump_height"]["category"])
+        elite_idx = cat_order.index(elite_result["jump_height"]["category"])
+        assert elite_idx <= default_idx
+
+    def test_trained_matches_default(self) -> None:
+        """Trained level produces identical results to default (factor 1.0)."""
+        data = {"jump_height_m": 0.45}
+
+        default_result = interpret_cmj_metrics(data)
+        trained_result = interpret_cmj_metrics(data, training_level="trained")
+
+        assert default_result == trained_result
+
+    def test_none_training_level_backward_compatible(self) -> None:
+        """None training_level produces identical results to no arg."""
+        data = {
+            "jump_height_m": 0.45,
+            "peak_concentric_velocity_m_s": 2.5,
+            "countermovement_depth_m": 0.30,
+        }
+        result_default = interpret_cmj_metrics(data)
+        result_explicit = interpret_cmj_metrics(data, training_level=None)
+
+        assert result_default == result_explicit
+
+    def test_training_level_in_demographic_context(self) -> None:
+        """training_level appears in demographic_context when provided."""
+        data = {"jump_height_m": 0.45}
+        result = interpret_metrics("cmj", data, training_level="recreational")
+
+        assert "demographic_context" in result
+        assert result["demographic_context"]["training_level"] == "recreational"
+
+    def test_training_level_absent_from_context_when_not_provided(self) -> None:
+        """training_level absent from demographic_context when not provided."""
+        data = {"jump_height_m": 0.45}
+        result = interpret_metrics("cmj", data, sex="male")
+
+        assert "demographic_context" in result
+        assert "training_level" not in result["demographic_context"]
+
+    def test_dropjump_recreational_rsi_higher_category(self) -> None:
+        """Recreational athlete gets better RSI category for same value."""
+        data = {"reactive_strength_index": 0.9}
+
+        default_result = interpret_dropjump_metrics(data)
+        rec_result = interpret_dropjump_metrics(data, training_level="recreational")
+
+        cat_order = [
+            "poor",
+            "below_average",
+            "average",
+            "good",
+            "very_good",
+            "excellent",
+        ]
+        default_idx = cat_order.index(default_result["rsi"]["category"])
+        rec_idx = cat_order.index(rec_result["rsi"]["category"])
+        assert rec_idx >= default_idx
+
+    def test_sj_elite_lower_category_for_velocity(self) -> None:
+        """Elite athlete gets worse velocity category for same value."""
+        data = {"peak_concentric_velocity_m_s": 2.5}
+
+        default_result = interpret_sj_metrics(data)
+        elite_result = interpret_sj_metrics(data, training_level="elite")
+
+        cat_order = [
+            "below_average",
+            "average",
+            "above_average",
+            "very_good",
+            "excellent",
+        ]
+        default_idx = cat_order.index(default_result["peak_concentric_velocity"]["category"])
+        elite_idx = cat_order.index(elite_result["peak_concentric_velocity"]["category"])
+        assert elite_idx <= default_idx
+
+    def test_countermovement_depth_unaffected_by_training_level(self) -> None:
+        """CM depth has no training factor — category unchanged by training level."""
+        data = {"countermovement_depth_m": 0.25}
+
+        default_result = interpret_cmj_metrics(data)
+        elite_result = interpret_cmj_metrics(data, training_level="elite")
+
+        assert (
+            default_result["countermovement_depth"]["category"]
+            == elite_result["countermovement_depth"]["category"]
+        )
+
+    def test_all_demographics_combined(self) -> None:
+        """Sex + age + training_level all appear in demographic_context."""
+        data = {"jump_height_m": 0.45}
+        result = interpret_metrics(
+            "cmj",
+            data,
+            sex="female",
+            age=40,
+            training_level="competitive",
+        )
+
+        ctx = result["demographic_context"]
+        assert ctx["sex"] == "female"
+        assert ctx["age_group"] == "masters_35"
+        assert ctx["training_level"] == "competitive"

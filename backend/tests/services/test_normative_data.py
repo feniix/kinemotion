@@ -15,8 +15,10 @@ from kinemotion_backend.services.normative_data import (
     JUMP_HEIGHT_NORMS,
     PEAK_VELOCITY_NORMS,
     RSI_NORMS,
+    TRAINING_FACTORS,
     NormTable,
     _apply_age_factor,
+    _apply_training_factor,
     get_norms,
 )
 
@@ -278,3 +280,212 @@ class TestGetNorms:
         normal = get_norms(GCT_NORMS, age_group=None, inverse=False)
         inv = get_norms(GCT_NORMS, age_group=None, inverse=True)
         assert normal == inv
+
+
+# ===========================================================================
+# Training factors
+# ===========================================================================
+
+
+class TestTrainingFactors:
+    """Tests for the TRAINING_FACTORS dictionary."""
+
+    def test_trained_is_reference(self) -> None:
+        """Trained level is the reference group with factor 1.00 for all metrics."""
+        for metric, levels in TRAINING_FACTORS.items():
+            assert levels["trained"] == 1.0, f"trained factor for {metric} must be 1.0"
+
+    def test_all_factors_positive(self) -> None:
+        """All training factors are positive."""
+        for metric, levels in TRAINING_FACTORS.items():
+            for level, factor in levels.items():
+                assert factor > 0, f"Factor for {metric}/{level} must be positive"
+
+    def test_factors_increase_from_untrained_to_elite(self) -> None:
+        """Factors increase monotonically from untrained to elite."""
+        ordered_levels = ["untrained", "recreational", "trained", "competitive", "elite"]
+        for metric, levels in TRAINING_FACTORS.items():
+            values = [levels[lvl] for lvl in ordered_levels]
+            for i in range(len(values) - 1):
+                assert values[i] < values[i + 1], (
+                    f"{metric}: {ordered_levels[i]} ({values[i]}) must be < "
+                    f"{ordered_levels[i + 1]} ({values[i + 1]})"
+                )
+
+    def test_expected_metrics_present(self) -> None:
+        """All expected metrics have training factors."""
+        expected = {"jump_height", "peak_velocity", "rsi", "ground_contact_time"}
+        assert set(TRAINING_FACTORS.keys()) == expected
+
+    def test_each_metric_has_all_levels(self) -> None:
+        """Each metric has all five training levels."""
+        expected_levels = {"untrained", "recreational", "trained", "competitive", "elite"}
+        for metric, levels in TRAINING_FACTORS.items():
+            assert set(levels.keys()) == expected_levels, f"{metric} missing levels"
+
+
+# ===========================================================================
+# _apply_training_factor
+# ===========================================================================
+
+
+class TestApplyTrainingFactor:
+    """Tests for the internal _apply_training_factor helper."""
+
+    SAMPLE_NORMS: NormTable = [
+        ("low", 10.0, 20.0),
+        ("high", 20.0, 30.0),
+    ]
+
+    def test_trained_returns_unmodified(self) -> None:
+        """Trained level returns the original norms unchanged."""
+        result = _apply_training_factor(self.SAMPLE_NORMS, "trained", "jump_height")
+        assert result == self.SAMPLE_NORMS
+
+    def test_none_returns_unmodified(self) -> None:
+        """None training level returns the original norms unchanged."""
+        result = _apply_training_factor(self.SAMPLE_NORMS, None, "jump_height")
+        assert result == self.SAMPLE_NORMS
+
+    def test_none_metric_key_returns_unmodified(self) -> None:
+        """None metric_key returns the original norms unchanged."""
+        result = _apply_training_factor(self.SAMPLE_NORMS, "elite", None)
+        assert result == self.SAMPLE_NORMS
+
+    def test_unknown_metric_key_returns_unmodified(self) -> None:
+        """Unknown metric_key returns the original norms unchanged."""
+        result = _apply_training_factor(self.SAMPLE_NORMS, "elite", "countermovement_depth")
+        assert result == self.SAMPLE_NORMS
+
+    def test_recreational_lowers_boundaries(self) -> None:
+        """Recreational factor (0.82 for jump_height) scales boundaries down."""
+        result = _apply_training_factor(self.SAMPLE_NORMS, "recreational", "jump_height")
+        factor = TRAINING_FACTORS["jump_height"]["recreational"]
+        assert result[0] == ("low", round(10.0 * factor, 1), round(20.0 * factor, 1))
+        assert result[1] == ("high", round(20.0 * factor, 1), round(30.0 * factor, 1))
+
+    def test_elite_raises_boundaries(self) -> None:
+        """Elite factor (1.50 for jump_height) scales boundaries up."""
+        result = _apply_training_factor(self.SAMPLE_NORMS, "elite", "jump_height")
+        factor = TRAINING_FACTORS["jump_height"]["elite"]
+        assert result[0] == ("low", round(10.0 * factor, 1), round(20.0 * factor, 1))
+        assert result[1] == ("high", round(20.0 * factor, 1), round(30.0 * factor, 1))
+
+    def test_categories_preserved(self) -> None:
+        """Category names are not affected by training-level scaling."""
+        result = _apply_training_factor(self.SAMPLE_NORMS, "recreational", "jump_height")
+        assert result[0][0] == "low"
+        assert result[1][0] == "high"
+
+    def test_inverse_scales_opposite_direction(self) -> None:
+        """Inverse mode divides by factor for inverse metrics like GCT."""
+        result = _apply_training_factor(
+            self.SAMPLE_NORMS,
+            "elite",
+            "ground_contact_time",
+            inverse=True,
+        )
+        factor = TRAINING_FACTORS["ground_contact_time"]["elite"]
+        inv_factor = 1.0 / factor
+        assert result[0] == (
+            "low",
+            round(10.0 * inv_factor, 1),
+            round(20.0 * inv_factor, 1),
+        )
+
+    def test_unknown_training_level_uses_factor_one(self) -> None:
+        """Unknown training level within a known metric uses factor 1.0."""
+        result = _apply_training_factor(self.SAMPLE_NORMS, "unknown_level", "jump_height")
+        assert result == [
+            ("low", 10.0, 20.0),
+            ("high", 20.0, 30.0),
+        ]
+
+
+# ===========================================================================
+# get_norms with training_level
+# ===========================================================================
+
+
+class TestGetNormsWithTrainingLevel:
+    """Tests for get_norms with training_level parameter."""
+
+    def test_training_level_applied_after_age(self) -> None:
+        """Training factor is applied on top of age adjustment."""
+        # Adult + trained = base norms
+        base = get_norms(JUMP_HEIGHT_NORMS, sex="male", age_group=None)
+
+        # Adult + recreational = lower norms
+        rec = get_norms(
+            JUMP_HEIGHT_NORMS,
+            sex="male",
+            age_group=None,
+            training_level="recreational",
+            metric_key="jump_height",
+        )
+        for (_, base_low, _), (_, rec_low, _) in zip(base, rec, strict=True):
+            assert rec_low < base_low
+
+    def test_elite_raises_norms(self) -> None:
+        """Elite training level raises norm boundaries."""
+        base = get_norms(JUMP_HEIGHT_NORMS, sex="male", age_group=None)
+        elite = get_norms(
+            JUMP_HEIGHT_NORMS,
+            sex="male",
+            age_group=None,
+            training_level="elite",
+            metric_key="jump_height",
+        )
+        for (_, base_low, _), (_, elite_low, _) in zip(base, elite, strict=True):
+            assert elite_low > base_low
+
+    def test_none_training_level_same_as_default(self) -> None:
+        """None training_level produces same norms as no training_level."""
+        default = get_norms(JUMP_HEIGHT_NORMS, sex="male", age_group=None)
+        explicit = get_norms(
+            JUMP_HEIGHT_NORMS,
+            sex="male",
+            age_group=None,
+            training_level=None,
+            metric_key="jump_height",
+        )
+        assert default == explicit
+
+    def test_trained_level_same_as_default(self) -> None:
+        """Trained level produces same norms as no training_level."""
+        default = get_norms(JUMP_HEIGHT_NORMS, sex="male", age_group=None)
+        trained = get_norms(
+            JUMP_HEIGHT_NORMS,
+            sex="male",
+            age_group=None,
+            training_level="trained",
+            metric_key="jump_height",
+        )
+        assert default == trained
+
+    def test_combined_age_and_training(self) -> None:
+        """Youth + recreational gives doubly reduced norms."""
+        base = get_norms(JUMP_HEIGHT_NORMS, sex="male", age_group=None)
+        combined = get_norms(
+            JUMP_HEIGHT_NORMS,
+            sex="male",
+            age_group="youth",
+            training_level="recreational",
+            metric_key="jump_height",
+        )
+        for (_, base_low, _), (_, comb_low, _) in zip(base, combined, strict=True):
+            assert comb_low < base_low
+
+    def test_gct_inverse_with_training(self) -> None:
+        """GCT with inverse + elite training level has LOWER boundaries."""
+        base = get_norms(GCT_NORMS, age_group=None, inverse=True)
+        elite = get_norms(
+            GCT_NORMS,
+            age_group=None,
+            inverse=True,
+            training_level="elite",
+            metric_key="ground_contact_time",
+        )
+        # Elite with inverse: divide by factor > 1, so boundaries lower
+        for (_, base_low, _), (_, elite_low, _) in zip(base, elite, strict=True):
+            assert elite_low < base_low

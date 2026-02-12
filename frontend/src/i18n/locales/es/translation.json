@@ -106,7 +106,12 @@
       "adult": "Adulto (18-34)",
       "masters_35": "Masters (35-49)",
       "masters_50": "Masters (50-64)",
-      "senior": "Senior (65+)"
+      "senior": "Senior (65+)",
+      "untrained": "Sin entrenamiento",
+      "recreational": "Recreativo",
+      "trained": "Entrenado",
+      "competitive": "Competitivo",
+      "elite": "Élite"
     },
     "categories": {
       "poor": "Bajo",

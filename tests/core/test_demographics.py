@@ -8,7 +8,9 @@ from kinemotion.core.demographics import (
     BiologicalSex,
     TrainingLevel,
     age_to_group,
+    training_level_to_profile,
 )
+from kinemotion.core.validation import AthleteProfile
 
 # ---------------------------------------------------------------------------
 # Enum serialization
@@ -227,3 +229,31 @@ class TestAthleteDemographicsHasAny:
             training_level=TrainingLevel.ELITE,
         )
         assert d.has_any()
+
+
+# ---------------------------------------------------------------------------
+# training_level_to_profile mapping
+# ---------------------------------------------------------------------------
+
+
+class TestTrainingLevelToProfile:
+    """Tests for training_level_to_profile() mapping."""
+
+    @pytest.mark.parametrize(
+        ("level", "expected"),
+        [
+            (TrainingLevel.UNTRAINED, AthleteProfile.UNTRAINED),
+            (TrainingLevel.RECREATIONAL, AthleteProfile.RECREATIONAL),
+            (TrainingLevel.TRAINED, AthleteProfile.TRAINED),
+            (TrainingLevel.COMPETITIVE, AthleteProfile.ELITE),
+            (TrainingLevel.ELITE, AthleteProfile.ELITE),
+        ],
+    )
+    def test_mapping(self, level: TrainingLevel, expected: AthleteProfile) -> None:
+        assert training_level_to_profile(level) == expected
+
+    def test_all_levels_covered(self) -> None:
+        """Every TrainingLevel must have a mapping."""
+        for level in TrainingLevel:
+            result = training_level_to_profile(level)
+            assert isinstance(result, AthleteProfile)

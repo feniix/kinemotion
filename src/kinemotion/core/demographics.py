@@ -11,6 +11,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 
+from .validation import AthleteProfile
+
 
 class BiologicalSex(str, Enum):
     """Biological sex for normative reference group selection."""
@@ -37,6 +39,20 @@ class TrainingLevel(str, Enum):
     TRAINED = "trained"
     COMPETITIVE = "competitive"
     ELITE = "elite"
+
+
+_TRAINING_LEVEL_TO_PROFILE: dict[TrainingLevel, AthleteProfile] = {
+    TrainingLevel.UNTRAINED: AthleteProfile.UNTRAINED,
+    TrainingLevel.RECREATIONAL: AthleteProfile.RECREATIONAL,
+    TrainingLevel.TRAINED: AthleteProfile.TRAINED,
+    TrainingLevel.COMPETITIVE: AthleteProfile.ELITE,
+    TrainingLevel.ELITE: AthleteProfile.ELITE,
+}
+
+
+def training_level_to_profile(level: TrainingLevel) -> AthleteProfile:
+    """Map a TrainingLevel to the corresponding AthleteProfile for validation."""
+    return _TRAINING_LEVEL_TO_PROFILE[level]
 
 
 def age_to_group(age: int) -> AgeGroup:

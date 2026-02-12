@@ -536,6 +536,11 @@ function ResultsDisplay({ metrics, videoFile }: ResultsDisplayProps) {
                   {t(`results.demographicValues.${demographicContext.age_group}`)}
                 </span>
               )}
+              {demographicContext.training_level && (
+                <span className="demographic-tag">
+                  {t(`results.demographicValues.${demographicContext.training_level}`)}
+                </span>
+              )}
             </div>
           )}
           {interpretation?.coaching_insights && interpretation.coaching_insights.length > 0 && (

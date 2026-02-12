@@ -20,7 +20,7 @@ from ..core.auto_tuning import (
     analyze_video_sample,
     auto_tune_parameters,
 )
-from ..core.demographics import AthleteDemographics
+from ..core.demographics import AthleteDemographics, training_level_to_profile
 from ..core.filtering import reject_outliers
 from ..core.metadata import (
     AlgorithmConfig,
@@ -47,6 +47,7 @@ from ..core.pipeline_utils import (
 from ..core.pose import MediaPipePoseTracker
 from ..core.quality import QualityAssessment, assess_jump_quality
 from ..core.timing import NULL_TIMER, PerformanceTimer, Timer
+from ..core.validation import AthleteProfile
 from ..core.video_io import VideoProcessor
 from .analysis import (
     detect_ground_contact,
@@ -431,10 +432,15 @@ def _validate_metrics_and_print_results(
     metrics: DropJumpMetrics,
     timer: Timer,
     verbose: bool,
+    demographics: AthleteDemographics | None = None,
 ) -> None:
     """Validate metrics and print validation results if verbose."""
+    assumed_profile: AthleteProfile | None = None
+    if demographics is not None and demographics.training_level is not None:
+        assumed_profile = training_level_to_profile(demographics.training_level)
+
     with timer.measure("metrics_validation"):
-        validator = DropJumpMetricsValidator()
+        validator = DropJumpMetricsValidator(assumed_profile=assumed_profile)
         validation_result = validator.validate(metrics.to_dict())  # type: ignore[arg-type]
         metrics.validation_result = validation_result
 
@@ -609,7 +615,11 @@ def process_dropjump_video(
                     verbose,
                 )
 
-            _validate_metrics_and_print_results(metrics, timer, verbose)
+            # Attach demographics if provided (before validation so validator can use it)
+            if demographics is not None and demographics.has_any():
+                metrics.demographics = demographics
+
+            _validate_metrics_and_print_results(metrics, timer, verbose, demographics=demographics)
 
             processing_time = time.perf_counter() - start_time
             result_metadata = _build_dropjump_metadata(
@@ -624,10 +634,6 @@ def process_dropjump_video(
                 timer,
             )
             metrics.result_metadata = result_metadata
-
-            # Attach demographics if provided
-            if demographics is not None and demographics.has_any():
-                metrics.demographics = demographics
 
             if json_output:
                 _save_dropjump_json(json_output, metrics, timer, verbose)

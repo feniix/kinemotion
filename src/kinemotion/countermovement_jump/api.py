@@ -15,7 +15,7 @@ from ..core.auto_tuning import (
     analyze_video_sample,
     auto_tune_parameters,
 )
-from ..core.demographics import AthleteDemographics
+from ..core.demographics import AthleteDemographics, training_level_to_profile
 from ..core.filtering import reject_outliers
 from ..core.metadata import (
     AlgorithmConfig,
@@ -41,7 +41,7 @@ from ..core.pipeline_utils import (
 from ..core.pose import MediaPipePoseTracker
 from ..core.quality import QualityAssessment, assess_jump_quality
 from ..core.timing import PerformanceTimer, Timer
-from ..core.validation import ValidationResult
+from ..core.validation import AthleteProfile, ValidationResult
 from ..core.video_io import VideoProcessor
 from .analysis import compute_signed_velocity, detect_cmj_phases
 from .debug_overlay import CMJDebugOverlayRenderer
@@ -345,6 +345,7 @@ def _finalize_analysis_results(
     start_time: float,
     timer: Timer,
     verbose: bool,
+    demographics: AthleteDemographics | None = None,
 ) -> None:
     """Assess quality, validate metrics, and attach metadata."""
     if verbose:
@@ -367,8 +368,12 @@ def _finalize_analysis_results(
 
     _print_quality_warnings(quality_result, verbose)
 
+    assumed_profile: AthleteProfile | None = None
+    if demographics is not None and demographics.training_level is not None:
+        assumed_profile = training_level_to_profile(demographics.training_level)
+
     with timer.measure("metrics_validation"):
-        validator = CMJMetricsValidator()
+        validator = CMJMetricsValidator(assumed_profile=assumed_profile)
         validation_result = validator.validate(metrics.to_dict())  # type: ignore[arg-type]
         metrics.validation_result = validation_result
 
@@ -510,6 +515,10 @@ def process_cmj_video(
                     verbose,
                 )
 
+            # Attach demographics if provided (before validation so validator can use it)
+            if demographics is not None and demographics.has_any():
+                metrics.demographics = demographics
+
             # 5. Finalization (Quality, Metadata, Validation)
             _finalize_analysis_results(
                 metrics,
@@ -522,11 +531,8 @@ def process_cmj_video(
                 start_time,
                 timer,
                 verbose,
+                demographics=demographics,
             )
-
-            # Attach demographics if provided
-            if demographics is not None and demographics.has_any():
-                metrics.demographics = demographics
 
             if json_output:
                 _save_metrics_to_json(metrics, json_output, timer, verbose)
